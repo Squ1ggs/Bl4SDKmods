@@ -1,4 +1,4 @@
-﻿# BL4 Player Movement
+# BL4 Player Movement
 
 On-foot **CharacterMovement** tuning for **Borderlands 4** via the official Python SDK (`mods_base` / Oak2 mod manager).
 
