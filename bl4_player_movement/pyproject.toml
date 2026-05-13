@@ -1,0 +1,23 @@
+# Oak2 mod database metadata — see https://bl-sdk.github.io/developing/#adding-to-the-mod-db
+#
+# `download` points at the packaged mod on the default branch (works before you use GitHub Releases).
+# After you publish versioned releases, you may switch this to e.g.
+#   https://github.com/Squ1ggs/Bl4SDKmods/releases/latest/download/bl4_player_movement.sdkmod
+
+[project]
+name = "bl4_player_movement"
+version = "1.0.5"
+authors = [{ name = "Squ1ggs" }]
+description = """\
+On-foot CharacterMovement tuning for Borderlands 4 via the Python SDK: Mods UI sliders, presets, \
+and console ``player_move_*`` commands. Session-oriented values; ``CoopSupport.ClientSide``. \
+"""
+
+[project.urls]
+Repository = "https://github.com/Squ1ggs/Bl4SDKmods"
+
+[tool.sdkmod]
+name = "BL4 Player Movement"
+license = { name = "MIT", url = "https://choosealicense.com/licenses/mit/" }
+download = "https://raw.githubusercontent.com/Squ1ggs/Bl4SDKmods/refs/heads/main/bl4_player_movement/bl4_player_movement.sdkmod"
+coop_support = "ClientSide"
