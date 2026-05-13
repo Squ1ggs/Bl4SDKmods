@@ -12,7 +12,7 @@ These are my Borderlands 4 **Python SDK** mods for the game’s **`sdk_mods`** f
 
 **What I built** is **Tuning GUI**: a small mod that **registers one extra tab** inside blimgui’s menu (the tab is also labeled **Tuning GUI**) and drives my three gameplay mods from there. The Oak2 package on disk is **`tuning_blimgui`** (`.sdkmod` / folder name); the mod list still shows **Squ1ggs** as author.
 
-**Install order:** enable **blimgui** first, then enable **Tuning GUI** (install **`tuning_blimgui.sdkmod`** or the loose folder—see below).
+**Install order:** enable **blimgui** first, then enable **Tuning GUI** (install **`tuning_blimgui.sdkmod`** from this repo—see below).
 
 ---
 
@@ -44,9 +44,11 @@ Do **not** unzip `.sdkmod` files by hand for normal play—the manager loads the
 
 ---
 
-## Install (folder package — optional)
+## Install (loose folder — optional)
 
-If you maintain mods as **loose folders** instead of `.sdkmod` zips: copy the whole **`bl4_player_movement`** (etc.) directory into **`sdk_mods`**. Oak2 imports it as a Python package; you still enable it under **`mods`**. The **`.sdkmod`** sitting inside each folder in this repo is the same mod in archive form—use **either** the zip **or** the folder, not both copies of the same mod name in `sdk_mods`.
+Each subfolder here ships **`*.sdkmod` + docs**; the Python entrypoint **`__init__.py`** is **inside** the zip, not duplicated as a loose file on GitHub. For normal play, use the **`.sdkmod`** steps above.
+
+If you want a **loose** package under **`sdk_mods`**, unpack the matching **`.sdkmod`** once (you get a folder that includes **`__init__.py`**), or sync from your own full dev tree. Don’t copy a GitHub subfolder alone unless it already contains unpacked sources. Never enable both the zip and an unpacked copy of the same mod name.
 
 ---
 
