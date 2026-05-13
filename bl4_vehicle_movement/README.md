@@ -6,8 +6,9 @@ Vehicle and Chaos movement tuning for **Borderlands 4** via the official Python 
 
 ## Install
 
-- **Folder:** copy the whole `bl4_vehicle_movement` directory into your game’s `sdk_mods` folder so you have `sdk_mods/bl4_vehicle_movement/__init__.py`.
-- **`.sdkmod`:** drop `bl4_vehicle_movement.sdkmod` into `sdk_mods` (same folder as other mods). The archive must unpack to a single root folder named `bl4_vehicle_movement`.
+**Recommended — `.sdkmod`:** copy **`bl4_vehicle_movement.sdkmod`** into **`sdk_mods`** or **`sdk_mods/sdkmod_dist`**. Oak2 expects a zip with **exactly one** top-level folder named **`bl4_vehicle_movement`**. Leave it as `.sdkmod`; the manager loads it—no manual unzip for normal play.
+
+**Optional — folder:** copy the whole **`bl4_vehicle_movement`** directory into **`sdk_mods`** instead if you use loose packages. Don’t duplicate the same mod as both zip and folder under `sdk_mods`.
 
 Requires a normal BL4 SDK install (the game loads `sdk_mods/__main__.py` and `mods_base`). **Ultra Local Menu is not required.**
 

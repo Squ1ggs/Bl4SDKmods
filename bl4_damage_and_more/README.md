@@ -2,12 +2,13 @@
 
 Tweaks **OakDamageState** and **OakDamageCauserData** on your **local pawn** (incoming damage/healing/resists, outgoing damage/crit/radius/healing, plus advanced scalars where the build exposes them).
 
-**Author:** sdk_mods · **License:** [MIT](LICENSE)
+**Author:** Squ1ggs · **License:** [MIT](LICENSE)
 
 ## Install
 
-- **Folder:** `sdk_mods/bl4_damage_and_more/__init__.py`
-- **`.sdkmod`:** `bl4_damage_and_more.sdkmod` in `sdk_mods` (zip contains only root folder `bl4_damage_and_more`).
+**Recommended — `.sdkmod`:** copy **`bl4_damage_and_more.sdkmod`** into **`sdk_mods`** or **`sdk_mods/sdkmod_dist`**. The archive must contain a **single** root folder **`bl4_damage_and_more`**. Use the file as-is (Oak2 loads `.sdkmod` packages directly).
+
+**Optional — folder:** copy the **`bl4_damage_and_more`** folder into **`sdk_mods`** if you prefer not to use the zip. Use **either** the `.sdkmod` **or** the folder, not both with the same mod id.
 
 Requires BL4 Python SDK / `mods_base`. **Ultra Local Menu is not required.**
 
@@ -48,5 +49,3 @@ The in-code comments note that **property paths mirror BL4 Live Editor**-style d
 This mod does **not** ship or require **blimgui**.
 
 You **do not have to** mention Live Editor or blimgui in your README for **MIT** compliance if you only used them as inspection tools. Mentioning Live Editor (or similar) is still useful for **other modders** who want to verify offsets/paths on new patches—entirely optional.
-
-If you replace the placeholder author **`sdk_mods`** in `__init__.py` and [LICENSE](LICENSE), use your real name or handle for copyright lines.

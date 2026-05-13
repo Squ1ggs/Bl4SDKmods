@@ -1,31 +1,34 @@
-# Tuning GUI (ImGui hub)
+﻿# Tuning GUI (ImGui hub)
 
-Adds a **Tuning GUI** tab to the **blimgui** menu for:
+Adds a **Tuning GUI** tab inside **blimgui**’s menu so you can drive:
 
 - `bl4_player_movement` — on-foot movement  
 - `bl4_vehicle_movement` — vehicle movement (be in a vehicle)  
 - `bl4_damage_and_more` — damage / elemental tuning  
 
-The in-game **mods** list still shows the package author (**Squ1ggs**); **blimgui** is the separate library mod that provides the window.
+The **mods** list shows me as author (**Squ1ggs**); **blimgui** is the separate mod that owns the ImGui window.
 
 ## Third-party: blimgui
 
-**I didn’t create blimgui.** This package only **registers a tab** in the menu that the **blimgui** mod provides. Install, enable, and follow **blimgui**’s own license and credits from its authors; any issues with the ImGui window itself belong with that project, not this hub.
+**I didn’t create blimgui.** This package only **registers a tab** in the menu that **blimgui** provides. Use blimgui’s license, credits, and issue tracker for the shell itself.
 
-## On-disk name
+## Install
 
-Install as folder **`squ1ggs_blimgui`**, or use a **`.sdkmod`** zip built in the Oak2 layout (the archive must contain a single top-level folder named `squ1ggs_blimgui`).  
-If you still have the old **`squ1ggs_blimgui_tuning`** folder, remove it after copying settings if needed — this package was renamed.
+**Recommended — `.sdkmod`:** copy **`squ1ggs_blimgui.sdkmod`** into **`sdk_mods`** or **`sdk_mods/sdkmod_dist`**. It must be a valid Oak2 package (one top-level folder **`squ1ggs_blimgui`** inside the zip). The manager loads `.sdkmod` files directly—don’t unzip them for normal use.
+
+**Optional — folder:** copy the **`squ1ggs_blimgui`** directory into **`sdk_mods`** instead if you use loose packages. Don’t install the same mod twice as both zip and folder.
+
+If you still have the old **`squ1ggs_blimgui_tuning`** folder from a rename, remove it after migrating settings.
 
 ## Setup
 
-1. Install **blimgui** and enable it.  
-2. Copy **`squ1ggs_blimgui`** into `sdk_mods` next to your tuning mods.  
-3. Enable **Tuning GUI** in the mod list.
+1. Install **blimgui** (as **`.sdkmod`** or folder—see blimgui’s own docs) and enable it.  
+2. Install **Tuning GUI** with **`squ1ggs_blimgui.sdkmod`** (or folder) as above.  
+3. In **`mods`**, enable **Tuning GUI** (package id on disk remains **`squ1ggs_blimgui`**).
 
 ## Keys / console
 
-- **Mods → Keybinds:** **Open BL4 Mod Menu (Tuning GUI)** (default **F1**, same as the usual blimgui menu key; rebind if you need a different key).  
+- **Mods → Keybinds:** **Open BL4 Mod Menu (Tuning GUI)** (default **F1**; rebind if needed).  
 - Console: `sqgui_open`
 
 ## Credit

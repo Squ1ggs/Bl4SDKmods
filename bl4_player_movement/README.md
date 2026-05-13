@@ -1,4 +1,4 @@
-# BL4 Player Movement
+﻿# BL4 Player Movement
 
 On-foot **CharacterMovement** tuning for **Borderlands 4** via the official Python SDK (`mods_base` / Oak2 mod manager).
 
@@ -6,8 +6,9 @@ On-foot **CharacterMovement** tuning for **Borderlands 4** via the official Pyth
 
 ## Install
 
-- **Folder:** copy the whole `bl4_player_movement` directory into `sdk_mods` so you have `sdk_mods/bl4_player_movement/__init__.py`.
-- **`.sdkmod`:** place `bl4_player_movement.sdkmod` in `sdk_mods` (single root folder `bl4_player_movement` inside the zip).
+**Recommended — `.sdkmod`:** copy **`bl4_player_movement.sdkmod`** into your game’s **`sdk_mods`** (next to `__main__.py`) or into **`sdk_mods/sdkmod_dist`**. It is an Oak2 package zip: **one** top-level folder named **`bl4_player_movement`** inside the archive, matching the filename stem. Do not unzip it yourself for normal use—the mod manager loads it as a package.
+
+**Optional — folder:** if you prefer a loose package instead of the zip, copy the whole **`bl4_player_movement`** directory into **`sdk_mods`** and enable the mod under **`mods`**. (In this repo the same `.sdkmod` is also bundled inside the folder for convenience—use **either** the zip **or** the folder in `sdk_mods`, not both.)
 
 Requires a normal BL4 SDK install. **Ultra Local Menu is not required.**
 
