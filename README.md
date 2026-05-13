@@ -43,7 +43,7 @@ If the mod list errors when saving options, create an empty **`sdk_mods/settings
 
 ---
 
-## Optional: `.sdkmod` zips
+`.sdkmod` zips
 
 The mod manager can load **`.sdkmod`** files. Each zip must contain **exactly one** top-level directory, and that directory’s name must match the file stem (for example `bl4_player_movement.sdkmod` → only `bl4_player_movement/...` inside). You can zip a folder yourself with that layout, or install the folders without zipping.
 
