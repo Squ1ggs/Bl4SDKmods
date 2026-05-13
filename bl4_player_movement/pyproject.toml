@@ -1,9 +1,3 @@
-# Oak2 mod database metadata — see https://bl-sdk.github.io/developing/#adding-to-the-mod-db
-#
-# `download` points at the packaged mod on the default branch (works before you use GitHub Releases).
-# After you publish versioned releases, you may switch this to e.g.
-#   https://github.com/Squ1ggs/Bl4SDKmods/releases/latest/download/bl4_player_movement.sdkmod
-
 [project]
 name = "bl4_player_movement"
 version = "1.0.5"
