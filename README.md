@@ -1,17 +1,16 @@
 # Bl4SDKmods
 
-Borderlands 4 **Python SDK** mods for the game’s **`sdk_mods`** folder (Oak2 / `mods_base`). If something breaks after a patch, open an issue and say **which mod** and **which game build** you are on.
+These are my Borderlands 4 **Python SDK** mods for the game’s **`sdk_mods`** folder (Oak2 / `mods_base`). If something breaks after a patch, open an issue and say **which mod** and **which game build** you’re on.
 
 ---
 
-## blimgui (third-party — not by Squ1ggs)
+## blimgui (third-party — I didn’t make it)
 
-**Squ1ggs did not create [blimgui](https://github.com/juso40/blimgui).**  
-**blimgui** is its own mod: it loads the ImGui stack and owns the **BL4 mod menu window** (tabs, docking, input, rendering, etc.). Use **blimgui’s** license, credits, and issue tracker for anything wrong with that shell.
+**I didn’t create [blimgui](https://github.com/juso40/blimgui).** It’s someone else’s mod: it loads the ImGui stack and owns the **BL4 mod menu window** (tabs, docking, input, rendering, etc.). For problems with that shell, use **blimgui’s** license, credits, and issue tracker—not mine.
 
-**blimgui is installed like any other Oak2 SDK mod** — add a **`blimgui`** folder or a valid **`blimgui.sdkmod`** to your game’s **`sdk_mods`** directory, then enable **blimgui** in **`mods`**. This repository **does not include** blimgui’s sources or a prebuilt zip; get it from **[blimgui upstream](https://github.com/juso40/blimgui)** or the **[Oak2 mod database](https://bl-sdk.github.io/oak2-mod-db/)** so you use the current release and the original authors’ packaging. You can still drop **`blimgui.sdkmod`** next to your other `.sdkmod` files (for example under **`sdk_mods/sdkmod_dist`**) if that is how you organize installs.
+**blimgui installs like any other Oak2 SDK mod** — add a **`blimgui`** folder or a valid **`blimgui.sdkmod`** to your game’s **`sdk_mods`** directory, then enable **blimgui** in **`mods`**. I **don’t ship** blimgui’s sources or a prebuilt zip in this repo; grab it from **[blimgui upstream](https://github.com/juso40/blimgui)** or the **[Oak2 mod database](https://bl-sdk.github.io/oak2-mod-db/)** so you stay on the current release and the original authors’ packaging. You can still drop **`blimgui.sdkmod`** next to your other `.sdkmod` files (for example under **`sdk_mods/sdkmod_dist`**) if that’s how you organize installs.
 
-**What Squ1ggs did build** is only the **`squ1ggs_blimgui`** package in this repo: it **registers one extra tab** inside blimgui’s menu (**“Squ1ggs · Tuning”**) and draws the controls that talk to the three gameplay mods. That is **menu content inside blimgui**, not a replacement for blimgui and not the ImGui framework itself.
+**What I built** is only the **`squ1ggs_blimgui`** package here: it **registers one extra tab** inside blimgui’s menu (**“Squ1ggs · Tuning”**) and draws the controls that talk to my three gameplay mods. That’s **UI inside blimgui’s menu**, not a replacement for blimgui and not the ImGui framework itself.
 
 **Install order:** enable **blimgui** first, then enable **Squ1ggs · Tuning** (`squ1ggs_blimgui`) if you want that tab.
 
@@ -28,7 +27,7 @@ Each package shows up separately under **`mods`** in the console.
 | **bl4_damage_and_more** | Local damage / healing tweaks (`bdam_*`). |
 | **squ1ggs_blimgui** | Optional **blimgui** tab that drives the three mods above. Needs **blimgui** and at least one of those mods; it has **no sliders by itself**. |
 
-**Dependency:** **blimgui** is also an Oak2 SDK mod (folder or `.sdkmod` in **`sdk_mods`**), but it is **not packaged in this repository** — install it from **[juso40/blimgui](https://github.com/juso40/blimgui)** or the **[Oak2 mod database](https://bl-sdk.github.io/oak2-mod-db/)**.
+**Dependency:** **blimgui** is also an Oak2 SDK mod (folder or `.sdkmod` in **`sdk_mods`**), but I **don’t include** it in this repo — install it from **[juso40/blimgui](https://github.com/juso40/blimgui)** or the **[Oak2 mod database](https://bl-sdk.github.io/oak2-mod-db/)**.
 
 **User-facing details** (keybinds, commands, behaviour): see each folder’s **`README.md`**.
 
