@@ -1,3 +1,7 @@
+__pycache__/
+*.py[cod]
+.DS_Store
+Thumbs.db
 
-# Local Nexus paste notes — keep out of repo
+# Local Nexus paste notes — keep out of repo (copy lives in your game sdk_mods folder only).
 NEXUS.md
