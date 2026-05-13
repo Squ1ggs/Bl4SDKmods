@@ -1,0 +1,871 @@
+"""
+BL4 Player Movement — on-foot CharacterMovement tuning for the Python SDK.
+
+**Standalone:** copy only the ``bl4_player_movement`` folder into your ``sdk_mods`` directory next to the SDK's
+``mods_base`` and ``unrealsdk`` packages. Ultra Local Menu is **not** required; the optional "forward to ulm" hint
+is ignored safely if ULM is absent.
+
+Mods → BL4 Player Movement: **Apply tuning to** (local / all / others), sliders, keybinds. Console: player_move_* commands.
+Session-only; values may reset on travel. Load in-world (not main menu).
+"""
+
+from __future__ import annotations
+
+import argparse
+import re
+from typing import Any
+
+import unrealsdk
+from mods_base import CoopSupport, Game, BoolOption, ButtonOption, GroupedOption, SliderOption, build_mod, command, keybind
+from mods_base.options import SpinnerOption
+from unrealsdk import logging
+
+__version__ = "1.0.5"
+__author__ = "Squ1ggs"
+MOD_NAME = "BL4 Player Movement"
+LOG_PREFIX = "[BPM]"
+SETTINGS_PATH = __import__("pathlib").Path(__file__).resolve().parent.parent / "settings" / "bl4_player_movement.json"
+SETTINGS_PATH.parent.mkdir(parents=True, exist_ok=True)
+
+# Defaults aligned with ultra_local_menu `ulm tune reset`
+_DEFAULT_MAX_WALK_SPEED = 600.0
+_DEFAULT_JUMP_Z = 620.0
+_DEFAULT_GRAVITY_SCALE = 1.0
+_DEFAULT_MASS = 100.0
+
+# (attr, vmin, vmax, step, default, display title)
+# Oak/BL4 often ignores MaxWalkSpeed for on-foot feel; MinAnalogWalkSpeed is what players report as effective.
+_CORE_SPECS: tuple[tuple[str, float, float, float, float, str], ...] = (
+    (
+        "MinAnalogWalkSpeed",
+        0.0,
+        12000.0,
+        5.0,
+        _DEFAULT_MAX_WALK_SPEED,
+        "Walk speed (MinAnalogWalkSpeed — usually what BL4 obeys)",
+    ),
+    (
+        "MaxWalkSpeed",
+        50.0,
+        12000.0,
+        5.0,
+        _DEFAULT_MAX_WALK_SPEED,
+        "Max walk speed (MaxWalkSpeed — may be ignored; match MinAnalog above)",
+    ),
+    ("JumpZVelocity", 0.0, 12000.0, 10.0, _DEFAULT_JUMP_Z, "Jump Z velocity"),
+    (
+        "GravityScale",
+        -80.0,
+        80.0,
+        0.05,
+        _DEFAULT_GRAVITY_SCALE,
+        "Gravity scale (negative = upward / anti-grav vs world down)",
+    ),
+    ("Mass", 1.0, 5000.0, 5.0, _DEFAULT_MASS, "Mass"),
+)
+
+_EXTRA_SPECS: tuple[tuple[str, float, float, float, float, str], ...] = (
+    ("MaxWalkSpeedCrouched", 0.0, 6000.0, 5.0, 300.0, "Max walk speed (crouched)"),
+    ("MaxAcceleration", 0.0, 32000.0, 50.0, 2048.0, "Max acceleration"),
+    ("MaxBrakingDecelerationWalking", 0.0, 32000.0, 50.0, 2048.0, "Max braking decel (walking)"),
+    ("MaxBrakingDecelerationFalling", 0.0, 32000.0, 50.0, 0.0, "Max braking decel (falling)"),
+    ("MaxBrakingDecelerationFlying", 0.0, 32000.0, 50.0, 0.0, "Max braking decel (flying / glide-like modes)"),
+    ("BrakingDecelerationWalking", 0.0, 32000.0, 50.0, 2048.0, "Braking deceleration (walking)"),
+    ("BrakingDecelerationFalling", 0.0, 32000.0, 50.0, 0.0, "Braking deceleration (falling)"),
+    ("BrakingDecelerationFlying", 0.0, 32000.0, 50.0, 0.0, "Braking deceleration (flying / glide-like modes)"),
+    ("BrakingFrictionFactor", 0.0, 20.0, 0.05, 2.0, "Braking friction factor (air / slide feel)"),
+    ("FallingLateralFriction", 0.0, 50.0, 0.05, 0.0, "Falling lateral friction (air strafe / glide drift)"),
+    ("GroundFriction", 0.0, 100.0, 0.1, 8.0, "Ground friction"),
+    ("MaxStepHeight", 0.0, 200.0, 1.0, 45.0, "Max step height"),
+    ("WalkableFloorAngle", 0.0, 89.0, 0.5, 75.0, "Walkable floor angle (degrees)"),
+    ("AirControl", 0.0, 20.0, 0.02, 0.05, "Air control"),
+    ("AirControlBoostMultiplier", 0.0, 30.0, 0.1, 1.0, "Air control boost mult"),
+    ("MaxFlySpeed", 0.0, 15000.0, 50.0, 600.0, "Max fly speed"),
+    ("MaxSwimSpeed", 0.0, 5000.0, 50.0, 300.0, "Max swim speed"),
+    ("MaxBrakingDecelerationSwimming", 0.0, 32000.0, 50.0, 0.0, "Max braking decel (swimming)"),
+    ("BrakingDecelerationSwimming", 0.0, 32000.0, 50.0, 0.0, "Braking deceleration (swimming)"),
+    ("MaxCustomMovementSpeed", 0.0, 20000.0, 50.0, 0.0, "Max custom movement speed (custom/glide modes if exposed)"),
+    ("PerchRadiusThreshold", 0.0, 500.0, 1.0, 0.0, "Perch radius threshold"),
+    ("Buoyancy", 0.0, 10.0, 0.05, 1.0, "Buoyancy"),
+    ("JumpOffJumpZFactor", 0.0, 80.0, 0.01, 0.5, "Jump-off jump Z factor"),
+    ("JumpMaxHoldTime", 0.0, 8.0, 0.01, 0.0, "Jump max hold time (variable-height jump)"),
+    ("MaxJumpApexAttemptsPerSimulation", 1.0, 64.0, 1.0, 2.0, "Max jump apex attempts per simulation"),
+)
+
+_FLOAT_SPECS: tuple[tuple[str, float, float, float, float, str], ...] = _CORE_SPECS + _EXTRA_SPECS
+
+# OakCharacterMovement vault stamina / costs on pawn (same paths as ultra_local_menu party vault_costs_free).
+_VAULT_COST_VALUE_PATHS: tuple[str, ...] = (
+    "OakCharacterMovement.VaultPowerCost_Dash.Value",
+    "OakCharacterMovement.VaultPowerCost_DoubleJump.Value",
+    "OakCharacterMovement.VaultPowerCost_Glide.Value",
+    "OakCharacterMovement.VaultPowerCost_Grapple.Value",
+    "OakCharacterMovement.VaultPowerCost_GroundSlam.Value",
+    "OakCharacterMovement.VaultPower_Forgiveness.Value",
+)
+
+_PATH_SEG_BRACKET_RE = re.compile(r"^([^[\]]+)\[(\d+)\]$")
+
+
+def _info(msg: str) -> None:
+    logging.info(f"{LOG_PREFIX} {msg}")
+
+
+def _warn(msg: str) -> None:
+    logging.warning(f"{LOG_PREFIX} {msg}")
+
+
+def _err(msg: str) -> None:
+    logging.error(f"{LOG_PREFIX} {msg}")
+
+
+def _is_cdo(obj: Any) -> bool:
+    try:
+        h = str(getattr(obj, "Name", "") or "")
+    except Exception:
+        h = ""
+    return "Default__" in h
+
+
+def _iter_pcs() -> list[Any]:
+    out: list[Any] = []
+    for cn in ("OakPlayerController", "Oak2PlayerController", "PlayerController"):
+        try:
+            out.extend(list(unrealsdk.find_all(cn, exact=False)))
+        except Exception:
+            continue
+    seen: set[int] = set()
+    uniq: list[Any] = []
+    for p in out:
+        try:
+            a = int(getattr(p, "_get_address", lambda: 0)() or 0)
+        except Exception:
+            a = id(p)
+        if a in seen:
+            continue
+        seen.add(a)
+        uniq.append(p)
+    return uniq
+
+
+def _try_pawn(pc: Any) -> Any | None:
+    for a in ("Pawn", "Character", "ControlledPawn"):
+        try:
+            v = getattr(pc, a, None)
+            if v is not None:
+                return v
+        except Exception:
+            continue
+    return None
+
+
+def _get_local_pc() -> Any | None:
+    candidates = [p for p in _iter_pcs() if not _is_cdo(p)]
+    if not candidates:
+        return None
+    with_pawn = [p for p in candidates if _try_pawn(p) is not None]
+    pool = with_pawn or candidates
+    try:
+        pool.sort(
+            key=lambda p: (0 if "oak" in str(getattr(getattr(p, "Class", None), "Name", "")).lower() else 1, id(p)),
+        )
+    except Exception:
+        pass
+    return pool[0] if pool else None
+
+
+def _is_local_pc(pc: Any) -> bool:
+    if pc is None:
+        return False
+    for attr_name in ("IsLocalPlayerController", "IsPrimaryPlayer", "bIsLocalPlayerController"):
+        try:
+            attr = getattr(pc, attr_name, None)
+            if callable(attr):
+                if bool(attr()):
+                    return True
+            elif attr is not None:
+                if bool(attr):
+                    return True
+        except Exception:
+            continue
+    try:
+        if int(getattr(pc, "PlayerIndex", -1) or -1) == 0:
+            return True
+    except Exception:
+        pass
+    return False
+
+
+# Co-op: sliders / presets / reset / vault apply to one or many pawns (see Mods spinner + `player_move_target`).
+BPM_APPLY_SCOPE: str = "local"
+_SCOPE_LABELS: dict[str, str] = {
+    "local": "Local (you only)",
+    "all": "All players in session",
+    "others": "Other players only (exclude you)",
+}
+_SCOPE_SPINNER_CHOICES: list[str] = list(_SCOPE_LABELS.values())
+
+
+def _scope_from_spinner_label(lab: str) -> str:
+    for key, disp in _SCOPE_LABELS.items():
+        if disp == lab:
+            return key
+    return "local"
+
+
+def _iter_pawns_for_bpm_scope() -> list[tuple[Any, str]]:
+    """(pawn, short_label) for current **BPM_APPLY_SCOPE**."""
+    pcs = [p for p in _iter_pcs() if not _is_cdo(p)]
+    if not pcs:
+        return []
+    local_pc = _get_local_pc()
+    out: list[tuple[Any, str]] = []
+    if BPM_APPLY_SCOPE == "local":
+        pc = local_pc or pcs[0]
+        pw = _try_pawn(pc)
+        if pw is not None:
+            out.append((pw, "local"))
+        return out
+    for pc in pcs:
+        pw = _try_pawn(pc)
+        if pw is None:
+            continue
+        is_loc = bool(local_pc is not None and (pc is local_pc or _is_local_pc(pc)))
+        if BPM_APPLY_SCOPE == "others" and is_loc:
+            continue
+        label = "?"
+        try:
+            ps = getattr(pc, "PlayerState", None) or getattr(pc, "OakPlayerState", None)
+            label = str(getattr(ps, "PlayerName", None) or getattr(pc, "Name", None) or "?")
+        except Exception:
+            label = str(getattr(pc, "Name", "?"))
+        out.append((pw, label))
+    return out
+
+
+def _resolve_character_movement_on_pawn(pawn: Any) -> tuple[str, Any] | None:
+    if pawn is None:
+        return None
+    for attr in (
+        "OakCharacterMovement",
+        "CharMoveComp",
+        "CharacterMovement",
+        "MovementComponent",
+        "GbxCharacterMovement",
+        "GbxEngineMovement",
+        "GbxNavMovement",
+    ):
+        try:
+            comp = getattr(pawn, attr, None)
+        except Exception:
+            continue
+        if comp is not None:
+            return (f"pawn.{attr}", comp)
+    return None
+
+
+def _iter_bpm_movement_hits() -> list[tuple[str, Any]]:
+    hits: list[tuple[str, Any]] = []
+    for pawn, who in _iter_pawns_for_bpm_scope():
+        hit = _resolve_character_movement_on_pawn(pawn)
+        if hit is None:
+            continue
+        path, comp = hit
+        hits.append((f"{path} [{who}]", comp))
+    return hits
+
+
+def _parse_attr_segment(seg: str) -> tuple[str, int | None]:
+    s = seg.strip()
+    m = _PATH_SEG_BRACKET_RE.match(s)
+    if m:
+        return m.group(1), int(m.group(2))
+    return s, None
+
+
+def _pawn_set_path(root: Any, path: str, value: Any) -> bool:
+    parts = [p for p in path.split(".") if p]
+    if not parts:
+        return False
+    obj: Any = root
+    for part in parts[:-1]:
+        name, idx = _parse_attr_segment(part)
+        try:
+            nxt = getattr(obj, name)
+        except Exception:
+            return False
+        if nxt is None:
+            return False
+        if idx is not None:
+            try:
+                nxt = nxt[idx]
+            except Exception:
+                return False
+        obj = nxt
+    last = parts[-1]
+    name, idx = _parse_attr_segment(last)
+    if idx is not None:
+        try:
+            seq = getattr(obj, name)
+            seq[idx] = value
+            return True
+        except Exception:
+            return False
+    try:
+        setattr(obj, name, value)
+        return True
+    except Exception:
+        return False
+
+
+def _pawn_get_path(root: Any, path: str) -> Any | None:
+    parts = [p for p in path.split(".") if p]
+    if not parts:
+        return None
+    obj: Any = root
+    for part in parts:
+        name, idx = _parse_attr_segment(part)
+        try:
+            nxt = getattr(obj, name)
+        except Exception:
+            return None
+        if nxt is None:
+            return None
+        if idx is not None:
+            try:
+                nxt = nxt[idx]
+            except Exception:
+                return None
+        obj = nxt
+    return obj
+
+
+def _read_float(obj: Any, name: str) -> float | None:
+    try:
+        v = getattr(obj, name, None)
+        if isinstance(v, (int, float)) and not isinstance(v, bool):
+            return float(v)
+    except Exception:
+        return None
+    return None
+
+
+def _write_float(obj: Any, name: str, value: float) -> bool:
+    try:
+        cur = getattr(obj, name, None)
+        if isinstance(cur, (int, float)) and not isinstance(cur, bool):
+            setattr(obj, name, float(value))
+            return True
+    except Exception:
+        return False
+    return False
+
+
+def _movement_hits_or_warn() -> list[tuple[str, Any]]:
+    hits = _iter_bpm_movement_hits()
+    if not hits:
+        _err(
+            "No CharacterMovement for current scope — load in-world on foot (exit vehicle if needed), "
+            "or change **Apply tuning to** / `player_move_target`.",
+        )
+    return hits
+
+
+def _apply_field(attr: str, value: float) -> None:
+    hits = _movement_hits_or_warn()
+    if not hits:
+        return
+    wrote = 0
+    for path, comp in hits:
+        if _read_float(comp, attr) is None:
+            continue
+        if _write_float(comp, attr, float(value)):
+            _info(f"Set {path}.{attr} = {value}")
+            wrote += 1
+    if wrote == 0:
+        _warn(f"No targets wrote {attr!r} (missing float or blocked).")
+
+
+def _reset_all() -> None:
+    hits = _movement_hits_or_warn()
+    if not hits:
+        return
+    defaults = {spec[0]: spec[4] for spec in _FLOAT_SPECS}
+    total = 0
+    for path, comp in hits:
+        ok = 0
+        for attr, val in defaults.items():
+            if _read_float(comp, attr) is not None and _write_float(comp, attr, float(val)):
+                ok += 1
+        total += ok
+        _info(f"Reset {ok} float fields on {path}")
+    _info(f"Total float writes this reset: {total}")
+
+
+def _show_all() -> None:
+    hits = _movement_hits_or_warn()
+    if not hits:
+        return
+    for path, comp in hits:
+        _info(f"Movement: {path}")
+        for attr, _vmin, _vmax, _step, _defv, title in _FLOAT_SPECS:
+            v = _read_float(comp, attr)
+            if v is not None:
+                _info(f"  {title} ({attr}) = {v}")
+
+
+def _scan_floats(max_lines: int) -> None:
+    hits = _movement_hits_or_warn()
+    if not hits:
+        return
+    per = max(5, max_lines // max(1, len(hits)))
+    for path, comp in hits:
+        _info(f"--- scan: {path} (cap {per} lines) ---")
+        try:
+            from unrealsdk.unreal import UObject  # noqa: PLC0415
+
+            names = (
+                list(comp._get_fields())
+                if isinstance(comp, UObject)
+                else sorted(x for x in dir(comp) if not x.startswith("_"))
+            )
+        except Exception:
+            names = sorted(x for x in dir(comp) if not x.startswith("_"))
+        shown = 0
+        for name in names:
+            v = _read_float(comp, name)
+            if v is None:
+                continue
+            _info(f"  float {name} = {v}")
+            shown += 1
+            if shown >= per:
+                _warn(f"Capped this target at {per} lines.")
+                break
+
+
+def _vault_show() -> None:
+    pawns = _iter_pawns_for_bpm_scope()
+    if not pawns:
+        _err("No pawns for current scope.")
+        return
+    for pawn, who in pawns:
+        _info(f"Vault power / traversal costs [{who}]:")
+        for rel in _VAULT_COST_VALUE_PATHS:
+            v = _pawn_get_path(pawn, rel)
+            if v is None:
+                _info(f"  {rel} = <missing>")
+                continue
+            try:
+                fv = float(v)
+            except (TypeError, ValueError):
+                _info(f"  {rel} = {_safe_repr(v)}")
+            else:
+                _info(f"  {rel} = {fv}")
+
+
+def _safe_repr(v: Any) -> str:
+    try:
+        return repr(v)[:120]
+    except Exception:
+        return "?"
+
+
+def _vault_zero() -> None:
+    _vault_set_uniform(0.0, label="zero")
+
+
+def _vault_set_uniform(value: float, *, label: str = "set") -> None:
+    pawns = _iter_pawns_for_bpm_scope()
+    if not pawns:
+        _err("No pawns for current scope.")
+        return
+    v = max(0.0, float(value))
+    for pawn, who in pawns:
+        ok = 0
+        for rel in _VAULT_COST_VALUE_PATHS:
+            if _pawn_set_path(pawn, rel, v):
+                ok += 1
+                _info(f"vault {label} [{who}]: {rel} = {v}")
+        if ok == 0:
+            _warn(f"[{who}] No vault cost paths wrote (OakCharacterMovement missing?).")
+        else:
+            _info(f"vault {label} [{who}]: updated {ok}/{len(_VAULT_COST_VALUE_PATHS)} paths.")
+
+
+_PRESETS: dict[str, dict[str, float]] = {
+    "fast": {"MinAnalogWalkSpeed": 950.0, "MaxWalkSpeed": 950.0, "MaxAcceleration": 4500.0},
+    "slow": {"MinAnalogWalkSpeed": 320.0, "MaxWalkSpeed": 320.0, "MaxAcceleration": 800.0},
+    "moon": {"GravityScale": 0.35, "JumpZVelocity": 980.0},
+    "sky": {"GravityScale": -2.2, "JumpZVelocity": 820.0},
+    "tank": {"Mass": 420.0, "MinAnalogWalkSpeed": 480.0, "MaxWalkSpeed": 480.0, "GroundFriction": 12.0},
+    "ice": {"GroundFriction": 0.15, "BrakingDecelerationWalking": 200.0},
+}
+
+
+def _apply_preset(name: str) -> None:
+    key = name.strip().lower()
+    if key not in _PRESETS:
+        _err(f"Unknown preset {name!r}. Try: {', '.join(sorted(_PRESETS))}")
+        return
+    hits = _movement_hits_or_warn()
+    if not hits:
+        return
+    for path, comp in hits:
+        for attr, val in _PRESETS[key].items():
+            if _read_float(comp, attr) is not None and _write_float(comp, attr, float(val)):
+                _info(f"preset {key}: set {path}.{attr} = {val}")
+            else:
+                _warn(f"preset {key}: skip {attr} on {path} (missing or not float)")
+
+
+def _bpm_scope_from_cli_token(raw: str) -> str | None:
+    s = raw.strip().lower()
+    if s in _SCOPE_LABELS:
+        return s
+    t = raw.strip()
+    for key, lab in _SCOPE_LABELS.items():
+        if lab == t or lab.lower() == t.lower():
+            return key
+    return None
+
+
+@command("player_move_target", description="Set who receives BPM tuning: local | all | others (same as Mods spinner).")
+def player_move_target(args: argparse.Namespace) -> None:
+    global BPM_APPLY_SCOPE
+    key = _bpm_scope_from_cli_token(str(getattr(args, "scope", "")))
+    if key is None:
+        _err(f"Unknown scope {getattr(args, 'scope', '')!r}. Use: local, all, others (or copy the Mods menu labels).")
+        return
+    BPM_APPLY_SCOPE = key
+    _info(f"apply scope → {BPM_APPLY_SCOPE} ({_SCOPE_LABELS[BPM_APPLY_SCOPE]})")
+    _warn("Co-op: writes on remote pawns may not replicate; host / solo is the reliable case.")
+
+
+player_move_target.add_argument("scope", help="local | all | others")
+
+
+@command("player_move_help", description="List BL4 Player Movement console commands.")
+def player_move_help(_args: argparse.Namespace) -> None:
+    _info("BL4 Player Movement (on-foot):")
+    _info("  player_move_show              — log all slider-backed float fields that exist")
+    _info("  player_move_reset             — reset those fields to mod defaults")
+    _info("  player_move_preset <name>     — fast | slow | moon | tank | ice")
+    _info("  player_move_set <Field> <n>   — setattr one float, e.g. MaxWalkSpeed 900")
+    _info("  player_move_scan_floats [N]   — list float properties on movement (default 60)")
+    _info("  player_move_vault_show        — log OakCharacterMovement vault power costs")
+    _info("  player_move_vault_zero        — set all listed VaultPowerCost_* / forgiveness .Value to 0")
+    _info("  player_move_vault_set <n>     — set those .Value fields to the same float (min 0)")
+    _info("  player_move_preset …          — includes **sky** (upward gravity preset)")
+    _info("  player_move_target <local|all|others> — who receives slider / preset / vault writes (same as Mods spinner)")
+    _info("Mods → BL4 Player Movement: **Apply tuning to** spinner + sliders + keybinds.")
+
+
+@command("player_move_show", description="Log current on-foot movement floats.")
+def player_move_show(_args: argparse.Namespace) -> None:
+    _show_all()
+
+
+@command("player_move_reset", description="Reset on-foot movement floats to bundled defaults.")
+def player_move_reset(_args: argparse.Namespace) -> None:
+    _reset_all()
+
+
+@command("player_move_preset", description="Apply a named movement preset (fast|slow|moon|tank|ice).")
+def player_move_preset(args: argparse.Namespace) -> None:
+    _apply_preset(args.name)
+
+
+player_move_preset.add_argument("name", help="fast | slow | moon | tank | ice")
+
+
+@command("player_move_set", description="Set one float on CharacterMovement (e.g. MaxWalkSpeed 900).")
+def player_move_set(args: argparse.Namespace) -> None:
+    _apply_field(args.field, float(args.value))
+
+
+player_move_set.add_argument("field", help="Property name, e.g. MaxWalkSpeed")
+player_move_set.add_argument("value", type=float, help="Float value")
+
+
+@command("player_move_scan_floats", description="List float fields on the movement component (discovery).")
+def player_move_scan_floats(args: argparse.Namespace) -> None:
+    _scan_floats(max(5, min(400, int(args.maxn))))
+
+
+player_move_scan_floats.add_argument("maxn", nargs="?", default="80", help="Max lines (default 80).")
+
+
+@command("player_move_vault_show", description="Log vault power / traversal cost fields on scoped pawn(s).")
+def player_move_vault_show(_args: argparse.Namespace) -> None:
+    _vault_show()
+
+
+@command("player_move_vault_zero", description="Zero vault power costs (dash, jump, glide, grapple, slam, forgiveness).")
+def player_move_vault_zero(_args: argparse.Namespace) -> None:
+    _vault_zero()
+
+
+@command("player_move_vault_set", description="Set all vault power .Value fields to the same number (>= 0).")
+def player_move_vault_set(args: argparse.Namespace) -> None:
+    _vault_set_uniform(float(args.value))
+
+
+player_move_vault_set.add_argument("value", type=float, help="Uniform cost value (0 = free).")
+
+
+def _build_sliders_from(
+    specs: tuple[tuple[str, float, float, float, float, str], ...],
+) -> list[SliderOption]:
+    opts: list[SliderOption] = []
+    for attr, vmin, vmax, step, default, title in specs:
+        opt = SliderOption(
+            f"bpm_slider_{attr}",
+            float(default),
+            float(vmin),
+            float(vmax),
+            step=float(step),
+            is_integer=False,
+            display_name=title,
+            description=(
+                f"Writes {attr} on each resolved movement component for the current **Apply tuning to** scope "
+                "(local / all / others) when the field exists."
+            ),
+        )
+
+        @opt
+        def _on_slider(_: Any, value: float, _attr: str = attr) -> None:
+            _apply_field(_attr, float(value))
+
+        opts.append(opt)
+    return opts
+
+
+_slider_core = _build_sliders_from(_CORE_SPECS)
+_slider_extra = _build_sliders_from(_EXTRA_SPECS)
+
+_preset_buttons: list[ButtonOption] = []
+for pname, pdesc in (
+    ("fast", "Higher speed + accel"),
+    ("slow", "Lower speed"),
+    ("moon", "Low gravity + high jump"),
+    ("sky", "Upward gravity (negative scale) + jump"),
+    ("tank", "Heavy + slower"),
+    ("ice", "Low friction slide"),
+):
+    btn = ButtonOption(
+        f"bpm_preset_btn_{pname}",
+        display_name=f"Preset: {pname}",
+        description=pdesc,
+    )
+
+    @btn
+    def _on_preset(_: Any, _n: str = pname) -> None:
+        _apply_preset(_n)
+
+    _preset_buttons.append(btn)
+
+
+_reset_button = ButtonOption(
+    "bpm_reset_btn",
+    display_name="Reset all (defaults)",
+    description="Same as player_move_reset / keybind.",
+)
+
+
+@_reset_button
+def _on_reset_btn(_: Any) -> None:
+    _reset_all()
+
+
+_show_button = ButtonOption(
+    "bpm_show_btn",
+    display_name="Log current values",
+    description="Same as player_move_show.",
+)
+
+
+@_show_button
+def _on_show_btn(_: Any) -> None:
+    _show_all()
+
+
+_vault_cost_slider = SliderOption(
+    "bpm_vault_cost_uniform",
+    12.0,
+    0.0,
+    200.0,
+    step=0.25,
+    is_integer=False,
+    display_name="Vault power costs (all same .Value)",
+    description=(
+        "Writes the same float to Dash/DoubleJump/Glide/Grapple/GroundSlam/VaultPower_Forgiveness `.Value` "
+        "on **pawn.OakCharacterMovement** for each pawn in the current **Apply tuning to** scope (0 = free)."
+    ),
+)
+
+
+@_vault_cost_slider
+def _on_vault_cost_slider(_: Any, value: float) -> None:
+    _vault_set_uniform(float(value), label="slider")
+
+
+_vault_zero_button = ButtonOption(
+    "bpm_vault_zero_btn",
+    display_name="Vault: zero all costs (free)",
+    description="Same as player_move_vault_zero.",
+)
+
+
+@_vault_zero_button
+def _on_vault_zero_btn(_: Any) -> None:
+    _vault_zero()
+
+
+_vault_show_button = ButtonOption(
+    "bpm_vault_show_btn",
+    display_name="Vault: log costs",
+    description="Same as player_move_vault_show.",
+)
+
+
+@_vault_show_button
+def _on_vault_show_btn(_: Any) -> None:
+    _vault_show()
+
+
+_ulm_hint = BoolOption(
+    "bpm_ulm_hint",
+    False,
+    display_name="Hint: forward to ulm tune (optional)",
+    description="If Ultra Local Menu is loaded, run `ulm tune show` once for cross-check.",
+)
+
+
+@_ulm_hint
+def _on_ulm_hint(_: Any, value: bool) -> None:
+    if not value:
+        return
+    try:
+        import ultra_local_menu as ulm  # type: ignore[import-not-found]
+
+        fn = getattr(ulm, "_dispatch", None)
+        if callable(fn):
+            fn("ulm tune show", len("ulm"))
+            _info("Forwarded: ulm tune show")
+        else:
+            _warn("ultra_local_menu has no _dispatch")
+    except Exception as ex:
+        _warn(f"ulm not available: {ex}")
+
+
+_target_scope = SpinnerOption(
+    "bpm_target_scope",
+    _SCOPE_LABELS["local"],
+    _SCOPE_SPINNER_CHOICES,
+    wrap_enabled=True,
+    display_name="Apply tuning to",
+    description=(
+        "**Local** — only your pawn. **All** — every player pawn we can find. **Others** — everyone except you. "
+        "Co-op: remote writes may not replicate; treat **All** / **Others** as best-effort unless you are host."
+    ),
+)
+
+
+@_target_scope
+def _on_bpm_target_scope(_: Any, value: str) -> None:
+    global BPM_APPLY_SCOPE
+    BPM_APPLY_SCOPE = _scope_from_spinner_label(str(value))
+    _info(f"apply scope → {BPM_APPLY_SCOPE}")
+
+
+BPM_OPTIONS: list[Any] = [
+    GroupedOption(
+        "bpm_group_scope",
+        display_name="Who receives tuning",
+        description="Sliders, presets, reset/show, vault controls, keybinds, and player_move_* all respect this.",
+        children=[_target_scope],
+    ),
+    GroupedOption(
+        "bpm_group_core",
+        display_name="Core (walk / jump / gravity / mass)",
+        description="Main gameplay feel. Use player_move_show to read live values.",
+        children=list(_slider_core),
+    ),
+    GroupedOption(
+        "bpm_group_extra",
+        display_name="Advanced (accel, friction, air, swim, slope, …)",
+        description="Extra CharacterMovement floats when the build exposes them.",
+        children=list(_slider_extra),
+    ),
+    GroupedOption(
+        "bpm_vault_group",
+        display_name="Vault traversal (power costs)",
+        description=(
+            "Reduces vault stamina costs on **OakCharacterMovement** (dash, double jump, glide, grapple, slam, "
+            "forgiveness) for each pawn in **Apply tuning to**. Same idea as `ulm party vault_costs_free`."
+        ),
+        children=[_vault_cost_slider, _vault_zero_button, _vault_show_button],
+    ),
+    GroupedOption(
+        "bpm_presets",
+        display_name="Presets",
+        description="One-click bundles; fields that do not exist are skipped.",
+        children=[*_preset_buttons, _reset_button, _show_button, _ulm_hint],
+    ),
+]
+
+
+def _kb_reset() -> None:
+    _reset_all()
+
+
+def _kb_show() -> None:
+    _show_all()
+
+
+KEY_RESET = keybind(
+    "bpm_reset_defaults",
+    key="Ctrl+Shift+F5",
+    callback=_kb_reset,
+    display_name="Reset player movement to defaults",
+    description="Runs the same logic as player_move_reset.",
+)
+
+KEY_SHOW = keybind(
+    "bpm_log_values",
+    key="Ctrl+Shift+F6",
+    callback=_kb_show,
+    display_name="Log player movement values",
+    description="Runs player_move_show (check console / unrealsdk.log).",
+)
+
+
+_bpm_mod = build_mod(
+    name=MOD_NAME,
+    author=__author__,
+    description="On-foot CharacterMovement sliders, presets, and player_move_* console commands.",
+    version=__version__,
+    supported_games=Game.BL4,
+    coop_support=CoopSupport.ClientSide,
+    settings_file=SETTINGS_PATH,
+    commands=[
+        player_move_help,
+        player_move_target,
+        player_move_show,
+        player_move_reset,
+        player_move_preset,
+        player_move_set,
+        player_move_scan_floats,
+        player_move_vault_show,
+        player_move_vault_zero,
+        player_move_vault_set,
+    ],
+    keybinds=[KEY_RESET, KEY_SHOW],
+    options=BPM_OPTIONS,
+)
+
+if not SETTINGS_PATH.exists():
+    try:
+        _bpm_mod.enable()
+    except Exception:
+        pass
