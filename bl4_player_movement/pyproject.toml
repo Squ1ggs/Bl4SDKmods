@@ -1,10 +1,9 @@
 [project]
-name = "bl4_player_movement"
-version = "1.0.5"
+name = "bl4-player-movement"
+version = "1.0.6"
 authors = [{ name = "Squ1ggs" }]
-description = """\
-On-foot CharacterMovement tuning for Borderlands 4 via the Python SDK: Mods UI sliders, presets, \
-and console ``player_move_*`` commands. Session-oriented values; ``CoopSupport.ClientSide``. \
+description = """
+On-foot movement tuning for BL4 — speed, jump, gravity, and related sliders. BLImGui panel plus player_move_* console commands. Client-side.
 """
 
 [project.urls]
@@ -13,5 +12,6 @@ Repository = "https://github.com/Squ1ggs/Bl4SDKmods"
 [tool.sdkmod]
 name = "BL4 Player Movement"
 license = { name = "MIT", url = "https://choosealicense.com/licenses/mit/" }
+version = "1.0.6"
 download = "https://raw.githubusercontent.com/Squ1ggs/Bl4SDKmods/refs/heads/main/bl4_player_movement/bl4_player_movement.sdkmod"
 coop_support = "ClientSide"
