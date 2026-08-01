@@ -3,7 +3,7 @@ name = "bl4-player-movement"
 version = "1.0.6"
 authors = [{ name = "Squ1ggs" }]
 description = """
-On-foot movement tuning for BL4 — speed, jump, gravity, and related sliders. BLImGui panel plus player_move_* console commands. Client-side.
+On-foot movement tuning for Borderlands 4 — walk/sprint speed, jump, gravity, glide, friction, and vault costs. BLImGui panel, Mods menu sliders, presets, and player_move_* console commands. Client-side co-op.
 """
 
 [project.urls]
