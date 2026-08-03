@@ -12,6 +12,7 @@ Borderlands 4 **Python SDK** mods for the game's **`sdk_mods`** folder (Oak2 / `
 | **vehicle_movement** | Vehicle tuning + spawn (`vehicle_move_*`). Optional **BLImGui** panel - **Open Vehicle Movement tab** (Ctrl+Alt+F8). |
 | **challenge_ticker** | UVHM ranks + challenge completion. **BLImGui** tab (Ctrl+F7). GPL-3.0. |
 | **damage_and_more** | Combat tuning (`bdam_*`). Optional **BLImGui** tab - **Open Damage & More tab** (Ctrl+Shift+F11). |
+| **resources_and_cooldowns** | Recovery sliders (`brc_*`). Optional **BLImGui** tab - **Open Resources & Cooldowns tab** (Ctrl+Shift+F12). |
 
 Mods menu + console work without BLImGui on most packages. For in-game panels, install [BLImGui](https://github.com/juso40/blimgui) separately and set the keybind under **Mods -> Keybinds**.
 
