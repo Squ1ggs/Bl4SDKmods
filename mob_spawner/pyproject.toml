@@ -1,0 +1,17 @@
+[project]
+name = "bl4-mob-spawner"
+version = "1.0.0"
+authors = [{ name = "Squ1ggs" }]
+description = """
+Borderlands 4 mob/IO spawn catalog with aggro modes. BLImGui tabs (Ctrl+F6). Needs Oak Spawner. Console: bms_* / mob_*. MIT.
+"""
+
+[project.urls]
+Repository = "https://github.com/Squ1ggs/Bl4SDKmods"
+
+[tool.sdkmod]
+name = "Borderlands Mob Spawner (BMS)"
+license = { name = "MIT", url = "https://choosealicense.com/licenses/mit/" }
+version = "1.0.0"
+download = "https://raw.githubusercontent.com/Squ1ggs/Bl4SDKmods/refs/heads/main/mob_spawner/mob_spawner.sdkmod"
+coop_support = "ClientSide"
