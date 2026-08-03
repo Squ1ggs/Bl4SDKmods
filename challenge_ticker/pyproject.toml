@@ -1,0 +1,17 @@
+[project]
+name = "bl4-challenge-ticker"
+version = "1.0.0"
+authors = [{ name = "Squ1ggs" }]
+description = """
+UVHM ranks and challenge completion for Borderlands 4. BLImGui tab (Ctrl+F7), mods menu, and bl4cu_* console commands. GPL-3.0.
+"""
+
+[project.urls]
+Repository = "https://github.com/Squ1ggs/Bl4SDKmods"
+
+[tool.sdkmod]
+name = "Challenge Ticker"
+license = { name = "GPL3", url = "https://choosealicense.com/licenses/gpl-3.0/" }
+version = "1.0.0"
+download = "https://raw.githubusercontent.com/Squ1ggs/Bl4SDKmods/refs/heads/main/challenge_ticker/challenge_ticker.sdkmod"
+coop_support = "Unknown"
