@@ -1,0 +1,17 @@
+[project]
+name = "bl4-coop-session-tools"
+version = "1.0.0"
+authors = [{ name = "Squ1ggs" }]
+description = """
+Co-op party roster and teleports for Borderlands 4. Mods menu + optional BLImGui tab. Console: bcst_*. MIT.
+"""
+
+[project.urls]
+Repository = "https://github.com/Squ1ggs/Bl4SDKmods"
+
+[tool.sdkmod]
+name = "P2P Teleporter"
+license = { name = "MIT", url = "https://choosealicense.com/licenses/mit/" }
+version = "1.0.0"
+download = "https://raw.githubusercontent.com/Squ1ggs/Bl4SDKmods/refs/heads/main/p2p_teleporter/p2p_teleporter.sdkmod"
+coop_support = "ClientSide"

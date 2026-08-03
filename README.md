@@ -14,6 +14,7 @@ Borderlands 4 **Python SDK** mods for the game's **`sdk_mods`** folder (Oak2 / `
 | **damage_and_more** | Combat tuning (`bdam_*`). Optional **BLImGui** tab - **Open Damage & More tab** (Ctrl+Shift+F11). |
 | **resources_and_cooldowns** | Recovery sliders (`brc_*`). Optional **BLImGui** tab - **Open Resources & Cooldowns tab** (Ctrl+Shift+F12). |
 | **mob_spawner** | Mob/IO spawn catalog. **BLImGui** tabs (Ctrl+F6 / F1 BMS). Needs Oak Spawner. Console: `bms_*`. |
+| **p2p_teleporter** | Co-op roster + teleports (`bcst_*`). Optional **BLImGui** tab - bind **Open P2P Teleporter tab**. |
 
 Mods menu + console work without BLImGui on most packages. For in-game panels, install [BLImGui](https://github.com/juso40/blimgui) separately and set the keybind under **Mods -> Keybinds**.
 
