@@ -1,0 +1,17 @@
+[project]
+name = "bl4-damage-and-more"
+version = "1.0.0"
+authors = [{ name = "Squ1ggs" }]
+description = """
+Combat sliders for Borderlands 4: damage, elemental, shields, melee, and more. Mods menu + bdam_* console. Optional BLImGui tab (Ctrl+Shift+F11). Client-side.
+"""
+
+[project.urls]
+Repository = "https://github.com/Squ1ggs/Bl4SDKmods"
+
+[tool.sdkmod]
+name = "Damage & More"
+license = { name = "MIT", url = "https://choosealicense.com/licenses/mit/" }
+version = "1.0.0"
+download = "https://raw.githubusercontent.com/Squ1ggs/Bl4SDKmods/refs/heads/main/damage_and_more/damage_and_more.sdkmod"
+coop_support = "ClientSide"
