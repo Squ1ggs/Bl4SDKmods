@@ -1,0 +1,17 @@
+[project]
+name = "bl4-vehicle-movement"
+version = "1.0.0"
+authors = [{ name = "Squ1ggs" }]
+description = """
+Borderlands 4 vehicle tuning and spawn catalog. Mods menu + vehicle_move_* console. Optional BLImGui panel (Ctrl+Alt+F8). Client-side co-op.
+"""
+
+[project.urls]
+Repository = "https://github.com/Squ1ggs/Bl4SDKmods"
+
+[tool.sdkmod]
+name = "Vehicle Movement"
+license = { name = "MIT", url = "https://choosealicense.com/licenses/mit/" }
+version = "1.0.0"
+download = "https://raw.githubusercontent.com/Squ1ggs/Bl4SDKmods/refs/heads/main/vehicle_movement/vehicle_movement.sdkmod"
+coop_support = "ClientSide"

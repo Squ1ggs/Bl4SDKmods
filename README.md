@@ -11,7 +11,8 @@ Each package shows up separately under **`mods`** in the console.
 
 | `.sdkmod` / package | What it does |
 |--------|----------------|
-| **bl4_player_movement** | On-foot movement tuning (`player_move_*` in console). |
+| **bl4_player_movement** | On-foot movement tuning (player_move_* in console). |
+| **vehicle_movement** | Vehicle tuning + spawn (ehicle_move_*). BLImGui panel optional � **Open Vehicle Movement tab** (Ctrl+Alt+F8). |
 
 
 ---
@@ -24,7 +25,7 @@ Use **`release_staging/`** to drop rebuilt **`*.sdkmod`** files, install them in
 
 ## Install (`.sdkmod` — recommended)
 
-1. From this repo, take **`bl4_player_movement/bl4_player_movement.sdkmod`** (and any other mods you want—the same pattern for each name).
+1. From this repo, take **`bl4_player_movement/bl4_player_movement.sdkmod **ehicle_movement/vehicle_movement.sdkmod**`** (and any other mods you want—the same pattern for each name).
 2. Copy those **`.sdkmod`** files into your game’s **`sdk_mods`** directory (next to `__main__.py`)
 3. Launch BL4, open the **console** (tilde), run **`mods`**, enable the mods you added.
 
