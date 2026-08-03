@@ -1,0 +1,17 @@
+[project]
+name = "bl4-world-travel"
+version = "1.0.0"
+authors = [{ name = "Squ1ggs" }]
+description = """
+Save and recall location bookmarks in Borderlands 4. Mods menu + optional BLImGui tab. Console: bwt_*. MIT.
+"""
+
+[project.urls]
+Repository = "https://github.com/Squ1ggs/Bl4SDKmods"
+
+[tool.sdkmod]
+name = "World Travel"
+license = { name = "MIT", url = "https://choosealicense.com/licenses/mit/" }
+version = "1.0.0"
+download = "https://raw.githubusercontent.com/Squ1ggs/Bl4SDKmods/refs/heads/main/world_travel/world_travel.sdkmod"
+coop_support = "ClientSide"
