@@ -1,0 +1,63 @@
+{
+  "name": "squ1ggs-boosting-tools-app",
+  "version": "1.0.68",
+  "private": true,
+  "description": "Desktop control panel for Squ1ggs Boosting Tools (Borderlands 4 SDK mod).",
+  "author": "RDPSqu1ggs",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "check": "node --check main.js && node --check preload.js && node --check lib/bridge.js && node --check lib/status.js && node --check lib/game_paths.js && node --check lib/sdkmod_install.js && node --check lib/app_settings.js && node --check lib/update_check.js && node --check renderer/app.js",
+    "sync:sdkmod": "python sync_sdkmod.py",
+    "prepack": "npm run sync:sdkmod",
+    "pack": "electron-builder --dir --publish never",
+    "pack:zip": "electron-builder --win zip --publish never -c.win.artifactName=Squ1ggsBoostingTools-Portable-v${version}.${ext}",
+    "dist:portable": "npm run pack && npm run pack:zip",
+    "dist:win": "electron-builder --win nsis --publish never"
+  },
+  "build": {
+    "appId": "com.squ1ggs.boostingtools",
+    "productName": "Squ1ggs Boosting Tools",
+    "executableName": "Squ1ggsBoostingTools",
+    "artifactName": "Squ1ggsBoostingTools-Setup-v${version}.${ext}",
+    "directories": {
+      "output": "../dist_squ1ggs_boosting_tools",
+      "buildResources": "build"
+    },
+    "icon": "build/icon.png",
+    "files": [
+      "main.js",
+      "preload.js",
+      "package.json",
+      "lib/**/*",
+      "renderer/**/*",
+      "build/icon.png"
+    ],
+    "extraResources": [
+      {
+        "from": "resources/Squ1ggsBoostingTools",
+        "to": "sdkmod/Squ1ggsBoostingTools"
+      }
+    ],
+    "win": {
+      "icon": "build/icon.png",
+      "target": [
+        "nsis"
+      ]
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "Squ1ggs Boosting Tools",
+      "include": "build/install-sdkmod.nsh"
+    }
+  },
+  "devDependencies": {
+    "electron": "^37.2.0",
+    "electron-builder": "^26.15.3",
+    "qrcode": "^1.5.4"
+  }
+}

@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self'"
+    />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Squ1ggs Boosting Tools</title>
+    <link rel="icon" type="image/png" href="assets/app-icon.png" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="topbar-brand">
+        <img
+          class="app-logo"
+          src="assets/app-icon.png"
+          width="72"
+          height="72"
+          alt="Squ1ggs Boosting Tools logo"
+        />
+        <div>
+          <p class="eyebrow">Squ1ggs · Borderlands 4</p>
+          <h1>Boosting Tools</h1>
+          <p class="tagline muted small">Player tools for Borderlands 4</p>
+        </div>
+      </div>
+      <div class="topbar-actions">
+        <div class="vault-hunter-strip" aria-label="Borderlands 4 Vault Hunters">
+          <img src="assets/bl4/vh-siren.png" alt="" aria-hidden="true" />
+          <img src="assets/bl4/vh-soldier.png" alt="" aria-hidden="true" />
+          <img src="assets/bl4/vh-gravitar.png" alt="" aria-hidden="true" />
+          <img src="assets/bl4/vh-paladin.png" alt="" aria-hidden="true" />
+          <img src="assets/bl4/vh-robodealer.png" alt="C4SH (Robo Dealer)" title="C4SH · Robo Dealer" />
+        </div>
+        <button id="snap-right-btn" type="button" class="ghost small" title="Dock to the right half of this monitor (Win11-friendly)">Snap right</button>
+        <button id="show-setup-btn" type="button" class="ghost small hidden">Setup</button>
+        <button id="refresh-btn" type="button">Refresh status</button>
+      </div>
+    </header>
+
+    <aside id="update-card" class="update-card hidden" role="status" aria-live="polite">
+      <img class="update-card-icon" src="assets/bl4/tab-home.png" alt="" aria-hidden="true" />
+      <div class="update-card-copy">
+        <p class="update-kicker">Pending update</p>
+        <h2 id="update-title">Download the new version from GitHub</h2>
+        <p id="update-detail" class="muted small">
+          A newer Squ1ggs Boosting Tools release is available. Download it, then use Install / update mod folder.
+        </p>
+      </div>
+      <div class="update-card-actions">
+        <button id="update-open-btn" type="button" class="primary">Download update</button>
+        <button id="update-dismiss-btn" type="button" class="ghost small" aria-label="Dismiss update notice">Later</button>
+      </div>
+    </aside>
+
+    <section class="card status-card">
+      <div class="status-row">
+        <span id="status-dot" class="status-dot offline"></span>
+        <div>
+          <h2 id="status-headline">Checking game connection…</h2>
+          <p id="status-detail" class="muted">Waiting for Borderlands 4.</p>
+        </div>
+      </div>
+      <dl class="meta-grid">
+        <div><dt>Game connection</dt><dd id="meta-bridge">—</dd></div>
+        <div><dt>Mod version</dt><dd id="meta-mod-version">—</dd></div>
+        <div><dt>Session</dt><dd id="meta-session">—</dd></div>
+        <div><dt>Target player</dt><dd id="meta-target">—</dd></div>
+        <div><dt>Spawn near</dt><dd id="meta-spawn">—</dd></div>
+        <div><dt>Freecam</dt><dd id="meta-freecam">—</dd></div>
+      </dl>
+      <div class="target-row">
+        <div class="target-row-head">
+          <h3>Party roster</h3>
+          <div class="target-controls">
+            <label class="target-control-label">
+              <span>Boost target (MAX ALL, UVHM, challenges, currency)</span>
+              <select id="global-target-select" data-role="player-select">
+                <option value="">Connect in-game…</option>
+              </select>
+            </label>
+            <label class="spawn-anchor-label">
+              <span>World drop / spawn near</span>
+              <select id="spawn-anchor-select">
+                <option value="local">From me</option>
+                <option value="party">From selected player</option>
+                <option value="npc_nearest">Near nearest NPC</option>
+              </select>
+            </label>
+          </div>
+        </div>
+        <p class="target-hint muted small">Pick who receives boosts above, then use any tab. Click a name below to set target quickly.</p>
+        <ul id="roster-list" class="roster-list"></ul>
+      </div>
+    </section>
+
+    <section id="sqbt-progress-panel" class="progress-panel global-progress-panel hidden" aria-live="polite"></section>
+
+    <section class="card setup-card" id="setup-card">
+      <div class="setup-head">
+        <h2>Setup</h2>
+        <button id="dismiss-setup-btn" type="button" class="ghost small">Hide setup</button>
+      </div>
+      <p class="setup-attention" id="setup-attention">
+        <strong>First use:</strong> press <strong>Install / update mod folder</strong>, then
+        <strong>fully restart Borderlands 4</strong> before using any tools.
+      </p>
+      <p class="muted">
+        Point at your <strong>Borderlands 4 game folder</strong> (the one that contains <code>OakGame</code> and
+        <code>sdk_mods</code>) — not the <code>sdk_mods</code> folder itself. If you pick <code>sdk_mods</code> by
+        mistake, the app will fix it automatically.
+      </p>
+      <p id="settings-mode-note" class="muted small"></p>
+      <div class="setup-row">
+        <input id="game-root" type="text" readonly placeholder="Auto-detect or browse…" />
+        <button id="browse-game-btn" type="button">Browse</button>
+        <button id="install-mod-btn" type="button" class="primary">Install / update mod folder</button>
+      </div>
+      <p id="setup-message" class="setup-message" aria-live="polite"></p>
+    </section>
+
+    <nav id="tab-bar" class="tab-bar"></nav>
+    <main id="tab-content" class="tab-content"></main>
+    <p id="action-message" class="action-message muted" aria-live="polite"></p>
+
+    <footer class="footer muted small">
+      <span>Squ1ggs Boosting Tools</span>
+      <span class="footer-dot" aria-hidden="true"></span>
+      <span id="app-version">Version checking…</span>
+      <span class="footer-dot" aria-hidden="true"></span>
+      <span>Borderlands 4</span>
+    </footer>
+    <script src="app.js"></script>
+  </body>
+</html>
