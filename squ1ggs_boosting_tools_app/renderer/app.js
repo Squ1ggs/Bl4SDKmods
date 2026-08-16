@@ -257,6 +257,25 @@ function renderUpdateStatus(result) {
     pendingUpdateUrl = "";
     pendingCanApply = false;
     pendingOpenSetup = false;
+    if (result?.needsGameRestartForMod) {
+      pendingUpdateUrl = result.releaseUrl || "";
+      if (updateTitle) {
+        updateTitle.textContent = "Mod files updated — restart Borderlands 4";
+      }
+      if (updateDetail) {
+        updateDetail.textContent =
+          `sdk_mods already has mod v${result.diskModVersion || result.currentModVersion || "latest"}, ` +
+          `but the game is still running v${result.liveModVersion || "an older build"}. ` +
+          "Fully quit Borderlands 4 and launch again — you do not need to Install update again.";
+      }
+      if (updateOpenBtn) {
+        updateOpenBtn.textContent = "Got it";
+        updateOpenBtn.disabled = false;
+      }
+      pendingCanApply = false;
+      updateCard?.classList.remove("hidden");
+      return;
+    }
     updateCard?.classList.add("hidden");
     return;
   }
@@ -293,7 +312,7 @@ function renderUpdateStatus(result) {
     }
     if (modBehind) {
       lines.push(
-        `Your live mod is v${result.currentModVersion || "unknown"}; GitHub has mod v${result.latestModVersion || latest}. Grab the newer portable EXE — it auto-copies the mod on launch. No Setup click needed.`
+        `Installed mod is v${result.currentModVersion || "unknown"}; GitHub has mod v${result.latestModVersion || latest}. Install update pulls the portable zip (app + mod).`
       );
     }
     if (!lines.length) {
@@ -4095,6 +4114,10 @@ if (updateOpenBtn) {
   updateOpenBtn.addEventListener("click", async () => {
     if (updateApplying) return;
     if (!pendingCanApply) {
+      if (updateOpenBtn.textContent === "Got it") {
+        updateCard?.classList.add("hidden");
+        return;
+      }
       if (pendingUpdateUrl) window.sqbt.openExternal(pendingUpdateUrl);
       return;
     }

@@ -7,7 +7,7 @@ const { defaultGameRootHint, defaultInstallCandidates, normalizeGameRoot, resolv
 const { ensureModSynced, getModSyncStatus, installSdkmod } = require("./lib/sdkmod_install");
 const { checkBaseSdkUpdate, detectBaseSdk, installBaseSdk } = require("./lib/oak2_sdk");
 const { loadSettings, saveSettings, normalizeTheme } = require("./lib/app_settings");
-const { checkForUpdates } = require("./lib/update_check");
+const { checkForUpdates, compareVersions, normalizeVersion } = require("./lib/update_check");
 const { applyGithubUpdate } = require("./lib/github_update");
 const { readSerialSource } = require("./lib/serial_sources");
 
@@ -121,12 +121,31 @@ async function refreshStatus() {
 
 async function getUpdateStatus(force = false, currentModVersion = "") {
   const now = Date.now();
-  const modKey = String(currentModVersion || "").trim();
+  const liveMod = normalizeVersion(currentModVersion) || String(currentModVersion || "").trim();
+  // Disk / bundled versions win over a stale live bridge reading — otherwise Install
+  // finishes, then the banner immediately says outdated until Borderlands restarts.
+  let sync = null;
+  try {
+    sync = getModSyncStatus(storedGameRoot);
+  } catch {
+    sync = null;
+  }
+  const diskMod = normalizeVersion(sync?.installedVersion) || "";
+  const bundledMod = normalizeVersion(sync?.bundledVersion) || "";
+  let effectiveMod = liveMod;
+  for (const candidate of [diskMod, bundledMod]) {
+    if (!candidate) continue;
+    if (!effectiveMod || compareVersions(candidate, effectiveMod) > 0) {
+      effectiveMod = candidate;
+    }
+  }
+  const modKey = effectiveMod;
   if (
     !force &&
     updateCache &&
     now - updateCheckedAt < UPDATE_CACHE_MS &&
-    String(updateCache.checkedModVersion || "") === modKey
+    String(updateCache.checkedModVersion || "") === modKey &&
+    String(updateCache.liveModVersion || "") === liveMod
   ) {
     return updateCache;
   }
@@ -136,6 +155,12 @@ async function getUpdateStatus(force = false, currentModVersion = "") {
       currentModVersion: modKey,
     });
     updateCache.checkedModVersion = modKey;
+    updateCache.liveModVersion = liveMod;
+    updateCache.diskModVersion = diskMod;
+    updateCache.bundledModVersion = bundledMod;
+    updateCache.needsGameRestartForMod = Boolean(
+      liveMod && diskMod && compareVersions(diskMod, liveMod) > 0
+    );
   } catch (error) {
     updateCache = {
       ok: false,
@@ -143,6 +168,10 @@ async function getUpdateStatus(force = false, currentModVersion = "") {
       currentVersion: app.getVersion(),
       currentModVersion: modKey,
       checkedModVersion: modKey,
+      liveModVersion: liveMod,
+      diskModVersion: diskMod,
+      bundledModVersion: bundledMod,
+      needsGameRestartForMod: false,
       message: String(error?.message || error),
     };
   }
@@ -393,7 +422,8 @@ ipcMain.handle("sqbt:apply-github-update", async (_event, currentModVersion) => 
       sdkmodUrl: status.sdkmodUrl,
       zipName: status.zipName || status.sdkmodName,
       gameRoot: storedGameRoot || undefined,
-      applyApp: Boolean(status.appUpdateAvailable),
+      // Replace the EXE whenever the portable zip is present — keeps app+mod in sync.
+      applyApp: Boolean(status.zipUrl),
       packaged: app.isPackaged,
       execPath: process.execPath,
       pid: process.pid,
@@ -408,6 +438,7 @@ ipcMain.handle("sqbt:apply-github-update", async (_event, currentModVersion) => 
       persistStoredSettings();
     }
     updateCache = null;
+    updateCheckedAt = 0;
     if (outcome.restartApp) {
       setTimeout(() => app.quit(), 900);
     }
