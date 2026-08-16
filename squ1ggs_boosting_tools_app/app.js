@@ -5,20 +5,25 @@ const { app, BrowserWindow, dialog, ipcMain, shell, screen } = require("electron
 const { getBridgeStatus, postAction, fetchManifest, fetchCatalog, BRIDGE_BASE } = require("./lib/bridge");
 const { defaultGameRootHint, defaultInstallCandidates, normalizeGameRoot, resolveGameRoot } = require("./lib/game_paths");
 const { installSdkmod } = require("./lib/sdkmod_install");
-const { loadSettings, saveSettings } = require("./lib/app_settings");
+const { loadSettings, saveSettings, normalizeTheme } = require("./lib/app_settings");
 const { checkForUpdates } = require("./lib/update_check");
+const { applyGithubUpdate } = require("./lib/github_update");
+const { readSerialSource } = require("./lib/serial_sources");
 
 let mainWindow = null;
 let refreshTimer = null;
 let storedGameRoot = null;
+let storedTheme = "default";
 let settingsMode = "appdata";
 let settingsPath = null;
 let updateCache = null;
 let updateCheckedAt = 0;
+let quittingAfterRestore = false;
 const UPDATE_CACHE_MS = 15 * 60 * 1000;
 
 function applyStoredSettings(state) {
   storedGameRoot = state?.gameRoot || null;
+  storedTheme = normalizeTheme(state?.theme);
   settingsMode = state?.settingsMode || "appdata";
   settingsPath = state?.settingsPath || null;
 }
@@ -28,9 +33,16 @@ function loadStoredSettings() {
 }
 
 function persistStoredSettings(extra = {}) {
-  const saved = saveSettings(app, { gameRoot: storedGameRoot, ...extra });
+  const saved = saveSettings(app, {
+    gameRoot: storedGameRoot,
+    theme: storedTheme,
+    ...extra,
+  });
   settingsMode = saved.mode;
   settingsPath = saved.path;
+  if (extra.theme !== undefined) {
+    storedTheme = normalizeTheme(extra.theme);
+  }
 }
 
 function createWindow() {
@@ -143,6 +155,20 @@ app.on("window-all-closed", () => {
   }
 });
 
+app.on("before-quit", (event) => {
+  if (quittingAfterRestore) {
+    return;
+  }
+  event.preventDefault();
+  stopAutoRefresh();
+  postAction("desktop_session_end", {}, 4)
+    .catch(() => {})
+    .finally(() => {
+      quittingAfterRestore = true;
+      app.quit();
+    });
+});
+
 ipcMain.handle("sqbt:get-status", async () => refreshStatus());
 ipcMain.handle("sqbt:check-for-updates", async (_event, force, currentModVersion) =>
   getUpdateStatus(Boolean(force), currentModVersion || "")
@@ -183,13 +209,34 @@ ipcMain.handle("sqbt:get-setup", async () => ({
   candidates: defaultInstallCandidates(),
   storedGameRoot,
   setupDismissed: Boolean(loadSettings(app).setupDismissed),
+  theme: storedTheme,
   settingsMode,
   settingsPath,
   isPackaged: app.isPackaged,
 }));
 ipcMain.handle("sqbt:dismiss-setup", async () => {
-  saveSettings(app, { gameRoot: storedGameRoot, setupDismissed: true });
+  persistStoredSettings({ setupDismissed: true });
   return { ok: true };
+});
+ipcMain.handle("sqbt:set-theme", async (_event, theme) => {
+  storedTheme = normalizeTheme(theme);
+  persistStoredSettings({ theme: storedTheme });
+  return { ok: true, theme: storedTheme };
+});
+ipcMain.handle("sqbt:read-serial-source", async (_event, rawPath) => readSerialSource(rawPath));
+ipcMain.handle("sqbt:pick-serial-file", async () => {
+  const result = await dialog.showOpenDialog(mainWindow, {
+    title: "Select a serial list (.txt or .docx)",
+    properties: ["openFile"],
+    filters: [
+      { name: "Serial lists", extensions: ["txt", "docx", "csv", "md", "json", "log"] },
+      { name: "All files", extensions: ["*"] },
+    ],
+  });
+  if (result.canceled || !result.filePaths?.length) {
+    return { ok: false, cancelled: true };
+  }
+  return readSerialSource(result.filePaths[0]);
 });
 ipcMain.handle("sqbt:pick-game-folder", async () => {
   const result = await dialog.showOpenDialog(mainWindow, {
@@ -213,6 +260,37 @@ ipcMain.handle("sqbt:install-sdkmod", async () => {
     return outcome;
   } catch (error) {
     return { ok: false, message: `Mod folder update failed: ${String(error?.message || error)}` };
+  }
+});
+ipcMain.handle("sqbt:apply-github-update", async (_event, currentModVersion) => {
+  try {
+    const status = await getUpdateStatus(true, currentModVersion || "");
+    const outcome = await applyGithubUpdate({
+      zipUrl: status.zipUrl,
+      sdkmodUrl: status.sdkmodUrl,
+      zipName: status.zipName || status.sdkmodName,
+      gameRoot: storedGameRoot || undefined,
+      applyApp: Boolean(status.appUpdateAvailable),
+      packaged: app.isPackaged,
+      execPath: process.execPath,
+      pid: process.pid,
+      onProgress: (info) => {
+        if (mainWindow && !mainWindow.isDestroyed()) {
+          mainWindow.webContents.send("sqbt:update-progress", info);
+        }
+      },
+    });
+    if (outcome.ok && outcome.gameRoot) {
+      storedGameRoot = outcome.gameRoot;
+      persistStoredSettings();
+    }
+    updateCache = null;
+    if (outcome.restartApp) {
+      setTimeout(() => app.quit(), 900);
+    }
+    return outcome;
+  } catch (error) {
+    return { ok: false, message: `Update failed: ${String(error?.message || error)}` };
   }
 });
 ipcMain.handle("sqbt:open-external", async (_event, targetUrl) => {

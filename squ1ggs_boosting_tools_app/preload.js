@@ -11,8 +11,23 @@ contextBridge.exposeInMainWorld("sqbt", {
   getCatalog: (name, payload) => ipcRenderer.invoke("sqbt:get-catalog", name, payload),
   getSetup: () => ipcRenderer.invoke("sqbt:get-setup"),
   dismissSetup: () => ipcRenderer.invoke("sqbt:dismiss-setup"),
+  setTheme: (theme) => ipcRenderer.invoke("sqbt:set-theme", theme),
+  readSerialSource: (filePath) => ipcRenderer.invoke("sqbt:read-serial-source", filePath),
+  pickSerialFile: () => ipcRenderer.invoke("sqbt:pick-serial-file"),
   pickGameFolder: () => ipcRenderer.invoke("sqbt:pick-game-folder"),
-  installSdkmod: () => ipcRenderer.invoke("sqbt:install-sdkmod"),
+  installSdkmod: (options = {}) => ipcRenderer.invoke("sqbt:install-sdkmod", options || {}),
+  applyGithubUpdate: (currentModVersion = "") =>
+    ipcRenderer.invoke("sqbt:apply-github-update", currentModVersion || ""),
+  onUpdateProgress: (handler) => {
+    const listener = (_event, payload) => handler(payload);
+    ipcRenderer.on("sqbt:update-progress", listener);
+    return () => ipcRenderer.removeListener("sqbt:update-progress", listener);
+  },
+  onModSync: (handler) => {
+    const listener = (_event, payload) => handler(payload);
+    ipcRenderer.on("sqbt:mod-sync", listener);
+    return () => ipcRenderer.removeListener("sqbt:mod-sync", listener);
+  },
   openExternal: (url) => ipcRenderer.invoke("sqbt:open-external", url),
   snapWindow: (edge = "right") => ipcRenderer.invoke("sqbt:snap-window", edge),
   onStatus: (handler) => {

@@ -37,6 +37,30 @@ function trustedReleaseUrl(value) {
   return candidate.startsWith(prefix) ? candidate : UPDATE_PAGE_URL;
 }
 
+function trustedDownloadUrl(value) {
+  const candidate = String(value || "");
+  const prefixes = [
+    `https://github.com/${UPDATE_REPOSITORY}/releases/download/`,
+    `https://github.com/${UPDATE_REPOSITORY}/releases/latest/download/`,
+  ];
+  return prefixes.some((prefix) => candidate.startsWith(prefix)) ? candidate : "";
+}
+
+function pickReleaseAssets(assets) {
+  const list = Array.isArray(assets) ? assets : [];
+  const trusted = list.filter((row) => trustedDownloadUrl(row?.browser_download_url));
+  const portable =
+    trusted.find((row) => /portable/i.test(String(row.name || "")) && /\.zip$/i.test(String(row.name || ""))) ||
+    trusted.find((row) => /\.zip$/i.test(String(row.name || "")));
+  const sdkmod = trusted.find((row) => /\.sdkmod$/i.test(String(row.name || "")));
+  return {
+    zipUrl: trustedDownloadUrl(portable?.browser_download_url),
+    zipName: String(portable?.name || ""),
+    sdkmodUrl: trustedDownloadUrl(sdkmod?.browser_download_url),
+    sdkmodName: String(sdkmod?.name || ""),
+  };
+}
+
 function parseLatestModVersion(releaseBody) {
   const text = String(releaseBody || "");
   // Release notes use shapes like: "mod **3.6.47**" / "mod 3.6.47+".
@@ -97,6 +121,7 @@ async function checkForUpdates({
     const modUpdateAvailable =
       Boolean(installedMod && latestModVersion) &&
       compareVersions(latestModVersion, installedMod) > 0;
+    const assets = pickReleaseAssets(release?.assets);
 
     return {
       ok: true,
@@ -111,6 +136,11 @@ async function checkForUpdates({
       releaseUrl: trustedReleaseUrl(release?.html_url),
       publishedAt: String(release?.published_at || ""),
       repository: UPDATE_REPOSITORY,
+      zipUrl: assets.zipUrl,
+      zipName: assets.zipName,
+      sdkmodUrl: assets.sdkmodUrl,
+      sdkmodName: assets.sdkmodName,
+      canApply: Boolean(assets.zipUrl || assets.sdkmodUrl),
     };
   } finally {
     clearTimeout(timer);
@@ -124,4 +154,6 @@ module.exports = {
   compareVersions,
   normalizeVersion,
   parseLatestModVersion,
+  pickReleaseAssets,
+  trustedDownloadUrl,
 };

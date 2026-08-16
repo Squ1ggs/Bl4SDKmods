@@ -36,25 +36,68 @@
           <img src="assets/bl4/vh-robodealer.png" alt="C4SH (Robo Dealer)" title="C4SH · Robo Dealer" />
         </div>
         <button id="snap-right-btn" type="button" class="ghost small" title="Dock to the right half of this monitor (Win11-friendly)">Snap right</button>
+        <button id="theme-toggle-btn" type="button" class="ghost small" title="Toggle Scooter's Toolbox look">Scooters theme</button>
+        <button id="report-issue-btn" type="button" class="ghost small" title="Report a bug on GitHub or ask on Discord">Report issue</button>
         <button id="show-setup-btn" type="button" class="ghost small hidden">Setup</button>
         <button id="refresh-btn" type="button">Refresh status</button>
       </div>
     </header>
 
+    <dialog id="report-issue-dialog" class="report-issue-dialog">
+      <form method="dialog" class="report-issue-panel">
+        <p class="report-issue-kicker">Feedback</p>
+        <h2>Report an issue</h2>
+        <p class="muted small">
+          Bugs are easiest to track on GitHub (versions are filled in for you).
+          Discord is better for quick questions.
+        </p>
+        <div class="report-issue-actions">
+          <button id="report-github-btn" type="button" class="primary">Open GitHub issue</button>
+          <button id="report-discord-btn" type="button" class="ghost">Ask on Discord</button>
+          <button value="cancel" type="submit" class="ghost small">Close</button>
+        </div>
+      </form>
+    </dialog>
+
     <aside id="update-card" class="update-card hidden" role="status" aria-live="polite">
       <img class="update-card-icon" src="assets/bl4/tab-home.png" alt="" aria-hidden="true" />
       <div class="update-card-copy">
         <p class="update-kicker">Pending update</p>
-        <h2 id="update-title">Download the new version from GitHub</h2>
+        <h2 id="update-title">Update available</h2>
         <p id="update-detail" class="muted small">
-          A newer Squ1ggs Boosting Tools release is available. Download it, then use Install / update mod folder.
+          A newer release is on GitHub. Newer EXEs auto-apply the Squ1ggs mod on launch.
         </p>
       </div>
       <div class="update-card-actions">
-        <button id="update-open-btn" type="button" class="primary">Download update</button>
+        <button id="update-open-btn" type="button" class="primary">Install update</button>
         <button id="update-dismiss-btn" type="button" class="ghost small" aria-label="Dismiss update notice">Later</button>
       </div>
     </aside>
+
+    <aside id="mod-sync-notice" class="mod-sync-notice hidden" role="status" aria-live="polite">
+      <div class="mod-sync-notice-body">
+        <p class="mod-sync-notice-kicker" id="mod-sync-notice-kicker">AUTO MOD SYNC</p>
+        <strong id="mod-sync-notice-title">Squ1ggs mod is current</strong>
+        <p id="mod-sync-notice-detail" class="muted small"></p>
+      </div>
+      <button id="mod-sync-notice-dismiss" type="button" class="ghost small">Got it</button>
+    </aside>
+
+    <section id="start-guide" class="card start-guide-card" aria-live="polite">
+      <p class="start-guide-kicker">Start here</p>
+      <h2 id="start-guide-title">What to do first</h2>
+      <ol id="start-guide-steps" class="start-guide-steps">
+        <li><strong>Set your Borderlands 4 install folder</strong> — open <strong>Setup</strong> and press <strong>Set install folder</strong>. Pick the folder that contains <code>Borderlands4.exe</code> / <code>OakGame</code> (Steam on another drive is fine, e.g. <code>D:\SteamLibrary\steamapps\common\Borderlands 4</code>).</li>
+        <li><strong>Install SDK once</strong> if prompted — then fully restart Borderlands 4.</li>
+        <li><strong>Load a character</strong> — get in-world. The main menu will not unlock the buttons.</li>
+        <li><strong>Wait for Online</strong> — this window should say <strong>Connected</strong>. Then use the tabs.</li>
+      </ol>
+      <p class="start-guide-foot" id="start-guide-foot">
+        Stuck Offline? Set the correct install folder → fully restart the game → load a character → Refresh status.
+        Other tools: <a href="https://github.com/Squ1ggs/Bl4SDKmods">GitHub</a>
+        · save editor <a href="https://scooterstoolbox.com">scooterstoolbox.com</a>
+      </p>
+    </section>
 
     <section class="card status-card">
       <div class="status-row">
@@ -104,20 +147,41 @@
         <h2>Setup</h2>
         <button id="dismiss-setup-btn" type="button" class="ghost small">Hide setup</button>
       </div>
+
+      <div id="mod-sync-banner" class="mod-sync-banner is-need-path" data-state="need-path" aria-live="polite">
+        <p class="mod-sync-kicker" id="mod-sync-kicker">AUTO MOD SYNC</p>
+        <p class="mod-sync-title" id="mod-sync-title">Point this app at Borderlands 4</p>
+        <p class="mod-sync-detail" id="mod-sync-detail">
+          Browse to your game folder once. After that, launching this EXE auto-copies the Squ1ggs mod when the version changes.
+        </p>
+        <p class="mod-sync-versions" id="mod-sync-versions"></p>
+      </div>
+
+      <div class="install-location-card" id="install-location-card">
+        <p class="install-location-kicker">Borderlands 4 install location</p>
+        <p class="install-location-title">Where is <code>Borderlands4.exe</code>?</p>
+        <p class="install-location-detail" id="install-location-detail">
+          If Steam/Epic put the game on another drive, auto-detect may miss it — press
+          <strong>Set install folder</strong> and pick the folder that contains <code>OakGame</code>
+          (example: <code>D:\SteamLibrary\steamapps\common\Borderlands 4</code>).
+        </p>
+        <div class="setup-row install-location-row">
+          <input id="game-root" type="text" readonly placeholder="Not set — browse to your Borderlands 4 folder…" />
+          <button id="browse-game-btn" type="button" class="primary">Set install folder</button>
+        </div>
+        <p id="install-location-status" class="install-location-status muted small" aria-live="polite"></p>
+      </div>
+
       <p class="setup-attention" id="setup-attention">
-        <strong>First use:</strong> press <strong>Install / update mod folder</strong>, then
-        <strong>fully restart Borderlands 4</strong> before using any tools.
+        <strong>First use:</strong> set your Borderlands 4 install folder, then press
+        <strong>Install SDK + Squ1ggs mod</strong> if oak2 is missing.
+        Fully restart Borderlands 4, load a character, then wait for <strong>Online</strong>.
       </p>
-      <p class="muted">
-        Point at your <strong>Borderlands 4 game folder</strong> (the one that contains <code>OakGame</code> and
-        <code>sdk_mods</code>) — not the <code>sdk_mods</code> folder itself. If you pick <code>sdk_mods</code> by
-        mistake, the app will fix it automatically.
-      </p>
+      <p id="sdk-status-line" class="muted small" aria-live="polite"></p>
       <p id="settings-mode-note" class="muted small"></p>
-      <div class="setup-row">
-        <input id="game-root" type="text" readonly placeholder="Auto-detect or browse…" />
-        <button id="browse-game-btn" type="button">Browse</button>
-        <button id="install-mod-btn" type="button" class="primary">Install / update mod folder</button>
+      <div class="setup-actions">
+        <button id="install-mod-btn" type="button" class="primary">Install SDK + Squ1ggs mod</button>
+        <button id="update-base-sdk-btn" type="button" class="ghost hidden">Update base SDK</button>
       </div>
       <p id="setup-message" class="setup-message" aria-live="polite"></p>
     </section>
@@ -130,6 +194,8 @@
       <span>Squ1ggs Boosting Tools</span>
       <span class="footer-dot" aria-hidden="true"></span>
       <span id="app-version">Version checking…</span>
+      <span class="footer-dot" aria-hidden="true"></span>
+      <button id="report-issue-footer-btn" type="button" class="footer-link-btn">Report issue</button>
       <span class="footer-dot" aria-hidden="true"></span>
       <span>Borderlands 4</span>
     </footer>

@@ -18,19 +18,45 @@ const actionMessage = document.getElementById("action-message");
 const gameRootInput = document.getElementById("game-root");
 const refreshBtn = document.getElementById("refresh-btn");
 const snapRightBtn = document.getElementById("snap-right-btn");
+const themeToggleBtn = document.getElementById("theme-toggle-btn");
 const browseGameBtn = document.getElementById("browse-game-btn");
 const installModBtn = document.getElementById("install-mod-btn");
+const updateBaseSdkBtn = document.getElementById("update-base-sdk-btn");
+const sdkStatusLine = document.getElementById("sdk-status-line");
+const setupAttention = document.getElementById("setup-attention");
 const dismissSetupBtn = document.getElementById("dismiss-setup-btn");
 const showSetupBtn = document.getElementById("show-setup-btn");
 const setupCard = document.getElementById("setup-card");
+const installLocationCard = document.getElementById("install-location-card");
+const installLocationDetail = document.getElementById("install-location-detail");
+const installLocationStatus = document.getElementById("install-location-status");
+const modSyncBanner = document.getElementById("mod-sync-banner");
+const modSyncKicker = document.getElementById("mod-sync-kicker");
+const modSyncTitle = document.getElementById("mod-sync-title");
+const modSyncDetail = document.getElementById("mod-sync-detail");
+const modSyncVersions = document.getElementById("mod-sync-versions");
 const tabBar = document.getElementById("tab-bar");
 const tabContent = document.getElementById("tab-content");
 const updateCard = document.getElementById("update-card");
 const updateTitle = document.getElementById("update-title");
 const updateDetail = document.getElementById("update-detail");
 const updateOpenBtn = document.getElementById("update-open-btn");
+const modSyncNotice = document.getElementById("mod-sync-notice");
+const modSyncNoticeKicker = document.getElementById("mod-sync-notice-kicker");
+const modSyncNoticeTitle = document.getElementById("mod-sync-notice-title");
+const modSyncNoticeDetail = document.getElementById("mod-sync-notice-detail");
+const modSyncNoticeDismiss = document.getElementById("mod-sync-notice-dismiss");
 const updateDismissBtn = document.getElementById("update-dismiss-btn");
 const appVersion = document.getElementById("app-version");
+const reportIssueBtn = document.getElementById("report-issue-btn");
+const reportIssueFooterBtn = document.getElementById("report-issue-footer-btn");
+const reportIssueDialog = document.getElementById("report-issue-dialog");
+const reportGithubBtn = document.getElementById("report-github-btn");
+const reportDiscordBtn = document.getElementById("report-discord-btn");
+const startGuide = document.getElementById("start-guide");
+const startGuideTitle = document.getElementById("start-guide-title");
+const startGuideFoot = document.getElementById("start-guide-foot");
+const startGuideSteps = document.getElementById("start-guide-steps");
 
 let latestStatus = null;
 let actionBusy = false;
@@ -39,6 +65,12 @@ let activeTabId = "home";
 let fieldValues = {};
 let progressPollTimer = null;
 let setupDismissed = false;
+let setupPinned = false;
+let lastSeenConnected = false;
+let lastSeenModVersion = "";
+let currentTheme = "default";
+let lastBaseSdk = null;
+let lastModSync = null;
 const catalogCache = new Map();
 const catalogRowCache = new Map();
 const multiselectState = new Map();
@@ -53,43 +85,48 @@ let pendingTargetUntil = 0;
 let lastProgressHtml = "";
 let lastChallengeStatus = null;
 let lastUvhmStatus = null;
+let lastSpawnAllStatus = null;
 let pendingUpdateUrl = "";
 const STATUS_CATALOG_TABS = new Set(["serials", "world", "vehicle", "progression"]);
 const poolBrowserSignatures = new Map();
 
 const TAB_ICONS = Object.freeze({
   home: "assets/bl4/tab-home.png",
-  player: "assets/bl4/tab-player.png",
-  keybinds: "emoji:⌨️",
+  player: "assets/icons/tab-player.svg",
+  keybinds: "assets/icons/tab-keybinds.svg",
   progression: "assets/bl4/tab-progression.png",
   loot: "assets/bl4/tab-loot.png",
   serials: "assets/bl4/tab-serials.png",
-  mobility: "emoji:🏃",
-  vehicle: "emoji:🏎️",
+  mobility: "assets/icons/tab-mobility.svg",
+  vehicle: "assets/icons/tab-vehicle.svg",
   damage: "assets/bl4/tab-damage.png",
   resources: "assets/bl4/tab-resources.png",
   world: "assets/bl4/tab-world.png",
-  mob_io: "emoji:👾",
-  activity: "assets/bl4/tab-support.png",
+  mob_io: "assets/icons/tab-mob.svg",
+  loot_shapes: "assets/icons/tab-shapes.svg",
+  faafo: "assets/bl4/tab-damage.png",
+  activity: "assets/icons/tab-support.svg",
 });
 
 const ACTION_ICON_RULES = Object.freeze([
-  [/\bcash\b/i, "assets/bl4/tab-cash.png"],
-  [/cosmetic/i, "emoji:🎨"],
-  [/max_sdu|backpack|bank/i, "emoji:🎒"],
-  [/open.*reward|rewards_open/i, "emoji:🎁"],
+  [/force.?fly|infinite.?jump|noclip|no.?target|glide|dash|\bfly\b|jump|walkable|time.?dilation|mobility_/i, "assets/icons/tab-mobility.svg"],
+  [/\bfreecam\b|debug.?cam/i, "assets/icons/tab-mobility.svg"],
+  [/teleport|me_to_|_to_me|party.?slot/i, "assets/bl4/tab-world.png"],
+  [/loot_shape|place.?fully|quick.?arrange|shape|type.?pile|rarity.?lane/i, "assets/icons/tab-shapes.svg"],
+  [/golden.?chest/i, "assets/bl4/tab-loot.png"],
   [/shiny/i, "assets/bl4/tab-home.png"],
-  [/freecam/i, "emoji:🎥"],
-  [/teleport|me.*target|target.*me/i, "emoji:↔️"],
-  [/spawn|loot|drop|golden_chest/i, "assets/bl4/tab-loot.png"],
-  [/serial|deliver|mail|reward/i, "assets/bl4/tab-serials.png"],
-  [/currency|cash|eridium|resource|wallet/i, "assets/bl4/tab-resources.png"],
+  [/fog|fast.?travel|travel_map|travel_station|world_text|barrel_logo/i, "assets/bl4/tab-world.png"],
+  [/spawn.?all|item.?pool|world.?spawn|drop.?all|\bspawn\b/i, "assets/bl4/tab-loot.png"],
+  [/\bcash\b/i, "assets/bl4/tab-cash.png"],
+  [/cosmetic|max_sdu|backpack|bank|\bsdu\b/i, "assets/icons/tab-player.svg"],
+  [/open.*reward|rewards_open/i, "assets/bl4/tab-serials.png"],
+  [/serial|deliver|mail|\breward\b/i, "assets/bl4/tab-serials.png"],
+  [/currency|eridium|resource|wallet/i, "assets/bl4/tab-resources.png"],
   [/experience|challenge|uvhm|progress/i, "assets/bl4/tab-progression.png"],
-  [/damage|perk|god|rarity/i, "assets/bl4/tab-damage.png"],
-  [/vehicle/i, "emoji:🏎️"],
-  [/mobility|teleport|freecam|fly|speed|jump|glide|dash/i, "emoji:🏃"],
-  [/mob|actor|npc|boss|\bio\b/i, "emoji:👾"],
-  [/player|target|cosmetic|sdu|max_all|inventory/i, "assets/bl4/tab-player.png"],
+  [/god.?mode|infinite.?ammo|devperk|damage.?look|faafo_|lock.?look|lock.?move|invert.?look/i, "assets/bl4/tab-damage.png"],
+  [/vehicle|weapons.?restricted/i, "assets/icons/tab-vehicle.svg"],
+  [/\bmobs?\b|\bnpc\b|\bboss\b|\bio\b|encounter|char_/i, "assets/icons/tab-mob.svg"],
+  [/max_all|\bplayer\b/i, "assets/icons/tab-player.svg"],
 ]);
 
 function setIconLabel(element, label, iconPath = "") {
@@ -110,22 +147,32 @@ function setIconLabel(element, label, iconPath = "") {
 }
 
 function actionIcon(actionDef) {
-  const searchable = `${actionDef?.action || ""} ${actionDef?.label || ""} ${JSON.stringify(actionDef?.payload || {})}`;
+  if (actionDef?.icon) return actionDef.icon;
+  const searchable = `${actionDef?.action || ""} ${actionDef?.label || ""}`;
   return ACTION_ICON_RULES.find(([pattern]) => pattern.test(searchable))?.[1] || "";
 }
 
 function actionAccent(actionDef) {
   const searchable = `${actionDef?.action || ""} ${actionDef?.label || ""}`;
   if (/spawn|loot|drop|serial|deliver|mail|cosmetic|rarity|reward/i.test(searchable)) return "pink";
-  if (/currency|cash|eridium|experience|challenge|player|target|mobility|teleport|freecam|vehicle|mob|npc|boss/i.test(searchable)) {
-    return "cyan";
-  }
-  return "violet";
+  return "cyan";
 }
 
 function decorateActionButton(button, label, actionDef) {
   button.dataset.accent = actionAccent(actionDef);
   setIconLabel(button, label, actionIcon(actionDef));
+}
+
+function friendlyActionError(text) {
+  const raw = String(text || "");
+  if (/TypeError|unexpected keyword|got an unexpected/i.test(raw)) {
+    return (
+      "The tools list in this window is out of date with the game. " +
+      "Press Refresh status (top-right). If you just installed an SDK update, fully restart " +
+      "Borderlands 4 first, load a character, then wait for Online — this window should reload itself."
+    );
+  }
+  return raw;
 }
 
 function actionsEnabled() {
@@ -136,53 +183,128 @@ function actionsEnabled() {
   return Boolean(raw.actions_available || raw.has_local_pc || (raw.players && raw.players.length));
 }
 
+let pendingCanApply = false;
+let pendingOpenSetup = false;
+let updateApplying = false;
+let knownAppVersion = "";
+
+const REPORT_GITHUB_NEW = "https://github.com/Squ1ggs/Bl4SDKmods/issues/new";
+const REPORT_DISCORD = "https://discord.gg/DqetrAK2sJ";
+
+function openReportIssueDialog() {
+  if (reportIssueDialog && typeof reportIssueDialog.showModal === "function") {
+    reportIssueDialog.showModal();
+    return;
+  }
+  window.sqbt.openExternal(buildGithubIssueUrl());
+}
+
+function buildGithubIssueUrl() {
+  const exe =
+    knownAppVersion ||
+    String(appVersion?.textContent || "")
+      .replace(/^v/i, "")
+      .replace(/version unavailable/i, "")
+      .trim() ||
+    "unknown";
+  const mod = String(latestStatus?.raw?.mod_version || "").trim() || "unknown";
+  const connection = latestStatus?.connected
+    ? "Connected"
+    : String(latestStatus?.state || "Offline");
+  const session = String(latestStatus?.raw?.session || latestStatus?.session || "").trim() || "—";
+  const body = [
+    "### What went wrong",
+    "",
+    "(What broke / what you expected)",
+    "",
+    "### Steps to reproduce",
+    "1.",
+    "2.",
+    "",
+    "### Versions (auto-filled from the app)",
+    `- EXE: v${exe}`,
+    `- Mod: ${mod}`,
+    `- Game connection: ${connection}`,
+    `- Session: ${session}`,
+    "",
+    "### Extra notes",
+    "",
+    "(Optional: screenshot, which tab/button, host/client)",
+    "",
+  ].join("\n");
+  const params = new URLSearchParams({
+    title: "[SQBT] ",
+    body,
+  });
+  return `${REPORT_GITHUB_NEW}?${params.toString()}`;
+}
+
+function showSetupCard() {
+  setupPinned = true;
+  if (setupCard) setupCard.classList.remove("is-hidden");
+  if (showSetupBtn) showSetupBtn.classList.add("hidden");
+  setupCard?.scrollIntoView({ behavior: "smooth", block: "nearest" });
+}
+
 function renderUpdateStatus(result) {
   const current = String(result?.currentVersion || "").replace(/^v/i, "");
+  if (current) knownAppVersion = current;
   if (appVersion) {
     appVersion.textContent = current ? `v${current}` : "Version unavailable";
   }
 
   if (!result?.ok || !result.updateAvailable || !result.latestVersion) {
     pendingUpdateUrl = "";
+    pendingCanApply = false;
+    pendingOpenSetup = false;
     updateCard?.classList.add("hidden");
     return;
   }
 
   const latest = String(result.latestVersion).replace(/^v/i, "");
   pendingUpdateUrl = result.releaseUrl || "";
+  pendingCanApply = Boolean(result.canApply);
   const appBehind = Boolean(result.appUpdateAvailable);
   const modBehind = Boolean(result.modUpdateAvailable);
+  // Mod updates come with a newer EXE (auto-sync on launch) — never send people to Setup.
+  pendingOpenSetup = false;
 
   if (updateTitle) {
     if (appBehind) {
-      updateTitle.textContent = `Download v${latest} from GitHub`;
+      updateTitle.textContent = pendingCanApply
+        ? `Install app v${latest} from GitHub`
+        : `Download v${latest} from GitHub`;
     } else if (modBehind) {
-      updateTitle.textContent = `Download the latest release (mod v${result.latestModVersion})`;
+      updateTitle.textContent = `Newer Squ1ggs mod on GitHub (v${result.latestModVersion || latest})`;
     } else {
-      updateTitle.textContent = `Download the new version from GitHub`;
+      updateTitle.textContent = pendingCanApply
+        ? `Install the new version from GitHub`
+        : `Download the new version from GitHub`;
     }
   }
   if (updateDetail) {
     const lines = [];
     if (appBehind) {
       lines.push(
-        `Your app is v${current || "unknown"}; GitHub has v${latest}. Download the portable zip, replace this EXE, then press Install / update mod folder and fully restart Borderlands 4.`
+        pendingCanApply
+          ? `Your app is v${current || "unknown"}; GitHub has v${latest}. Install update downloads the portable and replaces this app — the new EXE auto-applies the Squ1ggs mod.`
+          : `Your app is v${current || "unknown"}; GitHub has v${latest}. This release has no zip yet — open GitHub and install manually.`
       );
     }
     if (modBehind) {
       lines.push(
-        `Your mod is v${result.currentModVersion || "unknown"}; GitHub release includes mod v${result.latestModVersion}. Download the latest portable if needed, then Install / update mod folder and fully restart Borderlands 4.`
+        `Your live mod is v${result.currentModVersion || "unknown"}; GitHub has mod v${result.latestModVersion || latest}. Grab the newer portable EXE — it auto-copies the mod on launch. No Setup click needed.`
       );
     }
     if (!lines.length) {
-      lines.push(
-        `A newer Squ1ggs Boosting Tools release is on GitHub (v${latest}). Download it, then use Install / update mod folder.`
-      );
+      lines.push(`A newer Squ1ggs Boosting Tools release is on GitHub (v${latest}).`);
     }
+    lines.push("Fully restart Borderlands 4 after the mod folder updates.");
     updateDetail.textContent = lines.join(" ");
   }
   if (updateOpenBtn) {
-    updateOpenBtn.textContent = "Download update";
+    updateOpenBtn.textContent = pendingCanApply ? "Install update" : "Open GitHub";
+    updateOpenBtn.disabled = updateApplying;
   }
   updateCard?.classList.remove("hidden");
 }
@@ -247,10 +369,7 @@ function setStatusUi(payload) {
       (payload.detail || "") + " · Fully restart Borderlands 4 to load the latest mod version.";
     statusDetail.classList.add("attention");
   } else if (!payload?.connected) {
-    const detail = String(payload?.detail || "");
-    if (/install|sdk mod|restart/i.test(detail)) {
-      statusDetail.classList.add("attention");
-    }
+    statusDetail.classList.add("attention");
   }
   metaSession.textContent = raw.session || "—";
   const targetIdx = effectiveTargetIndex(raw);
@@ -287,15 +406,34 @@ function setStatusUi(payload) {
   if (payload?.connected && STATUS_CATALOG_TABS.has(activeTabId)) {
     window.setTimeout(() => reloadCatalogSelects(), 0);
   }
-  // Connected + game path known → never leave users stuck on the setup card.
-  if (payload?.connected && (gameRootInput?.value || "").trim()) {
-    hideSetupAfterConfigured(gameRootInput.value);
+  // Collapse Setup once when we go Online. Keep it hidden on later polls unless
+  // the user clicked Setup. Status polls used to snap the card back open.
+  if (!setupPinned && payload?.connected && !lastSeenConnected) {
+    hideSetupAfterConfigured(gameRootInput?.value || "");
+  }
+  // Drop Home "Start here" once connected (manifest section + top card).
+  if (payload?.connected && !lastSeenConnected && activeTabId === "home" && manifest?.tabs?.length) {
+    window.setTimeout(() => {
+      const current = manifest.tabs.find((row) => row.id === activeTabId);
+      if (current) renderTab(current);
+    }, 0);
   }
   // Once the live mod version is known, re-check GitHub so an outdated mod
   // (even on a current EXE) can still show the update card.
   if (payload?.connected && raw.mod_version) {
     window.setTimeout(() => refreshUpdateStatus(false), 0);
   }
+  updateStartGuide();
+  const connectedNow = Boolean(payload?.connected);
+  const modVersion = String(raw.mod_version || "");
+  if (
+    connectedNow &&
+    (!lastSeenConnected || (modVersion && modVersion !== lastSeenModVersion))
+  ) {
+    if (modVersion) lastSeenModVersion = modVersion;
+    loadManifest().catch(() => {});
+  }
+  lastSeenConnected = connectedNow;
 }
 
 function renderRoster(players, targetIndex) {
@@ -828,15 +966,18 @@ function collectPayload(sectionId, actionDef) {
       payload.open_rewards = String(value).toLowerCase() === "yes" || value === true;
       continue;
     }
+    if (field.key === "include_consumables" || field.key === "random_spread") {
+      payload[field.key] = String(value).toLowerCase() === "yes" || value === true;
+      continue;
+    }
     if (field.key === "level_override") {
       payload.level_override = String(value).toLowerCase() === "yes" || value === true;
       continue;
     }
     if (field.type === "textarea" && field.key === "serials") {
-      payload.serials = String(value)
-        .split(/\r?\n/)
-        .map((line) => line.trim())
-        .filter((line) => line.startsWith("@U") || (line.includes(",") && /\d/.test(line)));
+      // Placeholder — resolved asynchronously in runAction so file paths work too.
+      payload.serials = String(value);
+      payload.__serials_raw = String(value);
       continue;
     }
     payload[field.key] = value;
@@ -883,6 +1024,36 @@ async function runAction(action, payload, confirmText, context = {}) {
   actionMessage.className = "action-message muted";
   actionMessage.textContent = "Running…";
   const finalPayload = enrichPayload(action, payload);
+  if (action === "deliver_serials") {
+    const raw =
+      finalPayload.__serials_raw != null
+        ? String(finalPayload.__serials_raw)
+        : Array.isArray(finalPayload.serials)
+          ? finalPayload.serials.join("\n")
+          : String(finalPayload.serials || "");
+    // Multiselect / send-list already supplies a clean serial array — only resolve
+    // text when the payload still looks like pasted text / file paths.
+    const needsResolve =
+      typeof finalPayload.serials === "string" ||
+      (Array.isArray(finalPayload.serials) &&
+        finalPayload.serials.some((line) => looksLikeSerialFilePath(String(line || ""))));
+    if (needsResolve || finalPayload.__serials_raw != null) {
+      const resolved = await resolveSerialInputText(raw);
+      delete finalPayload.__serials_raw;
+      if (!resolved.serials.length) {
+        actionBusy = false;
+        refreshActionButtons();
+        actionMessage.className = "action-message error";
+        actionMessage.textContent =
+          resolved.message ||
+          "No usable serials found. Paste @U codes or a .txt / .docx path.";
+        return;
+      }
+      finalPayload.serials = resolved.serials;
+    } else {
+      delete finalPayload.__serials_raw;
+    }
+  }
   let timeout = 12;
   if (action === "shiny_drop_all") {
     timeout = 20;
@@ -918,6 +1089,7 @@ async function runAction(action, payload, confirmText, context = {}) {
   }
   if (
     (action === "spawn_mobs" && !(finalPayload.codes || []).length) ||
+    (action === "bms_group_add" && !(finalPayload.codes || []).length) ||
     (action === "spawn_ios" && !(finalPayload.cmds || []).length)
   ) {
     actionMessage.className = "action-message error";
@@ -945,7 +1117,7 @@ async function runAction(action, payload, confirmText, context = {}) {
     if (data?.ok === false || httpStatus === 202) {
       actionMessage.className = "action-message error";
     }
-    actionMessage.textContent = data?.message || JSON.stringify(data);
+    actionMessage.textContent = friendlyActionError(data?.message || JSON.stringify(data));
     if (action === "activity_log" && data?.lines) {
       renderActivityLog(data.lines);
     }
@@ -959,7 +1131,15 @@ async function runAction(action, payload, confirmText, context = {}) {
     if (action.startsWith("tuning_") && data?.values) {
       applyFieldValues(data.values);
     }
-    if (action === "challenge_bulk_start" || action === "uvhm_start" || action === "uvhm_start_all") {
+    if (action === "black_market" && data?.values) {
+      applyFieldValues(data.values);
+    }
+    if (
+      action === "challenge_bulk_start" ||
+      action === "uvhm_start" ||
+      action === "uvhm_start_all" ||
+      action === "spawn_item_pool_all"
+    ) {
       const panel = document.getElementById("sqbt-progress-panel");
       if (panel) {
         panel.classList.remove("hidden");
@@ -970,6 +1150,16 @@ async function runAction(action, payload, confirmText, context = {}) {
             index: 0,
             total: 1,
             message: "Starting…",
+          };
+        } else if (action === "spawn_item_pool_all") {
+          lastSpawnAllStatus = {
+            active: true,
+            queued: true,
+            index: 0,
+            total: Math.max(1, Number(data?.queued || 1)),
+            ok: 0,
+            failed: 0,
+            message: data?.message || "Queuing filtered pools…",
           };
         } else {
           lastUvhmStatus = {
@@ -982,7 +1172,7 @@ async function runAction(action, payload, confirmText, context = {}) {
           };
         }
         lastProgressHtml = "";
-        renderProgressPanel(null, null);
+        renderProgressPanel(null, null, null);
       }
       startProgressPoll();
     }
@@ -1015,10 +1205,13 @@ async function runAction(action, payload, confirmText, context = {}) {
       refreshMultiselectSection(context.sectionId, context.config || { catalog: "serial_store" });
     }
     if (action === "challenge_bulk_status") {
-      renderProgressPanel(data?.challenge, null);
+      renderProgressPanel(data?.challenge, null, null);
     }
     if (action === "uvhm_status") {
-      renderProgressPanel(null, data?.uvhm);
+      renderProgressPanel(null, data?.uvhm, null);
+    }
+    if (action === "spawn_item_pool_status" || action === "spawn_item_pool_cancel") {
+      renderProgressPanel(null, null, data?.spawn_all);
     }
   } catch (error) {
     const text = String(error?.message || error);
@@ -1029,7 +1222,7 @@ async function runAction(action, payload, confirmText, context = {}) {
         "Fully restart Borderlands 4, wait for it to finish loading, then retry.";
     } else {
       actionMessage.className = "action-message error";
-      actionMessage.textContent = text;
+      actionMessage.textContent = friendlyActionError(text);
     }
   } finally {
     actionBusy = false;
@@ -1066,16 +1259,22 @@ function isUvhmBusy(uvhm) {
   return Boolean(uvhm && (uvhm.active || uvhm.queued || uvhm.running));
 }
 
-function renderProgressPanel(challenge, uvhm) {
+function isSpawnAllBusy(spawnAll) {
+  return Boolean(spawnAll && (spawnAll.active || spawnAll.queued));
+}
+
+function renderProgressPanel(challenge, uvhm, spawnAll) {
   const panel = document.getElementById("sqbt-progress-panel");
   if (!panel) return;
 
   // null means keep cached value (manual status for one job must not wipe the other).
   if (challenge !== null) lastChallengeStatus = challenge;
   if (uvhm !== null) lastUvhmStatus = uvhm;
+  if (spawnAll !== null) lastSpawnAllStatus = spawnAll;
 
   const challengeState = lastChallengeStatus;
   const uvhmState = lastUvhmStatus;
+  const spawnState = lastSpawnAllStatus;
 
   const clampPct = (value, total) => {
     const safeTotal = Math.max(1, Number(total || 0));
@@ -1085,7 +1284,8 @@ function renderProgressPanel(challenge, uvhm) {
 
   const challengeBusy = isChallengeBusy(challengeState);
   const uvhmBusy = isUvhmBusy(uvhmState);
-  const busy = challengeBusy || uvhmBusy;
+  const spawnBusy = isSpawnAllBusy(spawnState);
+  const busy = challengeBusy || uvhmBusy || spawnBusy;
 
   let html = "";
   if (challengeBusy) {
@@ -1108,6 +1308,16 @@ function renderProgressPanel(challenge, uvhm) {
       <div class="progress-bar"><span style="width:${pct}%"></span></div>
       <p class="progress-meta muted">${detail}</p>`;
   }
+  if (spawnBusy) {
+    const total = Math.max(1, Number(spawnState.total || 0));
+    const index = Math.max(0, Number(spawnState.index || 0));
+    const pct = clampPct(index, total);
+    const detail = spawnState.message || `Queued · ${index}/${total}`;
+    html += `<h4>Spawn all filtered</h4>
+      <div class="progress-bar"><span style="width:${pct}%"></span></div>
+      <p class="progress-meta muted">${index}/${total} · OK ${spawnState.ok || 0} · fail ${spawnState.failed || 0}</p>
+      <p class="progress-meta muted">${detail}</p>`;
+  }
 
   let nextHtml = html;
   if (busy) {
@@ -1115,6 +1325,9 @@ function renderProgressPanel(challenge, uvhm) {
   } else if (activeTabId === "progression") {
     panel.classList.remove("hidden");
     nextHtml = `<p class="muted">No active challenge or UVHM job. Start one below.</p>`;
+  } else if (activeTabId === "loot") {
+    panel.classList.remove("hidden");
+    nextHtml = `<p class="muted">No Spawn All Filtered job running.</p>`;
   } else {
     panel.classList.add("hidden");
     nextHtml = "";
@@ -1130,17 +1343,35 @@ function renderProgressPanel(challenge, uvhm) {
 async function pollProgressOnce() {
   if (!actionsEnabled()) return;
   try {
-    const [challengeRes, uvhmRes] = await Promise.all([
+    const spawnBusyHint = isSpawnAllBusy(lastSpawnAllStatus);
+    if (spawnBusyHint) {
+      const spawnRes = await window.sqbt.postAction("spawn_item_pool_status", {});
+      lastSpawnAllStatus = spawnRes.data?.spawn_all ?? null;
+      renderProgressPanel(null, null, null);
+      if (isSpawnAllBusy(lastSpawnAllStatus)) {
+        if (!progressPollTimer) {
+          progressPollTimer = setInterval(() => {
+            pollProgressOnce();
+          }, 1200);
+        }
+      } else {
+        stopProgressPoll();
+      }
+      return;
+    }
+    const [challengeRes, uvhmRes, spawnRes] = await Promise.all([
       window.sqbt.postAction("challenge_bulk_status", {}),
       window.sqbt.postAction("uvhm_status", {}),
+      window.sqbt.postAction("spawn_item_pool_status", {}),
     ]);
     const challenge = challengeRes.data?.challenge ?? null;
     const uvhm = uvhmRes.data?.uvhm ?? null;
-    // Poll always refreshes both caches (unlike manual single-job status).
+    const spawnAll = spawnRes.data?.spawn_all ?? null;
     lastChallengeStatus = challenge;
     lastUvhmStatus = uvhm;
-    renderProgressPanel(null, null);
-    const busy = isChallengeBusy(challenge) || isUvhmBusy(uvhm);
+    lastSpawnAllStatus = spawnAll;
+    renderProgressPanel(null, null, null);
+    const busy = isChallengeBusy(challenge) || isUvhmBusy(uvhm) || isSpawnAllBusy(spawnAll);
     if (busy) {
       if (!progressPollTimer) {
         progressPollTimer = setInterval(() => {
@@ -1286,14 +1517,145 @@ function reloadCatalogSelects() {
   }
 }
 
+function bindExternalLinks(root) {
+  if (!root) return;
+  for (const link of root.querySelectorAll("a[href]")) {
+    if (link.dataset.externalBound) continue;
+    link.dataset.externalBound = "1";
+    link.addEventListener("click", (event) => {
+      event.preventDefault();
+      const href = link.getAttribute("href");
+      if (href) window.sqbt.openExternal(href);
+    });
+  }
+}
+
+function updateStartGuide() {
+  if (!startGuide) return;
+  const connected = Boolean(
+    latestStatus?.connected ||
+      ["ready", "connected", "in_menu_or_loading"].includes(String(latestStatus?.state || ""))
+  );
+  // Hide the whole Start here card as soon as the bridge is Online.
+  startGuide.hidden = connected;
+  startGuide.setAttribute("aria-hidden", connected ? "true" : "false");
+  startGuide.classList.toggle("hidden", connected);
+  startGuide.classList.toggle("is-hidden", connected);
+  startGuide.classList.toggle("is-ready", connected);
+  startGuide.style.display = connected ? "none" : "";
+  if (startGuideSteps) startGuideSteps.classList.toggle("hidden", connected);
+  if (connected) return;
+
+  const hasPath = Boolean((gameRootInput?.value || "").trim() || lastModSync?.gameRoot);
+  const baseOk = Boolean(lastBaseSdk?.installed);
+  const needsSetup = !hasPath || !baseOk;
+
+  if (startGuideTitle) {
+    startGuideTitle.textContent = needsSetup
+      ? hasPath
+        ? "One-time setup"
+        : "Set your Borderlands 4 install folder"
+      : "Get Online";
+  }
+  if (startGuideSteps) {
+    if (!hasPath) {
+      startGuideSteps.innerHTML = `<li><strong>Set install folder</strong> — open <strong>Setup</strong> → <strong>Set install folder</strong>. Pick the folder with <code>Borderlands4.exe</code> / <code>OakGame</code>. Other Steam drives work (e.g. <code>D:\\SteamLibrary\\steamapps\\common\\Borderlands 4</code>).</li>
+         <li><strong>Install SDK + Squ1ggs mod</strong> if oak2 is missing (one-time).</li>
+         <li><strong>Fully restart Borderlands 4</strong> — quit to desktop, then launch again.</li>
+         <li><strong>Load a character</strong> — wait for <strong>Online</strong>. Later EXE launches auto-apply the Squ1ggs mod.</li>`;
+    } else if (!baseOk) {
+      startGuideSteps.innerHTML = `<li><strong>Install oak2 once</strong> — open <strong>Setup</strong> and press <strong>Install SDK + Squ1ggs mod</strong>.</li>
+         <li><strong>Confirm install folder</strong> — if the game lives on another drive, use <strong>Set install folder</strong> so it points at the real <code>Borderlands 4</code> folder.</li>
+         <li><strong>Fully restart Borderlands 4</strong> — quit to desktop, then launch again.</li>
+         <li><strong>Load a character</strong> — wait for <strong>Online</strong>.</li>`;
+    } else {
+      startGuideSteps.innerHTML = `<li><strong>Launch Borderlands 4</strong> — Squ1ggs mod auto-copies on EXE launch when versions differ.</li>
+         <li><strong>Wrong folder?</strong> Setup → <strong>Set install folder</strong> if your game is on another drive and auto-detect missed it.</li>
+         <li><strong>Fully restart if the game was already open</strong> — quit to desktop, then launch again.</li>
+         <li><strong>Load a character</strong> — wait for <strong>Online</strong>.</li>`;
+    }
+  }
+  if (startGuideFoot) {
+    startGuideFoot.innerHTML = !hasPath
+      ? 'Game on D: / another Steam library? Setup → <strong>Set install folder</strong> → folder with OakGame. Other tools: <a href="https://github.com/Squ1ggs/Bl4SDKmods">GitHub</a> · save editor <a href="https://scooterstoolbox.com">scooterstoolbox.com</a>'
+      : needsSetup
+        ? 'Stuck? Confirm install folder → Install SDK + Squ1ggs mod → fully restart → load a character → Refresh. Other tools: <a href="https://github.com/Squ1ggs/Bl4SDKmods">GitHub</a> · save editor <a href="https://scooterstoolbox.com">scooterstoolbox.com</a>'
+        : 'Stuck Offline? Fully restart the game → load a character → Refresh. Wrong drive? Setup → Set install folder. Other tools: <a href="https://github.com/Squ1ggs/Bl4SDKmods">GitHub</a> · save editor <a href="https://scooterstoolbox.com">scooterstoolbox.com</a>';
+    bindExternalLinks(startGuideFoot);
+  }
+}
+
+function applyInstallLocationUi(setup = null) {
+  const stored = String(setup?.storedGameRoot || "").trim();
+  const resolved = String(setup?.gameRoot || gameRootInput?.value || "").trim();
+  const candidates = Array.isArray(setup?.candidates) ? setup.candidates.filter(Boolean) : [];
+  const pathSource = setup?.pathSource || (stored ? "stored" : resolved ? "detected" : "none");
+  const hasPath = Boolean(resolved);
+  if (installLocationCard) {
+    installLocationCard.classList.toggle("is-set", hasPath);
+    installLocationCard.classList.toggle("is-missing", !hasPath);
+  }
+  if (installLocationDetail) {
+    installLocationDetail.innerHTML = hasPath
+      ? "This is where oak2 / <code>sdk_mods</code> get installed. If that path is wrong (game on another drive), press <strong>Set install folder</strong> and pick the folder that contains <code>Borderlands4.exe</code> / <code>OakGame</code>."
+      : "Auto-detect did not find Borderlands 4. Press <strong>Set install folder</strong> and choose the folder with <code>Borderlands4.exe</code> / <code>OakGame</code> — including other Steam drives like <code>D:\\SteamLibrary\\steamapps\\common\\Borderlands 4</code>.";
+  }
+  if (installLocationStatus) {
+    if (!hasPath) {
+      installLocationStatus.textContent =
+        candidates.length > 0
+          ? `Detected candidates: ${candidates.slice(0, 3).join(" · ")} — pick the correct one with Set install folder.`
+          : "No install folder set yet.";
+    } else if (pathSource === "stored") {
+      installLocationStatus.textContent = "Saved install folder (used for auto mod sync).";
+    } else {
+      installLocationStatus.textContent =
+        "Auto-detected install folder. Change it with Set install folder if this is not where Borderlands4.exe lives.";
+    }
+  }
+  if (browseGameBtn) {
+    browseGameBtn.textContent = hasPath ? "Change install folder" : "Set install folder";
+    browseGameBtn.classList.add("primary");
+  }
+}
+
+function setupNeedsUserAction(setup = null) {
+  const hasPath = Boolean(
+    String(setup?.gameRoot || gameRootInput?.value || lastModSync?.gameRoot || "").trim()
+  );
+  const baseOk = Boolean((setup?.baseSdk || lastBaseSdk)?.installed);
+  const syncFailed =
+    lastModSync && lastModSync.ok === false && lastModSync.reason !== "no-game-root";
+  return !hasPath || !baseOk || Boolean(syncFailed);
+}
+
 function updateSetupVisibility(setup) {
-  setupDismissed = Boolean(setup?.setupDismissed);
-  const hasPath = Boolean((setup?.gameRoot || "").trim());
-  // Once a game folder is known, keep the big setup card collapsed so tabs stay usable.
-  // Users can reopen it with "Show setup".
-  const hide = setupDismissed || hasPath;
+  if (setup && Object.prototype.hasOwnProperty.call(setup, "setupDismissed")) {
+    setupDismissed = Boolean(setup.setupDismissed);
+  }
+  const needs = setupNeedsUserAction(setup);
+  // Only force Setup open when something still needs the user (path / oak2 / sync fail).
+  // Auto-sync success stays collapsed — use the header Setup button if needed.
+  const hide = setupPinned ? false : !needs;
+  if (!needs) {
+    setupPinned = false;
+  }
   if (setupCard) setupCard.classList.toggle("is-hidden", hide);
   if (showSetupBtn) showSetupBtn.classList.toggle("hidden", !hide);
+  updateStartGuide();
+}
+
+function showModSyncNotice(state, { kicker, title, detail } = {}) {
+  if (!modSyncNotice) return;
+  modSyncNotice.classList.remove("hidden", "is-restart", "is-updated", "is-ok");
+  if (state) modSyncNotice.classList.add(`is-${state}`);
+  if (modSyncNoticeKicker) modSyncNoticeKicker.textContent = kicker || "AUTO MOD SYNC";
+  if (modSyncNoticeTitle) modSyncNoticeTitle.textContent = title || "";
+  if (modSyncNoticeDetail) modSyncNoticeDetail.textContent = detail || "";
+}
+
+function hideModSyncNotice() {
+  modSyncNotice?.classList.add("hidden");
 }
 
 function hideSetupAfterConfigured(gameRoot) {
@@ -1372,6 +1734,135 @@ function renderSerialConvertResult(data) {
   panel.textContent = lines.filter((line, idx, arr) => !(line === "" && arr[idx - 1] === "")).join("\n");
 }
 
+function decodeHtmlEntities(text) {
+  return String(text || "")
+    .replace(/&lt;/gi, "<")
+    .replace(/&gt;/gi, ">")
+    .replace(/&amp;/gi, "&")
+    .replace(/&quot;/gi, '"')
+    .replace(/&#39;/gi, "'")
+    .replace(/&apos;/gi, "'");
+}
+
+function looksLikeSerialFilePath(raw) {
+  let s = String(raw || "").trim();
+  if (
+    (s.startsWith('"') && s.endsWith('"')) ||
+    (s.startsWith("'") && s.endsWith("'"))
+  ) {
+    s = s.slice(1, -1).trim();
+  }
+  if (!s) return false;
+  if (!/\.(txt|docx|csv|md|json|log|ya?ml)$/i.test(s)) return false;
+  return /^[A-Za-z]:[\\/]/.test(s) || s.startsWith("\\\\") || /[\\/]/.test(s);
+}
+
+function extractSerialsFromText(rawText) {
+  const text = decodeHtmlEntities(String(rawText || ""));
+  const found = [];
+  const seen = new Set();
+  const push = (serial) => {
+    const cleaned = String(serial || "")
+      .trim()
+      .replace(/^`+|`+$/g, "")
+      .trim();
+    if (!cleaned) return;
+    if (!(cleaned.startsWith("@U") || (cleaned.includes(",") && /\d/.test(cleaned)))) {
+      return;
+    }
+    if (seen.has(cleaned)) return;
+    seen.add(cleaned);
+    found.push(cleaned);
+  };
+  for (const match of text.match(/@U[^\s`'"]+/g) || []) {
+    push(match);
+  }
+  for (const line of text.split(/\r?\n/)) {
+    const trimmed = line.trim().replace(/^`+|`+$/g, "").trim();
+    if (trimmed.startsWith("@U")) {
+      push(trimmed.split(/\s+/)[0]);
+    } else if (/^\s*\d+\s*,\s*\d+/.test(trimmed)) {
+      push(trimmed);
+    }
+  }
+  return found;
+}
+
+async function resolveSerialInputText(rawText) {
+  const text = String(rawText || "");
+  const lines = text.split(/\r?\n/);
+  const serials = [];
+  const seen = new Set();
+  const notes = [];
+  const pushMany = (items) => {
+    for (const item of items) {
+      if (!item || seen.has(item)) continue;
+      seen.add(item);
+      serials.push(item);
+    }
+  };
+
+  // Whole textarea is a single file path (common when users paste one quoted path).
+  if (looksLikeSerialFilePath(text.trim()) && lines.filter((l) => l.trim()).length === 1) {
+    const result = await window.sqbt.readSerialSource(text.trim());
+    if (!result?.ok) {
+      return { ok: false, serials: [], message: result?.message || "Could not read serial file." };
+    }
+    pushMany(result.serials || []);
+    return {
+      ok: true,
+      serials,
+      message: result.message || `Loaded ${serials.length} serial(s).`,
+    };
+  }
+
+  for (const line of lines) {
+    const trimmed = line.trim();
+    if (!trimmed) continue;
+    if (looksLikeSerialFilePath(trimmed)) {
+      const result = await window.sqbt.readSerialSource(trimmed);
+      if (!result?.ok) {
+        notes.push(result?.message || `Failed: ${trimmed}`);
+        continue;
+      }
+      pushMany(result.serials || []);
+      if (result.message) notes.push(result.message);
+      continue;
+    }
+    pushMany(extractSerialsFromText(trimmed));
+  }
+
+  // Fallback: scrape @U tokens from the whole blob (fenced markdown dumps).
+  if (!serials.length) {
+    pushMany(extractSerialsFromText(text));
+  }
+
+  return {
+    ok: serials.length > 0,
+    serials,
+    message:
+      serials.length > 0
+        ? `Ready: ${serials.length} serial(s)${notes.length ? ` (${notes[0]})` : ""}`
+        : notes[0] || "Paste @U / human serials, or a .txt / .docx path like \"C:\\\\Users\\\\…\\\\BP 4 Gear.txt\".",
+  };
+}
+
+function applyTheme(theme) {
+  currentTheme = theme === "scooters" ? "scooters" : "default";
+  document.documentElement.setAttribute("data-theme", currentTheme);
+  if (themeToggleBtn) {
+    setIconLabel(
+      themeToggleBtn,
+      currentTheme === "scooters" ? "Default theme" : "Scooters theme",
+    );
+    themeToggleBtn.classList.toggle("is-toggle-on", currentTheme === "scooters");
+    themeToggleBtn.title =
+      currentTheme === "scooters"
+        ? "Switch back to the default Boosting Tools look"
+        : "Match Scooter's Toolbox save-editor styling";
+  }
+}
+
 function renderSerialSendList(section, sectionId, sectionEl) {
   const box = document.createElement("div");
   box.className = "multiselect-box serial-send-list";
@@ -1388,23 +1879,31 @@ function renderSerialSendList(section, sectionId, sectionEl) {
 
   const addWrap = document.createElement("label");
   addWrap.className = "field field-wide";
-  addWrap.innerHTML = "<span>Add serials (@U or human, one per line)</span>";
+  addWrap.innerHTML =
+    "<span>Add serials (@U / human, one per line) or paste a .txt / .docx path</span>";
   const addArea = document.createElement("textarea");
   addArea.rows = 4;
-  addArea.placeholder = "@U... or 300, 0, 1, 60| 2, 2002|| {9}";
+  addArea.placeholder =
+    '@U... or 300, 0, 1, 60| 2, 2002|| {9}\nor "C:\\Users\\…\\Downloads\\BP 4 Gear.txt"\nor "C:\\Users\\…\\Downloads\\BP 4 Gear (1).docx"';
   addWrap.appendChild(addArea);
+
+  const btnRow = document.createElement("div");
+  btnRow.className = "serial-add-actions";
+
+  const browseBtn = document.createElement("button");
+  browseBtn.type = "button";
+  browseBtn.className = "ghost";
+  browseBtn.textContent = "Browse file…";
 
   const addBtn = document.createElement("button");
   addBtn.type = "button";
   addBtn.textContent = "Add to send list";
-  addBtn.addEventListener("click", () => {
-    const lines = String(addArea.value || "")
-      .split(/\r?\n/)
-      .map((line) => line.trim())
-      .filter((line) => line.startsWith("@U") || (line.includes(",") && /\d/.test(line)));
+
+  const appendSerials = (lines, note) => {
     if (!lines.length) {
       actionMessage.className = "action-message error";
-      actionMessage.textContent = "Paste at least one @U or human serial line first.";
+      actionMessage.textContent =
+        note || "Paste at least one @U / human serial, or a .txt / .docx path first.";
       return;
     }
     const rows = multiselectRows.get(sectionId) || [];
@@ -1423,8 +1922,54 @@ function renderSerialSendList(section, sectionId, sectionEl) {
     addArea.value = "";
     renderSerialSendListRows(sectionId, box);
     actionMessage.className = "action-message ok";
-    actionMessage.textContent = `Added ${lines.length} serial(s) to send list.`;
+    actionMessage.textContent = note || `Added ${lines.length} serial(s) to send list.`;
+  };
+
+  addBtn.addEventListener("click", async () => {
+    addBtn.disabled = true;
+    browseBtn.disabled = true;
+    actionMessage.className = "action-message muted";
+    actionMessage.textContent = "Reading serials…";
+    try {
+      const resolved = await resolveSerialInputText(addArea.value);
+      appendSerials(resolved.serials || [], resolved.message);
+    } catch (error) {
+      actionMessage.className = "action-message error";
+      actionMessage.textContent = String(error?.message || error || "Could not read serials.");
+    } finally {
+      addBtn.disabled = false;
+      browseBtn.disabled = false;
+    }
   });
+
+  browseBtn.addEventListener("click", async () => {
+    addBtn.disabled = true;
+    browseBtn.disabled = true;
+    actionMessage.className = "action-message muted";
+    actionMessage.textContent = "Opening file…";
+    try {
+      const result = await window.sqbt.pickSerialFile();
+      if (result?.cancelled) {
+        actionMessage.className = "action-message muted";
+        actionMessage.textContent = "File pick cancelled.";
+        return;
+      }
+      if (!result?.ok) {
+        actionMessage.className = "action-message error";
+        actionMessage.textContent = result?.message || "Could not read that file.";
+        return;
+      }
+      appendSerials(result.serials || [], result.message);
+    } catch (error) {
+      actionMessage.className = "action-message error";
+      actionMessage.textContent = String(error?.message || error || "File pick failed.");
+    } finally {
+      addBtn.disabled = false;
+      browseBtn.disabled = false;
+    }
+  });
+
+  btnRow.append(browseBtn, addBtn);
 
   const meta = document.createElement("div");
   meta.className = "multiselect-meta";
@@ -1444,7 +1989,7 @@ function renderSerialSendList(section, sectionId, sectionEl) {
   const listEl = document.createElement("div");
   listEl.className = "multiselect-list";
 
-  box.append(addWrap, addBtn, meta, listEl);
+  box.append(addWrap, btnRow, meta, listEl);
   sectionEl.appendChild(box);
   if (!multiselectRows.has(sectionId)) multiselectRows.set(sectionId, []);
   if (!multiselectState.has(sectionId)) multiselectState.set(sectionId, new Set());
@@ -1543,6 +2088,9 @@ function renderField(sectionId, actionDef, field, sectionEl, allFields) {
 
   const wrap = document.createElement("label");
   wrap.className = "field";
+  if (field.type === "textarea" || field.wide || field.key === "serials") {
+    wrap.classList.add("field-wide");
+  }
   const key = fieldStorageKey(sectionId, actionDef, field);
   if (fieldValues[key] === undefined) {
     fieldValues[key] = field.default ?? "";
@@ -1644,6 +2192,9 @@ function renderField(sectionId, actionDef, field, sectionEl, allFields) {
   } else if (field.type === "number") {
     input = document.createElement("input");
     input.type = "number";
+    if (field.min != null) input.min = String(field.min);
+    if (field.max != null) input.max = String(field.max);
+    if (field.step != null) input.step = String(field.step);
   } else {
     input = document.createElement("input");
     input.type = "text";
@@ -1668,6 +2219,17 @@ function renderField(sectionId, actionDef, field, sectionEl, allFields) {
     refreshCatalogSiblings();
   });
   input.addEventListener("change", () => {
+    if (field.type === "number" && input.value !== "") {
+      const parsed = Number(input.value);
+      if (!Number.isFinite(parsed)) {
+        input.value = String(field.default ?? field.min ?? 0);
+      } else {
+        let next = parsed;
+        if (field.min != null) next = Math.max(Number(field.min), next);
+        if (field.max != null) next = Math.min(Number(field.max), next);
+        input.value = String(next);
+      }
+    }
     fieldValues[key] = input.value;
     refreshCatalogSiblings();
   });
@@ -1908,7 +2470,9 @@ async function refreshMultiselectSection(sectionId, config) {
         });
         const text = document.createElement("span");
         const title = String(row[config.labelKey || "title"] || row.name || rowId);
-        const extra = row.group || row.listing || row.category || "";
+        const extra = [row.type, row.manufacturer, row.group || row.listing || row.category]
+          .filter((bit, idx, arr) => bit && arr.indexOf(bit) === idx)
+          .join(" · ");
         text.textContent = extra ? `${title} · ${extra}` : title;
         label.append(cb, text);
         listEl.appendChild(label);
@@ -1916,20 +2480,28 @@ async function refreshMultiselectSection(sectionId, config) {
     }
     if (countEl) countEl.textContent = `${selected.size} selected`;
     if (statusEl) statusEl.textContent = data.message || `${rows.length} entries`;
-    if (config.catalog === "serial_store" && Array.isArray(data.groups)) {
-      const filterSelect = box.querySelector(".multiselect-filter select");
-      if (filterSelect) {
-        const current = fieldValues[`${sectionId}:group`] || "All";
-        filterSelect.innerHTML = "";
-        for (const group of data.groups) {
-          const opt = document.createElement("option");
-          opt.value = group;
-          opt.textContent = group;
-          filterSelect.appendChild(opt);
-        }
-        filterSelect.value = data.groups.includes(current) ? current : "All";
-        fieldValues[`${sectionId}:group`] = filterSelect.value;
+    const listByFilter = {
+      group: data.groups,
+      listing: data.listings,
+      category: data.categories,
+      type: data.types,
+      manufacturer: data.manufacturers,
+    };
+    for (const filterSelect of box.querySelectorAll("select[data-filter-key]")) {
+      const key = filterSelect.dataset.filterKey || "";
+      const listKey = filterSelect.dataset.filterList || key;
+      const list = listByFilter[key] || listByFilter[listKey];
+      if (!Array.isArray(list) || !list.length) continue;
+      const current = fieldValues[`${sectionId}:${key}`] || "All";
+      filterSelect.innerHTML = "";
+      for (const item of list) {
+        const opt = document.createElement("option");
+        opt.value = item;
+        opt.textContent = item;
+        filterSelect.appendChild(opt);
       }
+      filterSelect.value = list.includes(current) ? current : "All";
+      fieldValues[`${sectionId}:${key}`] = filterSelect.value;
     }
     box.dataset.catalogError = "";
   } catch (error) {
@@ -2065,9 +2637,17 @@ function renderMultiselectControls(section, sectionId, sectionEl) {
       opt.textContent = option;
       filterSelect.appendChild(opt);
     }
+    filterSelect.dataset.filterKey = filter.key;
+    filterSelect.dataset.filterList = filter.catalogParam || filter.key;
     filterSelect.value = fieldValues[filterKey];
     filterSelect.addEventListener("change", () => {
       fieldValues[filterKey] = filterSelect.value;
+      if (filter.key === "category") {
+        const typeKey = `${sectionId}:type`;
+        fieldValues[typeKey] = "All";
+        const typeSelect = box.querySelector('select[data-filter-key="type"]');
+        if (typeSelect) typeSelect.value = "All";
+      }
       catalogCache.delete(catalogCacheKey(config.catalog, multiselectParams(sectionId, config)));
       refreshMultiselectSection(sectionId, config);
     });
@@ -2288,8 +2868,14 @@ function renderSerialStoreSection(section, sectionId, sectionEl) {
 function renderActionCard(sectionId, actionDef, sectionEl, featured) {
   const card = document.createElement("div");
   card.className = "action-card";
-
   const fields = actionDef.fields || [];
+  const hasWideField = fields.some(
+    (field) => field.type === "textarea" || field.wide || field.key === "serials"
+  );
+  if (hasWideField) {
+    card.classList.add("action-card-full");
+  }
+
   if (featured && fields.length) {
     const title = document.createElement("h4");
     title.className = "action-card-title";
@@ -2299,6 +2885,9 @@ function renderActionCard(sectionId, actionDef, sectionEl, featured) {
   if (fields.length) {
     const fieldsWrap = document.createElement("div");
     fieldsWrap.className = "fields-grid action-fields";
+    if (hasWideField) {
+      fieldsWrap.classList.add("fields-grid-serials");
+    }
     for (const field of fields) {
       const node = renderField(sectionId, actionDef, field, sectionEl, fields);
       if (node) fieldsWrap.appendChild(node);
@@ -2306,23 +2895,56 @@ function renderActionCard(sectionId, actionDef, sectionEl, featured) {
     card.appendChild(fieldsWrap);
   }
 
+  const isToggle = String(actionDef.type || "").toLowerCase() === "toggle";
   const button = document.createElement("button");
   button.type = "button";
-  decorateActionButton(button, featured && fields.length ? "Run" : actionDef.label, actionDef);
   if (actionDef.tooltip) {
     button.title = actionDef.tooltip;
   }
   button.dataset.runAction = actionDef.action;
-  button.addEventListener("click", () => {
-    const payload = collectPayload(sectionId, actionDef);
-    const context = {
-      sectionId,
-      config: sectionEl.querySelector("[data-multiselect-config]")?.dataset.multiselectConfig
-        ? JSON.parse(sectionEl.querySelector("[data-multiselect-config]").dataset.multiselectConfig)
-        : { catalog: "serial_store" },
-    };
-    runAction(actionDef.action, payload, actionDef.confirm || "", context);
-  });
+
+  const paintToggle = (on) => {
+    const state = Boolean(on);
+    button.dataset.toggleOn = state ? "1" : "0";
+    button.dataset.accent = state ? "cyan" : "pink";
+    button.classList.toggle("is-toggle-on", state);
+    button.classList.toggle("is-toggle-off", !state);
+    const icon = actionIcon(actionDef);
+    setIconLabel(button, `${actionDef.label} — Toggle`, icon);
+  };
+
+  if (isToggle) {
+    paintToggle(Boolean(actionDef.defaultOn));
+    button.addEventListener("click", () => {
+      const currentlyOn = button.dataset.toggleOn === "1";
+      const nextOn = !currentlyOn;
+      const base = collectPayload(sectionId, actionDef);
+      const flip = nextOn
+        ? { ...(actionDef.payloadOn || { enabled: true }) }
+        : { ...(actionDef.payloadOff || { enabled: false }) };
+      const payload = { ...base, ...flip };
+      const context = {
+        sectionId,
+        config: sectionEl.querySelector("[data-multiselect-config]")?.dataset.multiselectConfig
+          ? JSON.parse(sectionEl.querySelector("[data-multiselect-config]").dataset.multiselectConfig)
+          : { catalog: "serial_store" },
+      };
+      paintToggle(nextOn);
+      runAction(actionDef.action, payload, actionDef.confirm || "", context);
+    });
+  } else {
+    decorateActionButton(button, featured && fields.length ? "Run" : actionDef.label, actionDef);
+    button.addEventListener("click", () => {
+      const payload = collectPayload(sectionId, actionDef);
+      const context = {
+        sectionId,
+        config: sectionEl.querySelector("[data-multiselect-config]")?.dataset.multiselectConfig
+          ? JSON.parse(sectionEl.querySelector("[data-multiselect-config]").dataset.multiselectConfig)
+          : { catalog: "serial_store" },
+      };
+      runAction(actionDef.action, payload, actionDef.confirm || "", context);
+    });
+  }
   card.appendChild(button);
 
   if (actionDef.note) {
@@ -2580,6 +3202,17 @@ function renderSection(section, tabId) {
   heading.textContent = section.title;
   sectionEl.appendChild(heading);
 
+  if (Array.isArray(section.guide) && section.guide.length) {
+    const guide = document.createElement("ol");
+    guide.className = "section-guide";
+    for (const step of section.guide) {
+      const item = document.createElement("li");
+      item.textContent = String(step);
+      guide.appendChild(item);
+    }
+    sectionEl.appendChild(guide);
+  }
+
   if (section.hint) {
     const hint = document.createElement("p");
     hint.className = "section-hint muted small";
@@ -2705,7 +3338,33 @@ function renderSection(section, tabId) {
   if (fieldActionsWrap) {
     fieldActionsWrap.className = "action-cards-stack";
   }
+  const foldHosts = new Map();
+  const foldOrder = [];
+  const hostFor = (actionDef) => {
+    const fold = String(actionDef.fold || "").trim();
+    if (!fold) return actionsWrap;
+    let rec = foldHosts.get(fold);
+    if (!rec) {
+      const details = document.createElement("details");
+      details.className = "action-fold";
+      const summary = document.createElement("summary");
+      summary.textContent = fold;
+      const hint = document.createElement("p");
+      hint.className = "fold-hint muted small";
+      hint.textContent =
+        String(actionDef.foldHint || "").trim() ||
+        "Build a list of mob packs, then start them so they spawn one group after another.";
+      const inner = document.createElement("div");
+      inner.className = featured ? "action-grid action-grid-featured" : "action-grid";
+      details.append(summary, hint, inner);
+      rec = { details, inner };
+      foldHosts.set(fold, rec);
+      foldOrder.push(rec);
+    }
+    return rec.inner;
+  };
   for (const actionDef of section.actions || []) {
+    const actionHost = hostFor(actionDef);
     if (section.multiselect || section.serialStore || section.serialSendList) {
       const button = document.createElement("button");
       button.type = "button";
@@ -2737,7 +3396,11 @@ function renderSection(section, tabId) {
               continue;
             }
             if (field.type === "number" && value !== "" && value != null) {
-              payload[field.key] = Number(value);
+              let num = Number(value);
+              if (!Number.isFinite(num)) num = Number(field.default) || 0;
+              if (field.min != null) num = Math.max(Number(field.min), num);
+              if (field.max != null) num = Math.min(Number(field.max), num);
+              payload[field.key] = num;
               continue;
             }
             payload[field.key] = value;
@@ -2760,7 +3423,7 @@ function renderSection(section, tabId) {
           if (node) fieldsWrap.appendChild(node);
         }
         card.append(fieldsWrap, button);
-        actionsWrap.appendChild(card);
+        actionHost.appendChild(card);
       } else if (
         actionDef.deliverMultiselect ||
         actionDef.deliverStore ||
@@ -2769,7 +3432,9 @@ function renderSection(section, tabId) {
       ) {
         const card = document.createElement("div");
         card.className = "action-card deliver-selected-card";
-        if (actionDef.deliverMultiselect || actionDef.deliverStore) {
+        if ((actionDef.fields || []).some((field) => field.type === "textarea" || field.wide || field.key === "serials")) {
+          card.classList.add("action-card-full");
+        }        if (actionDef.deliverMultiselect || actionDef.deliverStore) {
           const tip = document.createElement("p");
           tip.className = "muted small";
           tip.textContent =
@@ -2786,10 +3451,38 @@ function renderSection(section, tabId) {
           card.appendChild(fieldsWrap);
         }
         card.appendChild(button);
-        actionsWrap.appendChild(card);
+        actionHost.appendChild(card);
       } else {
-        actionsWrap.appendChild(button);
+        actionHost.appendChild(button);
       }
+    } else if (featured && String(actionDef.type || "").toLowerCase() === "toggle" && (actionDef.fields || []).length > 0) {
+      fieldActionsWrap.appendChild(renderActionCard(sectionId, actionDef, sectionEl, featured));
+    } else if (featured && String(actionDef.type || "").toLowerCase() === "toggle") {
+      const button = document.createElement("button");
+      button.type = "button";
+      if (actionDef.tooltip) button.title = actionDef.tooltip;
+      button.dataset.runAction = actionDef.action;
+      const paintToggle = (on) => {
+        const state = Boolean(on);
+        button.dataset.toggleOn = state ? "1" : "0";
+        button.dataset.accent = state ? "cyan" : "pink";
+        button.classList.toggle("is-toggle-on", state);
+        button.classList.toggle("is-toggle-off", !state);
+        const icon = actionIcon(actionDef);
+        setIconLabel(button, `${actionDef.label} — Toggle`, icon);
+      };
+      paintToggle(Boolean(actionDef.defaultOn));
+      button.addEventListener("click", () => {
+        const currentlyOn = button.dataset.toggleOn === "1";
+        const nextOn = !currentlyOn;
+        const base = collectPayload(sectionId, actionDef);
+        const flip = nextOn
+          ? { ...(actionDef.payloadOn || { enabled: true }) }
+          : { ...(actionDef.payloadOff || { enabled: false }) };
+        paintToggle(nextOn);
+        runAction(actionDef.action, { ...base, ...flip }, actionDef.confirm || "", { sectionId });
+      });
+      actionHost.appendChild(button);
     } else if (featured && (actionDef.fields || []).length > 0) {
       fieldActionsWrap.appendChild(renderActionCard(sectionId, actionDef, sectionEl, featured));
     } else if (featured && !(actionDef.fields || []).length) {
@@ -2802,12 +3495,17 @@ function renderSection(section, tabId) {
         const payload = collectPayload(sectionId, actionDef);
         runAction(actionDef.action, payload, actionDef.confirm || "", { sectionId });
       });
-      actionsWrap.appendChild(button);
+      actionHost.appendChild(button);
     } else {
-      actionsWrap.appendChild(renderActionCard(sectionId, actionDef, sectionEl, featured));
+      actionHost.appendChild(renderActionCard(sectionId, actionDef, sectionEl, featured));
     }
   }
-  sectionEl.appendChild(actionsWrap);
+  if (actionsWrap.childElementCount > 0) {
+    sectionEl.appendChild(actionsWrap);
+  }
+  for (const rec of foldOrder) {
+    sectionEl.appendChild(rec.details);
+  }
   if (fieldActionsWrap && fieldActionsWrap.childElementCount > 0) {
     sectionEl.appendChild(fieldActionsWrap);
   }
@@ -2821,11 +3519,20 @@ function renderTab(tab) {
   catalogCache.clear();
   lastRosterSignature = "";
   for (const section of tab.sections || []) {
+    // Hide Home "Start here" as soon as the game bridge is up (not only when actions unlock).
+    if (
+      String(section.title || "") === "Start here" &&
+      (actionsEnabled() ||
+        latestStatus?.connected ||
+        ["ready", "connected", "in_menu_or_loading"].includes(String(latestStatus?.state || "")))
+    ) {
+      continue;
+    }
     tabContent.appendChild(renderSection(section, tab.id));
   }
   // Keep the sticky global #sqbt-progress-panel; refresh visibility from cache.
-  renderProgressPanel(null, null);
-  if (tab.id === "progression" && actionsEnabled()) {
+  renderProgressPanel(null, null, null);
+  if ((tab.id === "progression" || tab.id === "loot") && actionsEnabled()) {
     pollProgressOnce();
   }
   if (tab.id === "vehicle" && actionsEnabled()) {
@@ -2856,7 +3563,26 @@ function renderTab(tab) {
 function renderTabs() {
   tabBar.innerHTML = "";
   if (!manifest?.tabs?.length) {
-    tabContent.innerHTML = "<p class='muted'>Connect to the game to load the tool manifest.</p>";
+    const needsSetup = setupNeedsUserAction();
+    tabContent.innerHTML = needsSetup
+      ? `<div class="panel-section panel-section-featured">
+      <h3>Waiting for the game</h3>
+      <ol class="section-guide">
+        <li>Open <strong>Setup</strong> if needed, then press <strong>Install SDK + Squ1ggs mod</strong> (oak2 once).</li>
+        <li><strong>Fully restart Borderlands 4</strong> — quit to desktop, then launch again.</li>
+        <li>Load a character (not the main menu).</li>
+        <li>Press <strong>Refresh status</strong> until this window says Online.</li>
+      </ol>
+    </div>`
+      : `<div class="panel-section panel-section-featured">
+      <h3>Waiting for the game</h3>
+      <ol class="section-guide">
+        <li>The Squ1ggs mod auto-applies on EXE launch — no Setup click needed.</li>
+        <li><strong>Fully restart Borderlands 4</strong> if it was already open — quit to desktop, then launch again.</li>
+        <li>Load a character (not the main menu).</li>
+        <li>Press <strong>Refresh status</strong> until this window says Online.</li>
+      </ol>
+    </div>`;
     return;
   }
   for (const tab of manifest.tabs) {
@@ -2881,20 +3607,306 @@ function renderTabs() {
 async function loadManifest() {
   const result = await window.sqbt.getManifest();
   if (!result.ok) {
-    tabContent.innerHTML = `<p class="setup-attention">${result.message || "Manifest unavailable."}<br><br>
-      <strong>Fix:</strong> press <strong>Install / update mod folder</strong> (first use), then
-      <strong>fully restart Borderlands 4</strong>, then Refresh status here.</p>`;
+    const needsSetup = setupNeedsUserAction();
+    tabContent.innerHTML = needsSetup
+      ? `<div class="panel-section panel-section-featured">
+      <h3>Tools not loaded yet</h3>
+      <p class="setup-attention">${result.message || "Manifest unavailable."}</p>
+      <ol class="section-guide">
+        <li>Open <strong>Setup</strong> if needed, then press <strong>Install SDK + Squ1ggs mod</strong> (oak2 once).</li>
+        <li><strong>Fully restart Borderlands 4</strong> (quit to desktop).</li>
+        <li>Load a character, then press <strong>Refresh status</strong>.</li>
+      </ol>
+    </div>`
+      : `<div class="panel-section panel-section-featured">
+      <h3>Tools not loaded yet</h3>
+      <p class="setup-attention">${result.message || "Manifest unavailable."}</p>
+      <ol class="section-guide">
+        <li>Mod auto-applies on EXE launch — no Setup click needed.</li>
+        <li><strong>Fully restart Borderlands 4</strong> if it was already open (quit to desktop).</li>
+        <li>Load a character, then press <strong>Refresh status</strong>.</li>
+      </ol>
+    </div>`;
     return;
   }
   manifest = result.manifest;
   renderTabs();
 }
 
+function setModSyncBanner(state, { kicker, title, detail, versions } = {}) {
+  if (!modSyncBanner) return;
+  const states = ["ok", "updated", "restart", "need-sdk", "need-path", "error"];
+  for (const name of states) {
+    modSyncBanner.classList.toggle(`is-${name}`, name === state);
+  }
+  modSyncBanner.dataset.state = state || "";
+  if (modSyncKicker) modSyncKicker.textContent = kicker || "AUTO MOD SYNC";
+  if (modSyncTitle) modSyncTitle.textContent = title || "";
+  if (modSyncDetail) modSyncDetail.textContent = detail || "";
+  if (modSyncVersions) {
+    modSyncVersions.textContent = versions || "";
+    modSyncVersions.classList.toggle("hidden", !versions);
+  }
+}
+
+function formatModVersions(modSync) {
+  if (!modSync?.bundledVersion && !modSync?.installedVersion) return "";
+  const installed = modSync.installedVersion || "not installed";
+  const bundled = modSync.bundledVersion || "unknown";
+  if (modSync.installedVersion && modSync.bundledVersion && modSync.installedVersion === modSync.bundledVersion) {
+    return `sdk_mods/Squ1ggsBoostingTools  ·  v${bundled}  ·  matches this EXE`;
+  }
+  return `Installed v${installed}  →  EXE bundles v${bundled}`;
+}
+
+function applyBaseSdkUi(baseSdk, modSync = null) {
+  if (baseSdk) lastBaseSdk = baseSdk;
+  if (modSync) lastModSync = modSync;
+  const installed = Boolean(baseSdk?.installed);
+  const updateAvailable = Boolean(baseSdk?.updateAvailable);
+  const version = String(baseSdk?.version || "").trim();
+  const latest = String(baseSdk?.latestVersion || "").trim();
+  const hasGameRoot = Boolean(baseSdk?.gameRoot || gameRootInput.value);
+  if (sdkStatusLine) {
+    if (!hasGameRoot) {
+      sdkStatusLine.textContent = "Base oak2 SDK: pick your Borderlands 4 folder first.";
+    } else if (!installed) {
+      sdkStatusLine.textContent =
+        "Base oak2 SDK: not found — use Install SDK + Squ1ggs mod (official download).";
+    } else if (updateAvailable && latest) {
+      sdkStatusLine.textContent = `Base oak2 SDK: installed${version ? ` (tracked v${version})` : ""} — update available (v${latest}).`;
+    } else {
+      sdkStatusLine.textContent = `Base oak2 SDK: installed${version ? ` (v${version})` : ""}${latest ? ` · latest v${latest}` : ""}.`;
+    }
+  }
+  if (installModBtn) {
+    if (!installed) {
+      installModBtn.textContent = "Install SDK + Squ1ggs mod";
+      installModBtn.classList.add("primary");
+      installModBtn.classList.remove("ghost");
+    } else {
+      installModBtn.textContent = "Force reinstall Squ1ggs mod";
+      installModBtn.classList.remove("primary");
+      installModBtn.classList.add("ghost");
+    }
+  }
+  if (updateBaseSdkBtn) {
+    const showUpdate = installed && updateAvailable;
+    updateBaseSdkBtn.classList.toggle("hidden", !showUpdate);
+    updateBaseSdkBtn.disabled = false;
+  }
+  if (setupAttention) {
+    if (!hasGameRoot) {
+      setupAttention.classList.remove("hidden");
+      setupAttention.innerHTML =
+        "<strong>Other drive / custom Steam library?</strong> Use <strong>Set install folder</strong> and pick the folder with <code>Borderlands4.exe</code> / <code>OakGame</code> (not <code>sdk_mods</code>).";
+    } else if (!installed) {
+      setupAttention.classList.remove("hidden");
+      setupAttention.innerHTML =
+        "<strong>First use:</strong> press <strong>Install SDK + Squ1ggs mod</strong> once (downloads official oak2). " +
+        "Later launches auto-copy the Squ1ggs mod. Fully restart Borderlands 4, then wait for <strong>Online</strong>.";
+    } else {
+      setupAttention.classList.add("hidden");
+      setupAttention.innerHTML = "";
+    }
+  }
+  if (!hasGameRoot) {
+    setModSyncBanner("need-path", {
+      kicker: "SET INSTALL FOLDER",
+      title: "Where is Borderlands 4 installed?",
+      detail:
+        "Press Set install folder and pick the folder that contains Borderlands4.exe / OakGame — including other Steam drives (D:\\SteamLibrary\\…). After that, this EXE auto-copies the Squ1ggs mod when versions differ.",
+      versions: formatModVersions(modSync),
+    });
+  } else if (!installed) {
+    setModSyncBanner("need-sdk", {
+      kicker: "BASE SDK MISSING",
+      title: "Install the official oak2 SDK once",
+      detail:
+        "Press Install SDK + Squ1ggs mod below. After oak2 is in place, this EXE auto-syncs the Squ1ggs mod on every launch when versions differ.",
+      versions: formatModVersions(modSync),
+    });
+  } else if (!modSync) {
+    setModSyncBanner("ok", {
+      kicker: "AUTO MOD SYNC",
+      title: "Squ1ggs mod auto-applies on EXE launch",
+      detail:
+        "If the bundled mod version differs from sdk_mods/Squ1ggsBoostingTools, it is copied automatically. If Borderlands 4 was already open, fully quit and relaunch.",
+      versions: "",
+    });
+  }
+  // Only force the Setup panel open when the user still must act (path / oak2).
+  if (!hasGameRoot || !installed) {
+    setupPinned = true;
+    if (setupCard) setupCard.classList.remove("is-hidden");
+    if (showSetupBtn) showSetupBtn.classList.add("hidden");
+  } else if (updateAvailable) {
+    // Base SDK update is optional — keep Setup reachable, do not force it open.
+    if (showSetupBtn && setupCard?.classList.contains("is-hidden")) {
+      showSetupBtn.classList.remove("hidden");
+    }
+  }
+}
+
+function applyModSyncUi(modSync, baseSdk = null) {
+  if (modSync) lastModSync = modSync;
+  const resolvedBase = baseSdk || lastBaseSdk;
+  const hasGameRoot = Boolean(modSync?.gameRoot || gameRootInput.value);
+  const versions = formatModVersions(modSync);
+
+  if (!hasGameRoot) {
+    hideModSyncNotice();
+    setModSyncBanner("need-path", {
+      kicker: "SET INSTALL FOLDER",
+      title: "Where is Borderlands 4 installed?",
+      detail:
+        "Press Set install folder and pick the folder that contains Borderlands4.exe / OakGame — including other Steam drives (D:\\SteamLibrary\\…). After that, this EXE auto-copies the Squ1ggs mod when versions differ.",
+      versions,
+    });
+    updateSetupVisibility({ gameRoot: "", baseSdk: resolvedBase });
+    return;
+  }
+
+  if (resolvedBase && !resolvedBase.installed) {
+    hideModSyncNotice();
+    setModSyncBanner("need-sdk", {
+      kicker: "BASE SDK MISSING",
+      title: "Install the official oak2 SDK once",
+      detail:
+        "Press Install SDK + Squ1ggs mod below. After oak2 is in place, this EXE auto-syncs the Squ1ggs mod on every launch when versions differ.",
+      versions,
+    });
+    updateSetupVisibility({ gameRoot: modSync.gameRoot || gameRootInput.value, baseSdk: resolvedBase });
+    return;
+  }
+
+  if (modSync?.updated && modSync.ok) {
+    setModSyncBanner(
+      modSync.gameRunning ? "restart" : "updated",
+      {
+        kicker: modSync.gameRunning ? "RESTART BORDERLANDS 4" : "MOD AUTO-UPDATED",
+        title: modSync.gameRunning
+          ? "Mod files updated — game is still open"
+          : `Squ1ggs mod is now v${modSync.bundledVersion || "bundled"}`,
+        detail: modSync.gameRunning
+          ? "Fully quit Borderlands 4 to desktop, then relaunch and load a character. Alt-tabbing back is not enough."
+          : "Copied into sdk_mods automatically. Launch or fully restart Borderlands 4, then wait for Online.",
+        versions,
+      }
+    );
+    showModSyncNotice(modSync.gameRunning ? "restart" : "updated", {
+      kicker: modSync.gameRunning ? "RESTART BORDERLANDS 4" : "MOD AUTO-UPDATED",
+      title: modSync.gameRunning
+        ? "Squ1ggs mod updated — fully quit the game"
+        : `Squ1ggs mod auto-updated to v${modSync.bundledVersion || "bundled"}`,
+      detail: modSync.gameRunning
+        ? "Quit Borderlands 4 to desktop and relaunch so the new mod loads. You do not need Setup."
+        : "Already copied into sdk_mods. Launch/restart the game and load a character — no Setup click needed.",
+    });
+    if (setupMessage) {
+      setupMessage.className = "setup-message attention";
+      setupMessage.textContent = modSync.message || "";
+    }
+    if (actionMessage) {
+      actionMessage.className = "action-message ok";
+      actionMessage.textContent = modSync.gameRunning
+        ? "Squ1ggs mod updated while Borderlands 4 is open — fully quit and relaunch the game."
+        : modSync.message || "Squ1ggs mod auto-updated.";
+    }
+    // Keep Setup collapsed — the top notice is enough.
+    setupPinned = false;
+    updateSetupVisibility({
+      gameRoot: modSync.gameRoot || gameRootInput.value,
+      baseSdk: resolvedBase,
+      setupDismissed: true,
+    });
+    return;
+  }
+
+  if (modSync?.ok === false && modSync.reason !== "no-game-root") {
+    hideModSyncNotice();
+    setModSyncBanner("error", {
+      kicker: "AUTO MOD SYNC FAILED",
+      title: "Could not update Squ1ggsBoostingTools",
+      detail: modSync.message || "Close Borderlands 4 and use Force reinstall Squ1ggs mod.",
+      versions,
+    });
+    if (setupMessage) {
+      setupMessage.className = "setup-message attention";
+      setupMessage.textContent = modSync.message || "";
+    }
+    setupPinned = true;
+    updateSetupVisibility({
+      gameRoot: modSync.gameRoot || gameRootInput.value,
+      baseSdk: resolvedBase,
+    });
+    return;
+  }
+
+  const match =
+    Boolean(modSync?.installedVersion) &&
+    Boolean(modSync?.bundledVersion) &&
+    modSync.installedVersion === modSync.bundledVersion;
+
+  if (match || modSync?.reason === "already-current") {
+    setModSyncBanner("ok", {
+      kicker: "AUTO MOD SYNC · UP TO DATE",
+      title: `Squ1ggs mod matches this EXE (v${modSync.bundledVersion || "unknown"})`,
+      detail:
+        "Nothing to install. This EXE will auto-copy a newer Squ1ggsBoostingTools folder the next time versions differ. Use Force reinstall only if something looks wrong.",
+      versions,
+    });
+    hideModSyncNotice();
+    setupPinned = false;
+    updateSetupVisibility({
+      gameRoot: modSync.gameRoot || gameRootInput.value,
+      baseSdk: resolvedBase,
+      setupDismissed: true,
+    });
+    return;
+  }
+
+  setModSyncBanner("updated", {
+    kicker: "AUTO MOD SYNC",
+    title: "Squ1ggs mod will auto-update on next sync",
+    detail:
+      "Installed version differs from this EXE. Relaunch the EXE or open Setup → Force reinstall. If the game is open afterward, fully quit and relaunch Borderlands 4.",
+    versions,
+  });
+  showModSyncNotice("updated", {
+    kicker: "AUTO MOD SYNC",
+    title: "Mod version differs — relaunch this EXE",
+    detail: "Or open Setup and press Force reinstall. No need to hunt for Install SDK.",
+  });
+  setupPinned = false;
+  updateSetupVisibility({
+    gameRoot: modSync.gameRoot || gameRootInput.value,
+    baseSdk: resolvedBase,
+    setupDismissed: true,
+  });
+}
+
 async function loadSetup() {
   const setup = await window.sqbt.getSetup();
-  gameRootInput.value =
-    setup.gameRoot || setup.candidates?.[0] || setup.defaultGameRoot || "";
-  updateSetupVisibility(setup);
+  // Prefer a real saved/detected root — never pretend a missing default C: path is set.
+  const resolved =
+    setup.gameRoot ||
+    setup.storedGameRoot ||
+    (setup.candidates || []).find(Boolean) ||
+    "";
+  gameRootInput.value = resolved;
+  applyTheme(setup.theme || "default");
+  applyInstallLocationUi(setup);
+  applyBaseSdkUi(setup.baseSdk, setup.modSync);
+  applyModSyncUi(setup.modSync, setup.baseSdk);
+  updateSetupVisibility({
+    ...setup,
+    gameRoot: resolved,
+    setupDismissed: setup.setupDismissed || !setupNeedsUserAction({ ...setup, gameRoot: resolved }),
+  });
+  if (!setupNeedsUserAction({ ...setup, gameRoot: resolved }) && !setup.setupDismissed) {
+    window.sqbt.dismissSetup().catch(() => {});
+  }
   if (settingsModeNote) {
     if (setup.settingsMode === "appdata" || setup.isPackaged) {
       settingsModeNote.textContent =
@@ -2929,6 +3941,24 @@ if (snapRightBtn) {
   });
 }
 
+if (themeToggleBtn) {
+  themeToggleBtn.addEventListener("click", async () => {
+    const next = currentTheme === "scooters" ? "default" : "scooters";
+    applyTheme(next);
+    try {
+      await window.sqbt.setTheme(next);
+      actionMessage.className = "action-message ok";
+      actionMessage.textContent =
+        next === "scooters"
+          ? "Scooter's Toolbox theme on."
+          : "Default Boosting Tools theme on.";
+    } catch (error) {
+      actionMessage.className = "action-message error";
+      actionMessage.textContent = String(error?.message || error || "Could not save theme.");
+    }
+  });
+}
+
 if (spawnAnchorSelect) {
   spawnAnchorSelect.addEventListener("change", () => {
     selectSpawnAnchor(spawnAnchorSelect.value);
@@ -2947,46 +3977,91 @@ browseGameBtn.addEventListener("click", async () => {
   const result = await window.sqbt.pickGameFolder();
   if (result.ok) {
     gameRootInput.value = result.gameRoot;
-    setupMessage.textContent = "Game folder saved.";
+    applyInstallLocationUi({
+      gameRoot: result.gameRoot,
+      storedGameRoot: result.storedGameRoot || result.gameRoot,
+      pathSource: result.pathSource || "stored",
+      candidates: result.candidates || [],
+    });
+    applyBaseSdkUi(result.baseSdk, result.modSync);
+    applyModSyncUi(result.modSync, result.baseSdk);
+    if (!(result.modSync?.updated && result.modSync?.ok) && setupMessage) {
+      setupMessage.className = "setup-message";
+      setupMessage.textContent = result.baseSdk?.installed
+        ? "Install folder saved. Squ1ggs mod auto-syncs on EXE launch."
+        : "Install folder saved. Base SDK missing — press Install SDK + Squ1ggs mod once.";
+    }
   }
 });
 
-installModBtn.addEventListener("click", async () => {
+async function runInstall({ forceBaseSdk = false, includeBaseSdk = false } = {}) {
+  setupPinned = true;
+  if (setupCard) setupCard.classList.remove("is-hidden");
   setupMessage.className = "setup-message";
-  setupMessage.textContent = "Updating mod folder…";
-  installModBtn.disabled = true;
+  setupMessage.textContent = forceBaseSdk
+    ? "Updating base oak2 SDK…"
+    : "Installing / updating…";
+  if (installModBtn) installModBtn.disabled = true;
+  if (updateBaseSdkBtn) updateBaseSdkBtn.disabled = true;
   try {
-    const result = await window.sqbt.installSdkmod();
+    const result = await window.sqbt.installSdkmod({
+      forceBaseSdk,
+      includeBaseSdk: includeBaseSdk || forceBaseSdk,
+    });
+    if (result?.cancelled) {
+      setupMessage.className = "setup-message";
+      setupMessage.textContent = result.message || "Cancelled.";
+      return;
+    }
     const base =
-      result?.message || "Mod folder update finished without a status message.";
+      result?.message || "Install finished without a status message.";
     if (result?.ok) {
       setupMessage.className = "setup-message attention";
       setupMessage.textContent = result?.needsGameRestart
-        ? `${base}  →  Fully restart Borderlands 4 now, then press Refresh status.`
+        ? `${base}  →  Fully restart Borderlands 4 now (quit to desktop). Load a character — this window should go Online.`
         : base;
+      if (result.gameRoot) gameRootInput.value = result.gameRoot;
+      actionMessage.className = "action-message ok";
+      actionMessage.textContent = setupMessage.textContent;
     } else {
       setupMessage.className = "setup-message attention";
       setupMessage.textContent = base;
     }
-    if (result?.ok && result.gameRoot) {
-      gameRootInput.value = result.gameRoot;
-      // Collapse setup so tabs stay usable; put the restart hint in the action line.
-      hideSetupAfterConfigured(result.gameRoot);
-      actionMessage.className = "action-message ok";
-      actionMessage.textContent = result?.needsGameRestart
-        ? `${base} Fully restart Borderlands 4, then press Refresh status.`
-        : base;
+    await loadSetup();
+    try {
+      await window.sqbt.getStatus().then(setStatusUi);
+      await loadManifest();
+    } catch {
+      /* game may still be restarting */
     }
   } catch (error) {
     setupMessage.className = "setup-message attention";
-    setupMessage.textContent = `Mod folder update failed: ${String(error?.message || error)}`;
+    setupMessage.textContent = `Install failed: ${String(error?.message || error)}`;
   } finally {
-    installModBtn.disabled = false;
+    if (installModBtn) installModBtn.disabled = false;
+    if (updateBaseSdkBtn) updateBaseSdkBtn.disabled = false;
   }
+}
+
+installModBtn.addEventListener("click", async () => {
+  // Main process confirms before downloading oak2 when needed.
+  const setup = await window.sqbt.getSetup();
+  const missing = !setup?.baseSdk?.installed;
+  await runInstall({
+    includeBaseSdk: missing,
+    forceBaseSdk: false,
+  });
 });
+
+if (updateBaseSdkBtn) {
+  updateBaseSdkBtn.addEventListener("click", async () => {
+    await runInstall({ forceBaseSdk: true, includeBaseSdk: true });
+  });
+}
 
 if (dismissSetupBtn) {
   dismissSetupBtn.addEventListener("click", async () => {
+    setupPinned = false;
     await window.sqbt.dismissSetup();
     updateSetupVisibility({ gameRoot: gameRootInput.value, setupDismissed: true });
   });
@@ -2994,14 +4069,71 @@ if (dismissSetupBtn) {
 
 if (showSetupBtn) {
   showSetupBtn.addEventListener("click", () => {
-    if (setupCard) setupCard.classList.remove("is-hidden");
-    showSetupBtn.classList.add("hidden");
+    showSetupCard();
   });
 }
 
+if (typeof window.sqbt.onUpdateProgress === "function") {
+  window.sqbt.onUpdateProgress((info) => {
+    if (info?.message) {
+      if (setupMessage && setupPinned) {
+        setupMessage.className = "setup-message";
+        setupMessage.textContent = String(info.message);
+      }
+      if (updateDetail) {
+        updateDetail.textContent = String(info.message);
+      }
+    }
+  });
+}
+
+if (typeof window.sqbt.onModSync === "function") {
+  window.sqbt.onModSync((info) => applyModSyncUi(info, lastBaseSdk));
+}
+
 if (updateOpenBtn) {
-  updateOpenBtn.addEventListener("click", () => {
-    if (pendingUpdateUrl) window.sqbt.openExternal(pendingUpdateUrl);
+  updateOpenBtn.addEventListener("click", async () => {
+    if (updateApplying) return;
+    if (!pendingCanApply) {
+      if (pendingUpdateUrl) window.sqbt.openExternal(pendingUpdateUrl);
+      return;
+    }
+    updateApplying = true;
+    updateOpenBtn.disabled = true;
+    updateOpenBtn.textContent = "Installing…";
+    if (updateDetail) updateDetail.textContent = "Downloading update from GitHub…";
+    try {
+      const modVersion = latestStatus?.raw?.mod_version || "";
+      const result = await window.sqbt.applyGithubUpdate(modVersion);
+      if (result?.ok) {
+        if (updateTitle) updateTitle.textContent = "Update installed";
+        if (updateDetail) {
+          updateDetail.textContent = result.message || "Update installed. Fully restart Borderlands 4.";
+        }
+        updateOpenBtn.textContent = result.restartApp ? "Restarting…" : "Installed";
+        if (result.needsGameRestart && actionMessage) {
+          actionMessage.className = "action-message ok";
+          actionMessage.textContent = result.message || "Mod updated. Fully restart Borderlands 4.";
+        }
+        if (!result.restartApp) {
+          window.setTimeout(() => refreshUpdateStatus(true), 1200);
+        }
+      } else {
+        if (updateDetail) {
+          updateDetail.textContent = result?.message || "Update failed.";
+        }
+        updateOpenBtn.textContent = pendingCanApply ? "Install update" : "Open GitHub";
+        updateOpenBtn.disabled = false;
+      }
+    } catch (error) {
+      if (updateDetail) {
+        updateDetail.textContent = `Update failed: ${String(error?.message || error)}`;
+      }
+      updateOpenBtn.textContent = pendingCanApply ? "Install update" : "Open GitHub";
+      updateOpenBtn.disabled = false;
+    } finally {
+      updateApplying = false;
+    }
   });
 }
 
@@ -3011,6 +4143,30 @@ if (updateDismissBtn) {
   });
 }
 
+if (reportIssueBtn) {
+  reportIssueBtn.addEventListener("click", () => openReportIssueDialog());
+}
+if (reportIssueFooterBtn) {
+  reportIssueFooterBtn.addEventListener("click", () => openReportIssueDialog());
+}
+if (reportGithubBtn) {
+  reportGithubBtn.addEventListener("click", () => {
+    window.sqbt.openExternal(buildGithubIssueUrl());
+    reportIssueDialog?.close?.();
+  });
+}
+if (reportDiscordBtn) {
+  reportDiscordBtn.addEventListener("click", () => {
+    window.sqbt.openExternal(REPORT_DISCORD);
+    reportIssueDialog?.close?.();
+  });
+}
+
+if (modSyncNoticeDismiss) {
+  modSyncNoticeDismiss.addEventListener("click", () => hideModSyncNotice());
+}
+
+bindExternalLinks(startGuide);
 window.sqbt.onStatus(setStatusUi);
 loadSetup();
 window.sqbt.getStatus().then(setStatusUi);

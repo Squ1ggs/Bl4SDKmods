@@ -1,13 +1,13 @@
 {
   "name": "squ1ggs-boosting-tools-app",
-  "version": "1.0.68",
+  "version": "1.0.69",
   "private": true,
   "description": "Desktop control panel for Squ1ggs Boosting Tools (Borderlands 4 SDK mod).",
   "author": "RDPSqu1ggs",
   "main": "main.js",
   "scripts": {
     "start": "electron .",
-    "check": "node --check main.js && node --check preload.js && node --check lib/bridge.js && node --check lib/status.js && node --check lib/game_paths.js && node --check lib/sdkmod_install.js && node --check lib/app_settings.js && node --check lib/update_check.js && node --check renderer/app.js",
+    "check": "node --check main.js && node --check preload.js && node --check lib/bridge.js && node --check lib/status.js && node --check lib/game_paths.js && node --check lib/sdkmod_install.js && node --check lib/oak2_sdk.js && node --check lib/app_settings.js && node --check lib/serial_sources.js && node --check lib/update_check.js && node --check lib/github_update.js && node --check renderer/app.js",
     "sync:sdkmod": "python sync_sdkmod.py",
     "prepack": "npm run sync:sdkmod",
     "pack": "electron-builder --dir --publish never",
