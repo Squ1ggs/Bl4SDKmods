@@ -4133,10 +4133,14 @@ if (updateOpenBtn) {
         if (updateDetail) {
           updateDetail.textContent = result.message || "Update installed. Fully restart Borderlands 4.";
         }
-        updateOpenBtn.textContent = result.restartApp ? "Restarting…" : "Installed";
+        updateOpenBtn.textContent = result.restartApp ? "Reopening once…" : "Installed";
         if (result.needsGameRestart && actionMessage) {
           actionMessage.className = "action-message ok";
           actionMessage.textContent = result.message || "Mod updated. Fully restart Borderlands 4.";
+        }
+        if (result.restartApp && updateDetail) {
+          updateDetail.textContent =
+            "Closing and reopening once to finish the EXE update. After it comes back, you can close normally.";
         }
         if (!result.restartApp) {
           window.setTimeout(() => refreshUpdateStatus(true), 1200);

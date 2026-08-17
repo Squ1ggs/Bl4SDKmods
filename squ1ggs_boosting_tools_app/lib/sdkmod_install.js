@@ -11,6 +11,8 @@ const {
   settingsDir,
 } = require("./game_paths");
 
+const { compareVersions } = require("./update_check");
+
 const MOD_FOLDER_NAME = "Squ1ggsBoostingTools";
 const LEGACY_SDKMOD_NAME = `${MOD_FOLDER_NAME}.sdkmod`;
 const PRESERVED_RUNTIME_DIRS = new Set(["logs"]);
@@ -20,15 +22,23 @@ function validModFolder(folder) {
   return existsDir(folder) && fs.existsSync(path.join(folder, "__init__.py"));
 }
 
-function readModVersion(folder) {
-  if (!validModFolder(folder)) return "";
+function readVersionFromPy(filePath) {
   try {
-    const text = fs.readFileSync(path.join(folder, "__init__.py"), "utf8");
+    const text = fs.readFileSync(filePath, "utf8");
     const match = text.match(/__version__(?:\s*:\s*\w+)?\s*=\s*["']([^"']+)["']/);
     return match ? String(match[1]).trim() : "";
   } catch {
     return "";
   }
+}
+
+function readModVersion(folder) {
+  if (!validModFolder(folder)) return "";
+  // Prefer _mod_version.py (avoids circular imports in the live mod).
+  return (
+    readVersionFromPy(path.join(folder, "_mod_version.py")) ||
+    readVersionFromPy(path.join(folder, "__init__.py"))
+  );
 }
 
 function installedModFolder(gameRoot) {
@@ -64,10 +74,14 @@ function getModSyncStatus(gameRootInput) {
   const bundledVersion = readModVersion(source);
   const installed = gameRoot ? installedModFolder(gameRoot) : null;
   const installedVersion = readModVersion(installed);
+  // Only push when bundled is newer. Never wipe a newer on-disk fix with an older EXE bundle.
   const needsUpdate =
     Boolean(gameRoot) &&
     Boolean(source) &&
-    (!installed || !bundledVersion || !installedVersion || bundledVersion !== installedVersion);
+    Boolean(bundledVersion) &&
+    (!installed ||
+      !installedVersion ||
+      compareVersions(bundledVersion, installedVersion) > 0);
   return {
     gameRoot,
     bundledVersion,

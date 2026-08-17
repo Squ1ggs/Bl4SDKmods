@@ -118,26 +118,45 @@ function extractArchive(archivePath, destDir) {
   }
 }
 
+function psSingleQuote(value) {
+  return String(value ?? "").replace(/'/g, "''");
+}
+
 function scheduleAppReplace(extractedAppRoot, destRoot, pid) {
-  const batPath = path.join(os.tmpdir(), `sqbt-apply-app-${Date.now()}.bat`);
-  const script = [
-    "@echo off",
-    "setlocal",
-    "set \"SRC=%~1\"",
-    "set \"DST=%~2\"",
-    "set \"PID=%~3\"",
-    ":wait",
-    "tasklist /FI \"PID eq %PID%\" | find \"%PID%\" >nul",
-    "if not errorlevel 1 (",
-    "  timeout /t 1 /nobreak >nul",
-    "  goto wait",
-    ")",
-    "robocopy \"%SRC%\" \"%DST%\" /E /NFL /NDL /NJH /NJS /nc /ns /np",
-    "start \"\" \"%DST%\\Squ1ggsBoostingTools.exe\"",
-    "del \"%~f0\"",
+  // Hidden PowerShell via wscript (window style 0) — no CMD / FIND flash.
+  const stamp = Date.now();
+  const ps1Path = path.join(os.tmpdir(), `sqbt-apply-app-${stamp}.ps1`);
+  const vbsPath = path.join(os.tmpdir(), `sqbt-apply-app-${stamp}.vbs`);
+  const waitPid = Math.max(0, Number(pid) || 0);
+  const src = psSingleQuote(extractedAppRoot);
+  const dst = psSingleQuote(destRoot);
+  const ps1Self = psSingleQuote(ps1Path);
+  const vbsSelf = psSingleQuote(vbsPath);
+  const ps1 = [
+    "$ErrorActionPreference = 'SilentlyContinue'",
+    `$src = '${src}'`,
+    `$dst = '${dst}'`,
+    "$exe = Join-Path $dst 'Squ1ggsBoostingTools.exe'",
+    `$waitPid = ${waitPid}`,
+    "if ($waitPid -gt 0) {",
+    "  Wait-Process -Id $waitPid -ErrorAction SilentlyContinue",
+    "  Start-Sleep -Milliseconds 500",
+    "}",
+    "& robocopy $src $dst /E /NFL /NDL /NJH /NJS /nc /ns /np | Out-Null",
+    "if (Test-Path -LiteralPath $exe) { Start-Process -FilePath $exe }",
+    `Remove-Item -LiteralPath '${ps1Self}' -Force -ErrorAction SilentlyContinue`,
+    `Remove-Item -LiteralPath '${vbsSelf}' -Force -ErrorAction SilentlyContinue`,
+    "",
   ].join("\r\n");
-  fs.writeFileSync(batPath, script, "utf8");
-  const child = spawn("cmd.exe", ["/c", batPath, extractedAppRoot, destRoot, String(pid)], {
+  const ps1ForVbs = ps1Path.replace(/"/g, '""');
+  const vbs = [
+    'Set sh = CreateObject("WScript.Shell")',
+    `sh.Run "powershell.exe -NoProfile -NonInteractive -ExecutionPolicy Bypass -File ""${ps1ForVbs}""", 0, False`,
+    "",
+  ].join("\r\n");
+  fs.writeFileSync(ps1Path, ps1, "utf8");
+  fs.writeFileSync(vbsPath, vbs, "utf8");
+  const child = spawn("wscript.exe", ["//B", "//Nologo", vbsPath], {
     detached: true,
     stdio: "ignore",
     windowsHide: true,
@@ -203,7 +222,7 @@ async function applyGithubUpdate({
         needsGameRestart: true,
         message:
           (installed?.message ? `${installed.message} ` : "") +
-          "App files will replace after this window closes, then Squ1ggs Boosting Tools will reopen. Fully restart Borderlands 4.",
+          "Finishing in the background (no CMD window). This app will close and reopen once by itself — after that, the X button closes normally. Fully restart Borderlands 4.",
         gameRoot: installed?.gameRoot,
       };
     }
