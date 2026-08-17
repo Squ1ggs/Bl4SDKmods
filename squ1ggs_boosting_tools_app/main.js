@@ -344,29 +344,35 @@ ipcMain.handle("sqbt:pick-game-folder", async () => {
 ipcMain.handle("sqbt:install-sdkmod", async (_event, options = {}) => {
   try {
     const gameRoot = storedGameRoot || resolveGameRoot(undefined);
+    const detectedPre = detectBaseSdk(gameRoot);
     const wantBase =
       Boolean(options?.includeBaseSdk) ||
       Boolean(options?.forceBaseSdk) ||
-      !detectBaseSdk(gameRoot).installed;
-    const forceBase = Boolean(options?.forceBaseSdk);
+      !detectedPre.installed ||
+      Boolean(detectedPre.belowMin);
+    const forceBase = Boolean(options?.forceBaseSdk) || Boolean(detectedPre.belowMin);
     const notes = [];
     let baseOutcome = null;
 
     if (wantBase) {
       const detected = detectBaseSdk(gameRoot);
-      const needsConfirm = !detected.installed || forceBase || Boolean(options?.includeBaseSdk);
+      const needsConfirm =
+        !detected.installed || forceBase || Boolean(options?.includeBaseSdk) || Boolean(detected.belowMin);
       if (needsConfirm && !options?.confirmedBaseSdk) {
-        const latestHint = forceBase || !detected.installed ? "latest official oak2-sdk.zip" : "oak2 SDK";
         const detail = detected.installed
-          ? `Update the base Borderlands 4 SDK (${latestHint}) from bl-sdk/oak2-mod-manager into:\n\n${gameRoot || "(unknown)"}\n\nExisting mods in sdk_mods are kept. Close Borderlands 4 first.`
+          ? `Squ1ggs needs Oak2 SDK 0.3+ (FGbxDefPtr). Tracked version: ${detected.version || "unknown"}.\n\nUpdate from bl-sdk/oak2-mod-manager into:\n\n${gameRoot || "(unknown)"}\n\nExisting mods in sdk_mods are kept. Close Borderlands 4 first.`
           : `No oak2 SDK detected in:\n\n${gameRoot || "(unknown)"}\n\nDownload and install the official oak2-sdk.zip from bl-sdk/oak2-mod-manager (~14 MB), then install Squ1ggs Boosting Tools.\n\nClose Borderlands 4 first.`;
         const choice = await dialog.showMessageBox(mainWindow, {
           type: "question",
           buttons: ["Install SDK", "Cancel"],
           defaultId: 0,
           cancelId: 1,
-          title: detected.installed ? "Update base SDK?" : "Install base SDK?",
-          message: detected.installed ? "Update oak2 base SDK?" : "Install oak2 base SDK?",
+          title: detected.belowMin ? "Update oak2 SDK to 0.3+?" : detected.installed ? "Update base SDK?" : "Install base SDK?",
+          message: detected.belowMin
+            ? "Oak2 SDK 0.3+ required"
+            : detected.installed
+              ? "Update oak2 base SDK?"
+              : "Install oak2 base SDK?",
           detail,
         });
         if (choice.response !== 0) {
@@ -375,7 +381,7 @@ ipcMain.handle("sqbt:install-sdkmod", async (_event, options = {}) => {
       }
       baseOutcome = await installBaseSdk({
         gameRoot,
-        force: forceBase || Boolean(options?.includeBaseSdk),
+        force: forceBase || Boolean(options?.includeBaseSdk) || Boolean(detected.belowMin),
         onProgress: (info) => {
           if (mainWindow && !mainWindow.isDestroyed()) {
             mainWindow.webContents.send("sqbt:update-progress", info);

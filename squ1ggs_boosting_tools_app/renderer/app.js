@@ -383,9 +383,24 @@ function setStatusUi(payload) {
   const raw = payload?.raw || {};
   metaBridge.textContent = payload?.connected ? "Online" : "Offline";
   metaModVersion.textContent = raw.mod_version || "—";
-  if (payload?.connected && raw.bridge_features && raw.bridge_features.manifest !== true) {
+  if (payload?.connected && raw.fgbx_def_ptr_ok === false) {
+    statusDetail.textContent =
+      (payload.detail || "") +
+      " · Oak2 SDK 0.3+ required for GiveCurrency (Setup → Update base SDK), then fully restart BL4.";
+    statusDetail.classList.add("attention");
+  } else if (payload?.connected && raw.bridge_features && raw.bridge_features.manifest !== true) {
     statusDetail.textContent =
       (payload.detail || "") + " · Fully restart Borderlands 4 to load the latest mod version.";
+    statusDetail.classList.add("attention");
+  } else if (
+    payload?.connected &&
+    lastModSync?.bundledVersion &&
+    raw.mod_version &&
+    String(raw.mod_version) !== String(lastModSync.bundledVersion)
+  ) {
+    statusDetail.textContent =
+      (payload.detail || "") +
+      ` · Game still has mod v${raw.mod_version}; this EXE bundles v${lastModSync.bundledVersion}. Fully restart Borderlands 4 after auto-sync.`;
     statusDetail.classList.add("attention");
   } else if (!payload?.connected) {
     statusDetail.classList.add("attention");
@@ -3682,9 +3697,11 @@ function applyBaseSdkUi(baseSdk, modSync = null) {
   if (baseSdk) lastBaseSdk = baseSdk;
   if (modSync) lastModSync = modSync;
   const installed = Boolean(baseSdk?.installed);
-  const updateAvailable = Boolean(baseSdk?.updateAvailable);
+  const belowMin = Boolean(baseSdk?.belowMin || baseSdk?.needsOak2_03);
+  const updateAvailable = Boolean(baseSdk?.updateAvailable) || belowMin;
   const version = String(baseSdk?.version || "").trim();
   const latest = String(baseSdk?.latestVersion || "").trim();
+  const minVersion = String(baseSdk?.minVersion || "0.3").trim();
   const hasGameRoot = Boolean(baseSdk?.gameRoot || gameRootInput.value);
   if (sdkStatusLine) {
     if (!hasGameRoot) {
@@ -3692,6 +3709,8 @@ function applyBaseSdkUi(baseSdk, modSync = null) {
     } else if (!installed) {
       sdkStatusLine.textContent =
         "Base oak2 SDK: not found — use Install SDK + Squ1ggs mod (official download).";
+    } else if (belowMin) {
+      sdkStatusLine.textContent = `Base oak2 SDK: too old (tracked ${version || "unknown"}) — Squ1ggs needs v${minVersion}+. Press Update base SDK.`;
     } else if (updateAvailable && latest) {
       sdkStatusLine.textContent = `Base oak2 SDK: installed${version ? ` (tracked v${version})` : ""} — update available (v${latest}).`;
     } else {
@@ -3699,8 +3718,8 @@ function applyBaseSdkUi(baseSdk, modSync = null) {
     }
   }
   if (installModBtn) {
-    if (!installed) {
-      installModBtn.textContent = "Install SDK + Squ1ggs mod";
+    if (!installed || belowMin) {
+      installModBtn.textContent = belowMin ? "Install SDK 0.3+ + Squ1ggs mod" : "Install SDK + Squ1ggs mod";
       installModBtn.classList.add("primary");
       installModBtn.classList.remove("ghost");
     } else {
@@ -3710,9 +3729,10 @@ function applyBaseSdkUi(baseSdk, modSync = null) {
     }
   }
   if (updateBaseSdkBtn) {
-    const showUpdate = installed && updateAvailable;
+    const showUpdate = installed && (updateAvailable || belowMin);
     updateBaseSdkBtn.classList.toggle("hidden", !showUpdate);
     updateBaseSdkBtn.disabled = false;
+    if (belowMin) updateBaseSdkBtn.textContent = "Update base SDK (0.3+ required)";
   }
   if (setupAttention) {
     if (!hasGameRoot) {
@@ -3724,6 +3744,11 @@ function applyBaseSdkUi(baseSdk, modSync = null) {
       setupAttention.innerHTML =
         "<strong>First use:</strong> press <strong>Install SDK + Squ1ggs mod</strong> once (downloads official oak2). " +
         "Later launches auto-copy the Squ1ggs mod. Fully restart Borderlands 4, then wait for <strong>Online</strong>.";
+    } else if (belowMin) {
+      setupAttention.classList.remove("hidden");
+      setupAttention.innerHTML =
+        `<strong>Oak2 SDK ${minVersion}+ required.</strong> Your install is tracked as <code>${version || "unknown"}</code>. ` +
+        "Press <strong>Update base SDK</strong> (or Install SDK 0.3+), then fully restart Borderlands 4. GiveCurrency / vault wallets need this.";
     } else {
       setupAttention.classList.add("hidden");
       setupAttention.innerHTML = "";
@@ -3745,6 +3770,14 @@ function applyBaseSdkUi(baseSdk, modSync = null) {
         "Press Install SDK + Squ1ggs mod below. After oak2 is in place, this EXE auto-syncs the Squ1ggs mod on every launch when versions differ.",
       versions: formatModVersions(modSync),
     });
+  } else if (belowMin) {
+    setModSyncBanner("need-sdk", {
+      kicker: "OAK2 0.3+ REQUIRED",
+      title: `Update base SDK to v${minVersion}+`,
+      detail:
+        "This user’s GiveCurrency / FGbxDefPtr errors usually mean an old oak2 install. Update base SDK from Setup, fully restart BL4, and make sure the EXE auto-synced the latest Squ1ggsBoostingTools folder.",
+      versions: formatModVersions(modSync),
+    });
   } else if (!modSync) {
     setModSyncBanner("ok", {
       kicker: "AUTO MOD SYNC",
@@ -3755,7 +3788,7 @@ function applyBaseSdkUi(baseSdk, modSync = null) {
     });
   }
   // Only force the Setup panel open when the user still must act (path / oak2).
-  if (!hasGameRoot || !installed) {
+  if (!hasGameRoot || !installed || belowMin) {
     setupPinned = true;
     if (setupCard) setupCard.classList.remove("is-hidden");
     if (showSetupBtn) showSetupBtn.classList.add("hidden");

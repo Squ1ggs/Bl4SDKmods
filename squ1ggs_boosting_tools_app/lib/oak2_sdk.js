@@ -10,6 +10,7 @@ const OAK2_REPO = "bl-sdk/oak2-mod-manager";
 const OAK2_API_LATEST = `https://api.github.com/repos/${OAK2_REPO}/releases/latest`;
 const OAK2_RELEASES_PAGE = `https://github.com/${OAK2_REPO}/releases/latest`;
 const OAK2_VERSION_MARKER = ".sqbt_oak2_sdk_version";
+const MIN_OAK2_VERSION = "0.3";
 const USER_AGENT = "Squ1ggs-Boosting-Tools";
 
 function win64Dir(gameRoot) {
@@ -70,11 +71,17 @@ function detectBaseSdk(gameRootInput) {
   if (!hasProxy) missing.push("OakGame\\Binaries\\Win64\\dsound.dll");
   if (!hasPlugin) missing.push("OakGame\\Binaries\\Win64\\Plugins\\unrealsdk.dll");
   if (!hasModsCore) missing.push("sdk_mods (mods_base / __main__.py)");
+  const version = readInstalledVersion(gameRoot);
+  const belowMin =
+    Boolean(installed) && (!version || compareVersions(MIN_OAK2_VERSION, version) > 0);
   return {
     ok: true,
     installed,
     gameRoot,
-    version: readInstalledVersion(gameRoot),
+    version,
+    minVersion: MIN_OAK2_VERSION,
+    belowMin,
+    needsOak2_03: belowMin,
     hasProxy,
     hasPlugin,
     hasModsDir: existsDir(modsDir),
@@ -137,17 +144,27 @@ async function checkBaseSdkUpdate(gameRootInput) {
   }
   try {
     const latest = await fetchLatestOak2Release();
+    const belowMin =
+      Boolean(detected.installed) &&
+      (!detected.version || compareVersions(MIN_OAK2_VERSION, detected.version) > 0);
     const updateAvailable =
       !detected.installed ||
+      belowMin ||
       (Boolean(detected.version) && compareVersions(latest.version, detected.version) > 0);
     return {
       ...detected,
+      belowMin,
+      needsOak2_03: belowMin,
+      minVersion: MIN_OAK2_VERSION,
       updateAvailable,
       latestVersion: latest.version,
       latestTag: latest.tag,
       zipUrl: latest.zipUrl,
       htmlUrl: latest.htmlUrl,
       current: detected.version || (detected.installed ? "unknown" : ""),
+      message: belowMin
+        ? `Oak2 SDK ${MIN_OAK2_VERSION}+ required (tracked ${detected.version || "unknown"}). Update base SDK.`
+        : undefined,
     };
   } catch (error) {
     return {
@@ -303,6 +320,7 @@ async function installBaseSdk({ gameRoot: gameRootInput, force = false, onProgre
   if (
     before.installed &&
     before.version &&
+    !before.belowMin &&
     compareVersions(latest.version, before.version) <= 0 &&
     !force
   ) {
@@ -364,6 +382,7 @@ async function installBaseSdk({ gameRoot: gameRootInput, force = false, onProgre
 }
 
 module.exports = {
+  MIN_OAK2_VERSION,
   OAK2_RELEASES_PAGE,
   OAK2_REPO,
   checkBaseSdkUpdate,
