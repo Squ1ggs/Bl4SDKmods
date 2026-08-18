@@ -50,9 +50,59 @@ function readJsonFile(filePath) {
   return data && typeof data === "object" ? data : {};
 }
 
+const SUPPORTED_LOCALES = ["en", "fr", "de", "es", "pt", "it", "pl", "ru", "ja", "ko", "zh"];
+
 function normalizeTheme(value) {
-  const theme = String(value || "").trim().toLowerCase();
-  return theme === "scooters" ? "scooters" : "default";
+  const theme = String(value || "").trim().toLowerCase().replaceAll("_", "-");
+  if (theme === "scooters-girly" || theme === "girly" || theme === "tina") return "scooters-girly";
+  if (theme === "scooters") return "scooters";
+  if (theme === "claptrap" || theme === "cl4p-tp" || theme === "cl4ptp") return "claptrap";
+  if (theme === "moxxi") return "moxxi";
+  if (theme === "crimson" || theme === "red-black" || theme === "redblack") return "crimson";
+  if (theme === "psycho" || theme === "bandit") return "psycho";
+  if (theme === "maliwan") return "maliwan";
+  return "default";
+}
+
+function normalizeLocale(value, fallback = "en") {
+  const raw = String(value || "")
+    .trim()
+    .toLowerCase()
+    .replaceAll("_", "-");
+  const base = SUPPORTED_LOCALES.includes(fallback) ? fallback : "en";
+  if (!raw) return base;
+  if (raw.startsWith("zh")) return "zh";
+  if (raw.startsWith("pt")) return "pt";
+  const short = raw.slice(0, 2);
+  return SUPPORTED_LOCALES.includes(short) ? short : base;
+}
+
+function detectSystemLocale() {
+  try {
+    return normalizeLocale(Intl.DateTimeFormat().resolvedOptions().locale, "en");
+  } catch {
+    return "en";
+  }
+}
+
+function hiddenShapesFlagPath() {
+  const base = process.env.LOCALAPPDATA || path.join(process.env.USERPROFILE || "", "AppData", "Local");
+  return path.join(base, "Squ1ggsBoostingTools", "watcha.json");
+}
+
+function readHiddenShapesUnlocked() {
+  try {
+    const data = readJsonFile(hiddenShapesFlagPath());
+    return Boolean(data && data.unlocked);
+  } catch {
+    return false;
+  }
+}
+
+function writeHiddenShapesUnlocked(unlocked) {
+  const filePath = hiddenShapesFlagPath();
+  fs.mkdirSync(path.dirname(filePath), { recursive: true });
+  fs.writeFileSync(filePath, JSON.stringify({ unlocked: Boolean(unlocked) }, null, 2) + "\n", "utf8");
 }
 
 function settingsScore(data) {
@@ -61,6 +111,7 @@ function settingsScore(data) {
   if (data.gameRoot) score += 2;
   if (data.setupDismissed) score += 1;
   if (data.theme) score += 1;
+  if (data.locale) score += 1;
   return score;
 }
 
@@ -102,6 +153,8 @@ function loadSettings(app) {
         gameRoot: best.gameRoot || null,
         setupDismissed: Boolean(best.setupDismissed),
         theme: normalizeTheme(best.theme),
+        locale: best.locale ? normalizeLocale(best.locale) : detectSystemLocale(),
+        hiddenShapes: Boolean(best.hiddenShapes) || readHiddenShapesUnlocked(),
       });
     } catch {
       /* keep loaded values even if migration fails */
@@ -112,6 +165,8 @@ function loadSettings(app) {
     gameRoot: best?.gameRoot || null,
     setupDismissed: Boolean(best?.setupDismissed),
     theme: normalizeTheme(best?.theme),
+    locale: best?.locale ? normalizeLocale(best.locale) : detectSystemLocale(),
+    hiddenShapes: Boolean(best?.hiddenShapes) || readHiddenShapesUnlocked(),
     settingsPath: writeTarget.path,
     settingsMode: writeTarget.mode,
   };
@@ -134,9 +189,24 @@ function saveSettings(app, data) {
         ? Boolean(data.setupDismissed)
         : Boolean(existing.setupDismissed),
     theme: normalizeTheme(data?.theme !== undefined ? data.theme : existing.theme),
+    locale: normalizeLocale(
+      data?.locale !== undefined ? data.locale : existing.locale,
+      detectSystemLocale()
+    ),
+    hiddenShapes:
+      data?.hiddenShapes !== undefined
+        ? Boolean(data.hiddenShapes)
+        : Boolean(existing.hiddenShapes) || readHiddenShapesUnlocked(),
   };
   fs.mkdirSync(path.dirname(target.path), { recursive: true });
   fs.writeFileSync(target.path, JSON.stringify(payload, null, 2) + "\n", "utf8");
+  if (payload.hiddenShapes) {
+    try {
+      writeHiddenShapesUnlocked(true);
+    } catch {
+      /* flag file is best-effort for the in-game panel */
+    }
+  }
   return target;
 }
 
@@ -145,6 +215,11 @@ module.exports = {
   appDataSettingsPath,
   loadSettings,
   normalizeTheme,
+  normalizeLocale,
+  detectSystemLocale,
+  SUPPORTED_LOCALES,
+  readHiddenShapesUnlocked,
+  writeHiddenShapesUnlocked,
   portableSettingsPath,
   resolveWritableSettingsTarget,
   saveSettings,

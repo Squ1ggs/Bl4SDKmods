@@ -1,5 +1,10 @@
 "use strict";
 
+const i18n = window.SqbtI18n;
+function t(key, vars) {
+  return i18n.t(key, vars);
+}
+
 const statusDot = document.getElementById("status-dot");
 const statusHeadline = document.getElementById("status-headline");
 const statusDetail = document.getElementById("status-detail");
@@ -18,7 +23,8 @@ const actionMessage = document.getElementById("action-message");
 const gameRootInput = document.getElementById("game-root");
 const refreshBtn = document.getElementById("refresh-btn");
 const snapRightBtn = document.getElementById("snap-right-btn");
-const themeToggleBtn = document.getElementById("theme-toggle-btn");
+const themeSelect = document.getElementById("theme-select");
+const langSelect = document.getElementById("lang-select");
 const browseGameBtn = document.getElementById("browse-game-btn");
 const installModBtn = document.getElementById("install-mod-btn");
 const updateBaseSdkBtn = document.getElementById("update-base-sdk-btn");
@@ -38,6 +44,7 @@ const modSyncVersions = document.getElementById("mod-sync-versions");
 const tabBar = document.getElementById("tab-bar");
 const tabContent = document.getElementById("tab-content");
 const updateCard = document.getElementById("update-card");
+const updateKicker = document.querySelector("#update-card .update-kicker");
 const updateTitle = document.getElementById("update-title");
 const updateDetail = document.getElementById("update-detail");
 const updateOpenBtn = document.getElementById("update-open-btn");
@@ -67,8 +74,11 @@ let progressPollTimer = null;
 let setupDismissed = false;
 let setupPinned = false;
 let lastSeenConnected = false;
+let lastSetup = null;
+let lastUpdateResult = null;
 let lastSeenModVersion = "";
 let currentTheme = "default";
+let hiddenShapesUnlocked = false;
 let lastBaseSdk = null;
 let lastModSync = null;
 const catalogCache = new Map();
@@ -100,7 +110,7 @@ const TAB_ICONS = Object.freeze({
   mobility: "assets/icons/tab-mobility.svg",
   vehicle: "assets/icons/tab-vehicle.svg",
   damage: "assets/bl4/tab-damage.png",
-  resources: "assets/bl4/tab-resources.png",
+  resources: "assets/icons/tab-kits.svg",
   world: "assets/bl4/tab-world.png",
   mob_io: "assets/icons/tab-mob.svg",
   loot_shapes: "assets/icons/tab-shapes.svg",
@@ -121,6 +131,7 @@ const ACTION_ICON_RULES = Object.freeze([
   [/cosmetic|max_sdu|backpack|bank|\bsdu\b/i, "assets/icons/tab-player.svg"],
   [/open.*reward|rewards_open/i, "assets/bl4/tab-serials.png"],
   [/serial|deliver|mail|\breward\b/i, "assets/bl4/tab-serials.png"],
+  [/kit|shield|repkit|\bbrc\b|recovery/i, "assets/icons/tab-kits.svg"],
   [/currency|eridium|resource|wallet/i, "assets/bl4/tab-resources.png"],
   [/experience|challenge|uvhm|progress/i, "assets/bl4/tab-progression.png"],
   [/god.?mode|infinite.?ammo|devperk|damage.?look|faafo_|lock.?look|lock.?move|invert.?look/i, "assets/bl4/tab-damage.png"],
@@ -157,6 +168,29 @@ function actionAccent(actionDef) {
   if (/spawn|loot|drop|serial|deliver|mail|cosmetic|rarity|reward/i.test(searchable)) return "pink";
   return "cyan";
 }
+
+let suppressActionClicksUntil = 0;
+document.addEventListener(
+  "mousedown",
+  (event) => {
+    const el = event.target;
+    if (el && (el.tagName === "SELECT" || el.tagName === "OPTION")) {
+      suppressActionClicksUntil = Date.now() + 500;
+    }
+  },
+  true
+);
+document.addEventListener(
+  "click",
+  (event) => {
+    if (Date.now() >= suppressActionClicksUntil) return;
+    const btn = event.target?.closest?.("button[data-run-action]");
+    if (!btn) return;
+    event.preventDefault();
+    event.stopImmediatePropagation();
+  },
+  true
+);
 
 function decorateActionButton(button, label, actionDef) {
   button.dataset.accent = actionAccent(actionDef);
@@ -247,10 +281,11 @@ function showSetupCard() {
 }
 
 function renderUpdateStatus(result) {
+  lastUpdateResult = result || null;
   const current = String(result?.currentVersion || "").replace(/^v/i, "");
   if (current) knownAppVersion = current;
   if (appVersion) {
-    appVersion.textContent = current ? `v${current}` : "Version unavailable";
+    appVersion.textContent = current ? `v${current}` : t("footer.unavailable");
   }
 
   if (!result?.ok || !result.updateAvailable || !result.latestVersion) {
@@ -259,17 +294,20 @@ function renderUpdateStatus(result) {
     pendingOpenSetup = false;
     if (result?.needsGameRestartForMod) {
       pendingUpdateUrl = result.releaseUrl || "";
+      if (updateKicker) {
+        updateKicker.textContent = t("update.modRestartKicker");
+      }
       if (updateTitle) {
-        updateTitle.textContent = "Mod files updated — restart Borderlands 4";
+        updateTitle.textContent = t("update.modRestartTitle");
       }
       if (updateDetail) {
-        updateDetail.textContent =
-          `sdk_mods already has mod v${result.diskModVersion || result.currentModVersion || "latest"}, ` +
-          `but the game is still running v${result.liveModVersion || "an older build"}. ` +
-          "Fully quit Borderlands 4 and launch again — you do not need to Install update again.";
+        updateDetail.textContent = t("update.modRestartDetail", {
+          disk: result.diskModVersion || result.currentModVersion || "latest",
+          live: result.liveModVersion || "an older build",
+        });
       }
       if (updateOpenBtn) {
-        updateOpenBtn.textContent = "Got it";
+        updateOpenBtn.textContent = t("update.gotIt");
         updateOpenBtn.disabled = false;
       }
       pendingCanApply = false;
@@ -291,38 +329,43 @@ function renderUpdateStatus(result) {
   if (updateTitle) {
     if (appBehind) {
       updateTitle.textContent = pendingCanApply
-        ? `Install app v${latest} from GitHub`
-        : `Download v${latest} from GitHub`;
+        ? t("update.installApp", { latest })
+        : t("update.downloadApp", { latest });
     } else if (modBehind) {
-      updateTitle.textContent = `Newer Squ1ggs mod on GitHub (v${result.latestModVersion || latest})`;
+      updateTitle.textContent = t("update.newerMod", { latest: result.latestModVersion || latest });
     } else {
-      updateTitle.textContent = pendingCanApply
-        ? `Install the new version from GitHub`
-        : `Download the new version from GitHub`;
+      updateTitle.textContent = pendingCanApply ? t("update.installNew") : t("update.downloadNew");
     }
+  }
+  if (updateKicker) {
+    updateKicker.textContent = t("update.githubKicker");
   }
   if (updateDetail) {
     const lines = [];
     if (appBehind) {
       lines.push(
         pendingCanApply
-          ? `Your app is v${current || "unknown"}; GitHub has v${latest}. Install update downloads the portable and replaces this app — the new EXE auto-applies the Squ1ggs mod.`
-          : `Your app is v${current || "unknown"}; GitHub has v${latest}. This release has no zip yet — open GitHub and install manually.`
+          ? t("update.appBehindApply", { current: current || t("sync.unknown"), latest })
+          : t("update.appBehindManual", { current: current || t("sync.unknown"), latest })
       );
     }
     if (modBehind) {
       lines.push(
-        `Installed mod is v${result.currentModVersion || "unknown"}; GitHub has mod v${result.latestModVersion || latest}. Install update pulls the portable zip (app + mod).`
+        t("update.modBehind", {
+          current: result.currentModVersion || t("sync.unknown"),
+          latest: result.latestModVersion || latest,
+        })
       );
     }
     if (!lines.length) {
-      lines.push(`A newer Squ1ggs Boosting Tools release is on GitHub (v${latest}).`);
+      lines.push(t("update.generic", { latest }));
     }
-    lines.push("Fully restart Borderlands 4 after the mod folder updates.");
+    lines.push(t("update.githubRequired"));
+    lines.push(t("update.restartAfter"));
     updateDetail.textContent = lines.join(" ");
   }
   if (updateOpenBtn) {
-    updateOpenBtn.textContent = pendingCanApply ? "Install update" : "Open GitHub";
+    updateOpenBtn.textContent = pendingCanApply ? t("update.install") : t("update.openGithub");
     updateOpenBtn.disabled = updateApplying;
   }
   updateCard?.classList.remove("hidden");
@@ -334,7 +377,7 @@ async function refreshUpdateStatus(force = false) {
     renderUpdateStatus(await window.sqbt.checkForUpdates(force, modVersion));
   } catch {
     updateCard?.classList.add("hidden");
-    if (appVersion) appVersion.textContent = "Version unavailable";
+    if (appVersion) appVersion.textContent = t("footer.unavailable");
   }
 }
 
@@ -346,7 +389,7 @@ function playerNameForIndex(players, index) {
 
 function applyTargetMeta(targetIdx, targetName) {
   if (Number(targetIdx) === -1 || targetName === "All players") {
-    metaTarget.textContent = "All players";
+    metaTarget.textContent = t("target.all");
   } else if (targetIdx != null && targetName) {
     metaTarget.textContent = `${targetName} (#${targetIdx})`;
   } else if (targetIdx != null) {
@@ -373,24 +416,63 @@ function effectiveTargetIndex(raw) {
   return remote;
 }
 
+function localizeStatusHeadline(headline) {
+  const raw = String(headline || "").trim();
+  const map = {
+    "Connected!": "status.connectedBang",
+    "Connected — enter a save": "status.enterSave",
+    "Game not responding": "status.notResponding",
+    "Game not connected": "status.notConnected",
+    Unknown: "status.unknown",
+  };
+  return map[raw] ? t(map[raw]) : raw || t("status.unknown");
+}
+
+function localizeStatusDetail(headline, detail) {
+  const head = String(headline || "").trim();
+  const text = String(detail || "");
+  if (head === "Connected!" && (text === "lets mod" || !text)) return t("status.letsMod");
+  if (head === "Connected — enter a save") return t("status.enterSaveDetail");
+  if (head === "Game not responding") return t("status.notRespondingDetail");
+  if (head === "Game not connected") {
+    const message = text.split("  →  ")[0] || text;
+    return t("status.notConnectedDetail", { message });
+  }
+  return text;
+}
+
+function localizeSpawnLabel(raw) {
+  const value = String(raw || "").trim();
+  const map = {
+    local: "spawn.local",
+    party: "spawn.party",
+    npc_nearest: "spawn.npc",
+    "From me": "spawn.local",
+    "From selected player": "spawn.party",
+    "Near nearest NPC": "spawn.npc",
+  };
+  return map[value] ? t(map[value]) : value || "—";
+}
+
 function setStatusUi(payload) {
   latestStatus = payload;
   const state = payload?.state || "disconnected";
   statusDot.className = "status-dot " + state;
-  statusHeadline.textContent = payload?.headline || "Unknown";
-  statusDetail.textContent = payload?.detail || "";
+  statusHeadline.textContent = localizeStatusHeadline(payload?.headline || "Unknown");
+  statusDetail.textContent = localizeStatusDetail(payload?.headline, payload?.detail || "");
   statusDetail.classList.remove("attention");
   const raw = payload?.raw || {};
-  metaBridge.textContent = payload?.connected ? "Online" : "Offline";
-  metaModVersion.textContent = raw.mod_version || "—";
-  if (payload?.connected && raw.fgbx_def_ptr_ok === false) {
-    statusDetail.textContent =
-      (payload.detail || "") +
-      " · Oak2 SDK 0.3+ required for GiveCurrency (Setup → Update base SDK), then fully restart BL4.";
-    statusDetail.classList.add("attention");
-  } else if (payload?.connected && raw.bridge_features && raw.bridge_features.manifest !== true) {
-    statusDetail.textContent =
-      (payload.detail || "") + " · Fully restart Borderlands 4 to load the latest mod version.";
+  metaBridge.textContent = payload?.connected ? t("status.online") : t("status.offline");
+  const liveMod = raw.mod_version || "";
+  const diskMod = lastModSync?.installedVersion || "";
+  if (liveMod && diskMod && String(liveMod) !== String(diskMod)) {
+    metaModVersion.textContent = t("status.modLiveVsDisk", { live: liveMod, disk: diskMod });
+  } else {
+    metaModVersion.textContent = liveMod || "—";
+  }
+  if (payload?.connected && raw.bridge_features && raw.bridge_features.manifest !== true) {
+    const base = localizeStatusDetail(payload?.headline, payload.detail || "");
+    statusDetail.textContent = `${base} · ${t("status.restartMod")}`;
     statusDetail.classList.add("attention");
   } else if (
     payload?.connected &&
@@ -398,9 +480,21 @@ function setStatusUi(payload) {
     raw.mod_version &&
     String(raw.mod_version) !== String(lastModSync.bundledVersion)
   ) {
-    statusDetail.textContent =
-      (payload.detail || "") +
-      ` · Game still has mod v${raw.mod_version}; this EXE bundles v${lastModSync.bundledVersion}. Fully restart Borderlands 4 after auto-sync.`;
+    const base = localizeStatusDetail(payload?.headline, payload.detail || "");
+    const disk = lastModSync.installedVersion || "";
+    const bundled = lastModSync.bundledVersion;
+    const diskMatchesBundled = disk && String(disk) === String(bundled);
+    statusDetail.textContent = `${base} · ${
+      diskMatchesBundled
+        ? t("status.modMismatch", {
+            game: raw.mod_version,
+            exe: bundled,
+          })
+        : t("status.modDiskBehind", {
+            disk: disk || t("sync.notInstalled"),
+            exe: bundled,
+          })
+    }`;
     statusDetail.classList.add("attention");
   } else if (!payload?.connected) {
     statusDetail.classList.add("attention");
@@ -416,7 +510,7 @@ function setStatusUi(payload) {
       ? "All players"
       : raw.target_player_name || playerNameForIndex(raw.players, targetIdx) || "";
   applyTargetMeta(targetIdx, targetName);
-  metaSpawn.textContent = raw.spawn_anchor_label || raw.spawn_anchor || "—";
+  metaSpawn.textContent = localizeSpawnLabel(raw.spawn_anchor_label || raw.spawn_anchor || "—");
   if (metaFreecam) {
     const fc = raw.freecam || {};
     metaFreecam.textContent = fc.status || (fc.active ? "ON" : "OFF");
@@ -428,6 +522,9 @@ function setStatusUi(payload) {
   refreshGlobalTargetSelect();
   refreshPlayerSelects();
   refreshActionButtons();
+  if (payload?.connected) {
+    syncStickyTogglesFromStatus(raw);
+  }
   if (
     payload?.connected &&
     Array.isArray(raw.players) &&
@@ -479,7 +576,7 @@ function renderRoster(players, targetIndex) {
   rosterList.innerHTML = "";
   if (!players.length) {
     const li = document.createElement("li");
-    li.textContent = "No players in roster yet.";
+    li.textContent = t("roster.empty");
     rosterList.appendChild(li);
     return;
   }
@@ -591,6 +688,73 @@ function fieldStorageKey(sectionId, actionDef, field) {
   return actionFieldKey(sectionId, actionDef, field);
 }
 
+const TOGGLE_STICKY_STORAGE = "sqbt.stickyToggles.v1";
+
+function toggleStickyKey(sectionId, actionDef) {
+  return `${sectionId}::${actionDef.action}::${actionDef.label}`;
+}
+
+function readStickyToggle(key) {
+  try {
+    const map = JSON.parse(localStorage.getItem(TOGGLE_STICKY_STORAGE) || "{}");
+    if (!map || typeof map !== "object" || !Object.prototype.hasOwnProperty.call(map, key)) {
+      return undefined;
+    }
+    return Boolean(map[key]);
+  } catch {
+    return undefined;
+  }
+}
+
+function writeStickyToggle(key, on) {
+  try {
+    const raw = localStorage.getItem(TOGGLE_STICKY_STORAGE);
+    const map = raw ? JSON.parse(raw) : {};
+    if (!map || typeof map !== "object") {
+      return;
+    }
+    map[key] = Boolean(on);
+    localStorage.setItem(TOGGLE_STICKY_STORAGE, JSON.stringify(map));
+  } catch {
+    /* ignore quota / private mode */
+  }
+}
+
+function initialToggleOn(sectionId, actionDef) {
+  if (actionDef?.sticky) {
+    const stored = readStickyToggle(toggleStickyKey(sectionId, actionDef));
+    if (stored !== undefined) return stored;
+  }
+  return Boolean(actionDef?.defaultOn);
+}
+
+function paintToggleButton(button, actionDef, on) {
+  const state = Boolean(on);
+  button.dataset.toggleOn = state ? "1" : "0";
+  button.dataset.accent = state ? "cyan" : "pink";
+  button.classList.toggle("is-toggle-on", state);
+  button.classList.toggle("is-toggle-off", !state);
+  const icon = actionIcon(actionDef);
+  setIconLabel(button, `${actionDef.label} — Toggle`, icon);
+}
+
+function syncStickyTogglesFromStatus(raw) {
+  const sticky = raw?.sticky_toggles;
+  if (!sticky || typeof sticky !== "object") return;
+  document.querySelectorAll("button[data-sync-key]").forEach((button) => {
+    const key = button.dataset.syncKey;
+    if (!key || !Object.prototype.hasOwnProperty.call(sticky, key)) return;
+    const on = Boolean(sticky[key]);
+    button.dataset.toggleOn = on ? "1" : "0";
+    button.dataset.accent = on ? "cyan" : "pink";
+    button.classList.toggle("is-toggle-on", on);
+    button.classList.toggle("is-toggle-off", !on);
+    if (button.dataset.stickyToggle === "1" && button.dataset.sectionId) {
+      writeStickyToggle(`${button.dataset.sectionId}::${button.dataset.runAction}::${button.dataset.toggleLabel}`, on);
+    }
+  });
+}
+
 function mergeSectionFieldsIntoPayload(sectionId, payload) {
   if (!manifest?.tabs?.length) {
     return payload;
@@ -614,6 +778,10 @@ function mergeSectionFieldsIntoPayload(sectionId, payload) {
         continue;
       }
       value = Number(value);
+    }
+    if (field.type === "checkbox") {
+      payload[field.key] = value === true || String(value).toLowerCase() === "true";
+      continue;
     }
     payload[field.key] = value;
   }
@@ -986,6 +1154,10 @@ function collectPayload(sectionId, actionDef) {
       }
       value = Number(value);
     }
+    if (field.type === "checkbox") {
+      payload[field.key] = value === true || String(value).toLowerCase() === "true";
+      continue;
+    }
     if (field.type === "player_select") {
       if (value === "" || value == null) {
         value = preferredDeliveryPlayerIndex(latestStatus?.raw?.players || []);
@@ -1013,6 +1185,9 @@ function collectPayload(sectionId, actionDef) {
       payload.serials = String(value);
       payload.__serials_raw = String(value);
       continue;
+    }
+    if (field.land_profile) {
+      payload.land_profile = field.land_profile;
     }
     payload[field.key] = value;
   }
@@ -1050,7 +1225,7 @@ async function runAction(action, payload, confirmText, context = {}) {
   }
   if (action === "set_target_player" && (payload.player_index === undefined || payload.player_index === "")) {
     actionMessage.className = "action-message error";
-    actionMessage.textContent = "Pick a player in the dropdown first.";
+    actionMessage.textContent = t("action.pickPlayer");
     return;
   }
   actionBusy = true;
@@ -1127,14 +1302,14 @@ async function runAction(action, payload, confirmText, context = {}) {
     (action === "spawn_ios" && !(finalPayload.cmds || []).length)
   ) {
     actionMessage.className = "action-message error";
-    actionMessage.textContent = "Tick at least one entry in the list first.";
+    actionMessage.textContent = t("action.tickEntry");
     actionBusy = false;
     refreshActionButtons();
     return;
   }
   if (action === "challenge_complete_selected" && !(finalPayload.tokens || []).length) {
     actionMessage.className = "action-message error";
-    actionMessage.textContent = "Tick at least one challenge first.";
+    actionMessage.textContent = t("action.tickChallenge");
     actionBusy = false;
     refreshActionButtons();
     return;
@@ -1438,7 +1613,7 @@ function refreshGlobalTargetSelect() {
     globalTargetSelect.innerHTML = "";
     const opt = document.createElement("option");
     opt.value = "";
-    opt.textContent = actionsEnabled() ? "No players in lobby" : "Connect in-game…";
+    opt.textContent = actionsEnabled() ? t("target.none") : t("target.connect");
     globalTargetSelect.appendChild(opt);
     globalTargetSelect.disabled = true;
     return;
@@ -1452,7 +1627,7 @@ function refreshGlobalTargetSelect() {
       globalTargetSelect.innerHTML = "";
       const allOpt = document.createElement("option");
       allOpt.value = "-1";
-      allOpt.textContent = "All players";
+      allOpt.textContent = t("target.all");
       globalTargetSelect.appendChild(allOpt);
       for (const row of players) {
         const opt = document.createElement("option");
@@ -1494,7 +1669,7 @@ function refreshPlayerSelects() {
     if (includeAll) {
       const allOpt = document.createElement("option");
       allOpt.value = "-1";
-      allOpt.textContent = "All players";
+      allOpt.textContent = t("target.all");
       select.appendChild(allOpt);
     }
     for (const row of players) {
@@ -1506,7 +1681,7 @@ function refreshPlayerSelects() {
     if (!players.length) {
       const opt = document.createElement("option");
       opt.value = "0";
-      opt.textContent = actionsEnabled() ? "Host (#0)" : "Connect in-game…";
+      opt.textContent = actionsEnabled() ? t("target.host") : t("target.connect");
       select.appendChild(opt);
       current = "0";
     }
@@ -1558,6 +1733,10 @@ function bindExternalLinks(root) {
     link.dataset.externalBound = "1";
     link.addEventListener("click", (event) => {
       event.preventDefault();
+      if (link.classList.contains("js-open-setup")) {
+        showSetupCard();
+        return;
+      }
       const href = link.getAttribute("href");
       if (href) window.sqbt.openExternal(href);
     });
@@ -1587,34 +1766,24 @@ function updateStartGuide() {
   if (startGuideTitle) {
     startGuideTitle.textContent = needsSetup
       ? hasPath
-        ? "One-time setup"
-        : "Set your Borderlands 4 install folder"
-      : "Get Online";
+        ? t("guide.oneTime")
+        : t("guide.setFolder")
+      : t("guide.getOnline");
   }
+  const setupLink = `<a href="#setup" class="js-open-setup">${t("chrome.setup")}</a>`;
   if (startGuideSteps) {
-    if (!hasPath) {
-      startGuideSteps.innerHTML = `<li><strong>Set install folder</strong> — open <strong>Setup</strong> → <strong>Set install folder</strong>. Pick the folder with <code>Borderlands4.exe</code> / <code>OakGame</code>. Other Steam drives work (e.g. <code>D:\\SteamLibrary\\steamapps\\common\\Borderlands 4</code>).</li>
-         <li><strong>Install SDK + Squ1ggs mod</strong> if oak2 is missing (one-time).</li>
-         <li><strong>Fully restart Borderlands 4</strong> — quit to desktop, then launch again.</li>
-         <li><strong>Load a character</strong> — wait for <strong>Online</strong>. Later EXE launches auto-apply the Squ1ggs mod.</li>`;
-    } else if (!baseOk) {
-      startGuideSteps.innerHTML = `<li><strong>Install oak2 once</strong> — open <strong>Setup</strong> and press <strong>Install SDK + Squ1ggs mod</strong>.</li>
-         <li><strong>Confirm install folder</strong> — if the game lives on another drive, use <strong>Set install folder</strong> so it points at the real <code>Borderlands 4</code> folder.</li>
-         <li><strong>Fully restart Borderlands 4</strong> — quit to desktop, then launch again.</li>
-         <li><strong>Load a character</strong> — wait for <strong>Online</strong>.</li>`;
-    } else {
-      startGuideSteps.innerHTML = `<li><strong>Launch Borderlands 4</strong> — Squ1ggs mod auto-copies on EXE launch when versions differ.</li>
-         <li><strong>Wrong folder?</strong> Setup → <strong>Set install folder</strong> if your game is on another drive and auto-detect missed it.</li>
-         <li><strong>Fully restart if the game was already open</strong> — quit to desktop, then launch again.</li>
-         <li><strong>Load a character</strong> — wait for <strong>Online</strong>.</li>`;
-    }
+    startGuideSteps.innerHTML = `<li><strong>${t("guide.step1")}</strong></li>
+         <li><strong>${t("guide.step2")}</strong></li>
+         <li>${t("guide.step3", { setup: setupLink })}</li>
+         <li><strong>${t("guide.step4")}</strong></li>`;
   }
+  if (startGuideSteps) bindExternalLinks(startGuideSteps);
   if (startGuideFoot) {
     startGuideFoot.innerHTML = !hasPath
-      ? 'Game on D: / another Steam library? Setup → <strong>Set install folder</strong> → folder with OakGame. Other tools: <a href="https://github.com/Squ1ggs/Bl4SDKmods">GitHub</a> · save editor <a href="https://scooterstoolbox.com">scooterstoolbox.com</a>'
+      ? t("guide.footNoPath", { setup: setupLink })
       : needsSetup
-        ? 'Stuck? Confirm install folder → Install SDK + Squ1ggs mod → fully restart → load a character → Refresh. Other tools: <a href="https://github.com/Squ1ggs/Bl4SDKmods">GitHub</a> · save editor <a href="https://scooterstoolbox.com">scooterstoolbox.com</a>'
-        : 'Stuck Offline? Fully restart the game → load a character → Refresh. Wrong drive? Setup → Set install folder. Other tools: <a href="https://github.com/Squ1ggs/Bl4SDKmods">GitHub</a> · save editor <a href="https://scooterstoolbox.com">scooterstoolbox.com</a>';
+        ? t("guide.footNeedSdk", { setup: setupLink })
+        : t("guide.footInGame", { setup: setupLink });
     bindExternalLinks(startGuideFoot);
   }
 }
@@ -1630,25 +1799,22 @@ function applyInstallLocationUi(setup = null) {
     installLocationCard.classList.toggle("is-missing", !hasPath);
   }
   if (installLocationDetail) {
-    installLocationDetail.innerHTML = hasPath
-      ? "This is where oak2 / <code>sdk_mods</code> get installed. If that path is wrong (game on another drive), press <strong>Set install folder</strong> and pick the folder that contains <code>Borderlands4.exe</code> / <code>OakGame</code>."
-      : "Auto-detect did not find Borderlands 4. Press <strong>Set install folder</strong> and choose the folder with <code>Borderlands4.exe</code> / <code>OakGame</code> — including other Steam drives like <code>D:\\SteamLibrary\\steamapps\\common\\Borderlands 4</code>.";
+    installLocationDetail.innerHTML = hasPath ? t("install.detailSet") : t("install.detailMissing");
   }
   if (installLocationStatus) {
     if (!hasPath) {
       installLocationStatus.textContent =
         candidates.length > 0
-          ? `Detected candidates: ${candidates.slice(0, 3).join(" · ")} — pick the correct one with Set install folder.`
-          : "No install folder set yet.";
+          ? t("install.candidates", { list: candidates.slice(0, 3).join(" · ") })
+          : t("install.noFolder");
     } else if (pathSource === "stored") {
-      installLocationStatus.textContent = "Saved install folder (used for auto mod sync).";
+      installLocationStatus.textContent = t("install.saved");
     } else {
-      installLocationStatus.textContent =
-        "Auto-detected install folder. Change it with Set install folder if this is not where Borderlands4.exe lives.";
+      installLocationStatus.textContent = t("install.detected");
     }
   }
   if (browseGameBtn) {
-    browseGameBtn.textContent = hasPath ? "Change install folder" : "Set install folder";
+    browseGameBtn.textContent = hasPath ? t("install.changeFolder") : t("install.setFolder");
     browseGameBtn.classList.add("primary");
   }
 }
@@ -1683,7 +1849,7 @@ function showModSyncNotice(state, { kicker, title, detail } = {}) {
   if (!modSyncNotice) return;
   modSyncNotice.classList.remove("hidden", "is-restart", "is-updated", "is-ok");
   if (state) modSyncNotice.classList.add(`is-${state}`);
-  if (modSyncNoticeKicker) modSyncNoticeKicker.textContent = kicker || "AUTO MOD SYNC";
+  if (modSyncNoticeKicker) modSyncNoticeKicker.textContent = kicker || t("sync.kicker");
   if (modSyncNoticeTitle) modSyncNoticeTitle.textContent = title || "";
   if (modSyncNoticeDetail) modSyncNoticeDetail.textContent = detail || "";
 }
@@ -1796,10 +1962,19 @@ function extractSerialsFromText(rawText) {
   const found = [];
   const seen = new Set();
   const push = (serial) => {
-    const cleaned = String(serial || "")
-      .trim()
-      .replace(/^`+|`+$/g, "")
-      .trim();
+    let cleaned = String(serial || "").trim();
+    if (
+      (cleaned.startsWith('"') && cleaned.endsWith('"')) ||
+      (cleaned.startsWith("'") && cleaned.endsWith("'"))
+    ) {
+      cleaned = cleaned.slice(1, -1).trim();
+    }
+    if (cleaned.startsWith("`") && cleaned.endsWith("`")) {
+      const inner = cleaned.slice(1, -1);
+      if (!inner.includes("`")) {
+        cleaned = inner.trim();
+      }
+    }
     if (!cleaned) return;
     if (!(cleaned.startsWith("@U") || (cleaned.includes(",") && /\d/.test(cleaned)))) {
       return;
@@ -1808,13 +1983,22 @@ function extractSerialsFromText(rawText) {
     seen.add(cleaned);
     found.push(cleaned);
   };
-  for (const match of text.match(/@U[^\s`'"]+/g) || []) {
-    push(match);
+  const pushAtUParts = (blob) => {
+    const value = String(blob || "");
+    const idx = value.indexOf("@U");
+    if (idx < 0) return;
+    for (const part of value.slice(idx).split(/(?=@U)/)) {
+      const token = part.trim();
+      if (token.startsWith("@U")) push(token);
+    }
+  };
+  for (const match of text.match(/@U\S+/g) || []) {
+    pushAtUParts(match);
   }
   for (const line of text.split(/\r?\n/)) {
-    const trimmed = line.trim().replace(/^`+|`+$/g, "").trim();
-    if (trimmed.startsWith("@U")) {
-      push(trimmed.split(/\s+/)[0]);
+    const trimmed = line.trim();
+    if (trimmed.includes("@U")) {
+      pushAtUParts(trimmed);
     } else if (/^\s*\d+\s*,\s*\d+/.test(trimmed)) {
       push(trimmed);
     }
@@ -1882,18 +2066,94 @@ async function resolveSerialInputText(rawText) {
 }
 
 function applyTheme(theme) {
-  currentTheme = theme === "scooters" ? "scooters" : "default";
+  const raw = String(theme || "").trim().toLowerCase().replaceAll("_", "-");
+  const known = {
+    default: "default",
+    scooters: "scooters",
+    "scooters-girly": "scooters-girly",
+    girly: "scooters-girly",
+    tina: "scooters-girly",
+    claptrap: "claptrap",
+    "cl4p-tp": "claptrap",
+    moxxi: "moxxi",
+    crimson: "crimson",
+    "red-black": "crimson",
+    psycho: "psycho",
+    bandit: "psycho",
+    maliwan: "maliwan",
+  };
+  currentTheme = known[raw] || "default";
   document.documentElement.setAttribute("data-theme", currentTheme);
-  if (themeToggleBtn) {
-    setIconLabel(
-      themeToggleBtn,
-      currentTheme === "scooters" ? "Default theme" : "Scooters theme",
-    );
-    themeToggleBtn.classList.toggle("is-toggle-on", currentTheme === "scooters");
-    themeToggleBtn.title =
-      currentTheme === "scooters"
-        ? "Switch back to the default Boosting Tools look"
-        : "Match Scooter's Toolbox save-editor styling";
+  if (themeSelect) themeSelect.value = currentTheme;
+}
+
+function applyLocale(locale, { refresh = true } = {}) {
+  const next = i18n.setLocale(locale || i18n.detectBrowserLocale());
+  i18n.fillLocaleSelect(langSelect, next);
+  i18n.applyDom();
+  if (refresh) refreshLocalizedChrome();
+  return next;
+}
+
+function refreshLocalizedChrome() {
+  if (lastSetup) applyInstallLocationUi(lastSetup);
+  applyBaseSdkUi(lastBaseSdk, lastModSync);
+  if (lastModSync || lastBaseSdk) applyModSyncUi(lastModSync, lastBaseSdk);
+  if (lastUpdateResult) renderUpdateStatus(lastUpdateResult);
+  if (latestStatus) setStatusUi(latestStatus);
+  else updateStartGuide();
+  if (typeof renderTabs === "function") {
+    if (manifest?.tabs?.length && tabBar?.children?.length) {
+      for (const button of tabBar.querySelectorAll("button[data-tab-id]")) {
+        const tab = manifest.tabs.find((row) => row.id === button.dataset.tabId);
+        if (tab) setIconLabel(button, i18n.tabLabel(tab), TAB_ICONS[tab.id] || "");
+      }
+    } else {
+      renderTabs();
+    }
+  }
+}
+
+const HIDDEN_SHAPE_OPTIONS = [
+  { value: "forbidden_one", label: "the forbidden one" },
+  { value: "forbidden_pair", label: "the forbidden pair" },
+];
+
+function applyShapeLayoutDefaults(sectionId, actionDef, shapeField, shapeValue, allFields, sectionEl) {
+  if (!shapeField?.land_profile || !manifest?.land_layout_defaults) return;
+  const profile = String(shapeField.land_profile || "shiny");
+  const table = manifest.land_layout_defaults[profile];
+  if (!table) return;
+  const shape = String(shapeValue || "none").toLowerCase();
+  if (shape === "none" || shape === "off") return;
+  const row = table[shape] || table.circle || table.house;
+  if (!row) return;
+  for (const sibling of allFields || []) {
+    if (sibling.key !== "radius" && sibling.key !== "spacing") continue;
+    const val = row[sibling.key];
+    if (val == null) continue;
+    const skey = actionFieldKey(sectionId, actionDef, sibling);
+    fieldValues[skey] = String(val);
+    const wrap = sectionEl?.querySelector(`[data-field-key="${skey}"]`);
+    const input = wrap?.querySelector("input[type='number']");
+    if (input) input.value = String(val);
+  }
+}
+
+function injectHiddenShapeOptions() {
+  if (!hiddenShapesUnlocked) return;
+  for (const select of document.querySelectorAll("select.js-shape-select")) {
+    if (select.querySelector('option[value="forbidden_one"]')) continue;
+    const og = document.createElement("optgroup");
+    og.label = "…";
+    og.dataset.hiddenShapes = "1";
+    for (const row of HIDDEN_SHAPE_OPTIONS) {
+      const opt = document.createElement("option");
+      opt.value = row.value;
+      opt.textContent = row.label;
+      og.appendChild(opt);
+    }
+    select.appendChild(og);
   }
 }
 
@@ -2134,6 +2394,18 @@ function renderField(sectionId, actionDef, field, sectionEl, allFields) {
   title.textContent = field.label || field.key;
   wrap.appendChild(title);
 
+  if (field.type === "checkbox") {
+    wrap.classList.add("field-check");
+    const input = document.createElement("input");
+    input.type = "checkbox";
+    input.checked = fieldValues[key] === true || String(fieldValues[key]).toLowerCase() === "true";
+    input.addEventListener("change", () => {
+      fieldValues[key] = input.checked;
+    });
+    wrap.appendChild(input);
+    return wrap;
+  }
+
   if (field.type === "player_select") {
     const select = document.createElement("select");
     select.dataset.role = "player-select";
@@ -2202,14 +2474,36 @@ function renderField(sectionId, actionDef, field, sectionEl, allFields) {
     if (field.placeholder) input.placeholder = field.placeholder;
   } else if (field.type === "select") {
     input = document.createElement("select");
-    for (const option of field.options || []) {
-      const opt = document.createElement("option");
-      opt.value = option;
-      opt.textContent = option;
-      input.appendChild(opt);
+    const groups = field.option_groups;
+    if (Array.isArray(groups) && groups.length) {
+      for (const group of groups) {
+        const og = document.createElement("optgroup");
+        og.label = String(group.label || "");
+        for (const option of group.options || []) {
+          const opt = document.createElement("option");
+          opt.value = option;
+          const labels = field.option_labels || {};
+          opt.textContent = labels[option] || String(option).replaceAll("_", " ");
+          og.appendChild(opt);
+        }
+        input.appendChild(og);
+      }
+      if (groups.some((group) => String(group.label || "").toLowerCase().includes("3d"))) {
+        input.classList.add("js-shape-select");
+      }
+    } else {
+      for (const option of field.options || []) {
+        const opt = document.createElement("option");
+        opt.value = option;
+        opt.textContent = option;
+        input.appendChild(opt);
+      }
     }
     input.addEventListener("change", () => {
       fieldValues[key] = input.value;
+      if (field.key === "shape" && field.land_profile) {
+        applyShapeLayoutDefaults(sectionId, actionDef, field, input.value, allFields, sectionEl);
+      }
       if (field.catalogParam) {
         catalogCache.clear();
         for (const sibling of allFields || []) {
@@ -2233,6 +2527,11 @@ function renderField(sectionId, actionDef, field, sectionEl, allFields) {
     input = document.createElement("input");
     input.type = "text";
     if (field.placeholder) input.placeholder = field.placeholder;
+  }
+  if (field.key === "shape") {
+    const retired = String(fieldValues[key] || "");
+    if (retired === "psycho_mask") fieldValues[key] = "psycho";
+    if (retired === "bl_logo") fieldValues[key] = "circle";
   }
   input.value = fieldValues[key];
   const refreshCatalogSiblings = () => {
@@ -2937,18 +3236,12 @@ function renderActionCard(sectionId, actionDef, sectionEl, featured) {
   }
   button.dataset.runAction = actionDef.action;
 
-  const paintToggle = (on) => {
-    const state = Boolean(on);
-    button.dataset.toggleOn = state ? "1" : "0";
-    button.dataset.accent = state ? "cyan" : "pink";
-    button.classList.toggle("is-toggle-on", state);
-    button.classList.toggle("is-toggle-off", !state);
-    const icon = actionIcon(actionDef);
-    setIconLabel(button, `${actionDef.label} — Toggle`, icon);
-  };
-
   if (isToggle) {
-    paintToggle(Boolean(actionDef.defaultOn));
+    button.dataset.sectionId = sectionId;
+    button.dataset.toggleLabel = actionDef.label;
+    if (actionDef.sticky) button.dataset.stickyToggle = "1";
+    if (actionDef.syncKey) button.dataset.syncKey = actionDef.syncKey;
+    paintToggleButton(button, actionDef, initialToggleOn(sectionId, actionDef));
     button.addEventListener("click", () => {
       const currentlyOn = button.dataset.toggleOn === "1";
       const nextOn = !currentlyOn;
@@ -2963,7 +3256,8 @@ function renderActionCard(sectionId, actionDef, sectionEl, featured) {
           ? JSON.parse(sectionEl.querySelector("[data-multiselect-config]").dataset.multiselectConfig)
           : { catalog: "serial_store" },
       };
-      paintToggle(nextOn);
+      paintToggleButton(button, actionDef, nextOn);
+      if (actionDef.sticky) writeStickyToggle(toggleStickyKey(sectionId, actionDef), nextOn);
       runAction(actionDef.action, payload, actionDef.confirm || "", context);
     });
   } else {
@@ -3496,16 +3790,11 @@ function renderSection(section, tabId) {
       button.type = "button";
       if (actionDef.tooltip) button.title = actionDef.tooltip;
       button.dataset.runAction = actionDef.action;
-      const paintToggle = (on) => {
-        const state = Boolean(on);
-        button.dataset.toggleOn = state ? "1" : "0";
-        button.dataset.accent = state ? "cyan" : "pink";
-        button.classList.toggle("is-toggle-on", state);
-        button.classList.toggle("is-toggle-off", !state);
-        const icon = actionIcon(actionDef);
-        setIconLabel(button, `${actionDef.label} — Toggle`, icon);
-      };
-      paintToggle(Boolean(actionDef.defaultOn));
+      button.dataset.sectionId = sectionId;
+      button.dataset.toggleLabel = actionDef.label;
+      if (actionDef.sticky) button.dataset.stickyToggle = "1";
+      if (actionDef.syncKey) button.dataset.syncKey = actionDef.syncKey;
+      paintToggleButton(button, actionDef, initialToggleOn(sectionId, actionDef));
       button.addEventListener("click", () => {
         const currentlyOn = button.dataset.toggleOn === "1";
         const nextOn = !currentlyOn;
@@ -3513,7 +3802,8 @@ function renderSection(section, tabId) {
         const flip = nextOn
           ? { ...(actionDef.payloadOn || { enabled: true }) }
           : { ...(actionDef.payloadOff || { enabled: false }) };
-        paintToggle(nextOn);
+        paintToggleButton(button, actionDef, nextOn);
+        if (actionDef.sticky) writeStickyToggle(toggleStickyKey(sectionId, actionDef), nextOn);
         runAction(actionDef.action, { ...base, ...flip }, actionDef.confirm || "", { sectionId });
       });
       actionHost.appendChild(button);
@@ -3600,21 +3890,21 @@ function renderTabs() {
     const needsSetup = setupNeedsUserAction();
     tabContent.innerHTML = needsSetup
       ? `<div class="panel-section panel-section-featured">
-      <h3>Waiting for the game</h3>
+      <h3>${t("waiting.game")}</h3>
       <ol class="section-guide">
-        <li>Open <strong>Setup</strong> if needed, then press <strong>Install SDK + Squ1ggs mod</strong> (oak2 once).</li>
-        <li><strong>Fully restart Borderlands 4</strong> — quit to desktop, then launch again.</li>
-        <li>Load a character (not the main menu).</li>
-        <li>Press <strong>Refresh status</strong> until this window says Online.</li>
+        <li>${t("waiting.setup1")}</li>
+        <li>${t("waiting.setup2")}</li>
+        <li>${t("waiting.setup3")}</li>
+        <li>${t("waiting.setup4")}</li>
       </ol>
     </div>`
       : `<div class="panel-section panel-section-featured">
-      <h3>Waiting for the game</h3>
+      <h3>${t("waiting.game")}</h3>
       <ol class="section-guide">
-        <li>The Squ1ggs mod auto-applies on EXE launch — no Setup click needed.</li>
-        <li><strong>Fully restart Borderlands 4</strong> if it was already open — quit to desktop, then launch again.</li>
-        <li>Load a character (not the main menu).</li>
-        <li>Press <strong>Refresh status</strong> until this window says Online.</li>
+        <li>${t("waiting.auto1")}</li>
+        <li>${t("waiting.auto2")}</li>
+        <li>${t("waiting.auto3")}</li>
+        <li>${t("waiting.auto4")}</li>
       </ol>
     </div>`;
     return;
@@ -3623,7 +3913,7 @@ function renderTabs() {
     const button = document.createElement("button");
     button.type = "button";
     button.dataset.tabId = tab.id;
-    setIconLabel(button, tab.short || tab.label, TAB_ICONS[tab.id] || "");
+    setIconLabel(button, i18n.tabLabel(tab), TAB_ICONS[tab.id] || "");
     button.className = tab.id === activeTabId ? "active" : "";
     button.addEventListener("click", () => {
       activeTabId = tab.id;
@@ -3636,29 +3926,32 @@ function renderTabs() {
   const current = manifest.tabs.find((row) => row.id === activeTabId) || manifest.tabs[0];
   activeTabId = current.id;
   renderTab(current);
+  injectHiddenShapeOptions();
 }
 
 async function loadManifest() {
   const result = await window.sqbt.getManifest();
   if (!result.ok) {
-    const needsSetup = setupNeedsUserAction();
+    const msg = String(result.message || "");
+    const gameOff = /fetch failed|econnrefused|not running|still loading|game not connected/i.test(msg);
+    const needsSetup = !gameOff && setupNeedsUserAction();
     tabContent.innerHTML = needsSetup
       ? `<div class="panel-section panel-section-featured">
-      <h3>Tools not loaded yet</h3>
-      <p class="setup-attention">${result.message || "Manifest unavailable."}</p>
+      <h3>${t("waiting.tools")}</h3>
+      <p class="setup-attention">${result.message || t("waiting.manifestUnavailable")}</p>
       <ol class="section-guide">
-        <li>Open <strong>Setup</strong> if needed, then press <strong>Install SDK + Squ1ggs mod</strong> (oak2 once).</li>
-        <li><strong>Fully restart Borderlands 4</strong> (quit to desktop).</li>
-        <li>Load a character, then press <strong>Refresh status</strong>.</li>
+        <li>${t("waiting.setup1")}</li>
+        <li>${t("waiting.toolsSetup2")}</li>
+        <li>${t("waiting.toolsSetup3")}</li>
       </ol>
     </div>`
       : `<div class="panel-section panel-section-featured">
-      <h3>Tools not loaded yet</h3>
-      <p class="setup-attention">${result.message || "Manifest unavailable."}</p>
+      <h3>${t("waiting.tools")}</h3>
+      <p class="setup-attention">${result.message || t("waiting.manifestUnavailable")}</p>
       <ol class="section-guide">
-        <li>Mod auto-applies on EXE launch — no Setup click needed.</li>
-        <li><strong>Fully restart Borderlands 4</strong> if it was already open (quit to desktop).</li>
-        <li>Load a character, then press <strong>Refresh status</strong>.</li>
+        <li>${t("waiting.toolsAuto1")}</li>
+        <li>${t("waiting.toolsAuto2")}</li>
+        <li>${t("waiting.toolsAuto3")}</li>
       </ol>
     </div>`;
     return;
@@ -3674,7 +3967,7 @@ function setModSyncBanner(state, { kicker, title, detail, versions } = {}) {
     modSyncBanner.classList.toggle(`is-${name}`, name === state);
   }
   modSyncBanner.dataset.state = state || "";
-  if (modSyncKicker) modSyncKicker.textContent = kicker || "AUTO MOD SYNC";
+  if (modSyncKicker) modSyncKicker.textContent = kicker || t("sync.kicker");
   if (modSyncTitle) modSyncTitle.textContent = title || "";
   if (modSyncDetail) modSyncDetail.textContent = detail || "";
   if (modSyncVersions) {
@@ -3685,12 +3978,12 @@ function setModSyncBanner(state, { kicker, title, detail, versions } = {}) {
 
 function formatModVersions(modSync) {
   if (!modSync?.bundledVersion && !modSync?.installedVersion) return "";
-  const installed = modSync.installedVersion || "not installed";
-  const bundled = modSync.bundledVersion || "unknown";
+  const installed = modSync.installedVersion || t("sync.notInstalled");
+  const bundled = modSync.bundledVersion || t("sync.unknown");
   if (modSync.installedVersion && modSync.bundledVersion && modSync.installedVersion === modSync.bundledVersion) {
-    return `sdk_mods/Squ1ggsBoostingTools  ·  v${bundled}  ·  matches this EXE`;
+    return t("sync.versionsMatch", { bundled });
   }
-  return `Installed v${installed}  →  EXE bundles v${bundled}`;
+  return t("sync.versionsDiff", { installed, bundled });
 }
 
 function applyBaseSdkUi(baseSdk, modSync = null) {
@@ -3705,25 +3998,33 @@ function applyBaseSdkUi(baseSdk, modSync = null) {
   const hasGameRoot = Boolean(baseSdk?.gameRoot || gameRootInput.value);
   if (sdkStatusLine) {
     if (!hasGameRoot) {
-      sdkStatusLine.textContent = "Base oak2 SDK: pick your Borderlands 4 folder first.";
+      sdkStatusLine.textContent = t("sdk.pickFolder");
     } else if (!installed) {
-      sdkStatusLine.textContent =
-        "Base oak2 SDK: not found — use Install SDK + Squ1ggs mod (official download).";
+      sdkStatusLine.textContent = t("sdk.notFound");
     } else if (belowMin) {
-      sdkStatusLine.textContent = `Base oak2 SDK: too old (tracked ${version || "unknown"}) — Squ1ggs needs v${minVersion}+. Press Update base SDK.`;
+      sdkStatusLine.textContent = t("sdk.tooOld", {
+        version: version || t("sync.unknown"),
+        min: minVersion,
+      });
     } else if (updateAvailable && latest) {
-      sdkStatusLine.textContent = `Base oak2 SDK: installed${version ? ` (tracked v${version})` : ""} — update available (v${latest}).`;
+      sdkStatusLine.textContent = t("sdk.updateAvail", {
+        tracked: version ? t("sdk.tracked", { version }) : "",
+        latest,
+      });
     } else {
-      sdkStatusLine.textContent = `Base oak2 SDK: installed${version ? ` (v${version})` : ""}${latest ? ` · latest v${latest}` : ""}.`;
+      sdkStatusLine.textContent = t("sdk.installed", {
+        tracked: version ? t("sdk.ver", { version }) : "",
+        latest: latest ? t("sdk.latestBit", { latest }) : "",
+      });
     }
   }
   if (installModBtn) {
     if (!installed || belowMin) {
-      installModBtn.textContent = belowMin ? "Install SDK 0.3+ + Squ1ggs mod" : "Install SDK + Squ1ggs mod";
+      installModBtn.textContent = belowMin ? t("sdk.install03") : t("sdk.install");
       installModBtn.classList.add("primary");
       installModBtn.classList.remove("ghost");
     } else {
-      installModBtn.textContent = "Force reinstall Squ1ggs mod";
+      installModBtn.textContent = t("sdk.forceReinstall");
       installModBtn.classList.remove("primary");
       installModBtn.classList.add("ghost");
     }
@@ -3732,23 +4033,21 @@ function applyBaseSdkUi(baseSdk, modSync = null) {
     const showUpdate = installed && (updateAvailable || belowMin);
     updateBaseSdkBtn.classList.toggle("hidden", !showUpdate);
     updateBaseSdkBtn.disabled = false;
-    if (belowMin) updateBaseSdkBtn.textContent = "Update base SDK (0.3+ required)";
+    updateBaseSdkBtn.textContent = belowMin ? t("sdk.updateBase03") : t("sdk.updateBase");
   }
   if (setupAttention) {
     if (!hasGameRoot) {
       setupAttention.classList.remove("hidden");
-      setupAttention.innerHTML =
-        "<strong>Other drive / custom Steam library?</strong> Use <strong>Set install folder</strong> and pick the folder with <code>Borderlands4.exe</code> / <code>OakGame</code> (not <code>sdk_mods</code>).";
+      setupAttention.innerHTML = t("setup.attentionDrive");
     } else if (!installed) {
       setupAttention.classList.remove("hidden");
-      setupAttention.innerHTML =
-        "<strong>First use:</strong> press <strong>Install SDK + Squ1ggs mod</strong> once (downloads official oak2). " +
-        "Later launches auto-copy the Squ1ggs mod. Fully restart Borderlands 4, then wait for <strong>Online</strong>.";
+      setupAttention.innerHTML = t("setup.attentionFirst");
     } else if (belowMin) {
       setupAttention.classList.remove("hidden");
-      setupAttention.innerHTML =
-        `<strong>Oak2 SDK ${minVersion}+ required.</strong> Your install is tracked as <code>${version || "unknown"}</code>. ` +
-        "Press <strong>Update base SDK</strong> (or Install SDK 0.3+), then fully restart Borderlands 4. GiveCurrency / vault wallets need this.";
+      setupAttention.innerHTML = t("setup.attentionOak", {
+        min: minVersion,
+        version: version || t("sync.unknown"),
+      });
     } else {
       setupAttention.classList.add("hidden");
       setupAttention.innerHTML = "";
@@ -3756,34 +4055,30 @@ function applyBaseSdkUi(baseSdk, modSync = null) {
   }
   if (!hasGameRoot) {
     setModSyncBanner("need-path", {
-      kicker: "SET INSTALL FOLDER",
-      title: "Where is Borderlands 4 installed?",
-      detail:
-        "Press Set install folder and pick the folder that contains Borderlands4.exe / OakGame — including other Steam drives (D:\\SteamLibrary\\…). After that, this EXE auto-copies the Squ1ggs mod when versions differ.",
+      kicker: t("sync.setFolderKicker"),
+      title: t("sync.setFolderTitle"),
+      detail: t("sync.setFolderDetail"),
       versions: formatModVersions(modSync),
     });
   } else if (!installed) {
     setModSyncBanner("need-sdk", {
-      kicker: "BASE SDK MISSING",
-      title: "Install the official oak2 SDK once",
-      detail:
-        "Press Install SDK + Squ1ggs mod below. After oak2 is in place, this EXE auto-syncs the Squ1ggs mod on every launch when versions differ.",
+      kicker: t("sync.sdkMissingKicker"),
+      title: t("sync.sdkMissingTitle"),
+      detail: t("sync.sdkMissingDetail"),
       versions: formatModVersions(modSync),
     });
   } else if (belowMin) {
     setModSyncBanner("need-sdk", {
-      kicker: "OAK2 0.3+ REQUIRED",
-      title: `Update base SDK to v${minVersion}+`,
-      detail:
-        "This user’s GiveCurrency / FGbxDefPtr errors usually mean an old oak2 install. Update base SDK from Setup, fully restart BL4, and make sure the EXE auto-synced the latest Squ1ggsBoostingTools folder.",
+      kicker: t("sync.oakRequiredKicker"),
+      title: t("sync.oakRequiredTitle", { min: minVersion }),
+      detail: t("sync.oakRequiredDetail"),
       versions: formatModVersions(modSync),
     });
   } else if (!modSync) {
     setModSyncBanner("ok", {
-      kicker: "AUTO MOD SYNC",
-      title: "Squ1ggs mod auto-applies on EXE launch",
-      detail:
-        "If the bundled mod version differs from sdk_mods/Squ1ggsBoostingTools, it is copied automatically. If Borderlands 4 was already open, fully quit and relaunch.",
+      kicker: t("sync.kicker"),
+      title: t("sync.autoTitle"),
+      detail: t("sync.autoDetail"),
       versions: "",
     });
   }
@@ -3809,10 +4104,9 @@ function applyModSyncUi(modSync, baseSdk = null) {
   if (!hasGameRoot) {
     hideModSyncNotice();
     setModSyncBanner("need-path", {
-      kicker: "SET INSTALL FOLDER",
-      title: "Where is Borderlands 4 installed?",
-      detail:
-        "Press Set install folder and pick the folder that contains Borderlands4.exe / OakGame — including other Steam drives (D:\\SteamLibrary\\…). After that, this EXE auto-copies the Squ1ggs mod when versions differ.",
+      kicker: t("sync.setFolderKicker"),
+      title: t("sync.setFolderTitle"),
+      detail: t("sync.setFolderDetail"),
       versions,
     });
     updateSetupVisibility({ gameRoot: "", baseSdk: resolvedBase });
@@ -3822,10 +4116,9 @@ function applyModSyncUi(modSync, baseSdk = null) {
   if (resolvedBase && !resolvedBase.installed) {
     hideModSyncNotice();
     setModSyncBanner("need-sdk", {
-      kicker: "BASE SDK MISSING",
-      title: "Install the official oak2 SDK once",
-      detail:
-        "Press Install SDK + Squ1ggs mod below. After oak2 is in place, this EXE auto-syncs the Squ1ggs mod on every launch when versions differ.",
+      kicker: t("sync.sdkMissingKicker"),
+      title: t("sync.sdkMissingTitle"),
+      detail: t("sync.sdkMissingDetail"),
       versions,
     });
     updateSetupVisibility({ gameRoot: modSync.gameRoot || gameRootInput.value, baseSdk: resolvedBase });
@@ -3836,24 +4129,20 @@ function applyModSyncUi(modSync, baseSdk = null) {
     setModSyncBanner(
       modSync.gameRunning ? "restart" : "updated",
       {
-        kicker: modSync.gameRunning ? "RESTART BORDERLANDS 4" : "MOD AUTO-UPDATED",
+        kicker: modSync.gameRunning ? t("sync.restartKicker") : t("sync.updatedKicker"),
         title: modSync.gameRunning
-          ? "Mod files updated — game is still open"
-          : `Squ1ggs mod is now v${modSync.bundledVersion || "bundled"}`,
-        detail: modSync.gameRunning
-          ? "Fully quit Borderlands 4 to desktop, then relaunch and load a character. Alt-tabbing back is not enough."
-          : "Copied into sdk_mods automatically. Launch or fully restart Borderlands 4, then wait for Online.",
+          ? t("sync.gameOpenTitle")
+          : t("sync.nowVersionTitle", { version: modSync.bundledVersion || "bundled" }),
+        detail: modSync.gameRunning ? t("sync.gameOpenDetail") : t("sync.copiedDetail"),
         versions,
       }
     );
     showModSyncNotice(modSync.gameRunning ? "restart" : "updated", {
-      kicker: modSync.gameRunning ? "RESTART BORDERLANDS 4" : "MOD AUTO-UPDATED",
+      kicker: modSync.gameRunning ? t("sync.restartKicker") : t("sync.updatedKicker"),
       title: modSync.gameRunning
-        ? "Squ1ggs mod updated — fully quit the game"
-        : `Squ1ggs mod auto-updated to v${modSync.bundledVersion || "bundled"}`,
-      detail: modSync.gameRunning
-        ? "Quit Borderlands 4 to desktop and relaunch so the new mod loads. You do not need Setup."
-        : "Already copied into sdk_mods. Launch/restart the game and load a character — no Setup click needed.",
+        ? t("sync.noticeGameOpenTitle")
+        : t("sync.noticeUpdatedTitle", { version: modSync.bundledVersion || "bundled" }),
+      detail: modSync.gameRunning ? t("sync.noticeGameOpenDetail") : t("sync.noticeUpdatedDetail"),
     });
     if (setupMessage) {
       setupMessage.className = "setup-message attention";
@@ -3862,8 +4151,8 @@ function applyModSyncUi(modSync, baseSdk = null) {
     if (actionMessage) {
       actionMessage.className = "action-message ok";
       actionMessage.textContent = modSync.gameRunning
-        ? "Squ1ggs mod updated while Borderlands 4 is open — fully quit and relaunch the game."
-        : modSync.message || "Squ1ggs mod auto-updated.";
+        ? t("sync.actionGameOpen")
+        : modSync.message || t("sync.actionUpdated");
     }
     // Keep Setup collapsed — the top notice is enough.
     setupPinned = false;
@@ -3878,9 +4167,9 @@ function applyModSyncUi(modSync, baseSdk = null) {
   if (modSync?.ok === false && modSync.reason !== "no-game-root") {
     hideModSyncNotice();
     setModSyncBanner("error", {
-      kicker: "AUTO MOD SYNC FAILED",
-      title: "Could not update Squ1ggsBoostingTools",
-      detail: modSync.message || "Close Borderlands 4 and use Force reinstall Squ1ggs mod.",
+      kicker: t("sync.failKicker"),
+      title: t("sync.failTitle"),
+      detail: modSync.message || t("sync.failDetail"),
       versions,
     });
     if (setupMessage) {
@@ -3902,10 +4191,9 @@ function applyModSyncUi(modSync, baseSdk = null) {
 
   if (match || modSync?.reason === "already-current") {
     setModSyncBanner("ok", {
-      kicker: "AUTO MOD SYNC · UP TO DATE",
-      title: `Squ1ggs mod matches this EXE (v${modSync.bundledVersion || "unknown"})`,
-      detail:
-        "Nothing to install. This EXE will auto-copy a newer Squ1ggsBoostingTools folder the next time versions differ. Use Force reinstall only if something looks wrong.",
+      kicker: t("sync.upToDateKicker"),
+      title: t("sync.upToDateTitle", { version: modSync.bundledVersion || t("sync.unknown") }),
+      detail: t("sync.upToDateDetail"),
       versions,
     });
     hideModSyncNotice();
@@ -3919,16 +4207,15 @@ function applyModSyncUi(modSync, baseSdk = null) {
   }
 
   setModSyncBanner("updated", {
-    kicker: "AUTO MOD SYNC",
-    title: "Squ1ggs mod will auto-update on next sync",
-    detail:
-      "Installed version differs from this EXE. Relaunch the EXE or open Setup → Force reinstall. If the game is open afterward, fully quit and relaunch Borderlands 4.",
+    kicker: t("sync.kicker"),
+    title: t("sync.willUpdateTitle"),
+    detail: t("sync.willUpdateDetail"),
     versions,
   });
   showModSyncNotice("updated", {
-    kicker: "AUTO MOD SYNC",
-    title: "Mod version differs — relaunch this EXE",
-    detail: "Or open Setup and press Force reinstall. No need to hunt for Install SDK.",
+    kicker: t("sync.kicker"),
+    title: t("syncNotice.relaunchTitle"),
+    detail: t("syncNotice.relaunchDetail"),
   });
   setupPinned = false;
   updateSetupVisibility({
@@ -3946,8 +4233,12 @@ async function loadSetup() {
     setup.storedGameRoot ||
     (setup.candidates || []).find(Boolean) ||
     "";
+  lastSetup = setup;
   gameRootInput.value = resolved;
   applyTheme(setup.theme || "default");
+  applyLocale(setup.locale || i18n.detectBrowserLocale(), { refresh: false });
+  hiddenShapesUnlocked = Boolean(setup.hiddenShapes);
+  injectHiddenShapeOptions();
   applyInstallLocationUi(setup);
   applyBaseSdkUi(setup.baseSdk, setup.modSync);
   applyModSyncUi(setup.modSync, setup.baseSdk);
@@ -3960,12 +4251,10 @@ async function loadSetup() {
     window.sqbt.dismissSetup().catch(() => {});
   }
   if (settingsModeNote) {
-    if (setup.settingsMode === "appdata" || setup.isPackaged) {
-      settingsModeNote.textContent =
-        "Game path is saved in your Windows AppData profile, so it survives unzipping a newer portable EXE.";
-    } else {
-      settingsModeNote.textContent = "Dev mode: settings use the Electron userData folder.";
-    }
+    settingsModeNote.textContent =
+      setup.settingsMode === "appdata" || setup.isPackaged
+        ? t("setup.appdata")
+        : t("setup.devmode");
   }
 }
 
@@ -3981,35 +4270,90 @@ if (snapRightBtn) {
       const result = await window.sqbt.snapWindow("right");
       if (result?.ok) {
         actionMessage.className = "action-message ok";
-        actionMessage.textContent = "Snapped to the right half of this monitor.";
+        actionMessage.textContent = t("snap.ok");
       } else {
         actionMessage.className = "action-message error";
-        actionMessage.textContent = result?.message || "Could not snap window.";
+        actionMessage.textContent = result?.message || t("snap.fail");
       }
     } catch (error) {
       actionMessage.className = "action-message error";
-      actionMessage.textContent = String(error?.message || error || "Snap failed.");
+      actionMessage.textContent = String(error?.message || error || t("snap.error"));
     }
   });
 }
 
-if (themeToggleBtn) {
-  themeToggleBtn.addEventListener("click", async () => {
-    const next = currentTheme === "scooters" ? "default" : "scooters";
+if (themeSelect) {
+  themeSelect.addEventListener("change", async () => {
+    const next = themeSelect.value || "default";
     applyTheme(next);
     try {
       await window.sqbt.setTheme(next);
       actionMessage.className = "action-message ok";
-      actionMessage.textContent =
-        next === "scooters"
-          ? "Scooter's Toolbox theme on."
-          : "Default Boosting Tools theme on.";
+      actionMessage.textContent = t(`theme.on.${next}`) || t("theme.saved");
     } catch (error) {
       actionMessage.className = "action-message error";
-      actionMessage.textContent = String(error?.message || error || "Could not save theme.");
+      actionMessage.textContent = String(error?.message || error || t("theme.fail"));
     }
   });
 }
+
+if (langSelect) {
+  langSelect.addEventListener("change", async () => {
+    const next = applyLocale(langSelect.value);
+    try {
+      await window.sqbt.setLocale(next);
+      actionMessage.className = "action-message ok";
+      actionMessage.textContent = t("lang.saved");
+    } catch (error) {
+      actionMessage.className = "action-message error";
+      actionMessage.textContent = String(error?.message || error || t("lang.fail"));
+    }
+  });
+}
+
+const watchaDialog = document.getElementById("watcha-dialog");
+const watchaNsfwDialog = document.getElementById("watcha-nsfw-dialog");
+const watchaContinueBtn = document.getElementById("watcha-continue-btn");
+const watchaGotItBtn = document.getElementById("watcha-got-it-btn");
+
+async function finishHiddenShapeUnlock() {
+  hiddenShapesUnlocked = true;
+  try {
+    await window.sqbt.unlockHiddenShapes();
+  } catch {
+    /* still show the options in this session */
+  }
+  injectHiddenShapeOptions();
+  watchaNsfwDialog?.close();
+  actionMessage.className = "action-message ok";
+  actionMessage.textContent = "two extra 3D shapes unlocked. keep those off public SBT posts.";
+}
+
+if (watchaContinueBtn) {
+  watchaContinueBtn.addEventListener("click", () => {
+    watchaDialog?.close();
+    watchaNsfwDialog?.showModal();
+  });
+}
+if (watchaGotItBtn) {
+  watchaGotItBtn.addEventListener("click", () => {
+    finishHiddenShapeUnlock();
+  });
+}
+
+window.addEventListener("keydown", (event) => {
+  if (!(event.ctrlKey && event.altKey && event.shiftKey && event.key === "F9")) return;
+  const tag = String(event.target?.tagName || "").toLowerCase();
+  if (tag === "input" || tag === "textarea") return;
+  event.preventDefault();
+  if (hiddenShapesUnlocked) {
+    injectHiddenShapeOptions();
+    actionMessage.className = "action-message ok";
+    actionMessage.textContent = "you already found those.";
+    return;
+  }
+  watchaDialog?.showModal();
+});
 
 if (spawnAnchorSelect) {
   spawnAnchorSelect.addEventListener("change", () => {
@@ -4035,6 +4379,13 @@ browseGameBtn.addEventListener("click", async () => {
       pathSource: result.pathSource || "stored",
       candidates: result.candidates || [],
     });
+    lastSetup = {
+      ...(lastSetup || {}),
+      gameRoot: result.gameRoot,
+      storedGameRoot: result.storedGameRoot || result.gameRoot,
+      pathSource: result.pathSource || "stored",
+      candidates: result.candidates || [],
+    };
     applyBaseSdkUi(result.baseSdk, result.modSync);
     applyModSyncUi(result.modSync, result.baseSdk);
     if (!(result.modSync?.updated && result.modSync?.ok) && setupMessage) {
@@ -4227,6 +4578,7 @@ if (modSyncNoticeDismiss) {
 }
 
 bindExternalLinks(startGuide);
+i18n.fillLocaleSelect(langSelect, i18n.detectBrowserLocale());
 window.sqbt.onStatus(setStatusUi);
 loadSetup();
 window.sqbt.getStatus().then(setStatusUi);

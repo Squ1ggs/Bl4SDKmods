@@ -1,6 +1,6 @@
 # Squ1ggs Boosting Tools — desktop app
 
-**v1.0.80** · Player tools for **Borderlands 4** by **[Squ1ggs](https://github.com/Squ1ggs)**.
+**v1.1.0** · Player tools for **Borderlands 4** by **[Squ1ggs](https://github.com/Squ1ggs)**.
 
 **Distribution:** GitHub only (mod + app) — not on the [BL Oak2 Mod DB](https://bl-sdk.github.io/oak2-mod-db/).  
 **Repo:** [github.com/Squ1ggs/Bl4SDKmods](https://github.com/Squ1ggs/Bl4SDKmods)
@@ -9,7 +9,7 @@
 
 1. Run **Squ1ggs Boosting Tools** → browse to Borderlands 4 if needed → **Install SDK + Squ1ggs mod** (downloads official [oak2-mod-manager](https://github.com/bl-sdk/oak2-mod-manager/releases/tag/v0.3) when the base SDK is missing).
 2. Launch **Borderlands 4**.
-3. **Fully restart Borderlands 4**, then **Refresh status** — confirm the game is connected and mod v3.6.173+ is shown.
+3. **Fully restart Borderlands 4**, then **Refresh status** — confirm the game is connected and mod v3.7.0+ is shown.
 4. Click a party roster row to set the action target, then use any tab.
 
 ## Features

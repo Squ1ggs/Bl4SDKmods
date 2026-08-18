@@ -2,11 +2,11 @@
 
 const path = require("path");
 const { app, BrowserWindow, dialog, ipcMain, shell, screen } = require("electron");
-const { getBridgeStatus, postAction, fetchManifest, fetchCatalog, BRIDGE_BASE } = require("./lib/bridge");
+const { getBridgeStatus, postAction, fetchManifest, fetchCatalog, getBridgeBase } = require("./lib/bridge");
 const { defaultGameRootHint, defaultInstallCandidates, normalizeGameRoot, resolveGameRoot } = require("./lib/game_paths");
 const { ensureModSynced, getModSyncStatus, installSdkmod } = require("./lib/sdkmod_install");
 const { checkBaseSdkUpdate, detectBaseSdk, installBaseSdk } = require("./lib/oak2_sdk");
-const { loadSettings, saveSettings, normalizeTheme } = require("./lib/app_settings");
+const { loadSettings, saveSettings, normalizeTheme, normalizeLocale, readHiddenShapesUnlocked } = require("./lib/app_settings");
 const { checkForUpdates, compareVersions, normalizeVersion } = require("./lib/update_check");
 const { applyGithubUpdate } = require("./lib/github_update");
 const { readSerialSource } = require("./lib/serial_sources");
@@ -15,6 +15,8 @@ let mainWindow = null;
 let refreshTimer = null;
 let storedGameRoot = null;
 let storedTheme = "default";
+let storedLocale = "en";
+let storedHiddenShapes = false;
 let settingsMode = "appdata";
 let settingsPath = null;
 let updateCache = null;
@@ -54,6 +56,8 @@ function runAutoModSync(options = {}) {
 function applyStoredSettings(state) {
   storedGameRoot = state?.gameRoot || null;
   storedTheme = normalizeTheme(state?.theme);
+  storedLocale = normalizeLocale(state?.locale);
+  storedHiddenShapes = Boolean(state?.hiddenShapes) || readHiddenShapesUnlocked();
   settingsMode = state?.settingsMode || "appdata";
   settingsPath = state?.settingsPath || null;
 }
@@ -66,12 +70,20 @@ function persistStoredSettings(extra = {}) {
   const saved = saveSettings(app, {
     gameRoot: storedGameRoot,
     theme: storedTheme,
+    locale: storedLocale,
+    hiddenShapes: storedHiddenShapes,
     ...extra,
   });
   settingsMode = saved.mode;
   settingsPath = saved.path;
   if (extra.theme !== undefined) {
     storedTheme = normalizeTheme(extra.theme);
+  }
+  if (extra.locale !== undefined) {
+    storedLocale = normalizeLocale(extra.locale);
+  }
+  if (extra.hiddenShapes !== undefined) {
+    storedHiddenShapes = Boolean(extra.hiddenShapes);
   }
 }
 
@@ -273,7 +285,7 @@ ipcMain.handle("sqbt:get-setup", async () => {
     /* keep local detect */
   }
   return {
-    bridgeUrl: BRIDGE_BASE,
+    bridgeUrl: getBridgeBase(),
     gameRoot,
     defaultGameRoot: defaultGameRootHint(),
     candidates,
@@ -281,6 +293,8 @@ ipcMain.handle("sqbt:get-setup", async () => {
     pathSource,
     setupDismissed: Boolean(loadSettings(app).setupDismissed),
     theme: storedTheme,
+    locale: storedLocale,
+    hiddenShapes: storedHiddenShapes,
     settingsMode,
     settingsPath,
     isPackaged: app.isPackaged,
@@ -296,6 +310,16 @@ ipcMain.handle("sqbt:set-theme", async (_event, theme) => {
   storedTheme = normalizeTheme(theme);
   persistStoredSettings({ theme: storedTheme });
   return { ok: true, theme: storedTheme };
+});
+ipcMain.handle("sqbt:set-locale", async (_event, locale) => {
+  storedLocale = normalizeLocale(locale);
+  persistStoredSettings({ locale: storedLocale });
+  return { ok: true, locale: storedLocale };
+});
+ipcMain.handle("sqbt:unlock-hidden-shapes", async () => {
+  storedHiddenShapes = true;
+  persistStoredSettings({ hiddenShapes: true });
+  return { ok: true, hiddenShapes: true };
 });
 ipcMain.handle("sqbt:read-serial-source", async (_event, rawPath) => readSerialSource(rawPath));
 ipcMain.handle("sqbt:pick-serial-file", async () => {

@@ -12,6 +12,8 @@ contextBridge.exposeInMainWorld("sqbt", {
   getSetup: () => ipcRenderer.invoke("sqbt:get-setup"),
   dismissSetup: () => ipcRenderer.invoke("sqbt:dismiss-setup"),
   setTheme: (theme) => ipcRenderer.invoke("sqbt:set-theme", theme),
+  setLocale: (locale) => ipcRenderer.invoke("sqbt:set-locale", locale),
+  unlockHiddenShapes: () => ipcRenderer.invoke("sqbt:unlock-hidden-shapes"),
   readSerialSource: (filePath) => ipcRenderer.invoke("sqbt:read-serial-source", filePath),
   pickSerialFile: () => ipcRenderer.invoke("sqbt:pick-serial-file"),
   pickGameFolder: () => ipcRenderer.invoke("sqbt:pick-game-folder"),

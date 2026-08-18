@@ -2,38 +2,45 @@
 
 function classifyDisconnected(error) {
   const message = String(error?.message || error || "Game connection unavailable.");
+  if (/fetch failed|econnrefused|network|aborted|ECONNREFUSED/i.test(message)) {
+    return {
+      state: "disconnected",
+      headline: "Start Borderlands 4",
+      detail:
+        "Launch Borderlands 4",
+    };
+  }
   if (message.includes("abort")) {
     return {
       state: "disconnected",
       headline: "Game not responding",
       detail:
-        "Start Borderlands 4, load a character, then Refresh status. First use: Setup → Install SDK + Squ1ggs mod, then fully restart the game.",
+        "Borderlands 4 may still be loading. Wait on a character, then press Refresh status.",
     };
   }
   return {
     state: "disconnected",
     headline: "Game not connected",
-    detail: `${message}  →  First use: Setup → Install SDK + Squ1ggs mod, fully restart Borderlands 4, load a character, then Refresh status.`,
+    detail: `${message}  →  Start Borderlands 4, load a character, then press Refresh status.`,
   };
 }
 
 function classifyConnected(status) {
   const connection = status?.connection_state || "";
   const actionsAvailable = Boolean(status?.actions_available);
-  const detailBase = `${status.session || "In session"} · mod ${status.mod_version || "?"}`;
   if (connection === "ready" || actionsAvailable) {
     return {
       state: "ready",
-      headline: "Connected — ready for actions",
-      detail: detailBase,
+      headline: "Connected!",
+      detail: "lets mod",
       actionsAvailable: true,
     };
   }
   if (status?.has_local_pc || (status?.players && status.players.length)) {
     return {
       state: "connected",
-      headline: "Connected — session detected",
-      detail: `${detailBase} · actions enabled`,
+      headline: "Connected!",
+      detail: "lets mod",
       actionsAvailable: true,
     };
   }

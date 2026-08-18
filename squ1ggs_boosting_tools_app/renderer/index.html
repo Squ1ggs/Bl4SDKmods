@@ -24,7 +24,7 @@
         <div>
           <p class="eyebrow">Squ1ggs · Borderlands 4</p>
           <h1>Boosting Tools</h1>
-          <p class="tagline muted small">Player tools for Borderlands 4</p>
+          <p class="tagline muted small" data-i18n="chrome.tagline">Player tools for Borderlands 4</p>
         </div>
       </div>
       <div class="topbar-actions">
@@ -35,26 +35,70 @@
           <img src="assets/bl4/vh-paladin.png" alt="" aria-hidden="true" />
           <img src="assets/bl4/vh-robodealer.png" alt="C4SH (Robo Dealer)" title="C4SH · Robo Dealer" />
         </div>
-        <button id="snap-right-btn" type="button" class="ghost small" title="Dock to the right half of this monitor (Win11-friendly)">Snap right</button>
-        <button id="theme-toggle-btn" type="button" class="ghost small" title="Toggle Scooter's Toolbox look">Scooters theme</button>
-        <button id="report-issue-btn" type="button" class="ghost small" title="Report a bug on GitHub or ask on Discord">Report issue</button>
-        <button id="show-setup-btn" type="button" class="ghost small hidden">Setup</button>
-        <button id="refresh-btn" type="button">Refresh status</button>
+        <button id="snap-right-btn" type="button" class="ghost small" data-i18n="chrome.snapRight" data-i18n-title="chrome.snapRightTitle" title="Dock to the right half of this monitor (Win11-friendly)">Snap right</button>
+        <label class="theme-picker" data-i18n-title="chrome.themeTitle" title="Pick a colour palette">
+          <span data-i18n="chrome.theme">Theme</span>
+          <select id="theme-select">
+            <optgroup label="Boosting Tools" data-i18n="chrome.themesBoosting">
+              <option value="default">Default</option>
+              <option value="scooters">Scooters</option>
+              <option value="scooters-girly">Tina</option>
+            </optgroup>
+            <optgroup label="More palettes" data-i18n="chrome.themesMore">
+              <option value="claptrap">Claptrap</option>
+              <option value="moxxi">Moxxi</option>
+              <option value="crimson">Crimson</option>
+              <option value="psycho">Psycho</option>
+              <option value="maliwan">Maliwan</option>
+            </optgroup>
+          </select>
+        </label>
+        <label class="theme-picker lang-picker" data-i18n-title="chrome.languageTitle" title="Choose the app language">
+          <span data-i18n="chrome.language">Language</span>
+          <select id="lang-select" aria-label="Language"></select>
+        </label>
+        <button id="report-issue-btn" type="button" class="ghost small" data-i18n="chrome.reportIssue" data-i18n-title="chrome.reportIssueTitle" title="Report a bug on GitHub or ask on Discord">Report issue</button>
+        <button id="show-setup-btn" type="button" class="ghost small hidden" data-i18n="chrome.setup">Setup</button>
+        <button id="refresh-btn" type="button" data-i18n="chrome.refresh">Refresh status</button>
       </div>
     </header>
 
     <dialog id="report-issue-dialog" class="report-issue-dialog">
       <form method="dialog" class="report-issue-panel">
-        <p class="report-issue-kicker">Feedback</p>
-        <h2>Report an issue</h2>
-        <p class="muted small">
+        <p class="report-issue-kicker" data-i18n="report.kicker">Feedback</p>
+        <h2 data-i18n="report.title">Report an issue</h2>
+        <p class="muted small" data-i18n="report.body">
           Bugs are easiest to track on GitHub (versions are filled in for you).
           Discord is better for quick questions.
         </p>
         <div class="report-issue-actions">
-          <button id="report-github-btn" type="button" class="primary">Open GitHub issue</button>
-          <button id="report-discord-btn" type="button" class="ghost">Ask on Discord</button>
-          <button value="cancel" type="submit" class="ghost small">Close</button>
+          <button id="report-github-btn" type="button" class="primary" data-i18n="report.github">Open GitHub issue</button>
+          <button id="report-discord-btn" type="button" class="ghost" data-i18n="report.discord">Ask on Discord</button>
+          <button value="cancel" type="submit" class="ghost small" data-i18n="report.close">Close</button>
+        </div>
+      </form>
+    </dialog>
+
+    <dialog id="watcha-dialog" class="report-issue-dialog">
+      <form method="dialog" class="report-issue-panel">
+        <p class="report-issue-kicker" data-i18n="watcha.kicker">hey</p>
+        <h2 data-i18n="watcha.title">watcha dooing?</h2>
+        <div class="report-issue-actions">
+          <button id="watcha-continue-btn" type="button" class="primary" data-i18n="watcha.continue">uhh</button>
+          <button value="cancel" type="submit" class="ghost small" data-i18n="watcha.nothing">nothing</button>
+        </div>
+      </form>
+    </dialog>
+
+    <dialog id="watcha-nsfw-dialog" class="report-issue-dialog">
+      <form method="dialog" class="report-issue-panel">
+        <p class="report-issue-kicker" data-i18n="nsfw.kicker">heads up</p>
+        <h2 data-i18n="nsfw.title">Hidden shapes</h2>
+        <p class="muted small" data-i18n="nsfw.body">
+          when spawning hidden shapes please do not post alongside SBT - NSFW
+        </p>
+        <div class="report-issue-actions">
+          <button id="watcha-got-it-btn" type="button" class="primary" data-i18n="nsfw.gotIt">got it</button>
         </div>
       </form>
     </dialog>
@@ -62,30 +106,30 @@
     <aside id="update-card" class="update-card hidden" role="status" aria-live="polite">
       <img class="update-card-icon" src="assets/bl4/tab-home.png" alt="" aria-hidden="true" />
       <div class="update-card-copy">
-        <p class="update-kicker">Pending update</p>
-        <h2 id="update-title">Update available</h2>
-        <p id="update-detail" class="muted small">
-          A newer release is on GitHub. Newer EXEs auto-apply the Squ1ggs mod on launch.
+        <p class="update-kicker" data-i18n="update.kicker">Pending update</p>
+        <h2 id="update-title" data-i18n="update.title">Update available</h2>
+        <p id="update-detail" class="muted small" data-i18n="update.detail">
+          A newer EXE is on GitHub. Restarting the game is not enough — install that EXE. It auto-applies the Squ1ggs mod on launch.
         </p>
       </div>
       <div class="update-card-actions">
-        <button id="update-open-btn" type="button" class="primary">Install update</button>
-        <button id="update-dismiss-btn" type="button" class="ghost small" aria-label="Dismiss update notice">Later</button>
+        <button id="update-open-btn" type="button" class="primary" data-i18n="update.install">Install update</button>
+        <button id="update-dismiss-btn" type="button" class="ghost small" data-i18n="update.later" data-i18n-aria="update.laterAria" aria-label="Dismiss update notice">Later</button>
       </div>
     </aside>
 
     <aside id="mod-sync-notice" class="mod-sync-notice hidden" role="status" aria-live="polite">
       <div class="mod-sync-notice-body">
-        <p class="mod-sync-notice-kicker" id="mod-sync-notice-kicker">AUTO MOD SYNC</p>
-        <strong id="mod-sync-notice-title">Squ1ggs mod is current</strong>
+        <p class="mod-sync-notice-kicker" id="mod-sync-notice-kicker" data-i18n="syncNotice.kicker">AUTO MOD SYNC</p>
+        <strong id="mod-sync-notice-title" data-i18n="syncNotice.current">Squ1ggs mod is current</strong>
         <p id="mod-sync-notice-detail" class="muted small"></p>
       </div>
-      <button id="mod-sync-notice-dismiss" type="button" class="ghost small">Got it</button>
+      <button id="mod-sync-notice-dismiss" type="button" class="ghost small" data-i18n="syncNotice.gotIt">Got it</button>
     </aside>
 
     <section id="start-guide" class="card start-guide-card" aria-live="polite">
-      <p class="start-guide-kicker">Start here</p>
-      <h2 id="start-guide-title">What to do first</h2>
+      <p class="start-guide-kicker" data-i18n="guide.kicker">Start here</p>
+      <h2 id="start-guide-title" data-i18n="guide.getOnline">What to do first</h2>
       <ol id="start-guide-steps" class="start-guide-steps">
         <li><strong>Set your Borderlands 4 install folder</strong> — open <strong>Setup</strong> and press <strong>Set install folder</strong>. Pick the folder that contains <code>Borderlands4.exe</code> / <code>OakGame</code> (Steam on another drive is fine, e.g. <code>D:\SteamLibrary\steamapps\common\Borderlands 4</code>).</li>
         <li><strong>Install SDK once</strong> if prompted — then fully restart Borderlands 4.</li>
@@ -103,39 +147,39 @@
       <div class="status-row">
         <span id="status-dot" class="status-dot offline"></span>
         <div>
-          <h2 id="status-headline">Checking game connection…</h2>
-          <p id="status-detail" class="muted">Waiting for Borderlands 4.</p>
+          <h2 id="status-headline" data-i18n="status.checkingHeadline">Checking game connection…</h2>
+          <p id="status-detail" class="muted" data-i18n="status.checkingDetail">Waiting for Borderlands 4.</p>
         </div>
       </div>
       <dl class="meta-grid">
-        <div><dt>Game connection</dt><dd id="meta-bridge">—</dd></div>
-        <div><dt>Mod version</dt><dd id="meta-mod-version">—</dd></div>
-        <div><dt>Session</dt><dd id="meta-session">—</dd></div>
-        <div><dt>Target player</dt><dd id="meta-target">—</dd></div>
-        <div><dt>Spawn near</dt><dd id="meta-spawn">—</dd></div>
-        <div><dt>Freecam</dt><dd id="meta-freecam">—</dd></div>
+        <div><dt data-i18n="meta.gameConnection">Game connection</dt><dd id="meta-bridge">—</dd></div>
+        <div><dt data-i18n="meta.modVersion">Mod version</dt><dd id="meta-mod-version">—</dd></div>
+        <div><dt data-i18n="meta.session">Session</dt><dd id="meta-session">—</dd></div>
+        <div><dt data-i18n="meta.targetPlayer">Target player</dt><dd id="meta-target">—</dd></div>
+        <div><dt data-i18n="meta.spawnNear">Spawn near</dt><dd id="meta-spawn">—</dd></div>
+        <div><dt data-i18n="meta.freecam">Freecam</dt><dd id="meta-freecam">—</dd></div>
       </dl>
       <div class="target-row">
         <div class="target-row-head">
-          <h3>Party roster</h3>
+          <h3 data-i18n="roster.title">Party roster</h3>
           <div class="target-controls">
             <label class="target-control-label">
-              <span>Boost target (MAX ALL, UVHM, challenges, currency)</span>
+              <span data-i18n="target.label">Boost target (MAX ALL, UVHM, challenges, currency)</span>
               <select id="global-target-select" data-role="player-select">
-                <option value="">Connect in-game…</option>
+                <option value="" data-i18n="target.connect">Connect in-game…</option>
               </select>
             </label>
             <label class="spawn-anchor-label">
-              <span>World drop / spawn near</span>
+              <span data-i18n="spawn.label">World drop / spawn near</span>
               <select id="spawn-anchor-select">
-                <option value="local">From me</option>
-                <option value="party">From selected player</option>
-                <option value="npc_nearest">Near nearest NPC</option>
+                <option value="local" data-i18n="spawn.local">From me</option>
+                <option value="party" data-i18n="spawn.party">From selected player</option>
+                <option value="npc_nearest" data-i18n="spawn.npc">Near nearest NPC</option>
               </select>
             </label>
           </div>
         </div>
-        <p class="target-hint muted small">Pick who receives boosts above, then use any tab. Click a name below to set target quickly.</p>
+        <p class="target-hint muted small" data-i18n="roster.hint">Pick who receives boosts above, then use any tab. Click a name below to set target quickly.</p>
         <ul id="roster-list" class="roster-list"></ul>
       </div>
     </section>
@@ -144,30 +188,30 @@
 
     <section class="card setup-card" id="setup-card">
       <div class="setup-head">
-        <h2>Setup</h2>
-        <button id="dismiss-setup-btn" type="button" class="ghost small">Hide setup</button>
+        <h2 data-i18n="setup.title">Setup</h2>
+        <button id="dismiss-setup-btn" type="button" class="ghost small" data-i18n="setup.hide">Hide setup</button>
       </div>
 
       <div id="mod-sync-banner" class="mod-sync-banner is-need-path" data-state="need-path" aria-live="polite">
-        <p class="mod-sync-kicker" id="mod-sync-kicker">AUTO MOD SYNC</p>
-        <p class="mod-sync-title" id="mod-sync-title">Point this app at Borderlands 4</p>
-        <p class="mod-sync-detail" id="mod-sync-detail">
+        <p class="mod-sync-kicker" id="mod-sync-kicker" data-i18n="sync.kicker">AUTO MOD SYNC</p>
+        <p class="mod-sync-title" id="mod-sync-title" data-i18n="sync.pointTitle">Point this app at Borderlands 4</p>
+        <p class="mod-sync-detail" id="mod-sync-detail" data-i18n="sync.pointDetail">
           Browse to your game folder once. After that, launching this EXE auto-copies the Squ1ggs mod when the version changes.
         </p>
         <p class="mod-sync-versions" id="mod-sync-versions"></p>
       </div>
 
       <div class="install-location-card" id="install-location-card">
-        <p class="install-location-kicker">Borderlands 4 install location</p>
-        <p class="install-location-title">Where is <code>Borderlands4.exe</code>?</p>
+        <p class="install-location-kicker" data-i18n="install.kicker">Borderlands 4 install location</p>
+        <p class="install-location-title" data-i18n-html="install.title">Where is <code>Borderlands4.exe</code>?</p>
         <p class="install-location-detail" id="install-location-detail">
           If Steam/Epic put the game on another drive, auto-detect may miss it — press
           <strong>Set install folder</strong> and pick the folder that contains <code>OakGame</code>
           (example: <code>D:\SteamLibrary\steamapps\common\Borderlands 4</code>).
         </p>
         <div class="setup-row install-location-row">
-          <input id="game-root" type="text" readonly placeholder="Not set — browse to your Borderlands 4 folder…" />
-          <button id="browse-game-btn" type="button" class="primary">Set install folder</button>
+          <input id="game-root" type="text" readonly data-i18n-placeholder="install.placeholder" placeholder="Not set — browse to your Borderlands 4 folder…" />
+          <button id="browse-game-btn" type="button" class="primary" data-i18n="install.setFolder">Set install folder</button>
         </div>
         <p id="install-location-status" class="install-location-status muted small" aria-live="polite"></p>
       </div>
@@ -180,8 +224,8 @@
       <p id="sdk-status-line" class="muted small" aria-live="polite"></p>
       <p id="settings-mode-note" class="muted small"></p>
       <div class="setup-actions">
-        <button id="install-mod-btn" type="button" class="primary">Install SDK + Squ1ggs mod</button>
-        <button id="update-base-sdk-btn" type="button" class="ghost hidden">Update base SDK</button>
+        <button id="install-mod-btn" type="button" class="primary" data-i18n="sdk.install">Install SDK + Squ1ggs mod</button>
+        <button id="update-base-sdk-btn" type="button" class="ghost hidden" data-i18n="sdk.updateBase">Update base SDK</button>
       </div>
       <p id="setup-message" class="setup-message" aria-live="polite"></p>
     </section>
@@ -193,12 +237,13 @@
     <footer class="footer muted small">
       <span>Squ1ggs Boosting Tools</span>
       <span class="footer-dot" aria-hidden="true"></span>
-      <span id="app-version">Version checking…</span>
+      <span id="app-version" data-i18n="footer.checking">Version checking…</span>
       <span class="footer-dot" aria-hidden="true"></span>
-      <button id="report-issue-footer-btn" type="button" class="footer-link-btn">Report issue</button>
+      <button id="report-issue-footer-btn" type="button" class="footer-link-btn" data-i18n="footer.report">Report issue</button>
       <span class="footer-dot" aria-hidden="true"></span>
       <span>Borderlands 4</span>
     </footer>
+    <script src="i18n.js"></script>
     <script src="app.js"></script>
   </body>
 </html>

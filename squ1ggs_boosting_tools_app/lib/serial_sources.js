@@ -10,7 +10,7 @@ const ALLOWED_EXTS = new Set([...TEXT_EXTS, ...DOCX_EXTS]);
 
 const PATH_LINE_RE =
   /^\s*(?:"([^"\r\n]+)"|'([^'\r\n]+)'|((?:[A-Za-z]:\\|\\\\)[^\r\n]+))\s*$/;
-const ATU_RE = /@U[^\s`'"]+/g;
+const ATU_RE = /@U\S+/g;
 const HUMAN_SERIAL_RE = /^\s*\d+\s*,\s*\d+/;
 
 function stripQuotes(raw) {
@@ -147,10 +147,20 @@ function extractSerialsFromText(rawText) {
   const seen = new Set();
 
   const push = (serial) => {
-    const cleaned = String(serial || "")
-      .trim()
-      .replace(/^`+|`+$/g, "")
-      .trim();
+    let cleaned = String(serial || "").trim();
+    if (
+      (cleaned.startsWith('"') && cleaned.endsWith('"')) ||
+      (cleaned.startsWith("'") && cleaned.endsWith("'"))
+    ) {
+      cleaned = cleaned.slice(1, -1).trim();
+    }
+    // Markdown fence around the whole token only — never strip backticks inside Base85.
+    if (cleaned.startsWith("`") && cleaned.endsWith("`") && cleaned.indexOf("`") === 0) {
+      const inner = cleaned.slice(1, -1);
+      if (!inner.includes("`")) {
+        cleaned = inner.trim();
+      }
+    }
     if (!cleaned) return;
     if (!(cleaned.startsWith("@U") || (cleaned.includes(",") && /\d/.test(cleaned)))) {
       return;
@@ -160,16 +170,27 @@ function extractSerialsFromText(rawText) {
     found.push(cleaned);
   };
 
+  const pushAtUParts = (blob) => {
+    const text = String(blob || "");
+    const idx = text.indexOf("@U");
+    if (idx < 0) return;
+    for (const part of text.slice(idx).split(/(?=@U)/)) {
+      const token = part.trim();
+      if (token.startsWith("@U")) push(token);
+    }
+  };
+
   // Prefer explicit @U tokens anywhere in the blob (fenced markdown, prose, etc.).
+  // Split only at a new @U prefix so ` ' @ inside one Base85 serial stay intact.
   const atMatches = text.match(ATU_RE) || [];
   for (const match of atMatches) {
-    push(match);
+    pushAtUParts(match);
   }
 
   for (const line of text.split(/\r?\n/)) {
-    const trimmed = line.trim().replace(/^`+|`+$/g, "").trim();
-    if (trimmed.startsWith("@U")) {
-      push(trimmed.split(/\s+/)[0]);
+    const trimmed = line.trim();
+    if (trimmed.includes("@U")) {
+      pushAtUParts(trimmed);
       continue;
     }
     if (HUMAN_SERIAL_RE.test(trimmed)) {

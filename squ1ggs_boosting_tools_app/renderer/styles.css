@@ -356,6 +356,18 @@ button:disabled {
   font-size: 0.85rem;
 }
 
+.field-check {
+  grid-template-columns: auto 1fr;
+  align-items: center;
+}
+
+.field-check input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  margin: 0;
+  accent-color: var(--accent-warm);
+}
+
 .field input[type="search"],
 .field textarea,
 .field input,
@@ -451,6 +463,12 @@ button:disabled {
 .start-guide-steps li::marker {
   color: var(--accent-warm);
   font-weight: 700;
+}
+
+.start-guide-steps a {
+  color: var(--accent);
+  font-weight: 700;
+  text-decoration: underline;
 }
 
 .start-guide-foot {
@@ -1280,6 +1298,33 @@ body::before {
   align-items: center;
   justify-content: flex-end;
   gap: 12px;
+}
+
+.theme-picker {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.78rem;
+  color: var(--muted);
+}
+
+.theme-picker span {
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  font-size: 0.68rem;
+}
+
+.theme-picker select {
+  min-width: 7.5rem;
+  padding: 6px 10px;
+  border-radius: 8px;
+  border: 1px solid var(--panel-border);
+  background: var(--panel-raised, rgba(18, 26, 49, 0.92));
+  color: var(--text);
+}
+
+.lang-picker select {
+  min-width: 8.25rem;
 }
 
 .report-issue-dialog {
@@ -2425,5 +2470,712 @@ html[data-theme="scooters"] .mod-sync-banner.is-ok {
 
 html[data-theme="scooters"] .mod-sync-banner.is-restart {
   border-color: rgba(255, 90, 90, 0.9);
+}
+
+/* ===== Tina theme (same Scooters layout, pink / lavender) ===== */
+html[data-theme="scooters-girly"] {
+  color-scheme: dark;
+  --bg: #1a0e18;
+  --panel: #26141f;
+  --panel-raised: #321c2a;
+  --panel-border: rgba(255, 122, 217, 0.42);
+  --text: #fff0f8;
+  --muted: #c9a8bc;
+  --accent: #ff7ad9;
+  --accent-2: #ffc0ee;
+  --accent-warm: #c084fc;
+  --ok: #ff9ee0;
+  --warn: #ffd27a;
+  --bad: #ff6b9d;
+  --radius: 12px;
+  font-family: "Segoe UI", system-ui, sans-serif;
+}
+
+html[data-theme="scooters-girly"] body {
+  background:
+    radial-gradient(circle at 12% 0%, rgba(255, 122, 217, 0.20), transparent 34%),
+    radial-gradient(circle at 88% 8%, rgba(192, 132, 252, 0.16), transparent 32%),
+    radial-gradient(circle at 50% 100%, rgba(255, 182, 193, 0.14), transparent 40%),
+    linear-gradient(180deg, #1a0e18 0%, #221018 55%, #160c14 100%);
+  background-size: auto;
+}
+
+html[data-theme="scooters-girly"] .eyebrow {
+  color: var(--accent);
+  text-shadow: 0 0 12px rgba(255, 122, 217, 0.4);
+}
+
+html[data-theme="scooters-girly"] h1 {
+  background: linear-gradient(90deg, #ff7ad9 0%, #ffc0ee 35%, #c084fc 70%, #fda4af 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+html[data-theme="scooters-girly"] .app-logo {
+  box-shadow:
+    0 0 0 1px rgba(255, 122, 217, 0.5),
+    0 0 22px rgba(255, 192, 238, 0.22),
+    0 10px 28px rgba(0, 0, 0, 0.4);
+}
+
+html[data-theme="scooters-girly"] .card,
+html[data-theme="scooters-girly"] .panel-section,
+html[data-theme="scooters-girly"] .status-card,
+html[data-theme="scooters-girly"] .setup-card,
+html[data-theme="scooters-girly"] .start-guide-card,
+html[data-theme="scooters-girly"] .update-card {
+  background: rgba(38, 20, 31, 0.92);
+  border-color: rgba(255, 122, 217, 0.32);
+  box-shadow:
+    0 10px 28px rgba(0, 0, 0, 0.28),
+    inset 0 0 0 1px rgba(255, 122, 217, 0.06);
+}
+
+html[data-theme="scooters-girly"] .action-card {
+  border-color: rgba(255, 122, 217, 0.46);
+  background:
+    linear-gradient(145deg, rgba(64, 24, 48, 0.96), rgba(32, 16, 28, 0.97)),
+    rgba(24, 12, 22, 0.94);
+  box-shadow:
+    inset 0 0 14px rgba(255, 192, 238, 0.08),
+    0 0 18px rgba(255, 122, 217, 0.14),
+    0 8px 18px rgba(0, 0, 0, 0.22);
+}
+
+html[data-theme="scooters-girly"] .action-card.deliver-selected-card {
+  border-color: rgba(192, 132, 252, 0.55);
+  background:
+    linear-gradient(145deg, rgba(58, 24, 72, 0.96), rgba(28, 16, 36, 0.97)),
+    rgba(22, 12, 28, 0.94);
+  box-shadow:
+    inset 0 0 14px rgba(192, 132, 252, 0.1),
+    0 0 18px rgba(192, 132, 252, 0.16),
+    0 8px 18px rgba(0, 0, 0, 0.22);
+}
+
+html[data-theme="scooters-girly"] input[type="text"],
+html[data-theme="scooters-girly"] input[type="number"],
+html[data-theme="scooters-girly"] textarea,
+html[data-theme="scooters-girly"] select {
+  border: 1px solid rgba(255, 122, 217, 0.48);
+  background: rgba(28, 14, 24, 0.78);
+  color: #fff0f8;
+  box-shadow: inset 0 0 0 1px rgba(255, 122, 217, 0.06);
+}
+
+html[data-theme="scooters-girly"] input:focus,
+html[data-theme="scooters-girly"] textarea:focus,
+html[data-theme="scooters-girly"] select:focus {
+  outline: none;
+  border-color: rgba(255, 122, 217, 0.9);
+  box-shadow: 0 0 0 3px rgba(255, 122, 217, 0.18);
+}
+
+html[data-theme="scooters-girly"] button {
+  border: 1px solid rgba(255, 122, 217, 0.46);
+  background: rgba(48, 20, 38, 0.9);
+  color: #fff0f8;
+  box-shadow: inset 0 0 10px rgba(255, 192, 238, 0.08);
+}
+
+html[data-theme="scooters-girly"] button:hover:not(:disabled) {
+  border-color: rgba(255, 122, 217, 0.95);
+  filter: brightness(1.08);
+}
+
+html[data-theme="scooters-girly"] .action-grid button,
+html[data-theme="scooters-girly"] .action-card button,
+html[data-theme="scooters-girly"] button.primary,
+html[data-theme="scooters-girly"] button[data-accent="cyan"],
+html[data-theme="scooters-girly"] button[data-accent="pink"],
+html[data-theme="scooters-girly"] button[data-accent="violet"],
+html[data-theme="scooters-girly"] #theme-toggle-btn.is-toggle-on {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  border: 1px solid rgba(255, 122, 217, 0.8);
+  background: #2a1422;
+  background-image: none;
+  animation: none;
+  color: #2a1020;
+  font-weight: 700;
+  box-shadow:
+    0 8px 20px rgba(0, 0, 0, 0.32),
+    inset 0 0 10px rgba(255, 122, 217, 0.2);
+}
+
+html[data-theme="scooters-girly"] .action-grid button::before,
+html[data-theme="scooters-girly"] .action-card button::before,
+html[data-theme="scooters-girly"] button.primary::before,
+html[data-theme="scooters-girly"] button[data-accent="cyan"]::before,
+html[data-theme="scooters-girly"] button[data-accent="pink"]::before,
+html[data-theme="scooters-girly"] button[data-accent="violet"]::before,
+html[data-theme="scooters-girly"] #theme-toggle-btn.is-toggle-on::before {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 300%;
+  height: 100%;
+  background-image: linear-gradient(
+    90deg,
+    #ff7ad9 0%,
+    #c084fc 11.11%,
+    #fda4af 22.22%,
+    #ff7ad9 33.33%,
+    #c084fc 44.44%,
+    #fda4af 55.55%,
+    #ff7ad9 66.66%,
+    #c084fc 77.77%,
+    #fda4af 88.88%,
+    #ff7ad9 100%
+  );
+  animation: scooters-btn-sweep 9s linear infinite;
+  pointer-events: none;
+  z-index: -1;
+}
+
+html[data-theme="scooters-girly"] button[data-accent="pink"]::before,
+html[data-theme="scooters-girly"] button.is-toggle-off::before {
+  background-image: linear-gradient(
+    90deg,
+    #fda4af 0%,
+    #ff7ad9 11.11%,
+    #c084fc 22.22%,
+    #fda4af 33.33%,
+    #ff7ad9 44.44%,
+    #c084fc 55.55%,
+    #fda4af 66.66%,
+    #ff7ad9 77.77%,
+    #c084fc 88.88%,
+    #fda4af 100%
+  );
+}
+
+html[data-theme="scooters-girly"] .action-grid button > *,
+html[data-theme="scooters-girly"] .action-card button > *,
+html[data-theme="scooters-girly"] button.primary > *,
+html[data-theme="scooters-girly"] button[data-accent] > *,
+html[data-theme="scooters-girly"] #theme-toggle-btn.is-toggle-on > * {
+  position: relative;
+  z-index: 1;
+}
+
+html[data-theme="scooters-girly"] .tab-bar button {
+  animation: none;
+  border-color: rgba(255, 122, 217, 0.3);
+  background: rgba(28, 14, 24, 0.76);
+  background-image: none;
+  color: #fff0f8;
+  box-shadow: none;
+  overflow: visible;
+}
+
+html[data-theme="scooters-girly"] .tab-bar button::before {
+  content: none;
+  animation: none;
+}
+
+html[data-theme="scooters-girly"] .tab-bar button.active {
+  border-color: rgba(255, 122, 217, 0.9);
+  background: rgba(255, 122, 217, 0.16);
+  box-shadow: 0 0 18px rgba(255, 122, 217, 0.2);
+}
+
+html[data-theme="scooters-girly"] .status-dot.connected,
+html[data-theme="scooters-girly"] .status-dot.ready {
+  background: #ff9ee0;
+  box-shadow: 0 0 16px rgba(255, 158, 224, 0.55);
+}
+
+html[data-theme="scooters-girly"] .roster-list li,
+html[data-theme="scooters-girly"] .multiselect-row,
+html[data-theme="scooters-girly"] .badge {
+  border-color: rgba(255, 122, 217, 0.3);
+}
+
+html[data-theme="scooters-girly"] a {
+  color: #ff9ee0;
+}
+
+html[data-theme="scooters-girly"] .update-card,
+html[data-theme="scooters-girly"] .setup-attention {
+  border-color: rgba(255, 122, 217, 0.46);
+  background: linear-gradient(135deg, rgba(255, 122, 217, 0.12), rgba(192, 132, 252, 0.1));
+}
+
+html[data-theme="scooters-girly"] .mod-sync-banner {
+  border-color: rgba(255, 122, 217, 0.68);
+  background:
+    linear-gradient(135deg, rgba(255, 122, 217, 0.18), rgba(192, 132, 252, 0.12)),
+    rgba(22, 10, 18, 0.95);
+}
+
+html[data-theme="scooters-girly"] .mod-sync-banner.is-ok {
+  border-color: rgba(255, 158, 224, 0.8);
+}
+
+html[data-theme="scooters-girly"] .mod-sync-banner.is-restart {
+  border-color: rgba(255, 107, 157, 0.9);
+}
+
+/* Extra palettes: variables + chrome. Scooters/Tina keep their custom button skins. */
+html[data-theme="claptrap"],
+html[data-theme="moxxi"],
+html[data-theme="crimson"],
+html[data-theme="psycho"],
+html[data-theme="maliwan"] {
+  color-scheme: dark;
+}
+
+html[data-theme="default"] {
+  --btn-on-sweep: #12081c;
+  --btn-sweep: linear-gradient(
+    90deg,
+    #c956ff 0%,
+    #43d7ff 11.11%,
+    #7c5cff 22.22%,
+    #c956ff 33.33%,
+    #43d7ff 44.44%,
+    #7c5cff 55.55%,
+    #c956ff 66.66%,
+    #43d7ff 77.77%,
+    #7c5cff 88.88%,
+    #c956ff 100%
+  );
+}
+
+html[data-theme="claptrap"] {
+  --bg: #16120a;
+  --panel: #241c10;
+  --panel-raised: #2e2414;
+  --panel-border: rgba(255, 208, 0, 0.42);
+  --text: #fff6d4;
+  --muted: #c4b48a;
+  --accent: #ffd000;
+  --accent-2: #ff8a1a;
+  --accent-warm: #ff8a1a;
+  --ok: #c8f060;
+  --warn: #ffd000;
+  --bad: #ff5a3a;
+  --btn-on-sweep: #1a1204;
+  --btn-sweep: linear-gradient(
+    90deg,
+    #ffd000 0%,
+    #ff8a1a 11.11%,
+    #ffe566 22.22%,
+    #ffd000 33.33%,
+    #ff8a1a 44.44%,
+    #ffe566 55.55%,
+    #ffd000 66.66%,
+    #ff8a1a 77.77%,
+    #ffe566 88.88%,
+    #ffd000 100%
+  );
+}
+
+html[data-theme="moxxi"] {
+  --bg: #14080c;
+  --panel: #241018;
+  --panel-raised: #32141e;
+  --panel-border: rgba(232, 197, 71, 0.4);
+  --text: #ffe8ee;
+  --muted: #c49aa6;
+  --accent: #ff4d7a;
+  --accent-2: #e8c547;
+  --accent-warm: #e8c547;
+  --ok: #e8c547;
+  --warn: #ffb347;
+  --bad: #ff4d7a;
+  --btn-on-sweep: #1a0810;
+  --btn-sweep: linear-gradient(
+    90deg,
+    #ff4d7a 0%,
+    #e8c547 11.11%,
+    #ff7aa0 22.22%,
+    #ff4d7a 33.33%,
+    #e8c547 44.44%,
+    #ff7aa0 55.55%,
+    #ff4d7a 66.66%,
+    #e8c547 77.77%,
+    #ff7aa0 88.88%,
+    #ff4d7a 100%
+  );
+}
+
+html[data-theme="crimson"] {
+  --bg: #070707;
+  --panel: #141010;
+  --panel-raised: #1c1414;
+  --panel-border: rgba(255, 40, 40, 0.5);
+  --text: #f5f0f0;
+  --muted: #b0a0a0;
+  --accent: #ff1a1a;
+  --accent-2: #ff6b6b;
+  --accent-warm: #ff4d4d;
+  --ok: #ff6b6b;
+  --warn: #ffb020;
+  --bad: #ff1a1a;
+  --btn-on-sweep: #140404;
+  --btn-sweep: linear-gradient(
+    90deg,
+    #ff1a1a 0%,
+    #8a0000 11.11%,
+    #ff6b6b 22.22%,
+    #ff1a1a 33.33%,
+    #8a0000 44.44%,
+    #ff6b6b 55.55%,
+    #ff1a1a 66.66%,
+    #8a0000 77.77%,
+    #ff6b6b 88.88%,
+    #ff1a1a 100%
+  );
+}
+
+html[data-theme="psycho"] {
+  --bg: #0c0c0c;
+  --panel: #161410;
+  --panel-raised: #1e1a12;
+  --panel-border: rgba(255, 225, 74, 0.45);
+  --text: #fff8d6;
+  --muted: #b8ae88;
+  --accent: #ffe14a;
+  --accent-2: #ff2a2a;
+  --accent-warm: #ff2a2a;
+  --ok: #ffe14a;
+  --warn: #ffe14a;
+  --bad: #ff2a2a;
+  --btn-on-sweep: #141208;
+  --btn-sweep: linear-gradient(
+    90deg,
+    #ffe14a 0%,
+    #ff2a2a 11.11%,
+    #fff3a0 22.22%,
+    #ffe14a 33.33%,
+    #ff2a2a 44.44%,
+    #fff3a0 55.55%,
+    #ffe14a 66.66%,
+    #ff2a2a 77.77%,
+    #fff3a0 88.88%,
+    #ffe14a 100%
+  );
+}
+
+html[data-theme="maliwan"] {
+  --bg: #041820;
+  --panel: #0a2430;
+  --panel-raised: #103040;
+  --panel-border: rgba(46, 230, 214, 0.42);
+  --text: #f4fffe;
+  --muted: #8eb8b4;
+  --accent: #2ee6d6;
+  --accent-2: #b388ff;
+  --accent-warm: #b388ff;
+  --ok: #2ee6d6;
+  --warn: #ffe08a;
+  --bad: #ff6ba8;
+  --btn-on-sweep: #041418;
+  --btn-sweep: linear-gradient(
+    90deg,
+    #2ee6d6 0%,
+    #b388ff 11.11%,
+    #7af0e6 22.22%,
+    #2ee6d6 33.33%,
+    #b388ff 44.44%,
+    #7af0e6 55.55%,
+    #2ee6d6 66.66%,
+    #b388ff 77.77%,
+    #7af0e6 88.88%,
+    #2ee6d6 100%
+  );
+}
+
+html[data-theme="claptrap"] body {
+  background:
+    radial-gradient(circle at 18% 0%, rgba(255, 208, 0, 0.2), transparent 36%),
+    radial-gradient(circle at 88% 12%, rgba(255, 138, 26, 0.14), transparent 32%),
+    linear-gradient(180deg, #16120a 0%, #1c160c 55%, #120e08 100%);
+}
+html[data-theme="moxxi"] body {
+  background:
+    radial-gradient(circle at 14% 0%, rgba(255, 77, 122, 0.18), transparent 34%),
+    radial-gradient(circle at 86% 8%, rgba(232, 197, 71, 0.14), transparent 32%),
+    linear-gradient(180deg, #14080c 0%, #1c0c12 55%, #10060a 100%);
+}
+html[data-theme="crimson"] body {
+  background:
+    radial-gradient(circle at 12% 0%, rgba(255, 26, 26, 0.22), transparent 34%),
+    radial-gradient(circle at 90% 100%, rgba(90, 0, 0, 0.35), transparent 40%),
+    linear-gradient(180deg, #070707 0%, #100808 55%, #050505 100%);
+}
+html[data-theme="psycho"] body {
+  background:
+    radial-gradient(circle at 16% 0%, rgba(255, 225, 74, 0.16), transparent 34%),
+    radial-gradient(circle at 88% 10%, rgba(255, 42, 42, 0.14), transparent 32%),
+    linear-gradient(180deg, #0c0c0c 0%, #12100c 55%, #080808 100%);
+}
+html[data-theme="maliwan"] body {
+  background:
+    radial-gradient(circle at 14% 0%, rgba(46, 230, 214, 0.16), transparent 34%),
+    radial-gradient(circle at 88% 8%, rgba(179, 136, 255, 0.14), transparent 32%),
+    linear-gradient(180deg, #041820 0%, #062028 55%, #03141a 100%);
+}
+
+html[data-theme="claptrap"] h1,
+html[data-theme="moxxi"] h1,
+html[data-theme="crimson"] h1,
+html[data-theme="psycho"] h1,
+html[data-theme="maliwan"] h1 {
+  background: linear-gradient(90deg, var(--accent) 0%, var(--accent-2) 55%, var(--accent-warm) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+html[data-theme="claptrap"] .eyebrow,
+html[data-theme="moxxi"] .eyebrow,
+html[data-theme="crimson"] .eyebrow,
+html[data-theme="psycho"] .eyebrow,
+html[data-theme="maliwan"] .eyebrow {
+  color: var(--accent);
+}
+
+html[data-theme="claptrap"] .app-logo,
+html[data-theme="moxxi"] .app-logo,
+html[data-theme="crimson"] .app-logo,
+html[data-theme="psycho"] .app-logo,
+html[data-theme="maliwan"] .app-logo {
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, var(--accent) 50%, transparent),
+    0 0 22px color-mix(in srgb, var(--accent-2) 22%, transparent),
+    0 10px 28px rgba(0, 0, 0, 0.4);
+}
+
+html[data-theme="claptrap"] .card,
+html[data-theme="moxxi"] .card,
+html[data-theme="crimson"] .card,
+html[data-theme="psycho"] .card,
+html[data-theme="maliwan"] .card,
+html[data-theme="claptrap"] .panel-section,
+html[data-theme="moxxi"] .panel-section,
+html[data-theme="crimson"] .panel-section,
+html[data-theme="psycho"] .panel-section,
+html[data-theme="maliwan"] .panel-section,
+html[data-theme="claptrap"] .status-card,
+html[data-theme="moxxi"] .status-card,
+html[data-theme="crimson"] .status-card,
+html[data-theme="psycho"] .status-card,
+html[data-theme="maliwan"] .status-card,
+html[data-theme="claptrap"] .setup-card,
+html[data-theme="moxxi"] .setup-card,
+html[data-theme="crimson"] .setup-card,
+html[data-theme="psycho"] .setup-card,
+html[data-theme="maliwan"] .setup-card,
+html[data-theme="claptrap"] .start-guide-card,
+html[data-theme="moxxi"] .start-guide-card,
+html[data-theme="crimson"] .start-guide-card,
+html[data-theme="psycho"] .start-guide-card,
+html[data-theme="maliwan"] .start-guide-card,
+html[data-theme="claptrap"] .update-card,
+html[data-theme="moxxi"] .update-card,
+html[data-theme="crimson"] .update-card,
+html[data-theme="psycho"] .update-card,
+html[data-theme="maliwan"] .update-card {
+  background: color-mix(in srgb, var(--panel) 92%, transparent);
+  border-color: var(--panel-border);
+}
+
+html[data-theme="claptrap"] .tab-bar button.active,
+html[data-theme="moxxi"] .tab-bar button.active,
+html[data-theme="crimson"] .tab-bar button.active,
+html[data-theme="psycho"] .tab-bar button.active,
+html[data-theme="maliwan"] .tab-bar button.active {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+html[data-theme="claptrap"] button.primary,
+html[data-theme="moxxi"] button.primary,
+html[data-theme="crimson"] button.primary,
+html[data-theme="psycho"] button.primary,
+html[data-theme="maliwan"] button.primary {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #111;
+}
+
+html[data-theme="claptrap"] a,
+html[data-theme="moxxi"] a,
+html[data-theme="crimson"] a,
+html[data-theme="psycho"] a,
+html[data-theme="maliwan"] a {
+  color: var(--accent-2);
+}
+
+/* Animated action buttons for Default + extra palettes (Scooters / Tina keep theirs). */
+html[data-theme="default"] .action-grid button,
+html[data-theme="default"] .action-card button,
+html[data-theme="default"] button.primary,
+html[data-theme="default"] button[data-accent="cyan"],
+html[data-theme="default"] button[data-accent="pink"],
+html[data-theme="default"] button[data-accent="violet"],
+html[data-theme="default"] #theme-toggle-btn.is-toggle-on,
+html[data-theme="claptrap"] .action-grid button,
+html[data-theme="claptrap"] .action-card button,
+html[data-theme="claptrap"] button.primary,
+html[data-theme="claptrap"] button[data-accent="cyan"],
+html[data-theme="claptrap"] button[data-accent="pink"],
+html[data-theme="claptrap"] button[data-accent="violet"],
+html[data-theme="claptrap"] #theme-toggle-btn.is-toggle-on,
+html[data-theme="moxxi"] .action-grid button,
+html[data-theme="moxxi"] .action-card button,
+html[data-theme="moxxi"] button.primary,
+html[data-theme="moxxi"] button[data-accent="cyan"],
+html[data-theme="moxxi"] button[data-accent="pink"],
+html[data-theme="moxxi"] button[data-accent="violet"],
+html[data-theme="moxxi"] #theme-toggle-btn.is-toggle-on,
+html[data-theme="crimson"] .action-grid button,
+html[data-theme="crimson"] .action-card button,
+html[data-theme="crimson"] button.primary,
+html[data-theme="crimson"] button[data-accent="cyan"],
+html[data-theme="crimson"] button[data-accent="pink"],
+html[data-theme="crimson"] button[data-accent="violet"],
+html[data-theme="crimson"] #theme-toggle-btn.is-toggle-on,
+html[data-theme="psycho"] .action-grid button,
+html[data-theme="psycho"] .action-card button,
+html[data-theme="psycho"] button.primary,
+html[data-theme="psycho"] button[data-accent="cyan"],
+html[data-theme="psycho"] button[data-accent="pink"],
+html[data-theme="psycho"] button[data-accent="violet"],
+html[data-theme="psycho"] #theme-toggle-btn.is-toggle-on,
+html[data-theme="maliwan"] .action-grid button,
+html[data-theme="maliwan"] .action-card button,
+html[data-theme="maliwan"] button.primary,
+html[data-theme="maliwan"] button[data-accent="cyan"],
+html[data-theme="maliwan"] button[data-accent="pink"],
+html[data-theme="maliwan"] button[data-accent="violet"],
+html[data-theme="maliwan"] #theme-toggle-btn.is-toggle-on {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  border: 1px solid color-mix(in srgb, var(--accent) 75%, transparent);
+  background: color-mix(in srgb, var(--panel) 88%, #000);
+  background-image: none;
+  animation: none;
+  color: var(--btn-on-sweep, #111);
+  font-weight: 700;
+  box-shadow:
+    0 8px 20px rgba(0, 0, 0, 0.32),
+    inset 0 0 10px color-mix(in srgb, var(--accent) 22%, transparent);
+}
+
+html[data-theme="default"] .action-grid button::before,
+html[data-theme="default"] .action-card button::before,
+html[data-theme="default"] button.primary::before,
+html[data-theme="default"] button[data-accent="cyan"]::before,
+html[data-theme="default"] button[data-accent="pink"]::before,
+html[data-theme="default"] button[data-accent="violet"]::before,
+html[data-theme="default"] #theme-toggle-btn.is-toggle-on::before,
+html[data-theme="claptrap"] .action-grid button::before,
+html[data-theme="claptrap"] .action-card button::before,
+html[data-theme="claptrap"] button.primary::before,
+html[data-theme="claptrap"] button[data-accent="cyan"]::before,
+html[data-theme="claptrap"] button[data-accent="pink"]::before,
+html[data-theme="claptrap"] button[data-accent="violet"]::before,
+html[data-theme="claptrap"] #theme-toggle-btn.is-toggle-on::before,
+html[data-theme="moxxi"] .action-grid button::before,
+html[data-theme="moxxi"] .action-card button::before,
+html[data-theme="moxxi"] button.primary::before,
+html[data-theme="moxxi"] button[data-accent="cyan"]::before,
+html[data-theme="moxxi"] button[data-accent="pink"]::before,
+html[data-theme="moxxi"] button[data-accent="violet"]::before,
+html[data-theme="moxxi"] #theme-toggle-btn.is-toggle-on::before,
+html[data-theme="crimson"] .action-grid button::before,
+html[data-theme="crimson"] .action-card button::before,
+html[data-theme="crimson"] button.primary::before,
+html[data-theme="crimson"] button[data-accent="cyan"]::before,
+html[data-theme="crimson"] button[data-accent="pink"]::before,
+html[data-theme="crimson"] button[data-accent="violet"]::before,
+html[data-theme="crimson"] #theme-toggle-btn.is-toggle-on::before,
+html[data-theme="psycho"] .action-grid button::before,
+html[data-theme="psycho"] .action-card button::before,
+html[data-theme="psycho"] button.primary::before,
+html[data-theme="psycho"] button[data-accent="cyan"]::before,
+html[data-theme="psycho"] button[data-accent="pink"]::before,
+html[data-theme="psycho"] button[data-accent="violet"]::before,
+html[data-theme="psycho"] #theme-toggle-btn.is-toggle-on::before,
+html[data-theme="maliwan"] .action-grid button::before,
+html[data-theme="maliwan"] .action-card button::before,
+html[data-theme="maliwan"] button.primary::before,
+html[data-theme="maliwan"] button[data-accent="cyan"]::before,
+html[data-theme="maliwan"] button[data-accent="pink"]::before,
+html[data-theme="maliwan"] button[data-accent="violet"]::before,
+html[data-theme="maliwan"] #theme-toggle-btn.is-toggle-on::before {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 300%;
+  height: 100%;
+  background-image: var(--btn-sweep);
+  animation: scooters-btn-sweep 9s linear infinite;
+  pointer-events: none;
+  z-index: -1;
+}
+
+html[data-theme="default"] .action-grid button > *,
+html[data-theme="default"] .action-card button > *,
+html[data-theme="default"] button.primary > *,
+html[data-theme="default"] button[data-accent] > *,
+html[data-theme="default"] #theme-toggle-btn.is-toggle-on > *,
+html[data-theme="claptrap"] .action-grid button > *,
+html[data-theme="claptrap"] .action-card button > *,
+html[data-theme="claptrap"] button.primary > *,
+html[data-theme="claptrap"] button[data-accent] > *,
+html[data-theme="claptrap"] #theme-toggle-btn.is-toggle-on > *,
+html[data-theme="moxxi"] .action-grid button > *,
+html[data-theme="moxxi"] .action-card button > *,
+html[data-theme="moxxi"] button.primary > *,
+html[data-theme="moxxi"] button[data-accent] > *,
+html[data-theme="moxxi"] #theme-toggle-btn.is-toggle-on > *,
+html[data-theme="crimson"] .action-grid button > *,
+html[data-theme="crimson"] .action-card button > *,
+html[data-theme="crimson"] button.primary > *,
+html[data-theme="crimson"] button[data-accent] > *,
+html[data-theme="crimson"] #theme-toggle-btn.is-toggle-on > *,
+html[data-theme="psycho"] .action-grid button > *,
+html[data-theme="psycho"] .action-card button > *,
+html[data-theme="psycho"] button.primary > *,
+html[data-theme="psycho"] button[data-accent] > *,
+html[data-theme="psycho"] #theme-toggle-btn.is-toggle-on > *,
+html[data-theme="maliwan"] .action-grid button > *,
+html[data-theme="maliwan"] .action-card button > *,
+html[data-theme="maliwan"] button.primary > *,
+html[data-theme="maliwan"] button[data-accent] > *,
+html[data-theme="maliwan"] #theme-toggle-btn.is-toggle-on > * {
+  position: relative;
+  z-index: 1;
+}
+
+html[data-theme="default"] .tab-bar button,
+html[data-theme="claptrap"] .tab-bar button,
+html[data-theme="moxxi"] .tab-bar button,
+html[data-theme="crimson"] .tab-bar button,
+html[data-theme="psycho"] .tab-bar button,
+html[data-theme="maliwan"] .tab-bar button {
+  animation: none;
+  background-image: none;
+  overflow: visible;
+  color: var(--text);
+  font-weight: 700;
+}
+
+html[data-theme="default"] .tab-bar button::before,
+html[data-theme="claptrap"] .tab-bar button::before,
+html[data-theme="moxxi"] .tab-bar button::before,
+html[data-theme="crimson"] .tab-bar button::before,
+html[data-theme="psycho"] .tab-bar button::before,
+html[data-theme="maliwan"] .tab-bar button::before {
+  content: none;
+  animation: none;
 }
 
