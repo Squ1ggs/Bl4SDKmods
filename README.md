@@ -19,6 +19,7 @@ Borderlands 4 **Python SDK** mods for the game's **`sdk_mods`** folder (Oak2 / `
 | These above can also be found on the bl4 sdk mod database - https://bl-sdk.github.io/oak2-mod-db/
 
 | **Squ1ggsBoostingTools** | Boosting toolkit + desktop EXE (**mod 3.8.0 / EXE 1.1.1**). GitHub [Releases](https://github.com/Squ1ggs/Bl4SDKmods/releases) — not on Mod DB. | includes all published sdk mods pretty much so it's an all in one boosting tool thats regularly updated, Supports multiple languages and has many features including sending modded items/legit items or spawning items via pools, movement/damage/teleports/fast travel/loot shapes like claptrap, car, house, pyramid or sort by type and more, also features the full challenge and uvhm unlocks and many other fun tools for playing around
+-To install just unzip exe, Run it and open borderlands 4
 
 Mods menu + console work without BLImGui on most packages. For in-game panels, install [BLImGui](https://github.com/juso40/blimgui) separately and set the keybind under **Mods -> Keybinds**.
 
