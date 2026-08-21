@@ -16,6 +16,7 @@ Borderlands 4 **Python SDK** mods for the game's **`sdk_mods`** folder (Oak2 / `
 | **mob_spawner** | Mob/IO spawn catalog. **BLImGui** tabs (Ctrl+F6 / F1 BMS). Needs Oak Spawner. Console: `bms_*`. |
 | **p2p_teleporter** | Co-op roster + teleports (`bcst_*`). Optional **BLImGui** tab - bind **Open P2P Teleporter tab**. |
 | **world_travel** | Location bookmarks + travel catalog (`bwt_*`). Optional **BLImGui** tab - **Open World Travel tab**. |
+| **Squ1ggsBoostingTools** | Boosting toolkit + desktop EXE (**mod 3.8.0 / EXE 1.1.1**). GitHub [Releases](https://github.com/Squ1ggs/Bl4SDKmods/releases) — not on Mod DB. |
 
 Mods menu + console work without BLImGui on most packages. For in-game panels, install [BLImGui](https://github.com/juso40/blimgui) separately and set the keybind under **Mods -> Keybinds**.
 

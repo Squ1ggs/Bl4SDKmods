@@ -1,0 +1,17 @@
+[project]
+name = "Squ1ggsBoostingTools"
+version = "3.8.0"
+authors = [{ name = "RDPSqu1ggs" }]
+description = """
+Squ1ggs Boosting Tools — desktop boosting app, localhost bridge, and lightweight SDK console commands. GitHub: Squ1ggs/Bl4SDKmods.
+"""
+
+[project.urls]
+Repository = "https://github.com/Squ1ggs/Bl4SDKmods"
+
+[tool.sdkmod]
+name = "Squ1ggs's Boosting Tools"
+license = { name = "GPL3", url = "https://choosealicense.com/licenses/gpl-3.0/" }
+version = "3.8.0"
+download = "https://raw.githubusercontent.com/Squ1ggs/Bl4SDKmods/refs/heads/main/Squ1ggsBoostingTools/Squ1ggsBoostingTools.sdkmod"
+coop_support = "Unknown"
