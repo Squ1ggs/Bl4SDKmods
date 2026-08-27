@@ -15,15 +15,15 @@ Use the **desktop app** for the full interface. The SDK mod supplies the localho
 
 ---
 
-## Quick start (MSBT-style)
+## Quick start (SQBT-style)
 
 1. Run **Squ1ggs Boosting Tools** (desktop app) → browse to Borderlands 4 if needed → **Install SDK + Squ1ggs mod** (pulls official [oak2-mod-manager](https://github.com/bl-sdk/oak2-mod-manager/releases) when the base SDK is missing).
 2. **Fully restart Borderlands 4**.
 3. Refresh status in the app — mod version should match (**3.7.0**).
 
-Same idea as Matt's SDK Boosting Tools: exe installs the mod, restart game, control from outside.
+Same idea as Squ1ggs Boosting Tools: exe installs the mod, restart game, control from outside.
 
-**Thanks:** GZO catalog/site by **Ynot**, catalog API by **Mattmab** — SQBT only reads that API. Thank you to **Tobgun** for feedback, ideas, testing, and bug reports.
+**Thanks:** GZO catalog from save-editor.be. Thank you to **Tobgun** for feedback, ideas, testing, and bug reports.
 
 ---
 
@@ -46,7 +46,7 @@ Same idea as Matt's SDK Boosting Tools: exe installs the mod, restart game, cont
 | **Keybinds** | Custom in-game action keybinds |
 | **Support** | Discord invite/QR code, Ko-fi link and release information |
 
-**GZO Codes:** catalog from [Borderlands 4 Items on save-editor.be](https://save-editor.be/GZO/Borderlands4/Codes.html) (site/catalog by **Ynot**). Catalog API by **Mattmab** — SQBT only reads that API to cache and deliver serials. Thank you to **Tobgun** for feedback, ideas, testing, and bug reports.
+**GZO Codes:** catalog from [Borderlands 4 Items on save-editor.be](https://save-editor.be/GZO/Borderlands4/Codes.html) . Thank you to **Tobgun** for feedback, ideas, testing, and bug reports.
 
 Searchable catalog dropdowns are provided directly by the desktop app.
 
