@@ -1,12 +1,41 @@
 "use strict";
 
+const fs = require("fs");
+const os = require("os");
+const path = require("path");
+
 const PRODUCT_ID = "squ1ggs-boosting-tools";
 const BRIDGE_HOST = "127.0.0.1";
-const BRIDGE_PORTS = [49775, 49776, 49777, 49778, 49779, 49780, 49781, 49782, 49783, 49784];
+// Match the in-game mod. 49775-49784 is often blocked by Hyper-V excluded ranges.
+const BRIDGE_PORTS = [
+  50675, 50676, 50677, 50678, 50679, 50680, 50681, 50682, 50683, 50684,
+  55175, 55176, 55177, 55178, 55179, 55180, 55181, 55182, 55183, 55184,
+  49775, 49776, 49777, 49778, 49779, 49780, 49781, 49782, 49783, 49784,
+];
 const CLIENT_HEADER = "squ1ggs-boosting-tools-exe";
 
 let activePort = BRIDGE_PORTS[0];
 let discoveredAt = 0;
+let lastDiscoverFound = false;
+
+function advertisedPort() {
+  const roots = [
+    process.env.LOCALAPPDATA,
+    process.env.APPDATA,
+    path.join(os.homedir(), "AppData", "Local"),
+  ].filter(Boolean);
+  for (const root of roots) {
+    try {
+      const file = path.join(root, "Squ1ggsBoostingTools", "bridge_port.json");
+      const data = JSON.parse(fs.readFileSync(file, "utf8"));
+      const port = Number(data?.port);
+      if (Number.isInteger(port) && port > 0 && port < 65536) return port;
+    } catch {
+      /* ignore */
+    }
+  }
+  return 0;
+}
 
 function bridgeBase() {
   return `http://${BRIDGE_HOST}:${activePort}`;
@@ -51,15 +80,27 @@ async function probePort(port, timeoutMs) {
 
 async function ensureBridgePort(force = false) {
   const now = Date.now();
-  if (!force && discoveredAt && now - discoveredAt < 4000) return activePort;
-  const order = [activePort, ...BRIDGE_PORTS.filter((port) => port !== activePort)];
-  const hits = await Promise.all(order.map((port) => probePort(port, 700).then((data) => ({ port, data }))));
+  if (!force && discoveredAt && now - discoveredAt < 2500) {
+    return { port: activePort, found: lastDiscoverFound };
+  }
+  const hinted = advertisedPort();
+  // Prefer the advertised live port, then last active, then the full sweep.
+  // Probe fast so a stale bridge_port.json cannot hang the EXE for seconds.
+  const order = [hinted, activePort, ...BRIDGE_PORTS].filter(
+    (port, idx, all) => Number(port) > 0 && all.indexOf(port) === idx
+  );
+  const hits = await Promise.all(
+    order.map((port) => probePort(port, 350).then((data) => ({ port, data })))
+  );
   const match = hits.find((row) => row.data);
+  discoveredAt = now;
   if (match) {
     activePort = match.port;
-    discoveredAt = now;
+    lastDiscoverFound = true;
+  } else {
+    lastDiscoverFound = false;
   }
-  return activePort;
+  return { port: activePort, found: lastDiscoverFound };
 }
 
 function getBridgeBase() {
@@ -67,7 +108,12 @@ function getBridgeBase() {
 }
 
 async function fetchJson(path, options = {}) {
-  await ensureBridgePort(Boolean(options.rediscover));
+  const discover = await ensureBridgePort(Boolean(options.rediscover));
+  if (options.requireLive !== false && !discover.found) {
+    const err = new Error("ECONNREFUSED");
+    err.code = "ECONNREFUSED";
+    throw err;
+  }
   const controller = new AbortController();
   const timeoutMs = options.timeoutMs ?? 4000;
   const timer = setTimeout(() => controller.abort(), timeoutMs);
@@ -112,12 +158,27 @@ const { classifyDisconnected, classifyConnected } = require("./status");
 async function getBridgeStatus() {
   try {
     discoveredAt = 0;
-    const { httpStatus, data } = await fetchJson("/status", { rediscover: true, timeoutMs: 2500 });
+    lastDiscoverFound = false;
+    const discover = await ensureBridgePort(true);
+    if (!discover.found) {
+      return {
+        connected: false,
+        ...classifyDisconnected(new Error("ECONNREFUSED")),
+        raw: null,
+        bridgeUrl: bridgeBase(),
+      };
+    }
+    const { httpStatus, data } = await fetchJson("/status", {
+      rediscover: false,
+      timeoutMs: 1200,
+      requireLive: false,
+    });
     if (httpStatus >= 400 || !data?.ok) {
       return {
         connected: false,
         ...classifyDisconnected(new Error(data?.message || `HTTP ${httpStatus}`)),
         raw: data,
+        bridgeUrl: bridgeBase(),
       };
     }
     if (!isSqbtStatus(data)) {
@@ -127,6 +188,7 @@ async function getBridgeStatus() {
           new Error("Another live-tool mod answered first. Enable Squ1ggs Boosting Tools in Mods, then Refresh."),
         ),
         raw: data,
+        bridgeUrl: bridgeBase(),
       };
     }
     const ui = classifyConnected(data);
@@ -134,12 +196,14 @@ async function getBridgeStatus() {
       connected: true,
       ...ui,
       raw: data,
+      bridgeUrl: bridgeBase(),
     };
   } catch (error) {
     return {
       connected: false,
       ...classifyDisconnected(error),
       raw: null,
+      bridgeUrl: bridgeBase(),
     };
   }
 }
@@ -213,7 +277,7 @@ async function fetchManifest() {
     const msg = String(error?.message || error);
     if (/fetch failed|econnrefused|network|aborted|ECONNREFUSED/i.test(msg)) {
       throw new Error(
-        "Borderlands 4 is not running (or still loading). Start the game, load a character, then press Refresh status.",
+        "Borderlands 4 is not running (or still loading). Start the game, load a character, then press Refresh status. After installing/updating the EXE, fully restart Borderlands 4 once so the mod reloads.",
       );
     }
     throw error;
@@ -229,7 +293,21 @@ async function fetchCatalog(name, payload = {}) {
   }
   const qs = params.toString();
   const path = qs ? `/catalog/${encodeURIComponent(name)}?${qs}` : `/catalog/${encodeURIComponent(name)}`;
-  const { httpStatus, data } = await fetchJson(path, { method: "GET" });
+  const timeoutMs = name === "item_pools" ? 15000 : 8000;
+  let httpStatus;
+  let data;
+  try {
+    ({ httpStatus, data } = await fetchJson(path, { method: "GET", timeoutMs }));
+  } catch (error) {
+    const text = String(error?.message || error);
+    if (error?.name === "AbortError" || /aborted/i.test(text)) {
+      throw new Error("Catalog request timed out — stay in-game unpaused and click Retry.");
+    }
+    if (/fetch failed|econnrefused|network|ECONNREFUSED/i.test(text)) {
+      throw new Error("Could not reach the game bridge — refresh status, then Retry.");
+    }
+    throw error;
+  }
   if (httpStatus >= 400 || !data?.ok) {
     throw new Error(data?.message || `Catalog HTTP ${httpStatus}`);
   }

@@ -2,12 +2,12 @@
 
 function classifyDisconnected(error) {
   const message = String(error?.message || error || "Game connection unavailable.");
-  if (/fetch failed|econnrefused|network|aborted|ECONNREFUSED/i.test(message)) {
+  if (/fetch failed|econnrefused|network|aborted|ECONNREFUSED|timeout|timed out/i.test(message)) {
     return {
       state: "disconnected",
       headline: "Start Borderlands 4",
       detail:
-        "Launch Borderlands 4",
+        "Launch Borderlands 4, load a character, then Refresh.",
     };
   }
   if (message.includes("abort")) {

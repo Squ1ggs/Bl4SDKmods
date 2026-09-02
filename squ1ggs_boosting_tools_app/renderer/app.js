@@ -1,8 +1,38 @@
 "use strict";
 
+const OPEN_REWARDS_LARGE_WARNING =
+  "Opening 250+ items in one go (especially if modded) will likely cause the game to lag, especially in a multiplayer lobby — solo lobby is often best to open.";
+
 const i18n = window.SqbtI18n;
 function t(key, vars) {
   return i18n.t(key, vars);
+}
+
+function compareModVersions(left, right) {
+  const parts = (value) => {
+    const match = String(value || "")
+      .trim()
+      .match(/(\d+)\.(\d+)\.(\d+)/);
+    return match ? [Number(match[1]), Number(match[2]), Number(match[3])] : null;
+  };
+  const a = parts(left);
+  const b = parts(right);
+  if (!a || !b) return 0;
+  for (let index = 0; index < 3; index += 1) {
+    if (a[index] > b[index]) return 1;
+    if (a[index] < b[index]) return -1;
+  }
+  return 0;
+}
+
+function modSyncDiskAhead(modSync) {
+  return (
+    Boolean(modSync?.diskAhead) ||
+    modSync?.reason === "disk-ahead" ||
+    (Boolean(modSync?.installedVersion) &&
+      Boolean(modSync?.bundledVersion) &&
+      compareModVersions(modSync.installedVersion, modSync.bundledVersion) > 0)
+  );
 }
 
 const statusDot = document.getElementById("status-dot");
@@ -20,8 +50,35 @@ const spawnAnchorSelect = document.getElementById("spawn-anchor-select");
 const setupMessage = document.getElementById("setup-message");
 const settingsModeNote = document.getElementById("settings-mode-note");
 const actionMessage = document.getElementById("action-message");
+
+function showMobilityToast(message, kind = "ok") {
+  const text = String(message || "").trim();
+  if (!text) {
+    return;
+  }
+  if (actionMessage) {
+    actionMessage.className = `action-message ${kind === "off" ? "attention" : "ok"}`;
+    actionMessage.textContent = text;
+  }
+  let el = document.getElementById("mobility-toast");
+  if (!el) {
+    el = document.createElement("div");
+    el.id = "mobility-toast";
+    el.className = "mobility-toast";
+    document.body.appendChild(el);
+  }
+  el.className = `mobility-toast ${kind}`;
+  el.textContent = text;
+  el.hidden = false;
+  clearTimeout(showMobilityToast._timer);
+  showMobilityToast._timer = setTimeout(() => {
+    el.hidden = true;
+  }, 4500);
+}
 const gameRootInput = document.getElementById("game-root");
 const refreshBtn = document.getElementById("refresh-btn");
+const toolSearchInput = document.getElementById("tool-search-input");
+const toolSearchResults = document.getElementById("tool-search-results");
 const snapRightBtn = document.getElementById("snap-right-btn");
 const themeSelect = document.getElementById("theme-select");
 const langSelect = document.getElementById("lang-select");
@@ -74,6 +131,8 @@ let progressPollTimer = null;
 let setupDismissed = false;
 let setupPinned = false;
 let lastSeenConnected = false;
+let offlineStreak = 0;
+let manifestLoadGen = 0;
 let lastSetup = null;
 let lastUpdateResult = null;
 let lastSeenModVersion = "";
@@ -85,6 +144,7 @@ const catalogCache = new Map();
 const catalogRowCache = new Map();
 const multiselectState = new Map();
 const multiselectRows = new Map();
+const multiselectSerialById = new Map();
 const serialStoreEdit = new Map();
 const itemPoolSelection = new Map();
 const itemPoolRows = new Map();
@@ -92,13 +152,127 @@ let lastRosterSignature = "";
 let lastGlobalPlayersSignature = "";
 let pendingTargetIndex = null;
 let pendingTargetUntil = 0;
+const TARGET_STORAGE_KEY = "sqbt.boostTargetIndex";
+let stickyTargetIndex = (() => {
+  try {
+    const raw = localStorage.getItem(TARGET_STORAGE_KEY);
+    if (raw === null || raw === "") return null;
+    const n = Number(raw);
+    return Number.isNaN(n) ? null : n;
+  } catch {
+    return null;
+  }
+})();
+let targetResyncQueued = false;
+let targetResyncLast = 0;
+let autoTargetInitialized = false;
 let lastProgressHtml = "";
 let lastChallengeStatus = null;
 let lastUvhmStatus = null;
 let lastSpawnAllStatus = null;
 let pendingUpdateUrl = "";
-const STATUS_CATALOG_TABS = new Set(["serials", "world", "vehicle", "progression"]);
+const STATUS_CATALOG_TABS = new Set(["serials", "world", "vehicle", "progression", "backpack"]);
 const poolBrowserSignatures = new Map();
+
+const FAVORITE_BUCKET_BY_CATALOG = Object.freeze({
+  item_pools: "itempools",
+  travel_maps: "travel_maps",
+  travel_stations: "travel_stations",
+  mob_actors: "mobs",
+  io_spawns: "ios",
+  serial_store: "serial_store",
+  gzo: "gzo",
+  lootlemon: "lootlemon",
+});
+let listFavorites = {
+  itempools: [],
+  travel_maps: [],
+  travel_stations: [],
+  mobs: [],
+  ios: [],
+  serial_store: [],
+  gzo: [],
+  lootlemon: [],
+};
+
+function favoriteBucketForCatalog(catalog) {
+  return FAVORITE_BUCKET_BY_CATALOG[String(catalog || "").trim()] || "";
+}
+
+function favoriteIdSet(bucket) {
+  return new Set((listFavorites[bucket] || []).map((id) => String(id).toLowerCase()));
+}
+
+function isListFavorite(bucket, id) {
+  const needle = String(id || "").trim().toLowerCase();
+  if (!needle || !bucket) return false;
+  return favoriteIdSet(bucket).has(needle);
+}
+
+function sortRowsFavoritesFirst(rows, idFn, bucket) {
+  const list = Array.isArray(rows) ? rows.slice() : [];
+  const fav = favoriteIdSet(bucket);
+  if (!list.length || !fav.size) return list;
+  return list.sort((a, b) => {
+    const aFav = fav.has(String(idFn(a) || "").toLowerCase()) ? 0 : 1;
+    const bFav = fav.has(String(idFn(b) || "").toLowerCase()) ? 0 : 1;
+    return aFav - bFav;
+  });
+}
+
+function poolFavoriteId(row) {
+  return String(row?.itempool || row?.catalog_key || "").trim();
+}
+
+function catalogFavoriteId(row, field) {
+  const valueKey = field?.valueKey || "id";
+  return String(row?.[valueKey] || row?.map || row?.station || row?.id || "").trim();
+}
+
+async function refreshListFavorites() {
+  try {
+    const result = await window.sqbt.getListFavorites();
+    if (result?.ok && result.favorites) {
+      listFavorites = { ...listFavorites, ...result.favorites };
+    }
+  } catch {
+    /* keep last known */
+  }
+}
+
+async function toggleRowFavorite(bucket, id, refreshFn) {
+  const value = String(id || "").trim();
+  if (!bucket || !value) return;
+  try {
+    const result = await window.sqbt.toggleListFavorite(bucket, value);
+    if (result?.ok && result.favorites) {
+      listFavorites = { ...listFavorites, ...result.favorites };
+    }
+  } catch (error) {
+    if (actionMessage) {
+      actionMessage.className = "action-message error";
+      actionMessage.textContent = String(error?.message || error);
+    }
+    return;
+  }
+  if (typeof refreshFn === "function") refreshFn();
+}
+
+function makeFavoriteButton(bucket, id, onChanged) {
+  const fav = isListFavorite(bucket, id);
+  const button = document.createElement("button");
+  button.type = "button";
+  button.className = `fav-toggle${fav ? " is-favorite" : ""}`;
+  button.title = fav ? "Remove from favourites" : "Add to favourites";
+  button.setAttribute("aria-label", button.title);
+  button.textContent = fav ? "★" : "+";
+  button.addEventListener("click", (event) => {
+    event.preventDefault();
+    event.stopPropagation();
+    toggleRowFavorite(bucket, id, onChanged);
+  });
+  return button;
+}
 
 const TAB_ICONS = Object.freeze({
   home: "assets/bl4/tab-home.png",
@@ -107,6 +281,8 @@ const TAB_ICONS = Object.freeze({
   progression: "assets/bl4/tab-progression.png",
   loot: "assets/bl4/tab-loot.png",
   serials: "assets/bl4/tab-serials.png",
+  backpack: "assets/icons/tab-player.svg",
+  debug_cam: "assets/icons/tab-mobility.svg",
   mobility: "assets/icons/tab-mobility.svg",
   vehicle: "assets/icons/tab-vehicle.svg",
   damage: "assets/bl4/tab-damage.png",
@@ -116,6 +292,7 @@ const TAB_ICONS = Object.freeze({
   loot_shapes: "assets/icons/tab-shapes.svg",
   faafo: "assets/bl4/tab-damage.png",
   activity: "assets/icons/tab-support.svg",
+  toggles: "assets/icons/tab-mobility.svg",
 });
 
 const ACTION_ICON_RULES = Object.freeze([
@@ -399,8 +576,74 @@ function applyTargetMeta(targetIdx, targetName) {
   }
 }
 
+function persistStickyTarget(idx) {
+  const n = Number(idx);
+  if (Number.isNaN(n)) return;
+  stickyTargetIndex = n;
+  try {
+    localStorage.setItem(TARGET_STORAGE_KEY, String(n));
+  } catch {
+    /* ignore */
+  }
+}
+
+function stickyTargetInRoster(players) {
+  return (
+    stickyTargetIndex != null &&
+    (players || []).some((row) => Number(row.index) === Number(stickyTargetIndex))
+  );
+}
+
+function clearStickyTargetIfGone(players) {
+  if (stickyTargetIndex == null) return;
+  if (!(players || []).length) return;
+  if (stickyTargetInRoster(players)) return;
+  stickyTargetIndex = null;
+  try {
+    localStorage.removeItem(TARGET_STORAGE_KEY);
+  } catch {
+    /* ignore */
+  }
+}
+
+function maybeResyncStickyTarget(raw) {
+  const players = raw?.players || [];
+  if (!players.length || !stickyTargetInRoster(players)) return;
+  if (pendingTargetIndex != null && Date.now() < pendingTargetUntil) return;
+  const remote = raw?.target_player_index;
+  if (remote == null || remote === "" || Number(remote) === Number(stickyTargetIndex)) return;
+  if (targetResyncQueued) return;
+  if (Date.now() - targetResyncLast < 5000) return;
+  targetResyncQueued = true;
+  targetResyncLast = Date.now();
+  window.setTimeout(() => {
+    targetResyncQueued = false;
+    if (stickyTargetInRoster(latestStatus?.raw?.players || [])) {
+      selectTarget(stickyTargetIndex);
+    }
+  }, 250);
+}
+
+function refreshBackpackIfActive() {
+  if (activeTabId !== "backpack") return;
+  for (const box of tabContent.querySelectorAll("[data-multiselect-section]")) {
+    const sectionId = box.dataset.multiselectSection;
+    const configJson = box.dataset.multiselectConfig;
+    if (!sectionId || !configJson) continue;
+    try {
+      const config = JSON.parse(configJson);
+      if (config.catalog !== "backpack") continue;
+      catalogCache.delete(catalogCacheKey("backpack", multiselectParams(sectionId, config)));
+      refreshMultiselectSection(sectionId, config);
+    } catch {
+      /* ignore */
+    }
+  }
+}
+
 function effectiveTargetIndex(raw) {
   const remote = raw?.target_player_index;
+  const players = raw?.players || [];
   if (pendingTargetIndex != null && Date.now() < pendingTargetUntil) {
     if (remote != null && Number(remote) === Number(pendingTargetIndex)) {
       pendingTargetIndex = null;
@@ -413,6 +656,10 @@ function effectiveTargetIndex(raw) {
     pendingTargetIndex = null;
     pendingTargetUntil = 0;
   }
+  if (stickyTargetInRoster(players)) {
+    return Number(stickyTargetIndex);
+  }
+  if (remote != null && remote !== "") return Number(remote);
   return remote;
 }
 
@@ -447,17 +694,53 @@ function localizeSpawnLabel(raw) {
     local: "spawn.local",
     party: "spawn.party",
     npc_nearest: "spawn.npc",
+    freecam: "spawn.freecam",
     "From me": "spawn.local",
     "From selected player": "spawn.party",
     "Near nearest NPC": "spawn.npc",
+    "At debug cam": "spawn.freecam",
   };
   return map[value] ? t(map[value]) : value || "—";
 }
 
 function setStatusUi(payload) {
+  const incoming = payload || {};
+  let connectedNow = Boolean(incoming.connected);
+  // Hold Online through 2 brief offline polls so tab switches / catalog loads
+  // cannot flash the "Start Borderlands 4" waiting panel.
+  if (!connectedNow && lastSeenConnected) {
+    offlineStreak += 1;
+    if (offlineStreak < 3) {
+      connectedNow = true;
+      payload = {
+        ...incoming,
+        connected: true,
+        state: latestStatus?.state || incoming.state || "connected",
+        headline: latestStatus?.headline || incoming.headline || "Connected!",
+        detail: latestStatus?.detail || incoming.detail || "",
+        raw: { ...(latestStatus?.raw || {}), ...(incoming.raw || {}) },
+        actionsAvailable:
+          incoming.actionsAvailable === true ||
+          latestStatus?.actionsAvailable === true ||
+          true,
+      };
+    }
+  } else if (connectedNow) {
+    offlineStreak = 0;
+  }
+
   latestStatus = payload;
   const state = payload?.state || "disconnected";
-  statusDot.className = "status-dot " + state;
+  // Connected payloads must always get a green class — some themes previously
+  // made --ok reddish, and unknown state names left the default red dot.
+  const dotState = payload?.connected
+    ? state === "in_menu_or_loading"
+      ? "in_menu_or_loading"
+      : "connected"
+    : state;
+  statusDot.className = "status-dot " + dotState;
+  if (payload?.connected) statusDot.classList.add("is-online");
+  else statusDot.classList.remove("is-online");
   statusHeadline.textContent = localizeStatusHeadline(payload?.headline || "Unknown");
   statusDetail.textContent = localizeStatusDetail(payload?.headline, payload?.detail || "");
   statusDetail.classList.remove("attention");
@@ -484,22 +767,29 @@ function setStatusUi(payload) {
     const disk = lastModSync.installedVersion || "";
     const bundled = lastModSync.bundledVersion;
     const diskMatchesBundled = disk && String(disk) === String(bundled);
+    const diskAhead = disk && bundled && compareModVersions(disk, bundled) > 0;
     statusDetail.textContent = `${base} · ${
       diskMatchesBundled
         ? t("status.modMismatch", {
             game: raw.mod_version,
             exe: bundled,
           })
-        : t("status.modDiskBehind", {
-            disk: disk || t("sync.notInstalled"),
-            exe: bundled,
-          })
+        : diskAhead
+          ? t("status.modDiskAhead", {
+              disk: disk || t("sync.notInstalled"),
+              exe: bundled,
+            })
+          : t("status.modDiskBehind", {
+              disk: disk || t("sync.notInstalled"),
+              exe: bundled,
+            })
     }`;
     statusDetail.classList.add("attention");
   } else if (!payload?.connected) {
     statusDetail.classList.add("attention");
   }
   metaSession.textContent = raw.session || "—";
+  clearStickyTargetIfGone(raw.players || []);
   const targetIdx = effectiveTargetIndex(raw);
   if (raw && targetIdx != null && Number(targetIdx) !== Number(raw.target_player_index)) {
     raw.target_player_index = targetIdx;
@@ -521,6 +811,7 @@ function setStatusUi(payload) {
   renderRoster(raw.players || [], targetIdx);
   refreshGlobalTargetSelect();
   refreshPlayerSelects();
+  maybeResyncStickyTarget(raw);
   refreshActionButtons();
   if (payload?.connected) {
     syncStickyTogglesFromStatus(raw);
@@ -529,10 +820,17 @@ function setStatusUi(payload) {
     payload?.connected &&
     Array.isArray(raw.players) &&
     raw.players.length &&
-    (targetIdx == null || targetIdx === "") &&
+    !autoTargetInitialized &&
     !(pendingTargetIndex != null && Date.now() < pendingTargetUntil)
   ) {
-    selectTarget(Number(raw.players[0].index));
+    autoTargetInitialized = true;
+    if (stickyTargetInRoster(raw.players)) {
+      selectTarget(Number(stickyTargetIndex));
+    } else if (targetIdx == null || targetIdx === "") {
+      selectTarget(Number(raw.players[0].index));
+    }
+  } else if (payload?.connected && targetIdx != null && targetIdx !== "") {
+    autoTargetInitialized = true;
   }
   if (payload?.connected && STATUS_CATALOG_TABS.has(activeTabId)) {
     window.setTimeout(() => reloadCatalogSelects(), 0);
@@ -555,7 +853,6 @@ function setStatusUi(payload) {
     window.setTimeout(() => refreshUpdateStatus(false), 0);
   }
   updateStartGuide();
-  const connectedNow = Boolean(payload?.connected);
   const modVersion = String(raw.mod_version || "");
   if (
     connectedNow &&
@@ -608,8 +905,9 @@ function refreshActionButtons() {
 async function selectTarget(index) {
   actionMessage.textContent = "";
   const idx = Number(index);
+  persistStickyTarget(idx);
   pendingTargetIndex = idx;
-  pendingTargetUntil = Date.now() + 4000;
+  pendingTargetUntil = Date.now() + 8000;
   if (latestStatus?.raw) {
     latestStatus.raw.target_player_index = idx;
     latestStatus.raw.target_player_name = playerNameForIndex(latestStatus.raw.players, idx);
@@ -620,8 +918,21 @@ async function selectTarget(index) {
   // Keep catalog "Send to" dropdowns aligned with Boost target so GZO/Lootlemon
   // deliveries match what users just clicked in the roster.
   for (const key of Object.keys(fieldValues)) {
-    if (key.endsWith(":deliver_player_index")) {
+    if (
+      key.endsWith(":deliver_player_index") ||
+      key.endsWith(":player_index")
+    ) {
       fieldValues[key] = String(idx);
+    }
+  }
+  for (const select of document.querySelectorAll("select[data-role='player-select']")) {
+    if ([...select.options].some((opt) => opt.value === String(idx))) {
+      select.value = String(idx);
+      const wrap = select.closest("[data-field-key]");
+      const fieldKeyName = wrap?.dataset.fieldKey || "";
+      const deliverKey = select.dataset.deliverPlayerKey || "";
+      if (deliverKey) fieldValues[deliverKey] = String(idx);
+      else if (fieldKeyName) fieldValues[fieldKeyName] = String(idx);
     }
   }
   refreshPlayerSelects();
@@ -647,7 +958,8 @@ async function selectTarget(index) {
     }
     const confirmed = data?.player_index != null ? Number(data.player_index) : idx;
     pendingTargetIndex = confirmed;
-    pendingTargetUntil = Date.now() + 2500;
+    pendingTargetUntil = Date.now() + 6000;
+    persistStickyTarget(confirmed);
     if (latestStatus?.raw) {
       latestStatus.raw.target_player_index = confirmed;
       latestStatus.raw.target_player_name =
@@ -656,6 +968,7 @@ async function selectTarget(index) {
     applyTargetMeta(confirmed, latestStatus?.raw?.target_player_name || "");
     refreshGlobalTargetSelect();
     renderRoster(latestStatus?.raw?.players || [], confirmed);
+    refreshBackpackIfActive();
   } catch (error) {
     pendingTargetIndex = null;
     pendingTargetUntil = 0;
@@ -679,6 +992,61 @@ function actionFieldKey(sectionId, actionDef, field) {
 
 function sectionFieldKey(sectionId, field) {
   return `${sectionId}:__section__:${field.key}`;
+}
+
+const FLY_PRESET_SPEEDS = {
+  cruise: 750,
+  fast: 5500,
+};
+
+function formatFlySpeedStatus(speed, preset, flying) {
+  const n = Math.round(Number(speed || 0));
+  const p = String(preset || "fast").trim().toLowerCase();
+  const label =
+    p === "custom" || !FLY_PRESET_SPEEDS[p] ? `custom ${n.toLocaleString()}` : `${p} (${n.toLocaleString()})`;
+  if (flying) {
+    return `Active fly speed: ${label} — hold WASD to move up/down/around.`;
+  }
+  return `Saved fly speed: ${label} — press Apply fly speed, then turn Force fly ON (green button).`;
+}
+
+function updateFlySpeedLivePanels(speed, preset, flying) {
+  const text = formatFlySpeedStatus(speed, preset, flying);
+  for (const el of document.querySelectorAll("[data-fly-speed-live]")) {
+    el.textContent = text;
+    el.className = flying ? "fly-speed-live ok" : "fly-speed-live muted";
+  }
+}
+
+function wireFlySpeedControls(sectionId) {
+  const modeKey = sectionFieldKey(sectionId, { key: "fly_speed_mode" });
+  const presetKey = sectionFieldKey(sectionId, { key: "fly_preset" });
+  const speedKey = sectionFieldKey(sectionId, { key: "fly_speed" });
+  const modeNode = document.querySelector(`[data-field-key="${modeKey}"] select`);
+  const presetNode = document.querySelector(`[data-field-key="${presetKey}"] select`);
+  const speedNode = document.querySelector(`[data-field-key="${speedKey}"] input`);
+  if (!modeNode && !presetNode && !speedNode) {
+    return;
+  }
+  const syncPresetNumber = () => {
+    if (!presetNode || !speedNode) return;
+    if (String(modeNode?.value || "preset") !== "preset") return;
+    const preset = String(presetNode.value || "fast").toLowerCase();
+    const num = FLY_PRESET_SPEEDS[preset];
+    if (num != null) {
+      speedNode.value = String(num);
+      fieldValues[speedKey] = String(num);
+    }
+  };
+  presetNode?.addEventListener("change", syncPresetNumber);
+  modeNode?.addEventListener("change", syncPresetNumber);
+  speedNode?.addEventListener("input", () => {
+    if (!speedNode || !modeNode) return;
+    if (String(modeNode.value || "preset") === "custom") return;
+    modeNode.value = "custom";
+    fieldValues[modeKey] = "custom";
+  });
+  syncPresetNumber();
 }
 
 function fieldStorageKey(sectionId, actionDef, field) {
@@ -721,6 +1089,12 @@ function writeStickyToggle(key, on) {
 }
 
 function initialToggleOn(sectionId, actionDef) {
+  if (actionDef?.syncKey) {
+    const sticky = latestStatus?.sticky_toggles || latestStatus?.raw?.sticky_toggles;
+    if (sticky && Object.prototype.hasOwnProperty.call(sticky, actionDef.syncKey)) {
+      return Boolean(sticky[actionDef.syncKey]);
+    }
+  }
   if (actionDef?.sticky) {
     const stored = readStickyToggle(toggleStickyKey(sectionId, actionDef));
     if (stored !== undefined) return stored;
@@ -728,6 +1102,45 @@ function initialToggleOn(sectionId, actionDef) {
   return Boolean(actionDef?.defaultOn);
 }
 
+function syncMobilityToggleButtons(syncKey, on) {
+  if (!syncKey) return;
+  const state = Boolean(on);
+  document.querySelectorAll(`button[data-sync-key="${syncKey}"]`).forEach((button) => {
+    const sectionId = button.dataset.sectionId || "";
+    const label = button.dataset.toggleLabel || button.textContent || "";
+    button.dataset.toggleOn = state ? "1" : "0";
+    button.dataset.accent = state ? "cyan" : "pink";
+    button.classList.toggle("is-toggle-on", state);
+    button.classList.toggle("is-toggle-off", !state);
+    if (button.dataset.stickyToggle === "1" && sectionId) {
+      writeStickyToggle(`${sectionId}::${button.dataset.runAction}::${label}`, state);
+    }
+    setIconLabel(button, `${label} — ${state ? "ON" : "OFF"}`, actionIcon({ action: button.dataset.runAction, label }));
+  });
+}
+
+function startSerialDeliveryPoll(initialMessage, options = {}) {
+  const started = Date.now();
+  const maxMs = Math.max(60000, Number(options.maxMs || 0) || 120000);
+  const pollDeliver = async () => {
+    try {
+      const { data: statusData } = await window.sqbt.postAction("serial_delivery_status", {}, 8);
+      const prog = statusData?.status || statusData?.progress || null;
+      const active = Boolean(prog?.active);
+      const msg = String(prog?.message || statusData?.message || "").trim();
+      if (msg) {
+        actionMessage.textContent = active ? msg : `${initialMessage} · ${msg}`;
+        actionMessage.className = active ? "action-message muted" : "action-message ok";
+      }
+      if (active && Date.now() - started < maxMs) {
+        window.setTimeout(pollDeliver, 900);
+      }
+    } catch {
+      /* ignore status poll errors */
+    }
+  };
+  window.setTimeout(pollDeliver, 600);
+}
 function paintToggleButton(button, actionDef, on) {
   const state = Boolean(on);
   button.dataset.toggleOn = state ? "1" : "0";
@@ -735,24 +1148,45 @@ function paintToggleButton(button, actionDef, on) {
   button.classList.toggle("is-toggle-on", state);
   button.classList.toggle("is-toggle-off", !state);
   const icon = actionIcon(actionDef);
-  setIconLabel(button, `${actionDef.label} — Toggle`, icon);
+  setIconLabel(button, `${actionDef.label} — ${state ? "ON" : "OFF"}`, icon);
 }
 
 function syncStickyTogglesFromStatus(raw) {
   const sticky = raw?.sticky_toggles;
-  if (!sticky || typeof sticky !== "object") return;
-  document.querySelectorAll("button[data-sync-key]").forEach((button) => {
-    const key = button.dataset.syncKey;
-    if (!key || !Object.prototype.hasOwnProperty.call(sticky, key)) return;
-    const on = Boolean(sticky[key]);
-    button.dataset.toggleOn = on ? "1" : "0";
-    button.dataset.accent = on ? "cyan" : "pink";
-    button.classList.toggle("is-toggle-on", on);
-    button.classList.toggle("is-toggle-off", !on);
-    if (button.dataset.stickyToggle === "1" && button.dataset.sectionId) {
-      writeStickyToggle(`${button.dataset.sectionId}::${button.dataset.runAction}::${button.dataset.toggleLabel}`, on);
-    }
-  });
+  if (sticky && typeof sticky === "object") {
+    document.querySelectorAll("button[data-sync-key]").forEach((button) => {
+      const key = button.dataset.syncKey;
+      if (!key || !Object.prototype.hasOwnProperty.call(sticky, key)) return;
+      const on = Boolean(sticky[key]);
+      const sectionId = button.dataset.sectionId || "";
+      const label = button.dataset.toggleLabel || "";
+      button.dataset.toggleOn = on ? "1" : "0";
+      button.dataset.accent = on ? "cyan" : "pink";
+      button.classList.toggle("is-toggle-on", on);
+      button.classList.toggle("is-toggle-off", !on);
+      if (label) {
+        setIconLabel(
+          button,
+          `${label} — ${on ? "ON" : "OFF"}`,
+          actionIcon({ action: button.dataset.runAction, label })
+        );
+      }
+      if (button.dataset.stickyToggle === "1" && sectionId) {
+        writeStickyToggle(
+          `${sectionId}::${button.dataset.runAction}::${button.dataset.toggleLabel}`,
+          on
+        );
+      }
+    });
+  }
+  fillTogglesBoard();
+  if (sticky && typeof sticky === "object" && sticky.fly_speed != null) {
+    updateFlySpeedLivePanels(
+      sticky.fly_speed,
+      sticky.fly_preset,
+      Boolean(sticky.force_fly || sticky.force_fly_all)
+    );
+  }
 }
 
 function mergeSectionFieldsIntoPayload(sectionId, payload) {
@@ -808,8 +1242,15 @@ function formatCatalogError(catalogName, error) {
   if (catalogName === "serial_store") {
     return "No saved serials yet — save entries in My Library below.";
   }
-  if (lower.includes("abort") || lower.includes("fetch") || lower.includes("unreachable")) {
-    return "Connect in-game first, then click Retry or refocus the dropdown.";
+  if (lower.includes("abort") || lower.includes("timed out")) {
+    return actionsEnabled()
+      ? "Catalog timed out — stay in-game unpaused, then click Retry or refocus the dropdown."
+      : "Connect in-game first, then click Retry or refocus the dropdown.";
+  }
+  if (lower.includes("fetch") || lower.includes("unreachable")) {
+    return actionsEnabled()
+      ? "Could not load catalog — click Retry or refresh status."
+      : "Connect in-game first, then click Retry or refocus the dropdown.";
   }
   return text;
 }
@@ -867,11 +1308,14 @@ function catalogParamsForField(sectionId, field, actionDef) {
 }
 
 function multiselectParams(sectionId, config) {
-  const params = { limit: 500 };
+  const params = { limit: 2000 };
   params.search = fieldValues[`${sectionId}:search`] || "";
   for (const filter of config.filters || []) {
     const param = filter.catalogParam || filter.key;
     params[param] = fieldValues[`${sectionId}:${filter.key}`] ?? filter.default ?? "";
+  }
+  if ((config.kind || "") === "backpack") {
+    params.player_index = preferredDeliveryPlayerIndex(latestStatus?.raw?.players || []);
   }
   return params;
 }
@@ -881,10 +1325,78 @@ function multiselectRowId(row, config) {
   return String(row[idKey] || row.serial || row.id || "");
 }
 
+function isDeliverableSerial(serial) {
+  const s = String(serial || "").trim();
+  if (!s) return false;
+  return s.startsWith("@U") || (s.includes(",") && /\d/.test(s));
+}
+
+function rememberMultiselectSerial(sectionId, rowId, serial) {
+  const s = String(serial || "").trim();
+  if (!s || !rowId) return;
+  if (!multiselectSerialById.has(sectionId)) {
+    multiselectSerialById.set(sectionId, new Map());
+  }
+  multiselectSerialById.get(sectionId).set(String(rowId), s);
+}
+
+function rowSerialValue(row, config) {
+  return String(row.serial || row[config.valueKey || "serial"] || "").trim();
+}
+
+function cacheMultiselectRows(sectionId, rows, config) {
+  for (const row of rows || []) {
+    const rowId = multiselectRowId(row, config);
+    const serial = rowSerialValue(row, config);
+    if (serial) rememberMultiselectSerial(sectionId, rowId, serial);
+  }
+}
+
+function formatMultiselectSelectedLabel(sectionId, config) {
+  const selected = multiselectState.get(sectionId) || new Set();
+  const rows = multiselectRows.get(sectionId) || [];
+  const rowIds = new Set(rows.map((row) => multiselectRowId(row, config)));
+  let onScreen = 0;
+  for (const id of selected) {
+    if (rowIds.has(id)) onScreen += 1;
+  }
+  const offScreen = selected.size - onScreen;
+  if (offScreen > 0) {
+    return `${selected.size} selected (${offScreen} off-screen)`;
+  }
+  return `${selected.size} selected`;
+}
+
+function collectSelectedSerials(sectionId, config) {
+  const selected = multiselectState.get(sectionId) || new Set();
+  const rows = multiselectRows.get(sectionId) || [];
+  const cache = multiselectSerialById.get(sectionId) || new Map();
+  const rowById = new Map();
+  for (const row of rows) {
+    const rowId = multiselectRowId(row, config);
+    rowById.set(rowId, row);
+    const serial = rowSerialValue(row, config);
+    if (serial) rememberMultiselectSerial(sectionId, rowId, serial);
+  }
+  const serials = [];
+  const seen = new Set();
+  for (const id of selected) {
+    const row = rowById.get(id);
+    let serial = row ? rowSerialValue(row, config) : "";
+    if (!serial) serial = String(cache.get(String(id)) || "").trim();
+    if (!isDeliverableSerial(serial)) continue;
+    if (seen.has(serial)) continue;
+    seen.add(serial);
+    serials.push(serial);
+  }
+  return { serials, selectedCount: selected.size };
+}
+
 const WORLD_SPAWN_ACTIONS = new Set([
   "shiny_drop_all",
   "spawn_item_pool",
   "spawn_item_pool_all",
+  "spawn_item_pool_singular_test",
   "spawn_mix",
   "spawn_mob",
   "spawn_mobs",
@@ -950,9 +1462,20 @@ function enrichPayload(action, payload) {
     "weapons_restricted",
     "ammo_regen",
     "vehicle_actions_locked",
+    "mobility_force_fly",
+    "mobility_infinite_jump",
+    "backpack_scan_status",
+    "backpack_relevel_selected",
+    "faafo_drop_backpack",
   ]);
   // These actions need a single concrete player — never stamp "All players" (-1).
-  const BOOST_TARGET_NO_ALL = new Set(["party_kick", "teleport_party", "uvhm_start"]);
+  const BOOST_TARGET_NO_ALL = new Set([
+    "party_kick",
+    "teleport_party",
+    "uvhm_start",
+    "backpack_scan_status",
+    "backpack_relevel_selected",
+  ]);
   const existing = next.player_index;
   const hasExplicit =
     existing !== undefined && existing !== null && existing !== "";
@@ -977,10 +1500,14 @@ function applyDeliveryRecipient(payload, sectionId) {
   payload.player_index = n;
   payload.mode = n === -1 ? "all" : "player";
   const openRaw = fieldValues[`${sectionId}:open_rewards`];
-  if (openRaw === undefined || openRaw === "" || openRaw === "yes" || openRaw === true) {
+  if (openRaw === "yes" || openRaw === true) {
+    payload.open_rewards = true;
+  } else if (openRaw === "no" || openRaw === false) {
+    payload.open_rewards = false;
+  } else if (openRaw === undefined || openRaw === "") {
     payload.open_rewards = true;
   } else {
-    payload.open_rewards = openRaw === "no" || openRaw === false ? false : Boolean(openRaw);
+    payload.open_rewards = Boolean(openRaw);
   }
   return payload;
 }
@@ -998,7 +1525,13 @@ function poolBrowserParams(sectionId, config) {
   if (needle.includes("shiny") && category === "All") {
     category = "Shiny";
   }
-  return { search, category, limit: 2000 };
+  const params = { search, category, limit: 2000 };
+  for (const toggle of config.toggles || []) {
+    const key = `${sectionId}:${toggle.key}`;
+    const on = fieldValues[key] === undefined ? Boolean(toggle.default) : Boolean(fieldValues[key]);
+    params[toggle.key] = on ? "1" : "0";
+  }
+  return params;
 }
 
 function applyItemPoolPayload(sectionId, payload) {
@@ -1009,6 +1542,19 @@ function applyItemPoolPayload(sectionId, payload) {
   }
   payload.search = search;
   payload.category = category;
+  const sectionEl = tabContent?.querySelector(`[data-section-id="${sectionId}"]`);
+  let toggles = [];
+  try {
+    const raw = sectionEl?.dataset?.poolBrowserConfig;
+    if (raw) toggles = JSON.parse(raw).toggles || [];
+  } catch {
+    toggles = [];
+  }
+  for (const toggle of toggles) {
+    const key = `${sectionId}:${toggle.key}`;
+    const on = fieldValues[key] === undefined ? Boolean(toggle.default) : Boolean(fieldValues[key]);
+    payload[toggle.key] = on ? "1" : "0";
+  }
   const selected = itemPoolSelection.get(sectionId);
   if (selected) {
     payload.entry = selected;
@@ -1023,7 +1569,7 @@ function collectPayload(sectionId, actionDef) {
   const payload = { ...(actionDef.payload || {}) };
   mergeSectionFieldsIntoPayload(sectionId, payload);
 
-  if (actionDef.action === "spawn_item_pool" || actionDef.action === "spawn_item_pool_all") {
+  if (actionDef.action === "spawn_item_pool" || actionDef.action === "spawn_item_pool_all" || actionDef.action === "spawn_item_pool_singular_test") {
     applyItemPoolPayload(sectionId, payload);
     for (const field of actionDef.fields || []) {
       const key = actionFieldKey(sectionId, actionDef, field);
@@ -1040,19 +1586,27 @@ function collectPayload(sectionId, actionDef) {
     return payload;
   }
 
-  if (actionDef.deliverMultiselect) {
-    const selected = multiselectState.get(sectionId) || new Set();
-    const rows = multiselectRows.get(sectionId) || [];
-    const config = getMultiselectConfig(sectionId);
-    payload.serials = rows
-      .filter((row) => selected.has(multiselectRowId(row, config)))
-      .map((row) => String(row.serial || row[config.valueKey || "serial"] || "").trim())
-      .filter((serial) => serial.startsWith("@U") || (serial.includes(",") && /\d/.test(serial)));
+  if (actionDef.deliverFromPaste) {
+    const area = document.querySelector(`textarea[data-serial-paste-area="${sectionId}"]`);
+    const raw = area?.value || "";
+    payload.__serials_raw = raw;
+    payload.serials = raw;
     if (fieldValues[`${sectionId}:level_override`] === "yes") {
       payload.level_override = true;
       payload.level = Number(fieldValues[`${sectionId}:level`] || 60);
     }
-    payload._selected_count = selected.size;
+    return applyDeliveryRecipient(payload, sectionId);
+  }
+
+  if (actionDef.deliverMultiselect) {
+    const config = getMultiselectConfig(sectionId);
+    const picked = collectSelectedSerials(sectionId, config);
+    payload.serials = picked.serials;
+    if (fieldValues[`${sectionId}:level_override`] === "yes") {
+      payload.level_override = true;
+      payload.level = Number(fieldValues[`${sectionId}:level`] || 60);
+    }
+    payload._selected_count = picked.selectedCount;
     return applyDeliveryRecipient(payload, sectionId);
   }
 
@@ -1082,22 +1636,26 @@ function collectPayload(sectionId, actionDef) {
       .filter(Boolean);
   }
 
-  if (actionDef.deliverStore) {
-    // Same selection/serial rules as GZO/Lootlemon deliverMultiselect.
-    // Previously only accepted @U and matched row.id loosely, so human serials
-    // and some selected rows were dropped → "no serials" / silent no-op.
+  if (actionDef.backpackMultiselect) {
     const selected = multiselectState.get(sectionId) || new Set();
     const rows = multiselectRows.get(sectionId) || [];
     const config = getMultiselectConfig(sectionId);
-    payload.serials = rows
+    const valueKey = config.valueKey || "slot";
+    payload.slots = rows
       .filter((row) => selected.has(multiselectRowId(row, config)))
-      .map((row) => String(row.serial || row[config.valueKey || "serial"] || "").trim())
-      .filter((serial) => serial.startsWith("@U") || (serial.includes(",") && /\d/.test(serial)));
+      .map((row) => Number(row[valueKey] ?? row.slot))
+      .filter((n) => !Number.isNaN(n));
+  }
+
+  if (actionDef.deliverStore) {
+    const config = getMultiselectConfig(sectionId);
+    const picked = collectSelectedSerials(sectionId, config);
+    payload.serials = picked.serials;
     if (fieldValues[`${sectionId}:level_override`] === "yes") {
       payload.level_override = true;
       payload.level = Number(fieldValues[`${sectionId}:level`] || 60);
     }
-    payload._selected_count = selected.size;
+    payload._selected_count = picked.selectedCount;
     return applyDeliveryRecipient(payload, sectionId);
   }
 
@@ -1216,11 +1774,49 @@ function collectPayload(sectionId, actionDef) {
       payload.mode = Number(payload.player_index) === -1 ? "all" : "player";
     }
   }
+  if (actionDef.action === "mobility_infinite_jump" || actionDef.action === "mobility_force_fly") {
+    if (payload.player_index === undefined || payload.player_index === "") {
+      payload.player_index = preferredDeliveryPlayerIndex(latestStatus?.raw?.players || []);
+    }
+  }
   return payload;
 }
 
+function boostTargetConfirmLabel() {
+  const players = latestStatus?.raw?.players || [];
+  const idx = preferredDeliveryPlayerIndex(players);
+  if (Number(idx) === -1) {
+    return "ALL PLAYERS (entire lobby)";
+  }
+  const name =
+    playerNameForIndex(players, idx) ||
+    latestStatus?.raw?.target_player_name ||
+    `player #${idx}`;
+  return `${name} (Boost target #${idx})`;
+}
+
+function buildDropBackpackConfirm(base) {
+  const who = boostTargetConfirmLabel();
+  const allPlayers = who.startsWith("ALL PLAYERS");
+  const head = allPlayers
+    ? "WARNING: Boost target is ALL PLAYERS — this can spill EVERYONE'S backpack onto the ground."
+    : `Boost target right now: ${who}`;
+  return [
+    head,
+    "",
+    "Look at Boost target (under the tabs) before you continue.",
+    "If you only want your own loot dropped, select yourself — not All players, and not a friend unless they asked.",
+    "",
+    base || "Spill that player's whole backpack onto the ground?",
+  ].join("\n");
+}
+
 async function runAction(action, payload, confirmText, context = {}) {
-  if (confirmText && !window.confirm(confirmText)) {
+  let prompt = confirmText || "";
+  if (action === "faafo_drop_backpack") {
+    prompt = buildDropBackpackConfirm(prompt);
+  }
+  if (prompt && !window.confirm(prompt)) {
     return;
   }
   if (action === "set_target_player" && (payload.player_index === undefined || payload.player_index === "")) {
@@ -1266,7 +1862,7 @@ async function runAction(action, payload, confirmText, context = {}) {
   let timeout = 12;
   if (action === "shiny_drop_all") {
     timeout = 20;
-  } else if (action === "spawn_item_pool" || action === "spawn_item_pool_all") {
+  } else if (action === "spawn_item_pool" || action === "spawn_item_pool_all" || action === "spawn_item_pool_singular_test") {
     timeout = 45;
   } else if (action === "spawn_mobs" || action === "spawn_ios") {
     timeout = 30;
@@ -1280,7 +1876,7 @@ async function runAction(action, payload, confirmText, context = {}) {
       actionMessage.className = "action-message error";
       actionMessage.textContent =
         selectedHint > 0
-          ? "Selected library entries have no usable serial (@U or human like 300, 0, 1, 60| …). Re-save them or pick different rows."
+          ? `${selectedHint} row(s) selected but none had a deliverable serial. Use Select all filtered (loads off-screen rows), or re-save entries with @U / human serials.`
           : "Tick at least one serial in the list (or paste @U / human serials) first. Use Send to for the recipient.";
       actionBusy = false;
       refreshActionButtons();
@@ -1295,6 +1891,39 @@ async function runAction(action, payload, confirmText, context = {}) {
     if (finalPayload.open_rewards === undefined) {
       finalPayload.open_rewards = true;
     }
+    // Queue returns quickly; scale wait so large GZO batches don't false-timeout.
+    const nSerials = finalPayload.serials.length;
+    const packages = Math.max(1, Math.ceil(nSerials / 25));
+    const selectedHintCount = selectedHint || nSerials;
+    if (nSerials >= 25) {
+      let confirmText = `Deliver ${nSerials} unique serial(s) in ${packages} mail package(s)?`;
+      if (selectedHintCount > nSerials) {
+        confirmText = `Deliver ${nSerials} unique serial(s) (${selectedHintCount} row(s) selected) in ${packages} mail package(s)?`;
+      }
+      if (finalPayload.open_rewards && nSerials >= 250) {
+        confirmText = `${OPEN_REWARDS_LARGE_WARNING}\n\n${confirmText}`;
+      }
+      if (!window.confirm(confirmText)) {
+        actionBusy = false;
+        refreshActionButtons();
+        actionMessage.className = "action-message muted";
+        actionMessage.textContent = "Cancelled.";
+        return;
+      }
+    } else if (finalPayload.open_rewards && nSerials >= 250) {
+      if (
+        !window.confirm(
+          `${OPEN_REWARDS_LARGE_WARNING}\n\nContinue with auto-open for ${nSerials} item(s)?`
+        )
+      ) {
+        actionBusy = false;
+        refreshActionButtons();
+        actionMessage.className = "action-message muted";
+        actionMessage.textContent = "Cancelled.";
+        return;
+      }
+    }
+    timeout = Math.min(240, Math.max(45, 20 + packages * 5));
   }
   if (
     (action === "spawn_mobs" && !(finalPayload.codes || []).length) ||
@@ -1321,12 +1950,85 @@ async function runAction(action, payload, confirmText, context = {}) {
     refreshActionButtons();
     return;
   }
+  if (action === "backpack_relevel_selected") {
+    if (Number(finalPayload.player_index) === -1) {
+      actionMessage.className = "action-message error";
+      actionMessage.textContent =
+        "Pick one player in Boost target (not All players) before releveling backpack gear.";
+      actionBusy = false;
+      refreshActionButtons();
+      return;
+    }
+    if (!Array.isArray(finalPayload.slots) || !finalPayload.slots.length) {
+      actionMessage.className = "action-message error";
+      actionMessage.textContent =
+        "Tick at least one backpack item in the list above, pick a new level, then relevel.";
+      actionBusy = false;
+      refreshActionButtons();
+      return;
+    }
+  }
   try {
     const { httpStatus, data } = await window.sqbt.postAction(action, finalPayload, timeout);
     if (data?.ok === false || httpStatus === 202) {
       actionMessage.className = "action-message error";
+      actionMessage.textContent = friendlyActionError(data?.message || JSON.stringify(data));
+    } else {
+      actionMessage.className = "action-message ok";
+      actionMessage.textContent = data?.message || "Done.";
     }
-    actionMessage.textContent = friendlyActionError(data?.message || JSON.stringify(data));
+    if (data?.warning && String(data.warning).trim()) {
+      const base = String(actionMessage.textContent || "").trim();
+      actionMessage.textContent = base ? `${base} ${data.warning}` : String(data.warning);
+      if (actionMessage.className === "action-message ok") {
+        actionMessage.className = "action-message attention";
+      }
+    }
+    if (action === "mobility_force_fly" && data?.ok !== false) {
+      actionMessage.className = "action-message ok";
+      actionMessage.textContent = data?.message || actionMessage.textContent;
+      showMobilityToast(data?.message, data?.force_fly_on ? "ok" : "off");
+      if (!finalPayload.apply_speed_only && !finalPayload.reapply_only) {
+        const syncKey = "force_fly";
+        syncMobilityToggleButtons(syncKey, Boolean(data?.force_fly_on));
+        // Legacy Force fly (all) sticky — keep UI off; fly is host-only now.
+        syncMobilityToggleButtons("force_fly_all", false);
+      }
+      if (data?.fly_speed != null) {
+        applyFieldValues({ fly_speed: data.fly_speed });
+        updateFlySpeedLivePanels(
+          data.fly_speed,
+          data.fly_preset,
+          Boolean(data?.force_fly_on)
+        );
+      }
+    }
+    if (action === "mobility_infinite_jump" && data?.ok !== false) {
+      showMobilityToast(data?.message, data?.infinite_jump_on ? "ok" : "off");
+      const scope = String(data?.infinite_jump_scope || finalPayload.scope || "target").toLowerCase();
+      const syncKey = scope === "all" ? "infinite_jump_all" : "infinite_jump";
+      syncMobilityToggleButtons(syncKey, Boolean(data?.infinite_jump_on));
+    }
+    if (action === "mobility_noclip" && data?.ok !== false) {
+      syncMobilityToggleButtons("noclip", Boolean(data?.noclip));
+      if (Object.prototype.hasOwnProperty.call(data || {}, "force_fly")) {
+        syncMobilityToggleButtons("force_fly", Boolean(data.force_fly));
+      }
+      if (data?.fly_speed != null) {
+        applyFieldValues({ fly_speed: data.fly_speed });
+        updateFlySpeedLivePanels(
+          data.fly_speed,
+          data.fly_preset,
+          Boolean(data?.force_fly)
+        );
+      }
+    }
+    if (action === "map_fog_hide" && data?.ok !== false) {
+      syncMobilityToggleButtons("map_fog", Boolean(data?.hidden));
+    }
+    if (action === "rarity_weights_set" && data?.ok && data?.weights) {
+      applyFieldValues(data.weights);
+    }
     if (action === "activity_log" && data?.lines) {
       renderActivityLog(data.lines);
     }
@@ -1347,7 +2049,8 @@ async function runAction(action, payload, confirmText, context = {}) {
       action === "challenge_bulk_start" ||
       action === "uvhm_start" ||
       action === "uvhm_start_all" ||
-      action === "spawn_item_pool_all"
+      action === "spawn_item_pool_all" ||
+      action === "spawn_item_pool_singular_test"
     ) {
       const panel = document.getElementById("sqbt-progress-panel");
       if (panel) {
@@ -1360,7 +2063,7 @@ async function runAction(action, payload, confirmText, context = {}) {
             total: 1,
             message: "Starting…",
           };
-        } else if (action === "spawn_item_pool_all") {
+        } else if (action === "spawn_item_pool_all" || action === "spawn_item_pool_singular_test") {
           lastSpawnAllStatus = {
             active: true,
             queued: true,
@@ -1368,7 +2071,7 @@ async function runAction(action, payload, confirmText, context = {}) {
             total: Math.max(1, Number(data?.queued || 1)),
             ok: 0,
             failed: 0,
-            message: data?.message || "Queuing filtered pools…",
+            message: data?.message || (action === "spawn_item_pool_singular_test" ? "Singular test…" : "Queuing filtered pools…"),
           };
         } else {
           lastUvhmStatus = {
@@ -1385,7 +2088,7 @@ async function runAction(action, payload, confirmText, context = {}) {
       }
       startProgressPoll();
     }
-    if (action === "max_all" || action === "shiny_drop_all" || action === "deliver_serials") {
+    if (action === "max_all" || action === "shiny_drop_all" || action === "deliver_serials" || action === "rewards_open_everyone") {
       actionMessage.textContent = data?.message || actionMessage.textContent;
       if (action === "shiny_drop_all" && data?.ok) {
         window.setTimeout(async () => {
@@ -1398,6 +2101,21 @@ async function runAction(action, payload, confirmText, context = {}) {
             /* ignore status poll errors */
           }
         }, 800);
+      }
+      if (action === "deliver_serials" && data?.ok) {
+        const nSerials = Array.isArray(finalPayload.serials) ? finalPayload.serials.length : 0;
+        const packages = Math.max(1, Math.ceil(nSerials / 25));
+        const openPollMs = finalPayload.open_rewards
+          ? Math.min(900000, Math.max(180000, packages * 1400 + 90000))
+          : Math.min(300000, Math.max(120000, packages * 800 + 30000));
+        startSerialDeliveryPoll(data.message || actionMessage.textContent, { maxMs: openPollMs });
+      }
+      if (action === "rewards_open_everyone" && data?.ok) {
+        const packages = Math.max(1, Number(data?.packages || data?.opened || 1));
+        const etaMs = Math.max(60000, Number(data?.eta_sec || 0) * 1000 + 45000);
+        startSerialDeliveryPoll(data.message || actionMessage.textContent, {
+          maxMs: Math.min(900000, Math.max(120000, etaMs)),
+        });
       }
     }
     if (action === "serial_store_save" && data?.entry && context.sectionId) {
@@ -1412,6 +2130,24 @@ async function runAction(action, payload, confirmText, context = {}) {
         serialStoreEdit.set(context.sectionId, { ...data.entry });
       }
       refreshMultiselectSection(context.sectionId, context.config || { catalog: "serial_store" });
+    }
+    if (action === "backpack_scan_status" && context.sectionId) {
+      const config = getMultiselectConfig(context.sectionId);
+      if (config?.catalog === "backpack") {
+        catalogCache.delete(
+          catalogCacheKey("backpack", multiselectParams(context.sectionId, config))
+        );
+        refreshMultiselectSection(context.sectionId, config);
+      }
+    }
+    if (action === "backpack_relevel_selected" && data?.ok && context.sectionId) {
+      const config = getMultiselectConfig(context.sectionId);
+      if (config?.catalog === "backpack") {
+        catalogCache.delete(
+          catalogCacheKey("backpack", multiselectParams(context.sectionId, config))
+        );
+        refreshMultiselectSection(context.sectionId, config);
+      }
     }
     if (action === "challenge_bulk_status") {
       renderProgressPanel(data?.challenge, null, null);
@@ -1469,7 +2205,11 @@ function isUvhmBusy(uvhm) {
 }
 
 function isSpawnAllBusy(spawnAll) {
-  return Boolean(spawnAll && (spawnAll.active || spawnAll.queued));
+  if (!spawnAll) return false;
+  if (spawnAll.active || spawnAll.queued) return true;
+  const total = Number(spawnAll.total || 0);
+  const index = Number(spawnAll.index || 0);
+  return total > 0 && index < total;
 }
 
 function renderProgressPanel(challenge, uvhm, spawnAll) {
@@ -1552,22 +2292,6 @@ function renderProgressPanel(challenge, uvhm, spawnAll) {
 async function pollProgressOnce() {
   if (!actionsEnabled()) return;
   try {
-    const spawnBusyHint = isSpawnAllBusy(lastSpawnAllStatus);
-    if (spawnBusyHint) {
-      const spawnRes = await window.sqbt.postAction("spawn_item_pool_status", {});
-      lastSpawnAllStatus = spawnRes.data?.spawn_all ?? null;
-      renderProgressPanel(null, null, null);
-      if (isSpawnAllBusy(lastSpawnAllStatus)) {
-        if (!progressPollTimer) {
-          progressPollTimer = setInterval(() => {
-            pollProgressOnce();
-          }, 1200);
-        }
-      } else {
-        stopProgressPoll();
-      }
-      return;
-    }
     const [challengeRes, uvhmRes, spawnRes] = await Promise.all([
       window.sqbt.postAction("challenge_bulk_status", {}),
       window.sqbt.postAction("uvhm_status", {}),
@@ -1582,10 +2306,13 @@ async function pollProgressOnce() {
     renderProgressPanel(null, null, null);
     const busy = isChallengeBusy(challenge) || isUvhmBusy(uvhm) || isSpawnAllBusy(spawnAll);
     if (busy) {
+      const pollMs = isSpawnAllBusy(spawnAll) && !isChallengeBusy(challenge) && !isUvhmBusy(uvhm)
+        ? 1200
+        : 800;
       if (!progressPollTimer) {
         progressPollTimer = setInterval(() => {
           pollProgressOnce();
-        }, 800);
+        }, pollMs);
       }
     } else {
       stopProgressPoll();
@@ -1638,9 +2365,14 @@ function refreshGlobalTargetSelect() {
     }
   }
   const next =
-    targetIndex != null && (Number(targetIndex) === -1 || players.some((row) => Number(row.index) === Number(targetIndex)))
-      ? String(targetIndex)
-      : previous;
+    pendingTargetIndex != null && Date.now() < pendingTargetUntil
+      ? String(pendingTargetIndex)
+      : stickyTargetInRoster(players)
+        ? String(stickyTargetIndex)
+        : targetIndex != null &&
+            (Number(targetIndex) === -1 || players.some((row) => Number(row.index) === Number(targetIndex)))
+          ? String(targetIndex)
+          : previous;
   if (next !== "" && [...globalTargetSelect.options].some((opt) => opt.value === next)) {
     if (globalTargetSelect.value !== next) {
       globalTargetSelect.value = next;
@@ -1651,6 +2383,10 @@ function refreshGlobalTargetSelect() {
 function refreshPlayerSelects() {
   refreshGlobalTargetSelect();
   const players = latestStatus?.raw?.players || [];
+  const globalIdx =
+    globalTargetSelect && !globalTargetSelect.disabled && globalTargetSelect.value !== ""
+      ? String(globalTargetSelect.value)
+      : "";
   for (const select of tabContent.querySelectorAll("select[data-role='player-select']")) {
     if (select === globalTargetSelect) continue;
     const fieldWrap = select.closest("[data-field-key]");
@@ -1660,10 +2396,12 @@ function refreshPlayerSelects() {
     let current = deliverKey
       ? fieldValues[deliverKey]
       : fieldValues[fieldKeyName] || select.value || "";
+    // Only follow the global Boost target when the per-action field was never set.
+    if (globalIdx !== "" && (current === undefined || current === "")) {
+      current = globalIdx;
+    }
     if (current === undefined || current === "") {
       current = String(preferredDeliveryPlayerIndex(players));
-      if (deliverKey) fieldValues[deliverKey] = current;
-      else if (fieldKeyName) fieldValues[fieldKeyName] = current;
     }
     select.innerHTML = "";
     if (includeAll) {
@@ -1671,6 +2409,9 @@ function refreshPlayerSelects() {
       allOpt.value = "-1";
       allOpt.textContent = t("target.all");
       select.appendChild(allOpt);
+    } else if (current === "-1") {
+      // Dropdown has no All option — fall back to preferred concrete player.
+      current = String(preferredDeliveryPlayerIndex(players.filter((p) => Number(p.index) !== -1)));
     }
     for (const row of players) {
       const opt = document.createElement("option");
@@ -1957,6 +2698,74 @@ function looksLikeSerialFilePath(raw) {
   return /^[A-Za-z]:[\\/]/.test(s) || s.startsWith("\\\\") || /[\\/]/.test(s);
 }
 
+function isSinglePastedBase85(text) {
+  const t = String(text || "").trim();
+  if (!t.startsWith("@U")) return false;
+  if (/[\r\n]/.test(t)) return false;
+  const re = /(?:^|\s)@Ug/gi;
+  let count = 0;
+  let m;
+  while ((m = re.exec(t)) !== null) {
+    count += 1;
+  }
+  return count <= 1;
+}
+
+function joinWrappedSerialLines(raw) {
+  const out = [];
+  let buf = "";
+  for (const line of String(raw || "").replace(/\r/g, "\n").split("\n")) {
+    const piece = line.trim();
+    if (!piece) {
+      if (buf) {
+        out.push(buf);
+        buf = "";
+      }
+      continue;
+    }
+    if (!buf) {
+      buf = piece;
+      continue;
+    }
+    if (piece.startsWith("@U") || looksLikeSerialFilePath(piece)) {
+      out.push(buf);
+      buf = piece;
+    } else if (buf.startsWith("@U")) {
+      buf += piece;
+    } else {
+      out.push(buf);
+      buf = piece;
+    }
+  }
+  if (buf) out.push(buf);
+  return out;
+}
+
+function splitBase85SerialBlob(blob) {
+  const text = String(blob || "").trim();
+  if (!text) return [];
+  if (isSinglePastedBase85(text)) return [text];
+  const starts = [];
+  const re = /(?:^|\s)@Ug/gi;
+  let m;
+  while ((m = re.exec(text)) !== null) {
+    const at = text[m.index] === "@" ? m.index : m.index + (m[0].length - 3);
+    starts.push(at);
+  }
+  if (!starts.length) {
+    return text.startsWith("@U") ? [text] : [];
+  }
+  if (starts.length === 1) {
+    return [text.slice(starts[0]).trim()];
+  }
+  const out = [];
+  for (let i = 0; i < starts.length; i += 1) {
+    const part = text.slice(starts[i], starts[i + 1] ?? text.length).trim();
+    if (part) out.push(part);
+  }
+  return out;
+}
+
 function extractSerialsFromText(rawText) {
   const text = decodeHtmlEntities(String(rawText || ""));
   const found = [];
@@ -1984,18 +2793,11 @@ function extractSerialsFromText(rawText) {
     found.push(cleaned);
   };
   const pushAtUParts = (blob) => {
-    const value = String(blob || "");
-    const idx = value.indexOf("@U");
-    if (idx < 0) return;
-    for (const part of value.slice(idx).split(/(?=@U)/)) {
-      const token = part.trim();
-      if (token.startsWith("@U")) push(token);
+    for (const token of splitBase85SerialBlob(blob)) {
+      push(token);
     }
   };
-  for (const match of text.match(/@U\S+/g) || []) {
-    pushAtUParts(match);
-  }
-  for (const line of text.split(/\r?\n/)) {
+  for (const line of joinWrappedSerialLines(text)) {
     const trimmed = line.trim();
     if (trimmed.includes("@U")) {
       pushAtUParts(trimmed);
@@ -2008,6 +2810,10 @@ function extractSerialsFromText(rawText) {
 
 async function resolveSerialInputText(rawText) {
   const text = String(rawText || "");
+  const whole = text.trim();
+  if (isSinglePastedBase85(whole)) {
+    return { ok: true, serials: [whole], message: "Ready: 1 serial(s)" };
+  }
   const lines = text.split(/\r?\n/);
   const serials = [];
   const seen = new Set();
@@ -2034,7 +2840,7 @@ async function resolveSerialInputText(rawText) {
     };
   }
 
-  for (const line of lines) {
+  for (const line of joinWrappedSerialLines(text)) {
     const trimmed = line.trim();
     if (!trimmed) continue;
     if (looksLikeSerialFilePath(trimmed)) {
@@ -2129,8 +2935,14 @@ function applyShapeLayoutDefaults(sectionId, actionDef, shapeField, shapeValue, 
   const row = table[shape] || table.circle || table.house;
   if (!row) return;
   for (const sibling of allFields || []) {
-    if (sibling.key !== "radius" && sibling.key !== "spacing") continue;
-    const val = row[sibling.key];
+    if (sibling.key !== "radius" && sibling.key !== "spacing" && sibling.key !== "drop_height") {
+      continue;
+    }
+    let val = row[sibling.key];
+    // Car: keep the player inside the silhouette — near-ground drop on first select.
+    if (sibling.key === "drop_height" && shape === "car" && (val == null || val === "")) {
+      val = 8;
+    }
     if (val == null) continue;
     const skey = actionFieldKey(sectionId, actionDef, sibling);
     fieldValues[skey] = String(val);
@@ -2174,11 +2986,12 @@ function renderSerialSendList(section, sectionId, sectionEl) {
   const addWrap = document.createElement("label");
   addWrap.className = "field field-wide";
   addWrap.innerHTML =
-    "<span>Add serials (@U / human, one per line) or paste a .txt / .docx path</span>";
+    "<span>Paste @Ug serials or a .txt / .docx path — leave a <strong>full blank line</strong> between each code so long Base85 strings stay separate, then Deliver pasted serials below.</span>";
   const addArea = document.createElement("textarea");
   addArea.rows = 4;
+  addArea.dataset.serialPasteArea = sectionId;
   addArea.placeholder =
-    '@U... or 300, 0, 1, 60| 2, 2002|| {9}\nor "C:\\Users\\…\\Downloads\\BP 4 Gear.txt"\nor "C:\\Users\\…\\Downloads\\BP 4 Gear (1).docx"';
+    '@U… (blank line between each serial)\n\n@U…\n\nor one line: "C:\\Users\\…\\Downloads\\BP 4 Gear.txt"';
   addWrap.appendChild(addArea);
 
   const btnRow = document.createElement("div");
@@ -2191,7 +3004,8 @@ function renderSerialSendList(section, sectionId, sectionEl) {
 
   const addBtn = document.createElement("button");
   addBtn.type = "button";
-  addBtn.textContent = "Add to send list";
+  addBtn.textContent = "Add to queue (optional)";
+  addBtn.title = "Build a list when you want to mix serials before sending. Paste + Deliver is enough for most boosts.";
 
   const appendSerials = (lines, note) => {
     if (!lines.length) {
@@ -2216,7 +3030,7 @@ function renderSerialSendList(section, sectionId, sectionEl) {
     addArea.value = "";
     renderSerialSendListRows(sectionId, box);
     actionMessage.className = "action-message ok";
-    actionMessage.textContent = note || `Added ${lines.length} serial(s) to send list.`;
+    actionMessage.textContent = note || `Added ${lines.length} serial(s) to queue.`;
   };
 
   addBtn.addEventListener("click", async () => {
@@ -2299,7 +3113,7 @@ function renderSerialSendListRows(sectionId, box) {
   const selected = multiselectState.get(sectionId) || new Set();
   listEl.innerHTML = "";
   if (!rows.length) {
-    listEl.innerHTML = `<p class="muted">No serials queued yet.</p>`;
+    listEl.innerHTML = `<p class="muted">Queue empty — paste above and press Deliver pasted serials, or Add to queue for mixed sets.</p>`;
   } else {
     for (const row of rows) {
       const label = document.createElement("label");
@@ -2319,7 +3133,7 @@ function renderSerialSendListRows(sectionId, box) {
     }
   }
   if (countEl) countEl.textContent = `${selected.size} selected`;
-  if (statusEl) statusEl.textContent = `${rows.length} in send list`;
+  if (statusEl) statusEl.textContent = `${rows.length} in queue`;
 }
 
 async function populateCatalogSelect(selectEl, field, sectionId, actionDef, wrapEl) {
@@ -2338,7 +3152,12 @@ async function populateCatalogSelect(selectEl, field, sectionId, actionDef, wrap
   try {
     const params = catalogParamsForField(sectionId, field, actionDef);
     const data = await loadCatalog(catalogName, params);
-    const rows = data.rows || data.maps || data.stations || [];
+    const bucket = favoriteBucketForCatalog(catalogName);
+    const rows = sortRowsFavoritesFirst(
+      data.rows || data.maps || data.stations || [],
+      (row) => catalogFavoriteId(row, field),
+      bucket
+    );
     selectEl.innerHTML = "";
     const placeholder = document.createElement("option");
     placeholder.value = "";
@@ -2352,7 +3171,8 @@ async function populateCatalogSelect(selectEl, field, sectionId, actionDef, wrap
       opt.value = String(row[valueKey] || "");
       const label = String(row[labelKey] || opt.value);
       const extra = row.category || row.rarity || row.world || row.group || "";
-      opt.textContent = extra ? `${label} · ${extra}` : label;
+      const favMark = isListFavorite(bucket, opt.value) ? "★ " : "";
+      opt.textContent = favMark + (extra ? `${label} · ${extra}` : label);
       selectEl.appendChild(opt);
     }
     const key = actionFieldKey(sectionId, actionDef, field);
@@ -2362,7 +3182,38 @@ async function populateCatalogSelect(selectEl, field, sectionId, actionDef, wrap
       selectEl.value = current;
       applyCatalogSelection(sectionId, actionDef, field, selectEl, key);
     }
-    if (wrapEl) wrapEl.dataset.catalogError = "";
+    if (wrapEl) {
+      wrapEl.dataset.catalogError = "";
+      const selectRow = wrapEl.querySelector(".catalog-select-row") || wrapEl;
+      let favBtn = selectRow.querySelector(".fav-toggle-catalog");
+      if (!favBtn && bucket) {
+        favBtn = document.createElement("button");
+        favBtn.type = "button";
+        favBtn.className = "fav-toggle fav-toggle-catalog";
+        selectRow.appendChild(favBtn);
+      }
+      if (favBtn && bucket) {
+        const syncFavBtn = () => {
+          const value = String(selectEl.value || "").trim();
+          const fav = value && isListFavorite(bucket, value);
+          favBtn.disabled = !value;
+          favBtn.classList.toggle("is-favorite", Boolean(fav));
+          favBtn.textContent = fav ? "★" : "+";
+          favBtn.title = fav ? "Remove from favourites" : "Add current selection to favourites";
+        };
+        favBtn.onclick = (event) => {
+          event.preventDefault();
+          event.stopPropagation();
+          const value = String(selectEl.value || "").trim();
+          if (!value) return;
+          toggleRowFavorite(bucket, value, () => {
+            populateCatalogSelect(selectEl, field, sectionId, actionDef, wrapEl);
+          });
+        };
+        selectEl.addEventListener("change", syncFavBtn);
+        syncFavBtn();
+      }
+    }
   } catch (error) {
     selectEl.innerHTML = "";
     const err = document.createElement("option");
@@ -2382,6 +3233,9 @@ function renderField(sectionId, actionDef, field, sectionEl, allFields) {
 
   const wrap = document.createElement("label");
   wrap.className = "field";
+  if (field.tooltip) {
+    wrap.title = field.tooltip;
+  }
   if (field.type === "textarea" || field.wide || field.key === "serials") {
     wrap.classList.add("field-wide");
   }
@@ -2396,6 +3250,9 @@ function renderField(sectionId, actionDef, field, sectionEl, allFields) {
 
   if (field.type === "checkbox") {
     wrap.classList.add("field-check");
+    if (field.compact) {
+      wrap.classList.add("field-compact");
+    }
     const input = document.createElement("input");
     input.type = "checkbox";
     input.checked = fieldValues[key] === true || String(fieldValues[key]).toLowerCase() === "true";
@@ -2462,6 +3319,10 @@ function renderField(sectionId, actionDef, field, sectionEl, allFields) {
       wrap.appendChild(searchInput);
     }
     wrap.appendChild(select);
+    const selectRow = document.createElement("div");
+    selectRow.className = "catalog-select-row";
+    selectRow.appendChild(select);
+    wrap.appendChild(selectRow);
     wrap.dataset.fieldKey = key;
     populateCatalogSelect(select, field, sectionId, actionDef, wrap);
     return wrap;
@@ -2495,7 +3356,8 @@ function renderField(sectionId, actionDef, field, sectionEl, allFields) {
       for (const option of field.options || []) {
         const opt = document.createElement("option");
         opt.value = option;
-        opt.textContent = option;
+        const labels = field.option_labels || {};
+        opt.textContent = labels[option] || String(option).replaceAll("_", " ");
         input.appendChild(opt);
       }
     }
@@ -2609,8 +3471,13 @@ async function refreshPoolBrowser(sectionId, config) {
 
   try {
     const data = await loadCatalog(config.catalog, params);
-    const rows = data.rows || [];
-    const rowsSig = `${cacheKey}:${rows.map((row) => poolBrowserRowId(row)).join("|")}`;
+    const bucket = favoriteBucketForCatalog(config.catalog);
+    const rows = sortRowsFavoritesFirst(
+      data.rows || [],
+      (row) => poolFavoriteId(row),
+      bucket
+    );
+    const rowsSig = `${cacheKey}:${rows.map((row) => `${poolBrowserRowId(row)}:${isListFavorite(bucket, poolFavoriteId(row)) ? 1 : 0}`).join("|")}`;
     if (rowsSig === lastRendered && hadRows) {
       const total = data.total ?? rows.length;
       if (countEl) {
@@ -2642,10 +3509,14 @@ async function refreshPoolBrowser(sectionId, config) {
     }
     for (const row of rows) {
       const rowId = poolBrowserRowId(row);
+      const favId = poolFavoriteId(row);
+      const wrap = document.createElement("div");
+      wrap.className = "list-row-with-fav";
       const button = document.createElement("button");
       button.type = "button";
       button.className = "pool-browser-row";
       if (rowId === selectedId) button.classList.add("is-selected");
+      if (isListFavorite(bucket, favId)) button.classList.add("is-favorite");
       const label = document.createElement("span");
       label.className = "pool-browser-label";
       label.textContent = row.display_name || row.itempool || row.catalog_key || "Pool";
@@ -2664,7 +3535,11 @@ async function refreshPoolBrowser(sectionId, config) {
         });
         button.classList.add("is-selected");
       });
-      listEl.appendChild(button);
+      wrap.append(
+        makeFavoriteButton(bucket, favId, () => refreshPoolBrowser(sectionId, config)),
+        button
+      );
+      listEl.appendChild(wrap);
     }
     if (selected && selectedEl) {
       selectedEl.textContent = selected.display_name || selected.itempool || "Selected";
@@ -2726,12 +3601,42 @@ function renderPoolBrowser(section, sectionId, sectionEl) {
   });
   categoryWrap.appendChild(categorySelect);
 
+  const toggleWrap = document.createElement("div");
+  toggleWrap.className = "pool-browser-toggles";
+  for (const toggle of config.toggles || []) {
+    const key = `${sectionId}:${toggle.key}`;
+    if (fieldValues[key] === undefined) {
+      fieldValues[key] = Boolean(toggle.default);
+    }
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "pool-filter-toggle";
+    btn.dataset.toggleKey = toggle.key;
+    btn.title = toggle.tooltip || toggle.label || toggle.key;
+    btn.style.setProperty("--toggle-accent", toggle.color || "#3ddc97");
+    const paint = () => {
+      const on = Boolean(fieldValues[key]);
+      btn.classList.toggle("is-on", on);
+      btn.setAttribute("aria-pressed", on ? "true" : "false");
+      btn.textContent = toggle.label || toggle.key;
+    };
+    paint();
+    btn.addEventListener("click", () => {
+      fieldValues[key] = !Boolean(fieldValues[key]);
+      paint();
+      refreshPoolBrowser(sectionId, config);
+    });
+    toggleWrap.appendChild(btn);
+  }
+
   const meta = document.createElement("div");
   meta.className = "multiselect-meta pool-browser-meta-row";
   meta.innerHTML = `<span class="multiselect-count badge pool-browser-count">0</span>
     <span class="pool-browser-selected muted small">Click a pool below to select it</span>`;
 
-  toolbar.append(searchWrap, categoryWrap, meta);
+  toolbar.append(searchWrap, categoryWrap);
+  if (toggleWrap.childElementCount) toolbar.appendChild(toggleWrap);
+  toolbar.appendChild(meta);
   box.appendChild(toolbar);
 
   const statusEl = document.createElement("p");
@@ -2770,8 +3675,14 @@ async function refreshMultiselectSection(sectionId, config) {
   try {
     const params = multiselectParams(sectionId, config);
     const data = await loadCatalog(config.catalog, params);
-    const rows = data.rows || [];
+    const bucket = favoriteBucketForCatalog(config.catalog);
+    const rows = sortRowsFavoritesFirst(
+      data.rows || [],
+      (row) => multiselectRowId(row, config),
+      bucket
+    );
     multiselectRows.set(sectionId, rows);
+    cacheMultiselectRows(sectionId, rows, config);
     if (!multiselectState.has(sectionId)) {
       multiselectState.set(sectionId, new Set());
     }
@@ -2782,15 +3693,27 @@ async function refreshMultiselectSection(sectionId, config) {
     } else {
       for (const row of rows) {
         const rowId = multiselectRowId(row, config);
+        const wrap = document.createElement("div");
+        wrap.className = "list-row-with-fav";
+        if (bucket) {
+          wrap.appendChild(
+            makeFavoriteButton(bucket, rowId, () => refreshMultiselectSection(sectionId, config))
+          );
+        }
         const label = document.createElement("label");
         label.className = "multiselect-row";
+        if (isListFavorite(bucket, rowId)) label.classList.add("is-favorite");
         const cb = document.createElement("input");
         cb.type = "checkbox";
         cb.checked = selected.has(rowId);
         cb.addEventListener("change", () => {
           if (cb.checked) selected.add(rowId);
           else selected.delete(rowId);
-          if (countEl) countEl.textContent = `${selected.size} selected`;
+          if (cb.checked) {
+            const serial = rowSerialValue(row, config);
+            if (serial) rememberMultiselectSerial(sectionId, rowId, serial);
+          }
+          if (countEl) countEl.textContent = formatMultiselectSelectedLabel(sectionId, config);
           if (config.catalog === "serial_store" && cb.checked) {
             serialStoreEdit.set(sectionId, {
               id: row.id,
@@ -2803,16 +3726,33 @@ async function refreshMultiselectSection(sectionId, config) {
         });
         const text = document.createElement("span");
         const title = String(row[config.labelKey || "title"] || row.name || rowId);
-        const extra = [row.type, row.manufacturer, row.group || row.listing || row.category]
-          .filter((bit, idx, arr) => bit && arr.indexOf(bit) === idx)
-          .join(" · ");
+        const extraBits = [row.type, row.manufacturer, row.group || row.listing || row.category];
+        if (config.kind === "backpack" || config.catalog === "backpack") {
+          if (row.level != null && row.level !== "") extraBits.unshift(`L${row.level}`);
+          const serial = String(row.serial || "");
+          if (serial.startsWith("@U")) {
+            extraBits.push(serial.length > 40 ? `${serial.slice(0, 36)}…` : serial);
+          } else {
+            extraBits.push("no @U — cannot relevel");
+          }
+        }
+        const extra = extraBits.filter((bit, idx, arr) => bit && arr.indexOf(bit) === idx).join(" · ");
         text.textContent = extra ? `${title} · ${extra}` : title;
         label.append(cb, text);
-        listEl.appendChild(label);
+        wrap.appendChild(label);
+        listEl.appendChild(wrap);
       }
     }
-    if (countEl) countEl.textContent = `${selected.size} selected`;
-    if (statusEl) statusEl.textContent = data.message || `${rows.length} entries`;
+    if (countEl) countEl.textContent = formatMultiselectSelectedLabel(sectionId, config);
+    const totalFiltered = Number(data.total || rows.length || 0);
+    if (statusEl) {
+      const base = data.message || `${rows.length} entries`;
+      if (totalFiltered > rows.length) {
+        statusEl.textContent = `${base} · ${totalFiltered} match filters (list capped — Select all filtered loads all before Deliver)`;
+      } else {
+        statusEl.textContent = base;
+      }
+    }
     const listByFilter = {
       group: data.groups,
       listing: data.listings,
@@ -3094,20 +4034,50 @@ function renderMultiselectControls(section, sectionId, sectionEl) {
   const selectAllBtn = document.createElement("button");
   selectAllBtn.type = "button";
   selectAllBtn.textContent = "Select all filtered";
-  selectAllBtn.addEventListener("click", () => {
-    const rows = multiselectRows.get(sectionId) || [];
+  selectAllBtn.addEventListener("click", async () => {
     const selected = multiselectState.get(sectionId) || new Set();
-    for (const row of rows) {
-      selected.add(multiselectRowId(row, config));
+    selectAllBtn.disabled = true;
+    if (statusEl) statusEl.textContent = "Loading full filtered list…";
+    try {
+      const params = { ...multiselectParams(sectionId, config), limit: 10000 };
+      const data = await loadCatalog(config.catalog, params);
+      const rows = sortRowsFavoritesFirst(
+        data.rows || [],
+        (row) => multiselectRowId(row, config),
+        favoriteBucketForCatalog(config.catalog)
+      );
+      cacheMultiselectRows(sectionId, rows, config);
+      for (const row of rows) {
+        selected.add(multiselectRowId(row, config));
+      }
+      multiselectState.set(sectionId, selected);
+      if (countEl) countEl.textContent = formatMultiselectSelectedLabel(sectionId, config);
+      const total = Number(data.total || rows.length || 0);
+      if (statusEl) {
+        statusEl.textContent =
+          total > rows.length
+            ? `Selected ${selected.size} — loaded ${rows.length} of ${total} (raise limit if needed)`
+            : `Selected ${selected.size} filtered row(s)`;
+      }
+    } catch (error) {
+      const rows = multiselectRows.get(sectionId) || [];
+      for (const row of rows) {
+        selected.add(multiselectRowId(row, config));
+      }
+      multiselectState.set(sectionId, selected);
+      if (countEl) countEl.textContent = formatMultiselectSelectedLabel(sectionId, config);
+      if (statusEl) statusEl.textContent = `Selected visible rows only (${formatCatalogError(config.catalog, error)})`;
+    } finally {
+      selectAllBtn.disabled = false;
+      refreshMultiselectSection(sectionId, config);
     }
-    multiselectState.set(sectionId, selected);
-    refreshMultiselectSection(sectionId, config);
   });
   const clearBtn = document.createElement("button");
   clearBtn.type = "button";
   clearBtn.textContent = "Clear";
   clearBtn.addEventListener("click", () => {
     multiselectState.set(sectionId, new Set());
+    multiselectSerialById.set(sectionId, new Map());
     refreshMultiselectSection(sectionId, config);
   });
   metaRow.append(selectAllBtn, clearBtn);
@@ -3205,7 +4175,22 @@ function renderActionCard(sectionId, actionDef, sectionEl, featured) {
   const hasWideField = fields.some(
     (field) => field.type === "textarea" || field.wide || field.key === "serials"
   );
-  if (hasWideField) {
+  const landHeavy = fields.some((field) =>
+    [
+      "shape",
+      "fill_until_complete",
+      "spawn_then_shape",
+      "drop_height",
+      "radius",
+      "spacing",
+      "line_length",
+      "z_bias",
+      "stay_in_air",
+      "peel_after",
+    ].includes(String(field.key || ""))
+  );
+  // Tall land/shape cards must span the row — half-width left empty "missing button" holes.
+  if (hasWideField || landHeavy || fields.length >= 5 || actionDef.fullWidth) {
     card.classList.add("action-card-full");
   }
 
@@ -3218,12 +4203,37 @@ function renderActionCard(sectionId, actionDef, sectionEl, featured) {
   if (fields.length) {
     const fieldsWrap = document.createElement("div");
     fieldsWrap.className = "fields-grid action-fields";
+    if (actionDef.action === "max_all") {
+      fieldsWrap.classList.add("max-all-fields");
+      card.classList.add("action-card-full");
+    }
     if (hasWideField) {
       fieldsWrap.classList.add("fields-grid-serials");
     }
+    let activeFold = null;
+    let activeFoldGrid = null;
     for (const field of fields) {
+      const foldName = String(field.field_fold || "").trim();
+      let target = fieldsWrap;
+      if (foldName) {
+        if (!activeFold || activeFold.dataset.foldName !== foldName) {
+          activeFold = document.createElement("details");
+          activeFold.className = "field-fold";
+          activeFold.dataset.foldName = foldName;
+          const summary = document.createElement("summary");
+          summary.textContent = foldName;
+          activeFoldGrid = document.createElement("div");
+          activeFoldGrid.className = "fields-grid field-fold-grid";
+          activeFold.append(summary, activeFoldGrid);
+          fieldsWrap.appendChild(activeFold);
+        }
+        target = activeFoldGrid;
+      } else {
+        activeFold = null;
+        activeFoldGrid = null;
+      }
       const node = renderField(sectionId, actionDef, field, sectionEl, fields);
-      if (node) fieldsWrap.appendChild(node);
+      if (node) target.appendChild(node);
     }
     card.appendChild(fieldsWrap);
   }
@@ -3261,7 +4271,15 @@ function renderActionCard(sectionId, actionDef, sectionEl, featured) {
       runAction(actionDef.action, payload, actionDef.confirm || "", context);
     });
   } else {
-    decorateActionButton(button, featured && fields.length ? "Run" : actionDef.label, actionDef);
+    decorateActionButton(
+      button,
+      actionDef.action === "max_all" && featured && fields.length
+        ? "Run MAX ALL"
+        : featured && fields.length
+          ? "Run"
+          : actionDef.label,
+      actionDef
+    );
     button.addEventListener("click", () => {
       const payload = collectPayload(sectionId, actionDef);
       const context = {
@@ -3499,6 +4517,65 @@ async function refreshKeybindsEditor(host) {
   }
 }
 
+const TOGGLE_BOARD_ROWS = Object.freeze([
+  ["force_fly", "Force fly (host)"],
+  ["force_fly_all", "Force fly (all)"],
+  ["infinite_jump", "Infinite jump"],
+  ["infinite_jump_all", "Infinite jump (all)"],
+  ["vehicle_jump", "Vehicle jump"],
+  ["noclip", "Noclip"],
+  ["fall_through_map", "Fall through map"],
+  ["auto_apply", "Auto-apply on load"],
+  ["shoot_sprint", "Shoot while sprinting"],
+  ["zoom_sprint", "Zoom while sprinting"],
+  ["zoom_injured", "Zoom while downed"],
+  ["auto_revive", "Auto revive"],
+  ["map_fog", "Hide map fog"],
+]);
+
+function renderTogglesBoard(sectionEl) {
+  const host = document.createElement("div");
+  host.className = "toggles-board";
+  host.id = "toggles-board";
+  sectionEl.appendChild(host);
+  fillTogglesBoard();
+}
+
+function fillTogglesBoard() {
+  const host = document.getElementById("toggles-board");
+  if (!host) return;
+  const sticky = latestStatus?.sticky_toggles || latestStatus?.raw?.sticky_toggles || {};
+  host.innerHTML = "";
+  const list = document.createElement("ul");
+  list.className = "toggles-board-list";
+  let anyOn = false;
+  for (const [key, label] of TOGGLE_BOARD_ROWS) {
+    const on = Boolean(sticky[key]);
+    if (on) anyOn = true;
+    const row = document.createElement("li");
+    row.className = on ? "toggles-board-row is-on" : "toggles-board-row is-off";
+    const name = document.createElement("span");
+    name.className = "toggles-board-name";
+    name.textContent = label;
+    const state = document.createElement("span");
+    state.className = "toggles-board-state";
+    state.textContent = on ? "ON" : "OFF";
+    row.append(name, state);
+    list.appendChild(row);
+  }
+  host.appendChild(list);
+  const note = document.createElement("p");
+  note.className = "muted small";
+  const speed = sticky.fly_speed;
+  const preset = sticky.fly_preset;
+  const extra = [];
+  if (preset) extra.push(`Fly preset: ${preset}`);
+  if (speed != null && speed !== "") extra.push(`Fly speed: ${speed}`);
+  extra.push(anyOn ? "At least one sticky boost is on." : "All listed sticky boosts are off.");
+  note.textContent = extra.join(" · ");
+  host.appendChild(note);
+}
+
 function renderKeybindsEditor(sectionEl) {
   const host = document.createElement("div");
   host.className = "keybinds-editor";
@@ -3521,14 +4598,65 @@ function renderKeybindsEditor(sectionEl) {
 function renderSection(section, tabId) {
   const sectionEl = document.createElement("section");
   sectionEl.className = "panel-section";
-  if (section.title === "Most used" || section.featured) {
+  const isWhatsNewCollapsible =
+    Array.isArray(section.whats_new) && section.whats_new.length && section.whats_new_collapsible;
+
+  if (isWhatsNewCollapsible) {
+    sectionEl.classList.add("panel-section-whats-new");
+    const details = document.createElement("details");
+    details.className = "whats-new-collapsible";
+    const summary = document.createElement("summary");
+    summary.className = "whats-new-trigger";
+    const ver = String(manifest?.version || "").trim();
+    summary.textContent = ver ? `What's new · v${ver}` : "What's new";
+    const body = document.createElement("div");
+    body.className = "whats-new-body";
+    const whatsList = document.createElement("ul");
+    whatsList.className = "whats-new-list";
+    for (const note of section.whats_new) {
+      const li = document.createElement("li");
+      li.textContent = String(note);
+      whatsList.appendChild(li);
+    }
+    body.appendChild(whatsList);
+    details.append(summary, body);
+    sectionEl.appendChild(details);
+    return sectionEl;
+  }
+
+  if (section.title === "Most used" || section.title === "Essentials" || section.featured) {
     sectionEl.classList.add("panel-section-featured");
+  }
+  if (section.title === "Most used" || section.title === "Essentials") {
+    sectionEl.classList.add("panel-section-most-used");
   }
   const sectionId = sectionKey(tabId, section);
   sectionEl.dataset.sectionId = sectionId;
+  if (section.title) sectionEl.dataset.sectionTitle = String(section.title);
   const heading = document.createElement("h3");
   heading.textContent = section.title;
   sectionEl.appendChild(heading);
+
+  if (Array.isArray(section.whats_new) && section.whats_new.length) {
+    const whatsNew = document.createElement("div");
+    whatsNew.className = "whats-new-box";
+    const showInnerTitle = String(section.title || "").trim().toLowerCase() !== "what's new";
+    if (showInnerTitle) {
+      const whatsTitle = document.createElement("p");
+      whatsTitle.className = "whats-new-title";
+      whatsTitle.textContent = "What's new";
+      whatsNew.appendChild(whatsTitle);
+    }
+    const whatsList = document.createElement("ul");
+    whatsList.className = "whats-new-list";
+    for (const note of section.whats_new) {
+      const li = document.createElement("li");
+      li.textContent = String(note);
+      whatsList.appendChild(li);
+    }
+    whatsNew.appendChild(whatsList);
+    sectionEl.appendChild(whatsNew);
+  }
 
   if (Array.isArray(section.guide) && section.guide.length) {
     const guide = document.createElement("ol");
@@ -3562,6 +4690,64 @@ function renderSection(section, tabId) {
     sectionEl.appendChild(hint);
   }
 
+  if (Array.isArray(section.quickLinks) && section.quickLinks.length) {
+    const links = document.createElement("div");
+    links.className = "action-grid action-grid-featured home-quick-links";
+    for (const row of section.quickLinks) {
+      const tabId = String(row.tab || "").trim();
+      const label = String(row.label || tabId).trim();
+      if (!tabId || !label) continue;
+      const button = document.createElement("button");
+      button.type = "button";
+      button.className = "home-quick-link";
+      decorateActionButton(button, label, { action: `nav:${tabId}` });
+      button.title = `Open ${tabId} tab`;
+      button.addEventListener("click", () => {
+        activeTabId = tabId;
+        renderTabs();
+        const current = manifest.tabs.find((item) => item.id === activeTabId);
+        if (current) renderTab(current);
+      });
+      links.appendChild(button);
+    }
+    if (links.childElementCount) sectionEl.appendChild(links);
+  }
+
+  if (section.danger) {
+    // Only the Home safety card should vanish after Got it — never blank other sections.
+    if (String(section.title || "") === "Before you boost" && safetyBannerDismissed()) {
+      return null;
+    }
+    if (String(section.title || "") === "Before you boost") {
+      const wrap = document.createElement("div");
+      wrap.className = "section-danger-wrap";
+      const danger = document.createElement("p");
+      danger.className = "section-danger small";
+      danger.textContent = section.danger;
+      const dismiss = document.createElement("button");
+      dismiss.type = "button";
+      dismiss.className = "section-danger-dismiss";
+      dismiss.textContent = "Got it";
+      dismiss.title = "Dismiss this reminder";
+      dismiss.addEventListener("click", () => {
+        dismissSafetyBanner();
+        const sectionRoot = wrap.closest(".panel-section");
+        wrap.remove();
+        if (sectionRoot) sectionRoot.remove();
+        renderSafetyBanner();
+      });
+      wrap.append(danger, dismiss);
+      sectionEl.appendChild(wrap);
+    } else {
+      const danger = document.createElement("p");
+      danger.className = "section-danger small";
+      danger.textContent = section.danger;
+      sectionEl.appendChild(danger);
+    }
+  } else if (section.title === "Before you boost" && safetyBannerDismissed()) {
+    return null;
+  }
+
   if (section.warning) {
     const warn = document.createElement("p");
     warn.className = "section-warning small";
@@ -3579,6 +4765,23 @@ function renderSection(section, tabId) {
       }
     }
     sectionEl.appendChild(shared);
+    if (section.fields.some((field) => field.key === "fly_speed_mode")) {
+      const live = document.createElement("p");
+      live.className = "fly-speed-live muted";
+      live.dataset.flySpeedLive = "1";
+      live.textContent =
+        "Pick preset or type a number → Apply fly speed → turn Force fly ON → hold WASD.";
+      sectionEl.appendChild(live);
+      wireFlySpeedControls(sectionId);
+      const sticky = latestStatus?.sticky_toggles || latestStatus?.raw?.sticky_toggles || {};
+      if (sticky.fly_speed != null) {
+        updateFlySpeedLivePanels(
+          sticky.fly_speed,
+          sticky.fly_preset,
+          Boolean(sticky.force_fly || sticky.force_fly_all)
+        );
+      }
+    }
   }
 
   if (section.discordLink) {
@@ -3643,9 +4846,15 @@ function renderSection(section, tabId) {
   }
 
   const featured = section.title === "Most used" || section.featured;
+  const fieldsSidebar = String(section.layout || "").trim() === "fields_sidebar";
 
   if (section.keybindsEditor) {
     renderKeybindsEditor(sectionEl);
+    return sectionEl;
+  }
+
+  if (section.togglesBoard) {
+    renderTogglesBoard(sectionEl);
     return sectionEl;
   }
 
@@ -3661,7 +4870,15 @@ function renderSection(section, tabId) {
   }
 
   const actionsWrap = document.createElement("div");
-  actionsWrap.className = featured ? "action-grid action-grid-featured" : "action-grid";
+  if (fieldsSidebar) {
+    actionsWrap.className = "action-grid action-grid-fields-sidebar";
+  } else {
+    actionsWrap.className = featured ? "action-grid action-grid-featured" : "action-grid";
+  }
+  const sidebarWrap = fieldsSidebar ? document.createElement("div") : null;
+  if (sidebarWrap) {
+    sidebarWrap.className = "action-sidebar";
+  }
   const fieldActionsWrap = featured ? document.createElement("div") : null;
   if (fieldActionsWrap) {
     fieldActionsWrap.className = "action-cards-stack";
@@ -3691,6 +4908,14 @@ function renderSection(section, tabId) {
     }
     return rec.inner;
   };
+  const placeCard = (card, actionDef, host) => {
+    if (fieldsSidebar && sidebarWrap && !(actionDef.fields || []).length) {
+      sidebarWrap.appendChild(card);
+      return;
+    }
+    host.appendChild(card);
+  };
+
   for (const actionDef of section.actions || []) {
     const actionHost = hostFor(actionDef);
     if (section.multiselect || section.serialStore || section.serialSendList) {
@@ -3744,6 +4969,9 @@ function renderSection(section, tabId) {
       if (section.serialSendList && (actionDef.fields || []).length) {
         const card = document.createElement("div");
         card.className = "action-card";
+        if (actionDef.deliverFromPaste) {
+          card.classList.add("action-card-full");
+        }
         const fieldsWrap = document.createElement("div");
         fieldsWrap.className = "fields-grid action-fields";
         for (const field of actionDef.fields || []) {
@@ -3756,6 +4984,7 @@ function renderSection(section, tabId) {
         actionDef.deliverMultiselect ||
         actionDef.deliverStore ||
         actionDef.spawnMultiselect ||
+        actionDef.backpackMultiselect ||
         (actionDef.fields || []).length
       ) {
         const card = document.createElement("div");
@@ -3766,7 +4995,14 @@ function renderSection(section, tabId) {
           const tip = document.createElement("p");
           tip.className = "muted small";
           tip.textContent =
-            "Tick rows above, choose Send to (yourself / friend / All players), keep Open rewards = Yes, then deliver.";
+            "Tick rows above, choose Send to (yourself / friend / All players), keep Open rewards = Yes (default), then deliver.";
+          card.appendChild(tip);
+        }
+        if (actionDef.backpackMultiselect) {
+          const tip = document.createElement("p");
+          tip.className = "muted small";
+          tip.textContent =
+            "Tick backpack rows above, set New item level, then relevel. Works on the Boost target only — best in solo.";
           card.appendChild(tip);
         }
         if ((actionDef.fields || []).length) {
@@ -3819,10 +5055,20 @@ function renderSection(section, tabId) {
         const payload = collectPayload(sectionId, actionDef);
         runAction(actionDef.action, payload, actionDef.confirm || "", { sectionId });
       });
-      actionHost.appendChild(button);
+      if (fieldsSidebar && sidebarWrap) {
+        const card = document.createElement("div");
+        card.className = "action-card";
+        card.appendChild(button);
+        sidebarWrap.appendChild(card);
+      } else {
+        actionHost.appendChild(button);
+      }
     } else {
-      actionHost.appendChild(renderActionCard(sectionId, actionDef, sectionEl, featured));
+      placeCard(renderActionCard(sectionId, actionDef, sectionEl, featured), actionDef, actionHost);
     }
+  }
+  if (sidebarWrap && sidebarWrap.childElementCount > 0) {
+    actionsWrap.appendChild(sidebarWrap);
   }
   if (actionsWrap.childElementCount > 0) {
     sectionEl.appendChild(actionsWrap);
@@ -3852,7 +5098,8 @@ function renderTab(tab) {
     ) {
       continue;
     }
-    tabContent.appendChild(renderSection(section, tab.id));
+    const sectionEl = renderSection(section, tab.id);
+    if (sectionEl) tabContent.appendChild(sectionEl);
   }
   // Keep the sticky global #sqbt-progress-panel; refresh visibility from cache.
   renderProgressPanel(null, null, null);
@@ -3871,6 +5118,9 @@ function renderTab(tab) {
     const host = tabContent.querySelector("[data-keybinds-editor]");
     if (host) refreshKeybindsEditor(host);
   }
+  if (tab.id === "toggles") {
+    fillTogglesBoard();
+  }
   if (["damage", "resources", "vehicle"].includes(tab.id) && actionsEnabled()) {
     const moduleMap = { damage: "bdam", resources: "brc", vehicle: "bvm" };
     const mod = moduleMap[tab.id];
@@ -3881,6 +5131,51 @@ function renderTab(tab) {
   refreshActionButtons();
   if (actionsEnabled()) {
     window.setTimeout(() => reloadCatalogSelects(), 0);
+  }
+}
+
+function renderSafetyBanner() {
+  const el = document.getElementById("safety-banner");
+  const textEl = document.getElementById("safety-banner-text");
+  const dismissBtn = document.getElementById("safety-banner-dismiss");
+  if (!el) return;
+  const text = String(manifest?.safety_banner || "").trim();
+  if (!text || safetyBannerDismissed()) {
+    el.classList.add("hidden");
+    if (textEl) textEl.textContent = "";
+    return;
+  }
+  el.classList.remove("hidden");
+  if (textEl) textEl.textContent = text;
+  else el.textContent = text;
+  if (dismissBtn && !dismissBtn.dataset.bound) {
+    dismissBtn.dataset.bound = "1";
+    dismissBtn.addEventListener("click", () => {
+      dismissSafetyBanner();
+      renderSafetyBanner();
+      if (activeTabId === "home" && manifest?.tabs?.length) {
+        const current = manifest.tabs.find((row) => row.id === activeTabId);
+        if (current) renderTab(current);
+      }
+    });
+  }
+}
+
+const SAFETY_BANNER_DISMISS_KEY = "sqbt.safetyBannerDismissed";
+
+function safetyBannerDismissed() {
+  try {
+    return localStorage.getItem(SAFETY_BANNER_DISMISS_KEY) === "1";
+  } catch {
+    return false;
+  }
+}
+
+function dismissSafetyBanner() {
+  try {
+    localStorage.setItem(SAFETY_BANNER_DISMISS_KEY, "1");
+  } catch {
+    /* ignore */
   }
 }
 
@@ -3910,6 +5205,7 @@ function renderTabs() {
     return;
   }
   for (const tab of manifest.tabs) {
+    if (tab.hidden) continue;
     const button = document.createElement("button");
     button.type = "button";
     button.dataset.tabId = tab.id;
@@ -3923,15 +5219,138 @@ function renderTabs() {
     });
     tabBar.appendChild(button);
   }
-  const current = manifest.tabs.find((row) => row.id === activeTabId) || manifest.tabs[0];
-  activeTabId = current.id;
-  renderTab(current);
+  const visibleTabs = (manifest?.tabs || []).filter((tab) => !tab.hidden);
+  let current = visibleTabs.find((row) => row.id === activeTabId) || visibleTabs[0];
+  if (current) {
+    activeTabId = current.id;
+  } else if (activeTabId === "backpack") {
+    activeTabId = "serials";
+    current = visibleTabs.find((row) => row.id === "serials") || visibleTabs[0];
+  }
+  renderSafetyBanner();
+  if (current) renderTab(current);
   injectHiddenShapeOptions();
 }
 
+function buildToolSearchIndex() {
+  const items = [];
+  for (const tab of manifest?.tabs || []) {
+    const tabLabel = String(tab.label || tab.id || "");
+    for (const section of tab.sections || []) {
+      const sectionTitle = String(section.title || "");
+      for (const actionDef of section.actions || []) {
+        const label = String(actionDef.label || "").trim();
+        if (!label) continue;
+        items.push({
+          tabId: tab.id,
+          tabLabel,
+          sectionTitle,
+          label,
+          action: String(actionDef.action || ""),
+          haystack: `${tabLabel} ${sectionTitle} ${label} ${actionDef.action || ""}`.toLowerCase(),
+        });
+      }
+    }
+  }
+  return items;
+}
+
+function hideToolSearchResults() {
+  if (!toolSearchResults) return;
+  toolSearchResults.classList.add("hidden");
+  toolSearchResults.innerHTML = "";
+}
+
+function renderToolSearchResults(query) {
+  if (!toolSearchResults) return;
+  const q = String(query || "").trim().toLowerCase();
+  if (q.length < 2) {
+    hideToolSearchResults();
+    return;
+  }
+  const tokens = q.split(/\s+/).filter(Boolean);
+  const matches = buildToolSearchIndex()
+    .filter((row) => tokens.every((tok) => row.haystack.includes(tok)))
+    .slice(0, 12);
+  toolSearchResults.innerHTML = "";
+  if (!matches.length) {
+    const empty = document.createElement("p");
+    empty.className = "muted small tool-search-empty";
+    empty.textContent = t("search.none");
+    toolSearchResults.appendChild(empty);
+    toolSearchResults.classList.remove("hidden");
+    return;
+  }
+  for (const row of matches) {
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "tool-search-hit";
+    btn.setAttribute("role", "option");
+    btn.innerHTML = `<strong>${escapeHtml(row.label)}</strong><span class="muted small">${escapeHtml(
+      `${row.tabLabel} · ${row.sectionTitle}`
+    )}</span>`;
+    btn.addEventListener("click", () => jumpToTool(row));
+    toolSearchResults.appendChild(btn);
+  }
+  toolSearchResults.classList.remove("hidden");
+}
+
+function escapeHtml(value) {
+  return String(value || "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;");
+}
+
+function jumpToTool(row) {
+  if (!row?.tabId || !manifest?.tabs?.length) return;
+  hideToolSearchResults();
+  if (toolSearchInput) toolSearchInput.value = "";
+  activeTabId = row.tabId;
+  renderTabs();
+  window.setTimeout(() => {
+    const sectionEl = [...tabContent.querySelectorAll("[data-section-title]")].find(
+      (node) => String(node.dataset.sectionTitle || "") === String(row.sectionTitle || "")
+    );
+    let target = null;
+    if (row.action) {
+      const buttons = sectionEl
+        ? sectionEl.querySelectorAll(`[data-run-action="${CSS.escape(row.action)}"]`)
+        : tabContent.querySelectorAll(`[data-run-action="${CSS.escape(row.action)}"]`);
+      for (const btn of buttons) {
+        const text = String(btn.textContent || "").replace(/\s+/g, " ").trim().toLowerCase();
+        if (text.includes(String(row.label || "").toLowerCase()) || !row.label) {
+          target = btn;
+          break;
+        }
+      }
+      if (!target && buttons.length) target = buttons[0];
+    }
+    if (!target) target = sectionEl;
+    if (!target) return;
+    target.scrollIntoView({ behavior: "smooth", block: "center" });
+    const flashHost = target.closest(".action-card") || target;
+    flashHost.classList.add("tool-search-flash");
+    window.setTimeout(() => flashHost.classList.remove("tool-search-flash"), 1600);
+  }, 40);
+}
+
 async function loadManifest() {
+  const gen = ++manifestLoadGen;
   const result = await window.sqbt.getManifest();
+  if (gen !== manifestLoadGen) return;
   if (!result.ok) {
+    // Never wipe a healthy tools UI on a transient bridge blip.
+    if (manifest?.tabs?.length) {
+      if (actionMessage) {
+        actionMessage.className = "action-message muted";
+        actionMessage.textContent = String(result.message || "").trim()
+          ? `Tools list refresh skipped: ${result.message}`
+          : "";
+      }
+      return;
+    }
     const msg = String(result.message || "");
     const gameOff = /fetch failed|econnrefused|not running|still loading|game not connected/i.test(msg);
     const needsSetup = !gameOff && setupNeedsUserAction();
@@ -3958,6 +5377,7 @@ async function loadManifest() {
   }
   manifest = result.manifest;
   renderTabs();
+  if (toolSearchInput?.value) renderToolSearchResults(toolSearchInput.value);
 }
 
 function setModSyncBanner(state, { kicker, title, detail, versions } = {}) {
@@ -4206,6 +5626,25 @@ function applyModSyncUi(modSync, baseSdk = null) {
     return;
   }
 
+  if (modSyncDiskAhead(modSync)) {
+    const diskVersion = modSync.installedVersion || t("sync.unknown");
+    const bundledVersion = modSync.bundledVersion || t("sync.unknown");
+    setModSyncBanner(modSync.gameRunning ? "restart" : "ok", {
+      kicker: t("sync.diskAheadKicker"),
+      title: t("sync.diskAheadTitle", { disk: diskVersion, exe: bundledVersion }),
+      detail: t("sync.diskAheadDetail", { disk: diskVersion }),
+      versions,
+    });
+    hideModSyncNotice();
+    setupPinned = false;
+    updateSetupVisibility({
+      gameRoot: modSync.gameRoot || gameRootInput.value,
+      baseSdk: resolvedBase,
+      setupDismissed: true,
+    });
+    return;
+  }
+
   setModSyncBanner("updated", {
     kicker: t("sync.kicker"),
     title: t("sync.willUpdateTitle"),
@@ -4227,6 +5666,7 @@ function applyModSyncUi(modSync, baseSdk = null) {
 
 async function loadSetup() {
   const setup = await window.sqbt.getSetup();
+  await refreshListFavorites();
   // Prefer a real saved/detected root — never pretend a missing default C: path is set.
   const resolved =
     setup.gameRoot ||
@@ -4346,14 +5786,151 @@ window.addEventListener("keydown", (event) => {
   const tag = String(event.target?.tagName || "").toLowerCase();
   if (tag === "input" || tag === "textarea") return;
   event.preventDefault();
+  unlockDevSmokePanel();
   if (hiddenShapesUnlocked) {
     injectHiddenShapeOptions();
     actionMessage.className = "action-message ok";
-    actionMessage.textContent = "you already found those.";
+    actionMessage.textContent = "Dev smoke panel open. Hidden shapes already unlocked.";
     return;
   }
   watchaDialog?.showModal();
 });
+
+const devSmokeCard = document.getElementById("dev-smoke-card");
+const devSmokeOut = document.getElementById("dev-smoke-out");
+const devSmokeHideBtn = document.getElementById("dev-smoke-hide-btn");
+const devRuntimeLogPath = document.getElementById("dev-runtime-log-path");
+const devRuntimeLogTailBtn = document.getElementById("dev-runtime-log-tail-btn");
+const devRuntimeLogFlushBtn = document.getElementById("dev-runtime-log-flush-btn");
+const devRuntimeLogOpenBtn = document.getElementById("dev-runtime-log-open-btn");
+let devSmokeUnlocked = false;
+
+function unlockDevSmokePanel() {
+  devSmokeUnlocked = true;
+  if (devSmokeCard) {
+    devSmokeCard.classList.remove("hidden");
+    devSmokeCard.scrollIntoView({ behavior: "smooth", block: "nearest" });
+  }
+  refreshDevRuntimeLogPath();
+}
+
+function runtimeLogPathFromStatus() {
+  const raw = latestStatus?.raw || {};
+  return String(raw.runtime_log?.path || raw.runtime_log?.dir || "").trim();
+}
+
+async function refreshDevRuntimeLogPath() {
+  if (!devSmokeUnlocked || !devRuntimeLogPath) return;
+  try {
+    const { data } = await window.sqbt.postAction("runtime_log", { op: "status" }, 12);
+    const p = String(data?.path || runtimeLogPathFromStatus() || "").trim();
+    const bytes = data?.file_bytes != null ? ` (${data.file_bytes}B)` : "";
+    const ring = data?.ring_lines != null ? ` ring=${data.ring_lines}` : "";
+    devRuntimeLogPath.textContent = p
+      ? `Flight log: ${p}${bytes}${ring}`
+      : "Flight log: unavailable (mod offline?)";
+  } catch (_error) {
+    const p = runtimeLogPathFromStatus();
+    devRuntimeLogPath.textContent = p
+      ? `Flight log: ${p}`
+      : "Flight log: connect in-game first";
+  }
+}
+
+async function runDevSmoke(suite) {
+  if (!devSmokeOut) return;
+  const token = "";
+  devSmokeOut.textContent = `Running ${suite}…`;
+  actionMessage.className = "action-message muted";
+  actionMessage.textContent = `Dev smoke: ${suite}…`;
+  try {
+    const { data } = await window.sqbt.postAction("dev_smoke", { suite, token }, 45);
+    const text = String(data?.message || JSON.stringify(data, null, 2) || "No response");
+    devSmokeOut.textContent = text;
+    actionMessage.className = data?.ok ? "action-message ok" : "action-message error";
+    actionMessage.textContent = data?.ok
+      ? `Dev smoke [${suite}] passed — see panel + unrealsdk.log`
+      : `Dev smoke [${suite}] failed — see panel + unrealsdk.log`;
+    refreshDevRuntimeLogPath();
+  } catch (error) {
+    const msg = String(error?.message || error || "Dev smoke failed");
+    devSmokeOut.textContent = msg;
+    actionMessage.className = "action-message error";
+    actionMessage.textContent = msg;
+  }
+}
+
+if (devSmokeHideBtn) {
+  devSmokeHideBtn.addEventListener("click", () => {
+    devSmokeCard?.classList.add("hidden");
+  });
+}
+document.querySelectorAll("[data-dev-smoke]").forEach((btn) => {
+  btn.addEventListener("click", () => {
+    if (!devSmokeUnlocked) return;
+    const suite = btn.getAttribute("data-dev-smoke") || "all";
+    runDevSmoke(suite);
+  });
+});
+
+if (devRuntimeLogTailBtn) {
+  devRuntimeLogTailBtn.addEventListener("click", async () => {
+    if (!devSmokeUnlocked || !devSmokeOut) return;
+    try {
+      const { data } = await window.sqbt.postAction("runtime_log", { op: "tail", limit: 80 }, 15);
+      const lines = Array.isArray(data?.lines) ? data.lines : [];
+      devSmokeOut.textContent =
+        lines.length > 0
+          ? lines.join("\n")
+          : String(data?.message || "(empty runtime log)");
+      refreshDevRuntimeLogPath();
+    } catch (error) {
+      devSmokeOut.textContent = String(error?.message || error);
+    }
+  });
+}
+if (devRuntimeLogFlushBtn) {
+  devRuntimeLogFlushBtn.addEventListener("click", async () => {
+    if (!devSmokeUnlocked) return;
+    try {
+      const { data } = await window.sqbt.postAction("runtime_log", { op: "flush" }, 12);
+      actionMessage.className = "action-message ok";
+      actionMessage.textContent = String(data?.message || "Runtime log flushed");
+      refreshDevRuntimeLogPath();
+    } catch (error) {
+      actionMessage.className = "action-message error";
+      actionMessage.textContent = String(error?.message || error);
+    }
+  });
+}
+if (devRuntimeLogOpenBtn) {
+  devRuntimeLogOpenBtn.addEventListener("click", async () => {
+    if (!devSmokeUnlocked) return;
+    try {
+      let target = runtimeLogPathFromStatus();
+      if (!target) {
+        const { data } = await window.sqbt.postAction("runtime_log", { op: "status" }, 12);
+        target = String(data?.path || data?.dir || "").trim();
+      }
+      if (!target) {
+        actionMessage.className = "action-message error";
+        actionMessage.textContent = "No runtime log path yet — enable the mod in-game first.";
+        return;
+      }
+      const result = await window.sqbt.openPath(target);
+      if (!result?.ok) {
+        actionMessage.className = "action-message error";
+        actionMessage.textContent = String(result?.message || "Could not open path");
+        return;
+      }
+      actionMessage.className = "action-message ok";
+      actionMessage.textContent = `Opened ${result.path || target}`;
+    } catch (error) {
+      actionMessage.className = "action-message error";
+      actionMessage.textContent = String(error?.message || error);
+    }
+  });
+}
 
 if (spawnAnchorSelect) {
   spawnAnchorSelect.addEventListener("change", () => {
@@ -4579,8 +6156,34 @@ if (modSyncNoticeDismiss) {
 
 bindExternalLinks(startGuide);
 i18n.fillLocaleSelect(langSelect, i18n.detectBrowserLocale());
+if (toolSearchInput) {
+  toolSearchInput.addEventListener("input", () => renderToolSearchResults(toolSearchInput.value));
+  toolSearchInput.addEventListener("keydown", (event) => {
+    if (event.key === "Escape") {
+      toolSearchInput.value = "";
+      hideToolSearchResults();
+    }
+  });
+  toolSearchInput.addEventListener("focus", () => {
+    if (toolSearchInput.value.trim().length >= 2) renderToolSearchResults(toolSearchInput.value);
+  });
+}
+document.addEventListener("click", (event) => {
+  if (!toolSearchResults || toolSearchResults.classList.contains("hidden")) return;
+  const inside = event.target?.closest?.(".tool-search-bar");
+  if (!inside) hideToolSearchResults();
+});
 window.sqbt.onStatus(setStatusUi);
 loadSetup();
 window.sqbt.getStatus().then(setStatusUi);
 loadManifest();
 window.setTimeout(() => refreshUpdateStatus(false), 900);
+
+let resizeUiTimer = null;
+window.addEventListener("resize", () => {
+  document.body.classList.add("is-resizing");
+  clearTimeout(resizeUiTimer);
+  resizeUiTimer = window.setTimeout(() => {
+    document.body.classList.remove("is-resizing");
+  }, 150);
+});

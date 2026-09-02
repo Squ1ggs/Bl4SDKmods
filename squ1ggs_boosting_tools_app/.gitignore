@@ -1,0 +1,7 @@
+# Ignore dev dependencies and build output
+node_modules/
+dist_squ1ggs_boosting_tools/
+
+# Build script stages the loose SDK mod folder here.
+resources/Squ1ggsBoostingTools/
+resources/*.sdkmod

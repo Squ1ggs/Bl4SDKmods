@@ -9,6 +9,8 @@ contextBridge.exposeInMainWorld("sqbt", {
   postAction: (action, payload, timeout) => ipcRenderer.invoke("sqbt:post-action", action, payload, timeout),
   getManifest: () => ipcRenderer.invoke("sqbt:get-manifest"),
   getCatalog: (name, payload) => ipcRenderer.invoke("sqbt:get-catalog", name, payload),
+  getListFavorites: () => ipcRenderer.invoke("sqbt:get-list-favorites"),
+  toggleListFavorite: (bucket, id) => ipcRenderer.invoke("sqbt:toggle-list-favorite", bucket, id),
   getSetup: () => ipcRenderer.invoke("sqbt:get-setup"),
   dismissSetup: () => ipcRenderer.invoke("sqbt:dismiss-setup"),
   setTheme: (theme) => ipcRenderer.invoke("sqbt:set-theme", theme),
@@ -31,6 +33,7 @@ contextBridge.exposeInMainWorld("sqbt", {
     return () => ipcRenderer.removeListener("sqbt:mod-sync", listener);
   },
   openExternal: (url) => ipcRenderer.invoke("sqbt:open-external", url),
+  openPath: (targetPath) => ipcRenderer.invoke("sqbt:open-path", targetPath),
   snapWindow: (edge = "right") => ipcRenderer.invoke("sqbt:snap-window", edge),
   onStatus: (handler) => {
     const listener = (_event, payload) => handler(payload);

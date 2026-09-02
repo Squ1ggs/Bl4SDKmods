@@ -3,6 +3,11 @@
 const path = require("path");
 const { app, BrowserWindow, dialog, ipcMain, shell, screen } = require("electron");
 const { getBridgeStatus, postAction, fetchManifest, fetchCatalog, getBridgeBase } = require("./lib/bridge");
+const {
+  loadFavorites,
+  toggleFavorite,
+  bucketForCatalog,
+} = require("./lib/list_favorites");
 const { defaultGameRootHint, defaultInstallCandidates, normalizeGameRoot, resolveGameRoot } = require("./lib/game_paths");
 const { ensureModSynced, getModSyncStatus, installSdkmod } = require("./lib/sdkmod_install");
 const { checkBaseSdkUpdate, detectBaseSdk, installBaseSdk } = require("./lib/oak2_sdk");
@@ -242,6 +247,14 @@ app.on("before-quit", (event) => {
 });
 
 ipcMain.handle("sqbt:get-status", async () => refreshStatus());
+ipcMain.handle("sqbt:get-list-favorites", async () => ({
+  ok: true,
+  favorites: loadFavorites(),
+}));
+ipcMain.handle("sqbt:toggle-list-favorite", async (_event, bucket, id) => {
+  const favorites = toggleFavorite(bucket, id);
+  return { ok: true, favorites, bucket: bucketForCatalog(bucket) || bucket };
+});
 ipcMain.handle("sqbt:check-for-updates", async (_event, force, currentModVersion) =>
   getUpdateStatus(Boolean(force), currentModVersion || "")
 );
@@ -480,6 +493,32 @@ ipcMain.handle("sqbt:apply-github-update", async (_event, currentModVersion) => 
 ipcMain.handle("sqbt:open-external", async (_event, targetUrl) => {
   if (typeof targetUrl === "string" && targetUrl.startsWith("http")) {
     await shell.openExternal(targetUrl);
+  }
+});
+ipcMain.handle("sqbt:open-path", async (_event, targetPath) => {
+  const raw = String(targetPath || "").trim();
+  if (!raw) {
+    return { ok: false, message: "No path." };
+  }
+  try {
+    const fs = require("fs");
+    const path = require("path");
+    let openTarget = raw;
+    if (!fs.existsSync(openTarget)) {
+      const parent = path.dirname(openTarget);
+      if (fs.existsSync(parent)) {
+        openTarget = parent;
+      } else {
+        return { ok: false, message: `Path not found: ${raw}` };
+      }
+    }
+    const err = await shell.openPath(openTarget);
+    if (err) {
+      return { ok: false, message: String(err) };
+    }
+    return { ok: true, path: openTarget };
+  } catch (error) {
+    return { ok: false, message: String(error?.message || error) };
   }
 });
 ipcMain.handle("sqbt:snap-window", async (_event, edge = "right") => {

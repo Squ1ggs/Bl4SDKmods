@@ -162,29 +162,49 @@
       <div class="target-row">
         <div class="target-row-head">
           <h3 data-i18n="roster.title">Party roster</h3>
-          <div class="target-controls">
-            <label class="target-control-label">
-              <span data-i18n="target.label">Boost target (MAX ALL, UVHM, challenges, currency)</span>
-              <select id="global-target-select" data-role="player-select">
-                <option value="" data-i18n="target.connect">Connect in-game…</option>
-              </select>
-            </label>
-            <label class="spawn-anchor-label">
-              <span data-i18n="spawn.label">World drop / spawn near</span>
-              <select id="spawn-anchor-select">
-                <option value="local" data-i18n="spawn.local">From me</option>
-                <option value="party" data-i18n="spawn.party">From selected player</option>
-                <option value="npc_nearest" data-i18n="spawn.npc">Near nearest NPC</option>
-              </select>
-            </label>
-          </div>
         </div>
-        <p class="target-hint muted small" data-i18n="roster.hint">Pick who receives boosts above, then use any tab. Click a name below to set target quickly.</p>
+        <p class="target-hint muted small" data-i18n="roster.hint">Pick who receives boosts in the bar under the tabs, then use any page. Click a name below to set target quickly.</p>
         <ul id="roster-list" class="roster-list"></ul>
       </div>
     </section>
 
     <section id="sqbt-progress-panel" class="progress-panel global-progress-panel hidden" aria-live="polite"></section>
+
+    <section id="dev-smoke-card" class="card dev-smoke-card hidden" aria-live="polite">
+      <div class="setup-head">
+        <h2>Dev smoke tests</h2>
+        <button id="dev-smoke-hide-btn" type="button" class="ghost small">Hide</button>
+      </div>
+      <p class="muted small">
+        Unlocked with <kbd>Ctrl</kbd>+<kbd>Alt</kbd>+<kbd>Shift</kbd>+<kbd>F9</kbd>.
+        Requires Online + in-world. Results also go to <code>unrealsdk.log</code> as
+        <code>[Squ1ggs's Boosting Tools | DevSmoke]</code>.
+      </p>
+      <div class="dev-smoke-actions">
+        <button type="button" class="primary small" data-dev-smoke="all">Run all</button>
+        <button type="button" class="ghost small" data-dev-smoke="sdk">SDK / FGbx</button>
+        <button type="button" class="ghost small" data-dev-smoke="host">Host / PC</button>
+        <button type="button" class="ghost small" data-dev-smoke="world">World / NCS</button>
+        <button type="button" class="ghost small" data-dev-smoke="vault">Vault roles</button>
+        <button type="button" class="ghost small" data-dev-smoke="bridge">Bridge</button>
+        <button type="button" class="ghost small" data-dev-smoke="catalog">Catalog</button>
+        <button type="button" class="ghost small" data-dev-smoke="currency">Currency</button>
+        <button type="button" class="ghost small" data-dev-smoke="challenges">Challenges</button>
+        <button type="button" class="ghost small" data-dev-smoke="rewards">Rewards</button>
+        <button type="button" class="ghost small" data-dev-smoke="deferred">Deferred / ImGui</button>
+        <button type="button" class="ghost small" data-dev-smoke="travel">Travel</button>
+        <button type="button" class="ghost small" data-dev-smoke="peers">Peer mods</button>
+        <button type="button" class="ghost small" data-dev-smoke="mobility">Mobility / fly</button>
+        <button type="button" class="ghost small" data-dev-smoke="zoom">Zoom flags</button>
+      </div>
+      <div class="dev-smoke-actions" style="margin-top:0.5rem">
+        <button type="button" class="ghost small" id="dev-runtime-log-tail-btn">Show runtime log tail</button>
+        <button type="button" class="ghost small" id="dev-runtime-log-flush-btn">Flush runtime log</button>
+        <button type="button" class="ghost small" id="dev-runtime-log-open-btn">Open runtime log folder</button>
+      </div>
+      <p class="muted small" id="dev-runtime-log-path" aria-live="polite"></p>
+      <pre id="dev-smoke-out" class="dev-smoke-out" aria-live="polite">Press a test button…</pre>
+    </section>
 
     <section class="card setup-card" id="setup-card">
       <div class="setup-head">
@@ -230,7 +250,44 @@
       <p id="setup-message" class="setup-message" aria-live="polite"></p>
     </section>
 
-    <nav id="tab-bar" class="tab-bar"></nav>
+    <div class="sticky-workbench">
+      <div class="tool-search-bar">
+        <label class="tool-search-label" for="tool-search-input">
+          <span data-i18n="search.label">Find a tool</span>
+          <input
+            id="tool-search-input"
+            type="search"
+            autocomplete="off"
+            spellcheck="false"
+            data-i18n-placeholder="search.placeholder"
+            placeholder="Search fly, shinies, UVHM, chest…"
+          />
+        </label>
+        <div id="tool-search-results" class="tool-search-results hidden" role="listbox" aria-label="Tool search results"></div>
+      </div>
+      <nav id="tab-bar" class="tab-bar"></nav>
+      <div id="safety-banner" class="safety-banner hidden" role="note" aria-live="polite">
+        <p id="safety-banner-text" class="safety-banner-text"></p>
+        <button id="safety-banner-dismiss" type="button" class="safety-banner-dismiss" title="Dismiss this reminder">Got it</button>
+      </div>
+      <div class="sticky-target-bar">
+        <label class="target-control-label">
+          <span data-i18n="target.label">Boost target (player, backpack, UVHM, currency)</span>
+          <select id="global-target-select" data-role="player-select">
+            <option value="" data-i18n="target.connect">Connect in-game…</option>
+          </select>
+        </label>
+        <label class="spawn-anchor-label">
+          <span data-i18n="spawn.label">World drop / spawn near</span>
+          <select id="spawn-anchor-select">
+            <option value="local" data-i18n="spawn.local">From me</option>
+            <option value="party" data-i18n="spawn.party">From selected player</option>
+            <option value="npc_nearest" data-i18n="spawn.npc">Near nearest NPC</option>
+            <option value="freecam" data-i18n="spawn.freecam">At debug cam</option>
+          </select>
+        </label>
+      </div>
+    </div>
     <main id="tab-content" class="tab-content"></main>
     <p id="action-message" class="action-message muted" aria-live="polite"></p>
 

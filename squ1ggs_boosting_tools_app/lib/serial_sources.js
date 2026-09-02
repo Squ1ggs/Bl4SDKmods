@@ -10,8 +10,72 @@ const ALLOWED_EXTS = new Set([...TEXT_EXTS, ...DOCX_EXTS]);
 
 const PATH_LINE_RE =
   /^\s*(?:"([^"\r\n]+)"|'([^'\r\n]+)'|((?:[A-Za-z]:\\|\\\\)[^\r\n]+))\s*$/;
-const ATU_RE = /@U\S+/g;
 const HUMAN_SERIAL_RE = /^\s*\d+\s*,\s*\d+/;
+
+/** True when text is one contiguous @U serial (no whitespace-bound second @Ug). */
+function isSinglePastedBase85(text) {
+  const t = String(text || "").trim();
+  if (!t.startsWith("@U")) return false;
+  if (/[\r\n]/.test(t)) return false;
+  const re = /(?:^|\s)@Ug/gi;
+  let count = 0;
+  let m;
+  while ((m = re.exec(t)) !== null) {
+    count += 1;
+  }
+  return count <= 1;
+}
+
+/** Rejoin lines broken mid-serial (backtick/newline in chat exports). */
+function joinWrappedSerialLines(raw) {
+  const out = [];
+  let buf = "";
+  for (const line of String(raw || "").replace(/\r/g, "\n").split("\n")) {
+    const piece = line.trim();
+    if (!piece) continue;
+    if (!buf) {
+      buf = piece;
+      continue;
+    }
+    if (piece.startsWith("@U") || looksLikeSerialFilePath(piece)) {
+      out.push(buf);
+      buf = piece;
+    } else if (buf.startsWith("@U")) {
+      buf += piece;
+    } else {
+      out.push(buf);
+      buf = piece;
+    }
+  }
+  if (buf) out.push(buf);
+  return out;
+}
+
+/** Split a blob into Base85 serials. @Ug starts a serial only at start/whitespace. */
+function splitBase85SerialBlob(blob) {
+  const text = String(blob || "").trim();
+  if (!text) return [];
+  if (isSinglePastedBase85(text)) return [text];
+  const starts = [];
+  const re = /(?:^|\s)@Ug/gi;
+  let m;
+  while ((m = re.exec(text)) !== null) {
+    const at = text[m.index] === "@" ? m.index : m.index + (m[0].length - 3);
+    starts.push(at);
+  }
+  if (!starts.length) {
+    return text.startsWith("@U") ? [text] : [];
+  }
+  if (starts.length === 1) {
+    return [text.slice(starts[0]).trim()];
+  }
+  const out = [];
+  for (let i = 0; i < starts.length; i += 1) {
+    const part = text.slice(starts[i], starts[i + 1] ?? text.length).trim();
+    if (part) out.push(part);
+  }
+  return out;
+}
 
 function stripQuotes(raw) {
   let s = String(raw || "").trim();
@@ -171,23 +235,12 @@ function extractSerialsFromText(rawText) {
   };
 
   const pushAtUParts = (blob) => {
-    const text = String(blob || "");
-    const idx = text.indexOf("@U");
-    if (idx < 0) return;
-    for (const part of text.slice(idx).split(/(?=@U)/)) {
-      const token = part.trim();
-      if (token.startsWith("@U")) push(token);
+    for (const token of splitBase85SerialBlob(blob)) {
+      push(token);
     }
   };
 
-  // Prefer explicit @U tokens anywhere in the blob (fenced markdown, prose, etc.).
-  // Split only at a new @U prefix so ` ' @ inside one Base85 serial stay intact.
-  const atMatches = text.match(ATU_RE) || [];
-  for (const match of atMatches) {
-    pushAtUParts(match);
-  }
-
-  for (const line of text.split(/\r?\n/)) {
+  for (const line of joinWrappedSerialLines(text)) {
     const trimmed = line.trim();
     if (trimmed.includes("@U")) {
       pushAtUParts(trimmed);
@@ -239,7 +292,10 @@ function readSerialSource(rawPath) {
 module.exports = {
   ALLOWED_EXTS,
   extractSerialsFromText,
+  isSinglePastedBase85,
+  joinWrappedSerialLines,
   looksLikeSerialFilePath,
   readSerialSource,
+  splitBase85SerialBlob,
   stripQuotes,
 };

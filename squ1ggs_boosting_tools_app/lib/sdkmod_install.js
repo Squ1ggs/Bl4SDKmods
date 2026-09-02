@@ -75,6 +75,10 @@ function getModSyncStatus(gameRootInput) {
   const installed = gameRoot ? installedModFolder(gameRoot) : null;
   const installedVersion = readModVersion(installed);
   // Only push when bundled is newer. Never wipe a newer on-disk fix with an older EXE bundle.
+  const diskAhead =
+    Boolean(installedVersion) &&
+    Boolean(bundledVersion) &&
+    compareVersions(installedVersion, bundledVersion) > 0;
   const needsUpdate =
     Boolean(gameRoot) &&
     Boolean(source) &&
@@ -89,6 +93,7 @@ function getModSyncStatus(gameRootInput) {
     installedPath: installed,
     sourcePath: source,
     needsUpdate,
+    diskAhead,
     gameRunning: isBorderlandsRunning(),
   };
 }
@@ -262,13 +267,16 @@ function ensureModSynced(options = {}) {
     };
   }
   if (!status.needsUpdate && !options.force) {
+    const diskAhead = Boolean(status.diskAhead);
     return {
       ok: true,
       skipped: true,
       updated: false,
-      reason: "already-current",
-      message: `Squ1ggsBoostingTools already matches this EXE (v${status.bundledVersion || "unknown"}).`,
-      needsGameRestart: false,
+      reason: diskAhead ? "disk-ahead" : "already-current",
+      message: diskAhead
+        ? `sdk_mods has v${status.installedVersion}; this EXE bundles v${status.bundledVersion}. Disk is newer — fully restart Borderlands 4 to load it. Rebuild or replace this EXE to bundle the same version.`
+        : `Squ1ggsBoostingTools already matches this EXE (v${status.bundledVersion || "unknown"}).`,
+      needsGameRestart: diskAhead,
       gameRunning: status.gameRunning,
       ...status,
     };
