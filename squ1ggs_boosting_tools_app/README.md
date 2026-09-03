@@ -1,6 +1,6 @@
 # Squ1ggs Boosting Tools — desktop app
 
-**v1.1.235** · Player tools for **Borderlands 4** by **[Squ1ggs](https://github.com/Squ1ggs)**.
+**v1.1.128** · Player tools for **Borderlands 4** by **[Squ1ggs](https://github.com/Squ1ggs)**.
 
 Download the portable zip from [Releases](https://github.com/Squ1ggs/Bl4SDKmods/releases).
 
@@ -8,7 +8,7 @@ Download the portable zip from [Releases](https://github.com/Squ1ggs/Bl4SDKmods/
 
 1. Run **Squ1ggsBoostingTools.exe** → set game path → **Install SDK + Squ1ggs mod**.
 2. Launch and **fully restart Borderlands 4**.
-3. **Refresh status** — mod **3.8.254+** should show connected.
+3. **Refresh status** — mod **3.8.134+** should show connected.
 
 Tabs cover loot, serials, movement, travel, spawns, loot shapes, challenges, and more.
 

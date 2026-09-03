@@ -9,7 +9,7 @@ Author: **[Squ1ggs](https://github.com/Squ1ggs)** · **GPL-3.0**
 
 1. Download the portable zip from **Releases** and run **Squ1ggsBoostingTools.exe**.
 2. Set your Borderlands 4 folder → **Install SDK + Squ1ggs mod**.
-3. **Fully restart Borderlands 4**, then **Refresh status** in the app (mod **3.8.254**).
+3. **Fully restart Borderlands 4**, then **Refresh status** in the app (mod **3.8.134**).
 
 Use the desktop app for the full UI. The SDK mod provides the in-game bridge only.
 
