@@ -1,6 +1,6 @@
 # Squ1ggs Boosting Tools
 
-Borderlands 4 boosting toolkit — **desktop app** + **SDK mod**.  
+Borderlands 4 boosting toolkit - **desktop app** + **SDK mod**.  
 Author: **[Squ1ggs](https://github.com/Squ1ggs)** · **GPL-3.0**
 
 **Releases:** [github.com/Squ1ggs/Bl4SDKmods/releases](https://github.com/Squ1ggs/Bl4SDKmods/releases) (not on Mod DB)
@@ -8,16 +8,10 @@ Author: **[Squ1ggs](https://github.com/Squ1ggs)** · **GPL-3.0**
 ## Quick start
 
 1. Download the portable zip from **Releases** and run **Squ1ggsBoostingTools.exe**.
-2. Set your Borderlands 4 folder → **Install SDK + Squ1ggs mod**.
-3. **Fully restart Borderlands 4**, then **Refresh status** in the app (mod **3.8.134**).
+2. Point it at your Borderlands 4 folder if asked - the EXE installs the SDK + Squ1ggs mod for you.
+3. **Fully restart Borderlands 4**, load a character, then **Refresh status** (mod **3.8.135**).
 
-Use the desktop app for the full UI. The SDK mod provides the in-game bridge only.
-
-## Install (mod only)
-
-Requires [Oak2 Mod Manager v0.3+](https://github.com/bl-sdk/oak2-mod-manager/releases/tag/v0.3).
-
-Copy `Squ1ggsBoostingTools.sdkmod` (or the loose folder) into `sdk_mods` and enable **Squ1ggs's Boosting Tools** in the mods menu.
+Use the desktop app for the full UI. The SDK mod is the in-game bridge only.
 
 ## Notes
 

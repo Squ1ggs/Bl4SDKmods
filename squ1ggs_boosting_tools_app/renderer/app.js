@@ -902,6 +902,15 @@ function refreshActionButtons() {
   }
 }
 
+function syncBoostTargetFromSendTo(value) {
+  const idx = Number(value);
+  if (!Number.isFinite(idx)) return;
+  const top =
+    globalTargetSelect && !globalTargetSelect.disabled ? String(globalTargetSelect.value) : "";
+  if (top === String(idx)) return;
+  selectTarget(idx);
+}
+
 async function selectTarget(index) {
   actionMessage.textContent = "";
   const idx = Number(index);
@@ -2986,7 +2995,7 @@ function renderSerialSendList(section, sectionId, sectionEl) {
   const addWrap = document.createElement("label");
   addWrap.className = "field field-wide";
   addWrap.innerHTML =
-    "<span>Paste @Ug serials or a .txt / .docx path — leave a <strong>full blank line</strong> between each code so long Base85 strings stay separate, then Deliver pasted serials below.</span>";
+    "<span>Paste @Ug serials or a .txt / .docx path — leave a <strong>full blank line</strong> between each code. Then press <strong>Send items</strong> next to Add to queue.</span>";
   const addArea = document.createElement("textarea");
   addArea.rows = 4;
   addArea.dataset.serialPasteArea = sectionId;
@@ -3004,8 +3013,9 @@ function renderSerialSendList(section, sectionId, sectionEl) {
 
   const addBtn = document.createElement("button");
   addBtn.type = "button";
+  addBtn.className = "ghost";
   addBtn.textContent = "Add to queue (optional)";
-  addBtn.title = "Build a list when you want to mix serials before sending. Paste + Deliver is enough for most boosts.";
+  addBtn.title = "Build a list when you want to mix serials before sending. Paste + Send items is enough for most boosts.";
 
   const appendSerials = (lines, note) => {
     if (!lines.length) {
@@ -3079,6 +3089,17 @@ function renderSerialSendList(section, sectionId, sectionEl) {
 
   btnRow.append(browseBtn, addBtn);
 
+  // Send items lands here (next to Add to queue) when the action card renders.
+  const sendBtnSlot = document.createElement("div");
+  sendBtnSlot.className = "serial-send-btn-slot";
+  sendBtnSlot.dataset.serialSendBtn = sectionId;
+  btnRow.appendChild(sendBtnSlot);
+
+  // Send options (Send to / amount / open rewards) stay visible under the button row.
+  const primarySlot = document.createElement("div");
+  primarySlot.className = "serial-send-primary-slot";
+  primarySlot.dataset.serialSendPrimary = sectionId;
+
   const meta = document.createElement("div");
   meta.className = "multiselect-meta";
   meta.innerHTML = `<span class="multiselect-count badge">0 selected</span>
@@ -3097,7 +3118,13 @@ function renderSerialSendList(section, sectionId, sectionEl) {
   const listEl = document.createElement("div");
   listEl.className = "multiselect-list";
 
-  box.append(addWrap, btnRow, meta, listEl);
+  const queueDetails = document.createElement("details");
+  queueDetails.className = "serial-queue-fold";
+  const queueSummary = document.createElement("summary");
+  queueSummary.textContent = "Optional queue (usually skip this)";
+  queueDetails.append(queueSummary, meta, listEl);
+
+  box.append(addWrap, btnRow, primarySlot, queueDetails);
   sectionEl.appendChild(box);
   if (!multiselectRows.has(sectionId)) multiselectRows.set(sectionId, []);
   if (!multiselectState.has(sectionId)) multiselectState.set(sectionId, new Set());
@@ -3113,7 +3140,7 @@ function renderSerialSendListRows(sectionId, box) {
   const selected = multiselectState.get(sectionId) || new Set();
   listEl.innerHTML = "";
   if (!rows.length) {
-    listEl.innerHTML = `<p class="muted">Queue empty — paste above and press Deliver pasted serials, or Add to queue for mixed sets.</p>`;
+    listEl.innerHTML = `<p class="muted">Queue empty — most people just paste above and press Send items. Use Add to queue only to mix sets.</p>`;
   } else {
     for (const row of rows) {
       const label = document.createElement("label");
@@ -3271,6 +3298,8 @@ function renderField(sectionId, actionDef, field, sectionEl, allFields) {
     }
     select.addEventListener("change", () => {
       fieldValues[key] = select.value;
+      // Keep Boost target (top bar) in lockstep with any Send to / Target player picker.
+      syncBoostTargetFromSendTo(select.value);
     });
     wrap.appendChild(select);
     wrap.dataset.fieldKey = key;
@@ -3947,6 +3976,7 @@ function renderMultiselectControls(section, sectionId, sectionEl) {
     deliverPlayer.dataset.includeAll = "1";
     deliverPlayer.addEventListener("change", () => {
       fieldValues[deliverPlayerKey] = deliverPlayer.value;
+      syncBoostTargetFromSendTo(deliverPlayer.value);
     });
     deliverWrap.appendChild(deliverPlayer);
     toolbar.appendChild(deliverWrap);
@@ -4965,12 +4995,21 @@ function renderSection(section, tabId) {
         };
         runAction(actionDef.action, payload, actionDef.confirm || "", context);
       });
-      // For send-list, also render field controls above the button.
+      // For send-list, also render field controls (Send to / amount / etc.).
       if (section.serialSendList && (actionDef.fields || []).length) {
         const card = document.createElement("div");
-        card.className = "action-card";
+        card.className = "action-card action-card-full";
         if (actionDef.deliverFromPaste) {
-          card.classList.add("action-card-full");
+          card.classList.add("serial-send-primary-card");
+        } else {
+          card.classList.add("deliver-selected-card");
+        }
+        if (actionDef.deliverFromPaste) {
+          const tip = document.createElement("p");
+          tip.className = "serial-send-primary-tip";
+          tip.textContent =
+            "Send options — Send to matches Boost target (top bar). Change either and both update.";
+          card.appendChild(tip);
         }
         const fieldsWrap = document.createElement("div");
         fieldsWrap.className = "fields-grid action-fields";
@@ -4978,8 +5017,26 @@ function renderSection(section, tabId) {
           const node = renderField(sectionId, actionDef, field, sectionEl, actionDef.fields);
           if (node) fieldsWrap.appendChild(node);
         }
-        card.append(fieldsWrap, button);
-        actionHost.appendChild(card);
+        card.appendChild(fieldsWrap);
+        const primarySlot = sectionEl.querySelector(
+          `.serial-send-primary-slot[data-serial-send-primary="${sectionId}"]`
+        );
+        const sendBtnSlot = sectionEl.querySelector(
+          `.serial-send-btn-slot[data-serial-send-btn="${sectionId}"]`
+        );
+        if (actionDef.deliverFromPaste && primarySlot) {
+          primarySlot.appendChild(card);
+          if (sendBtnSlot) {
+            button.classList.add("serial-send-primary-btn");
+            sendBtnSlot.appendChild(button);
+          } else {
+            button.classList.add("serial-send-primary-btn");
+            card.appendChild(button);
+          }
+        } else {
+          card.appendChild(button);
+          actionHost.appendChild(card);
+        }
       } else if (
         actionDef.deliverMultiselect ||
         actionDef.deliverStore ||

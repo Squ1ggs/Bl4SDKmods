@@ -1,4 +1,4 @@
-﻿# Bl4SDKmods
+# Bl4SDKmods
 
 Borderlands 4 **Python SDK** mods for the game's **`sdk_mods`** folder (Oak2 / `mods_base`). Each mod ships as an **`.sdkmod`** file â€” a zip with one top-level folder matching the file name.
 
@@ -17,7 +17,7 @@ Borderlands 4 **Python SDK** mods for the game's **`sdk_mods`** folder (Oak2 / `
 | **p2p_teleporter** | Co-op roster + teleports (`bcst_*`). Optional **BLImGui** tab. |
 | **world_travel** | Location bookmarks + travel catalog (`bwt_*`). Optional **BLImGui** tab. |
 | These above are also on the [BL Oak2 Mod DB](https://bl-sdk.github.io/oak2-mod-db/). |
-| **Squ1ggsBoostingTools** | All-in-one boosting desktop app + mod (**3.8.134 / EXE 1.1.128**). [Releases](https://github.com/Squ1ggs/Bl4SDKmods/releases) â€” not on Mod DB. |
+| **Squ1ggsBoostingTools** | All-in-one boosting desktop app + mod (**3.8.135 / EXE 1.1.129**). [Releases](https://github.com/Squ1ggs/Bl4SDKmods/releases) â€” not on Mod DB. |
 
 Mods menu + console work without BLImGui on most packages. For in-game panels, install [BLImGui](https://github.com/juso40/blimgui) separately.
 
