@@ -464,6 +464,7 @@ def do_drop_backpack(pc: Any = None, player_index: int | None = None) -> str:
     max_passes = 80 if before < 0 else min(400, max(int(before) + 8, 8))
     # spawnpattern_default_loot is a one-item chest spit. Keep calling until
     # the backpack is empty instead of returning after the first success.
+    shape_pull_at = 0.0
     for _pass in range(max_passes):
         occupied = _backpack_occupied_count(pc)
         if occupied == 0:
@@ -492,10 +493,20 @@ def do_drop_backpack(pc: Any = None, player_index: int | None = None) -> str:
             )
 
             if landing_armed():
-                # after_dump_spawn caps at 2/call — backpack SpillOut needs a bigger backlog pull.
+                # Never fresh=True every SpillOut pass — that find_all storm AVs
+                # (0xffffffffffffffff) when Drop backpack → shape dumps a full pack.
+                import time as _time
+
+                now = _time.monotonic()
                 arm_overhead_catch(12.0)
                 arm_deferred_catch(12.0)
-                pull_new_pickups_into_shape(limit=6 if (_pass % 2 == 0) else 3, fresh=True)
+                fresh = now - shape_pull_at >= 0.55
+                if fresh:
+                    shape_pull_at = now
+                pull_new_pickups_into_shape(
+                    limit=2 if fresh else 1,
+                    fresh=fresh,
+                )
         except Exception:
             pass
         now = _backpack_occupied_count(pc)

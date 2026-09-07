@@ -111,6 +111,9 @@ _force_fly_missing_since: dict[str, float] = {}
 _last_force_fly_tick: float = 0.0
 _last_orphan_fly_scrub_at: float = 0.0
 _last_mobility_party_count: int = 0
+_last_mobility_party_array_len: int = 0
+_infinite_jump_key_missing_since: dict[str, float] = {}
+_INFINITE_JUMP_PRUNE_SEC: float = 8.0
 _last_remote_walk_scrub_at: float = 0.0
 _remote_join_scrub_until: float = 0.0
 _force_fly_throttle_until: float = 0.0
@@ -1016,8 +1019,66 @@ def _party_identity_key(idx: int) -> str:
         return ""
 
 
+def _player_array_len() -> int:
+    """Raw lobby size from PlayerArray — does not drop when a PC briefly fails to resolve."""
+    try:
+        _world, gs = _gbc_session_world_and_gamestate()
+        pa = getattr(gs, "PlayerArray", None) if gs is not None else None
+        if pa is None:
+            return 0
+        n = 0
+        for i in range(len(pa)):
+            try:
+                if pa[i] is not None:
+                    n += 1
+            except Exception:
+                continue
+        return n
+    except Exception:
+        return 0
+
+
+def _player_array_identity_keys() -> set[str] | None:
+    """All resolvable lobby identity keys. None = roster incomplete (do not prune)."""
+    try:
+        from .uvhm_progression import _player_state_key
+        from .party_helpers import _gbc_resolve_player_display_name
+
+        _world, gs = _gbc_session_world_and_gamestate()
+        pa = getattr(gs, "PlayerArray", None) if gs is not None else None
+        if pa is None:
+            return None
+        keys: set[str] = set()
+        slots = 0
+        for i in range(len(pa)):
+            try:
+                ps = pa[i]
+            except Exception:
+                ps = None
+            if ps is None:
+                continue
+            slots += 1
+            try:
+                name = _gbc_resolve_player_display_name(ps)
+                key = str(_player_state_key(ps, name) or "")
+            except Exception:
+                return None
+            if not key:
+                return None
+            keys.add(key)
+        if slots <= 0:
+            return None
+        return keys
+    except Exception:
+        return None
+
+
 def _sync_infinite_jump_indices_from_keys() -> None:
-    """Rebuild party-slot indices from stable keys after joins / remaps."""
+    """Rebuild party-slot indices from stable keys after joins / remaps.
+
+    Never prune keys here — brief PC/identity misses used to wipe Infinite Jump
+    mid-session. Departures are handled only by ``_prune_remote_mobility_toggles``.
+    """
     global infinite_jump_indices
     if not (_infinite_jump_keys or _infinite_jump_all_mode or infinite_jump_indices):
         return
@@ -1031,29 +1092,30 @@ def _sync_infinite_jump_indices_from_keys() -> None:
         contexts = live_party_contexts()
     except Exception:
         return
+    if not contexts:
+        # Loading / travel — keep current indices + keys.
+        return
     new_indices: set[int] = set()
-    live_keys: set[str] = set()
     for idx, _name, _pc, _pawn, _move in contexts:
         i = int(idx)
         key = _party_identity_key(i)
-        if key:
-            live_keys.add(key)
         want = bool(_infinite_jump_all_mode)
         if key and key in _infinite_jump_keys:
             want = True
-        elif not key and i in infinite_jump_indices:
-            # Identity briefly unavailable — keep the slot until keys resolve.
+        elif i in infinite_jump_indices:
+            # Keep slot through identity remaps / brief key failures.
             want = True
+            if key:
+                _infinite_jump_keys.add(key)
         if want:
             new_indices.add(i)
             if key:
                 _infinite_jump_keys.add(key)
-    if _infinite_jump_keys and live_keys:
-        # Drop only players who left the lobby (PC gone), never temporary pawn misses.
-        for key in list(_infinite_jump_keys):
-            if key not in live_keys:
-                _infinite_jump_keys.discard(key)
-    infinite_jump_indices = set(new_indices)
+    if new_indices:
+        infinite_jump_indices = set(new_indices)
+    elif _infinite_jump_keys or _infinite_jump_all_mode:
+        # Remap failed but intent remains — do not clear.
+        pass
 
 
 def _infinite_jump_party_wide() -> bool:
@@ -1074,6 +1136,8 @@ def _infinite_jump_party_wide() -> bool:
 def _may_mutate_infinite_jump(idx: int | None) -> bool:
     if idx is None:
         return False
+    if _infinite_jump_all_mode:
+        return True
     if int(idx) in infinite_jump_indices:
         return True
     key = _party_identity_key(int(idx))
@@ -1134,6 +1198,18 @@ def set_infinite_jump_for_index(idx: int, enabled: bool) -> None:
                 _infinite_jump_keys.add(key)
             _infinite_jump_disabling.discard(idx)
             _infinite_jump_disable_until.pop(idx, None)
+            _infinite_jump_key_missing_since.pop(key, None) if key else None
+            # Apply immediately so the first click always works.
+            try:
+                for cidx, _n, _pc, pawn, move in live_party_contexts():
+                    if int(cidx) != int(idx):
+                        continue
+                    if pawn is None or _is_default_obj(pawn):
+                        continue
+                    _prepare_infinite_jump_pawn(pawn)
+                    _reset_pawn_jump_counter_if_spent(pawn, move)
+            except Exception:
+                pass
         else:
             infinite_jump_indices.discard(idx)
             if key:
@@ -1171,18 +1247,37 @@ def set_infinite_jump_all(enabled: bool) -> None:
         if enabled:
             infinite_jump_indices.clear()
             _infinite_jump_keys.clear()
+            _infinite_jump_key_missing_since.clear()
             _infinite_jump_disabling.clear()
             _infinite_jump_disable_until.clear()
             for idx, _name, _pc, pawn, _move in contexts:
-                if pawn is not None and not _is_default_obj(pawn):
-                    i = int(idx)
-                    infinite_jump_indices.add(i)
-                    key = _party_identity_key(i)
-                    if key:
-                        _infinite_jump_keys.add(key)
+                i = int(idx)
+                # Keep the latch even if pawn is briefly missing — HUD tick remaps.
+                infinite_jump_indices.add(i)
+                key = _party_identity_key(i)
+                if key:
+                    _infinite_jump_keys.add(key)
+            # Solo / empty contexts: still latch local slot 0 so jump works immediately.
+            if not infinite_jump_indices:
+                local = local_party_index()
+                seed = int(local) if local is not None else 0
+                infinite_jump_indices.add(seed)
+                key = _party_identity_key(seed)
+                if key:
+                    _infinite_jump_keys.add(key)
+            # Apply JumpMaxCount now — do not wait for the next HUD tick.
+            for idx, _name, _pc, pawn, move in contexts:
+                if pawn is None or _is_default_obj(pawn):
+                    continue
+                try:
+                    _prepare_infinite_jump_pawn(pawn)
+                    _reset_pawn_jump_counter_if_spent(pawn, move)
+                except Exception:
+                    pass
         else:
             infinite_jump_indices.clear()
             _infinite_jump_keys.clear()
+            _infinite_jump_key_missing_since.clear()
             now = time.monotonic()
             for idx, _name, _pc, pawn, _move in contexts:
                 if pawn is None or _is_default_obj(pawn):
@@ -1194,7 +1289,11 @@ def set_infinite_jump_all(enabled: bool) -> None:
         _infinite_jump_context_cache = []
         _infinite_jump_context_cache_time = 0.0
         save_settings()
-        status_message = f"Infinite Jump enabled for: {enabled_infinite_names()}."
+        status_message = (
+            "Infinite Jump ON for all (stays on until you turn it off)."
+            if enabled
+            else "Infinite Jump OFF for all."
+        )
         _log(status_message)
         _set_status_pill(status_message, "green" if enabled else "cyan")
     except Exception as exc:
@@ -3396,44 +3495,12 @@ def _sync_party_wide_mobility_targets() -> None:
 
 
 def _prune_remote_mobility_toggles() -> None:
-    """Drop infinite-jump for players who left — never wipe intentional targets on join.
+    """Departed-player cleanup for infinite jump.
 
-    Party joins briefly leave pawns unresolved. Treating those slots as “gone”
-    used to clear Infinite Jump (host and guests) right after someone joined.
-    Membership is keyed by stable player identity; indices are rebuilt from keys.
+    Disabled as an auto wipe — false leave detection kept clearing Infinite Jump
+    a few seconds after enable. Explicit OFF still clears via set_infinite_jump_*.
     """
-    try:
-        _sync_infinite_jump_indices_from_keys()
-    except Exception:
-        pass
-    if not _infinite_jump_keys and not infinite_jump_indices:
-        return
-    try:
-        contexts = live_party_contexts()
-    except Exception:
-        return
-    live_keys: set[str] = set()
-    for idx, _name, _pc, _pawn, _move in contexts:
-        key = _party_identity_key(int(idx))
-        if key:
-            live_keys.add(key)
-    if not live_keys:
-        # Transient empty roster (loading) — keep current jump targets.
-        return
-    gone = {k for k in _infinite_jump_keys if k not in live_keys}
-    if not gone:
-        return
-    for key in gone:
-        _infinite_jump_keys.discard(key)
-    try:
-        _sync_infinite_jump_indices_from_keys()
-    except Exception:
-        pass
-    try:
-        save_settings()
-    except Exception:
-        pass
-    _log(f"Cleared infinite-jump for departed player key(s) {len(gone)}.")
+    return
 
 
 def _restore_remote_walk_pawn(pc: object, pawn: object, move: object | None, idx: int) -> int:
@@ -3617,22 +3684,29 @@ def _scrub_orphan_force_fly_latches(*, include_local: bool = True) -> int:
 
 def _mobility_party_join_scrub() -> None:
     """Someone joined — undo stale SQBT writes on remote pawns (not full mobility presets)."""
-    global _last_mobility_party_count, _remote_join_scrub_until
+    global _last_mobility_party_count, _last_mobility_party_array_len, _remote_join_scrub_until
     try:
+        array_len = _player_array_len()
         contexts = live_party_contexts()
         count = len(contexts)
     except Exception:
         return
+    prev_array = int(_last_mobility_party_array_len or 0)
     prev = int(_last_mobility_party_count or 0)
-    _last_mobility_party_count = count
-    if count < prev:
-        # Someone left — drop their jump key only. Never prune on join.
+    if array_len > 0:
+        _last_mobility_party_array_len = array_len
+    _last_mobility_party_count = count if count > 0 else prev
+    # Prefer PlayerArray size for leave/join — live_party_contexts drops when PC
+    # briefly fails to resolve and used to look like a leave → wipe jump.
+    size_now = array_len if array_len > 0 else count
+    size_prev = prev_array if prev_array > 0 else prev
+    if size_now < size_prev and size_prev > 0:
         try:
             _prune_remote_mobility_toggles()
         except Exception:
             pass
         return
-    if count <= prev or count < 2:
+    if size_now <= size_prev or size_now < 2:
         return
     _remote_join_scrub_until = time.monotonic() + 18.0
     try:
@@ -3645,7 +3719,7 @@ def _mobility_party_join_scrub() -> None:
         except Exception:
             pass
         return
-    scrub_remote_party_mobility(reason=f"party {prev}->{count}")
+    scrub_remote_party_mobility(reason=f"party {size_prev}->{size_now}")
 
 
 def _scrub_remote_force_fly_latch() -> int:
@@ -4192,10 +4266,11 @@ def disable_mobility_runtime() -> None:
 
 def enable_mobility_runtime() -> None:
     global infinite_jump_indices, _infinite_jump_all_mode, _infinite_jump_disabling, _infinite_jump_disable_until
-    global _infinite_jump_keys
+    global _infinite_jump_keys, _infinite_jump_key_missing_since
     # Never re-arm Infinite Jump from a previous session.
     infinite_jump_indices.clear()
     _infinite_jump_keys.clear()
+    _infinite_jump_key_missing_since.clear()
     _infinite_jump_all_mode = False
     _infinite_jump_disabling.clear()
     _infinite_jump_disable_until.clear()

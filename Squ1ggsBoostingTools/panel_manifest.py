@@ -97,6 +97,14 @@ _SHAPE_3D_OPTIONS: list[str] = [
     "claptrap",
     "pyramid_3d",
     "globe",
+    "diamond_3d",
+    "blocks",
+    "cube",
+    "torus",
+    "crown",
+    "ufo",
+    "rocket",
+    "gear",
 ]
 _SHAPE_SELECT_OPTIONS: list[str] = [*_SHAPE_3D_OPTIONS, *_SHAPE_2D_OPTIONS]
 _SHAPE_OPTION_LABELS: dict[str, str] = {
@@ -112,6 +120,14 @@ _SHAPE_OPTION_LABELS: dict[str, str] = {
     "type_piles": "type piles",
     "unique_piles": "unique item piles",
     "rarity_lanes": "rarity lanes",
+    "diamond_3d": "diamond (3D)",
+    "blocks": "blocks",
+    "cube": "cube",
+    "torus": "torus",
+    "crown": "crown",
+    "ufo": "UFO",
+    "rocket": "rocket",
+    "gear": "gear",
     "forbidden_one": "the forbidden one",
     "forbidden_pair": "the forbidden pair",
 }
@@ -184,10 +200,10 @@ TAB_SHORT_LABELS: tuple[str, ...] = (
 
 # Recent release highlights on Home (collapsible — not the dev changelog).
 HOME_WHATS_NEW: tuple[str, ...] = (
-    "Weapon / loot text: spell up to 3 lines with shinies or a loot pool — on the Loot tab (and Loot Shapes). Default height 640.",
-    "Vault of the Damned / Complete ALL non-UVHM covers the full Cowbell set again (kickdowns, achievements, spooky stories).",
-    "Infinite jump stays on through joins; glued @Ug serials work without spaces; Setup asks for your BL4 folder if not found.",
-    "EXE shows waiting (no tool tabs) until Online in-character. Toggles tab click-to-toggle; coloured section auras.",
+    "New 3D shapes: diamond, blocks (3+1), cube, torus, crown, UFO, rocket, gear.",
+    "Loot text: default height 670 + faster slow writing.",
+    "Co-op shapes: guests see silhouette + settle again; prior shapes stay when you spawn another.",
+    "Slow drop leftovers, infinite jump latch, open-rewards default No, and a few UI/spill fixes.",
 )
 
 _AGGRO_MODES = ["attack_me", "attack_party", "free_for_all", "nearest_other", "passive"]
@@ -252,9 +268,11 @@ def _delivery_recipient_fields() -> list[dict[str, Any]]:
             "label": "Open rewards on send",
             "type": "select",
             "options": ["yes", "no"],
-            "default": "yes",
+            "default": "no",
             "tooltip": (
-                "Default Yes for Serials — opens this delivery's mail one package at a time. "
+                "Default No — leave mail in Reward Center so you open it yourself. "
+                "Opening hundreds of packages (especially GZO / bulk serials) can make "
+                "the backpack look empty until you bank/mule under ~250–300 items. "
                 + _OPEN_REWARDS_LARGE_WARNING
             ),
         },
@@ -1217,7 +1235,7 @@ def _loot_text_section() -> dict[str, Any]:
                         "placeholder": "itempool_ar_05_legendary",
                     },
                     _num_field("distance", "Distance", 640, min_v=200, max_v=2000, step=20),
-                    _num_field("height", "Height", 640, min_v=40, max_v=800, step=10),
+                    _num_field("height", "Height", 670, min_v=40, max_v=800, step=10),
                     _num_field("spacing", "Spacing", 56, min_v=28, max_v=120, step=2),
                     _num_field("scale", "Scale", 1.0, min_v=0.35, max_v=2.5, step=0.05),
                     _settle_select_field(default="slow"),
@@ -1516,8 +1534,20 @@ def get_panel_manifest() -> dict[str, Any]:
                                 "Backpack / bank sizes",
                                 "inventory_set_sizes",
                                 fields=[
-                                    {"key": "backpack_size", "type": "number", "default": 500},
-                                    {"key": "bank_size", "type": "number", "default": 500},
+                                    {
+                                        "key": "backpack_size",
+                                        "label": "Backpack size",
+                                        "type": "text",
+                                        "default": "500",
+                                        "placeholder": "e.g. 500",
+                                    },
+                                    {
+                                        "key": "bank_size",
+                                        "label": "Bank size",
+                                        "type": "text",
+                                        "default": "500",
+                                        "placeholder": "e.g. 500",
+                                    },
                                 ],
                             ),
                         ],

@@ -34,6 +34,14 @@ SHAPE_3D_NAMES: tuple[str, ...] = (
     "claptrap",
     "pyramid_3d",
     "globe",
+    "diamond_3d",
+    "blocks",
+    "cube",
+    "torus",
+    "crown",
+    "ufo",
+    "rocket",
+    "gear",
     "forbidden_one",
     "forbidden_pair",
 )
@@ -89,6 +97,14 @@ SHAPE_LABELS: dict[str, str] = {
     "type_piles": "type piles",
     "unique_piles": "unique item piles",
     "rarity_lanes": "rarity lanes",
+    "diamond_3d": "diamond (3D)",
+    "blocks": "blocks",
+    "cube": "cube",
+    "torus": "torus",
+    "crown": "crown",
+    "ufo": "UFO",
+    "rocket": "rocket",
+    "gear": "gear",
     "forbidden_one": "the forbidden one",
     "forbidden_pair": "the forbidden pair",
 }
@@ -163,6 +179,8 @@ _join_reapply_pending = False
 _join_reapply_at = 0.0
 _coop_followup_sync_at: float = 0.0
 _coop_followup_waves: int = 0
+# Lobby house crash guard: do not guest-push until float settle is quiet.
+_coop_guest_sync_after: float = 0.0
 _float_jobs: list[dict[str, Any]] = []
 # Slow settle: next fall start time (rain as items are caught — not after full dump).
 _slow_rain_next_at: float = 0.0
@@ -405,6 +423,30 @@ def _coop_incremental_sync_ok() -> bool:
     Host pins only while dumping; guests get a spread sync after settle / join quiet.
     """
     return False
+
+
+def _coop_large_held_shape() -> bool:
+    """House/car-sized held silhouettes — mass guest teleports AV in lobby."""
+    try:
+        return held_pin_count() > 80
+    except Exception:
+        return False
+
+
+def _coop_guest_sync_ready(now: float | None = None) -> bool:
+    """True when lobby guest push is safe.
+
+    Mid-dump ForceNetUpdate AVs. Float jobs may still be raining — we only push
+    rows already pinned onto slots, so guests see the silhouette fill in.
+    """
+    t = time.monotonic() if now is None else float(now)
+    if _mid_shape_dump():
+        return False
+    if t < float(_coop_guest_sync_after or 0.0):
+        return False
+    if _in_join_quiet(t):
+        return False
+    return True
 
 
 def _append_obj_names(parts: list[str], obj: Any, *, depth: int = 0, seen: set[int] | None = None) -> None:
@@ -864,6 +906,8 @@ def _tick_coop_followup_sync(now: float) -> None:
         return
     if _land_active and not _landing_settle_done and not _coop_incremental_sync_ok():
         return
+    if not _coop_guest_sync_ready(now):
+        return
     if not _want_coop_replicate() or not _pinned_slots:
         _coop_followup_waves = 0
         return
@@ -872,7 +916,7 @@ def _tick_coop_followup_sync(now: float) -> None:
         _coop_followup_waves = 0
         return
     _coop_followup_waves -= 1
-    _coop_followup_sync_at = now + 4.0
+    _coop_followup_sync_at = now + (5.0 if _coop_large_held_shape() else 3.5)
     try:
         _guest_sync_cursor = 0
         _coop_pins_synced = 0
@@ -1221,6 +1265,25 @@ def _normalize_shape_name(shape: str) -> str:
         "psycho_mask": "psycho",
         "mask_3d": "psycho",
         "3d_psycho": "psycho",
+        "3d_diamond": "diamond_3d",
+        "octahedron": "diamond_3d",
+        "gem": "diamond_3d",
+        "diamond_gem": "diamond_3d",
+        "minecraft": "blocks",
+        "minecraft_blocks": "blocks",
+        "voxel_blocks": "blocks",
+        "dirt_blocks": "blocks",
+        "block_stack": "blocks",
+        "box": "cube",
+        "donut": "torus",
+        "doughnut": "torus",
+        "ring_torus": "torus",
+        "tiara": "crown",
+        "flying_saucer": "ufo",
+        "saucer": "ufo",
+        "missile": "rocket",
+        "cog": "gear",
+        "cogwheel": "gear",
         "the_forbidden_one": "forbidden_one",
         "the_forbidden_pair": "forbidden_pair",
     }
@@ -1247,7 +1310,7 @@ _SHAPE_TEXT_MAX = 12  # per line
 _SHAPE_TEXT_MAX_ROWS = 3
 _shape_text: str = ""
 _text_distance: float = 640.0
-_text_height: float = 640.0
+_text_height: float = 670.0
 # Spacing ≈ cell gap — guns + nameplates need room or "360" becomes an orange wall.
 _text_spacing: float = 56.0
 _text_scale: float = 1.0
@@ -1616,6 +1679,14 @@ def shape_offsets(
         "claptrap": lambda: _offsets_claptrap(n, radius),
         "pyramid_3d": lambda: _offsets_pyramid_3d(n, radius),
         "globe": lambda: _offsets_globe(n, radius, spacing),
+        "diamond_3d": lambda: _offsets_diamond_3d(n, radius),
+        "blocks": lambda: _offsets_blocks(n, radius),
+        "cube": lambda: _offsets_cube(n, radius),
+        "torus": lambda: _offsets_torus(n, radius),
+        "crown": lambda: _offsets_crown(n, radius),
+        "ufo": lambda: _offsets_ufo(n, radius),
+        "rocket": lambda: _offsets_rocket(n, radius),
+        "gear": lambda: _offsets_gear(n, radius),
         "forbidden_one": lambda: _offsets_forbidden_one(n, radius),
         "forbidden_pair": lambda: _offsets_forbidden_pair(n, radius),
     }
@@ -1624,7 +1695,18 @@ def shape_offsets(
         raw = _offsets_rings(n, radius, spacing, per_ring)
     else:
         raw = maker()
-    if shape in ("globe", "pyramid", "pyramid_3d", "dome"):
+    if shape in (
+        "globe",
+        "pyramid",
+        "pyramid_3d",
+        "dome",
+        "diamond_3d",
+        "blocks",
+        "cube",
+        "torus",
+        "ufo",
+        "rocket",
+    ):
         raw = _limit_shape_extent(raw)
     clearance = 180.0
     if shape in ("firehawk", "psycho", "vault"):
@@ -2940,6 +3022,365 @@ def _offsets_pyramid_3d(n: int, radius: float) -> list[tuple[float, float, float
             i += 1
         rows.extend(fill_pts[:n_fill])
     return _commit_oriented(_lift_oriented(rows, pad=36.0), n)
+
+
+def _box_wire_oriented(
+    cx: float,
+    cy: float,
+    cz: float,
+    hx: float,
+    hy: float,
+    hz: float,
+    n: int,
+) -> list[tuple[tuple[float, float, float], tuple[float, float, float]]]:
+    """Axis-aligned box: 12 edges first, then face stripes if budget remains."""
+    n = max(0, int(n))
+    if n <= 0:
+        return []
+    corners = [
+        (cx - hx, cy - hy, cz - hz),
+        (cx + hx, cy - hy, cz - hz),
+        (cx + hx, cy + hy, cz - hz),
+        (cx - hx, cy + hy, cz - hz),
+        (cx - hx, cy - hy, cz + hz),
+        (cx + hx, cy - hy, cz + hz),
+        (cx + hx, cy + hy, cz + hz),
+        (cx - hx, cy + hy, cz + hz),
+    ]
+    edges = (
+        (0, 1),
+        (1, 2),
+        (2, 3),
+        (3, 0),
+        (4, 5),
+        (5, 6),
+        (6, 7),
+        (7, 4),
+        (0, 4),
+        (1, 5),
+        (2, 6),
+        (3, 7),
+    )
+    n_edge = min(n, max(12, int(round(n * 0.62))))
+    edge_counts = _split_counts(n_edge, len(edges))
+    rows: list[tuple[tuple[float, float, float], tuple[float, float, float]]] = []
+    for count, (a, b) in zip(edge_counts, edges):
+        if count:
+            rows.extend(_oriented_polyline([corners[a], corners[b]], count))
+    remain = max(0, n - len(rows))
+    if remain <= 0:
+        return rows[:n]
+    # Light face fill so short dumps still read as solid cubes.
+    faces = (
+        (corners[0], corners[1], corners[2], corners[3]),  # bottom
+        (corners[4], corners[5], corners[6], corners[7]),  # top
+        (corners[0], corners[1], corners[5], corners[4]),
+        (corners[1], corners[2], corners[6], corners[5]),
+        (corners[2], corners[3], corners[7], corners[6]),
+        (corners[3], corners[0], corners[4], corners[7]),
+    )
+    face_counts = _split_counts(remain, len(faces))
+    for count, face in zip(face_counts, faces):
+        if count <= 0:
+            continue
+        loop = list(face) + [face[0]]
+        rows.extend(_oriented_polyline(loop, count))
+    return rows[:n]
+
+
+def _offsets_diamond_3d(n: int, radius: float) -> list[tuple[float, float, float]]:
+    """Standing octahedron / gem: apex, nadir, equatorial ring, then face stripes."""
+    n = max(0, int(n))
+    if n <= 0:
+        return []
+    s = min(max(70.0, float(radius) * 0.55), 160.0)
+    h = min(max(120.0, float(radius) * 1.05), 280.0)
+    mid = h * 0.48
+    apex = (0.0, 0.0, h)
+    nadir = (0.0, 0.0, 0.0)
+    eq = [(s, 0.0, mid), (0.0, s, mid), (-s, 0.0, mid), (0.0, -s, mid)]
+    if n == 1:
+        return _commit_oriented(_lift_oriented([(apex, (0.0, 0.0, 1.0))]), 1)
+    n_eq = max(12, int(round(n * 0.28)))
+    n_rise = max(12, int(round(n * 0.36)))
+    n_fill = max(0, n - n_eq - n_rise)
+    rows = _oriented_polyline(eq + [eq[0]], n_eq)
+    rise_budget = _split_counts(n_rise, 8)
+    for i, corner in enumerate(eq):
+        up_n = rise_budget[i] if i < len(rise_budget) else 0
+        dn_n = rise_budget[i + 4] if i + 4 < len(rise_budget) else 0
+        if up_n:
+            rows.extend(_oriented_polyline([corner, apex], up_n))
+        if dn_n:
+            rows.extend(_oriented_polyline([corner, nadir], dn_n))
+    if n_fill:
+        n_stripes = min(5, max(2, n_fill // 16))
+        per = max(1, n_fill // (n_stripes * 8))
+        face_rows: list[list[tuple[tuple[float, float, float], tuple[float, float, float]]]] = [
+            [] for _ in range(8)
+        ]
+        for i in range(n_stripes):
+            t = (i + 1) / (n_stripes + 1)
+            for fi, corner in enumerate(eq):
+                nxt = eq[(fi + 1) % 4]
+                a = _lerp3(corner, apex, t)
+                b = _lerp3(nxt, apex, t)
+                face_rows[fi].extend(_oriented_polyline([a, b], per))
+                c = _lerp3(corner, nadir, t)
+                d = _lerp3(nxt, nadir, t)
+                face_rows[fi + 4].extend(_oriented_polyline([c, d], per))
+        fill_pts: list[tuple[tuple[float, float, float], tuple[float, float, float]]] = []
+        i = 0
+        while len(fill_pts) < n_fill:
+            progressed = False
+            for fr in face_rows:
+                if i < len(fr):
+                    fill_pts.append(fr[i])
+                    progressed = True
+                    if len(fill_pts) >= n_fill:
+                        break
+            if not progressed:
+                break
+            i += 1
+        rows.extend(fill_pts[:n_fill])
+    return _commit_oriented(_lift_oriented(rows, pad=28.0), n)
+
+
+def _offsets_blocks(n: int, radius: float) -> list[tuple[float, float, float]]:
+    """Minecraft-ish: three cubes on the bottom row, one cube centered on top."""
+    n = max(0, int(n))
+    if n <= 0:
+        return []
+    s = min(max(42.0, float(radius) * 0.28), 78.0)
+    gap = s * 2.12
+    centers = (
+        (0.0, -gap, s),
+        (0.0, 0.0, s),
+        (0.0, gap, s),
+        (0.0, 0.0, s * 3.0),
+    )
+    # Bottom three get a bit more budget so short dumps still read as the row.
+    weights = (0.26, 0.26, 0.26, 0.22)
+    counts = [max(4, int(round(n * w))) for w in weights]
+    while sum(counts) > n:
+        for i in range(4):
+            if sum(counts) <= n:
+                break
+            if counts[i] > 4:
+                counts[i] -= 1
+    while sum(counts) < n:
+        counts[sum(counts) % 4] += 1
+    rows: list[tuple[tuple[float, float, float], tuple[float, float, float]]] = []
+    for (cx, cy, cz), count in zip(centers, counts):
+        rows.extend(_box_wire_oriented(cx, cy, cz, s, s, s, count))
+    return _commit_oriented(_lift_oriented(rows[:n], pad=18.0), n)
+
+
+def _offsets_cube(n: int, radius: float) -> list[tuple[float, float, float]]:
+    """Single standing cube silhouette."""
+    n = max(0, int(n))
+    if n <= 0:
+        return []
+    s = min(max(70.0, float(radius) * 0.52), 150.0)
+    rows = _box_wire_oriented(0.0, 0.0, s, s, s, s, n)
+    return _commit_oriented(_lift_oriented(rows, pad=20.0), n)
+
+
+def _offsets_torus(n: int, radius: float) -> list[tuple[float, float, float]]:
+    """Donut / torus lying flat: major ring + tube rings."""
+    n = max(0, int(n))
+    if n <= 0:
+        return []
+    R = min(max(90.0, float(radius) * 0.72), 200.0)
+    r = min(max(28.0, R * 0.32), 70.0)
+    if n == 1:
+        return _commit_oriented(_lift_oriented([((R, 0.0, r), (0.0, 1.0, 0.0))]), 1)
+    n_major = max(16, int(round(n * 0.40)))
+    n_tubes = max(0, n - n_major)
+    major = _ring_3d(0.0, 0.0, r, R, 0.0, 0.0, 0.0, R, 0.0, n_major)
+    rows = _oriented_from_pts(major, (0.0, 1.0, 0.0))
+    if n_tubes:
+        n_sections = min(12, max(4, n_tubes // 8))
+        per = max(1, n_tubes // n_sections)
+        tube_rows: list[list[tuple[tuple[float, float, float], tuple[float, float, float]]]] = [
+            [] for _ in range(n_sections)
+        ]
+        for si in range(n_sections):
+            ang = (2.0 * math.pi * si) / n_sections
+            ca, sa = math.cos(ang), math.sin(ang)
+            cx, cy = R * ca, R * sa
+            # Tube circle in the plane spanned by radial + up.
+            tube = _ring_3d(cx, cy, r, r * ca, r * sa, 0.0, 0.0, 0.0, r, per)
+            tube_rows[si] = _oriented_from_pts(tube, (-sa, ca, 0.0))
+        fill: list[tuple[tuple[float, float, float], tuple[float, float, float]]] = []
+        i = 0
+        while len(fill) < n_tubes:
+            progressed = False
+            for tr in tube_rows:
+                if i < len(tr):
+                    fill.append(tr[i])
+                    progressed = True
+                    if len(fill) >= n_tubes:
+                        break
+            if not progressed:
+                break
+            i += 1
+        rows.extend(fill[:n_tubes])
+    return _commit_oriented(_lift_oriented(rows, pad=22.0), n)
+
+
+def _offsets_crown(n: int, radius: float) -> list[tuple[float, float, float]]:
+    """Band + pointed spikes — reads as a crown even on short shiny dumps."""
+    n = max(0, int(n))
+    if n <= 0:
+        return []
+    R = min(max(80.0, float(radius) * 0.62), 170.0)
+    band_h = max(28.0, R * 0.28)
+    spike_h = max(55.0, R * 0.70)
+    n_spikes = 5
+    n_band = max(16, int(round(n * 0.45)))
+    n_rise = max(0, n - n_band)
+    band_lo = _ring_3d(0.0, 0.0, 0.0, R, 0.0, 0.0, 0.0, R, 0.0, max(8, n_band // 2))
+    band_hi = _ring_3d(0.0, 0.0, band_h, R, 0.0, 0.0, 0.0, R, 0.0, n_band - len(band_lo))
+    rows = _oriented_from_pts(band_lo + band_hi, (0.0, 1.0, 0.0))
+    if n_rise:
+        spike_counts = _split_counts(n_rise, n_spikes)
+        for i, count in enumerate(spike_counts):
+            if not count:
+                continue
+            ang = (2.0 * math.pi * i) / n_spikes - math.pi / 2.0
+            ca, sa = math.cos(ang), math.sin(ang)
+            base_l = (R * math.cos(ang - 0.22), R * math.sin(ang - 0.22), band_h)
+            base_r = (R * math.cos(ang + 0.22), R * math.sin(ang + 0.22), band_h)
+            tip = (R * 0.92 * ca, R * 0.92 * sa, band_h + spike_h)
+            left_n = max(1, count // 2)
+            right_n = max(0, count - left_n)
+            rows.extend(_oriented_polyline([base_l, tip], left_n))
+            if right_n:
+                rows.extend(_oriented_polyline([base_r, tip], right_n))
+    return _commit_oriented(_lift_oriented(rows, pad=24.0), n)
+
+
+def _offsets_ufo(n: int, radius: float) -> list[tuple[float, float, float]]:
+    """Flying saucer: disc rim + cabin dome."""
+    n = max(0, int(n))
+    if n <= 0:
+        return []
+    R = min(max(100.0, float(radius) * 0.78), 210.0)
+    disc_z = max(36.0, R * 0.22)
+    dome_r = max(36.0, R * 0.34)
+    n_rim = max(16, int(round(n * 0.38)))
+    n_inner = max(8, int(round(n * 0.18)))
+    n_dome = max(0, n - n_rim - n_inner)
+    rim = _ring_3d(0.0, 0.0, disc_z, R, 0.0, 0.0, 0.0, R, 0.0, n_rim)
+    inner = _ring_3d(0.0, 0.0, disc_z + 8.0, R * 0.55, 0.0, 0.0, 0.0, R * 0.55, 0.0, n_inner)
+    rows = _oriented_from_pts(rim + inner, (0.0, 1.0, 0.0))
+    if n_dome:
+        dome = _sphere_shell(0.0, 0.0, disc_z + dome_r * 0.15, dome_r, n_dome, front_bias=0.15)
+        # Keep only the upper cabin (z above disc).
+        dome = [p for p in dome if p[2] >= disc_z - 4.0]
+        if len(dome) < n_dome:
+            dome = _take_n_points(dome or [(0.0, 0.0, disc_z + dome_r)], n_dome)
+        rows.extend(_oriented_from_pts(dome[:n_dome], (1.0, 0.0, 0.0)))
+    return _commit_oriented(_lift_oriented(rows, pad=26.0), n)
+
+
+def _offsets_rocket(n: int, radius: float) -> list[tuple[float, float, float]]:
+    """Standing rocket: body rings, nose cone, base fins."""
+    n = max(0, int(n))
+    if n <= 0:
+        return []
+    h = min(max(160.0, float(radius) * 1.15), 320.0)
+    body_r = min(max(34.0, float(radius) * 0.22), 70.0)
+    nose_h = h * 0.28
+    body_h = h * 0.62
+    n_body = max(16, int(round(n * 0.42)))
+    n_nose = max(8, int(round(n * 0.22)))
+    n_fins = max(0, n - n_body - n_nose)
+    # Horizontal body rings stacked up the fuselage.
+    n_rings = min(8, max(3, n_body // 10))
+    ring_counts = _split_counts(n_body, n_rings)
+    rows: list[tuple[tuple[float, float, float], tuple[float, float, float]]] = []
+    for i, count in enumerate(ring_counts):
+        if not count:
+            continue
+        z = (i + 0.5) / n_rings * body_h
+        ring = _ring_3d(0.0, 0.0, z, body_r, 0.0, 0.0, 0.0, body_r, 0.0, count)
+        rows.extend(_oriented_from_pts(ring, (0.0, 1.0, 0.0)))
+    # Nose cone ribs to tip.
+    tip = (0.0, 0.0, body_h + nose_h)
+    nose_ribs = 6
+    nose_counts = _split_counts(n_nose, nose_ribs)
+    for i, count in enumerate(nose_counts):
+        if not count:
+            continue
+        ang = (2.0 * math.pi * i) / nose_ribs
+        base = (body_r * math.cos(ang), body_r * math.sin(ang), body_h)
+        rows.extend(_oriented_polyline([base, tip], count))
+    # Three fins at the base.
+    if n_fins:
+        fin_counts = _split_counts(n_fins, 3)
+        for i, count in enumerate(fin_counts):
+            if not count:
+                continue
+            ang = (2.0 * math.pi * i) / 3.0 + math.pi / 6.0
+            ca, sa = math.cos(ang), math.sin(ang)
+            root_lo = (body_r * ca, body_r * sa, 0.0)
+            root_hi = (body_r * ca, body_r * sa, body_h * 0.28)
+            tip_fin = (body_r * 2.2 * ca, body_r * 2.2 * sa, 0.0)
+            a_n = max(1, count // 2)
+            b_n = max(0, count - a_n)
+            rows.extend(_oriented_polyline([root_lo, tip_fin], a_n))
+            if b_n:
+                rows.extend(_oriented_polyline([root_hi, tip_fin], b_n))
+    return _commit_oriented(_lift_oriented(rows, pad=20.0), n)
+
+
+def _offsets_gear(n: int, radius: float) -> list[tuple[float, float, float]]:
+    """Standing cog: outer toothed ring, hub, and spokes."""
+    n = max(0, int(n))
+    if n <= 0:
+        return []
+    R = min(max(90.0, float(radius) * 0.70), 190.0)
+    r_hub = max(28.0, R * 0.28)
+    teeth = 10
+    tooth_out = R * 1.18
+    n_rim = max(20, int(round(n * 0.48)))
+    n_hub = max(8, int(round(n * 0.18)))
+    n_spokes = max(0, n - n_rim - n_hub)
+    # Build toothed outline in XY, lift to standing plane (forward/up).
+    tooth_pts: list[tuple[float, float, float]] = []
+    for i in range(teeth):
+        a0 = (2.0 * math.pi * i) / teeth
+        a1 = (2.0 * math.pi * (i + 0.35)) / teeth
+        a2 = (2.0 * math.pi * (i + 0.65)) / teeth
+        a3 = (2.0 * math.pi * (i + 1.0)) / teeth
+        tooth_pts.extend(
+            [
+                (0.0, R * math.cos(a0), R * math.sin(a0)),
+                (0.0, tooth_out * math.cos(a1), tooth_out * math.sin(a1)),
+                (0.0, tooth_out * math.cos(a2), tooth_out * math.sin(a2)),
+                (0.0, R * math.cos(a3), R * math.sin(a3)),
+            ]
+        )
+    rows = _oriented_polyline(tooth_pts + [tooth_pts[0]], n_rim)
+    hub = [
+        (0.0, r_hub * math.cos((2.0 * math.pi * i) / max(1, n_hub)), r_hub * math.sin((2.0 * math.pi * i) / max(1, n_hub)))
+        for i in range(max(1, n_hub))
+    ]
+    rows.extend(_oriented_from_pts(hub, (0.0, 0.0, 1.0)))
+    if n_spokes:
+        spoke_n = 6
+        spoke_counts = _split_counts(n_spokes, spoke_n)
+        for i, count in enumerate(spoke_counts):
+            if not count:
+                continue
+            ang = (2.0 * math.pi * i) / spoke_n
+            ca, sa = math.cos(ang), math.sin(ang)
+            inner = (0.0, r_hub * ca, r_hub * sa)
+            outer = (0.0, R * 0.92 * ca, R * 0.92 * sa)
+            rows.extend(_oriented_polyline([inner, outer], count))
+    return _commit_oriented(_lift_oriented(rows, pad=30.0), n)
 
 
 def _lift_above_ground(
@@ -4431,7 +4872,17 @@ def _tick_coop_hold_guest_heartbeat(now: float, *, join_quiet: bool = False) -> 
             return _repin_host_hold_pins(limit=16, refresh_cache=False)
         except Exception:
             return 0
-    gap = 1.8
+    # Before guest-sync window: host-only freeze (mid-dump / grace / join quiet).
+    if not _coop_guest_sync_ready(now):
+        gap = 1.2
+        if now - _guest_maint_last < gap:
+            return 0
+        _guest_maint_last = now
+        try:
+            return _repin_host_hold_pins(limit=8, refresh_cache=False)
+        except Exception:
+            return 0
+    gap = 1.8 if not _coop_large_held_shape() else 2.4
     if now - _guest_maint_last < gap:
         return 0
     _guest_maint_last = now
@@ -4442,10 +4893,11 @@ def _tick_coop_hold_guest_heartbeat(now: float, *, join_quiet: bool = False) -> 
             return _repin_host_hold_pins(limit=8, refresh_cache=False)
         except Exception:
             return 0
-    hold_rows = [row for row in _pinned_slots if row.get("hold")]
+    hold_rows = [row for row in _pinned_slots if row.get("hold") and not row.get("guest_ok")]
     if not hold_rows:
         return 0
-    budget = 8
+    # Paced fill for large car/house/text — never skip guests to "host only".
+    budget = 2 if _coop_large_held_shape() else 4
     synced = 0
     n = len(hold_rows)
     for _ in range(min(budget, n)):
@@ -4513,6 +4965,9 @@ def _tick_guest_sync(now: float) -> None:
     join_boost = now < float(_join_guest_boost_until or 0.0)
     if _land_active and not _landing_settle_done and not join_boost and not _coop_incremental_sync_ok():
         return
+    # Large lobby houses: never ForceNetUpdate/teleport-storm while flights settle.
+    if not join_boost and not _coop_guest_sync_ready(now):
+        return
     if not _guest_sync_active or not _want_coop_replicate() or not _pinned_slots:
         _guest_sync_active = False
         return
@@ -4522,18 +4977,23 @@ def _tick_guest_sync(now: float) -> None:
         pass
     held_shape = any(row.get("hold") for row in _pinned_slots)
     hold_n = held_pin_count()
-    gap = 0.12 if _landing_settle_done else (0.10 if (_mid_shape_dump() and held_shape) else 0.22)
+    # Paced guest pose push for all sizes — never skip large car/house/text
+    # (that left guests watching feet-spit while host saw the silhouette).
+    gap = 0.28 if _landing_settle_done else 0.35
     if hold_n > 220:
-        gap = max(gap, 0.42)
+        gap = max(gap, 0.48)
     elif hold_n > 140:
-        gap = max(gap, 0.28)
+        gap = max(gap, 0.38)
+    elif hold_n > 80:
+        gap = max(gap, 0.32)
     if now - _guest_sync_last < gap:
         return
     _guest_sync_last = now
-    if now - _guest_sync_refresh_at >= 2.5:
+    if now - _guest_sync_refresh_at >= 3.5:
         _guest_sync_refresh_at = now
         if not (_bulk_healthcheck_mode and _land_active and not _landing_settle_done):
             try:
+                # find_all during huge lobby guest sync hitch'd — skip for large.
                 if not (_held_coop_shape_active() and len(_pinned_slots) > 120):
                     _refresh_live_pickups()
             except Exception:
@@ -4547,6 +5007,7 @@ def _tick_guest_sync(now: float) -> None:
         if not _guest_sync_complete_announced:
             _guest_sync_complete_announced = True
             _log_dev(f"Co-op guest sync complete ({len(_pinned_slots)} pin(s)).")
+            _log("Co-op shape synced for party.")
         try:
             if not (_want_coop_replicate() and _pinned_slots and any(row.get("hold") for row in _pinned_slots)):
                 _relax_pinned_net_load()
@@ -4554,15 +5015,16 @@ def _tick_guest_sync(now: float) -> None:
             pass
         return
     synced = 0
-    budget = 48 if join_boost else (28 if (_mid_shape_dump() and held_shape) else (24 if held_shape else 16))
+    # Tiny budgets for large silhouettes — fills the car over seconds, not one AV tick.
+    budget = 10 if join_boost else (4 if held_shape else 6)
     if join_boost and hold_n > 120:
-        budget = min(budget, 14)
-    elif join_boost and hold_n > 80:
-        budget = min(budget, 22)
+        budget = min(budget, 4)
     elif held_shape and hold_n > 220:
-        budget = min(budget, 8)
+        budget = min(budget, 2)
     elif held_shape and hold_n > 140:
-        budget = min(budget, 12)
+        budget = min(budget, 3)
+    elif held_shape and hold_n > 80:
+        budget = min(budget, 3)
     if join_boost:
         max_fail = 128
     elif held_shape:
@@ -4703,6 +5165,7 @@ def _teleport_pickup(
     freeze: bool | None = None,
     replicate: bool = True,
     guest_push: bool = False,
+    force_net: bool = False,
 ) -> bool:
     """Freeze first, then K2_TeleportTo. Never physics-on (that flattened houses)."""
     if not _live(inv):
@@ -4710,9 +5173,12 @@ def _teleport_pickup(
     try:
         loc = _make_vector(x, y, z)
         rot = _make_rotator(float(pitch), math.degrees(yaw), float(roll))
-        # Mid-dump / large held shapes: host pose only — ForceNetUpdate here AVs
-        # (same dump hash as UECC …0629E6E3 / …86DAE8D1).
-        if _mid_shape_dump() or held_pin_count() > 80:
+        # Mid-dump default: host pose only — ForceNetUpdate storms AV here.
+        # force_net=True is for paced guest sync / sparse flight samples only.
+        if _mid_shape_dump() and not force_net:
+            replicate = False
+            guest_push = False
+        elif held_pin_count() > 80 and not force_net:
             replicate = False
             guest_push = False
         if replicate:
@@ -4784,7 +5250,8 @@ def _pin_pickup_to_slot(
         coop = bool(_want_coop_replicate())
     except Exception:
         coop = False
-    # Mid-dump: host-only pin (no per-item net). Settle + join guest sync pushes to lobby.
+    # Mid-dump: host-only pin (no per-item net). After settle, force_net so
+    # guests see car/house/text slots even when held pin count is large.
     mid_dump = bool(_land_active and not _landing_settle_done)
     net_push = coop and not mid_dump
     ok = _teleport_pickup(
@@ -4798,6 +5265,7 @@ def _pin_pickup_to_slot(
         freeze=True,
         replicate=net_push,
         guest_push=net_push,
+        force_net=net_push,
     )
     if ok:
         _set_physics(inv, False, keep_grab_collision=True)
@@ -6346,9 +6814,17 @@ def _tick_join_reapply(now: float) -> None:
     return
 
 
-def _push_pin_to_guests(row: dict[str, Any], inv: Any) -> bool:
+def _push_pin_to_guests(
+    row: dict[str, Any],
+    inv: Any,
+    *,
+    allow_during_dump: bool = False,
+) -> bool:
     """Freeze on slot XYZ and net to lobby guests (never wake physics — that drops the house)."""
     if not _live(inv):
+        return False
+    # Mid-dump mass push AVs — allow_during_dump is sparse flight/land samples only.
+    if _mid_shape_dump() and not allow_during_dump:
         return False
     try:
         ok = _teleport_pickup(
@@ -6362,6 +6838,7 @@ def _push_pin_to_guests(row: dict[str, Any], inv: Any) -> bool:
             freeze=True,
             replicate=True,
             guest_push=True,
+            force_net=True,
         )
         if ok:
             _set_physics(inv, False, keep_grab_collision=True)
@@ -6614,6 +7091,7 @@ def abandon_world_loot() -> None:
     global _join_serial_reapply_active, _join_serial_reapply_at, _join_serial_reapply_cursor
     global _guest_sync_active, _guest_sync_cursor, _guest_sync_last, _guest_maint_last
     global _guest_maint_cursor, _coop_followup_sync_at, _coop_followup_waves
+    global _coop_guest_sync_after
     global _absorb_orphans_after_abandon, _absorb_orphans_at
     global _abandon_epoch, _last_layout, _float_force_at
     had_pins = bool(_pinned_slots)
@@ -6640,6 +7118,7 @@ def abandon_world_loot() -> None:
     _guest_sync_last = 0.0
     _coop_followup_sync_at = 0.0
     _coop_followup_waves = 0
+    _coop_guest_sync_after = 0.0
     _absorb_orphans_after_abandon = False
     _absorb_orphans_at = 0.0
     _pickup_cache = []
@@ -7112,7 +7591,7 @@ def arm_deferred_catch(seconds: float = 1.0) -> None:
 
 def settle_landing_loot(*, limit: int = 16) -> int:
     """End of Drop All / Spawn All: pull leftover feet-spit onto remaining slots."""
-    global _landing_settle_done, _burst_replicate_at, _float_force_at
+    global _landing_settle_done, _burst_replicate_at, _float_force_at, _coop_guest_sync_after
     if not _land_active or not _world_alive():
         return 0
     if _landing_settle_done:
@@ -7123,13 +7602,13 @@ def settle_landing_loot(*, limit: int = 16) -> int:
     try:
         dur = float((DROP_MODES.get(_drop_mode) or {}).get("dur") or 1.5)
         if _drop_mode == "slow":
-            # Let each in-flight fall finish; re-check stuck leftovers every few seconds.
-            _float_force_at = time.monotonic() + max(6.0, dur + 4.0)
+            # First stuck-sweep sooner; re-arm keeps sweeping until flights finish.
+            _float_force_at = time.monotonic() + max(3.5, dur + 1.5)
         else:
             hang = 1.2 if _drop_mode == "medium" else 0.8
             _float_force_at = time.monotonic() + hang + dur + 2.5
     except Exception:
-        _float_force_at = time.monotonic() + 8.0
+        _float_force_at = time.monotonic() + 6.0
     n = pull_new_pickups_into_shape(limit=max(4, min(160, int(limit))), fresh=True)
     try:
         # Dump often also spits a forward/feet pile — fold leftovers into slots.
@@ -7153,21 +7632,24 @@ def settle_landing_loot(*, limit: int = 16) -> int:
         try:
             tracked = _build_layout_entries_from_pins()
             pin_n = len(_pinned_slots)
-            # Big lobbies + stacked shapes: skip host repin stamp (already frozen)
-            # and only push pins that never synced.
+            # Short grace so guests see the silhouette fill while rain/slow lands —
+            # still paced (tiny budgets), not a one-tick ForceNetUpdate storm.
+            grace = 2.8 if pin_n > 180 else (2.0 if pin_n > 80 else 1.2)
+            _coop_guest_sync_after = time.monotonic() + grace
+            stamped = 0
             try:
-                stamped = 0 if pin_n > 180 else _repin_all_for_guests(limit=24)
+                stamped = _repin_all_for_guests(limit=12 if pin_n > 80 else 16)
             except Exception:
                 stamped = 0
             if not _guest_sync_active:
                 _begin_guest_sync(force=True)
-            gap = 8.5 if _in_join_quiet() else (3.5 if pin_n > 180 else 1.5)
-            waves = 1 if pin_n > 220 else 2
+            gap = max(grace + 1.5, 6.0 if _in_join_quiet() else (4.5 if pin_n > 180 else 3.0))
+            waves = 4 if pin_n > 180 else (3 if pin_n > 80 else 2)
             _schedule_coop_followup_sync(waves=waves, gap=gap)
             _log("Co-op shape ready for party.")
             _log_dev(
                 f"Co-op settle: {pin_n} pin(s), {tracked} serial(s), "
-                f"{stamped} repin(s)."
+                f"{stamped} repin(s), guest sync after {grace:.1f}s, {waves} wave(s)."
             )
         except Exception as exc:
             _log_dev(f"guest sync at settle failed: {exc!r}")
@@ -7185,6 +7667,14 @@ _SHINY_LAYOUT_BASES: dict[str, tuple[float, float]] = {
     "psycho": (210.0, 74.0),
     "claptrap": (230.0, 64.0),
     "dna_helix": (185.0, 70.0),
+    "diamond_3d": (195.0, 70.0),
+    "blocks": (200.0, 68.0),
+    "cube": (180.0, 70.0),
+    "torus": (190.0, 68.0),
+    "crown": (185.0, 70.0),
+    "ufo": (200.0, 68.0),
+    "rocket": (175.0, 66.0),
+    "gear": (185.0, 70.0),
     "circle": (185.0, 78.0),
     "star": (200.0, 76.0),
     "heart": (190.0, 74.0),
@@ -7206,6 +7696,14 @@ _BULK_LAYOUT_BASES: dict[str, tuple[float, float]] = {
     "firehawk": (260.0, 70.0),
     "claptrap": (310.0, 68.0),
     "dna_helix": (220.0, 66.0),
+    "diamond_3d": (230.0, 64.0),
+    "blocks": (240.0, 64.0),
+    "cube": (220.0, 66.0),
+    "torus": (230.0, 64.0),
+    "crown": (220.0, 66.0),
+    "ufo": (240.0, 64.0),
+    "rocket": (210.0, 64.0),
+    "gear": (220.0, 66.0),
     "circle": (240.0, 70.0),
     "star": (250.0, 70.0),
     "heart": (240.0, 70.0),
@@ -7408,7 +7906,7 @@ def begin_overhead_drop(
     global _coop_pins_synced
     global _join_serial_reapply_active, _join_serial_reapply_at, _join_serial_reapply_cursor
     global _land_slot_pools, _land_layout_profile
-    global _slow_rain_next_at
+    global _slow_rain_next_at, _coop_guest_sync_after
     if shape_text:
         set_shape_text(shape_text)
     shape = _normalize_shape_name(shape)
@@ -7473,6 +7971,7 @@ def begin_overhead_drop(
     _land_pose_index = 0
     _landing_settle_done = False
     _float_force_at = 0.0
+    _coop_guest_sync_after = 0.0
     _land_active = True
     _loot_world_id = _current_world_id()
     if user_shape is not None:
@@ -7931,7 +8430,7 @@ def _force_complete_float_jobs(*, hold: bool | None = None, overdue_only: bool =
             t0 = float(job.get("t0") or now)
             dur = max(0.35, float(job.get("dur") or 1.0))
             # Still hovering / mid-fall — leave alone (Stop uses overdue_only=False).
-            if now < (t0 + dur + 1.25):
+            if now < (t0 + dur + 0.55):
                 keep.append(job)
                 continue
         inv = _job_inv_live(job)
@@ -7945,6 +8444,13 @@ def _force_complete_float_jobs(*, hold: bool | None = None, overdue_only: bool =
             except Exception:
                 inv = None
         if inv is None:
+            # Never drop the job silently — that stranded guns mid-air on the host
+            # while guests already had a mid-flight pose.
+            if overdue_only:
+                misses = int(job.get("misses") or 0) + 1
+                job["misses"] = misses
+                if misses < 48:
+                    keep.append(job)
             continue
         try:
             x1 = float(job["x1"])
@@ -7979,9 +8485,13 @@ def _force_complete_float_jobs(*, hold: bool | None = None, overdue_only: bool =
                     slot_index=idx,
                 )
                 pinned += 1
+            elif overdue_only:
+                keep.append(job)
         except Exception:
+            if overdue_only:
+                keep.append(job)
             continue
-    if overdue_only and keep:
+    if overdue_only:
         _float_jobs = keep
     else:
         _float_jobs = []
@@ -8040,27 +8550,36 @@ def _pin_inflight_float_jobs(*, hold: bool = True) -> int:
 
 
 def _preserve_prior_held_shapes() -> None:
-    """Keep prior silhouettes. In a lobby only release when pin count would explode."""
+    """Keep prior silhouettes frozen when starting another shape.
+
+    Lobby used to physics-wake prior pins past a budget (house dropped for guests).
+    Soft-dormant instead: host keeps freeze, guests keep the already-synced pose,
+    and we skip re-net storms on the old silhouette.
+    """
     global _pinned_slots, _pickup_by_addr, _drop_seen, _drop_preexisting, _float_jobs, _land_slot_pools
     hold_n = sum(1 for row in _pinned_slots if row.get("hold"))
-    # Stacking 400+ ForceNetUpdate pins in co-op AVs — release only past budget.
-    if _want_coop_replicate() and hold_n > 220:
-        try:
-            _refresh_live_pickups()
-        except Exception:
-            pass
-        frozen: set[str] = set(_drop_preexisting)
-        for addr in list(_pickup_by_addr.keys()):
-            frozen.add(_key_for_addr(int(addr)))
+    if _want_coop_replicate() and hold_n > 180:
+        # Soft-archive prior silhouette — do NOT wake physics (that dropped the house).
         for row in list(_pinned_slots):
-            serial = str(row.get("serial") or "")
-            if serial:
-                frozen.add(serial)
-        _release_held_pins_for_loot(reason="new shape in lobby (pin budget)")
-        _drop_preexisting = frozen
-        _drop_seen = set(frozen)
-        _float_jobs = []
-        return
+            if not row.get("hold"):
+                continue
+            row["dormant"] = True
+            row["guest_ok"] = True
+            row.pop("guest_fail", None)
+            addr = int(row.get("addr") or 0)
+            inv = _pickup_by_addr.get(addr) if addr else None
+            if inv is not None:
+                try:
+                    _set_physics(inv, False, keep_grab_collision=True)
+                    _zero_velocity(inv)
+                except Exception:
+                    pass
+                try:
+                    inv.bAlwaysRelevant = False
+                    inv.NetUpdateFrequency = 2.0
+                except Exception:
+                    pass
+        _log_dev(f"Dormant-preserved {hold_n} prior held pin(s) for new shape (lobby).")
     kept: list[dict[str, Any]] = []
     preserved: dict[int, Any] = {}
     frozen = set(_drop_preexisting)
@@ -8177,7 +8696,12 @@ def _tick_pins() -> None:
             # not be dropped after a join (empty map used to flatten the house).
             # In lobby, guests loot constantly — drop missing pins fast (no UObject probe).
             misses = int(row.get("misses") or 0) + 1
-            keep = 3 if (_want_coop_replicate() and row.get("hold")) else (80 if row.get("hold") else 4)
+            if row.get("dormant") and row.get("hold"):
+                keep = 120
+            elif _want_coop_replicate() and row.get("hold"):
+                keep = 3
+            else:
+                keep = 80 if row.get("hold") else 4
             if misses < keep:
                 row["misses"] = misses
                 live.append(row)
@@ -8338,9 +8862,11 @@ def _queue_drop_job(
     if style in ("straight",) and _drop_mode in ("slow", "medium", "fast", "snap"):
         if _drop_mode == "slow":
             # Dump pace creates the cascade; each gun falls after a tiny hover.
-            t0 = now + 0.10
+            # Text used to hang longer (slow "writing") — land faster.
+            is_text = str(_drop_shape or "") == "text"
+            t0 = now + (0.04 if is_text else 0.10)
             pin_hold = bool(_should_hold_in_air())
-            fall_dur = 1.55 if str(_drop_shape or "") == "text" else 1.35
+            fall_dur = 0.95 if is_text else 1.35
             _float_jobs.append(
                 {
                     "addr": addr,
@@ -8351,7 +8877,7 @@ def _queue_drop_job(
                     "y1": y1,
                     "z1": z1,
                     "t0": t0,
-                    "dur": max(0.85, min(2.2, fall_dur)),
+                    "dur": max(0.55, min(2.0, fall_dur)),
                     "yaw": yaw_r,
                     "pitch": pitch,
                     "roll": roll,
@@ -8595,7 +9121,7 @@ def _push_coop_flight_guest(
         "addr": addr,
     }
     try:
-        if _push_pin_to_guests(fly_row, inv):
+        if _push_pin_to_guests(fly_row, inv, allow_during_dump=True):
             budget[0] -= 1
             return True
     except Exception:
@@ -8612,9 +9138,17 @@ def _tick_float_jobs(now: float) -> None:
     n_jobs = len(_float_jobs)
     # Large house dumps (~400) need a fat budget or flights stall mid-air at dump height.
     budget = min(n_jobs, 64 if n_jobs > 80 else (40 if n_jobs > 24 else (20 if n_jobs > 10 else 10)))
-    # Host-only flight path. Mid-air guest ForceNetUpdate AVs on large houses.
-    coop_fly_shape = False
-    guest_fly_budget = [0]
+    # Sparse mid-air guest samples so lobby sees rain/slow/medium — not a net storm.
+    coop_fly_shape = bool(_want_coop_replicate() and _shape_hold_active())
+    if coop_fly_shape:
+        if n_jobs > 180:
+            guest_fly_budget = [2]
+        elif n_jobs > 80:
+            guest_fly_budget = [3]
+        else:
+            guest_fly_budget = [5]
+    else:
+        guest_fly_budget = [0]
     for job in _float_jobs:
         inv = _job_inv_live(job)
         dur = max(0.35, float(job.get("dur") or 1.0))
@@ -8637,7 +9171,10 @@ def _tick_float_jobs(now: float) -> None:
                 except Exception:
                     inv = None
             if inv is None:
-                if not overdue and now <= t0 + dur + 3.0:
+                # Keep retrying — dropping the job here left 2–3 guns stuck mid-air on host.
+                misses = int(job.get("misses") or 0) + 1
+                job["misses"] = misses
+                if misses < 60 or now <= (t0 + dur + 14.0):
                     remaining.append(job)
                 continue
         if now < t0:
@@ -8664,6 +9201,8 @@ def _tick_float_jobs(now: float) -> None:
                 if _teleport_pickup(inv, x, y, z, yaw, pitch=pitch, roll=roll, replicate=False):
                     job["last_move"] = now
             if coop_fly_shape and guest_fly_budget[0] > 0:
+                # Fewer mid samples on huge dumps — land + post-settle fill do the rest.
+                mid_gap = 0.55 if n_jobs > 120 else 0.28
                 if not job.get("guest_start") and u > 0.02:
                     x0 = float(job.get("x0") or x)
                     y0 = float(job.get("y0") or y)
@@ -8677,7 +9216,7 @@ def _tick_float_jobs(now: float) -> None:
                         job, inv, x, y, z, yaw=yaw, pitch=pitch, roll=roll, budget=guest_fly_budget
                     ):
                         job["guest_mid"] = True
-                elif (now - float(job.get("guest_net") or 0.0)) >= 0.16:
+                elif (now - float(job.get("guest_net") or 0.0)) >= mid_gap:
                     if _push_coop_flight_guest(
                         job, inv, x, y, z, yaw=yaw, pitch=pitch, roll=roll, budget=guest_fly_budget
                     ):
@@ -8694,13 +9233,16 @@ def _tick_float_jobs(now: float) -> None:
                     slot_i = int(slot_idx) if slot_idx is not None else None
                     if hold:
                         _pin_pickup_to_slot(inv, (x1, y1, z1), index=slot_i or 0, hold=True)
-                        if coop_fly_shape and addr:
+                        if coop_fly_shape and addr and guest_fly_budget[0] > 0:
                             for row in _pinned_slots:
                                 if int(row.get("addr") or 0) == addr:
                                     try:
-                                        if _push_pin_to_guests(row, inv):
+                                        if _push_pin_to_guests(
+                                            row, inv, allow_during_dump=True
+                                        ):
                                             row["guest_ok"] = True
                                             row.pop("guest_fail", None)
+                                            guest_fly_budget[0] -= 1
                                     except Exception:
                                         pass
                                     break
@@ -8920,7 +9462,7 @@ def tick_drop_motion(now: float | None = None) -> None:
                 only_over = str(_drop_mode or "") == "slow"
                 _force_complete_float_jobs(hold=_should_hold_in_air(), overdue_only=only_over)
                 if only_over and _float_jobs:
-                    _float_force_at = now + 8.0
+                    _float_force_at = now + 2.5
             except Exception:
                 pass
         if not _should_hold_in_air():

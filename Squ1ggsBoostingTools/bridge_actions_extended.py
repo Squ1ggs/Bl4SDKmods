@@ -464,8 +464,8 @@ def max_sdu(payload: dict[str, Any] | None = None) -> dict[str, Any]:
 
 def inventory_set_sizes(payload: dict[str, Any]) -> dict[str, Any]:
     try:
-        backpack = int(payload.get("backpack_size") or 500)
-        bank = int(payload.get("bank_size") or 500)
+        backpack = int(str(payload.get("backpack_size") or 500).strip().replace(",", ""))
+        bank = int(str(payload.get("bank_size") or 500).strip().replace(",", ""))
     except Exception:
         return _fail("backpack_size and bank_size must be integers.")
     scope = str(payload.get("scope") or "target").lower()
@@ -2093,7 +2093,10 @@ def mobility_infinite_jump(payload: dict[str, Any]) -> dict[str, Any]:
         enabled = not bool(getattr(mobility_runtime, "_infinite_jump_all_mode", False))
     else:
         idx_probe = mobility_runtime.normalize_mobility_target_index(idx_raw)
-        enabled = int(idx_probe) not in mobility_runtime.infinite_jump_indices
+        try:
+            enabled = not bool(mobility_runtime._may_mutate_infinite_jump(int(idx_probe)))
+        except Exception:
+            enabled = int(idx_probe) not in mobility_runtime.infinite_jump_indices
     if want_all:
         mobility_runtime.set_infinite_jump_all(enabled)
         return _ok(

@@ -1,25 +1,21 @@
-# Squ1ggs Boosting Tools — v1.1.130 / mod 3.8.136
+# Squ1ggs Boosting Tools — v1.1.132 / mod 3.8.138
 
 Paste-ready notes for GitHub Releases.
 
 ## Highlights
 
-### Fixes
-- **IO Spawner** works again (Spawn no longer errors out).
-- **Player Bank** no longer freezes the host or kicks the lobby.
-- **House / loot shapes in co-op** less likely to crash mid-dump or when guests loot.
-- **MAX ALL** fills vault cards **1–4** (card 4 was often skipped).
-- **Mob list** after a ULM dump: wait for the dump, Refresh status, then Retry.
-- **Spawn All Filtered** reliability; infinite jump stays session-only until you toggle it.
-- **Slow settle** rains items into place as they spawn (no hang-then-snap).
+### Loot shapes
+- **New 3D shapes:** diamond (3D), blocks (Minecraft-style 3+1), cube, torus, crown, UFO, rocket, gear.
+- **Loot text:** default height **670**; slow settle writes faster.
+- **Co-op:** guests see silhouettes + settle motion again; prior house stays up when you spawn another; slow drop no longer leaves host leftovers mid-air.
 
-### Improvements
-- Send serials: **Clear** next to Add to queue; paste box clears after a successful send.
-- Quieter loot-shape logging; stabler session teardown when traveling or exiting.
-- License metadata is **MIT** (SDK page previously showed GPL by mistake).
+### Small fixes
+- Infinite jump stays on until you turn it off.
+- Open rewards on send defaults to **No**.
+- Drop backpack → shape AV fix; hide Player 1 placeholder seats; backpack/bank size fields type cleanly.
 
 ## Install
 
 1. Download the portable zip below and run **Squ1ggsBoostingTools.exe**.
 2. Point it at Borderlands 4 if asked — the EXE installs the SDK + mod for you.
-3. **Fully restart Borderlands 4**, then confirm mod **3.8.136** in Refresh status.
+3. **Fully restart Borderlands 4**, then confirm mod **3.8.138** in Refresh status.

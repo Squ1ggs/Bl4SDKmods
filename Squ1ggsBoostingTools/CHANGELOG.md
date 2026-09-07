@@ -2,6 +2,22 @@
 
 User-facing notes for each release. Technical / internal detail stays brief.
 
+## 3.8.138 / EXE 1.1.132
+
+### Highlights
+- **New 3D loot shapes:** diamond (3D), blocks (Minecraft-style 3+1), cube, torus, crown, UFO, rocket, gear. Existing shapes unchanged.
+- **Loot text:** default height **670** (clears the ground better); slow settle writes faster.
+
+### Fixes
+- **Co-op shapes:** guests see the car/house/text silhouette and settle motion (slow/rain/etc.) again - not loot shooting to their feet.
+- **Slow drop:** host no longer leaves a few guns stuck mid-air.
+- **Stacking shapes in lobby:** prior house/car stays up for guests when you spawn another.
+- **Infinite jump:** stays on until you turn it off (no multi-click / auto-off).
+- **Open rewards on send** defaults to **No** (large auto-opens can blank the backpack).
+- **Drop backpack -> shape** no longer AV mid-spill; Player 1 placeholder seats hidden; backpack/bank size fields type cleanly.
+
+---
+
 ## 3.8.137 / EXE 1.1.131
 
 ### Highlights
