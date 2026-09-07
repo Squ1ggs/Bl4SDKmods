@@ -1,0 +1,622 @@
+{
+  "bor_hw_comp_05_legendary_discjockey": [
+    "ItemPoolList_SpiderJumbo",
+    "ItemPoolList_SpiderJumbo_TrueBoss"
+  ],
+  "bor_hw_comp_05_legendary_jetset": [
+    "ItemPoolList_Bloomreaper",
+    "ItemPoolList_Bloomreaper_TRUE"
+  ],
+  "bor_hw_comp_05_legendary_streamer": [
+    "ItemPoolList_MeatPlantGunship",
+    "ItemPoolList_MeatPlantGunship_TrueBoss",
+    "ItemPoolList_MeatheadRider_TrueBoss"
+  ],
+  "bor_repair_kit_comp_05_legendary_augmenter": [
+    "ItemPoolList_RockAndRoll",
+    "ItemPoolList_RockAndRoll_TrueBoss"
+  ],
+  "bor_sg_comp_05_legendary_convergence": [
+    "ItemPoolList_Destroyer",
+    "ItemPoolList_Destroyer_TrueBoss"
+  ],
+  "bor_sg_comp_05_legendary_demo": [
+    "ItemPoolList_Ordonite_Meathead",
+    "ItemPoolList_Ordonite_Meathead_TRUE",
+    "ItemPoolList_Ordonite_Splice",
+    "ItemPoolList_Ordonite_Splice_TRUE"
+  ],
+  "bor_sg_comp_05_legendary_goldengod": [
+    "ItemPoolList_Grasslands_Commander",
+    "ItemPoolList_Grasslands_Commander_TrueBoss"
+  ],
+  "bor_sg_comp_05_legendary_goremaster": [
+    "ItemPoolList_Grasslands_Commander",
+    "ItemPoolList_Grasslands_Commander_TrueBoss"
+  ],
+  "bor_sg_comp_05_legendary_plumbbob": [
+    "ItemPoolList_SkankEyes",
+    "ItemPoolList_SkankEyes_TRUE"
+  ],
+  "bor_shield_comp_05_legendary_lightning": [
+    "ItemPoolList_StealthPredator",
+    "ItemPoolList_StealthPredator_TrueBoss"
+  ],
+  "bor_shield_comp_05_legendary_watts4dinner": [
+    "ItemPoolList_MountainGuardian",
+    "ItemPoolList_MountainGuardian_TrueBoss"
+  ],
+  "bor_sm_comp_05_legendary_hellfire": [
+    "ItemPoolList_BatMatriarch",
+    "ItemPoolList_BatMatriarch_TrueBoss"
+  ],
+  "bor_sm_comp_05_legendary_jailbroken": [
+    "ItemPoolList_Raid2_Subjugator",
+    "ItemPoolList_Raid2_Subjugator_True",
+    "ItemPoolList_Raid2_Thol",
+    "ItemPoolList_Raid2_Thol_True"
+  ],
+  "bor_sm_comp_05_legendary_prince": [
+    "ItemPoolList_Bango",
+    "ItemPoolList_Bango_TrueBoss"
+  ],
+  "bor_sr_comp_05_legendary_stray": [
+    "ItemPoolList_Pango",
+    "ItemPoolList_Pango_TrueBoss"
+  ],
+  "bor_sr_comp_05_legendary_vamoose": [
+    "ItemPoolList_StealthPredator",
+    "ItemPoolList_StealthPredator_TrueBoss"
+  ],
+  "borg_grenade_gadget_comp_05_legendary_buoy": [
+    "ItemPoolList_SurpriseAttack",
+    "ItemPoolList_SurpriseAttack_TrueBoss"
+  ],
+  "borg_grenade_gadget_comp_05_legendary_rubber": [
+    "ItemPoolList_GlidePackPsycho",
+    "ItemPoolList_GlidePackPsycho_TrueBoss"
+  ],
+  "classmod_dark_siren_comp_05_legendary_05": [
+    "ItemPoolList_ShatterlandsCommanderFortress_TrueBoss"
+  ],
+  "classmod_dark_siren_comp_05_legendary_06": [
+    "ItemPoolList_ShatterlandsGuardian_TrueBoss"
+  ],
+  "dad_ar_comp_05_legendary_kaos": [
+    "ItemPoolList_Raid2_Subjugator_True"
+  ],
+  "dad_ar_comp_05_legendary_lumberjack": [
+    "ItemPoolList_FoundryFreak_Psycho",
+    "ItemPoolList_FoundryFreak_Psycho_TrueBoss",
+    "ItemPoolList_FoundryFreak_Splice",
+    "ItemPoolList_FoundryFreak_Splice_TrueBoss"
+  ],
+  "dad_ar_comp_05_legendary_om": [
+    "ItemPoolList_SoldierAncient",
+    "ItemPoolList_SoldierAncient_TrueBoss"
+  ],
+  "dad_ar_comp_05_legendary_star_helix": [
+    "ItemPoolList_Timekeeper_Guardian",
+    "ItemPoolList_Timekeeper_Guardian_TrueBoss"
+  ],
+  "dad_grenade_gadget_comp_05_legendary_axe": [
+    "ItemPoolList_CityCat",
+    "ItemPoolList_CityCat_TrueBoss"
+  ],
+  "dad_grenade_gadget_comp_05_legendary_fuse": [
+    "ItemPoolList_Drillerhole",
+    "ItemPoolList_Drillerhole_TrueBoss"
+  ],
+  "dad_ps_comp_05_legendary_rangefinder": [
+    "ItemPoolList_FirstCorrupt",
+    "ItemPoolList_FirstCorrupt_TrueBoss"
+  ],
+  "dad_ps_comp_05_legendary_silversliver": [
+    "ItemPoolList_BetaMaxxx",
+    "ItemPoolList_BetaMaxxx_TRUE"
+  ],
+  "dad_ps_comp_05_legendary_zipgun": [
+    "ItemPoolList_UpgradedElectiMole",
+    "ItemPoolList_UpgradedElectiMole_TrueBoss"
+  ],
+  "dad_repair_kit_comp_05_legendary_healthraiser": [
+    "ItemPoolList_Donk",
+    "ItemPoolList_Donk_TrueBoss",
+    "ItemPoolList_MinisterScrew",
+    "ItemPoolList_MinisterScrew_TrueBoss"
+  ],
+  "dad_repair_kit_comp_05_legendary_pacemaker": [
+    "ItemPoolList_KotoLieutenant",
+    "ItemPoolList_KotoLieutenant_TrueBoss"
+  ],
+  "dad_sg_comp_05_legendary_bod": [
+    "ItemPoolList_CityCat",
+    "ItemPoolList_CityCat_TrueBoss"
+  ],
+  "dad_sg_comp_05_legendary_heartgun": [
+    "ItemPoolList_Arjay",
+    "ItemPoolList_Arjay_TrueBoss"
+  ],
+  "dad_shield_comp_05_legendary_angel": [
+    "ItemPoolList_Arjay",
+    "ItemPoolList_Arjay_TrueBoss"
+  ],
+  "dad_shield_comp_05_legendary_supersoldier": [
+    "ItemPoolList_MountainCommander",
+    "ItemPoolList_MountainCommander_TrueBoss"
+  ],
+  "dad_sm_comp_05_legendary_bloodstarved": [
+    "ItemPoolList_SurpriseAttack",
+    "ItemPoolList_SurpriseAttack_TrueBoss"
+  ],
+  "dad_sm_comp_05_legendary_luty": [
+    "ItemPoolList_StrikerSplitter",
+    "ItemPoolList_StrikerSplitter_TrueBoss"
+  ],
+  "jak_ar_comp_05_legendary_bonnieclyde": [
+    "ItemPoolList_Redguard",
+    "ItemPoolList_Redguard_TrueBoss"
+  ],
+  "jak_ar_comp_05_legendary_gomie": [
+    "ItemPoolList_Raid2_Thol",
+    "ItemPoolList_Raid2_Thol_True"
+  ],
+  "jak_ar_comp_05_legendary_rowan": [
+    "ItemPoolList_Redguard",
+    "ItemPoolList_Redguard_TrueBoss"
+  ],
+  "jak_ar_comp_05_legendary_rowdy": [
+    "ItemPoolList_Donk",
+    "ItemPoolList_Donk_TrueBoss",
+    "ItemPoolList_MinisterScrew",
+    "ItemPoolList_MinisterScrew_TrueBoss"
+  ],
+  "jak_grenade_gadget_comp_05_legendary_shokunai": [
+    "ItemPoolList_KOTOMotherbaseBrute",
+    "ItemPoolList_KOTOMotherbaseBrute_TrueBoss"
+  ],
+  "jak_ps_comp_05_legendary_kingsgambit": [
+    "ItemPoolList_FirstCorrupt",
+    "ItemPoolList_FirstCorrupt_TrueBoss"
+  ],
+  "jak_ps_comp_05_legendary_phantom_flame": [
+    "ItemPoolList_Bango",
+    "ItemPoolList_Bango_TrueBoss",
+    "ItemPoolList_Pango",
+    "ItemPoolList_Pango_TrueBoss"
+  ],
+  "jak_ps_comp_05_legendary_quickdraw": [
+    "ItemPoolList_RockAndRoll",
+    "ItemPoolList_RockAndRoll_TrueBoss"
+  ],
+  "jak_ps_comp_05_legendary_seventh_sense": [
+    "ItemPoolList_SideCity_Psycho",
+    "ItemPoolList_SideCity_Psycho_TrueBoss"
+  ],
+  "jak_ps_comp_05_legendary_shalashaska": [
+    "ItemPoolList_Ordonite_PGG_Activity"
+  ],
+  "jak_repair_kit_comp_05_legendary_defibrillator": [
+    "ItemPoolList_DroneKeeper",
+    "ItemPoolList_DroneKeeper_TrueBoss"
+  ],
+  "jak_sg_comp_05_legendary_doeshot": [
+    "ItemPoolList_Ordonite_PGG_Mission",
+    "ItemPoolList_Ordonite_Phalanx",
+    "ItemPoolList_Ordonite_Phalanx_TRUE"
+  ],
+  "jak_sg_comp_05_legendary_hellwalker": [
+    "ItemPoolList_MeatheadRider",
+    "ItemPoolList_MeatheadRider_Jockey",
+    "ItemPoolList_MeatheadRider_Jockey_TrueBoss"
+  ],
+  "jak_sg_comp_05_legendary_rainbowvomit": [
+    "ItemPoolList_UpgradedElectiMole",
+    "ItemPoolList_UpgradedElectiMole_TrueBoss"
+  ],
+  "jak_sg_comp_05_legendary_slugger": [
+    "ItemPoolList_BlasterBrute",
+    "ItemPoolList_BlasterBrute_TrueBoss"
+  ],
+  "jak_sg_comp_05_legendary_tkswave": [
+    "ItemPoolList_RockAndRoll",
+    "ItemPoolList_RockAndRoll_TrueBoss"
+  ],
+  "jak_sg_comp_05_legendary_verce": [
+    "ItemPoolList_MaxxxSupreme_TRUE",
+    "ItemPoolList_OrdiniteFracture"
+  ],
+  "jak_shield_comp_05_legendary_barrelaged": [
+    "ItemPoolList_SkullOrchid",
+    "ItemPoolList_SkullOrchid_TrueBoss"
+  ],
+  "jak_shield_comp_05_legendary_onionlayeredguard": [
+    "ItemPoolList_TrashThresher",
+    "ItemPoolList_TrashThresher_TrueBoss"
+  ],
+  "jak_sr_comp_05_legendary_ballista": [
+    "ItemPoolList_Timekeeper_TKBoss",
+    "ItemPoolList_Timekeeper_TKBoss_TrueBoss"
+  ],
+  "jak_sr_comp_05_legendary_boomslang": [
+    "ItemPoolList_Destroyer",
+    "ItemPoolList_Destroyer_TrueBoss"
+  ],
+  "jak_sr_comp_05_legendary_burrow": [
+    "ItemPoolList_BetaMaxxx",
+    "ItemPoolList_BetaMaxxx_TRUE"
+  ],
+  "jak_sr_comp_05_legendary_truck": [
+    "ItemPoolList_Thresher_BioArmoredBig",
+    "ItemPoolList_Thresher_BioArmoredBig_TrueBoss"
+  ],
+  "mal_grenade_gadget_comp_05_legendary_disco_disc": [
+    "ItemPoolList_Destroyer",
+    "ItemPoolList_Destroyer_TrueBoss"
+  ],
+  "mal_grenade_gadget_comp_05_legendary_recursive": [
+    "ItemPoolList_SoldierAncient",
+    "ItemPoolList_SoldierAncient_TrueBoss"
+  ],
+  "mal_hw_comp_05_legendary_bottledlightning": [
+    "ItemPoolList_MountainGuardian",
+    "ItemPoolList_MountainGuardian_TrueBoss"
+  ],
+  "mal_hw_comp_05_legendary_gammavoid": [
+    "ItemPoolList_ShatterlandsCommanderElpis",
+    "ItemPoolList_ShatterlandsCommanderElpis_TrueBoss"
+  ],
+  "mal_repair_kit_comp_05_legendary_bloodanalyzer": [
+    "ItemPoolList_MeatPlantGunship",
+    "ItemPoolList_MeatPlantGunship_TrueBoss"
+  ],
+  "mal_sg_comp_05_legendary_kaleidosplode": [
+    "ItemPoolList_BlasterBrute",
+    "ItemPoolList_BlasterBrute_TrueBoss"
+  ],
+  "mal_sg_comp_05_legendary_kickballer": [
+    "ItemPoolList_TrashThresher",
+    "ItemPoolList_TrashThresher_TrueBoss"
+  ],
+  "mal_sg_comp_05_legendary_mantra": [
+    "ItemPoolList_Bloomreaper",
+    "ItemPoolList_Bloomreaper_TRUE"
+  ],
+  "mal_sm_comp_05_legendary_ohmigot": [
+    "ItemPoolList_ShatterlandsCommanderElpis",
+    "ItemPoolList_ShatterlandsCommanderElpis_TrueBoss"
+  ],
+  "mal_sm_comp_05_legendary_plasmacoil": [
+    "ItemPoolList_Timekeeper_Guardian",
+    "ItemPoolList_Timekeeper_Guardian_TrueBoss"
+  ],
+  "mal_sm_comp_05_legendary_songbird": [
+    "ItemPoolList_Ordonite_Pangolin",
+    "ItemPoolList_Ordonite_Pangolin_TRUE"
+  ],
+  "mal_sr_comp_05_legendary_asher": [
+    "ItemPoolList_MeatPlantGunship",
+    "ItemPoolList_MeatPlantGunship_TrueBoss"
+  ],
+  "mal_sr_comp_05_legendary_complex_root": [
+    "ItemPoolList_StrikerSplitter",
+    "ItemPoolList_StrikerSplitter_TrueBoss"
+  ],
+  "mal_sr_comp_05_legendary_conflux": [
+    "ItemPoolList_Ordonite_PGG_Activity"
+  ],
+  "mal_sr_comp_05_legendary_katagawa": [
+    "ItemPoolList_Drillerhole",
+    "ItemPoolList_Drillerhole_TrueBoss"
+  ],
+  "ord_ar_comp_05_legendary_gmr": [
+    "ItemPoolList_Drillerhole",
+    "ItemPoolList_Drillerhole_TrueBoss"
+  ],
+  "ord_ar_comp_05_legendary_goalkeeper": [
+    "ItemPoolList_SideCity_Psycho",
+    "ItemPoolList_SideCity_Psycho_TrueBoss"
+  ],
+  "ord_grenade_gadget_comp_05_legendary_aggrovator": [
+    "ItemPoolList_FoundryFreak_MeatheadFrackingBoss",
+    "ItemPoolList_FoundryFreak_MeatheadFrackingBoss_TrueBoss"
+  ],
+  "ord_grenade_gadget_comp_05_legendary_swarm": [
+    "ItemPoolList_SoldierAncient_TrueBoss",
+    "ItemPoolList_SpiderJumbo",
+    "ItemPoolList_SpiderJumbo_TrueBoss"
+  ],
+  "ord_ps_comp_05_legendary_bully": [
+    "ItemPoolList_DroneKeeper",
+    "ItemPoolList_DroneKeeper_TrueBoss"
+  ],
+  "ord_ps_comp_05_legendary_noisycricket": [
+    "ItemPoolList_SpiderJumbo",
+    "ItemPoolList_SpiderJumbo_TrueBoss"
+  ],
+  "ord_ps_comp_05_legendary_rocketreload": [
+    "ItemPoolList_KotoLieutenant",
+    "ItemPoolList_KotoLieutenant_TrueBoss"
+  ],
+  "ord_ps_comp_05_legendary_roulette": [
+    "ItemPoolList_Ordonite_PGG_Mission",
+    "ItemPoolList_Ordonite_Phalanx",
+    "ItemPoolList_Ordonite_Phalanx_TRUE"
+  ],
+  "ord_repair_kit_comp_05_legendary_triplebypass": [
+    "ItemPoolList_Backhive",
+    "ItemPoolList_Backhive_TrueBoss"
+  ],
+  "ord_shield_comp_05_legendary_cindershelly": [
+    "ItemPoolList_Backhive",
+    "ItemPoolList_Backhive_TrueBoss"
+  ],
+  "ord_shield_comp_05_legendary_collector": [
+    "ItemPoolList_Raid2_Subjugator",
+    "ItemPoolList_Raid2_Subjugator_True"
+  ],
+  "ord_shield_comp_05_legendary_proteancell": [
+    "ItemPoolList_LeaderHologram",
+    "ItemPoolList_LeaderHologram_TrueBoss"
+  ],
+  "ord_sr_comp_05_legendary_fisheye": [
+    "ItemPoolList_Arjay",
+    "ItemPoolList_Arjay_TrueBoss"
+  ],
+  "ord_sr_comp_05_legendary_symmetry": [
+    "ItemPoolList_Timekeeper_TKBoss",
+    "ItemPoolList_Timekeeper_TKBoss_TrueBoss"
+  ],
+  "ted_ar_comp_05_legendary_chuck": [
+    "ItemPoolList_FoundryFreak_MeatheadFrackingBoss",
+    "ItemPoolList_FoundryFreak_MeatheadFrackingBoss_TrueBoss",
+    "ItemPoolList_FoundryFreak_Psycho",
+    "ItemPoolList_FoundryFreak_Psycho_TrueBoss",
+    "ItemPoolList_LeaderHologram",
+    "ItemPoolList_LeaderHologram_TrueBoss"
+  ],
+  "ted_ar_comp_05_legendary_dividedfocus": [
+    "ItemPoolList_DroneKeeper",
+    "ItemPoolList_DroneKeeper_TrueBoss"
+  ],
+  "ted_ar_comp_05_legendary_laserdisc": [
+    "ItemPoolList_Ordonite_Meathead",
+    "ItemPoolList_Ordonite_Meathead_TRUE",
+    "ItemPoolList_Ordonite_Splice",
+    "ItemPoolList_Ordonite_Splice_TRUE"
+  ],
+  "ted_grenade_gadget_comp_05_legendary_faultydetonator": [
+    "ItemPoolList_SkullOrchid",
+    "ItemPoolList_SkullOrchid_TrueBoss"
+  ],
+  "ted_grenade_gadget_comp_05_legendary_predatordrone": [
+    "ItemPoolList_LeaderHologram",
+    "ItemPoolList_LeaderHologram_TrueBoss",
+    "ItemPoolList_StrikerSplitter",
+    "ItemPoolList_StrikerSplitter_TrueBoss"
+  ],
+  "ted_grenade_gadget_comp_05_legendary_urchin": [
+    "ItemPoolList_Bloomreaper"
+  ],
+  "ted_ps_comp_05_legendary_atlien": [
+    "ItemPoolList_KOTOMotherbaseBrute",
+    "ItemPoolList_KOTOMotherbaseBrute_TrueBoss"
+  ],
+  "ted_ps_comp_05_legendary_earlyexcess": [
+    "ItemPoolList_InfamousDave",
+    "ItemPoolList_InfamousDave_TRUE",
+    "ItemPoolList_MaxxxSupreme",
+    "ItemPoolList_MaxxxSupreme_TRUE"
+  ],
+  "ted_ps_comp_05_legendary_inscriber": [
+    "ItemPoolList_Donk",
+    "ItemPoolList_Donk_TrueBoss",
+    "ItemPoolList_MinisterScrew",
+    "ItemPoolList_MinisterScrew_TrueBoss"
+  ],
+  "ted_ps_comp_05_legendary_rubysgrasp": [
+    "ItemPoolList_MountainCommander",
+    "ItemPoolList_MountainCommander_TrueBoss"
+  ],
+  "ted_ps_comp_05_legendary_shammy": [
+    "ItemPoolList_Raid2_Subjugator",
+    "ItemPoolList_Raid2_Subjugator_True"
+  ],
+  "ted_ps_comp_05_legendary_sideshow": [
+    "ItemPoolList_CloningLeader",
+    "ItemPoolList_CloningLeader_TrueBoss"
+  ],
+  "ted_repair_kit_comp_05_legendary_killspring": [
+    "ItemPoolList_CityCat",
+    "ItemPoolList_CityCat_TrueBoss"
+  ],
+  "ted_sg_comp_05_legendary_anarchy": [
+    "ItemPoolList_ShatterlandsGuardian",
+    "ItemPoolList_ShatterlandsGuardian_TrueBoss"
+  ],
+  "ted_sg_comp_05_legendary_eigenburst": [
+    "ItemPoolList_Ordonite_PGG_Activity"
+  ],
+  "ted_sg_comp_05_legendary_heavyturret": [
+    "ItemPoolList_Grasslands_Guardian",
+    "ItemPoolList_Grasslands_Guardian_TrueBoss"
+  ],
+  "ted_shield_comp_05_legendary_hopscotch": [
+    "ItemPoolList_Ordonite_Pangolin",
+    "ItemPoolList_Ordonite_Pangolin_TRUE"
+  ],
+  "ted_shield_comp_05_legendary_shieldboi": [
+    "ItemPoolList_CloningLeader",
+    "ItemPoolList_CloningLeader_TrueBoss"
+  ],
+  "ted_shield_comp_05_legendary_timekeeper": [
+    "ItemPoolList_Timekeeper_Guardian",
+    "ItemPoolList_Timekeeper_Guardian_TrueBoss",
+    "ItemPoolList_Timekeeper_TKBoss",
+    "ItemPoolList_Timekeeper_TKBoss_TrueBoss"
+  ],
+  "tor_ar_comp_05_legendary_bugbear": [
+    "ItemPoolList_BattleWagon",
+    "ItemPoolList_BattleWagon_TrueBoss",
+    "ItemPoolList_Thresher_BioArmoredBig",
+    "ItemPoolList_Thresher_BioArmoredBig_TrueBoss"
+  ],
+  "tor_ar_comp_05_legendary_fleabag": [
+    "ItemPoolList_Ordonite_Pangolin",
+    "ItemPoolList_Ordonite_Pangolin_TRUE"
+  ],
+  "tor_ar_comp_05_legendary_lockjaw": [
+    "ItemPoolList_Raid2_Thol",
+    "ItemPoolList_Raid2_Thol_True"
+  ],
+  "tor_ar_comp_05_legendary_potatothrower": [
+    "ItemPoolList_Hovercart",
+    "ItemPoolList_Hovercart_TrueBoss",
+    "ItemPoolList_SurpriseAttack",
+    "ItemPoolList_SurpriseAttack_TrueBoss"
+  ],
+  "tor_grenade_gadget_comp_05_legendary_firepot": [
+    "ItemPoolList_UpgradedElectiMole",
+    "ItemPoolList_UpgradedElectiMole_TrueBoss"
+  ],
+  "tor_grenade_gadget_comp_05_legendary_slippy": [
+    "ItemPoolList_StealthPredator",
+    "ItemPoolList_StealthPredator_TrueBoss"
+  ],
+  "tor_hw_comp_05_legendary_loiter": [
+    "ItemPoolList_InfamousDave",
+    "ItemPoolList_InfamousDave_TRUE"
+  ],
+  "tor_hw_comp_05_legendary_ravenfire": [
+    "ItemPoolList_Grasslands_Guardian",
+    "ItemPoolList_Grasslands_Guardian_TrueBoss"
+  ],
+  "tor_ps_comp_05_legendary_handcannon": [
+    "ItemPoolList_Ordonite_PGG_Mission",
+    "ItemPoolList_Ordonite_Pangolin"
+  ],
+  "tor_ps_comp_05_legendary_queensrest": [
+    "ItemPoolList_ShatterlandsCommanderElpis_TrueBoss",
+    "ItemPoolList_ShatterlandsCommanderFortress",
+    "ItemPoolList_ShatterlandsCommanderFortress_TrueBoss"
+  ],
+  "tor_ps_comp_05_legendary_roach": [
+    "ItemPoolList_SkullOrchid",
+    "ItemPoolList_SkullOrchid_TrueBoss"
+  ],
+  "tor_repair_kit_comp_05_legendary_shinywarpaint": [
+    "ItemPoolList_MeatheadRider",
+    "ItemPoolList_MeatheadRider_TrueBoss"
+  ],
+  "tor_sg_comp_05_legendary_leadballoon": [
+    "ItemPoolList_FoundryFreak_Splice_TrueBoss",
+    "ItemPoolList_GlidePackPsycho",
+    "ItemPoolList_GlidePackPsycho_TrueBoss"
+  ],
+  "tor_sg_comp_05_legendary_linebacker": [
+    "ItemPoolList_BatMatriarch",
+    "ItemPoolList_BatMatriarch_TrueBoss"
+  ],
+  "tor_shield_comp_05_legendary_compleat": [
+    "ItemPoolList_BattleWagon",
+    "ItemPoolList_BattleWagon_TrueBoss"
+  ],
+  "tor_shield_comp_05_legendary_firewerks": [
+    "ItemPoolList_GlidePackPsycho",
+    "ItemPoolList_GlidePackPsycho_TrueBoss"
+  ],
+  "tor_shield_comp_05_legendary_hydrowerks": [
+    "ItemPoolList_InfamousDave_TRUE",
+    "ItemPoolList_MaxxxSupreme",
+    "ItemPoolList_MaxxxSupreme_TRUE"
+  ],
+  "vla_ar_comp_05_legendary_bubbles": [
+    "ItemPoolList_OrdiniteFracture",
+    "ItemPoolList_Ordonite_Cat",
+    "ItemPoolList_Ordonite_Cat_TRUE"
+  ],
+  "vla_ar_comp_05_legendary_dualdamage": [
+    "ItemPoolList_KotoLieutenant",
+    "ItemPoolList_KotoLieutenant_TrueBoss"
+  ],
+  "vla_ar_comp_05_legendary_lucian": [
+    "ItemPoolList_MeatheadRider",
+    "ItemPoolList_MeatheadRider_Jockey",
+    "ItemPoolList_MeatheadRider_Jockey_TrueBoss",
+    "ItemPoolList_MeatheadRider_TrueBoss"
+  ],
+  "vla_ar_comp_05_legendary_wf": [
+    "ItemPoolList_PrisonFirstLeader",
+    "ItemPoolList_Redguard",
+    "ItemPoolList_Redguard_TrueBoss"
+  ],
+  "vla_ar_comp_05_legendary_wombocombo": [
+    "ItemPoolList_Hovercart",
+    "ItemPoolList_Hovercart_TrueBoss"
+  ],
+  "vla_grenade_gadget_comp_05_legendary_blockbuster": [
+    "ItemPoolList_MountainCommander",
+    "ItemPoolList_MountainCommander_TrueBoss"
+  ],
+  "vla_grenade_gadget_comp_05_legendary_waterfall": [
+    "ItemPoolList_KOTOMotherbaseBrute",
+    "ItemPoolList_KOTOMotherbaseBrute_TrueBoss"
+  ],
+  "vla_hw_comp_05_legendary_atlinggun": [
+    "ItemPoolList_BlasterBrute",
+    "ItemPoolList_BlasterBrute_TrueBoss"
+  ],
+  "vla_hw_comp_05_legendary_flak": [
+    "ItemPoolList_Raid2_Thol",
+    "ItemPoolList_Raid2_Thol_True"
+  ],
+  "vla_hw_comp_05_legendary_splatoon": [
+    "ItemPoolList_CloningLeader",
+    "ItemPoolList_CloningLeader_TrueBoss"
+  ],
+  "vla_repair_kit_comp_05_legendary_adrenalinepump": [
+    "ItemPoolList_ShatterlandsGuardian",
+    "ItemPoolList_ShatterlandsGuardian_TrueBoss"
+  ],
+  "vla_repair_kit_comp_05_legendary_bloodiron": [
+    "ItemPoolList_BetaMaxxx",
+    "ItemPoolList_BetaMaxxx_TRUE"
+  ],
+  "vla_shield_comp_05_legendary_heavyweight": [
+    "ItemPoolList_FirstCorrupt",
+    "ItemPoolList_FirstCorrupt_TrueBoss"
+  ],
+  "vla_shield_comp_05_legendary_hoarder": [
+    "ItemPoolList_BatMatriarch",
+    "ItemPoolList_BatMatriarch_TrueBoss"
+  ],
+  "vla_shield_comp_05_legendary_undershield": [
+    "ItemPoolList_Bloomreaper",
+    "ItemPoolList_Bloomreaper_TRUE"
+  ],
+  "vla_sm_comp_05_legendary_beegun": [
+    "ItemPoolList_TrashThresher",
+    "ItemPoolList_TrashThresher_TrueBoss"
+  ],
+  "vla_sm_comp_05_legendary_kaoson": [
+    "ItemPoolList_MountainGuardian",
+    "ItemPoolList_MountainGuardian_TrueBoss"
+  ],
+  "vla_sm_comp_05_legendary_mercury": [
+    "ItemPoolList_OrdiniteFracture",
+    "ItemPoolList_Ordonite_Cat",
+    "ItemPoolList_Ordonite_Cat_TRUE"
+  ],
+  "vla_sm_comp_05_legendary_onslaught": [
+    "ItemPoolList_Grasslands_Commander",
+    "ItemPoolList_Grasslands_Commander_TrueBoss"
+  ],
+  "vla_sr_comp_05_legendary_finnty": [
+    "ItemPoolList_BattleWagon",
+    "ItemPoolList_BattleWagon_TrueBoss"
+  ],
+  "vla_sr_comp_05_legendary_stopgap": [
+    "ItemPoolList_Backhive",
+    "ItemPoolList_Backhive_TrueBoss"
+  ]
+}

@@ -1,0 +1,410 @@
+{
+  "schema": "bl4.pearl_merge_pools.v1",
+  "source": "extracted from bl4_item_spawner/data/merge.json",
+  "entries": {
+    "itempool_bor_sg_05_legendary_crazedearl_pearl": {
+      "items": [
+        {
+          "item": {
+            "item": {
+              "handle": "inv'BOR_SG.comp_05_legendary_CrazedEarl'"
+            }
+          }
+        }
+      ],
+      "mingamestage": "attribute'Att_MinGameStage_WEaponType_AssaultRifle'",
+      "customizationlist": [
+        {
+          "probability": {
+            "attribute": "attribute'attr_is_story_complete'"
+          }
+        }
+      ],
+      "spawn_serial": "BOR_SG.comp_05_legendary_CrazedEarl",
+      "catalog_key": "bor_sg_comp_05_legendary_crazedearl",
+      "source_comp": "bor_sg_comp_05_legendary_crazedearl",
+      "handle_variants": [
+        "inv'BOR_SG.comp_05_legendary_Crazedearl'",
+        "inv'BOR_SG.comp_05_legendary_CrazedEarl'"
+      ],
+      "__raid3_content": true
+    },
+    "itempool_bor_sm_05_legendary_jailbroken": {
+      "__synthetic": true,
+      "source_comp": "bor_sm_comp_05_legendary_jailbroken",
+      "spawn_serial": "BOR_SM.comp_05_legendary_jailbroken",
+      "items": [
+        {
+          "item": {
+            "item": {
+              "handle": "inv'BOR_SM.comp_05_legendary_jailbroken'"
+            }
+          }
+        }
+      ],
+      "mingamestage": "attribute'Att_MinGameStage_WeaponType_SMG'",
+      "handle_variants": [
+        "inv'BOR_SM.comp_05_legendary_jailbroken'",
+        "inv'BOR_SM.comp_05_legendary_Jailbroken'"
+      ]
+    },
+    "itempool_bor_sr_05_legendary_abyss": {
+      "__synthetic": true,
+      "source_comp": "bor_sr_comp_05_legendary_abyss",
+      "spawn_serial": "bor_sr.comp_05_legendary_abyss",
+      "items": [
+        {
+          "item": {
+            "item": {
+              "handle": "inv'bor_sr.comp_05_legendary_abyss'"
+            }
+          }
+        }
+      ],
+      "mingamestage": "attribute'Att_MinGameStage_ClassMod'",
+      "handle_variants": [
+        "inv'bor_sr.comp_05_legendary_abyss'",
+        "inv'bor_sr.comp_05_legendary_Abyss'"
+      ]
+    },
+    "itempool_dad_ps_05_legendary_soulsurvivor_pearl": {
+      "items": [
+        {
+          "item": {
+            "item": {
+              "handle": "inv'DAD_PS.comp_05_legendary_soulsurvivor'"
+            }
+          }
+        }
+      ],
+      "mingamestage": "attribute'Att_MinGameStage_WEaponType_AssaultRifle'",
+      "customizationlist": [
+        {
+          "probability": {
+            "attribute": "attribute'attr_is_story_complete'"
+          }
+        }
+      ],
+      "spawn_serial": "DAD_PS.comp_05_legendary_soulsurvivor",
+      "catalog_key": "dad_ps_comp_05_legendary_soulsurvivor",
+      "source_comp": "dad_ps_comp_05_legendary_soulsurvivor",
+      "handle_variants": [
+        "inv'DAD_PS.comp_05_legendary_Soulsurvivor'",
+        "inv'DAD_PS.comp_05_legendary_soulsurvivor'"
+      ]
+    },
+    "itempool_dad_sm_05_legendary_raiden": {
+      "__synthetic": true,
+      "source_comp": "dad_sm_comp_05_legendary_raiden",
+      "spawn_serial": "DAD_SM.comp_05_legendary_Raiden",
+      "items": [
+        {
+          "item": {
+            "item": {
+              "handle": "inv'DAD_SM.comp_05_legendary_Raiden'"
+            }
+          }
+        }
+      ],
+      "mingamestage": "attribute'Att_MinGameStage_WeaponType_SMG'",
+      "handle_variants": [
+        "inv'DAD_SM.comp_05_legendary_Raiden'"
+      ]
+    },
+    "itempool_dad_sm_06_pearl_screwed": {
+      "__synthetic": true,
+      "source_comp": "dad_sm_comp_06_pearl_screwed",
+      "spawn_serial": "DAD_SM.comp_06_pearl_Screwed",
+      "items": [
+        {
+          "item": {
+            "item": {
+              "handle": "inv'DAD_SM.comp_06_pearl_Screwed'"
+            }
+          }
+        }
+      ],
+      "mingamestage": "attribute'Att_MinGameStage_WeaponType_SMG'",
+      "handle_variants": [
+        "inv'DAD_SM.comp_06_pearl_Screwed'"
+      ],
+      "__raid2_content": true,
+      "__new_content": true,
+      "display_name": "Screwstonian"
+    },
+    "itempool_jak_ar_05_legendary_gomie": {
+      "__synthetic": true,
+      "source_comp": "jak_ar_comp_05_legendary_gomie",
+      "spawn_serial": "JAK_AR.comp_05_legendary_gomie",
+      "items": [
+        {
+          "item": {
+            "item": {
+              "handle": "inv'JAK_AR.comp_05_legendary_gomie'"
+            }
+          }
+        }
+      ],
+      "mingamestage": "attribute'Att_MinGameStage_WEaponType_AssaultRifle'",
+      "handle_variants": [
+        "inv'JAK_AR.comp_05_legendary_gomie'",
+        "inv'JAK_AR.comp_05_legendary_Gomie'"
+      ]
+    },
+    "itempool_jak_sg_06_pearl_constable": {
+      "__synthetic": true,
+      "source_comp": "jak_sg_comp_06_pearl_constable",
+      "spawn_serial": "JAK_SG.comp_06_pearl_Constable",
+      "items": [
+        {
+          "item": {
+            "item": {
+              "handle": "inv'JAK_SG.comp_06_pearl_Constable'"
+            }
+          }
+        }
+      ],
+      "mingamestage": "attribute'Att_MinGameStage_WeaponType_Shotgun'",
+      "handle_variants": [
+        "inv'JAK_SG.comp_06_pearl_Constable'"
+      ],
+      "__raid2_content": true,
+      "__new_content": true,
+      "display_name": "Constable"
+    },
+    "itempool_mal_sm_06_pearl_juliet": {
+      "__synthetic": true,
+      "source_comp": "mal_sm_comp_06_pearl_juliet",
+      "spawn_serial": "MAL_SM.comp_06_pearl_Juliet",
+      "items": [
+        {
+          "item": {
+            "item": {
+              "handle": "inv'MAL_SM.comp_06_pearl_Juliet'"
+            }
+          }
+        }
+      ],
+      "mingamestage": "attribute'Att_MinGameStage_ClassMod'",
+      "handle_variants": [
+        "inv'MAL_SM.comp_06_pearl_Juliet'"
+      ],
+      "__raid2_content": true,
+      "__new_content": true,
+      "display_name": "Juliet's Sparkle"
+    },
+    "itempool_mal_sr_05_legendary_conflux_pearl": {
+      "items": [
+        {
+          "item": {
+            "item": {
+              "handle": "inv'MAL_SR.comp_05_legendary_conflux'"
+            }
+          }
+        }
+      ],
+      "mingamestage": "attribute'Att_MinGameStage_WEaponType_AssaultRifle'",
+      "customizationlist": [
+        {
+          "probability": {
+            "attribute": "attribute'attr_is_story_complete'"
+          }
+        }
+      ],
+      "spawn_serial": "MAL_SR.comp_05_legendary_conflux",
+      "catalog_key": "mal_sr_comp_05_legendary_conflux",
+      "source_comp": "mal_sr_comp_05_legendary_conflux",
+      "handle_variants": [
+        "inv'MAL_SR.comp_05_legendary_conflux'",
+        "inv'MAL_SR.comp_05_legendary_Conflux'"
+      ]
+    },
+    "itempool_ord_ar_05_legendary_crowsourced_pearl": {
+      "items": [
+        {
+          "item": {
+            "item": {
+              "handle": "inv'ORD_AR.comp_05_legendary_crowsourced'"
+            }
+          }
+        }
+      ],
+      "mingamestage": "attribute'Att_MinGameStage_WEaponType_AssaultRifle'",
+      "customizationlist": [
+        {
+          "probability": {
+            "attribute": "attribute'attr_is_story_complete'"
+          }
+        }
+      ],
+      "spawn_serial": "ORD_AR.comp_05_legendary_crowsourced",
+      "catalog_key": "ord_ar_comp_05_legendary_crowsourced",
+      "source_comp": "ord_ar_comp_05_legendary_crowsourced",
+      "handle_variants": [
+        "inv'ORD_AR.comp_05_legendary_crowsourced'",
+        "inv'ORD_AR.comp_05_legendary_Crowsourced'"
+      ]
+    },
+    "itempool_ord_sr_05_legendary_temper": {
+      "__synthetic": true,
+      "source_comp": "ord_sr_comp_05_legendary_temper",
+      "spawn_serial": "ORD_SR.comp_05_legendary_temper",
+      "items": [
+        {
+          "item": {
+            "item": {
+              "handle": "inv'ORD_SR.comp_05_legendary_temper'"
+            }
+          }
+        }
+      ],
+      "mingamestage": "attribute'Att_MinGameStage_ClassMod'",
+      "handle_variants": [
+        "inv'ORD_SR.comp_05_legendary_temper'",
+        "inv'ORD_SR.comp_05_legendary_Temper'"
+      ]
+    },
+    "itempool_ted_sg_05_legendary_eigenburst_pearl": {
+      "items": [
+        {
+          "item": {
+            "item": {
+              "handle": "inv'TED_SG.comp_05_legendary_Eigenburst'"
+            }
+          }
+        }
+      ],
+      "mingamestage": "attribute'Att_MinGameStage_WEaponType_AssaultRifle'",
+      "customizationlist": [
+        {
+          "probability": {
+            "attribute": "attribute'attr_is_story_complete'"
+          }
+        }
+      ],
+      "spawn_serial": "TED_SG.comp_05_legendary_Eigenburst",
+      "catalog_key": "ted_sg_comp_05_legendary_eigenburst",
+      "source_comp": "ted_sg_comp_05_legendary_eigenburst",
+      "handle_variants": [
+        "inv'TED_SG.comp_05_legendary_Eigenburst'"
+      ]
+    },
+    "itempool_ted_sg_06_pearl_sharkbait": {
+      "__synthetic": true,
+      "source_comp": "ted_sg_comp_06_pearl_sharkbait",
+      "spawn_serial": "TED_SG.comp_06_pearl_sharkbait",
+      "items": [
+        {
+          "item": {
+            "item": {
+              "handle": "inv'TED_SG.comp_06_pearl_sharkbait'"
+            }
+          }
+        }
+      ],
+      "mingamestage": "attribute'Att_MinGameStage_ClassMod'",
+      "handle_variants": [
+        "inv'TED_SG.comp_06_pearl_sharkbait'",
+        "inv'TED_SG.comp_06_pearl_Sharkbait'"
+      ],
+      "__raid2_content": true,
+      "__new_content": true,
+      "display_name": "Sharkbait"
+    },
+    "itempool_tor_ps_05_legendary_handcannon_pearl": {
+      "items": [
+        {
+          "item": {
+            "item": {
+              "handle": "inv'TOR_PS.comp_05_legendary_handcannon'"
+            }
+          }
+        }
+      ],
+      "mingamestage": "attribute'Att_MinGameStage_WEaponType_AssaultRifle'",
+      "customizationlist": [
+        {
+          "probability": {
+            "attribute": "attribute'attr_is_story_complete'"
+          }
+        }
+      ],
+      "spawn_serial": "TOR_PS.comp_05_legendary_handcannon",
+      "catalog_key": "tor_ps_comp_05_legendary_handcannon",
+      "source_comp": "tor_ps_comp_05_legendary_handcannon",
+      "handle_variants": [
+        "inv'TOR_PS.comp_05_legendary_handcannon'",
+        "inv'TOR_PS.comp_05_legendary_Handcannon'"
+      ]
+    },
+    "itempool_tor_ps_06_pearl_herald": {
+      "__synthetic": true,
+      "source_comp": "tor_ps_comp_06_pearl_herald",
+      "spawn_serial": "TOR_PS.comp_06_pearl_Herald",
+      "items": [
+        {
+          "item": {
+            "item": {
+              "handle": "inv'TOR_PS.comp_06_pearl_Herald'"
+            }
+          }
+        }
+      ],
+      "mingamestage": "attribute'Att_MinGameStage_WeaponType_Pistol'",
+      "handle_variants": [
+        "inv'TOR_PS.comp_06_pearl_Herald'"
+      ],
+      "__raid2_content": true,
+      "__new_content": true,
+      "display_name": "Herald"
+    },
+    "itempool_vla_sm_06_pearl_locust": {
+      "__synthetic": true,
+      "source_comp": "vla_sm_comp_06_pearl_locust",
+      "spawn_serial": "VLA_SM.comp_06_pearl_Locust",
+      "items": [
+        {
+          "item": {
+            "item": {
+              "handle": "inv'VLA_SM.comp_06_pearl_Locust'"
+            }
+          }
+        }
+      ],
+      "mingamestage": "attribute'Att_MinGameStage_ClassMod'",
+      "handle_variants": [
+        "inv'VLA_SM.comp_06_pearl_Locust'"
+      ],
+      "__raid2_content": true,
+      "__new_content": true,
+      "display_name": "Parasite"
+    },
+    "itempool_vla_sm_06_pearl_locust_shiny": {
+      "items": [
+        {
+          "item": {
+            "item": {
+              "handle": "inv'VLA_SM.comp_06_pearl_Locust'"
+            }
+          }
+        }
+      ],
+      "mingamestage": "attribute'Att_MinGameStage_WeaponType_Pistol'",
+      "customizationlist": [
+        {
+          "probability": {
+            "attribute": "attribute'attr_is_story_complete'"
+          },
+          "customization": "inv_custom'Cosmetics_Weapon_Shiny_Locust'"
+        }
+      ],
+      "spawn_serial": "VLA_SM.comp_06_pearl_Locust",
+      "catalog_key": "vla_sm_comp_06_pearl_locust",
+      "source_comp": "vla_sm_comp_06_pearl_locust",
+      "handle_variants": [
+        "inv'VLA_SM.comp_06_pearl_Locust'"
+      ],
+      "__raid2_content": true
+    }
+  }
+}

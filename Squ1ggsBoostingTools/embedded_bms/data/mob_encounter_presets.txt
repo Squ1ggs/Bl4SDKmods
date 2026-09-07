@@ -1,0 +1,6 @@
+# Encounter IO presets — require BL4 Oak Spawner (oak_spawnai).
+# label | console line
+Enemy event manager | oak_spawnai io_Event_Enemy_Manager
+Ripper egg ShatterBoss | oak_spawnai io_RippersEggSpawner_ShatterBoss
+Ripper egg static ShatterBoss | oak_spawnai io_RippersEggSpawner_Static_ShatterBoss
+Target practice dummy | oak_spawnai IO_TargetPracticeDummy_Skeletal
