@@ -3,7 +3,7 @@
 Borderlands 4 boosting toolkit — **desktop EXE** + in-game **SDK mod**.
 
 **Author:** [Squ1ggs](https://github.com/Squ1ggs) · **License:** MIT  
-**Current:** mod **3.8.138** · EXE **1.1.132**
+**Current:** mod **3.8.139** · EXE **1.1.133**
 
 Download from **[Releases](https://github.com/Squ1ggs/Bl4SDKmods/releases)** (GitHub only — not on Mod DB).
 
@@ -14,7 +14,7 @@ Download from **[Releases](https://github.com/Squ1ggs/Bl4SDKmods/releases)** (Gi
 1. Download the **portable zip** from Releases and run **`Squ1ggsBoostingTools.exe`**.
 2. Point it at your Borderlands 4 folder if asked — the EXE installs the Oak2 SDK + this mod for you.
 3. **Fully restart** Borderlands 4, load a character, then click **Refresh status**.
-4. When status shows connected (mod **3.8.138+**), you’re good.
+4. When status shows connected (mod **3.8.139+**), you’re good.
 
 Use the **desktop app** for the full UI. The SDK mod is the in-game bridge.
 

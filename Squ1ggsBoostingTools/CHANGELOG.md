@@ -1,141 +1,48 @@
 # Changelog
 
-User-facing notes for each release. Technical / internal detail stays brief.
-
-## 3.8.138 / EXE 1.1.132
-
-### Highlights
-- **New 3D loot shapes:** diamond (3D), blocks (Minecraft-style 3+1), cube, torus, crown, UFO, rocket, gear. Existing shapes unchanged.
-- **Loot text:** default height **670** (clears the ground better); slow settle writes faster.
-
-### Fixes
-- **Co-op shapes:** guests see the car/house/text silhouette and settle motion (slow/rain/etc.) again - not loot shooting to their feet.
-- **Slow drop:** host no longer leaves a few guns stuck mid-air.
-- **Stacking shapes in lobby:** prior house/car stays up for guests when you spawn another.
-- **Infinite jump:** stays on until you turn it off (no multi-click / auto-off).
-- **Open rewards on send** defaults to **No** (large auto-opens can blank the backpack).
-- **Drop backpack -> shape** no longer AV mid-spill; Player 1 placeholder seats hidden; backpack/bank size fields type cleanly.
-
----
-
-## 3.8.137 / EXE 1.1.131
-
-### Highlights
-- **Weapon / loot text** on the **Loot** tab (and Loot Shapes): spell up to 3 lines with shinies or a loot pool. Default height **640**.
-- **Vault of the Damned / Complete ALL non-UVHM** restores the full Cowbell catalog (kickdowns, achievements 38–45, individual spooky stories).
-- **Infinite jump** stays on through joins (identity-keyed; no more accidental prune).
-- **Serial paste** accepts glued `@Ug…@Ug…` codes without spaces/newlines.
-- **Setup:** default Steam/Epic path first; if missing, dialog to choose the folder with `Borderlands4.exe` / `OakGame`.
-- **EXE tools UI:** Offline shows waiting (no tool tabs) until Online in-character; brief blips don’t flicker.
-- Section **coloured auras**; **Toggles** tab click-to-toggle; Force fly (host) session-only; Open rewards on send defaults Yes (with warnings).
-
----
-
-## 3.8.136 / EXE 1.1.130
-
-### Fixes
-- **IO Spawner** works again (Spawn no longer errors out).
-- **Player Bank** no longer freezes the host or kicks the lobby — safe spawn + unlock path only.
-- **House / loot shapes in co-op** less likely to crash mid-dump or when guests loot.
-- **MAX ALL** now fills vault cards **1-4** (card 4 was often skipped).
-- **Mob list** after a ULM dump: wait for the dump to finish, Refresh status, then Retry.
-- **Spawn All Filtered** reliability restored; **infinite jump** stays session-only until you toggle it.
-- **Slow settle** rains each item into place as it spawns (no more hang-then-snap at dump end).
-- **Stop drop** snaps in-flight items onto their slots instead of leaving them stuck mid-air.
-
-### Improvements
-- Send serials: **Clear** next to Add to queue; paste box clears after a successful send.
-- Quieter loot-shape logging; stabler session teardown when traveling or exiting.
-- Loot-shape layout defaults tuned (higher billboard height, clearer letter spacing).
-- License metadata is **MIT** (was mislabeled GPL on the SDK page).
-
----
-
-## 3.8.135 / EXE 1.1.129
-- **Send serials** back on Home; Serials tab leads with paste & send (GZO / Lootlemon labeled as browse catalogs).
-- **Send items** sits next to Add to queue; Send to / amount / open rewards stay under it.
-- **Send to ↔ Boost target** stay in sync either way.
-
-## 3.8.134 / EXE 1.1.128
-- **Debug Cam** — spawn IO props at the camera; audio-only rows removed from the catalog.
-- **Loot shapes** — shapes follow your Boost target; smoother co-op settle and join.
-- **Force fly** — host-only; smoother movement when fly is off.
-
-## 3.8.133 / EXE 1.1.127
-- Loot Pool Spawner: if a named row is missing or fails, try Spawn all filtered or the type pool (AR / SG / SM / PS / SR 05 Legendary; Pearl type pools).
-- Same tip on silent-empty / named legendary miss messages.
-
-## 3.8.249 / EXE 1.1.230
-- **Join / load lag:** removed duplicate rebind + 48-pin net burst on held-shape join; smaller spread sync only when 2+ players. Solo load no longer triggers shape join work.
-
-## 3.8.248 / EXE 1.1.229
-- **Late join + held shape:** clear guest_ok on join so new players get full shape re-net (not “already synced” from earlier guests).
-- **Car (partial shiny):** sedan width/length scale with item count; always reserve wheel ring slots so small drops still get four tires.
-
-## 3.8.247 / EXE 1.1.228
-- **Co-op settle + hold:** fixed guest flight sync (`addr` typo broke all in-air settle net). Guests get start/mid/path + slot pin; faster pin tail during dump (less spray, more shape in air).
-- **Host lag:** smaller join guest batches mid-dump; capped in-flight guest pushes per tick.
-
-## 3.8.246 / EXE 1.1.227
-- **Send serials:** blank line between codes is the safe separator (UI + parser); long @U Base85 is never split on symbols inside one code.
-- **Car shape:** tire rings at all four corners (fill wheels first), slightly wider/longer again.
-- **Backpack tab removed** from EXE (relevel parked — use serial mail / other tools).
-
-## 3.8.245 / EXE 1.1.226
-- **IO spawner:** PersistentLevel **WorldPath** duplicate rows hidden by default — **Show WorldPaths** toggle in EXE (World IO spawns) and in-game IO tab.
-
-## 3.8.244 / EXE 1.1.225
-- **Co-op join + 3D hold:** join quiet repins held shapes first (even mid-dump) and pushes guest net immediately — joiners see floating house/globe again.
-- **Settle visible in lobby:** spiral/rain/etc. restored for host; guest net updates during flight path (~11 Hz) so both see settle motion.
-- **Car shape:** wider/longer sedan profile (was still reading as a thin rail).
-- **IO floor:** world-path floor rows removed from Floor / placeables filter; floor/breakaway spawns forced to `oak_spawnai` only (no PersistentLevel duplicate freeze).
+## 3.8.139 / EXE 1.1.133
+- **Spawn shapes (new/restored on this drop):** diamond (3D), blocks, cube, torus, crown, UFO, rocket, gear — if you stayed on the last public release, grab this build so these shapes are actually on disk.
+- **Send serials Browse / YAML:** loads into the paste box (blank line between codes) — not the optional queue and not My Library.
+- **Add to library…** next to Send items: saves the paste box into My Library under a name you choose.
+- **Open rewards:** still opens one package at a time (safe path); no bulk open.
+- **Loot text / Spell a word:** restored 3-line shinies/pool lettering where relevant.
+- **Co-op shapes:** silhouette drip / settle fixes so guests can grab without floor piles or mid-dump snaps.
 
 ## 3.8.243 / EXE 1.1.224
-- **Shapes on Boost target:** landing anchor auto-follows selected player (party pose + yaw), not host feet. Drop-backpack shaped spill uses the same anchor.
-- **Car shape:** larger sedan profile again (was over-clamped slim/tiny).
-- **Co-op + settle on 3D:** held silhouettes pin on-slot for guests even with rain/slow/etc. — no feet-spit-then-snap on their screen.
+- **Send serials Browse / YAML:** loads into the paste box (blank line between codes) — not the optional queue and not My Library.
+- **Add to library…** next to Send items: saves the paste box into My Library under a name you choose (reuse later).
 
 ## 3.8.242 / EXE 1.1.223
-- **3D shapes (co-op):** guests see held house/globe/etc. build incrementally — not invisible until the full dump finishes. Joiners get faster guest net on active silhouettes.
-- **Settle + shape:** rain/slow/drip/etc. still combine with any shape; incremental co-op sync no longer waits for 100% spawn count.
-- **Force fly:** buttons say **(host)** everywhere.
-- **IO spawner:** multi-select/count queues one batch (no bridge loop hitch); bulk skips per-spawn activate (use Activate last IO spawn).
+- **Loot text / Spell a word restored:** 3-line shinies/pool lettering (MODS / ARE / FREE style) back on Loot + Loot Shapes, with full glyph font, spawn_text_shape, and shape_text wiring through shinies/pools.
 
 ## 3.8.241 / EXE 1.1.222
-- **Force fly = host only.** Guest fly briefly engages then Oak snaps them back → judder (client prediction vs host). Infinite jump stays party-wide. Force fly (all) removed; toggles always apply to you.
-- **Backpack relevel:** parked — slots list counts but live inventory often has no diggable `@U` yet (would show “no @U / cannot relevel”). Not chasing that while fly is settled.
+- **Restored missing 3D shapes** from the pre-standalone tree: UFO, rocket, gear, diamond (3D), blocks, cube, torus, crown (were left behind when dist folders moved to Documents).
+- **Forbidden** shapes stay unlock-only / hidden again (not the “missing” list).
+- **Car:** fat sedan / driver-seat cabin back (was slim batmobile).
+- **Co-op drop method:** guests get sparse mid-flight samples of rain/slow/medium again (not shoot-high-then-snap). Grab collision kept on frozen silhouette pins.
 
 ## 3.8.240 / EXE 1.1.221
-- **Force fly (guests):** no host Velocity either (that still juddered). Guests = ClientCheatFly re-armed + Gbx MaxFlySpeed stamps only — their client owns movement.
+- **Co-op shapes restore:** removed owner-only dump suppress + settle hide-debris + full re-push of already-synced pins (that broke guest grabs and left floor piles/dupes). Back to host local pin + throttled guest slot drip (~2/s) + settle pending-only repin.
+- **Shapes:** `the forbidden one` / `the forbidden pair` back in the normal 3D list (were unlock-only / missing from panel).
 
 ## 3.8.239 / EXE 1.1.220
-- **Force fly (guests):** host no longer teleports guest pawns each tick (that fought their client → judder / tiny drift). Guests use ClientCheatFly + CheatManager.Fly once, Gbx MaxFlySpeed stamps, and soft Velocity assist only.
+- **Co-op shapes (the ask):** friends watch the silhouette build live with the host. ULM dump ballistics are suppressed for guests; each host pin drips the frozen slot pose (~2 every 0.42s). Settle still full-pushes + clears floor leftovers. Grabable; avoids mid-dump ForceNetUpdate storms.
 
 ## 3.8.238 / EXE 1.1.219
-- **Force fly (guests):** kinematic drive like host (no CheatManager fly fight) — less slow/judder; network smoothing off.
-- **Noclip:** ON sets Force fly @ Cruise; OFF also turns Force fly OFF (UI syncs).
-- **UVHM unlock:** shorter settle waits + faster tick pump so ranks run through instead of stop/start pauses.
+- **Co-op ULM dump + shape:** removed mid-dump guest drip (that looked like sky→floor→snap). Host pins stay owner-only until settle, then one full silhouette push; leftover floor spit is hidden after settle.
 
 ## 3.8.237 / EXE 1.1.218
-- **Home blank after Got it:** dismissing “Before you boost” no longer aborts the whole Home tab (`appendChild(null)`). Most used / Jump to / etc. render again.
-- **Drop backpack confirm:** every spill prompt names the live Boost target (or warns if All players) so you do not dump a friend’s pack by mistake.
+- **Serials UI:** one Optional queue fold (list + Deliver queued) — removed the duplicate second fold.
+- **EXE scroll thrash:** status polls no longer reload GZO/catalogs every tick (was flipping pages / scrolling).
+- **UVHM:** clearer target-one errors (needs a single Boost target); progress bar keeps a short grace so it does not blink off between ranks.
+- **Co-op 3D shapes:** join guest net starts sooner (less floor-drop on join); mid-lobby Spawn All drips a few frozen pins to guests so they do not watch a floor pile until settle.
 
 ## 3.8.236 / EXE 1.1.217
-- **Before you boost:** Got it removes the whole Home section (not just the red text).
-- **Debug Cam tab:** freecam tools + spawn at camera; Home/Player no longer bury freecam. World drop adds **At debug cam**.
-- **IO / carryables / floor:** spawn placement now respects spawn anchor (including freecam); Carryables + Floor / placeables filters list GbxActor props that were hard to find.
-- **Backpack:** row labels show level / @U (or “no @U”); relevel never clears a slot until the new serial is verified in the pack.
-- **Toggles:** status sync rewrites ON/OFF labels (infinite jump no longer stuck showing ON when off).
-- **Force fly:** stop zeroing / consuming input on blank wish frames (was freezing movement).
-- **Snapped Home:** Most used stays a compact 2-column grid with shorter buttons instead of huge stacked rows.
+- **Reward opens (GZO / serials):** one package at a time with a **3–5s** gap; always opens the live newest mail (no stale indices). Removed `Server_OpenAllPackages` bulk path that could AV / blank backpacks in MP.
+- **Browse YAML / STBX:** still extracts `serial: '@U…'` (from 3.8.235).
 
 ## 3.8.235 / EXE 1.1.216
-- **Safety banners:** Got it dismisses the sticky red banner and Home “Before you boost” card (saved in the EXE).
-- **Peel delay clarified:** renamed to “Then drop to ground after (sec)” under More options — leave at **0** to keep floating shapes; most users never need it.
-- **Join + held house:** host-only freeze continues during join quiet so silhouettes stop collapsing to the ground.
-- **Co-op grab:** frozen shape items keep grab collision; leftover feet/forward spit near the player is hidden after settle so guests pick from the silhouette.
-- **Car shape:** human-scale sedan centered on the driver seat (player stands in the cabin).
-- **Backpack tab:** stronger @U serial dig from inventory wrappers (was often empty / missing items).
+- **Browse YAML / STBX saves:** extract `serial: '@U…'` fields (quoted save-editor YAML). Empty browse now shows a clear error; optional queue opens when serials are added.
 
 ## 3.8.234 / EXE 1.1.215
 - **Boost target stickiness:** EXE remembers your selected player (localStorage + in-session sticky). Status polls and roster refreshes no longer snap back to host; backend re-syncs if it drifts. Backpack list refreshes when you change target.
@@ -459,6 +366,9 @@ User-facing notes for each release. Technical / internal detail stays brief.
 
 ## 3.8.135 / EXE 1.1.128
 - Favourites on GZO and Lootlemon catalogs.
+
+## 3.8.134 / EXE 1.1.128
+- Loot shapes visible to guests already in lobby.
 
 ## 3.8.133 / EXE 1.1.127 - Missing/fail spawn hint → Spawn All Filtered / type pools
 - Loot Pool Spawner (EXE + in-game): if a named row is missing or fails, try Spawn all filtered or the type pool (AR / SG / SM / PS / SR 05 Legendary; Pearl type pools).

@@ -1,21 +1,25 @@
-# Squ1ggs Boosting Tools — v1.1.132 / mod 3.8.138
+# Squ1ggs Boosting Tools — v1.1.133 / mod 3.8.139
 
 Paste-ready notes for GitHub Releases.
 
 ## Highlights
 
-### Loot shapes
-- **New 3D shapes:** diamond (3D), blocks (Minecraft-style 3+1), cube, torus, crown, UFO, rocket, gear.
-- **Loot text:** default height **670**; slow settle writes faster.
-- **Co-op:** guests see silhouettes + settle motion again; prior house stays up when you spawn another; slow drop no longer leaves host leftovers mid-air.
+### Spawn shapes (new / restored)
+These should be on the **latest** portable drop. If you stayed on the last public release, you may have missed them or expected them already:
 
-### Small fixes
-- Infinite jump stays on until you turn it off.
-- Open rewards on send defaults to **No**.
-- Drop backpack → shape AV fix; hide Player 1 placeholder seats; backpack/bank size fields type cleanly.
+- diamond (3D), blocks, cube, torus, crown, UFO, rocket, gear
+
+### Serials
+- **Browse / YAML → paste box** (blank line between codes) — not the optional queue, not My Library.
+- **Add to library…** saves the paste box into My Library under a name you choose.
+- **Open rewards** still opens **one package at a time** (safe path).
+
+### Also in this drop
+- Loot text / Spell a word restore where relevant.
+- Co-op shape silhouette / settle fixes (guest grabs, less floor pile / mid-dump snap).
 
 ## Install
 
 1. Download the portable zip below and run **Squ1ggsBoostingTools.exe**.
 2. Point it at Borderlands 4 if asked — the EXE installs the SDK + mod for you.
-3. **Fully restart Borderlands 4**, then confirm mod **3.8.138** in Refresh status.
+3. **Fully restart Borderlands 4**, then confirm mod **3.8.139** in Refresh status.
