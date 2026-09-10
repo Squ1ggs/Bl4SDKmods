@@ -111,18 +111,6 @@ def gameplay_ready() -> bool:
         if pawn is None:
             get_pawn = getattr(pc, "GetPawn", None)
             pawn = get_pawn() if callable(get_pawn) else None
-        if pawn is not None:
-            return True
-        try:
-            from .dev_tools import _cached_dcc, _gameplay_pc, is_debug_cam_active  # noqa: PLC0415
-
-            if is_debug_cam_active():
-                if _cached_dcc() is not None:
-                    return True
-                if _gameplay_pc() is not None:
-                    return True
-        except Exception:
-            pass
-        return False
+        return pawn is not None
     except Exception:
         return False

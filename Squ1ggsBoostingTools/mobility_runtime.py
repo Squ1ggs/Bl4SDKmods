@@ -79,9 +79,9 @@ zero_vault_costs: bool = bool(_boot_preset.get("zero_vault_costs", True))
 time_dilation: float = float(DEFAULT_PRESET.get("time_dilation", 1.0) or 1.0)
 
 status_message: str = "Host-only movement tools. Adjust sliders, then apply to all party pawns."
-infinite_jump_indices: set[int] = set()
-# Stable player keys (same as force-fly). Indices remumber on join; keys do not.
-_infinite_jump_keys: set[str] = set()
+infinite_jump_indices: set[int] = {
+    int(x) for x in (_settings.get("mobility_infinite_jump_indices", []) or []) if str(x).strip().isdigit()
+}
 # Gates jump hooks / HUD tick. Import installs hooks early; on_enable arms this.
 # Default False so a disabled-at-boot mod cannot leave Infinite Jump live.
 _runtime_enabled: bool = False
@@ -111,9 +111,6 @@ _force_fly_missing_since: dict[str, float] = {}
 _last_force_fly_tick: float = 0.0
 _last_orphan_fly_scrub_at: float = 0.0
 _last_mobility_party_count: int = 0
-_last_mobility_party_array_len: int = 0
-_infinite_jump_key_missing_since: dict[str, float] = {}
-_INFINITE_JUMP_PRUNE_SEC: float = 8.0
 _last_remote_walk_scrub_at: float = 0.0
 _remote_join_scrub_until: float = 0.0
 _force_fly_throttle_until: float = 0.0
@@ -137,8 +134,7 @@ _infinite_jump_context_cache: list[tuple[int, str, object, object | None, object
 _infinite_jump_context_cache_time: float = 0.0
 _infinite_jump_disabling: set[int] = set()
 _infinite_jump_disable_until: dict[int, float] = {}
-# Session-only — never restore Infinite Jump from disk (users expect OFF until they toggle).
-_infinite_jump_all_mode: bool = False
+_infinite_jump_all_mode: bool = bool(_settings.get("mobility_infinite_jump_all_mode", False))
 _force_fly_all_mode: bool = bool(_settings.get("mobility_force_fly_all_mode", False))
 _remote_cheat_fly_latched: set[str] = set()
 
@@ -410,9 +406,8 @@ def save_settings() -> None:
             mobility_auto_apply_on_load=bool(_auto_apply_on_load),
             mobility_saved_preset=dict(_saved_preset),
             mobility_noclip=bool(_noclip),
-            # Infinite Jump is session-only — wipe any legacy persisted indices.
-            mobility_infinite_jump_indices=[],
-            mobility_infinite_jump_all_mode=False,
+            mobility_infinite_jump_indices=sorted(int(x) for x in infinite_jump_indices),
+            mobility_infinite_jump_all_mode=bool(_infinite_jump_all_mode),
             mobility_force_fly_all_mode=bool(_force_fly_all_mode),
         )
     except Exception as exc:
@@ -641,31 +636,19 @@ def reset_time() -> None:
 
 
 def apply_noclip() -> None:
-    """Collision off for exploration. Auto-enables force fly at Cruise; OFF also kills force fly."""
+    """Collision off for exploration. Auto-enables local force fly so you don't freefall."""
     global status_message
     if _noclip:
         _clear_fall_through_all()
     msg = set_noclip(_noclip)
-    try:
-        local = local_party_index()
-        host_idx = int(local) if local is not None else 0
-    except Exception:
-        host_idx = 0
     if _noclip:
         try:
-            # Cruise by default so noclip exploration is controllable (not Fast travel).
-            set_force_fly_speed_value(float(FLY_PRESETS["cruise"]), preset="cruise", log=False)
+            local = local_party_index()
+            host_idx = int(local) if local is not None else 0
             set_force_fly_for_index(host_idx, True)
-            msg = f"{msg} Force fly auto-ON @ Cruise."
+            msg = f"{msg} Force fly auto-ON."
         except Exception as exc:
             msg = f"{msg} (force fly auto-ON failed: {exc!r})"
-    else:
-        try:
-            if force_fly_enabled_for_index(host_idx):
-                set_force_fly_for_index(host_idx, False)
-                msg = f"{msg} Force fly auto-OFF."
-        except Exception as exc:
-            msg = f"{msg} (force fly auto-OFF failed: {exc!r})"
     save_settings()
     status_message = msg
     _log(msg)
@@ -1010,120 +993,11 @@ def normalize_mobility_target_index(idx: int, *, party_wide: bool = False) -> in
     return idx
 
 
-def _party_identity_key(idx: int) -> str:
-    try:
-        from .uvhm_progression import selected_lobby_identity
-
-        return str(selected_lobby_identity(int(idx)).key or "")
-    except Exception:
-        return ""
-
-
-def _player_array_len() -> int:
-    """Raw lobby size from PlayerArray — does not drop when a PC briefly fails to resolve."""
-    try:
-        _world, gs = _gbc_session_world_and_gamestate()
-        pa = getattr(gs, "PlayerArray", None) if gs is not None else None
-        if pa is None:
-            return 0
-        n = 0
-        for i in range(len(pa)):
-            try:
-                if pa[i] is not None:
-                    n += 1
-            except Exception:
-                continue
-        return n
-    except Exception:
-        return 0
-
-
-def _player_array_identity_keys() -> set[str] | None:
-    """All resolvable lobby identity keys. None = roster incomplete (do not prune)."""
-    try:
-        from .uvhm_progression import _player_state_key
-        from .party_helpers import _gbc_resolve_player_display_name
-
-        _world, gs = _gbc_session_world_and_gamestate()
-        pa = getattr(gs, "PlayerArray", None) if gs is not None else None
-        if pa is None:
-            return None
-        keys: set[str] = set()
-        slots = 0
-        for i in range(len(pa)):
-            try:
-                ps = pa[i]
-            except Exception:
-                ps = None
-            if ps is None:
-                continue
-            slots += 1
-            try:
-                name = _gbc_resolve_player_display_name(ps)
-                key = str(_player_state_key(ps, name) or "")
-            except Exception:
-                return None
-            if not key:
-                return None
-            keys.add(key)
-        if slots <= 0:
-            return None
-        return keys
-    except Exception:
-        return None
-
-
-def _sync_infinite_jump_indices_from_keys() -> None:
-    """Rebuild party-slot indices from stable keys after joins / remaps.
-
-    Never prune keys here — brief PC/identity misses used to wipe Infinite Jump
-    mid-session. Departures are handled only by ``_prune_remote_mobility_toggles``.
-    """
-    global infinite_jump_indices
-    if not (_infinite_jump_keys or _infinite_jump_all_mode or infinite_jump_indices):
-        return
-    # Seed keys from any index-only state (older toggles / first enable).
-    if infinite_jump_indices and not _infinite_jump_keys and not _infinite_jump_all_mode:
-        for i in list(infinite_jump_indices):
-            key = _party_identity_key(int(i))
-            if key:
-                _infinite_jump_keys.add(key)
-    try:
-        contexts = live_party_contexts()
-    except Exception:
-        return
-    if not contexts:
-        # Loading / travel — keep current indices + keys.
-        return
-    new_indices: set[int] = set()
-    for idx, _name, _pc, _pawn, _move in contexts:
-        i = int(idx)
-        key = _party_identity_key(i)
-        want = bool(_infinite_jump_all_mode)
-        if key and key in _infinite_jump_keys:
-            want = True
-        elif i in infinite_jump_indices:
-            # Keep slot through identity remaps / brief key failures.
-            want = True
-            if key:
-                _infinite_jump_keys.add(key)
-        if want:
-            new_indices.add(i)
-            if key:
-                _infinite_jump_keys.add(key)
-    if new_indices:
-        infinite_jump_indices = set(new_indices)
-    elif _infinite_jump_keys or _infinite_jump_all_mode:
-        # Remap failed but intent remains — do not clear.
-        pass
-
-
 def _infinite_jump_party_wide() -> bool:
     """True when every live party member has infinite jump (explicit all-party mode)."""
     if _infinite_jump_all_mode:
         return True
     try:
-        _sync_infinite_jump_indices_from_keys()
         contexts = live_party_contexts()
         indices = [int(i) for i, _n, _pc, pawn, _m in contexts if pawn is not None and not _is_default_obj(pawn)]
     except Exception:
@@ -1136,12 +1010,7 @@ def _infinite_jump_party_wide() -> bool:
 def _may_mutate_infinite_jump(idx: int | None) -> bool:
     if idx is None:
         return False
-    if _infinite_jump_all_mode:
-        return True
-    if int(idx) in infinite_jump_indices:
-        return True
-    key = _party_identity_key(int(idx))
-    return bool(key) and key in _infinite_jump_keys
+    return int(idx) in infinite_jump_indices
 
 
 def _force_fly_party_wide() -> bool:
@@ -1188,44 +1057,22 @@ def set_infinite_jump_for_index(idx: int, enabled: bool) -> None:
     global status_message, _infinite_jump_context_cache, _infinite_jump_context_cache_time
     global _infinite_jump_disabling, _infinite_jump_disable_until, _infinite_jump_all_mode
     try:
-        # Single-target edits leave party-wide mode; do not wipe other guests' indices.
         _infinite_jump_all_mode = False
         idx = normalize_mobility_target_index(int(idx), party_wide=False)
-        key = _party_identity_key(idx)
         if enabled:
             infinite_jump_indices.add(idx)
-            if key:
-                _infinite_jump_keys.add(key)
             _infinite_jump_disabling.discard(idx)
             _infinite_jump_disable_until.pop(idx, None)
-            _infinite_jump_key_missing_since.pop(key, None) if key else None
-            # Apply immediately so the first click always works.
-            try:
-                for cidx, _n, _pc, pawn, move in live_party_contexts():
-                    if int(cidx) != int(idx):
-                        continue
-                    if pawn is None or _is_default_obj(pawn):
-                        continue
-                    _prepare_infinite_jump_pawn(pawn)
-                    _reset_pawn_jump_counter_if_spent(pawn, move)
-            except Exception:
-                pass
         else:
             infinite_jump_indices.discard(idx)
-            if key:
-                _infinite_jump_keys.discard(key)
             _infinite_jump_disabling.add(idx)
             _infinite_jump_disable_until[idx] = time.monotonic() + 4.0
             _restore_jump_limits_for_indices({idx})
-        _sync_infinite_jump_indices_from_keys()
         _infinite_jump_context_cache = []
         _infinite_jump_context_cache_time = 0.0
         save_settings()
         if enabled:
-            if _is_local_party_index(idx):
-                status_message = "Infinite Jump ON (you)."
-            else:
-                status_message = f"Infinite Jump ON (party slot {idx})."
+            status_message = "Infinite Jump ON (you)."
             pill = "green"
         else:
             status_message = "Infinite Jump OFF."
@@ -1246,38 +1093,13 @@ def set_infinite_jump_all(enabled: bool) -> None:
         contexts = live_party_contexts()
         if enabled:
             infinite_jump_indices.clear()
-            _infinite_jump_keys.clear()
-            _infinite_jump_key_missing_since.clear()
             _infinite_jump_disabling.clear()
             _infinite_jump_disable_until.clear()
             for idx, _name, _pc, pawn, _move in contexts:
-                i = int(idx)
-                # Keep the latch even if pawn is briefly missing — HUD tick remaps.
-                infinite_jump_indices.add(i)
-                key = _party_identity_key(i)
-                if key:
-                    _infinite_jump_keys.add(key)
-            # Solo / empty contexts: still latch local slot 0 so jump works immediately.
-            if not infinite_jump_indices:
-                local = local_party_index()
-                seed = int(local) if local is not None else 0
-                infinite_jump_indices.add(seed)
-                key = _party_identity_key(seed)
-                if key:
-                    _infinite_jump_keys.add(key)
-            # Apply JumpMaxCount now — do not wait for the next HUD tick.
-            for idx, _name, _pc, pawn, move in contexts:
-                if pawn is None or _is_default_obj(pawn):
-                    continue
-                try:
-                    _prepare_infinite_jump_pawn(pawn)
-                    _reset_pawn_jump_counter_if_spent(pawn, move)
-                except Exception:
-                    pass
+                if pawn is not None and not _is_default_obj(pawn):
+                    infinite_jump_indices.add(int(idx))
         else:
             infinite_jump_indices.clear()
-            _infinite_jump_keys.clear()
-            _infinite_jump_key_missing_since.clear()
             now = time.monotonic()
             for idx, _name, _pc, pawn, _move in contexts:
                 if pawn is None or _is_default_obj(pawn):
@@ -1289,11 +1111,7 @@ def set_infinite_jump_all(enabled: bool) -> None:
         _infinite_jump_context_cache = []
         _infinite_jump_context_cache_time = 0.0
         save_settings()
-        status_message = (
-            "Infinite Jump ON for all (stays on until you turn it off)."
-            if enabled
-            else "Infinite Jump OFF for all."
-        )
+        status_message = f"Infinite Jump enabled for: {enabled_infinite_names()}."
         _log(status_message)
         _set_status_pill(status_message, "green" if enabled else "cyan")
     except Exception as exc:
@@ -1773,24 +1591,9 @@ def _force_fly_suppress_engine_fly(pawn: object | None, move: object | None) -> 
                 pass
 
 
-def _force_fly_enable_can_fly(move: object | None, *, keep_cheat_flying: bool = False) -> None:
+def _force_fly_enable_can_fly(move: object | None) -> None:
     """Dump: MovementState/NavAgentProps.bCanFly default False."""
     if move is None:
-        return
-    if keep_cheat_flying:
-        for attr in ("MovementState", "NavAgentProps"):
-            try:
-                state = getattr(move, attr, None)
-                if state is None:
-                    continue
-                setattr(state, "bCanFly", True)
-                setattr(move, attr, state)
-            except Exception:
-                pass
-        try:
-            setattr(move, "bCheatFlying", True)
-        except Exception:
-            pass
         return
     _force_fly_suppress_engine_fly(None, move)
 
@@ -2426,14 +2229,12 @@ def _drive_force_fly(
                 setattr(move, "bCheatFlying", False)
         except Exception:
             pass
-    if wish is None:
-        # Do not zero velocity — that locked the pawn in place when WASD input
-        # was not readable for a frame (looked like "force fly on but can't move").
-        # Also do not ConsumeInputVector here — that ate the stick/keys before move.
-        return False
-    if not remote:
+    else:
         _force_fly_consume_walk_input(pawn, move)
         _force_fly_suppress_engine_fly(pawn, move)
+    if wish is None:
+        _zero_move_velocity(move)
+        return False
     dx, dy, dz = wish
     horiz_steer = (dx * dx + dy * dy) ** 0.5
     if use_sweep and move is not None and _force_fly_is_grounded(move):
@@ -2579,21 +2380,6 @@ def _raise_world_fly_altitude(*, force: bool = False) -> None:
             continue
 
 
-def _client_cheat_fly(pawn: object | None, *, enabled: bool) -> bool:
-    """Owning-client fly RPC — required for guests; host kinematic teleports fight their prediction."""
-    if pawn is None or not _uobject_live(pawn):
-        return False
-    name = "ClientCheatFly" if enabled else "ClientCheatWalk"
-    fn = getattr(pawn, name, None)
-    if not callable(fn):
-        return False
-    try:
-        fn()
-        return True
-    except Exception:
-        return False
-
-
 def _cheat_manager_set_fly(pc: object | None, enabled: bool) -> None:
     """Prefer CheatManager.Fly/Walk — ClientCheatFly alone often snaps back to walk."""
     if pc is None:
@@ -2614,78 +2400,6 @@ def _cheat_manager_set_fly(pc: object | None, enabled: bool) -> None:
             pass
 
 
-def _remote_stamp_fly_speeds(comp: object, fly_speed: float, fly_accel: float, fly_brake: float) -> int:
-    """Gbx-aware speed writes — raw setattr often leaves dump MaxFlySpeed=600 stuck."""
-    from .movement_adjustments import _set_attr
-
-    writes = 0
-    for attr, value in (
-        ("GravityScale", 0.0),
-        ("MaxFlySpeed", fly_speed),
-        ("MaxCustomMovementSpeed", fly_speed),
-        ("MaxAcceleration", fly_accel),
-        ("BrakingDecelerationFlying", fly_brake),
-        ("BrakingDecelerationFalling", 0.0),
-        ("GroundFriction", 0.0),
-        ("AirControl", 1.0),
-        ("FallingLateralFriction", 0.0),
-        ("Friction", 0.0),
-        ("FlyingSpeed", fly_speed),
-        ("FlySpeed", fly_speed),
-        ("MaxWalkSpeed", fly_speed),
-        ("MinAnalogWalkSpeed", min(fly_speed, 600.0)),
-    ):
-        try:
-            if _set_attr(comp, attr, float(value)):
-                writes += 1
-                continue
-        except Exception:
-            pass
-        try:
-            setattr(comp, attr, float(value))
-            writes += 1
-        except Exception:
-            pass
-    for attr, value in (
-        ("bCheatFlying", True),
-        ("bAlwaysCheckFloor", False),
-        ("bForceNextFloorCheck", False),
-        ("bEnablePhysicsInteraction", False),
-        ("DefaultLandMovementMode", 5),
-        ("GroundMovementMode", 5),
-        # Keep default smoothing — forcing 0 + host teleports was the judder.
-        ("NetworkSmoothingMode", 1),
-    ):
-        try:
-            setattr(comp, attr, value)
-            writes += 1
-        except Exception:
-            pass
-    return writes
-
-
-def _remote_soft_velocity_assist(
-    pc: object | None,
-    pawn: object,
-    move: object | None,
-    *,
-    speed: float,
-) -> bool:
-    """Scale server Velocity from replicated wish — never SetActorLocation (that rubber-bands guests)."""
-    if move is None or not _uobject_live(pawn):
-        return False
-    wish = _force_fly_wish_dir(pc, pawn, move)
-    if wish is None:
-        return False
-    dx, dy, dz = wish
-    mag = (dx * dx + dy * dy + dz * dz) ** 0.5
-    if mag < 1e-6:
-        return False
-    dx, dy, dz = dx / mag, dy / mag, dz / mag
-    tick_speed = clamp_force_fly_speed(speed)
-    return _set_move_velocity(move, dx * tick_speed, dy * tick_speed, dz * tick_speed)
-
-
 def _stamp_force_fly_speed(
     pawn: object,
     move: object | None,
@@ -2694,9 +2408,8 @@ def _stamp_force_fly_speed(
     pc: object | None = None,
     dt: float = 0.016,
 ) -> int:
-    """Stamp MaxFlySpeed every tick + kinematic WASD steps on the local pawn only."""
+    """Stamp MaxFlySpeed every tick + kinematic WASD steps on the local pawn."""
     global _force_fly_maintain_until
-    del dt
     if not _uobject_live(pawn):
         return 0
     if move is not None and not _uobject_live(move):
@@ -2712,31 +2425,50 @@ def _stamp_force_fly_speed(
     now = time.monotonic()
     if not local_target:
         maintain_key = _force_fly_pawn_key(pawn)
-        # Guests: no SetActorLocation and no host Velocity — both fight their client
-        # (their screen judders in place; host sees tiny drift). ClientCheatFly + stamps only.
-        full_stamp = now >= float(_force_fly_maintain_until_by_key.get(maintain_key, 0.0) or 0.0)
-        if full_stamp:
-            _force_fly_maintain_until_by_key[maintain_key] = now + 0.25
+        if now >= float(_force_fly_maintain_until_by_key.get(maintain_key, 0.0) or 0.0):
+            _force_fly_maintain_until_by_key[maintain_key] = now + 0.4
             _raise_world_fly_altitude(force=False)
-            if pc is None:
-                try:
-                    pc = getattr(pawn, "Controller", None)
-                except Exception:
-                    pc = None
-            # Re-arm fly if Oak snaps them back to walk (latch alone is not enough).
-            _remote_cheat_fly_latched.discard(maintain_key)
-            _ensure_remote_cheat_fly(pc, pawn, enabled=True)
-        for comp in moves:
-            writes += _remote_stamp_fly_speeds(comp, fly_speed, fly_accel, fly_brake)
-            if full_stamp:
-                _force_fly_enable_can_fly(comp, keep_cheat_flying=True)
+            for comp in moves:
+                for attr, value in (
+                    ("GravityScale", 0.0),
+                    ("MaxFlySpeed", fly_speed),
+                    ("MaxCustomMovementSpeed", fly_speed),
+                    ("MaxAcceleration", fly_accel),
+                    ("BrakingDecelerationFlying", fly_brake),
+                    ("bCheatFlying", False),
+                    ("BrakingDecelerationFalling", 0.0),
+                    ("GroundFriction", 0.0),
+                    ("AirControl", 1.0),
+                    ("FallingLateralFriction", 0.0),
+                    ("Friction", 0.0),
+                    ("DefaultLandMovementMode", 5),
+                    ("GroundMovementMode", 5),
+                    ("NetworkSmoothingMode", 2),
+                    ("bAlwaysCheckFloor", False),
+                    ("bForceNextFloorCheck", False),
+                    ("bEnablePhysicsInteraction", False),
+                ):
+                    try:
+                        setattr(comp, attr, value)
+                        writes += 1
+                    except Exception:
+                        pass
+                _force_fly_enable_can_fly(comp)
                 _force_fly_set_mode_flying(comp)
-        try:
-            setattr(pawn, "GravityScale", 0.0)
-            setattr(pawn, "bCheatFlying", True)
-            writes += 2
-        except Exception:
-            pass
+            try:
+                setattr(pawn, "GravityScale", 0.0)
+                setattr(pawn, "bCheatFlying", False)
+                writes += 2
+            except Exception:
+                pass
+        else:
+            try:
+                setattr(primary, "GravityScale", 0.0)
+                setattr(primary, "MaxFlySpeed", fly_speed)
+                setattr(primary, "MaxCustomMovementSpeed", fly_speed)
+                writes += 3
+            except Exception:
+                pass
         return writes
     for comp in moves:
         try:
@@ -2804,7 +2536,7 @@ def _stamp_force_fly_speed(
                 pc = getattr(pawn, "Controller", None)
             except Exception:
                 pc = None
-        if _drive_force_fly(pc, pawn, primary, speed=fly_speed, dt=0.016):
+        if _drive_force_fly(pc, pawn, primary, speed=fly_speed, dt=dt):
             writes += 1
     return writes
 
@@ -2867,58 +2599,31 @@ def _pawn_has_mobility_poison(pawn: object, move: object | None) -> bool:
 
 
 def _ensure_remote_cheat_fly(pc: object | None, pawn: object, *, enabled: bool) -> None:
-    """Latch ClientCheatFly + CheatManager.Fly once on party remotes — never every tick."""
+    """Latch CheatManager fly once on party remotes — never toggle every tick (freezes)."""
     if not _uobject_live(pawn):
         return
     key = _force_fly_pawn_key(pawn)
     if enabled:
         if key in _remote_cheat_fly_latched:
             return
-        _client_cheat_fly(pawn, enabled=True)
         _cheat_manager_set_fly(pc, True)
-        try:
-            setattr(pawn, "bCheatFlying", True)
-        except Exception:
-            pass
         _remote_cheat_fly_latched.add(key)
         return
     if key not in _remote_cheat_fly_latched:
         return
-    _client_cheat_fly(pawn, enabled=False)
     _cheat_manager_set_fly(pc, False)
-    try:
-        setattr(pawn, "bCheatFlying", False)
-    except Exception:
-        pass
     _remote_cheat_fly_latched.discard(key)
 
 
 def _apply_remote_force_fly_on(pc: object, pawn: object, move: object | None) -> int:
-    """Party remotes: client fly latch + Gbx speed stamp. No host SetActorLocation."""
+    """Party remotes: CheatManager fly + speed stamp (host kinematic drive freezes them)."""
     if not _uobject_live(pawn):
         return 0
     global _force_fly_maintain_until_by_key
     _force_fly_maintain_until_by_key.pop(_force_fly_pawn_key(pawn), None)
     _ensure_remote_cheat_fly(pc, pawn, enabled=True)
     _raise_world_fly_altitude(force=True)
-    moves = [m for m in _movement_components_for_pawn(pawn) if _uobject_live(m)]
-    if move is not None and id(move) not in {id(m) for m in moves}:
-        moves.insert(0, move)
-    writes = 0
-    fly_speed, fly_accel, fly_brake = _fly_motion_params()
-    for obj in (pawn, *moves):
-        try:
-            setattr(obj, "GravityScale", 0.0)
-            setattr(obj, "bCheatFlying", True)
-            writes += 2
-        except Exception:
-            pass
-    for comp in moves:
-        _force_fly_enable_can_fly(comp, keep_cheat_flying=True)
-        writes += _remote_stamp_fly_speeds(comp, fly_speed, fly_accel, fly_brake)
-        _force_fly_set_mode_flying(comp)
-        writes += 1
-    # One-time liftoff only on enable — not per tick (per-tick Z writes rubber-band guests).
+    writes = _stamp_force_fly_speed(pawn, move, local_target=False, pc=pc, dt=0.016)
     try:
         cur = _pawn_world_location(pawn)
         if cur is not None and move is not None and _force_fly_is_grounded(move):
@@ -2926,13 +2631,12 @@ def _apply_remote_force_fly_on(pc: object, pawn: object, move: object | None) ->
                 pawn,
                 cur[0],
                 cur[1],
-                float(cur[2]) + 48.0,
+                float(cur[2]) + 36.0,
                 sweep=False,
             ):
                 writes += 1
     except Exception:
         pass
-    writes += _stamp_force_fly_speed(pawn, move, local_target=False, pc=pc, dt=0.016)
     return max(writes, 1)
 
 
@@ -3190,83 +2894,52 @@ def _is_local_party_index(idx: int) -> bool:
 
 
 def force_fly_enabled_for_index(idx: int) -> bool:
-    """Force fly is host-only — idx < 0 / 'all' means the local host pawn."""
     try:
-        local = local_party_index()
-        if local is None:
-            return bool(force_fly_targets)
-        check = int(local) if int(idx) < 0 else int(idx)
-        if not _is_local_party_index(check):
-            return False
+        idx = int(idx)
+        if idx < 0:
+            contexts = live_party_contexts()
+            if not contexts:
+                return bool(force_fly_targets)
+            from .uvhm_progression import selected_lobby_identity
+
+            for cidx, _name, _pc, pawn, _move in contexts:
+                if pawn is None or _is_default_obj(pawn):
+                    continue
+                try:
+                    key = str(selected_lobby_identity(int(cidx)).key)
+                except Exception:
+                    continue
+                if key not in force_fly_targets:
+                    return False
+            return True
         from .uvhm_progression import selected_lobby_identity
 
-        identity = selected_lobby_identity(check)
+        identity = selected_lobby_identity(idx)
         return str(identity.key) in force_fly_targets
     except Exception:
         return False
 
 
-def _release_remote_force_fly_leftovers() -> int:
-    """Drop any guest force-fly latches left from older builds (they judder)."""
-    released = 0
+def set_force_fly_all(enabled: bool) -> None:
+    """Enable/disable force fly for every live party member (host panel applies remotes too)."""
+    global status_message, _force_fly_all_mode
+    _force_fly_all_mode = bool(enabled)
     try:
         contexts = live_party_contexts()
-    except Exception:
-        return 0
-    from .uvhm_progression import selected_lobby_identity
-
-    for cidx, _name, pc, pawn, move in contexts:
-        if _is_local_party_index(int(cidx)):
-            continue
-        try:
-            key = str(selected_lobby_identity(int(cidx)).key)
-        except Exception:
-            key = ""
-        latched = False
-        try:
-            latched = bool(key) and (
-                key in force_fly_targets
-                or _force_fly_pawn_key(pawn) in _remote_cheat_fly_latched
-            )
-        except Exception:
-            latched = bool(key) and key in force_fly_targets
-        if not latched:
-            continue
-        if key and key in force_fly_targets:
-            _release_force_fly_target(key, pc=pc, pawn=pawn, move=move, is_local=False)
-        else:
-            try:
-                _ensure_remote_cheat_fly(pc, pawn, enabled=False)
-                _apply_force_fly(pc, pawn, move, False, {}, local_target=False)
-            except Exception:
-                pass
-        released += 1
-    return released
-
-
-def set_force_fly_all(enabled: bool) -> None:
-    """Host-only: 'all' used to mean party-wide; guests judder, so this only toggles you."""
-    global status_message, _force_fly_all_mode
-    _force_fly_all_mode = False
-    local = local_party_index()
-    if local is None:
-        status_message = "Force Fly failed: host pawn unavailable."
-        _log(status_message)
-        _set_status_pill(status_message, "red")
-        return
-    try:
-        _release_remote_force_fly_leftovers()
-        set_force_fly_for_index(int(local), bool(enabled), party_wide=False)
+        applied = 0
+        for idx, _name, _pc, pawn, _move in contexts:
+            if pawn is None or _is_default_obj(pawn):
+                continue
+            set_force_fly_for_index(int(idx), bool(enabled), party_wide=True)
+            applied += 1
         save_settings()
-        if enabled:
-            status_message = (
-                "Force Fly ON for you (host-only). Guests judder under Oak netcode — "
-                "use Infinite jump (all) for the lobby."
-            )
-            _log(status_message)
-            _set_status_pill(status_message, "green")
+        status_message = (
+            f"Force Fly {'ON' if enabled else 'OFF'} for {applied} party member(s)."
+        )
+        _log(status_message)
+        _set_status_pill(status_message, "green" if enabled else "cyan")
     except Exception as exc:
-        status_message = f"Force Fly toggle failed: {exc!r}"
+        status_message = f"Force Fly all toggle failed: {exc!r}"
         _log(status_message)
         _set_status_pill(status_message, "red")
 
@@ -3279,29 +2952,12 @@ def set_force_fly_for_index(idx: int, enabled: bool, *, party_wide: bool = False
     if idx < 0:
         set_force_fly_all(enabled)
         return
-    # Force fly is host-only. Party-wide / guest targets snap then judder (client prediction fight).
-    _force_fly_all_mode = False
-    local = local_party_index()
-    if enabled:
-        if local is None:
-            status_message = "Force Fly failed: host pawn unavailable."
-            _log(status_message)
-            _set_status_pill(status_message, "red")
-            return
-        if party_wide or not _is_local_party_index(idx):
-            try:
-                _release_remote_force_fly_leftovers()
-            except Exception:
-                pass
-            idx = int(local)
-        else:
-            idx = int(local)
-    else:
-        # OFF may still clean a guest leftover from older builds.
-        if not party_wide:
-            idx = normalize_mobility_target_index(idx, party_wide=False)
+    if not party_wide:
+        _force_fly_all_mode = False
     if enabled and fall_through_enabled_for_index(idx):
         set_fall_through_for_index(idx, False)
+    if not party_wide:
+        idx = normalize_mobility_target_index(idx, party_wide=False)
     local_target = _is_local_party_index(idx)
     try:
         identity = selected_lobby_identity(idx)
@@ -3392,11 +3048,6 @@ def set_force_fly_for_index(idx: int, enabled: bool, *, party_wide: bool = False
         except Exception:
             pass
     status_message = f"Force Fly {'enabled' if enabled else 'disabled'} for {name}."
-    if enabled and local_target:
-        status_message = (
-            f"Force Fly ON for {name} (host-only). "
-            "Use Infinite jump for other players — guest fly judders under Oak netcode."
-        )
     _log(status_message)
     _set_status_pill(status_message, "green" if enabled else "cyan")
 
@@ -3429,7 +3080,7 @@ def _release_force_fly_target(
 
 
 def _mobility_feature_active_for_index(idx: int) -> bool:
-    if _may_mutate_infinite_jump(int(idx)):
+    if int(idx) in infinite_jump_indices:
         return True
     if int(idx) in _fall_through_indices:
         return True
@@ -3446,11 +3097,7 @@ def _mobility_feature_active_for_index(idx: int) -> bool:
 
 def _sync_party_wide_mobility_targets() -> None:
     """All-party modes: add new joiners instead of scrubbing them back to vanilla."""
-    global infinite_jump_indices, _force_fly_all_mode
-    try:
-        _sync_infinite_jump_indices_from_keys()
-    except Exception:
-        pass
+    global infinite_jump_indices
     if not (_infinite_jump_all_mode or _force_fly_all_mode):
         return
     try:
@@ -3463,12 +3110,8 @@ def _sync_party_wide_mobility_targets() -> None:
             if pawn is None or _is_default_obj(pawn):
                 continue
             i = int(idx)
-            key = _party_identity_key(i)
             if i not in infinite_jump_indices:
                 infinite_jump_indices.add(i)
-                changed = True
-            if key and key not in _infinite_jump_keys:
-                _infinite_jump_keys.add(key)
                 changed = True
         if changed:
             try:
@@ -3476,31 +3119,41 @@ def _sync_party_wide_mobility_targets() -> None:
             except Exception:
                 pass
     if _force_fly_all_mode:
-        # Legacy flag from older builds — force fly is host-only now.
-        _force_fly_all_mode = False
-        local = local_party_index()
-        if local is not None:
-            from .uvhm_progression import selected_lobby_identity
+        from .uvhm_progression import selected_lobby_identity
 
+        for idx, _name, _pc, pawn, _move in contexts:
+            if pawn is None or _is_default_obj(pawn):
+                continue
             try:
-                key = str(selected_lobby_identity(int(local)).key)
+                key = str(selected_lobby_identity(int(idx)).key)
             except Exception:
-                key = ""
-            if key and key not in force_fly_targets:
-                set_force_fly_for_index(int(local), True, party_wide=False)
-        try:
-            _release_remote_force_fly_leftovers()
-        except Exception:
-            pass
+                continue
+            if key not in force_fly_targets:
+                set_force_fly_for_index(int(idx), True, party_wide=True)
 
 
 def _prune_remote_mobility_toggles() -> None:
-    """Departed-player cleanup for infinite jump.
-
-    Disabled as an auto wipe — false leave detection kept clearing Infinite Jump
-    a few seconds after enable. Explicit OFF still clears via set_infinite_jump_*.
-    """
-    return
+    """Guest indices in saved toggles read as OFF in the EXE but still poison pawns on join."""
+    global infinite_jump_indices
+    if _infinite_jump_party_wide():
+        return
+    local = local_party_index()
+    if local is None:
+        return
+    stale = {int(i) for i in infinite_jump_indices if int(i) != int(local)}
+    if not stale:
+        return
+    for idx in stale:
+        infinite_jump_indices.discard(idx)
+    try:
+        _restore_jump_limits_for_indices(stale)
+    except Exception:
+        pass
+    try:
+        save_settings()
+    except Exception:
+        pass
+    _log(f"Cleared stale infinite-jump on remote slot(s) {sorted(stale)} (host-only mode).")
 
 
 def _restore_remote_walk_pawn(pc: object, pawn: object, move: object | None, idx: int) -> int:
@@ -3593,7 +3246,7 @@ def _restore_remote_walk_pawn(pc: object, pawn: object, move: object | None, idx
 
 
 def scrub_remote_party_mobility(*, reason: str = "") -> int:
-    """Force vanilla movement on remote party pawns that are NOT on an intentional SQBT boost."""
+    """Force vanilla movement on every remote party pawn (late join / stale host writes)."""
     try:
         contexts = live_party_contexts()
     except Exception:
@@ -3602,13 +3255,9 @@ def scrub_remote_party_mobility(*, reason: str = "") -> int:
         return 0
     restored = 0
     for idx, _name, pc, pawn, move in contexts:
-        i = int(idx)
-        if _is_local_party_index(i):
+        if _is_local_party_index(int(idx)):
             continue
-        # Keep intentional Infinite Jump / Fall-through / Force-fly remotes.
-        if _mobility_feature_active_for_index(i):
-            continue
-        restored += _restore_remote_walk_pawn(pc, pawn, move, i)
+        restored += _restore_remote_walk_pawn(pc, pawn, move, int(idx))
     try:
         restored += _scrub_orphan_force_fly_latches(include_local=False)
     except Exception:
@@ -3660,7 +3309,7 @@ def _scrub_orphan_force_fly_latches(*, include_local: bool = True) -> int:
             continue
         if int(idx) in _fall_through_indices:
             continue
-        if _may_mutate_infinite_jump(int(idx)):
+        if int(idx) in infinite_jump_indices:
             continue
         try:
             key = str(selected_lobby_identity(int(idx)).key)
@@ -3684,42 +3333,28 @@ def _scrub_orphan_force_fly_latches(*, include_local: bool = True) -> int:
 
 def _mobility_party_join_scrub() -> None:
     """Someone joined — undo stale SQBT writes on remote pawns (not full mobility presets)."""
-    global _last_mobility_party_count, _last_mobility_party_array_len, _remote_join_scrub_until
+    global _last_mobility_party_count, _remote_join_scrub_until
     try:
-        array_len = _player_array_len()
         contexts = live_party_contexts()
         count = len(contexts)
     except Exception:
         return
-    prev_array = int(_last_mobility_party_array_len or 0)
     prev = int(_last_mobility_party_count or 0)
-    if array_len > 0:
-        _last_mobility_party_array_len = array_len
-    _last_mobility_party_count = count if count > 0 else prev
-    # Prefer PlayerArray size for leave/join — live_party_contexts drops when PC
-    # briefly fails to resolve and used to look like a leave → wipe jump.
-    size_now = array_len if array_len > 0 else count
-    size_prev = prev_array if prev_array > 0 else prev
-    if size_now < size_prev and size_prev > 0:
-        try:
-            _prune_remote_mobility_toggles()
-        except Exception:
-            pass
-        return
-    if size_now <= size_prev or size_now < 2:
+    _last_mobility_party_count = count
+    if count <= prev or count < 2:
         return
     _remote_join_scrub_until = time.monotonic() + 18.0
-    try:
-        _sync_infinite_jump_indices_from_keys()
-    except Exception:
-        pass
     if _infinite_jump_party_wide() or _force_fly_party_wide():
         try:
             _sync_party_wide_mobility_targets()
         except Exception:
             pass
         return
-    scrub_remote_party_mobility(reason=f"party {size_prev}->{size_now}")
+    try:
+        _prune_remote_mobility_toggles()
+    except Exception:
+        pass
+    scrub_remote_party_mobility(reason=f"party {prev}->{count}")
 
 
 def _scrub_remote_force_fly_latch() -> int:
@@ -3728,31 +3363,33 @@ def _scrub_remote_force_fly_latch() -> int:
 
 
 def reapply_all_force_fly() -> int:
-    """Re-push the current force-fly speed to active host targets only."""
+    """Re-push the current force-fly speed to every active target (kinematic stamp)."""
     from .uvhm_progression import selected_lobby_identity
 
     if not force_fly_targets:
         return 0
-    try:
-        _release_remote_force_fly_leftovers()
-    except Exception:
-        pass
     applied = 0
     for idx, _name, pc, pawn, move in live_party_contexts():
-        if not _is_local_party_index(int(idx)):
-            continue
         try:
             identity = selected_lobby_identity(int(idx))
         except Exception:
             continue
         if identity.key not in force_fly_targets:
             continue
-        if pawn is None or not _uobject_live(pawn):
+        if pawn is None:
             continue
-        if _stamp_force_fly_speed(pawn, move, local_target=True, pc=pc, dt=0.016) > 0:
+        if not _uobject_live(pawn):
+            continue
+        if _stamp_force_fly_speed(
+            pawn,
+            move,
+            local_target=_is_local_party_index(int(idx)),
+            pc=pc,
+            dt=0.016,
+        ) > 0:
             applied += 1
     if applied:
-        status_message = f"Updated force-fly speed to {float(force_fly_speed):.0f}."
+        status_message = f"Updated force-fly speed to {float(force_fly_speed):.0f} for {applied} target(s)."
         _log(status_message)
     return applied
 
@@ -3826,10 +3463,6 @@ def _force_fly_hud_tick() -> None:
         _force_fly_missing_since.pop(key, None)
         restore = _sanitize_force_fly_restore(_force_fly_restore.get(key, {}))
         is_local = _is_local_party_index(int(_idx))
-        if not is_local:
-            # Host-only: never keep driving guests (judder).
-            _release_force_fly_target(key, pc=live_pc, pawn=pawn, move=move, is_local=False)
-            continue
         if key in _force_fly_disabling:
             if _apply_force_fly(
                 live_pc,
@@ -3844,7 +3477,7 @@ def _force_fly_hud_tick() -> None:
         _stamp_force_fly_speed(
             pawn,
             move,
-            local_target=True,
+            local_target=is_local,
             pc=live_pc,
             dt=min(dt, 0.1),
         )
@@ -4080,22 +3713,19 @@ def _infinite_jump_hud_tick(now: float) -> None:
         done: list[int] = []
         for idx in list(_infinite_jump_disabling):
             until = float(_infinite_jump_disable_until.get(idx) or 0.0)
-            if idx in infinite_jump_indices or _may_mutate_infinite_jump(idx):
-                # Re-enabled during the disable grace — stop restoring vanilla caps.
-                _infinite_jump_disabling.discard(idx)
-                _infinite_jump_disable_until.pop(idx, None)
-                continue
+            if idx in infinite_jump_indices:
+                infinite_jump_indices.discard(idx)
             _restore_jump_limits_for_indices({idx})
             if now >= until:
                 done.append(idx)
         for idx in done:
             _infinite_jump_disabling.discard(idx)
             _infinite_jump_disable_until.pop(idx, None)
-    if not infinite_jump_indices and not _infinite_jump_keys and not _infinite_jump_all_mode:
+    if not infinite_jump_indices:
         return
     for idx, _name, _pc, pawn, move in _infinite_jump_cached_contexts(now):
         try:
-            if not _may_mutate_infinite_jump(int(idx)):
+            if int(idx) not in infinite_jump_indices:
                 continue
         except Exception:
             continue
@@ -4265,20 +3895,7 @@ def disable_mobility_runtime() -> None:
 
 
 def enable_mobility_runtime() -> None:
-    global infinite_jump_indices, _infinite_jump_all_mode, _infinite_jump_disabling, _infinite_jump_disable_until
-    global _infinite_jump_keys, _infinite_jump_key_missing_since
-    # Never re-arm Infinite Jump from a previous session.
-    infinite_jump_indices.clear()
-    _infinite_jump_keys.clear()
-    _infinite_jump_key_missing_since.clear()
-    _infinite_jump_all_mode = False
-    _infinite_jump_disabling.clear()
-    _infinite_jump_disable_until.clear()
     set_runtime_enabled(True)
-    try:
-        save_settings()
-    except Exception:
-        pass
 
 
 try:

@@ -1,6 +1,7 @@
 {
   "schema": "ulm.challenge_catalog.v1",
-  "source": "Bundled NCS challenge export; sanitized for standalone distribution. Goals = per-token max challengetiers.goalvalue.",
+  "source": "NexusConfigStore_Dumps_v1.9.1-10.0.0.3",
+  "built_at": "2026-09-10T16:51:00Z",
   "challenges": [
     {
       "token": "Challenge_2_Status_Effects",
@@ -107,6 +108,10 @@
       "goal": 3
     },
     {
+      "token": "Challenge_Activity_DahlBunker_1",
+      "goal": 20000
+    },
+    {
       "token": "Challenge_Activity_DrillSites_Demo_1",
       "goal": 1
     },
@@ -137,6 +142,18 @@
     {
       "token": "Challenge_Activity_DrillSites_Shatteredlands_2",
       "goal": 1
+    },
+    {
+      "token": "Challenge_Activity_FuelSiphon_1",
+      "goal": 20000
+    },
+    {
+      "token": "Challenge_Activity_FuelSiphon_2",
+      "goal": 20000
+    },
+    {
+      "token": "Challenge_Activity_FuelSiphon_Parent",
+      "goal": 20000
     },
     {
       "token": "Challenge_Activity_OrderBunkers_City_1",
@@ -323,8 +340,64 @@
       "goal": 125
     },
     {
+      "token": "Challenge_Clot_01",
+      "goal": 20000
+    },
+    {
+      "token": "Challenge_Clot_02",
+      "goal": 20000
+    },
+    {
+      "token": "Challenge_Clot_03",
+      "goal": 20000
+    },
+    {
+      "token": "Challenge_Clot_04",
+      "goal": 20000
+    },
+    {
+      "token": "Challenge_Clot_05",
+      "goal": 20000
+    },
+    {
+      "token": "Challenge_Clot_06",
+      "goal": 20000
+    },
+    {
+      "token": "Challenge_Clot_07",
+      "goal": 20000
+    },
+    {
+      "token": "Challenge_Clot_08",
+      "goal": 20000
+    },
+    {
+      "token": "Challenge_Clot_09",
+      "goal": 20000
+    },
+    {
       "token": "Challenge_Collect_AllKeys_EchoLocationTest",
       "goal": 3
+    },
+    {
+      "token": "Challenge_Collect_BP4_EchoLog_1",
+      "goal": 20000
+    },
+    {
+      "token": "Challenge_Collect_BP4_EchoLog_2",
+      "goal": 20000
+    },
+    {
+      "token": "Challenge_Collect_BP4_EchoLog_3",
+      "goal": 20000
+    },
+    {
+      "token": "Challenge_Collect_BP4_EchoLog_4",
+      "goal": 20000
+    },
+    {
+      "token": "Challenge_Collect_BP4_EchoLog_5",
+      "goal": 20000
     },
     {
       "token": "Challenge_Collect_Caches_Grasslands_1",
@@ -459,12 +532,164 @@
       "goal": 1
     },
     {
+      "token": "Challenge_Collect_DLC1_EchoLog_1",
+      "goal": 20000
+    },
+    {
+      "token": "Challenge_Collect_DLC1_EchoLog_10",
+      "goal": 20000
+    },
+    {
+      "token": "Challenge_Collect_DLC1_EchoLog_11",
+      "goal": 20000
+    },
+    {
+      "token": "Challenge_Collect_DLC1_EchoLog_12",
+      "goal": 20000
+    },
+    {
+      "token": "Challenge_Collect_DLC1_EchoLog_13",
+      "goal": 20000
+    },
+    {
+      "token": "Challenge_Collect_DLC1_EchoLog_14",
+      "goal": 20000
+    },
+    {
+      "token": "Challenge_Collect_DLC1_EchoLog_15",
+      "goal": 20000
+    },
+    {
+      "token": "Challenge_Collect_DLC1_EchoLog_16",
+      "goal": 20000
+    },
+    {
+      "token": "Challenge_Collect_DLC1_EchoLog_17",
+      "goal": 20000
+    },
+    {
+      "token": "Challenge_Collect_DLC1_EchoLog_18",
+      "goal": 20000
+    },
+    {
+      "token": "Challenge_Collect_DLC1_EchoLog_19",
+      "goal": 20000
+    },
+    {
+      "token": "Challenge_Collect_DLC1_EchoLog_2",
+      "goal": 20000
+    },
+    {
+      "token": "Challenge_Collect_DLC1_EchoLog_20",
+      "goal": 20000
+    },
+    {
+      "token": "Challenge_Collect_DLC1_EchoLog_21",
+      "goal": 20000
+    },
+    {
+      "token": "Challenge_Collect_DLC1_EchoLog_22",
+      "goal": 20000
+    },
+    {
+      "token": "Challenge_Collect_DLC1_EchoLog_23",
+      "goal": 20000
+    },
+    {
+      "token": "Challenge_Collect_DLC1_EchoLog_24",
+      "goal": 20000
+    },
+    {
+      "token": "Challenge_Collect_DLC1_EchoLog_25",
+      "goal": 20000
+    },
+    {
+      "token": "Challenge_Collect_DLC1_EchoLog_26",
+      "goal": 20000
+    },
+    {
+      "token": "Challenge_Collect_DLC1_EchoLog_27",
+      "goal": 20000
+    },
+    {
+      "token": "Challenge_Collect_DLC1_EchoLog_28",
+      "goal": 20000
+    },
+    {
+      "token": "Challenge_Collect_DLC1_EchoLog_3",
+      "goal": 20000
+    },
+    {
+      "token": "Challenge_Collect_DLC1_EchoLog_4",
+      "goal": 20000
+    },
+    {
+      "token": "Challenge_Collect_DLC1_EchoLog_5",
+      "goal": 20000
+    },
+    {
+      "token": "Challenge_Collect_DLC1_EchoLog_6",
+      "goal": 20000
+    },
+    {
+      "token": "Challenge_Collect_DLC1_EchoLog_7",
+      "goal": 20000
+    },
+    {
+      "token": "Challenge_Collect_DLC1_EchoLog_8",
+      "goal": 20000
+    },
+    {
+      "token": "Challenge_Collect_DLC1_EchoLog_9",
+      "goal": 20000
+    },
+    {
       "token": "Challenge_Collect_DLC1_EchoLog_Parent",
       "goal": 3000000
     },
     {
+      "token": "Challenge_Collect_DLC1_VaultSymbols_1",
+      "goal": 20000
+    },
+    {
+      "token": "Challenge_Collect_DLC1_VaultSymbols_2",
+      "goal": 20000
+    },
+    {
+      "token": "Challenge_Collect_DLC1_VaultSymbols_3",
+      "goal": 20000
+    },
+    {
+      "token": "Challenge_Collect_DLC1_VaultSymbols_4",
+      "goal": 20000
+    },
+    {
+      "token": "Challenge_Collect_DLC1_VaultSymbols_5",
+      "goal": 20000
+    },
+    {
       "token": "Challenge_Collect_DLC1_VaultSymbols_Parent",
       "goal": 3000000
+    },
+    {
+      "token": "Challenge_Collect_DahlCaches_1",
+      "goal": 20000
+    },
+    {
+      "token": "Challenge_Collect_DahlCaches_2",
+      "goal": 20000
+    },
+    {
+      "token": "Challenge_Collect_DahlCaches_3",
+      "goal": 20000
+    },
+    {
+      "token": "Challenge_Collect_DahlCaches_4",
+      "goal": 20000
+    },
+    {
+      "token": "Challenge_Collect_DahlCaches_5",
+      "goal": 20000
     },
     {
       "token": "Challenge_Collect_DahlCaches_Parent",
@@ -521,6 +746,50 @@
     {
       "token": "Challenge_Collect_EchoLog_ARJ_SHA_03",
       "goal": 1
+    },
+    {
+      "token": "Challenge_Collect_EchoLog_Auger_Fallen",
+      "goal": 20000
+    },
+    {
+      "token": "Challenge_Collect_EchoLog_Auger_Smashed",
+      "goal": 20000
+    },
+    {
+      "token": "Challenge_Collect_EchoLog_ERD_01",
+      "goal": 20000
+    },
+    {
+      "token": "Challenge_Collect_EchoLog_ERD_02",
+      "goal": 20000
+    },
+    {
+      "token": "Challenge_Collect_EchoLog_ERD_03",
+      "goal": 20000
+    },
+    {
+      "token": "Challenge_Collect_EchoLog_ERD_04",
+      "goal": 20000
+    },
+    {
+      "token": "Challenge_Collect_EchoLog_ERD_05",
+      "goal": 20000
+    },
+    {
+      "token": "Challenge_Collect_EchoLog_ERD_06",
+      "goal": 20000
+    },
+    {
+      "token": "Challenge_Collect_EchoLog_ERD_07",
+      "goal": 20000
+    },
+    {
+      "token": "Challenge_Collect_EchoLog_ERD_08",
+      "goal": 20000
+    },
+    {
+      "token": "Challenge_Collect_EchoLog_ERD_09",
+      "goal": 20000
     },
     {
       "token": "Challenge_Collect_EchoLog_ERD_Parent",
@@ -1055,6 +1324,10 @@
       "goal": 1
     },
     {
+      "token": "Challenge_Collect_EchoLog_MIS_CITY_16",
+      "goal": 20000
+    },
+    {
       "token": "Challenge_Collect_EchoLog_MIS_CITY_17",
       "goal": 1
     },
@@ -1251,6 +1524,22 @@
       "goal": 1
     },
     {
+      "token": "Challenge_Collect_EchoLog_Pietro_Log1",
+      "goal": 20000
+    },
+    {
+      "token": "Challenge_Collect_EchoLog_Pietro_Log2",
+      "goal": 20000
+    },
+    {
+      "token": "Challenge_Collect_EchoLog_Pietro_Log3",
+      "goal": 20000
+    },
+    {
+      "token": "Challenge_Collect_EchoLog_Pietro_Log4",
+      "goal": 20000
+    },
+    {
       "token": "Challenge_Collect_EchoLog_VH_CITY_01",
       "goal": 1
     },
@@ -1397,6 +1686,18 @@
     {
       "token": "Challenge_Collect_EchoLog_VH_SHA_09",
       "goal": 1
+    },
+    {
+      "token": "Challenge_Collect_Echo_Log_Dogleg_1",
+      "goal": 20000
+    },
+    {
+      "token": "Challenge_Collect_Echo_Log_Dogleg_2",
+      "goal": 20000
+    },
+    {
+      "token": "Challenge_Collect_Echo_Log_Dogleg_3",
+      "goal": 20000
     },
     {
       "token": "Challenge_Collect_Evocariums_City_1",
@@ -1613,6 +1914,26 @@
     {
       "token": "Challenge_Collect_PropagandaSpeakers_Shatteredlands_8",
       "goal": 1
+    },
+    {
+      "token": "Challenge_Collect_RecordPlayer_1",
+      "goal": 20000
+    },
+    {
+      "token": "Challenge_Collect_RecordPlayer_2",
+      "goal": 20000
+    },
+    {
+      "token": "Challenge_Collect_RecordPlayer_3",
+      "goal": 20000
+    },
+    {
+      "token": "Challenge_Collect_RecordPlayer_4",
+      "goal": 20000
+    },
+    {
+      "token": "Challenge_Collect_RecordPlayer_5",
+      "goal": 20000
     },
     {
       "token": "Challenge_Collect_RecordPlayer_Parent",
@@ -2003,12 +2324,48 @@
       "goal": 1600
     },
     {
+      "token": "Challenge_Cowbell_Kickdowns_WSWBridge_Left",
+      "goal": 20000
+    },
+    {
+      "token": "Challenge_Cowbell_Kickdowns_WSWBridge_Parent",
+      "goal": 20000
+    },
+    {
+      "token": "Challenge_Cowbell_Kickdowns_WSWBridge_Right",
+      "goal": 20000
+    },
+    {
       "token": "Challenge_Cryo_Kills",
       "goal": 1000
     },
     {
       "token": "Challenge_Cryo_Status",
       "goal": 10000
+    },
+    {
+      "token": "Challenge_DLC1_EchoLog_RecordPlayer_1",
+      "goal": 20000
+    },
+    {
+      "token": "Challenge_DLC1_EchoLog_RecordPlayer_2",
+      "goal": 20000
+    },
+    {
+      "token": "Challenge_DLC1_EchoLog_RecordPlayer_3",
+      "goal": 20000
+    },
+    {
+      "token": "Challenge_DLC1_EchoLog_RecordPlayer_4",
+      "goal": 20000
+    },
+    {
+      "token": "Challenge_DLC1_EchoLog_RecordPlayer_5",
+      "goal": 20000
+    },
+    {
+      "token": "Challenge_DLC1_EchoLog_RecordPlayer_Parent",
+      "goal": 20000
     },
     {
       "token": "Challenge_Daedalus_Kills",
@@ -2065,6 +2422,34 @@
     {
       "token": "Challenge_DarkSiren_LevelUp",
       "goal": 50
+    },
+    {
+      "token": "Challenge_EchoLog_Tuba_1",
+      "goal": 20000
+    },
+    {
+      "token": "Challenge_EchoLog_Tuba_2",
+      "goal": 20000
+    },
+    {
+      "token": "Challenge_EchoLog_Tuba_3",
+      "goal": 20000
+    },
+    {
+      "token": "Challenge_EchoLog_Tuba_4",
+      "goal": 20000
+    },
+    {
+      "token": "Challenge_EchoLog_Tuba_5",
+      "goal": 20000
+    },
+    {
+      "token": "Challenge_EchoLog_Tuba_6",
+      "goal": 20000
+    },
+    {
+      "token": "Challenge_EchoLog_Tuba_7",
+      "goal": 20000
     },
     {
       "token": "Challenge_ExoSoldier_AutoLock_Single",
@@ -2443,6 +2828,10 @@
       "goal": 175
     },
     {
+      "token": "Challenge_Mandolin_Tutorial_CoS_BadassSwitch",
+      "goal": 20000
+    },
+    {
       "token": "Challenge_Misc_WorldEvent_Grasslands",
       "goal": 1
     },
@@ -2799,6 +3188,10 @@
       "goal": 1
     },
     {
+      "token": "Challenge_Shiny_Parent",
+      "goal": 20000
+    },
+    {
       "token": "Challenge_Shiny_Phantom_Flame",
       "goal": 1
     },
@@ -2967,6 +3360,18 @@
       "goal": 1000
     },
     {
+      "token": "Challenge_ShuggurathTank_01",
+      "goal": 20000
+    },
+    {
+      "token": "Challenge_ShuggurathTank_02",
+      "goal": 20000
+    },
+    {
+      "token": "Challenge_ShuggurathTank_03",
+      "goal": 20000
+    },
+    {
       "token": "Challenge_Sniper_Bigshot",
       "goal": 1
     },
@@ -3019,8 +3424,16 @@
       "goal": 350
     },
     {
+      "token": "Challenge_SpareParts_CovNotOverheat",
+      "goal": 250000
+    },
+    {
       "token": "Challenge_SpareParts_CovNotOverheated",
       "goal": 600
+    },
+    {
+      "token": "Challenge_SpareParts_CovOverheat",
+      "goal": 3000000
     },
     {
       "token": "Challenge_SpareParts_CovOverheated",
@@ -3031,8 +3444,68 @@
       "goal": 100
     },
     {
+      "token": "Challenge_SpeakeasyDoor_1",
+      "goal": 20000
+    },
+    {
+      "token": "Challenge_SpeakeasyDoor_2",
+      "goal": 20000
+    },
+    {
+      "token": "Challenge_SpeakeasyDoor_3",
+      "goal": 20000
+    },
+    {
+      "token": "Challenge_SpeakeasyDoor_Parent",
+      "goal": 20000
+    },
+    {
+      "token": "Challenge_SpeakeasyPortal_1",
+      "goal": 20000
+    },
+    {
+      "token": "Challenge_SpeakeasyPortal_2",
+      "goal": 20000
+    },
+    {
+      "token": "Challenge_SpeakeasyPortal_3",
+      "goal": 20000
+    },
+    {
+      "token": "Challenge_SpeakeasyPortal_4",
+      "goal": 20000
+    },
+    {
+      "token": "Challenge_SpeakeasyPortal_5",
+      "goal": 20000
+    },
+    {
+      "token": "Challenge_SpeakeasyPortal_6",
+      "goal": 20000
+    },
+    {
       "token": "Challenge_SpeakeasyPortal_Parent",
       "goal": 3000000
+    },
+    {
+      "token": "Challenge_SpeakeasySafe_1",
+      "goal": 20000
+    },
+    {
+      "token": "Challenge_SpeakeasySafe_2",
+      "goal": 20000
+    },
+    {
+      "token": "Challenge_SpeakeasySafe_3",
+      "goal": 20000
+    },
+    {
+      "token": "Challenge_SpeakeasySafe_4",
+      "goal": 20000
+    },
+    {
+      "token": "Challenge_SpeakeasySafe_5",
+      "goal": 20000
     },
     {
       "token": "Challenge_Tediore_ComboReload_Kills",
@@ -3131,6 +3604,18 @@
       "goal": 1
     },
     {
+      "token": "Challenge_Tutorial_Collectible_DLC1_DahlCaches_Discovery",
+      "goal": 20000
+    },
+    {
+      "token": "Challenge_Tutorial_Collectible_DLC1_RecordPlayers_Discovery",
+      "goal": 20000
+    },
+    {
+      "token": "Challenge_Tutorial_Collectible_DLC1_VaultSymbols_Discovery",
+      "goal": 20000
+    },
+    {
       "token": "Challenge_Tutorial_Collectible_EchoLogArjay_Discovery",
       "goal": 1
     },
@@ -3181,6 +3666,10 @@
     {
       "token": "Challenge_Tutorial_Misc_CombatChest",
       "goal": 1
+    },
+    {
+      "token": "Challenge_Tutorial_Misc_DLC1_IceFishing_Discovery",
+      "goal": 20000
     },
     {
       "token": "Challenge_Tutorial_Misc_RespecMachine",
@@ -3355,6 +3844,14 @@
       "goal": 20000
     },
     {
+      "token": "Challenges_Achievements_04_cosmetics_collect",
+      "goal": 20000
+    },
+    {
+      "token": "Challenges_Achievements_05_vehicles_collect",
+      "goal": 20000
+    },
+    {
       "token": "Challenges_Achievements_06_legendaries_equip",
       "goal": 1
     },
@@ -3365,6 +3862,10 @@
     {
       "token": "Challenges_Achievements_08_challenges_manufacturer",
       "goal": 1
+    },
+    {
+      "token": "Challenges_Achievements_09_activities_complete",
+      "goal": 20000
     },
     {
       "token": "Challenges_Achievements_10_worldevents_colosseum",
@@ -3379,8 +3880,32 @@
       "goal": 1
     },
     {
+      "token": "Challenges_Achievements_13_contracts_complete",
+      "goal": 20000
+    },
+    {
+      "token": "Challenges_Achievements_14_discovery_grasslands",
+      "goal": 20000
+    },
+    {
+      "token": "Challenges_Achievements_15_discovery_mountains",
+      "goal": 20000
+    },
+    {
+      "token": "Challenges_Achievements_16_discovery_shatteredlands",
+      "goal": 20000
+    },
+    {
+      "token": "Challenges_Achievements_17_discovery_city",
+      "goal": 20000
+    },
+    {
       "token": "Challenges_Achievements_18_worldboss_defeat",
       "goal": 1
+    },
+    {
+      "token": "Challenges_Achievements_19_vaultguardian_defeat",
+      "goal": 20000
     },
     {
       "token": "Challenges_Achievements_19_vaultguardian_grasslands",
@@ -3393,6 +3918,22 @@
     {
       "token": "Challenges_Achievements_19_vaultguardian_shatteredlands",
       "goal": 1
+    },
+    {
+      "token": "Challenges_Achievements_20_missions_survivalist",
+      "goal": 20000
+    },
+    {
+      "token": "Challenges_Achievements_21_missions_auger",
+      "goal": 20000
+    },
+    {
+      "token": "Challenges_Achievements_22_missions_electi",
+      "goal": 20000
+    },
+    {
+      "token": "Challenges_Achievements_23_missions_claptrap",
+      "goal": 20000
     },
     {
       "token": "Challenges_Achievements_24_missions_side",
@@ -3439,7 +3980,147 @@
       "goal": 1
     },
     {
+      "token": "Challenges_Achievements_35_Cello_enemies_defeat",
+      "goal": 20000
+    },
+    {
       "token": "Challenges_Achievements_35_trophies_all",
+      "goal": 20000
+    },
+    {
+      "token": "Challenges_Achievements_36_Cello_boss_cat",
+      "goal": 20000
+    },
+    {
+      "token": "Challenges_Achievements_36_Cello_boss_defeat",
+      "goal": 20000
+    },
+    {
+      "token": "Challenges_Achievements_36_Cello_boss_meathead",
+      "goal": 20000
+    },
+    {
+      "token": "Challenges_Achievements_36_Cello_boss_pangolin",
+      "goal": 20000
+    },
+    {
+      "token": "Challenges_Achievements_36_Cello_boss_phalanx",
+      "goal": 20000
+    },
+    {
+      "token": "Challenges_Achievements_36_Cello_boss_splice",
+      "goal": 20000
+    },
+    {
+      "token": "Challenges_Achievements_37_Cello_missions_main",
+      "goal": 20000
+    },
+    {
+      "token": "Challenges_Achievements_38_Cowbell_complete_all_activities",
+      "goal": 20000
+    },
+    {
+      "token": "Challenges_Achievements_39_Cowbell_complete_all_side_missions",
+      "goal": 20000
+    },
+    {
+      "token": "Challenges_Achievements_40_Cowbell_Defeat_Rift_boss",
+      "goal": 1
+    },
+    {
+      "token": "Challenges_Achievements_41_Cowbell_mission_01_PolarWastes",
+      "goal": 1
+    },
+    {
+      "token": "Challenges_Achievements_42_Cowbell_mission_02_FindEllie",
+      "goal": 1
+    },
+    {
+      "token": "Challenges_Achievements_43_Cowbell_mission_03_BloodstainedHollows",
+      "goal": 1
+    },
+    {
+      "token": "Challenges_Achievements_44_Cowbell_mission_04_ColonyShip",
+      "goal": 1
+    },
+    {
+      "token": "Challenges_Achievements_45_Cowbell_Main_mission",
+      "goal": 1
+    },
+    {
+      "token": "Challenges_Achievements_46_Mandolin_coin_chest",
+      "goal": 20000
+    },
+    {
+      "token": "Challenges_Achievements_47_Mandolin_boss_cleaner",
+      "goal": 20000
+    },
+    {
+      "token": "Challenges_Achievements_47_Mandolin_boss_defeat",
+      "goal": 20000
+    },
+    {
+      "token": "Challenges_Achievements_47_Mandolin_boss_fixer",
+      "goal": 20000
+    },
+    {
+      "token": "Challenges_Achievements_47_Mandolin_boss_main",
+      "goal": 20000
+    },
+    {
+      "token": "Challenges_Achievements_48_Mandolin_missions_main",
+      "goal": 20000
+    },
+    {
+      "token": "Challenges_Achievements_49_Harp_response_dave1",
+      "goal": 20000
+    },
+    {
+      "token": "Challenges_Achievements_49_Harp_response_dave2",
+      "goal": 20000
+    },
+    {
+      "token": "Challenges_Achievements_49_Harp_response_skankeyes1",
+      "goal": 20000
+    },
+    {
+      "token": "Challenges_Achievements_49_Harp_response_skankeyes2",
+      "goal": 20000
+    },
+    {
+      "token": "Challenges_Achievements_49_Harp_response_william1",
+      "goal": 20000
+    },
+    {
+      "token": "Challenges_Achievements_49_Harp_response_william2",
+      "goal": 20000
+    },
+    {
+      "token": "Challenges_Achievements_49_Harp_responses_all",
+      "goal": 20000
+    },
+    {
+      "token": "Challenges_Achievements_50_Harp_boss_betamaxxx",
+      "goal": 20000
+    },
+    {
+      "token": "Challenges_Achievements_50_Harp_boss_defeat",
+      "goal": 20000
+    },
+    {
+      "token": "Challenges_Achievements_50_Harp_boss_infamousdave",
+      "goal": 20000
+    },
+    {
+      "token": "Challenges_Achievements_50_Harp_boss_maxxxsupreme",
+      "goal": 20000
+    },
+    {
+      "token": "Challenges_Achievements_50_Harp_boss_skankeyes",
+      "goal": 20000
+    },
+    {
+      "token": "Challenges_Achievements_51_Harp_missions_main",
       "goal": 20000
     },
     {
@@ -3515,50 +4196,6 @@
       "goal": 3000000
     },
     {
-      "token": "Challenge_Cowbell_Kickdowns_WSWBridge_Left",
-      "goal": 1
-    },
-    {
-      "token": "Challenge_Cowbell_Kickdowns_WSWBridge_Parent",
-      "goal": 1
-    },
-    {
-      "token": "Challenge_Cowbell_Kickdowns_WSWBridge_Right",
-      "goal": 1
-    },
-    {
-      "token": "Challenges_Achievements_38_Cowbell_complete_all_activities",
-      "goal": 1
-    },
-    {
-      "token": "Challenges_Achievements_39_Cowbell_complete_all_side_missions",
-      "goal": 1
-    },
-    {
-      "token": "Challenges_Achievements_40_Cowbell_Defeat_Rift_boss",
-      "goal": 1
-    },
-    {
-      "token": "Challenges_Achievements_41_Cowbell_mission_01_PolarWastes",
-      "goal": 1
-    },
-    {
-      "token": "Challenges_Achievements_42_Cowbell_mission_02_FindEllie",
-      "goal": 1
-    },
-    {
-      "token": "Challenges_Achievements_43_Cowbell_mission_03_BloodstainedHollows",
-      "goal": 1
-    },
-    {
-      "token": "Challenges_Achievements_44_Cowbell_mission_04_ColonyShip",
-      "goal": 1
-    },
-    {
-      "token": "Challenges_Achievements_45_Cowbell_Main_mission",
-      "goal": 1
-    },
-    {
       "token": "Cowbell_Challenges_World_SpookyStory_BuyerRemorse",
       "goal": 1
     },
@@ -3592,7 +4229,7 @@
     },
     {
       "token": "Cowbell_Challenges_World_SpookyStory_Lucine5",
-      "goal": 1
+      "goal": 20000
     },
     {
       "token": "Cowbell_Challenges_World_SpookyStory_LucineIntro",
@@ -3659,12 +4296,404 @@
       "goal": 1
     },
     {
+      "token": "challenge_clot_10",
+      "goal": 20000
+    },
+    {
+      "token": "challenge_clot_11",
+      "goal": 20000
+    },
+    {
+      "token": "challenge_clot_12",
+      "goal": 20000
+    },
+    {
+      "token": "challenge_clot_13",
+      "goal": 20000
+    },
+    {
+      "token": "challenge_clot_14",
+      "goal": 20000
+    },
+    {
+      "token": "challenge_clot_15",
+      "goal": 20000
+    },
+    {
+      "token": "challenge_clot_16",
+      "goal": 20000
+    },
+    {
+      "token": "challenge_clot_17",
+      "goal": 20000
+    },
+    {
+      "token": "challenge_clot_18",
+      "goal": 20000
+    },
+    {
+      "token": "challenge_clot_19",
+      "goal": 20000
+    },
+    {
+      "token": "challenge_clot_20",
+      "goal": 20000
+    },
+    {
+      "token": "challenge_clot_21",
+      "goal": 20000
+    },
+    {
+      "token": "challenge_clot_22",
+      "goal": 20000
+    },
+    {
+      "token": "challenge_clot_23",
+      "goal": 20000
+    },
+    {
+      "token": "challenge_clot_24",
+      "goal": 20000
+    },
+    {
+      "token": "challenge_clot_25",
+      "goal": 20000
+    },
+    {
+      "token": "challenge_clot_26",
+      "goal": 20000
+    },
+    {
+      "token": "challenge_collect_echolog_erd_10",
+      "goal": 20000
+    },
+    {
+      "token": "challenge_collect_echolog_erd_11",
+      "goal": 20000
+    },
+    {
+      "token": "challenge_collect_echolog_erd_12",
+      "goal": 20000
+    },
+    {
+      "token": "challenge_collect_echolog_erd_13",
+      "goal": 20000
+    },
+    {
+      "token": "challenge_collect_echolog_erd_14",
+      "goal": 20000
+    },
+    {
+      "token": "challenge_collect_echolog_erd_15",
+      "goal": 20000
+    },
+    {
+      "token": "challenge_collect_echolog_erd_16",
+      "goal": 20000
+    },
+    {
+      "token": "challenge_collect_echolog_erd_17",
+      "goal": 20000
+    },
+    {
+      "token": "challenge_collect_echolog_erd_18",
+      "goal": 20000
+    },
+    {
+      "token": "challenge_collect_echolog_gen_city_10",
+      "goal": 20000
+    },
+    {
+      "token": "challenge_collect_echolog_gen_city_11",
+      "goal": 20000
+    },
+    {
+      "token": "challenge_collect_echolog_gen_city_12",
+      "goal": 20000
+    },
+    {
+      "token": "challenge_collect_echolog_gen_city_13",
+      "goal": 20000
+    },
+    {
+      "token": "challenge_collect_echolog_gen_city_14",
+      "goal": 20000
+    },
+    {
+      "token": "challenge_collect_echolog_gen_city_15",
+      "goal": 20000
+    },
+    {
+      "token": "challenge_collect_echolog_gen_city_16",
+      "goal": 20000
+    },
+    {
+      "token": "challenge_collect_echolog_gen_city_17",
+      "goal": 20000
+    },
+    {
+      "token": "challenge_collect_echolog_gen_city_18",
+      "goal": 20000
+    },
+    {
+      "token": "challenge_collect_echolog_gen_city_19",
+      "goal": 20000
+    },
+    {
+      "token": "challenge_collect_echolog_gen_city_20",
+      "goal": 20000
+    },
+    {
+      "token": "challenge_collect_echolog_gen_city_21",
+      "goal": 20000
+    },
+    {
+      "token": "challenge_collect_echolog_gen_city_22",
+      "goal": 20000
+    },
+    {
+      "token": "challenge_collect_echolog_gen_city_23",
+      "goal": 20000
+    },
+    {
+      "token": "challenge_collect_echolog_gen_gra_10",
+      "goal": 20000
+    },
+    {
+      "token": "challenge_collect_echolog_gen_gra_11",
+      "goal": 20000
+    },
+    {
+      "token": "challenge_collect_echolog_gen_gra_12",
+      "goal": 20000
+    },
+    {
+      "token": "challenge_collect_echolog_gen_gra_13",
+      "goal": 20000
+    },
+    {
+      "token": "challenge_collect_echolog_gen_gra_14",
+      "goal": 20000
+    },
+    {
+      "token": "challenge_collect_echolog_gen_gra_15",
+      "goal": 20000
+    },
+    {
+      "token": "challenge_collect_echolog_gen_gra_16",
+      "goal": 20000
+    },
+    {
+      "token": "challenge_collect_echolog_gen_gra_17",
+      "goal": 20000
+    },
+    {
+      "token": "challenge_collect_echolog_gen_gra_18",
+      "goal": 20000
+    },
+    {
+      "token": "challenge_collect_echolog_gen_gra_19",
+      "goal": 20000
+    },
+    {
+      "token": "challenge_collect_echolog_gen_gra_20",
+      "goal": 20000
+    },
+    {
+      "token": "challenge_collect_echolog_gen_gra_21",
+      "goal": 20000
+    },
+    {
+      "token": "challenge_collect_echolog_gen_gra_22",
+      "goal": 20000
+    },
+    {
+      "token": "challenge_collect_echolog_gen_gra_23",
+      "goal": 20000
+    },
+    {
+      "token": "challenge_collect_echolog_gen_gra_24",
+      "goal": 20000
+    },
+    {
       "token": "challenge_collect_echolog_gen_gra_25",
       "goal": 1
     },
     {
+      "token": "challenge_collect_echolog_gen_gra_26",
+      "goal": 20000
+    },
+    {
+      "token": "challenge_collect_echolog_gen_gra_27",
+      "goal": 20000
+    },
+    {
+      "token": "challenge_collect_echolog_gen_gra_28",
+      "goal": 20000
+    },
+    {
+      "token": "challenge_collect_echolog_gen_mtn_10",
+      "goal": 20000
+    },
+    {
+      "token": "challenge_collect_echolog_gen_mtn_11",
+      "goal": 20000
+    },
+    {
+      "token": "challenge_collect_echolog_gen_mtn_12",
+      "goal": 20000
+    },
+    {
+      "token": "challenge_collect_echolog_gen_mtn_13",
+      "goal": 20000
+    },
+    {
+      "token": "challenge_collect_echolog_gen_mtn_14",
+      "goal": 20000
+    },
+    {
+      "token": "challenge_collect_echolog_gen_mtn_15",
+      "goal": 20000
+    },
+    {
+      "token": "challenge_collect_echolog_gen_mtn_16",
+      "goal": 20000
+    },
+    {
+      "token": "challenge_collect_echolog_gen_mtn_17",
+      "goal": 20000
+    },
+    {
+      "token": "challenge_collect_echolog_gen_mtn_18",
+      "goal": 20000
+    },
+    {
+      "token": "challenge_collect_echolog_gen_mtn_19",
+      "goal": 20000
+    },
+    {
+      "token": "challenge_collect_echolog_gen_mtn_20",
+      "goal": 20000
+    },
+    {
+      "token": "challenge_collect_echolog_gen_mtn_21",
+      "goal": 20000
+    },
+    {
+      "token": "challenge_collect_echolog_gen_mtn_22",
+      "goal": 20000
+    },
+    {
+      "token": "challenge_collect_echolog_gen_mtn_23",
+      "goal": 20000
+    },
+    {
+      "token": "challenge_collect_echolog_gen_mtn_24",
+      "goal": 20000
+    },
+    {
+      "token": "challenge_collect_echolog_gen_mtn_25",
+      "goal": 20000
+    },
+    {
+      "token": "challenge_collect_echolog_gen_mtn_26",
+      "goal": 20000
+    },
+    {
+      "token": "challenge_collect_echolog_gen_mtn_27",
+      "goal": 20000
+    },
+    {
+      "token": "challenge_collect_echolog_gen_mtn_28",
+      "goal": 20000
+    },
+    {
+      "token": "challenge_collect_echolog_gen_sha_10",
+      "goal": 20000
+    },
+    {
+      "token": "challenge_collect_echolog_gen_sha_11",
+      "goal": 20000
+    },
+    {
+      "token": "challenge_collect_echolog_gen_sha_12",
+      "goal": 20000
+    },
+    {
+      "token": "challenge_collect_echolog_gen_sha_13",
+      "goal": 20000
+    },
+    {
+      "token": "challenge_collect_echolog_gen_sha_14",
+      "goal": 20000
+    },
+    {
+      "token": "challenge_collect_echolog_gen_sha_15",
+      "goal": 20000
+    },
+    {
+      "token": "challenge_collect_echolog_gen_sha_16",
+      "goal": 20000
+    },
+    {
+      "token": "challenge_collect_echolog_gen_sha_17",
+      "goal": 20000
+    },
+    {
+      "token": "challenge_collect_echolog_gen_sha_18",
+      "goal": 20000
+    },
+    {
+      "token": "challenge_collect_echolog_gen_sha_19",
+      "goal": 20000
+    },
+    {
+      "token": "challenge_collect_echolog_gen_sha_20",
+      "goal": 20000
+    },
+    {
+      "token": "challenge_collect_echolog_gen_sha_21",
+      "goal": 20000
+    },
+    {
+      "token": "challenge_collect_echolog_gen_sha_22",
+      "goal": 20000
+    },
+    {
+      "token": "challenge_collect_echolog_gen_sha_23",
+      "goal": 20000
+    },
+    {
+      "token": "challenge_collect_echolog_gen_sha_24",
+      "goal": 20000
+    },
+    {
+      "token": "challenge_collect_echolog_gen_sha_25",
+      "goal": 20000
+    },
+    {
+      "token": "challenge_collect_echolog_gen_sha_26",
+      "goal": 20000
+    },
+    {
+      "token": "challenge_collect_echolog_gen_sha_27",
+      "goal": 20000
+    },
+    {
+      "token": "challenge_collect_echolog_gen_sha_28",
+      "goal": 20000
+    },
+    {
+      "token": "challenge_collect_echolog_gen_sha_29",
+      "goal": 20000
+    },
+    {
       "token": "challenge_collect_echolog_mis_city_16",
       "goal": 1
+    },
+    {
+      "token": "challenge_collect_echolog_mis_gra_10",
+      "goal": 20000
     },
     {
       "token": "challenge_collect_echolog_mis_gra_11",

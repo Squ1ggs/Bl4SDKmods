@@ -11,7 +11,7 @@ from unrealsdk import logging
 from unrealsdk.unreal import UObject
 
 MAX_ITEM_LEVEL = 999999
-DEFAULT_ITEM_LEVEL = 60
+DEFAULT_ITEM_LEVEL = 70
 SPAWN_FORWARD_OFFSET = 90.0
 SPAWN_HEIGHT_OFFSET = 45.0
 # Tight ring in front of the player (was a long zig-zag that stretched far).
@@ -737,7 +737,6 @@ def _queue_shiny_itempool_drop(
         pool_list = pool_list[:MAX_DROP_ALL_SHINIES]
     if fill_until_complete:
         pool_list = _extend_shiny_pools_until_shape(pool_list, shape)
-    # Loot text: exact one spawn per glyph pixel (never dump 200 shinies into ~130 letters).
     if str(shape or "").strip().lower() == "text" or bool(str(shape_text or "").strip()):
         try:
             from .loot_shapes import text_shape_slot_count  # noqa: PLC0415
@@ -968,11 +967,9 @@ def _process_pending_shiny_drop_jobs() -> None:
                     _log_warning(f"Failed to spawn {pool_name}: {exc}")
             if catch_dump and batch_spawned > 0:
                 try:
-                    from .loot_shapes import after_dump_spawn, tick_drop_motion
+                    from .loot_shapes import after_dump_spawn
 
                     after_dump_spawn(batch_spawned)
-                    # Drive slow/medium falls during the dump (UMG tick alone starved motion).
-                    tick_drop_motion()
                 except Exception:
                     pass
             job["index"] = end

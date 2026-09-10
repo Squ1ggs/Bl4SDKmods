@@ -1,5 +1,10 @@
 # Changelog
 
+## 3.8.140 / EXE 1.1.134
+- **Character level 70:** MAX ALL, Player level, in-game LV button, and keybinds actually apply **70** (labels already said 70; wiring still used 60).
+- **Gear defaults / overrides:** serial rewrite + catalog level fields track 70 for this cap bump.
+- **Pre-update note:** item-pool / main-page catalog refresh for the new cap is coming soon — this drop is the level-70 boost prep.
+
 ## 3.8.139 / EXE 1.1.133
 - **Spawn shapes (new/restored on this drop):** diamond (3D), blocks, cube, torus, crown, UFO, rocket, gear — if you stayed on the last public release, grab this build so these shapes are actually on disk.
 - **Send serials Browse / YAML:** loads into the paste box (blank line between codes) — not the optional queue and not My Library.

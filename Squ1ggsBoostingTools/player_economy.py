@@ -67,7 +67,7 @@ _CURRENCY_KIND_ALIASES: Dict[str, str] = {
 # writing ExperienceState fields directly, because the engine updates related
 # level/XP state itself. For Character, the working token is exactly
 # FGbxDefPtr(name="Character", ref="/Script/GbxGame.GbxExperienceDef").
-_MAX_PLAYER_LEVEL_ENGINE = 60
+_MAX_PLAYER_LEVEL_ENGINE = 70
 _MAX_SPEC_LEVEL_ENGINE = 701
 # NCS Oak2_VaultCardXP_Progression levelcap (Engine/Content/_NCS).
 _MAX_VAULT_XP_LEVEL_ENGINE = 9_999
@@ -1139,19 +1139,19 @@ def max_all_for_target(
     else:
         bits.append("vault=skipped")
 
-    # Apply player/spec LAST — vault OnRep / XP writes must not leave character short of 60.
+    # Apply player/spec LAST — vault OnRep / XP writes must not leave character short of cap.
     ok_p = False
     ok_s = False
     if ps is not None:
         if _want("max_player_level"):
-            ok_p = _ensure_experience_level_via_bp(ps, 0, 60)
+            ok_p = _ensure_experience_level_via_bp(ps, 0, _MAX_PLAYER_LEVEL_ENGINE)
             got_p = _get_experience_level_via_bp(ps, 0)
             bits.append(f"player BP={'OK' if ok_p else 'FAIL'} (now={got_p})")
             if (not ok_p) and apply_name:
                 try:
-                    _do_give_experience("player", 60, apply_name)
-                    ok_p = (_get_experience_level_via_bp(ps, 0) or 0) >= 60
-                    bits.append("player level 60 (name fallback)")
+                    _do_give_experience("player", _MAX_PLAYER_LEVEL_ENGINE, apply_name)
+                    ok_p = (_get_experience_level_via_bp(ps, 0) or 0) >= _MAX_PLAYER_LEVEL_ENGINE
+                    bits.append(f"player level {_MAX_PLAYER_LEVEL_ENGINE} (name fallback)")
                 except Exception as ex:  # noqa: BLE001
                     bits.append(f"player level FAIL: {ex}")
         else:
@@ -1174,9 +1174,9 @@ def max_all_for_target(
     elif apply_name:
         if _want("max_player_level"):
             try:
-                _do_give_experience("player", 60, apply_name)
+                _do_give_experience("player", _MAX_PLAYER_LEVEL_ENGINE, apply_name)
                 ok_p = True
-                bits.append("player level 60 (name)")
+                bits.append(f"player level {_MAX_PLAYER_LEVEL_ENGINE} (name)")
             except Exception as ex:  # noqa: BLE001
                 bits.append(f"player level FAIL: {ex}")
         else:

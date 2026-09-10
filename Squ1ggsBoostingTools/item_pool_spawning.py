@@ -8668,11 +8668,10 @@ def pump_bulk_spawn_queue(*, max_steps: int = _BULK_SPAWN_STEPS_PER_TICK) -> int
                 _maybe_bulk_segment_pause()
                 continue
             try:
-                from .loot_shapes import after_dump_spawn, landing_armed, tick_drop_motion
+                from .loot_shapes import after_dump_spawn, landing_armed
 
                 if landing_armed():
                     after_dump_spawn(max(1, int(count)))
-                    tick_drop_motion()
             except Exception:
                 pass
             if _record_bulk_ground_result(
@@ -8727,11 +8726,10 @@ def pump_bulk_spawn_queue(*, max_steps: int = _BULK_SPAWN_STEPS_PER_TICK) -> int
             bump_ring_index()
             spawned_n = spawn_item_pool_entry(entry, level, count)
             try:
-                from .loot_shapes import after_dump_spawn, landing_armed, tick_drop_motion
+                from .loot_shapes import after_dump_spawn, landing_armed
 
                 if landing_armed():
                     after_dump_spawn(max(1, int(count)))
-                    tick_drop_motion()
                 elif single_queue:
                     method_hint = str(
                         (_pearl_spawn_delivery_info() or {}).get("method") or ""
@@ -8876,11 +8874,10 @@ def pump_bulk_spawn_queue(*, max_steps: int = _BULK_SPAWN_STEPS_PER_TICK) -> int
                 _bulk_trace(entry, batch_index, "ERROR", "no new ground loot")
         except Exception as exc:  # noqa: BLE001
             try:
-                from .loot_shapes import after_dump_spawn, landing_armed, tick_drop_motion
+                from .loot_shapes import after_dump_spawn, landing_armed
 
                 if landing_armed():
                     after_dump_spawn(max(1, int(count)))
-                    tick_drop_motion()
             except Exception:
                 pass
             from .item_spawn.pearlescent_manifest import is_pearlescent_catalog
@@ -8910,11 +8907,10 @@ def pump_bulk_spawn_queue(*, max_steps: int = _BULK_SPAWN_STEPS_PER_TICK) -> int
             )
             if pearl_hit is not None:
                 try:
-                    from .loot_shapes import after_dump_spawn, landing_armed, tick_drop_motion
+                    from .loot_shapes import after_dump_spawn, landing_armed
 
                     if landing_armed():
                         after_dump_spawn(max(1, int(count)))
-                        tick_drop_motion()
                 except Exception:
                     pass
                 _record_bulk_ground_result(
@@ -9283,7 +9279,6 @@ def queue_all_filtered_item_pools(
     fill_until_complete: bool = False,
     exclude_currency: bool = False,
     exclude_ai_guns: bool = False,
-    shape_text: str = "",
 ) -> int:
     """Queue filtered pools for paced spawning outside the BLImGui callback."""
     global _BULK_SPAWN_OK, _BULK_SPAWN_FAIL, _BULK_SPAWN_SUMMARY_PENDING
@@ -9296,17 +9291,6 @@ def queue_all_filtered_item_pools(
 
     shape_l = str(shape or "none").strip().lower()
     settle_l = str(settle or "none").strip().lower()
-    shape_text_s = str(shape_text or "").strip()
-    if shape_text_s or shape_l in ("text", "text_shape", "words", "word", "write"):
-        try:
-            from .loot_shapes import sanitize_shape_text, set_shape_text  # noqa: PLC0415
-
-            shape_text_s = set_shape_text(shape_text_s)
-            if sanitize_shape_text(shape_text_s):
-                shape_l = "text"
-                shape = "text"
-        except Exception:
-            pass
     if shape_l not in ("", "none", "off", "no", "vanilla") or settle_l not in ("", "none"):
         random_spread = False
         try:
@@ -9434,7 +9418,6 @@ def queue_all_filtered_item_pools(
             stay_in_air=stay_in_air,
             peel_after=peel_after,
             land_profile=land_profile,
-            shape_text=shape_text_s,
         )
         pause_catch_for_shape(shape_l)
     except Exception as land_exc:

@@ -1687,6 +1687,7 @@
     "itempool_ord_ar_05_legendary_crowsourced_pearl",
     "itempool_ord_ar_05_legendary_GMR_shiny",
     "itempool_ord_ar_05_legendary_Goalkeeper_shiny",
+    "itempool_ord_ar_05_legendary_Pchonk",
     "itempool_ord_ar_05_legendary_Pchonk_shiny",
     "itempool_ord_ps",
     "itempool_ord_ps_05_legendary_Bully_shiny",
@@ -8956,5 +8957,5 @@
     "Weapon_VLA_SR_CrowdSourced",
     "ZoneTravelStation"
   ],
-  "nexus_catalog_built_at": "2026-08-20T03:31:52Z"
+  "nexus_catalog_built_at": "2026-09-10T16:51:01Z"
 }

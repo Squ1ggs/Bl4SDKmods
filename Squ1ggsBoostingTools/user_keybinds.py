@@ -20,10 +20,10 @@ BINDABLE_ACTIONS: tuple[dict[str, Any], ...] = (
     {"id": "max_cash", "label": "Max cash", "action": "max_cash", "payload": {}},
     {"id": "max_eridium", "label": "Max eridium", "action": "max_eridium", "payload": {}},
     {
-        "id": "player_level_60",
-        "label": "Player level 60",
+        "id": "player_level_70",
+        "label": "Player level 70",
         "action": "give_experience",
-        "payload": {"track": "player", "level": 60},
+        "payload": {"track": "player", "level": 70},
     },
     {
         "id": "spec_level_701",

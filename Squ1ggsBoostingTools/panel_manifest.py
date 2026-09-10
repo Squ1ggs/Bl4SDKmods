@@ -17,7 +17,6 @@ TAB_LABELS: tuple[str, ...] = (
     "Loot",
     "Serials",
     "Backpack",
-    "Debug Cam",
     "Mobility",
     "Vehicle",
     "Damage & More",
@@ -32,9 +31,9 @@ TAB_LABELS: tuple[str, ...] = (
 )
 
 _OPEN_REWARDS_LARGE_WARNING = (
-    "WARNING: Opening lots of Reward Center mail (especially 250–600+ items) can lag BL4 and, "
-    "on console / cross-play characters, make the backpack look empty until the save is under "
-    "~250–300 items. Prefer solo, open in smaller batches, then bank / mule gear before rejoining multiplayer."
+    "Open rewards runs one mail package at a time with a 3–5s wait between opens "
+    "(never bulk-open — that can crash or blank backpacks in multiplayer). "
+    "Large sends (250+) still take a while; prefer solo for big opens, then bank/mule before rejoining MP."
 )
 
 _BOOST_SAFETY_DANGER = (
@@ -45,11 +44,10 @@ _BOOST_SAFETY_DANGER = (
 )
 
 _REWARDS_AND_INVENTORY_WARNING = (
-    "Mail / rewards: Open rewards on send defaults to Yes for Serials (opens each package as it arrives, "
-    "one at a time). Challenge complete does not auto-open Reward Center. Already-completed challenges usually "
-    "do not grant new packages (game behavior, not a skip bug). "
-    "Console / cross-play: if someone is ~250–600+ items deep, backpack can look empty online until they "
-    "reduce inventory in solo, then bank / mule gear."
+    "Mail / rewards: Open rewards on send defaults to Yes — each package opens one-by-one "
+    "with a 3–5s gap (never open hundreds in one frame). Console / cross-play: avoid bulk Open pending in MP. "
+    "If someone carries roughly 250–300+ items and joins online, backpack slots can look empty until "
+    "they drop below that in solo — fix in solo, then split gear between bank and mule chars before going online again."
 )
 
 _SHAPE_2D_OPTIONS: list[str] = [
@@ -144,16 +142,16 @@ _SETTLE_SELECT_OPTIONS: list[str] = [
     "drip",
 ]
 _SETTLE_OPTION_LABELS: dict[str, str] = {
-    "none": "None — appear on the shape",
-    "slow": "Slow fall from above",
-    "medium": "Medium fall from above",
-    "fast": "Fast fall from above",
-    "spiral": "Spiral fall",
-    "rain": "Rain fall",
-    "fountain": "Fountain fall",
-    "stagger": "Staggered fall",
-    "snap": "Snap onto slots (short fall)",
-    "drip": "Drip peel to ground (only if Stay in air = No)",
+    "none": "None (ground)",
+    "slow": "Slow drop",
+    "medium": "Medium drop",
+    "fast": "Fast drop",
+    "spiral": "Spiral",
+    "rain": "Rain",
+    "fountain": "Fountain",
+    "stagger": "Stagger",
+    "snap": "Snap onto slots",
+    "drip": "Drip peel to ground",
 }
 
 
@@ -184,7 +182,6 @@ TAB_SHORT_LABELS: tuple[str, ...] = (
     "Loot",
     "Serials",
     "Backpack",
-    "Debug Cam",
     "Mobility",
     "Vehicle",
     "Damage",
@@ -200,14 +197,14 @@ TAB_SHORT_LABELS: tuple[str, ...] = (
 
 # Recent release highlights on Home (collapsible — not the dev changelog).
 HOME_WHATS_NEW: tuple[str, ...] = (
-    "New 3D shapes: diamond, blocks (3+1), cube, torus, crown, UFO, rocket, gear.",
-    "Loot text: default height 670 + faster slow writing.",
-    "Co-op shapes: guests see silhouette + settle again; prior shapes stay when you spawn another.",
-    "Slow drop leftovers, infinite jump latch, open-rewards default No, and a few UI/spill fixes.",
+    "Character cap 70 — MAX ALL / Player level / keybinds boost to 70 (gear defaults follow).",
+    "Item-pool catalog refresh for the main page is coming soon — this drop is the level-70 pre-update.",
+    "Send serials — Browse/YAML into paste box; Add to library…; open rewards one-at-a-time.",
+    "Spawn shapes — UFO, rocket, gear, crown, torus, cube, blocks, diamond (3D).",
 )
 
 _AGGRO_MODES = ["attack_me", "attack_party", "free_for_all", "nearest_other", "passive"]
-_SPAWN_ANCHORS = ["local", "party", "npc_nearest", "freecam"]
+_SPAWN_ANCHORS = ["local", "party", "npc_nearest"]
 _SHINY_DROP_TOOLTIP = (
     "Shiny cosmetics must be unlocked on this save. Finished the story? Start a new game in UVHM "
     "and Drop All Shinies should spawn them."
@@ -223,7 +220,7 @@ _MAYHEM_NOTE = (
     "Bypasses the first normal clear. Sets Mayhem Rank: 1+ unlocks Mayhem mode, "
     "5+ unlocks Hardcore (default 10 does both). Reload save after — kiosk UI will not update until then."
 )
-_DEFAULT_ITEM_LEVEL = 60
+_DEFAULT_ITEM_LEVEL = 70
 _MOB_SECTIONS = [
     "All",
     "dedicated_drop_bosses_91",
@@ -237,21 +234,14 @@ _MOB_SECTIONS = [
 
 def _io_categories() -> list[str]:
     path = Path(__file__).resolve().parent / "embedded_bms" / "data" / "io_spawn_catalog.json"
-    cats: list[str] = []
     try:
         data = json.loads(path.read_text(encoding="utf-8"))
-        raw = data.get("categories") if isinstance(data, dict) else None
-        if isinstance(raw, list):
-            cats = [str(c) for c in raw if str(c).strip()]
+        cats = data.get("categories") if isinstance(data, dict) else None
+        if isinstance(cats, list):
+            return ["All", *[str(c) for c in cats if str(c).strip()]]
     except Exception:
-        cats = []
-    # Virtual filters — most carryables/floor props live under GbxActor.
-    virtual = ["Carryables", "Floor / placeables"]
-    out = ["All", *virtual]
-    for c in cats:
-        if c not in out:
-            out.append(c)
-    return out
+        pass
+    return ["All"]
 
 
 def _delivery_recipient_fields() -> list[dict[str, Any]]:
@@ -268,82 +258,10 @@ def _delivery_recipient_fields() -> list[dict[str, Any]]:
             "label": "Open rewards on send",
             "type": "select",
             "options": ["yes", "no"],
-            "default": "no",
-            "tooltip": (
-                "Default No — leave mail in Reward Center so you open it yourself. "
-                "Opening hundreds of packages (especially GZO / bulk serials) can make "
-                "the backpack look empty until you bank/mule under ~250–300 items. "
-                + _OPEN_REWARDS_LARGE_WARNING
-            ),
+            "default": "yes",
+            "tooltip": _OPEN_REWARDS_LARGE_WARNING,
         },
     ]
-
-
-def _paste_deliver_action() -> dict[str, Any]:
-    """Primary paste→mail send — button label is intentionally obvious for new users."""
-    return _action(
-        "Send items",
-        "deliver_serials",
-        deliver_from_paste=True,
-        tooltip="Sends whatever is in the paste box above. Does not need Add to queue.",
-        fields=[
-            {"key": "count", "label": "Amount per serial", "type": "number", "default": 1},
-            {
-                "key": "level_override",
-                "label": "Rewrite item level",
-                "type": "select",
-                "options": ["no", "yes"],
-                "default": "no",
-            },
-            {"key": "level", "label": "Item level", "type": "number", "default": _DEFAULT_ITEM_LEVEL},
-            *_delivery_recipient_fields(),
-        ],
-    )
-
-
-def _paste_serial_send_section(*, home: bool = False) -> dict[str, Any]:
-    hint = (
-        "Paste @Ug serials — blank lines, newlines, or stuck together (@Ug…@Ug…) all work. "
-        "Press Send items next to Add to queue. Send to / amount / open rewards stay under the buttons. "
-        "Send to and Boost target (top bar) stay in sync. "
-        f"{_OPEN_REWARDS_LARGE_WARNING}"
-    )
-    if home:
-        hint = (
-            "Quick send from Home. Same paste box as Serials. "
-            "For GZO / Lootlemon catalogs, open the Serials tab. "
-            + hint
-        )
-    return {
-        "title": "Send serials",
-        "featured": True,
-        "aura": "serial",
-        "hint": hint,
-        "warning": _REWARDS_AND_INVENTORY_WARNING,
-        "serialSendList": True,
-        "actions": [
-            _paste_deliver_action(),
-            _action(
-                "Send queued serials",
-                "deliver_serials",
-                deliver_multiselect=True,
-                fold="Optional queue",
-                fold_hint="Only if you used Add to queue to mix serials before sending.",
-                fields=[
-                    {"key": "count", "label": "Amount per serial", "type": "number", "default": 1},
-                    {
-                        "key": "level_override",
-                        "label": "Rewrite item level",
-                        "type": "select",
-                        "options": ["no", "yes"],
-                        "default": "no",
-                    },
-                    {"key": "level", "label": "Item level", "type": "number", "default": _DEFAULT_ITEM_LEVEL},
-                    *_delivery_recipient_fields(),
-                ],
-            ),
-        ],
-    }
 
 
 def _progression_player_field() -> dict[str, Any]:
@@ -612,7 +530,7 @@ def _legit_forge_fields(*, include_delivery: bool = False, include_part_picker: 
             "default": "",
             "placeholder": "inv_comp:comp_05_legendary  (# comments allowed)",
         },
-        {"key": "level", "label": "Level", "type": "number", "default": 60},
+        {"key": "level", "label": "Level", "type": "number", "default": 70},
         {
             "key": "unlock_rules",
             "label": "Unlock rules (modded gear)",
@@ -712,11 +630,7 @@ def _settle_select_field(*, default: str = "none", field_fold: str = "") -> dict
         "options": list(_SETTLE_SELECT_OPTIONS),
         "option_labels": dict(_SETTLE_OPTION_LABELS),
         "default": default,
-        "tooltip": (
-            "How items land on the shape. "
-            "None = appear on slots. Slow/Medium/Fast = fall from Drop height onto slots. "
-            "Drip peel = drop a held shape to the ground when Stay in air is No."
-        ),
+        "tooltip": "Drop-from-above: none = ground spawn; snap = fall onto slots; drip = peel 3D down.",
     }
     if field_fold:
         out["field_fold"] = field_fold
@@ -724,22 +638,29 @@ def _settle_select_field(*, default: str = "none", field_fold: str = "") -> dict
 
 
 def _air_hold_fields(*, field_fold: str = "") -> list[dict[str, Any]]:
-    # Stay in air + Settle cover float vs ground. No separate peel timer field —
-    # use Settle = drip (and Stay in air = No) for peel-to-ground.
     stay: dict[str, Any] = {
         "key": "stay_in_air",
         "label": "Stay in air",
         "type": "select",
         "options": ["yes", "no"],
         "default": "yes",
-        "tooltip": (
-            "Yes = keep the finished silhouette floating (house/word stays up). "
-            "No = settle onto the shape then stop sky-holding (use Settle → Drip to peel to ground)."
-        ),
+        "tooltip": "3D shapes stay up instead of falling to the ground.",
     }
     if field_fold:
         stay["field_fold"] = field_fold
-    return [stay]
+    return [
+        stay,
+        _num_field(
+            "peel_after",
+            "Peel delay (sec)",
+            0,
+            min_v=0,
+            max_v=70,
+            step=1,
+            field_fold=field_fold,
+            tooltip="After this many seconds, peel 3D down. 0 = keep in air when Stay in air is yes.",
+        ),
+    ]
 
 
 def _shiny_land_fields() -> list[dict[str, Any]]:
@@ -870,7 +791,7 @@ def _max_all_option_fields() -> list[dict[str, Any]]:
         {"key": "max_eridium", "label": "Eridium", "type": "checkbox", "default": True, "compact": True},
         {"key": "max_sdu", "label": "SDU", "type": "checkbox", "default": True, "compact": True},
         {"key": "max_vault_cards", "label": "Vault 1–4", "type": "checkbox", "default": True, "compact": True},
-        {"key": "max_player_level", "label": "Level 60", "type": "checkbox", "default": True, "compact": True},
+        {"key": "max_player_level", "label": "Level 70", "type": "checkbox", "default": True, "compact": True},
         {"key": "max_spec_level", "label": "Spec 701", "type": "checkbox", "default": True, "compact": True},
     ]
 
@@ -1015,12 +936,11 @@ def _toggle(
 
 def _gzo_multiselect_section() -> dict[str, Any]:
     return {
-        "title": "Browse GZO catalog",
+        "title": "GZO catalog",
         "hint": (
-            "Pick from the public list (not the paste box above). "
             "GZO codes from save-editor.be. Thank you to Tobgun for feedback, ideas, testing, and bug reports. "
             "How to send: Select all filtered (or tick rows) → set Send to → Deliver selected. "
-            "Open rewards on send opens only this delivery's mail when Yes (default Yes for Serials). "
+            "Open rewards on send opens only this delivery's mail automatically in the background (one package at a time). "
             f"{_OPEN_REWARDS_LARGE_WARNING} Every selected row is one mail item. "
             "Host must run the EXE while in-game. Empty list → Refresh GZO (needs network). "
             "Use Item category (Weapons / Shields / Class Mods / …) then Item type (Pistol, SMG, …). "
@@ -1110,9 +1030,8 @@ def _gzo_multiselect_section() -> dict[str, Any]:
 
 def _lootlemon_multiselect_section(lootlemon_categories: list[str]) -> dict[str, Any]:
     return {
-        "title": "Browse Lootlemon catalog",
+        "title": "Lootlemon catalog",
         "hint": (
-            "Pick from the public list (not the paste box above). "
             "How to send: Select all filtered (or tick rows) → set Send to → Deliver selected. "
             "Open rewards opens only mail from this delivery (default No). "
             f"{_OPEN_REWARDS_LARGE_WARNING} "
@@ -1240,12 +1159,11 @@ def _loot_text_section() -> dict[str, Any]:
                     _num_field("scale", "Scale", 1.0, min_v=0.35, max_v=2.5, step=0.05),
                     _settle_select_field(default="slow"),
                     *_air_hold_fields(),
-                    _num_field("level", "Item level", _DEFAULT_ITEM_LEVEL, min_v=1, max_v=60, step=1),
+                    _num_field("level", "Item level", _DEFAULT_ITEM_LEVEL, min_v=1, max_v=70, step=1),
                 ],
             ),
         ],
     }
-
 
 def get_panel_manifest() -> dict[str, Any]:
     from .loot_shapes import land_layout_defaults
@@ -1332,7 +1250,7 @@ def get_panel_manifest() -> dict[str, Any]:
                         "featured": True,
                         "hint": (
                             "Daily one-taps for the boost target. MAX ALL checkboxes pick "
-                            "cash, eridium, SDU, vault cards, level 60, spec 701. "
+                            "cash, eridium, SDU, vault cards, level 70, spec 701. "
                             "Vault cards / SDU alone are under Economy below."
                         ),
                         "actions": [
@@ -1342,7 +1260,7 @@ def get_panel_manifest() -> dict[str, Any]:
                                 fields=_max_all_option_fields(),
                                 tooltip=(
                                     "Apply checked options for the boost target: cash, eridium, "
-                                    "SDU, vault cards 1–4 (+ XP tracks), player 60, spec 701."
+                                    "SDU, vault cards 1–4 (+ XP tracks), player 70, spec 701."
                                 ),
                             ),
                             _action("Unlock all cosmetics", "devperk_activate", payload={"perk_index": 4}),
@@ -1350,15 +1268,10 @@ def get_panel_manifest() -> dict[str, Any]:
                                 "Open pending rewards (everyone)",
                                 "rewards_open_everyone",
                                 confirm=(
-                                    "Open EVERY pending Reward Center package for all live party members? "
-                                    "This is NOT automatic after challenges — only run it when you mean to. "
-                                    f"{_OPEN_REWARDS_LARGE_WARNING} "
+                                    "Open every pending Reward Center package for all live party members? "
                                     "Packages open in the background — stay in-world until the progress line finishes."
                                 ),
-                                tooltip=(
-                                    "Manual only — opens pending Reward Center mail for the party. "
-                                    + _OPEN_REWARDS_LARGE_WARNING
-                                ),
+                                tooltip="Open every pending Reward Center package for all live party players using Squ1ggs Boosting Tools.",
                             ),
                             _action("God mode (toggle)", "devperk_activate", payload={"perk_index": 6}),
                             _action("Kill all enemies", "kill_all_enemies"),
@@ -1368,24 +1281,20 @@ def get_panel_manifest() -> dict[str, Any]:
                                 "mobility_infinite_jump",
                                 payload_on={"enabled": True},
                                 payload_off={"enabled": False},
-                                sticky=False,
+                                sticky=True,
                                 sync_key="infinite_jump",
-                                tooltip=(
-                                    "Session only. Uses Boost target — All players = whole lobby. "
-                                    "Or use Infinite jump (all) under Mobility. Stays on when people join."
-                                ),
                             ),
                             _toggle(
-                                "Force fly (host)",
+                                "Force fly",
                                 "mobility_force_fly",
                                 payload_on={"enabled": True, "scope": "target"},
                                 payload_off={"enabled": False, "scope": "target"},
-                                sticky=False,
+                                sticky=True,
                                 sync_key="force_fly",
                                 tooltip=(
-                                    "Host-only fly (you). Not sticky — turns off when you reload. "
-                                    "Guests judder under Oak netcode — use Infinite jump for other players. "
-                                    "Set Cruise/Fast under Mobility → Movement toggles."
+                                    "Turn force fly ON for the boost target. "
+                                    "Set Cruise/Fast under **Mobility → Movement toggles** "
+                                    "(Apply fly speed) before or after."
                                 ),
                             ),
                             _toggle(
@@ -1420,6 +1329,8 @@ def get_panel_manifest() -> dict[str, Any]:
                                 sticky=True,
                                 sync_key="map_fog",
                             ),
+                            _action("Toggle freecam", "freecam_toggle"),
+                            _action("Freecam OFF if stuck", "freecam_disable"),
                             _action(
                                 "Spawn golden chest",
                                 "spawn_ios",
@@ -1441,7 +1352,7 @@ def get_panel_manifest() -> dict[str, Any]:
                             _action(
                                 "Drop backpack",
                                 "faafo_drop_backpack",
-                                confirm="Spill THIS Boost target's whole backpack onto the ground? Check Boost target first.",
+                                confirm="Spill the target's whole backpack onto the ground?",
                                 tooltip="Quick spill at feet. Pick a shape on Loot → Drop backpack → shape.",
                             ),
                             _action(
@@ -1460,20 +1371,18 @@ def get_panel_manifest() -> dict[str, Any]:
                             ),
                         ],
                     },
-                    _paste_serial_send_section(home=True),
                     {
                         "title": "Jump to",
                         "featured": True,
                         "hint": "Shortcuts into the tabs that hold the rest of the toolkit.",
                         "quickLinks": [
-                            {"label": "Serials — GZO / Lootlemon catalogs", "tab": "serials"},
+                            {"label": "Send serials (paste & deliver)", "tab": "serials"},
                             {"label": "Progress / UVHM / challenges", "tab": "progression"},
-                            {"label": "Debug Cam / freecam spawns", "tab": "debug_cam"},
                             {"label": "Mobility / fly / sprint", "tab": "mobility"},
-                            {"label": "Loot pools / shinies / loot text / backpack→shape", "tab": "loot"},
+                            {"label": "Loot pools / drop backpack shape", "tab": "loot"},
                             {"label": "World / fog / golden chest", "tab": "world"},
                             {"label": "F.A.A.F.O. / drop backpack", "tab": "faafo"},
-                            {"label": "Player / teleports", "tab": "player"},
+                            {"label": "Player / freecam / teleports", "tab": "player"},
                             {"label": "Mob & IO spawner", "tab": "mob_io"},
                         ],
                     },
@@ -1509,7 +1418,7 @@ def get_panel_manifest() -> dict[str, Any]:
                         "actions": [
                             _action("Max cash", "max_cash"),
                             _action("Max eridium", "max_eridium"),
-                            _action("Player level 60", "give_experience", payload={"track": "player", "level": 60}),
+                            _action("Player level 70", "give_experience", payload={"track": "player", "level": 70}),
                             _action("Spec level 701", "give_experience", payload={"track": "specialization", "level": 701}),
                             _action("Max SDU", "max_sdu"),
                             _action("Delivery status", "serial_delivery_status"),
@@ -1527,27 +1436,15 @@ def get_panel_manifest() -> dict[str, Any]:
                                 "give_experience",
                                 fields=[
                                     {"key": "track", "type": "select", "options": exp_tracks, "default": "player"},
-                                    {"key": "level", "type": "number", "default": 50},
+                                    {"key": "level", "type": "number", "default": 70},
                                 ],
                             ),
                             _action(
                                 "Backpack / bank sizes",
                                 "inventory_set_sizes",
                                 fields=[
-                                    {
-                                        "key": "backpack_size",
-                                        "label": "Backpack size",
-                                        "type": "text",
-                                        "default": "500",
-                                        "placeholder": "e.g. 500",
-                                    },
-                                    {
-                                        "key": "bank_size",
-                                        "label": "Bank size",
-                                        "type": "text",
-                                        "default": "500",
-                                        "placeholder": "e.g. 500",
-                                    },
+                                    {"key": "backpack_size", "type": "number", "default": 500},
+                                    {"key": "bank_size", "type": "number", "default": 500},
                                 ],
                             ),
                         ],
@@ -1610,16 +1507,15 @@ def get_panel_manifest() -> dict[str, Any]:
                             _action("Low gravity", "pawn_gravity", payload={"scale": 0.35}),
                             _action("Normal gravity", "pawn_gravity", payload={"scale": 1.0}),
                             _toggle(
-                                "Force fly (host)",
+                                "Force fly",
                                 "mobility_force_fly",
                                 payload_on={"enabled": True, "scope": "target"},
                                 payload_off={"enabled": False, "scope": "target"},
-                                sticky=False,
+                                sticky=True,
                                 sync_key="force_fly",
                                 tooltip=(
-                                    "Host-only. Not sticky — turns off when you reload. "
-                                    "Cruise / Fast + Apply fly speed live under Mobility. "
-                                    "Use Infinite jump for other players."
+                                    "Sticky on/off for the boost target. "
+                                    "Cruise / Fast + Apply fly speed live under **Mobility**."
                                 ),
                             ),
                             _toggle(
@@ -1627,12 +1523,9 @@ def get_panel_manifest() -> dict[str, Any]:
                                 "mobility_infinite_jump",
                                 payload_on={"enabled": True},
                                 payload_off={"enabled": False},
-                                sticky=False,
+                                sticky=True,
                                 sync_key="infinite_jump",
-                                tooltip=(
-                                    "Session only. Uses Boost target — All players = whole lobby. "
-                                    "Or use Infinite jump (all) under Mobility. Stays on when people join."
-                                ),
+                                tooltip="Sticky: stays highlighted while it is on. Starts off on a new install.",
                             ),
                         ],
                     },
@@ -1661,9 +1554,31 @@ def get_panel_manifest() -> dict[str, Any]:
                     },
                     {
                         "title": "Freecam",
-                        "hint": "Moved to the Debug Cam tab — toggle, speed, look-at tools, and spawn at camera.",
                         "actions": [
-                            _action("Open Debug Cam tab tools", "freecam_toggle", tooltip="Quick toggle; full tools live under Debug Cam."),
+                            _action("Toggle freecam", "freecam_toggle"),
+                            _action("Freecam OFF if stuck", "freecam_disable"),
+                            _action("Pull target here", "freecam_pull_target"),
+                            _action("Copy cam location", "freecam_copy_location"),
+                            _action("Freecam speed 1x", "freecam_set_speed", payload={"speed": 1.0}),
+                            _action("Freecam speed 5x", "freecam_set_speed", payload={"speed": 5.0}),
+                            _action("Freecam speed 10x", "freecam_set_speed", payload={"speed": 10.0}),
+                            _action(
+                                "Set freecam speed",
+                                "freecam_set_speed",
+                                fields=[{"key": "speed", "type": "number", "default": 1.0}],
+                            ),
+                            _action(
+                                "Set freecam distance",
+                                "freecam_set_distance",
+                                fields=[{"key": "distance", "type": "number", "default": 256.0}],
+                            ),
+                            _action("Inspect looked-at", "freecam_inspect_target"),
+                            _action("Destroy looked-at", "freecam_destroy_target"),
+                            _action(
+                                "Damage looked-at",
+                                "freecam_damage_target",
+                                fields=[{"key": "amount", "type": "number", "default": 999999.0}],
+                            ),
                         ],
                     },
                     {
@@ -1705,12 +1620,13 @@ def get_panel_manifest() -> dict[str, Any]:
                 "sections": [
                     {
                         "title": "UVHM progression",
+                        "hint": "Uses Boost target (player bar under the tabs). Start UVHM (target) needs one player — not All players.",
                         "fields": [_uvhm_max_rank_field()],
                         "actions": [
                             _action(
                                 "Start UVHM (target)",
                                 "uvhm_start",
-                                confirm="Start UVHM for the target player? This is not a loot spawn.",
+                                confirm="Start UVHM for the Boost target player? This is not a loot spawn.",
                             ),
                             _action(
                                 "Start UVHM (all lobby)",
@@ -1728,9 +1644,7 @@ def get_panel_manifest() -> dict[str, Any]:
                             "Story challenge flags ticks Completemainstory / Completesidemissions achievement tokens. "
                             "That is not the same as finishing story in the mission log — dumps have no CompleteMission RPC. "
                             "Weapons = gun/grenade type challenges. Combat = shields/repairs/revive/cowbell combat. "
-                            "Other catches leftovers. Use Boost target = All players to boost everyone. "
-                            "Does not open Reward Center mail — use Open pending rewards only when you intend to. "
-                            "Already-done challenges usually skip new reward packages (game rule)."
+                            "Other catches leftovers. Use Boost target = All players to boost everyone."
                         ),
                         "warning": _CONSOLE_REWARDS_WARNING,
                         "actions": [
@@ -1746,22 +1660,13 @@ def get_panel_manifest() -> dict[str, Any]:
                                         "default": "All non-UVHM",
                                     },
                                 ],
-                                confirm=(
-                                    "Permanently complete selected challenges for the target player? "
-                                    "This does not open Reward Center mail. Already-completed challenges "
-                                    "usually do not grant new packages. If inventory is huge, reduce in solo first."
-                                ),
+                                confirm="Permanently complete selected challenges for the target player?",
                             ),
                             _action(
                                 "Complete ALL non-UVHM",
                                 "challenge_bulk_start",
                                 payload={"category": "All non-UVHM"},
-                                confirm=(
-                                    "Complete every non-UVHM challenge (including Vault of the Damned) for the "
-                                    "target player? Does not open mail. Already-done challenges usually skip new "
-                                    "packages. Console: if they already have hundreds of items, clear/bank in solo "
-                                    "before opening Reward Center later."
-                                ),
+                                confirm="Complete every non-UVHM challenge (including Vault of the Damned) for the target player?",
                             ),
                             _action("Cancel challenge bulk", "challenge_bulk_cancel"),
                             _action("Refresh challenge progress", "challenge_bulk_status"),
@@ -1797,10 +1702,7 @@ def get_panel_manifest() -> dict[str, Any]:
                                 "Complete selected challenge(s)",
                                 "challenge_complete_selected",
                                 challenge_multiselect=True,
-                                confirm=(
-                                    "Permanently complete only the ticked challenge(s) for the target player? "
-                                    "Does not open Reward Center mail. Already-done ones usually skip new packages."
-                                ),
+                                confirm="Permanently complete only the ticked challenge(s) for the target player?",
                             ),
                         ],
                     },
@@ -1811,13 +1713,9 @@ def get_panel_manifest() -> dict[str, Any]:
                 "label": TAB_LABELS[3],
                 "short": TAB_SHORT_LABELS[3],
                 "sections": [
-                    {
-                        **_item_pool_browser_section(pool_categories),
-                        "aura": "pool",
-                    },
+                    _item_pool_browser_section(pool_categories),
                     {
                         "title": "Shiny drops",
-                        "aura": "shiny",
                         "hint": "World loot only — same Drop All Shinies as Home. Mail lives under Serials.",
                         "actions": [
                             _action(
@@ -1836,9 +1734,9 @@ def get_panel_manifest() -> dict[str, Any]:
                             ),
                         ],
                     },
+                    _loot_text_section(),
                     {
                         "title": "Drop backpack → shape",
-                        "aura": "backpack",
                         "hint": (
                             "Spill the boost target's whole backpack as world loot, then catch into the "
                             "selected silhouette (same path as Drop All Shinies — never mail). Use type piles "
@@ -1848,7 +1746,7 @@ def get_panel_manifest() -> dict[str, Any]:
                             _action(
                                 "Drop backpack → shape",
                                 "faafo_drop_backpack",
-                                confirm="Spill THIS Boost target's whole backpack and arrange into the selected shape? Check Boost target first.",
+                                confirm="Spill the target's whole backpack and arrange into the selected shape?",
                                 fields=[*_shiny_land_fields()],
                                 full_width=True,
                                 tooltip=(
@@ -1858,10 +1756,8 @@ def get_panel_manifest() -> dict[str, Any]:
                             ),
                         ],
                     },
-                    _loot_text_section(),
                     {
                         "title": "Rarity drop weights",
-                        "aura": "rarity",
                         "hint": (
                             "World drop weights. 100 is normal, 0 turns that rarity off. "
                             "Same sliders as the in-game rarity card."
@@ -1892,16 +1788,54 @@ def get_panel_manifest() -> dict[str, Any]:
                 "label": TAB_LABELS[4],
                 "short": TAB_SHORT_LABELS[4],
                 "sections": [
-                    _paste_serial_send_section(home=False),
-                    _gzo_multiselect_section(),
-                    _lootlemon_multiselect_section(lootlemon_categories),
-                    _serial_store_section(),
                     {
-                        "title": "Shiny mail",
-                        "hint": "Mailbox only. World shiny drops live under Loot.",
+                        "title": "Send serials",
+                        "featured": True,
+                        "hint": (
+                            "Paste or Browse @Ug serials into the box (YAML/STBX ok), then Send items. "
+                            "Browse fills the paste box — not the queue or My Library. "
+                            "Add to library… saves the paste box under a name for later. "
+                            "Optional queue is only for mixing sets. "
+                            f"{_OPEN_REWARDS_LARGE_WARNING}"
+                        ),
+                        "warning": _REWARDS_AND_INVENTORY_WARNING,
+                        "serialSendList": True,
                         "actions": [
-                            _action("Reward all shinies — target player", "shiny_mail_all", payload={"mode": "selected"}),
-                            _action("Reward all shinies — entire lobby", "shiny_mail_all", payload={"mode": "all"}),
+                            _action(
+                                "Send items",
+                                "deliver_serials",
+                                deliver_from_paste=True,
+                                tooltip="Reads the paste box above — does not require Add to queue.",
+                                fields=[
+                                    {"key": "count", "label": "Amount per serial", "type": "number", "default": 1},
+                                    {
+                                        "key": "level_override",
+                                        "label": "Rewrite item level",
+                                        "type": "select",
+                                        "options": ["no", "yes"],
+                                        "default": "no",
+                                    },
+                                    {"key": "level", "label": "Item level", "type": "number", "default": _DEFAULT_ITEM_LEVEL},
+                                    *_delivery_recipient_fields(),
+                                ],
+                            ),
+                            _action(
+                                "Deliver queued serials",
+                                "deliver_serials",
+                                deliver_multiselect=True,
+                                fields=[
+                                    {"key": "count", "label": "Amount per serial", "type": "number", "default": 1},
+                                    {
+                                        "key": "level_override",
+                                        "label": "Rewrite item level",
+                                        "type": "select",
+                                        "options": ["no", "yes"],
+                                        "default": "no",
+                                    },
+                                    {"key": "level", "label": "Item level", "type": "number", "default": _DEFAULT_ITEM_LEVEL},
+                                    *_delivery_recipient_fields(),
+                                ],
+                            ),
                         ],
                     },
                     {
@@ -1913,15 +1847,10 @@ def get_panel_manifest() -> dict[str, Any]:
                                 "Open pending rewards (everyone)",
                                 "rewards_open_everyone",
                                 confirm=(
-                                    "Open EVERY pending Reward Center package for all live party members? "
-                                    "This is NOT automatic after challenges — only run it when you mean to. "
-                                    f"{_OPEN_REWARDS_LARGE_WARNING} "
+                                    "Open every pending Reward Center package for all live party members? "
                                     "Packages open in the background — stay in-world until the progress line finishes."
                                 ),
-                                tooltip=(
-                                    "Manual only — opens pending Reward Center mail for the party. "
-                                    + _OPEN_REWARDS_LARGE_WARNING
-                                ),
+                                tooltip="Open every pending Reward Center package for all live party players using Squ1ggs Boosting Tools.",
                             ),
                             _action(
                                 "Convert serial(s)",
@@ -1947,142 +1876,72 @@ def get_panel_manifest() -> dict[str, Any]:
                             ),
                         ],
                     },
+                    _gzo_multiselect_section(),
+                    _lootlemon_multiselect_section(lootlemon_categories),
+                    _serial_store_section(),
+                    {
+                        "title": "Shiny mail",
+                        "hint": "Mailbox only. World shiny drops live under Loot.",
+                        "actions": [
+                            _action("Reward all shinies — target player", "shiny_mail_all", payload={"mode": "selected"}),
+                            _action("Reward all shinies — entire lobby", "shiny_mail_all", payload={"mode": "all"}),
+                        ],
+                    },
                 ],
             },
             {
-                "id": "debug_cam",
-                "label": TAB_LABELS[6],
-                "short": TAB_SHORT_LABELS[6],
+                "id": "backpack",
+                "label": TAB_LABELS[5],
+                "short": TAB_SHORT_LABELS[5],
                 "sections": [
                     {
-                        "title": "Freecam / debug cam",
+                        "title": "Backpack scan & relevel",
                         "featured": True,
                         "hint": (
-                            "Toggle freecam, then set World drop / spawn near → At debug cam "
-                            "so mobs, IO, carryables, and floor props place where you are looking. "
-                            "Stay host / in-world while spawning."
+                            "Reads the Boost target's backpack only when you open this tab or press Refresh. "
+                            "Tick gear, pick a new level, then relevel — decodes @U, rewrites level, swaps in-place."
                         ),
-                        "actions": [
-                            _action("Toggle freecam", "freecam_toggle"),
-                            _action("Freecam OFF if stuck", "freecam_disable"),
-                            _action("Pull target here", "freecam_pull_target"),
-                            _action("Copy cam location", "freecam_copy_location"),
-                            _action("Freecam speed 1x", "freecam_set_speed", payload={"speed": 1.0}),
-                            _action("Freecam speed 5x", "freecam_set_speed", payload={"speed": 5.0}),
-                            _action("Freecam speed 10x", "freecam_set_speed", payload={"speed": 10.0}),
-                            _action(
-                                "Set freecam speed",
-                                "freecam_set_speed",
-                                fields=[{"key": "speed", "type": "number", "default": 1.0}],
-                            ),
-                            _action(
-                                "Set freecam distance",
-                                "freecam_set_distance",
-                                fields=[{"key": "distance", "type": "number", "default": 256.0}],
-                            ),
-                            _action("Inspect looked-at", "freecam_inspect_target"),
-                            _action("Destroy looked-at", "freecam_destroy_target"),
-                            _action(
-                                "Damage looked-at",
-                                "freecam_damage_target",
-                                fields=[{"key": "amount", "type": "number", "default": 999999.0}],
-                            ),
-                        ],
-                    },
-                    {
-                        "title": "Spawn at camera",
-                        "hint": (
-                            "Set spawn near to At debug cam (top bar), enable freecam, then spawn. "
-                            "Same catalog as Mob and IO — Carryables / Floor filters included."
-                        ),
-                        "actions": [
-                            _action(
-                                "Spawn golden chest at cam",
-                                "spawn_ios",
-                                payload={
-                                    "cmds": ["oak_spawnai Lootable_GoldenChest"],
-                                    "count": 1,
-                                    "activate": "yes",
-                                    "spawn_anchor": "freecam",
-                                },
-                            ),
-                            _action(
-                                "Spawn carryable battery at cam",
-                                "spawn_ios",
-                                payload={
-                                    "cmds": ["oak_spawnai IO_Carryable_Battery"],
-                                    "count": 1,
-                                    "activate": "yes",
-                                    "spawn_anchor": "freecam",
-                                },
-                            ),
-                            _action(
-                                "Spawn breakaway floor at cam",
-                                "spawn_ios",
-                                payload={
-                                    "cmds": ["oak_spawnai IO_BreakawayFloor"],
-                                    "count": 1,
-                                    "activate": "yes",
-                                    "spawn_anchor": "freecam",
-                                },
-                            ),
-                        ],
-                    },
-                    {
-                        "title": "IO at debug cam",
-                        "catalog": "io_spawns",
-                        "hint": "Tick props and Spawn selected — placement uses At debug cam when freecam is on.",
+                        "warning": _REWARDS_AND_INVENTORY_WARNING,
                         "multiselect": {
-                            "catalog": "io_spawns",
-                            "kind": "spawn",
-                            "valueKey": "cmd",
-                            "labelKey": "label",
-                            "idKey": "cmd",
-                            "filters": [
-                                {
-                                    "key": "category",
-                                    "label": "Category",
-                                    "type": "select",
-                                    "options": io_categories,
-                                    "default": "Carryables",
-                                    "catalogParam": "category",
-                                },
-                                {
-                                    "key": "show_worldpaths",
-                                    "label": "Show WorldPaths",
-                                    "type": "select",
-                                    "options": ["no", "yes"],
-                                    "default": "no",
-                                    "catalogParam": "show_worldpaths",
-                                },
-                            ],
+                            "catalog": "backpack",
+                            "kind": "backpack",
+                            "valueKey": "slot",
+                            "labelKey": "title",
+                            "idKey": "id",
                         },
                         "actions": [
                             _action(
-                                "Spawn selected at cam",
-                                "spawn_ios",
-                                payload={"spawn_anchor": "freecam", "activate": "yes"},
+                                "Refresh backpack list",
+                                "backpack_scan_status",
+                                tooltip="Rescan the Boost target's backpack for @U serials.",
+                            ),
+                            _action(
+                                "Relevel selected",
+                                "backpack_relevel_selected",
+                                backpack_multiselect=True,
+                                confirm=(
+                                    "Rewrite level on every ticked backpack item for the Boost target? "
+                                    "Works best in solo with room in the pack."
+                                ),
                                 fields=[
                                     {
-                                        "key": "activate",
-                                        "label": "Activate after spawn",
-                                        "type": "select",
-                                        "options": ["yes", "no"],
-                                        "default": "yes",
+                                        "key": "level",
+                                        "label": "New item level",
+                                        "type": "number",
+                                        "default": _DEFAULT_ITEM_LEVEL,
+                                        "min": 1,
+                                        "max": 100,
                                     },
-                                    {"key": "count", "label": "Count (1–999)", "type": "number", "default": 1},
                                 ],
-                                spawn_multiselect=True,
                             ),
-                            _action("Activate last IO spawn", "bms_activate_io"),
                         ],
                     },
                 ],
             },
             {
                 "id": "mobility",
-                "label": TAB_LABELS[7],
-                "short": TAB_SHORT_LABELS[7],
+                "label": TAB_LABELS[6],
+                "short": TAB_SHORT_LABELS[6],
                 "sections": [
                     {
                         "title": "Movement tuning",
@@ -2120,9 +1979,8 @@ def get_panel_manifest() -> dict[str, Any]:
                                 sticky=True,
                                 sync_key="noclip",
                                 tooltip=(
-                                    "Collision off for flying through walls. Turns Force fly ON at Cruise "
-                                    "(so you do not freefall). Turning Noclip OFF also turns Force fly OFF. "
-                                    "Use FAAFO → Fall through map to drop through floors."
+                                    "Collision off for flying through walls. Auto-enables Force fly "
+                                    "so you do not freefall. Use FAAFO → Fall through map to drop through floors."
                                 ),
                             ),
                             _action("Toggle players-only", "mobility_players_only"),
@@ -2141,11 +1999,12 @@ def get_panel_manifest() -> dict[str, Any]:
                     {
                         "title": "Movement toggles",
                         "hint": (
-                            "How to fly (you / host only): 1) Pick Cruise / Fast (or Custom)  "
+                            "How to fly: 1) Pick Cruise / Fast (or Custom)  "
                             "2) Press Apply fly speed  3) Turn Force fly ON  4) Hold WASD. "
-                            "Jump = up, Crouch = down. "
-                            "Guest fly judders under Oak netcode — use Infinite jump (all) for the lobby. "
-                            "Cruise is walk/jog (~750); Fast for travel. Custom up to 500,000."
+                            "Jump = up, Crouch = down (look pitch no longer steers vertical). "
+                            "Cruise is walk/jog (~750); Fast for travel. "
+                            "Custom numbers go up to 500,000. "
+                            "Home → Most used has a quick Force fly toggle — speed stays here."
                         ),
                         "fields": _fly_control_fields(),
                         "actions": [
@@ -2161,36 +2020,40 @@ def get_panel_manifest() -> dict[str, Any]:
                                 "mobility_infinite_jump",
                                 payload_on={"enabled": True, "scope": "target"},
                                 payload_off={"enabled": False, "scope": "target"},
-                                sticky=False,
+                                sticky=True,
                                 sync_key="infinite_jump",
-                                tooltip=(
-                                    "Session only. Uses Boost target — All players = whole lobby. "
-                                    "Or use Infinite jump (all) under Mobility. Stays on when people join."
-                                ),
                             ),
                             _toggle(
                                 "Infinite jump (all)",
                                 "mobility_infinite_jump",
                                 payload_on={"enabled": True, "scope": "all"},
                                 payload_off={"enabled": False, "scope": "all"},
-                                sticky=False,
+                                sticky=True,
                                 sync_key="infinite_jump_all",
-                                tooltip=(
-                                    "Session only. Uses Boost target — All players = whole lobby. "
-                                    "Or use Infinite jump (all) under Mobility. Stays on when people join."
-                                ),
                             ),
                             _toggle(
-                                "Force fly (host)",
+                                "Force fly (target)",
                                 "mobility_force_fly",
                                 payload_on={"enabled": True, "scope": "target"},
                                 payload_off={"enabled": False, "scope": "target"},
-                                sticky=False,
+                                sticky=True,
                                 sync_key="force_fly",
                                 tooltip=(
-                                    "Host-only kinematic fly. Not sticky — turns off when you reload. "
-                                    "Always applies to you, even if Boost target is someone else. "
-                                    "Guests: use Infinite jump. Party-wide Force fly is disabled (unreliable)."
+                                    "Host-authoritative fly for the Boost target. "
+                                    "Local: kinematic WASD fly. Party member: cheat fly on their pawn "
+                                    "(they move with their own input)."
+                                ),
+                            ),
+                            _toggle(
+                                "Force fly (all)",
+                                "mobility_force_fly",
+                                payload_on={"enabled": True, "scope": "all"},
+                                payload_off={"enabled": False, "scope": "all"},
+                                sticky=True,
+                                sync_key="force_fly_all",
+                                tooltip=(
+                                    "Force fly for every live party member from the host panel "
+                                    "(remotes use CheatManager fly — not host kinematic drive)."
                                 ),
                             ),
                             _toggle(
@@ -2260,8 +2123,8 @@ def get_panel_manifest() -> dict[str, Any]:
             },
             {
                 "id": "vehicle",
-                "label": TAB_LABELS[8],
-                "short": TAB_SHORT_LABELS[8],
+                "label": TAB_LABELS[7],
+                "short": TAB_SHORT_LABELS[7],
                 "sections": [
                     {
                         "title": "Vehicle tuning",
@@ -2345,8 +2208,8 @@ def get_panel_manifest() -> dict[str, Any]:
             },
             {
                 "id": "damage",
-                "label": TAB_LABELS[9],
-                "short": TAB_SHORT_LABELS[9],
+                "label": TAB_LABELS[8],
+                "short": TAB_SHORT_LABELS[8],
                 "sections": [
                     {
                         "title": "Combat sliders",
@@ -2361,8 +2224,8 @@ def get_panel_manifest() -> dict[str, Any]:
             },
             {
                 "id": "resources",
-                "label": TAB_LABELS[10],
-                "short": TAB_SHORT_LABELS[10],
+                "label": TAB_LABELS[9],
+                "short": TAB_SHORT_LABELS[9],
                 "sections": [
                     {
                         "title": "Shield / repkit / recovery",
@@ -2377,8 +2240,8 @@ def get_panel_manifest() -> dict[str, Any]:
             },
             {
                 "id": "world",
-                "label": TAB_LABELS[11],
-                "short": TAB_SHORT_LABELS[11],
+                "label": TAB_LABELS[10],
+                "short": TAB_SHORT_LABELS[10],
                 "sections": [
                     {
                         "title": "Fast travel",
@@ -2511,7 +2374,6 @@ def get_panel_manifest() -> dict[str, Any]:
                     },
                     {
                         "title": "World text (prop logo)",
-                        "aura": "world-text",
                         "hint": (
                             "Spells text with world props (not floating UI). Default text MODS / ARE / FREE; "
                             "default actor electisafe. Heavy actors (goldenchest/IO/NPC) auto-cap at 256 props "
@@ -2573,8 +2435,8 @@ def get_panel_manifest() -> dict[str, Any]:
             },
             {
                 "id": "mob_io",
-                "label": TAB_LABELS[12],
-                "short": TAB_SHORT_LABELS[12],
+                "label": TAB_LABELS[11],
+                "short": TAB_SHORT_LABELS[11],
                 "sections": [
                     {
                         "title": "Mix spawn groups",
@@ -2732,15 +2594,7 @@ def get_panel_manifest() -> dict[str, Any]:
                                     "options": io_categories,
                                     "default": "All",
                                     "catalogParam": "category",
-                                },
-                                {
-                                    "key": "show_worldpaths",
-                                    "label": "Show WorldPaths",
-                                    "type": "select",
-                                    "options": ["no", "yes"],
-                                    "default": "no",
-                                    "catalogParam": "show_worldpaths",
-                                },
+                                }
                             ],
                         },
                         "actions": [
@@ -2788,14 +2642,13 @@ def get_panel_manifest() -> dict[str, Any]:
             },
             {
                 "id": "loot_shapes",
-                "label": TAB_LABELS[13],
-                "short": TAB_SHORT_LABELS[13],
+                "label": TAB_LABELS[12],
+                "short": TAB_SHORT_LABELS[12],
                 "sections": [
                     _loot_text_section(),
                     {
                         "title": "Place shape",
                         "featured": True,
-                        "aura": "shape",
                         "hint": (
                             "Shape + settle, then Place Fully. New shapes keep prior house/globe frozen. "
                             "Expand Layout tuning / More options for every size knob."
@@ -2811,7 +2664,6 @@ def get_panel_manifest() -> dict[str, Any]:
                     },
                     {
                         "title": "Adjust & cleanup",
-                        "aura": "shape-tools",
                         "hint": "Re-run the same layout, cancel a drop animation, or soft-hide ground loot.",
                         "actions": [
                             _action(
@@ -2837,12 +2689,11 @@ def get_panel_manifest() -> dict[str, Any]:
             },
             {
                 "id": "faafo",
-                "label": TAB_LABELS[14],
-                "short": TAB_SHORT_LABELS[14],
+                "label": TAB_LABELS[13],
+                "short": TAB_SHORT_LABELS[13],
                 "sections": [
                     {
                         "title": "F.A.A.F.O.",
-                        "aura": "faafo",
                         "hint": (
                             "Party-aware chaos tools for the current boost target(s). "
                             "Weapon/vehicle locks and mobility shortcuts are below."
@@ -2906,7 +2757,6 @@ def get_panel_manifest() -> dict[str, Any]:
                     },
                     {
                         "title": "Drop backpack",
-                        "aura": "backpack",
                         "hint": (
                             "Spill the whole backpack to the ground. Use type piles or unique piles "
                             "under Shape when you want stacked piles instead of a silhouette."
@@ -2915,7 +2765,7 @@ def get_panel_manifest() -> dict[str, Any]:
                             _action(
                                 "Drop backpack",
                                 "faafo_drop_backpack",
-                                confirm="Spill THIS Boost target's whole backpack onto the ground? Check Boost target first.",
+                                confirm="Spill the target's whole backpack onto the ground?",
                                 fields=[*_shiny_land_fields()],
                                 tooltip=(
                                     "Spills the whole backpack to the ground. Pick type piles (weapon/shield/…) "
@@ -2969,8 +2819,8 @@ def get_panel_manifest() -> dict[str, Any]:
             },
             {
                 "id": "keybinds",
-                "label": TAB_LABELS[15],
-                "short": TAB_SHORT_LABELS[15],
+                "label": TAB_LABELS[14],
+                "short": TAB_SHORT_LABELS[14],
                 "sections": [
                     {
                         "title": "Custom keybinds",
@@ -2984,25 +2834,23 @@ def get_panel_manifest() -> dict[str, Any]:
             },
             {
                 "id": "toggles",
-                "label": TAB_LABELS[16],
-                "short": TAB_SHORT_LABELS[16],
+                "label": TAB_LABELS[15],
+                "short": TAB_SHORT_LABELS[15],
                 "sections": [
                     {
                         "title": "Sticky toggles",
                         "togglesBoard": True,
-                        "aura": "toggles",
                         "hint": (
-                            "Click a row to turn that sticky boost ON or OFF for the current boost target. "
-                            "Force fly (all) stays unavailable — use Infinite jump (all) for the lobby. "
-                            "Same live state as Home / Mobility."
+                            "Live on/off for sticky boosts (fly, jump, noclip, shoot/zoom flags). "
+                            "Turn them on from Home or Mobility — this tab only shows current state."
                         ),
                     },
                 ],
             },
             {
                 "id": "activity",
-                "label": TAB_LABELS[17],
-                "short": TAB_SHORT_LABELS[17],
+                "label": TAB_LABELS[16],
+                "short": TAB_SHORT_LABELS[16],
                 "sections": [
                     {
                         "title": "Support",

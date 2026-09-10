@@ -313,7 +313,7 @@ def reclaim_runtime_hooks() -> None:
     try:
         from .loot_shapes import install_loot_shapes_hooks
 
-        install_loot_shapes_hooks(force=False)
+        install_loot_shapes_hooks(force=True)
     except Exception:
         pass
     try:

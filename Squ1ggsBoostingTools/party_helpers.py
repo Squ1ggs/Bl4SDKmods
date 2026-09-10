@@ -382,12 +382,6 @@ def _list_party_players() -> List[Tuple[int, str]]:
         if ps is None:
             continue
         name = _gbc_resolve_player_display_name(ps)
-        if not str(name or "").strip():
-            # Empty labels become "Player N" in the EXE and confuse the dropdown.
-            if local_ps is not None and ps is local_ps:
-                name = f"Host (#{i})"
-            else:
-                continue
         if local_ps is not None and ps is local_ps:
             # Prefer a non-placeholder host label when the engine still says "Player 0".
             if _ps_placeholder_display_name(name):

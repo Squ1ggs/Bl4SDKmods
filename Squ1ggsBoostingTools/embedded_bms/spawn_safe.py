@@ -13,29 +13,19 @@ SpawnFn = Callable[[], tuple[bool, str]]
 
 
 def _mark_pending(ui: Any, msg: str) -> None:
-    if ui is None:
-        return
+    ui.status_text = msg
+    ui.error_text = ""
+    ui.spawn_pending = True  # type: ignore[attr-defined]
     try:
-        ui.status_text = msg
-        ui.error_text = ""
-        ui.spawn_pending = True  # type: ignore[attr-defined]
-        try:
-            ui.spawn_pending_since = time.monotonic()  # type: ignore[attr-defined]
-        except Exception:
-            pass
+        ui.spawn_pending_since = time.monotonic()  # type: ignore[attr-defined]
     except Exception:
         pass
 
 
 def _clear_pending(ui: Any) -> None:
-    if ui is None:
-        return
+    ui.spawn_pending = False  # type: ignore[attr-defined]
     try:
-        ui.spawn_pending = False  # type: ignore[attr-defined]
-        try:
-            ui.spawn_pending_since = 0.0  # type: ignore[attr-defined]
-        except Exception:
-            pass
+        ui.spawn_pending_since = 0.0  # type: ignore[attr-defined]
     except Exception:
         pass
 
@@ -46,27 +36,6 @@ def _wrap_paused(fn: SpawnFn) -> SpawnFn:
             return fn()
 
     return _inner
-
-
-def _queue_anchor(ui: Any) -> str:
-    anchor = "local"
-    if ui is not None:
-        anchor = str(getattr(ui, "spawn_anchor", "local") or "local")
-    else:
-        try:
-            from Squ1ggsBoostingTools import spawn_targets  # noqa: PLC0415
-
-            anchor = str(spawn_targets.mode() or "local")
-        except Exception:
-            pass
-    try:
-        from Squ1ggsBoostingTools.dev_tools import is_debug_cam_active  # noqa: PLC0415
-
-        if is_debug_cam_active() and anchor in ("local", ""):
-            anchor = "freecam"
-    except Exception:
-        pass
-    return anchor
 
 
 def queue_spawn_action(
@@ -87,16 +56,15 @@ def queue_spawn_action(
     """
     try:
         from Squ1ggsBoostingTools import spawn_deferred as deferred
-        anchor = _queue_anchor(ui)
         request = make_request(
             label,
             _wrap_paused(fn) if pause else fn,
-            anchor=anchor,
-            party_index=int(getattr(ui, "party_index", 2) or 2) if ui is not None else 2,
+            anchor=str(getattr(ui, "spawn_anchor", "local") or "local"),
+            party_index=int(getattr(ui, "party_index", 2) or 2),
             status_ui=ui,
         )
         deferred.queue_action(label, request.execute)
-        msg = f"Queued: {label} — waiting for world to settle"
+        msg = f"Queued: {label} — waiting_for_stable_lobby"
         _mark_pending(ui, msg)
         return True, msg
     except Exception as exc:  # noqa: BLE001
@@ -122,29 +90,24 @@ def queue_spawn_actions(
         n = len(fns)
         for i, fn in enumerate(fns):
             item_label = f"{label} ({i + 1}/{n})"
-            anchor = _queue_anchor(ui)
             request = make_request(
                 item_label,
                 _wrap_paused(fn) if pause else fn,
-                anchor=anchor,
-                party_index=int(getattr(ui, "party_index", 2) or 2) if ui is not None else 2,
+                anchor=str(getattr(ui, "spawn_anchor", "local") or "local"),
+                party_index=int(getattr(ui, "party_index", 2) or 2),
                 status_ui=ui,
             )
             deferred.queue_action(
                 item_label,
                 request.execute,
             )
-        msg = f"Queued {n}x {label} — waiting for world to settle"
+        msg = f"Queued {n}x {label} — waiting_for_stable_lobby"
         _mark_pending(ui, msg)
         return True, msg
     except Exception as exc:  # noqa: BLE001
         last_msg = f"failed: could not queue {label}: {type(exc).__name__}: {exc}"
-        if ui is not None:
-            try:
-                ui.status_text = last_msg
-                ui.error_text = last_msg
-            except Exception:
-                pass
+        ui.status_text = last_msg
+        ui.error_text = last_msg
         _clear_pending(ui)
         return False, last_msg
 

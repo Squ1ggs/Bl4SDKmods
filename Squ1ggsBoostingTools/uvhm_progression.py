@@ -25,9 +25,9 @@ from typing import Any, Callable, Iterable, Optional, Protocol, Sequence
 # The supplied, field-tested command list uses exactly +1 for every objective
 # and final token.  Larger catalog-scaled amounts are not equivalent here.
 OBJECTIVE_INCREMENT = 1
-PRE_FINAL_GRACE_POLLS = 3
-POST_FINAL_GRACE_POLLS = 4
-RANK_ACTIVATION_GRACE_POLLS = 4
+PRE_FINAL_GRACE_POLLS = 8
+POST_FINAL_GRACE_POLLS = 12
+RANK_ACTIVATION_GRACE_POLLS = 20
 TRAIT_CATALOG_ONLY = "Challenge_UVH_Rankup_1_Trait"
 
 

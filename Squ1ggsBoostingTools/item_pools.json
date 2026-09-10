@@ -78,9 +78,7 @@
     "display_name": "Disc Jockey",
     "itempool": "ItemPool_BlackMarket_Comp_BOR_HW_DiscJockey",
     "category": "Heavy",
-    "catalog_key": "bor_hw_comp_05_legendary_discjockey",
-    "dump_inv": "inv'BOR_HW.comp_05_legendary_DiscJockey'",
-    "dump_named_legendary": "1"
+    "catalog_key": "bor_hw_comp_05_legendary_discjockey"
   },
   {
     "display_name": "Blackmarket Comp Bor Hw Streamer",
@@ -1095,8 +1093,8 @@
   {
     "display_name": "Jak Sr Legendary Burrow Shiny",
     "itempool": "itempool_jak_sr_legendary_Burrow_shiny",
-    "catalog_key": "jak_sr_comp_05_legendary_burrow",
-    "category": "Sniper"
+    "category": "Sniper",
+    "catalog_key": "jak_sr_comp_05_legendary_burrow"
   },
   {
     "display_name": "Jak Sr Legendary Extinction Shiny",
@@ -1302,19 +1300,19 @@
   {
     "display_name": "Rainmaker",
     "itempool": "itempool_mal_sg_05_legendary_rainmaker_shiny",
-    "catalog_key": "bor_sr_comp_05_legendary_rainmaker",
-    "category": "Sniper"
-  },
-  {
-    "display_name": "Roil",
-    "itempool": "itempool_mal_sg_05_legendary_roil_shiny",
-    "catalog_key": "bor_sm_comp_05_legendary_roil",
-    "category": "SMG"
+    "category": "Sniper",
+    "catalog_key": "bor_sr_comp_05_legendary_rainmaker"
   },
   {
     "display_name": "Mal SG 05 Legendary Reminisce Shiny",
     "itempool": "itempool_mal_sg_05_legendary_reminisce_shiny",
     "category": "Shotgun"
+  },
+  {
+    "display_name": "Roil",
+    "itempool": "itempool_mal_sg_05_legendary_roil_shiny",
+    "category": "SMG",
+    "catalog_key": "bor_sm_comp_05_legendary_roil"
   },
   {
     "display_name": "Mal SG 05 Legendary Scootshoot Shiny",
@@ -1349,8 +1347,8 @@
   {
     "display_name": "Mal SM 05 Legendary Mercury Shiny",
     "itempool": "itempool_mal_sm_05_legendary_mercury_shiny",
-    "catalog_key": "vla_sm_comp_05_legendary_mercury",
-    "category": "SMG"
+    "category": "SMG",
+    "catalog_key": "vla_sm_comp_05_legendary_mercury"
   },
   {
     "display_name": "Mal SM 05 Legendary Ohmigot Shiny",
@@ -1548,8 +1546,8 @@
   {
     "display_name": "Pachonk",
     "itempool": "itempool_ord_ar_05_legendary_Pchonk",
-    "catalog_key": "ord_ar_comp_05_legendary_pchonk",
-    "category": "Pearl"
+    "category": "Pearl",
+    "catalog_key": "ord_ar_comp_05_legendary_pchonk"
   },
   {
     "display_name": "Ord Ar 05 Legendary Pchonk Shiny",
@@ -1617,12 +1615,6 @@
     "category": "Sniper"
   },
   {
-    "display_name": "Kaoson",
-    "itempool": "itempool_vla_sm_05_legendary_KaoSon_shiny",
-    "catalog_key": "vla_sm_comp_05_legendary_kaoson",
-    "category": "SMG"
-  },
-  {
     "display_name": "Verce",
     "itempool": "itempool_patch_inline_jak_sg_verce",
     "category": "Shotgun"
@@ -1630,9 +1622,8 @@
   {
     "display_name": "PRISM",
     "itempool": "itempool_patch_inline_jak_sr_burrow",
-    "catalog_key": "jak_sr_comp_05_legendary_burrow",
-    "dump_inv": "inv'JAK_SR.comp_05_legendary_Burrow'",
-    "category": "Pearl"
+    "category": "Pearl",
+    "catalog_key": "jak_sr_comp_05_legendary_burrow"
   },
   {
     "display_name": "Loiter",
@@ -2547,6 +2538,12 @@
     "display_name": "Vla SM 05 Legendary Beegun Shiny",
     "itempool": "itempool_vla_sm_05_legendary_BeeGun_shiny",
     "category": "SMG"
+  },
+  {
+    "display_name": "Kaoson",
+    "itempool": "itempool_vla_sm_05_legendary_KaoSon_shiny",
+    "category": "SMG",
+    "catalog_key": "vla_sm_comp_05_legendary_kaoson"
   },
   {
     "display_name": "Vla SM 05 Legendary Onslaught Shiny",

@@ -136,7 +136,6 @@ _MIN_DROP_HEIGHT = 0.0
 _MAX_DROP_HEIGHT = 800.0
 _CAR_DEFAULT_DROP_HEIGHT = 8.0
 _CAR_GROUND_LIFT = 6.0
-# Human-scale sedan around the player (driver seat near origin).
 _CAR_WORLD_Z_BIAS = -10.0
 _MIN_ITEM_GAP = 48.0
 # 3D globe/pyramid grew past this and froze the session (physics + pin restamps).
@@ -179,11 +178,7 @@ _join_reapply_pending = False
 _join_reapply_at = 0.0
 _coop_followup_sync_at: float = 0.0
 _coop_followup_waves: int = 0
-# Lobby house crash guard: do not guest-push until float settle is quiet.
-_coop_guest_sync_after: float = 0.0
 _float_jobs: list[dict[str, Any]] = []
-# Slow settle: next fall start time (rain as items are caught — not after full dump).
-_slow_rain_next_at: float = 0.0
 _pinned_slots: list[dict[str, Any]] = []
 _pin_tick: int = 0
 # Shiny/bulk land: slot index → itempool name (for @U serial when pickup has no LOV serial).
@@ -261,8 +256,7 @@ def _uobject_addr(obj: Any) -> int:
         addr = int(obj._get_address() or 0)
     except Exception:
         return 0
-    # Native AV reading 0xffffffffffffffff — treat -1 / near-max as dead.
-    if addr <= 0 or addr >= 0xFFFFFFFFFFFF0000:
+    if addr <= 0 or addr == 0xFFFFFFFFFFFFFFFF:
         return 0
     return addr
 
@@ -290,14 +284,13 @@ def _player_anchor() -> tuple[Any, float, float, float, float] | None:
         return None
     pawn = getattr(pc, "Pawn", None) or getattr(pc, "OakCharacter", None)
     try:
-        from .spawn_targets import anchor_pawn, mode as spawn_mode
+        from .spawn_targets import mode as spawn_mode
         from .spawn_targets import resolve_pose
 
         pose = resolve_pose(pc)
         if pose is not None:
             loc, rot = pose
-            spawn_mode_str = str(spawn_mode() or "local").strip().lower()
-            if spawn_mode_str == "local":
+            if str(spawn_mode() or "local").strip().lower() == "local":
                 fn = getattr(pc, "GetControlRotation", None)
                 look = None
                 if callable(fn):
@@ -313,10 +306,7 @@ def _player_anchor() -> tuple[Any, float, float, float, float] | None:
             if abs(yaw_raw) > 720.0:
                 yaw_raw = yaw_raw * (360.0 / 65536.0)
             yaw = math.radians(yaw_raw)
-            anchor_p = anchor_pawn(pc)
-            if _live(anchor_p):
-                pawn = anchor_p
-            # Prefer anchor pawn forward so yank/shape slots match their facing.
+            # Prefer pawn forward so yank/shape slots match engine facing.
             try:
                 if _live(pawn):
                     fwd = pawn.GetActorForwardVector()
@@ -415,38 +405,6 @@ _RARITY_FROM_COMP = {
 def _mid_shape_dump() -> bool:
     """Spawn All / shaped dump still filling slots — guest net + stale reads AV here."""
     return bool(_land_active and not _landing_settle_done)
-
-
-def _coop_incremental_sync_ok() -> bool:
-    """Mid-dump guest ForceNetUpdate caused AV 0xffffffffffffffff on lobby shapes.
-
-    Host pins only while dumping; guests get a spread sync after settle / join quiet.
-    """
-    return False
-
-
-def _coop_large_held_shape() -> bool:
-    """House/car-sized held silhouettes — mass guest teleports AV in lobby."""
-    try:
-        return held_pin_count() > 80
-    except Exception:
-        return False
-
-
-def _coop_guest_sync_ready(now: float | None = None) -> bool:
-    """True when lobby guest push is safe.
-
-    Mid-dump ForceNetUpdate AVs. Float jobs may still be raining — we only push
-    rows already pinned onto slots, so guests see the silhouette fill in.
-    """
-    t = time.monotonic() if now is None else float(now)
-    if _mid_shape_dump():
-        return False
-    if t < float(_coop_guest_sync_after or 0.0):
-        return False
-    if _in_join_quiet(t):
-        return False
-    return True
 
 
 def _append_obj_names(parts: list[str], obj: Any, *, depth: int = 0, seen: set[int] | None = None) -> None:
@@ -904,9 +862,7 @@ def _tick_coop_followup_sync(now: float) -> None:
         return
     if _in_join_quiet(now):
         return
-    if _land_active and not _landing_settle_done and not _coop_incremental_sync_ok():
-        return
-    if not _coop_guest_sync_ready(now):
+    if _land_active and not _landing_settle_done:
         return
     if not _want_coop_replicate() or not _pinned_slots:
         _coop_followup_waves = 0
@@ -916,7 +872,7 @@ def _tick_coop_followup_sync(now: float) -> None:
         _coop_followup_waves = 0
         return
     _coop_followup_waves -= 1
-    _coop_followup_sync_at = now + (5.0 if _coop_large_held_shape() else 3.5)
+    _coop_followup_sync_at = now + 4.0
     try:
         _guest_sync_cursor = 0
         _coop_pins_synced = 0
@@ -1046,19 +1002,24 @@ def _inv_is_car_wheel(inv: Any = None, pool_name: str = "") -> bool:
 
 
 def _car_take_part_slot(*, inv: Any = None, pool_name: str = "") -> tuple[float, float, float] | None:
-    """Fill tire rings first so wheels stay visible even without pistol/SMG dumps."""
+    """Pistols/SMGs fill tires first; everything else stays on the chassis."""
     wheels = _drop_part_plans.get("car_wheel") or []
     body = _drop_part_plans.get("car_body") or []
     if not wheels and not body:
         return None
-    n_w = int(_drop_type_counts.get("car_wheel", 0))
-    if n_w < len(wheels):
-        _drop_type_counts["car_wheel"] = n_w + 1
-        return wheels[n_w]
-    n_b = int(_drop_type_counts.get("car_body", 0))
-    if n_b < len(body):
-        _drop_type_counts["car_body"] = n_b + 1
-        return body[n_b]
+    if _inv_is_car_wheel(inv, pool_name):
+        n = int(_drop_type_counts.get("car_wheel", 0))
+        if n < len(wheels):
+            _drop_type_counts["car_wheel"] = n + 1
+            return wheels[n]
+    n = int(_drop_type_counts.get("car_body", 0))
+    if n < len(body):
+        _drop_type_counts["car_body"] = n + 1
+        return body[n]
+    n = int(_drop_type_counts.get("car_wheel", 0))
+    if n < len(wheels):
+        _drop_type_counts["car_wheel"] = n + 1
+        return wheels[n]
     return None
 
 
@@ -1220,11 +1181,6 @@ def _normalize_shape_name(shape: str) -> str:
         "figure_8": "figure8",
         "sine": "wave",
         "sine_wave": "wave",
-        "text_shape": "text",
-        "words": "text",
-        "word": "text",
-        "type_text": "text",
-        "write": "text",
         "bolt": "lightning",
         "vault_symbol": "vault",
         "vault_logo": "vault",
@@ -1280,6 +1236,11 @@ def _normalize_shape_name(shape: str) -> str:
         "ring_torus": "torus",
         "tiara": "crown",
         "flying_saucer": "ufo",
+        "text_shape": "text",
+        "words": "text",
+        "word": "text",
+        "write": "text",
+        "loot_text": "text",
         "saucer": "ufo",
         "missile": "rocket",
         "cog": "gear",
@@ -1301,6 +1262,16 @@ def hidden_shapes_unlocked() -> bool:
         return bool(data.get("unlocked"))
     except Exception:
         return False
+
+
+def visible_shape_names() -> list[str]:
+    unlock = hidden_shapes_unlocked()
+    # "text" is its own Shapes section (Spell a word), not the normal Shape dropdown.
+    return [
+        name
+        for name in SHAPE_NAMES
+        if name != "text" and (unlock or name not in SHAPE_HIDDEN_3D_NAMES)
+    ]
 
 
 # ---------------------------------------------------------------------------
@@ -1596,17 +1567,6 @@ def _offsets_text(
     step = len(base) / float(n)
     return [base[min(len(base) - 1, int(i * step))] for i in range(n)]
 
-
-def visible_shape_names() -> list[str]:
-    unlock = hidden_shapes_unlocked()
-    # "text" is its own Shapes section (Spell a word), not the normal Shape dropdown.
-    return [
-        name
-        for name in SHAPE_NAMES
-        if name != "text" and (unlock or name not in SHAPE_HIDDEN_3D_NAMES)
-    ]
-
-
 _pending_local_dirs: list[tuple[float, float, float]] = []
 
 
@@ -1710,9 +1670,10 @@ def shape_offsets(
         raw = _limit_shape_extent(raw)
     clearance = 180.0
     if shape in ("firehawk", "psycho", "vault"):
+        # Sit further forward than leftover 3D dumps so a new logo is not
+        # drawn on top of the previous silhouette.
         clearance = 340.0
     elif shape == "text":
-        # World-text style stand-off in front of the player.
         clearance = max(220.0, float(_text_distance))
     raw = _push_shape_in_front(raw, clearance=clearance)
     if shape == "forbidden_pair" and raw:
@@ -2774,7 +2735,6 @@ def _car_part_offsets(
     nb = len(body)
     return lifted[:nb], lifted[nb:]
 
-
 def _offsets_car(n: int, radius: float) -> list[tuple[float, float, float]]:
     """Parked 3D car: side-profile cabin, then tires. Guns lie flat."""
     body, wheels = _car_part_offsets(n, radius)
@@ -3024,6 +2984,49 @@ def _offsets_pyramid_3d(n: int, radius: float) -> list[tuple[float, float, float
     return _commit_oriented(_lift_oriented(rows, pad=36.0), n)
 
 
+def _lift_above_ground(
+    points: list[tuple[float, float, float]],
+    *,
+    pad: float = 28.0,
+) -> list[tuple[float, float, float]]:
+    """Keep a standing silhouette's chin / lowest point above the player's feet."""
+    if not points:
+        return points
+    min_z = min(p[2] for p in points)
+    if min_z >= pad:
+        return points
+    dz = pad - min_z
+    return [(x, y, z + dz) for x, y, z in points]
+
+
+def _sphere_shell(
+    cx: float,
+    cy: float,
+    cz: float,
+    rad: float,
+    n: int,
+    *,
+    front_bias: float = 0.0,
+) -> list[tuple[float, float, float]]:
+    """Fibonacci sphere. front_bias > 0 pulls points toward +forward (player-facing)."""
+    if n <= 0:
+        return []
+    golden = math.pi * (3.0 - math.sqrt(5.0))
+    out: list[tuple[float, float, float]] = []
+    for i in range(n):
+        t = (i + 0.5) / n
+        z = 1.0 - 2.0 * t
+        rxy = math.sqrt(max(0.0, 1.0 - z * z))
+        ang = i * golden
+        fwd = rad * rxy * math.cos(ang)
+        right = rad * rxy * math.sin(ang)
+        up = rad * z
+        if front_bias > 0.0:
+            fwd = abs(fwd) * (0.35 + 0.65 * front_bias) + fwd * (1.0 - front_bias) * 0.25
+        out.append((cx + fwd, cy + right, cz + up))
+    return out
+
+
 def _box_wire_oriented(
     cx: float,
     cy: float,
@@ -3087,7 +3090,6 @@ def _box_wire_oriented(
         rows.extend(_oriented_polyline(loop, count))
     return rows[:n]
 
-
 def _offsets_diamond_3d(n: int, radius: float) -> list[tuple[float, float, float]]:
     """Standing octahedron / gem: apex, nadir, equatorial ring, then face stripes."""
     n = max(0, int(n))
@@ -3145,7 +3147,6 @@ def _offsets_diamond_3d(n: int, radius: float) -> list[tuple[float, float, float
         rows.extend(fill_pts[:n_fill])
     return _commit_oriented(_lift_oriented(rows, pad=28.0), n)
 
-
 def _offsets_blocks(n: int, radius: float) -> list[tuple[float, float, float]]:
     """Minecraft-ish: three cubes on the bottom row, one cube centered on top."""
     n = max(0, int(n))
@@ -3175,7 +3176,6 @@ def _offsets_blocks(n: int, radius: float) -> list[tuple[float, float, float]]:
         rows.extend(_box_wire_oriented(cx, cy, cz, s, s, s, count))
     return _commit_oriented(_lift_oriented(rows[:n], pad=18.0), n)
 
-
 def _offsets_cube(n: int, radius: float) -> list[tuple[float, float, float]]:
     """Single standing cube silhouette."""
     n = max(0, int(n))
@@ -3184,7 +3184,6 @@ def _offsets_cube(n: int, radius: float) -> list[tuple[float, float, float]]:
     s = min(max(70.0, float(radius) * 0.52), 150.0)
     rows = _box_wire_oriented(0.0, 0.0, s, s, s, s, n)
     return _commit_oriented(_lift_oriented(rows, pad=20.0), n)
-
 
 def _offsets_torus(n: int, radius: float) -> list[tuple[float, float, float]]:
     """Donut / torus lying flat: major ring + tube rings."""
@@ -3228,7 +3227,6 @@ def _offsets_torus(n: int, radius: float) -> list[tuple[float, float, float]]:
         rows.extend(fill[:n_tubes])
     return _commit_oriented(_lift_oriented(rows, pad=22.0), n)
 
-
 def _offsets_crown(n: int, radius: float) -> list[tuple[float, float, float]]:
     """Band + pointed spikes — reads as a crown even on short shiny dumps."""
     n = max(0, int(n))
@@ -3260,7 +3258,6 @@ def _offsets_crown(n: int, radius: float) -> list[tuple[float, float, float]]:
                 rows.extend(_oriented_polyline([base_r, tip], right_n))
     return _commit_oriented(_lift_oriented(rows, pad=24.0), n)
 
-
 def _offsets_ufo(n: int, radius: float) -> list[tuple[float, float, float]]:
     """Flying saucer: disc rim + cabin dome."""
     n = max(0, int(n))
@@ -3283,7 +3280,6 @@ def _offsets_ufo(n: int, radius: float) -> list[tuple[float, float, float]]:
             dome = _take_n_points(dome or [(0.0, 0.0, disc_z + dome_r)], n_dome)
         rows.extend(_oriented_from_pts(dome[:n_dome], (1.0, 0.0, 0.0)))
     return _commit_oriented(_lift_oriented(rows, pad=26.0), n)
-
 
 def _offsets_rocket(n: int, radius: float) -> list[tuple[float, float, float]]:
     """Standing rocket: body rings, nose cone, base fins."""
@@ -3335,7 +3331,6 @@ def _offsets_rocket(n: int, radius: float) -> list[tuple[float, float, float]]:
                 rows.extend(_oriented_polyline([root_hi, tip_fin], b_n))
     return _commit_oriented(_lift_oriented(rows, pad=20.0), n)
 
-
 def _offsets_gear(n: int, radius: float) -> list[tuple[float, float, float]]:
     """Standing cog: outer toothed ring, hub, and spokes."""
     n = max(0, int(n))
@@ -3381,50 +3376,6 @@ def _offsets_gear(n: int, radius: float) -> list[tuple[float, float, float]]:
             outer = (0.0, R * 0.92 * ca, R * 0.92 * sa)
             rows.extend(_oriented_polyline([inner, outer], count))
     return _commit_oriented(_lift_oriented(rows, pad=30.0), n)
-
-
-def _lift_above_ground(
-    points: list[tuple[float, float, float]],
-    *,
-    pad: float = 28.0,
-) -> list[tuple[float, float, float]]:
-    """Keep a standing silhouette's chin / lowest point above the player's feet."""
-    if not points:
-        return points
-    min_z = min(p[2] for p in points)
-    if min_z >= pad:
-        return points
-    dz = pad - min_z
-    return [(x, y, z + dz) for x, y, z in points]
-
-
-def _sphere_shell(
-    cx: float,
-    cy: float,
-    cz: float,
-    rad: float,
-    n: int,
-    *,
-    front_bias: float = 0.0,
-) -> list[tuple[float, float, float]]:
-    """Fibonacci sphere. front_bias > 0 pulls points toward +forward (player-facing)."""
-    if n <= 0:
-        return []
-    golden = math.pi * (3.0 - math.sqrt(5.0))
-    out: list[tuple[float, float, float]] = []
-    for i in range(n):
-        t = (i + 0.5) / n
-        z = 1.0 - 2.0 * t
-        rxy = math.sqrt(max(0.0, 1.0 - z * z))
-        ang = i * golden
-        fwd = rad * rxy * math.cos(ang)
-        right = rad * rxy * math.sin(ang)
-        up = rad * z
-        if front_bias > 0.0:
-            fwd = abs(fwd) * (0.35 + 0.65 * front_bias) + fwd * (1.0 - front_bias) * 0.25
-        out.append((cx + fwd, cy + right, cz + up))
-    return out
-
 
 def _offsets_forbidden_one(n: int, radius: float) -> list[tuple[float, float, float]]:
     """Hidden 3D silhouette: glans first, then pair at the base, then shaft (full XYZ)."""
@@ -4392,45 +4343,34 @@ def _force_net_update(inv: Any, *, coop_pin: bool = False, guest_push: bool = Fa
     """One net flush. Doubling ForceNetUpdate on every pin lagged the host."""
     if not _live(inv):
         return
-    # Re-check immediately before native net calls (wrappers die between ticks).
-    if not _live(inv):
-        return
     for name in ("SetReplicates", "SetReplicateMovement"):
         fn = getattr(inv, name, None)
         if callable(fn):
             try:
-                if not _live(inv):
-                    return
                 fn(True)
             except Exception:
-                return
+                pass
     if guest_push:
         dorm = getattr(inv, "SetNetDormancy", None)
         if callable(dorm):
             try:
-                if not _live(inv):
-                    return
                 dorm(3)  # DORM_Never
             except Exception:
-                return
+                pass
     try:
-        if not _live(inv):
-            return
         inv.bReplicates = True
         inv.bReplicateMovement = True
         inv.bAlwaysRelevant = bool(guest_push or coop_pin)
         inv.NetUpdateFrequency = 40.0 if guest_push else (24.0 if coop_pin else 100.0)
     except Exception:
-        return
+        pass
     for name in ("FlushNetDormancy", "ForceNetUpdate"):
         fn = getattr(inv, name, None)
         if callable(fn):
             try:
-                if not _live(inv):
-                    return
                 fn()
             except Exception:
-                return
+                pass
             break
 
 
@@ -4466,8 +4406,8 @@ def _should_replicate_pin_now() -> bool:
     if not _want_coop_replicate():
         return False
     if _land_active and not _landing_settle_done:
-        return _coop_incremental_sync_ok()
-    if _float_jobs and not _coop_incremental_sync_ok():
+        return False
+    if _float_jobs:
         return False
     return True
 
@@ -4525,8 +4465,7 @@ def _schedule_orphan_pickup_absorb() -> None:
     """After abandon, mark world pickups untouchable on next in-world tick (items may still render)."""
     global _absorb_orphans_after_abandon, _absorb_orphans_at
     _absorb_orphans_after_abandon = True
-    # Defer past load settle — find_all here during character stream hitch'd badly.
-    _absorb_orphans_at = time.monotonic() + 5.0
+    _absorb_orphans_at = time.monotonic() + 0.35
 
 
 def _absorb_orphan_pickups_if_due(now: float | None = None) -> None:
@@ -4539,13 +4478,10 @@ def _absorb_orphan_pickups_if_due(now: float | None = None) -> None:
         return
     _absorb_orphans_after_abandon = False
     try:
-        from .session_guards import session_safe, session_warm
+        from .session_guards import session_safe
 
         if not session_safe():
             _schedule_orphan_pickup_absorb()
-            return
-        if not session_warm():
-            _absorb_orphans_at = max(float(_absorb_orphans_at or 0.0), time.monotonic() + 1.0)
             return
     except Exception:
         pass
@@ -4682,19 +4618,16 @@ def _begin_join_quiet(*, seconds: float = 8.0, reason: str = "") -> None:
     }
     if hold_shape:
         # Do not invalidate/wipe the addr map at join start — half the house lost wrappers
-        # and fell before rebind could catch up. Rebind only when session is fully in-world.
+        # and fell before rebind could catch up.
         try:
-            from .session_guards import session_safe, session_warm
-
-            if session_safe() and session_warm():
-                rebound = _rebind_hold_pins_after_join()
-                repinned = _repin_host_hold_pins(
-                    limit=_join_hold_repin_cap(base=28), refresh_cache=False
+            rebound = _rebind_hold_pins_after_join()
+            repinned = _repin_host_hold_pins(
+                limit=_join_hold_repin_cap(base=64), refresh_cache=False
+            )
+            if rebound or repinned:
+                _log_dev(
+                    f"Join hold prep: {rebound} pin(s) remapped, {repinned} re-frozen before quiet."
                 )
-                if rebound or repinned:
-                    _log_dev(
-                        f"Join hold prep: {rebound} pin(s) remapped, {repinned} re-frozen before quiet."
-                    )
         except Exception:
             pass
     else:
@@ -4705,7 +4638,8 @@ def _begin_join_quiet(*, seconds: float = 8.0, reason: str = "") -> None:
         row.pop("inv", None)
         row["misses"] = 0
         if row.get("hold"):
-            # Keep guest_ok during quiet — mass re-net here hitch'd load/join.
+            # Keep guest_ok — mass re-net during join quiet was waking physics and
+            # half the house fell before heartbeat caught up.
             row.pop("guest_fail", None)
         else:
             row.pop("guest_ok", None)
@@ -4719,9 +4653,6 @@ def _begin_join_quiet(*, seconds: float = 8.0, reason: str = "") -> None:
         _guest_sync_cursor = 0
         _guest_sync_last = 0.0
         _guest_maint_last = 0.0
-        _guest_maint_cursor = 0
-        _coop_pins_synced = 0
-        _guest_sync_complete_announced = False
         try:
             _purge_decor_pins()
         except Exception:
@@ -4743,13 +4674,6 @@ def _begin_join_quiet(*, seconds: float = 8.0, reason: str = "") -> None:
 def _poll_party_join(now: float) -> None:
     """Detect lobby joins before pin/guest ticks. Must run first on the shape poll."""
     global _party_poll_at, _join_reapply_pending, _join_reapply_at, _coop_pins_synced
-    try:
-        from .session_guards import session_safe, session_warm
-
-        if not session_safe() or not session_warm():
-            return
-    except Exception:
-        return
     gap = 0.45 if _pinned_slots else 1.5
     if now - _party_poll_at < gap:
         return
@@ -4763,7 +4687,7 @@ def _poll_party_join(now: float) -> None:
         return
     if count > prev:
         pass  # mobility_runtime party-join scrub handles remote jump/gravity (not loot_shapes)
-    if count > prev and _pinned_slots and count >= 2:
+    if count > prev and _pinned_slots:
         _last_layout["party_count"] = count
         _begin_join_quiet(seconds=8.0, reason=f"party {prev}->{count}")
         _coop_pins_synced = 0
@@ -4789,19 +4713,21 @@ def _poll_party_join(now: float) -> None:
 
 
 def _schedule_coop_pin_tail(*, limit: int = 2) -> None:
-    """Throttled net push for pins the host just froze (guests see silhouette, not feet drops)."""
+    """3.8.169 path: ~2 pins/sec to lobby while host builds — freeze-first guest push, no owner-only."""
     global _coop_tail_throttle_at
     if not _want_coop_replicate():
         return
     now = time.monotonic()
-    mid = bool(_land_active and not _landing_settle_done and _coop_incremental_sync_ok())
-    min_gap = 0.20 if mid else 0.14
+    mid = bool(_land_active and not _landing_settle_done)
+    min_gap = 0.50 if mid else 0.14
     if now - _coop_tail_throttle_at < min_gap:
         return
     _coop_tail_throttle_at = now
-    cap = 10 if mid else 4
     try:
-        _coop_sync_pins_tail(limit=max(1, min(cap, int(limit))))
+        _coop_sync_pins_tail(
+            limit=max(1, min(2 if mid else 4, int(limit))),
+            allow_mid_dump=True,
+        )
     except Exception:
         pass
 
@@ -4824,18 +4750,11 @@ def _begin_guest_sync(*, force: bool = False, clear_ok: bool = True) -> None:
     _guest_sync_last = 0.0
     _coop_pins_synced = 0
     if clear_ok:
-        # Keep already-synced held pins. Re-clearing every settle re-blasted 200–400
-        # ForceNetUpdates when stacking shapes in a lobby (native AV).
         _guest_sync_complete_announced = False
-        fresh = 0
         for row in _pinned_slots:
-            if row.get("guest_ok"):
-                continue
+            row.pop("guest_ok", None)
             row.pop("guest_fail", None)
-            fresh += 1
-        _log_dev(
-            f"Co-op guest sync queued ({fresh} new / {len(_pinned_slots)} total pin(s))."
-        )
+        _log_dev(f"Co-op guest sync queued ({len(_pinned_slots)} held pin(s)).")
     else:
         _log_dev(f"Co-op guest sync retry ({pending}/{len(_pinned_slots)} pin(s) still pending).")
 
@@ -4845,69 +4764,73 @@ def _tick_coop_hold_guest_heartbeat(now: float, *, join_quiet: bool = False) -> 
     global _guest_maint_cursor, _guest_maint_last, _guest_sync_active
     if not _held_coop_shape_active():
         return 0
-    mid_build = bool(_mid_shape_dump() and _coop_incremental_sync_ok())
+    # Mid Spawn All: skip guest net unless we are already in join quiet (house must stay up).
+    if _mid_shape_dump() and not join_quiet:
+        return 0
     if join_quiet:
-        # Join quiet: host-only freeze. Guest ForceNetUpdate during stream AV'd
-        # (EXCEPTION_ACCESS_VIOLATION reading 0xffffffffffffffff).
-        gap = 0.35
+        elapsed = max(0.0, now - float(_join_quiet_started_at or 0.0))
+        gap = 0.06
         if now - _guest_maint_last < gap:
             return 0
         _guest_maint_last = now
-        try:
-            return _repin_host_hold_pins(
-                limit=_join_hold_repin_cap(base=24), refresh_cache=False
-            )
-        except Exception:
+        hold_rows = [row for row in _pinned_slots if row.get("hold")]
+        if not hold_rows:
             return 0
-    if mid_build:
-        # Mid dump: host freeze only for settled pins — never touch float jobs
-        # (that froze slow/medium/fast drops mid-air).
-        if _float_jobs:
-            return 0
-        gap = 0.45
-        if now - _guest_maint_last < gap:
-            return 0
-        _guest_maint_last = now
-        try:
-            return _repin_host_hold_pins(limit=16, refresh_cache=False)
-        except Exception:
-            return 0
-    # Before guest-sync window: host-only freeze (mid-dump / grace / join quiet).
-    if not _coop_guest_sync_ready(now):
-        gap = 1.2
-        if now - _guest_maint_last < gap:
-            return 0
-        _guest_maint_last = now
-        try:
-            return _repin_host_hold_pins(limit=8, refresh_cache=False)
-        except Exception:
-            return 0
-    gap = 1.8 if not _coop_large_held_shape() else 2.4
+        # Brief host re-freeze, then guest net immediately (2s host-only left pins falling for joiners).
+        if elapsed < 0.35:
+            try:
+                return _repin_host_hold_pins(
+                    limit=_join_hold_repin_cap(base=56), refresh_cache=False
+                )
+            except Exception:
+                return 0
+        if int(elapsed * 8.0) % 2 == 0:
+            try:
+                return _repin_host_hold_pins(
+                    limit=_join_hold_repin_cap(base=40), refresh_cache=False
+                )
+            except Exception:
+                return 0
+        synced = 0
+        budget = 14
+        n = len(hold_rows)
+        for _ in range(min(budget, n)):
+            row = hold_rows[_guest_maint_cursor % n]
+            _guest_maint_cursor += 1
+            addr = int(row.get("addr") or 0)
+            inv = _live_pickup(addr) if addr else None
+            if inv is None:
+                inv = _resolve_pin_inv(row, fresh=False)
+            if inv is None or not _live(inv):
+                continue
+            try:
+                if _push_pin_to_guests(row, inv):
+                    row["guest_ok"] = True
+                    row.pop("guest_fail", None)
+                    synced += 1
+            except Exception:
+                continue
+        if synced:
+            _guest_sync_active = True
+        return synced
+    gap = 1.8
     if now - _guest_maint_last < gap:
         return 0
     _guest_maint_last = now
-    # After the first guest sync finishes, never ForceNetUpdate again — players
-    # loot the silhouette and dead wrappers AV (crash dump 0xffffffffffffffff).
-    if _guest_sync_complete_announced:
-        try:
-            return _repin_host_hold_pins(limit=8, refresh_cache=False)
-        except Exception:
-            return 0
-    hold_rows = [row for row in _pinned_slots if row.get("hold") and not row.get("guest_ok")]
+    hold_rows = [row for row in _pinned_slots if row.get("hold")]
     if not hold_rows:
         return 0
-    # Paced fill for large car/house/text — never skip guests to "host only".
-    budget = 2 if _coop_large_held_shape() else 4
+    budget = 12
     synced = 0
     n = len(hold_rows)
     for _ in range(min(budget, n)):
         row = hold_rows[_guest_maint_cursor % n]
         _guest_maint_cursor += 1
         addr = int(row.get("addr") or 0)
-        if not addr or addr not in _pickup_by_addr:
-            continue
-        inv = _live_pickup(addr)
+        inv = _live_pickup(addr) if addr else None
         if inv is None:
+            inv = _resolve_pin_inv(row, fresh=join_quiet)
+        if inv is None or not _live(inv):
             continue
         try:
             if _push_pin_to_guests(row, inv):
@@ -4963,37 +4886,19 @@ def _tick_guest_sync(now: float) -> None:
             _tick_coop_hold_guest_heartbeat(now, join_quiet=True)
         return
     join_boost = now < float(_join_guest_boost_until or 0.0)
-    if _land_active and not _landing_settle_done and not join_boost and not _coop_incremental_sync_ok():
-        return
-    # Large lobby houses: never ForceNetUpdate/teleport-storm while flights settle.
-    if not join_boost and not _coop_guest_sync_ready(now):
+    if _land_active and not _landing_settle_done and not join_boost:
         return
     if not _guest_sync_active or not _want_coop_replicate() or not _pinned_slots:
         _guest_sync_active = False
         return
-    try:
-        _prune_pins_missing_from_addr_map()
-    except Exception:
-        pass
-    held_shape = any(row.get("hold") for row in _pinned_slots)
-    hold_n = held_pin_count()
-    # Paced guest pose push for all sizes — never skip large car/house/text
-    # (that left guests watching feet-spit while host saw the silhouette).
-    gap = 0.28 if _landing_settle_done else 0.35
-    if hold_n > 220:
-        gap = max(gap, 0.48)
-    elif hold_n > 140:
-        gap = max(gap, 0.38)
-    elif hold_n > 80:
-        gap = max(gap, 0.32)
+    gap = 0.12 if _landing_settle_done else 0.22
     if now - _guest_sync_last < gap:
         return
     _guest_sync_last = now
-    if now - _guest_sync_refresh_at >= 3.5:
+    if now - _guest_sync_refresh_at >= 2.5:
         _guest_sync_refresh_at = now
         if not (_bulk_healthcheck_mode and _land_active and not _landing_settle_done):
             try:
-                # find_all during huge lobby guest sync hitch'd — skip for large.
                 if not (_held_coop_shape_active() and len(_pinned_slots) > 120):
                     _refresh_live_pickups()
             except Exception:
@@ -5007,7 +4912,6 @@ def _tick_guest_sync(now: float) -> None:
         if not _guest_sync_complete_announced:
             _guest_sync_complete_announced = True
             _log_dev(f"Co-op guest sync complete ({len(_pinned_slots)} pin(s)).")
-            _log("Co-op shape synced for party.")
         try:
             if not (_want_coop_replicate() and _pinned_slots and any(row.get("hold") for row in _pinned_slots)):
                 _relax_pinned_net_load()
@@ -5015,16 +4919,15 @@ def _tick_guest_sync(now: float) -> None:
             pass
         return
     synced = 0
-    # Tiny budgets for large silhouettes — fills the car over seconds, not one AV tick.
-    budget = 10 if join_boost else (4 if held_shape else 6)
+    held_shape = any(row.get("hold") for row in _pinned_slots)
+    budget = 48 if join_boost else (28 if held_shape else 16)
+    hold_n = held_pin_count()
     if join_boost and hold_n > 120:
-        budget = min(budget, 4)
-    elif held_shape and hold_n > 220:
-        budget = min(budget, 2)
+        budget = min(budget, 14)
+    elif join_boost and hold_n > 80:
+        budget = min(budget, 22)
     elif held_shape and hold_n > 140:
-        budget = min(budget, 3)
-    elif held_shape and hold_n > 80:
-        budget = min(budget, 3)
+        budget = min(budget, 18)
     if join_boost:
         max_fail = 128
     elif held_shape:
@@ -5035,10 +4938,6 @@ def _tick_guest_sync(now: float) -> None:
     for row in pending:
         if synced >= budget:
             break
-        addr = int(row.get("addr") or 0)
-        if addr and addr not in _pickup_by_addr:
-            row["guest_fail"] = int(row.get("guest_fail") or 0) + 1
-            continue
         inv = _resolve_pin_inv(row, fresh=fresh_resolve)
         fresh_resolve = False
         if inv is None or not _live(inv):
@@ -5095,23 +4994,25 @@ def _tick_coop_hold_sync(now: float) -> None:
     return
 
 
-def _coop_sync_pins_tail(*, limit: int = 4) -> int:
-    """Push only newly pinned slots to lobby guests (full teleport + net)."""
+def _coop_sync_pins_tail(*, limit: int = 4, allow_mid_dump: bool = False) -> int:
+    """Push frozen silhouette slots to lobby guests (first guest-visible pose = slot XYZ)."""
     global _coop_pins_synced
-    # Never mid-dump — house/lobby AV at 0xffffffffffffffff from ForceNetUpdate storms.
-    if _mid_shape_dump():
+    if _mid_shape_dump() and not allow_mid_dump:
         return 0
     if not _want_coop_replicate() or not _pinned_slots:
         return 0
-    start = max(0, min(int(_coop_pins_synced), len(_pinned_slots)))
-    if start >= len(_pinned_slots):
-        return 0
     synced = 0
-    budget = max(1, min(8, int(limit)))
-    idx = start
-    while idx < len(_pinned_slots) and synced < budget:
-        row = _pinned_slots[idx]
-        idx += 1
+    budget = max(1, min(2 if (_mid_shape_dump() and allow_mid_dump) else 8, int(limit)))
+    # Prefer newest pending pins so the live build keeps up with the host.
+    pending = [row for row in _pinned_slots if row.get("hold") and not row.get("guest_ok")]
+    if not pending:
+        _coop_pins_synced = len(_pinned_slots)
+        return 0
+    # Walk newest-first during mid-dump so guests see the house grow where host just pinned.
+    walk = list(reversed(pending)) if _mid_shape_dump() else pending
+    for row in walk:
+        if synced >= budget:
+            break
         inv = _resolve_pin_inv(row, fresh=False)
         if inv is None:
             continue
@@ -5124,7 +5025,8 @@ def _coop_sync_pins_tail(*, limit: int = 4) -> int:
                 synced += 1
         except Exception:
             continue
-    _coop_pins_synced = idx
+    done = sum(1 for row in _pinned_slots if row.get("guest_ok"))
+    _coop_pins_synced = done
     if synced:
         _log_dev(f"Co-op pin tail: synced {synced} held slot(s) for lobby guests.")
     return synced
@@ -5165,7 +5067,6 @@ def _teleport_pickup(
     freeze: bool | None = None,
     replicate: bool = True,
     guest_push: bool = False,
-    force_net: bool = False,
 ) -> bool:
     """Freeze first, then K2_TeleportTo. Never physics-on (that flattened houses)."""
     if not _live(inv):
@@ -5173,18 +5074,8 @@ def _teleport_pickup(
     try:
         loc = _make_vector(x, y, z)
         rot = _make_rotator(float(pitch), math.degrees(yaw), float(roll))
-        # Mid-dump default: host pose only — ForceNetUpdate storms AV here.
-        # force_net=True is for paced guest sync / sparse flight samples only.
-        if _mid_shape_dump() and not force_net:
-            replicate = False
-            guest_push = False
-        elif held_pin_count() > 80 and not force_net:
-            replicate = False
-            guest_push = False
         if replicate:
             try:
-                if not _live(inv):
-                    return False
                 inv.bReplicateMovement = True
                 inv.bAlwaysRelevant = True
             except Exception:
@@ -5198,19 +5089,14 @@ def _teleport_pickup(
         fn = getattr(inv, "K2_TeleportTo", None)
         if callable(fn):
             try:
-                if not _live(inv):
-                    return False
                 result = fn(loc, rot)
                 ok = True if result is None else bool(result)
             except Exception:
                 ok = False
-                addr = _uobject_addr(inv)
-                if addr:
-                    _pickup_by_addr.pop(int(addr), None)
-        if ok and replicate and _live(inv):
+        if ok and replicate:
             _stamp_replicated_movement(inv, loc, rot)
             _force_net_update(inv, coop_pin=True, guest_push=bool(guest_push))
-        if ok and freeze is True and _live(inv):
+        if ok and freeze is True:
             _set_physics(inv, False)
             _zero_velocity(inv)
         return ok
@@ -5250,10 +5136,9 @@ def _pin_pickup_to_slot(
         coop = bool(_want_coop_replicate())
     except Exception:
         coop = False
-    # Mid-dump: host-only pin (no per-item net). After settle, force_net so
-    # guests see car/house/text slots even when held pin count is large.
+    # Host freezes locally mid-dump; throttled guest push (~2/s) stamps slot XYZ for lobby.
     mid_dump = bool(_land_active and not _landing_settle_done)
-    net_push = coop and not mid_dump
+    net_push = bool(coop and not mid_dump)
     ok = _teleport_pickup(
         inv,
         x1,
@@ -5265,7 +5150,6 @@ def _pin_pickup_to_slot(
         freeze=True,
         replicate=net_push,
         guest_push=net_push,
-        force_net=net_push,
     )
     if ok:
         _set_physics(inv, False, keep_grab_collision=True)
@@ -5277,13 +5161,16 @@ def _pin_pickup_to_slot(
             _track_layout_entry(inv, x1, y1, z1)
         except Exception:
             pass
+        if coop and mid_dump:
+            try:
+                _schedule_coop_pin_tail(limit=2)
+            except Exception:
+                pass
         if net_push:
             try:
                 _stamp_coop_spawn(inv, x1, y1, z1, yaw_r, pitch=pitch, roll=roll)
             except Exception:
                 pass
-        # Mid-dump: host-only pin. Do NOT schedule coop pin-tail / guest sync here —
-        # house ×600 with lobby guests ForceNetUpdate-stormed into AV (0xffffffffffffffff).
     return ok
 
 
@@ -5293,24 +5180,27 @@ def _burst_replicate_pins(*, limit: int = 64) -> None:
     return
 
 
-def _repin_all_for_guests(*, limit: int = 0) -> int:
-    """Push held pins to lobby guests in small batches (never blast 600+ ForceNetUpdates)."""
+def _repin_all_for_guests(*, limit: int = 0, only_pending: bool = True) -> int:
+    """Push held pins to lobby guests. Default: skip already guest_ok (avoids settle double-push piles)."""
     global _coop_pins_synced
     if not _want_coop_replicate() or not _pinned_slots:
-        return 0
-    if _mid_shape_dump():
         return 0
     try:
         _refresh_live_pickups()
     except Exception:
         pass
-    total = len(_pinned_slots)
-    # Cap immediate burst — large houses must use spread `_begin_guest_sync`.
-    hard_cap = 48
-    requested = total if int(limit or 0) <= 0 else max(1, min(total, int(limit)))
-    cap = min(requested, hard_cap)
+    rows = [
+        row
+        for row in list(_pinned_slots)
+        if row.get("hold") and (not only_pending or not row.get("guest_ok"))
+    ]
+    total = len(rows)
+    if total <= 0:
+        _coop_pins_synced = len(_pinned_slots)
+        return 0
+    cap = total if int(limit or 0) <= 0 else max(1, min(total, int(limit)))
     stamped = 0
-    for row in list(_pinned_slots)[:cap]:
+    for row in rows[:cap]:
         inv = _resolve_pin_inv(row, fresh=False)
         if inv is None:
             continue
@@ -5321,7 +5211,7 @@ def _repin_all_for_guests(*, limit: int = 0) -> int:
                 stamped += 1
         except Exception:
             continue
-    _coop_pins_synced = cap
+    _coop_pins_synced = sum(1 for row in _pinned_slots if row.get("guest_ok"))
     if stamped:
         _log_dev(f"Co-op guest repin: {stamped}/{cap} held pin(s).")
     return stamped
@@ -5514,40 +5404,6 @@ def _hide_pickup(inv: Any) -> None:
         inv.K2_TeleportTo(away, _make_rotator())
     except Exception:
         pass
-
-
-def _hide_unpinned_near_origin(*, radius: float = 260.0, limit: int = 48) -> int:
-    """Remove leftover feet/forward spit after a shape settles so guests grab the silhouette."""
-    if not _pinned_slots or not _world_alive():
-        return 0
-    ox, oy = float(_drop_origin[0]), float(_drop_origin[1])
-    pin_addrs = {int(row.get("addr") or 0) for row in _pinned_slots if int(row.get("addr") or 0)}
-    busy = _float_or_pin_addrs()
-    r2 = max(80.0, float(radius)) ** 2
-    hidden = 0
-    budget = max(1, min(64, int(limit)))
-    try:
-        scan = _raw_pickup_scan(fresh=True)
-    except Exception:
-        return 0
-    for addr, inv in scan:
-        if hidden >= budget:
-            break
-        if not addr or addr in pin_addrs or addr in busy:
-            continue
-        if not _live(inv):
-            continue
-        hd2 = _horiz_dist2(inv, ox, oy)
-        if hd2 is None or hd2 > r2:
-            continue
-        try:
-            _hide_pickup(inv)
-            hidden += 1
-        except Exception:
-            continue
-    if hidden:
-        _log_dev(f"Hid {hidden} unpinned near-origin pickup(s) after shape settle.")
-    return hidden
 
 
 # --- public arrange API -------------------------------------------------------
@@ -5909,8 +5765,7 @@ def last_shape_name() -> str:
 _DROP_HEIGHT = _DEFAULT_DROP_HEIGHT
 DROP_MODES: dict[str, dict[str, float | str]] = {
     "none": {"dur": 0.0, "style": "none", "height_mul": 0.0, "stagger": 0.0},
-    # Slow = sequential rain into slots (per-index stagger in _queue_drop_job).
-    "slow": {"dur": 2.15, "style": "straight", "height_mul": 1.45, "stagger": 0.12},
+    "slow": {"dur": 2.6, "style": "straight", "height_mul": 1.15, "stagger": 0.0},
     "medium": {"dur": 1.7, "style": "straight", "height_mul": 1.05, "stagger": 0.0},
     "fast": {"dur": 0.95, "style": "straight", "height_mul": 0.9, "stagger": 0.0},
     "spiral": {"dur": 2.2, "style": "spiral", "height_mul": 1.2, "stagger": 0.0},
@@ -6017,10 +5872,8 @@ def _arm_peel_clock() -> None:
 def _should_hold_in_air() -> bool:
     if _peel_started:
         return False
-    shape = _normalize_shape_name(_drop_shape or _land_user_shape or "")
-    # Text words are 2D layouts but must pin when Stay in air is on — otherwise
-    # catch uses a 6s pin and pool guns fall flat on the floor.
-    if shape not in SHAPE_3D_NAMES and shape != "text":
+    shape = _normalize_shape_name(_drop_shape)
+    if shape not in SHAPE_3D_NAMES:
         return False
     if _stay_in_air:
         return True
@@ -6030,13 +5883,13 @@ def _should_hold_in_air() -> bool:
 
 
 def _shape_hold_active() -> bool:
-    """True when the silhouette should stay pinned after settle (Stay in air / peel).
-
-    Mid-dump still freezes items while they fly onto slots; permanent hold only
-    follows Stay in air. Old behavior always held every 3D dump, so houses sat
-    frozen in the sky even with Stay in air = No.
-    """
-    return _should_hold_in_air()
+    """3D silhouettes stay pinned for the whole dump, not only when Stay in air is on."""
+    if _should_hold_in_air():
+        return True
+    if not _land_active:
+        return False
+    shape = _normalize_shape_name(_drop_shape or _land_user_shape or "")
+    return shape in SHAPE_3D_NAMES
 
 
 def _reset_air_hold() -> None:
@@ -6084,7 +5937,6 @@ _tick_busy: bool = False
 _party_poll_at: float = 0.0
 _drop_until: float = 0.0
 _float_tick_at: float = 0.0
-_float_force_at: float = 0.0
 _deferred_catch_at: float = 0.0
 _deferred_catch_until: float = 0.0
 _deferred_catch_empty: int = 0
@@ -6141,11 +5993,7 @@ def _live_pickup(addr: int) -> Any | None:
     inv = _pickup_by_addr.get(want)
     if inv is None:
         return None
-    try:
-        if _uobject_addr(inv) != want:
-            _pickup_by_addr.pop(want, None)
-            return None
-    except Exception:
+    if _uobject_addr(inv) != want:
         _pickup_by_addr.pop(want, None)
         return None
     return inv
@@ -6208,111 +6056,29 @@ def _resolve_pin_inv(row: dict[str, Any], *, fresh: bool = False) -> Any | None:
 
 
 def _refresh_live_pickups() -> None:
-    """Replace the address map with this tick's find_all.
-
-    Never keep looted pin wrappers (AV). Do keep in-flight settle wrappers for one
-    tick if find_all misses them — otherwise slow/medium/fast freezes mid-air.
-    """
+    """Replace the address map with this tick's find_all. Stale dump wrappers AV."""
     global _pickup_by_addr
-    fresh: dict[int, Any] = {}
+    hold_addrs = {
+        int(row.get("addr") or 0)
+        for row in _pinned_slots
+        if row.get("hold") and int(row.get("addr") or 0)
+    }
+    preserved = {a: _pickup_by_addr[a] for a in hold_addrs if a in _pickup_by_addr}
+    fresh: dict[int, Any] = dict(preserved)
     try:
         for addr, inv in _raw_pickup_scan(fresh=True):
             if addr and inv is not None:
                 fresh[int(addr)] = inv
     except Exception:
-        # Keep prior map only if scan failed mid-frame — do not invent wrappers.
+        _pickup_by_addr = preserved
         return
-    fly_addrs = {int(job.get("addr") or 0) for job in _float_jobs if int(job.get("addr") or 0)}
-    for addr in fly_addrs:
-        if addr in fresh:
-            continue
-        old = _pickup_by_addr.get(addr)
-        if old is None:
-            continue
-        try:
-            if _uobject_addr(old) == addr:
-                fresh[addr] = old
-        except Exception:
-            pass
     _pickup_by_addr = fresh
-    try:
-        _prune_pins_missing_from_addr_map()
-    except Exception:
-        pass
-
-
-def _prune_pins_missing_from_addr_map() -> int:
-    """Drop pins whose addr is gone (looted/despawned) without touching UObjects."""
-    global _pinned_slots
-    if not _pinned_slots:
-        return 0
-    live_addrs = set(_pickup_by_addr.keys())
-    if not live_addrs and not _want_coop_replicate():
-        # Solo empty map can be a transient scan miss — leave pins alone.
-        return 0
-    kept: list[dict[str, Any]] = []
-    dropped = 0
-    for row in _pinned_slots:
-        addr = int(row.get("addr") or 0)
-        if addr and addr not in live_addrs:
-            dropped += 1
-            continue
-        kept.append(row)
-    if dropped:
-        _pinned_slots = kept
-        _log_dev(f"Pruned {dropped} looted/missing pin(s) (no UObject touch).")
-    return dropped
-
-
-def _release_held_pins_for_loot(*, reason: str = "") -> int:
-    """Stop maintaining held silhouette pins so lobby players can loot safely.
-
-    Items stay in the world; we just stop ForceNetUpdate / restamp so picking them
-    up cannot AV on a dead wrapper next tick.
-    """
-    global _pinned_slots, _guest_sync_active, _guest_sync_complete_announced
-    global _coop_followup_waves, _pickup_by_addr
-    hold_rows = [row for row in _pinned_slots if row.get("hold")]
-    if not hold_rows:
-        return 0
-    released = 0
-    for row in hold_rows:
-        addr = int(row.get("addr") or 0)
-        inv = _pickup_by_addr.get(addr) if addr else None
-        if inv is not None:
-            try:
-                # Prefer grab-friendly collision; ignore failures on already-gone actors.
-                _set_physics(inv, True, keep_grab_collision=True)
-            except Exception:
-                pass
-            try:
-                inv.bAlwaysRelevant = False
-                inv.NetUpdateFrequency = 12.0
-            except Exception:
-                pass
-        released += 1
-    # Keep non-hold pins (short float jobs); drop all hold maintenance rows.
-    _pinned_slots = [row for row in _pinned_slots if not row.get("hold")]
-    _guest_sync_active = False
-    _guest_sync_complete_announced = True
-    _coop_followup_waves = 0
-    why = str(reason or "loot").strip() or "loot"
-    _log(f"Released {released} prior shape pin(s) for pickup ({why}).")
-    _log_dev(f"Released {released} held pin(s) for loot ({why}).")
-    return released
 
 
 def _tick_join_hold_freeze(now: float) -> None:
-    """Join quiet: light host-only freeze so held houses do not fall mid-stream."""
-    if not _in_join_quiet(now):
-        return
-    if not any(row.get("hold") for row in _pinned_slots):
-        return
-    # Heartbeat already batches; this is a tiny extra physics latch only.
-    try:
-        _repin_host_hold_pins(limit=12, refresh_cache=False)
-    except Exception:
-        pass
+    """Join quiet: do not hammer teleports — that AVs when guests stream/GC pickups."""
+    del now
+    return
 
 
 def pickup_address_set(*, fresh: bool = False) -> set[int]:
@@ -6430,11 +6196,9 @@ def _ensure_drop_plan_built() -> None:
         _drop_plan = body_world + wheel_world
         return
     if shape == "text":
-        # Prefer rows from set_text_layout; only seed from joined shape_text if empty.
         if not any(_text_rows):
             set_shape_text(cfg.get("shape_text") or get_shape_text())
         elif cfg.get("shape_text"):
-            # Keep multi-word lines when joined text matches current layout.
             set_shape_text(cfg.get("shape_text"))
     offsets = shape_offsets(
         shape,
@@ -6473,12 +6237,9 @@ def _repin_host_hold_pins(*, limit: int = 0, refresh_cache: bool = True) -> int:
     for i in range(cap):
         row = hold_rows[(_hold_repin_cursor + i) % total]
         addr = int(row.get("addr") or 0)
-        # Never yank items that are still mid settle-fall.
-        if addr and any(int(job.get("addr") or 0) == addr for job in _float_jobs):
-            continue
-        if addr and addr not in _pickup_by_addr:
-            continue
         inv = _live_pickup(addr) if addr else None
+        if inv is None or not _live(inv):
+            inv = _resolve_pin_inv(row, fresh=False)
         if inv is None or not _live(inv):
             continue
         try:
@@ -6708,8 +6469,6 @@ def _tick_join_serial_reapply(now: float) -> None:
 def _run_join_guest_shape_push() -> None:
     """Late joiner: held shapes — host freeze during quiet, then guest heartbeat."""
     global _join_guest_boost_until, _guest_sync_active, _guest_sync_cursor, _guest_sync_last
-    global _coop_pins_synced, _peel_armed_at, _peel_started, _guest_maint_cursor
-    global _guest_sync_complete_announced
     if not _want_coop_replicate() or not _pinned_slots:
         return
     _join_guest_boost_until = time.monotonic() + 120.0
@@ -6722,17 +6481,24 @@ def _run_join_guest_shape_push() -> None:
         _guest_sync_active = True
         _guest_sync_cursor = 0
         _guest_sync_last = 0.0
-        for row in _pinned_slots:
-            if row.get("hold"):
-                row.pop("guest_ok", None)
-                row.pop("guest_fail", None)
-        _coop_pins_synced = 0
-        _guest_maint_cursor = 0
-        _guest_sync_complete_announced = False
-        _schedule_coop_followup_sync(waves=2, gap=5.0)
-        _log(f"Guest joined — syncing held shape ({len(_pinned_slots)} pin(s)).")
-        _log_dev("Join guest push: held shape — spread guest sync (no find_all burst).")
+        try:
+            now = time.monotonic()
+            if not _join_hold_rebind_recent(now, within=3.0):
+                _rebind_hold_pins_after_join()
+            repin_gap = 0.45 if held_pin_count() > 120 else 0.28
+            if now - float(_join_hold_repin_last or 0.0) >= repin_gap:
+                _repin_host_hold_pins(
+                    limit=_join_hold_repin_cap(base=24), refresh_cache=False
+                )
+            # Heartbeat already running from join quiet — do not reset guest_ok / cursor.
+        except Exception:
+            pass
+        _log(f"Guest joined — held shape heartbeat ({len(_pinned_slots)} pin(s)).")
+        _log_dev(
+            "Join guest push: held shape — throttled repin; guest heartbeat continues."
+        )
         return
+    global _coop_pins_synced, _peel_armed_at, _peel_started
     _coop_pins_synced = 0
     _peel_armed_at = 0.0
     _peel_started = False
@@ -6838,7 +6604,6 @@ def _push_pin_to_guests(
             freeze=True,
             replicate=True,
             guest_push=True,
-            force_net=True,
         )
         if ok:
             _set_physics(inv, False, keep_grab_collision=True)
@@ -6849,6 +6614,12 @@ def _push_pin_to_guests(
                 pass
             try:
                 _set_pickup_collision(inv, block=True)
+            except Exception:
+                pass
+            try:
+                inv.bOnlyRelevantToOwner = False
+                inv.bAlwaysRelevant = True
+                inv.bReplicateMovement = True
             except Exception:
                 pass
         return ok
@@ -6904,29 +6675,20 @@ def set_bulk_healthcheck_mode(active: bool) -> None:
 
 
 def pause_catch_for_shape(shape: str) -> None:
-    """3D stay-in-air dumps need pin restamps; only pause catch for 2D / no-shape.
-
-    Loot text is 2D layout but must keep catch live (same as 3D hold) or feet spit.
-    """
+    """3D stay-in-air dumps need pin restamps; only pause catch for 2D / no-shape."""
     name = _normalize_shape_name(shape)
     pause_landing_catch(name not in SHAPE_3D_NAMES and name != "text")
 
 
 def _refresh_float_job_clocks() -> None:
     """Dump drain can outlast rain/fountain dur — restart clocks when catch resumes."""
-    global _slow_rain_next_at
     if not _float_jobs:
         return
     now = time.monotonic()
-    _slow_rain_next_at = 0.0
     for job in _float_jobs:
         mode_n = str(job.get("mode") or "")
-        if mode_n == "slow":
-            job["t0"] = now + 0.08
-            continue
-        idx = max(0, int(job.get("index") or 0))
         stagger = float((DROP_MODES.get(mode_n) or {}).get("stagger") or 0.0)
-        slot = idx % 10
+        slot = max(0, int(job.get("index") or 0)) % 10
         job["t0"] = now + stagger * slot
 
 
@@ -7042,13 +6804,6 @@ def _world_alive() -> bool:
 
 def _player_left_drop_site() -> bool:
     """True after travel / lobby when the pawn is far from the dump silhouette."""
-    try:
-        from .session_guards import session_warm
-
-        if not session_warm():
-            return False
-    except Exception:
-        pass
     if _join_reapply_pending:
         return False
     if not (_land_active or _float_jobs or _pinned_slots or _peel_queue):
@@ -7088,12 +6843,8 @@ def abandon_world_loot() -> None:
     global _join_reapply_pending, _landing_settle_done, _defer_shape, _defer_dump_index
     global _coop_pins_synced, _guest_sync_cursor, _guest_sync_active, _guest_sync_last
     global _peel_queue, _loot_world_id, _drop_local_dirs, _land_slot_pools
-    global _join_serial_reapply_active, _join_serial_reapply_at, _join_serial_reapply_cursor
-    global _guest_sync_active, _guest_sync_cursor, _guest_sync_last, _guest_maint_last
-    global _guest_maint_cursor, _coop_followup_sync_at, _coop_followup_waves
-    global _coop_guest_sync_after
-    global _absorb_orphans_after_abandon, _absorb_orphans_at
-    global _abandon_epoch, _last_layout, _float_force_at
+    global _coop_followup_sync_at, _coop_followup_waves, _abandon_epoch
+    global _last_layout
     had_pins = bool(_pinned_slots)
     _abandon_epoch = int(_abandon_epoch or 0) + 1
     _last_layout["abandon_epoch"] = _abandon_epoch
@@ -7106,7 +6857,6 @@ def abandon_world_loot() -> None:
     _drop_local_dirs = []
     _drop_until = 0.0
     _float_jobs = []
-    _float_force_at = 0.0
     _deferred_catch_at = 0.0
     _deferred_catch_until = 0.0
     _landing_settle_done = False
@@ -7118,9 +6868,6 @@ def abandon_world_loot() -> None:
     _guest_sync_last = 0.0
     _coop_followup_sync_at = 0.0
     _coop_followup_waves = 0
-    _coop_guest_sync_after = 0.0
-    _absorb_orphans_after_abandon = False
-    _absorb_orphans_at = 0.0
     _pickup_cache = []
     _pickup_cache_at = 0.0
     _pickup_by_addr = {}
@@ -7307,8 +7054,8 @@ def pin_stragglers(*, limit: int = 8, fresh: bool = True) -> int:
             continue
         idx = _drop_next
         slot = _slot_for_new_pickup(inv, idx)
-        if _instant_land_mode():
-            if not _pin_pickup_to_slot(inv, slot, index=idx, hold=_shape_hold_active()):
+        if _shape_hold_active():
+            if not _pin_pickup_to_slot(inv, slot, index=idx, hold=True):
                 if not _queue_drop_job(inv, slot, index=idx):
                     continue
         elif not _queue_drop_job(inv, slot, index=idx):
@@ -7507,7 +7254,7 @@ def snapshot_pickup_ids() -> set[str]:
 
 
 def _lock_unseen_dump(*, limit: int = 8, fresh: bool = False) -> int:
-    """Catch dump actors onto the next shape slot — honor Settle (drop-from-height)."""
+    """Hard-pin dump actors onto the next shape slot. Never freeze at the player's feet."""
     locked = 0
     _ensure_drop_plan_built()
     if not _drop_plan:
@@ -7518,11 +7265,8 @@ def _lock_unseen_dump(*, limit: int = 8, fresh: bool = False) -> int:
             continue
         idx = _drop_next
         slot = _slot_for_caught_pickup(inv, idx)
-        if _instant_land_mode():
-            pinned = _pin_pickup_to_slot(inv, slot, index=idx, hold=_shape_hold_active())
-            if not pinned:
-                pinned = _queue_drop_job(inv, slot, index=idx)
-        else:
+        pinned = _pin_pickup_to_slot(inv, slot, index=idx, hold=True)
+        if not pinned:
             pinned = _queue_drop_job(inv, slot, index=idx)
         if not pinned:
             continue
@@ -7551,7 +7295,7 @@ def after_dump_spawn(count: int = 1) -> None:
         # Spawn All + dump was find_all'ing ~every 0.22s → multi-minute car builds.
         fresh_gap = 0.95 if _bulk_healthcheck_mode else 0.55
         if _want_coop_replicate():
-            fresh_gap = max(fresh_gap, 0.85 if _bulk_healthcheck_mode else 0.72)
+            fresh_gap = max(fresh_gap, 1.65 if _bulk_healthcheck_mode else 1.05)
         allow_fresh = (now - _bulk_after_dump_scan_at) >= fresh_gap
         caught = catch_overhead_drops(fresh=False, limit=n)
         if caught <= 0:
@@ -7563,6 +7307,12 @@ def after_dump_spawn(count: int = 1) -> None:
                 caught = _lock_unseen_dump(limit=n, fresh=True)
         if caught or allow_fresh:
             _bulk_after_dump_scan_at = now
+        # Live lobby build: drip slot poses after suppress (same silhouette host just froze).
+        if caught > 0 and _want_coop_replicate() and is_hold:
+            try:
+                _schedule_coop_pin_tail(limit=2)
+            except Exception:
+                pass
         return
     if is_2d:
         fresh = (now - _bulk_after_dump_scan_at) >= 0.55
@@ -7591,65 +7341,37 @@ def arm_deferred_catch(seconds: float = 1.0) -> None:
 
 def settle_landing_loot(*, limit: int = 16) -> int:
     """End of Drop All / Spawn All: pull leftover feet-spit onto remaining slots."""
-    global _landing_settle_done, _burst_replicate_at, _float_force_at, _coop_guest_sync_after
+    global _landing_settle_done, _burst_replicate_at
     if not _land_active or not _world_alive():
         return 0
     if _landing_settle_done:
         return 0
     _landing_settle_done = True
-    # Do NOT snap every float job here — that made the whole house slam down at once.
-    # Let per-item hang + fall finish; only force-complete stuck leftovers later.
-    try:
-        dur = float((DROP_MODES.get(_drop_mode) or {}).get("dur") or 1.5)
-        if _drop_mode == "slow":
-            # First stuck-sweep sooner; re-arm keeps sweeping until flights finish.
-            _float_force_at = time.monotonic() + max(3.5, dur + 1.5)
-        else:
-            hang = 1.2 if _drop_mode == "medium" else 0.8
-            _float_force_at = time.monotonic() + hang + dur + 2.5
-    except Exception:
-        _float_force_at = time.monotonic() + 6.0
     n = pull_new_pickups_into_shape(limit=max(4, min(160, int(limit))), fresh=True)
     try:
-        # Dump often also spits a forward/feet pile — fold leftovers into slots.
-        n += int(pin_stragglers(limit=max(8, min(48, int(limit)))))
-    except Exception:
-        pass
-    try:
-        # Only hide true feet spit — a 280uu radius was eating prior silhouettes.
-        _hide_unpinned_near_origin(radius=96.0, limit=32)
+        # Fold dump spit into silhouette slots — never hide/teleport-away (that looked like dupes).
+        n += int(pin_stragglers(limit=max(16, min(96, int(limit) * 2))))
+        n += int(pin_stragglers(limit=max(8, min(48, int(limit))), fresh=True))
     except Exception:
         pass
     arm_deferred_catch(10.0)
     _arm_peel_clock()
-    if not _should_hold_in_air() and not _float_jobs:
-        # Stay in air = No and flights already done — stop permanent sky pins.
-        try:
-            _release_temp_dump_pins()
-        except Exception:
-            pass
     if _want_coop_replicate() and _pinned_slots:
         try:
             tracked = _build_layout_entries_from_pins()
-            pin_n = len(_pinned_slots)
-            # Short grace so guests see the silhouette fill while rain/slow lands —
-            # still paced (tiny budgets), not a one-tick ForceNetUpdate storm.
-            grace = 2.8 if pin_n > 180 else (2.0 if pin_n > 80 else 1.2)
-            _coop_guest_sync_after = time.monotonic() + grace
-            stamped = 0
             try:
-                stamped = _repin_all_for_guests(limit=12 if pin_n > 80 else 16)
+                # Only pins guests do not have yet — re-pushing all 200+ created floor ghosts.
+                stamped = _repin_all_for_guests(limit=0, only_pending=True)
             except Exception:
                 stamped = 0
             if not _guest_sync_active:
-                _begin_guest_sync(force=True)
-            gap = max(grace + 1.5, 6.0 if _in_join_quiet() else (4.5 if pin_n > 180 else 3.0))
-            waves = 4 if pin_n > 180 else (3 if pin_n > 80 else 2)
-            _schedule_coop_followup_sync(waves=waves, gap=gap)
+                _begin_guest_sync(force=True, clear_ok=False)
+            gap = 8.5 if _in_join_quiet() else 1.5
+            _schedule_coop_followup_sync(waves=2, gap=gap)
             _log("Co-op shape ready for party.")
             _log_dev(
-                f"Co-op settle: {pin_n} pin(s), {tracked} serial(s), "
-                f"{stamped} repin(s), guest sync after {grace:.1f}s, {waves} wave(s)."
+                f"Co-op settle: {len(_pinned_slots)} pin(s), {tracked} serial(s), "
+                f"{stamped} pending repin(s)."
             )
         except Exception as exc:
             _log_dev(f"guest sync at settle failed: {exc!r}")
@@ -7663,10 +7385,13 @@ _SHINY_LAYOUT_BASES: dict[str, tuple[float, float]] = {
     "pyramid": (190.0, 70.0),
     "pyramid_3d": (190.0, 70.0),
     "boat": (180.0, 70.0),
-    "car": (280.0, 80.0),
+    "car": (340.0, 88.0),
     "psycho": (210.0, 74.0),
     "claptrap": (230.0, 64.0),
     "dna_helix": (185.0, 70.0),
+    "circle": (185.0, 78.0),
+    "star": (200.0, 76.0),
+    "heart": (190.0, 74.0),
     "diamond_3d": (195.0, 70.0),
     "blocks": (200.0, 68.0),
     "cube": (180.0, 70.0),
@@ -7675,14 +7400,10 @@ _SHINY_LAYOUT_BASES: dict[str, tuple[float, float]] = {
     "ufo": (200.0, 68.0),
     "rocket": (175.0, 66.0),
     "gear": (185.0, 70.0),
-    "circle": (185.0, 78.0),
-    "star": (200.0, 76.0),
-    "heart": (190.0, 74.0),
     "forbidden_one": (210.0, 70.0),
     "forbidden_pair": (200.0, 72.0),
     "type_piles": (220.0, 76.0),
     "unique_piles": (240.0, 74.0),
-    "text": (340.0, 72.0),
 }
 _BULK_LAYOUT_BASES: dict[str, tuple[float, float]] = {
     "house": (240.0, 68.0),
@@ -7691,11 +7412,14 @@ _BULK_LAYOUT_BASES: dict[str, tuple[float, float]] = {
     "pyramid": (240.0, 66.0),
     "pyramid_3d": (230.0, 64.0),
     "boat": (240.0, 68.0),
-    "car": (310.0, 74.0),
+    "car": (360.0, 92.0),
     "psycho": (230.0, 70.0),
     "firehawk": (260.0, 70.0),
     "claptrap": (310.0, 68.0),
     "dna_helix": (220.0, 66.0),
+    "circle": (240.0, 70.0),
+    "star": (250.0, 70.0),
+    "heart": (240.0, 70.0),
     "diamond_3d": (230.0, 64.0),
     "blocks": (240.0, 64.0),
     "cube": (220.0, 66.0),
@@ -7704,14 +7428,10 @@ _BULK_LAYOUT_BASES: dict[str, tuple[float, float]] = {
     "ufo": (240.0, 64.0),
     "rocket": (210.0, 64.0),
     "gear": (220.0, 66.0),
-    "circle": (240.0, 70.0),
-    "star": (250.0, 70.0),
-    "heart": (240.0, 70.0),
     "forbidden_one": (280.0, 68.0),
     "forbidden_pair": (250.0, 70.0),
     "type_piles": (280.0, 72.0),
     "unique_piles": (300.0, 70.0),
-    "text": (340.0, 72.0),
 }
 
 
@@ -7741,12 +7461,6 @@ def land_layout_for(
         except Exception:
             pass
     n = max(1, int(count))
-    if name == "text":
-        # Soft fit hint only — glyph pitch comes from set_text_layout, not land spacing.
-        r = max(220.0, min(420.0, base_r))
-        s = max(40.0, min(72.0, base_s if base_s > 1.0 else 48.0))
-        clamped = clamp_layout_params(radius=r, spacing=s)
-        return float(clamped["radius"]), float(clamped["spacing"])
     if prof == "bulk":
         # Hundreds of filtered items should pack the same silhouette, not grow a mansion.
         s = base_s
@@ -7757,8 +7471,6 @@ def land_layout_for(
             else:
                 scale = min(1.08, max(1.0, math.sqrt(n / 500.0)))
                 cap = 340.0 if name == "claptrap" else (240.0 if name == "house" else 260.0)
-                if name == "car":
-                    cap = 320.0
                 if name in ("globe", "dome"):
                     cap = 240.0
                 r = min(cap, base_r * scale)
@@ -7771,10 +7483,8 @@ def land_layout_for(
             r = min(320.0, base_r * scale)
     else:
         # ~80–130 shinies: keep the wireframe tight so items fill the silhouette.
-        floor = 0.72 if name == "car" else 0.58
-        scale = min(1.0, max(floor, math.sqrt(n / 88.0)))
-        min_r = 175.0 if name == "car" else 140.0
-        r = max(min_r, base_r * scale)
+        scale = min(1.0, max(0.58, math.sqrt(n / 88.0)))
+        r = max(140.0, base_r * scale)
         s = max(52.0, base_s * min(1.0, max(0.72, scale)))
     clamped = clamp_layout_params(radius=r, spacing=s)
     return float(clamped["radius"]), float(clamped["spacing"])
@@ -7785,8 +7495,6 @@ def shape_complete_slot_count(shape: str, *, profile: str = "shiny") -> int:
     name = _normalize_shape_name(shape)
     if name in ("", "none", "off", "no", "vanilla"):
         return 0
-    if name == "text":
-        return text_shape_slot_count(profile=profile)
     complete = {
         "claptrap": 240,
         "psycho": 220,
@@ -7906,18 +7614,17 @@ def begin_overhead_drop(
     global _coop_pins_synced
     global _join_serial_reapply_active, _join_serial_reapply_at, _join_serial_reapply_cursor
     global _land_slot_pools, _land_layout_profile
-    global _slow_rain_next_at, _coop_guest_sync_after
+    shape = _normalize_shape_name(shape)
     if shape_text:
         set_shape_text(shape_text)
-    shape = _normalize_shape_name(shape)
     if shape not in SHAPE_NAMES:
         shape = "spiral"
-    mode_l = normalize_drop_mode(mode)
-    _set_air_hold(stay_in_air, peel_after)
     prof = str(land_profile or _land_layout_profile or "shiny").strip().lower()
     if prof not in ("shiny", "bulk"):
         prof = "shiny"
     _land_layout_profile = prof
+    mode_l = normalize_drop_mode(mode)
+    _set_air_hold(stay_in_air, peel_after)
     n = max(1, int(count))
     anchor = _player_anchor()
     if anchor is None:
@@ -7970,8 +7677,6 @@ def begin_overhead_drop(
     _spawn_cursor = 0
     _land_pose_index = 0
     _landing_settle_done = False
-    _float_force_at = 0.0
-    _coop_guest_sync_after = 0.0
     _land_active = True
     _loot_world_id = _current_world_id()
     if user_shape is not None:
@@ -7979,10 +7684,9 @@ def begin_overhead_drop(
     else:
         _land_user_shape = shape
     _drop_mode = mode_l
-    _slow_rain_next_at = 0.0
     _drop_yaw = yaw
     _drop_origin = (ox, oy, oz)
-    _pin_inflight_float_jobs(hold=True)
+    _float_jobs = []
     _preserve_prior_held_shapes()
     _deferred_catch_at = 0.0
     _deferred_catch_until = 0.0
@@ -8160,35 +7864,28 @@ def _start_xyz_for_slot(slot: tuple[float, float, float], index: int = 0) -> tup
         # Peel drip only — animate silhouette down to ground.
         if z1 > oz + 40.0:
             return x1, y1, z1
-        return x1, y1, z1 + max(120.0, height)
+        return x1, y1, z1 + max(320.0, height)
     if style == "drip":
         return x1, y1, z1
-    # Honor Drop height. The old max(320, height) floor launched cars into the sky.
-    if _DROP_HEIGHT <= 48.0:
-        lift = max(28.0, height)
-    else:
-        lift = max(72.0, height)
-    # Loot text: shorter drop so rain is visible into the word (not a sky parking lot).
-    if str(_drop_shape or "") == "text":
-        lift = max(90.0, min(220.0, lift * 0.45))
     # Scripted flight always ends on the slot. Stay over the silhouette —
-    # do not start at the player's feet (that looked like items shooting out).
+    # do not start behind the shape at the player's feet.
     if style == "fountain":
-        return x1, y1, z1 + max(140.0, lift)
+        sx, sy = _clamp_xy_to_shape(ox, oy, pad=40.0)
+        return sx, sy, oz + 64.0
     if style == "rain":
         rng = random.Random(int(index) * 7919 + 104729)
-        jitter = 56.0
+        jitter = 90.0
         rx = x1 + (rng.random() - 0.5) * jitter
         ry = y1 + (rng.random() - 0.5) * jitter
         rx, ry = _clamp_xy_to_shape(rx, ry, pad=30.0)
-        return rx, ry, z1 + lift
+        return rx, ry, z1 + max(_DEFAULT_DROP_HEIGHT, height)
     if style == "spiral":
         spin0 = math.pi * 6.0 + (int(index) * 0.47)
-        rx = x1 + math.cos(spin0) * 48.0
-        ry = y1 + math.sin(spin0) * 48.0
+        rx = x1 + math.cos(spin0) * 90.0
+        ry = y1 + math.sin(spin0) * 90.0
         rx, ry = _clamp_xy_to_shape(rx, ry, pad=30.0)
-        return rx, ry, z1 + lift
-    return x1, y1, z1 + lift
+        return rx, ry, z1 + max(360.0, height)
+    return x1, y1, z1 + max(320.0, height)
 
 
 def _shape_xy_bounds() -> tuple[float, float, float, float] | None:
@@ -8416,173 +8113,12 @@ def _clear_pins() -> None:
     _pinned_slots = []
 
 
-def _force_complete_float_jobs(*, hold: bool | None = None, overdue_only: bool = False) -> int:
-    """Snap in-flight settle jobs onto end slots (fixes mid-air freezes)."""
-    global _float_jobs
-    if not _float_jobs:
-        return 0
-    want_hold = _should_hold_in_air() if hold is None else bool(hold)
-    pinned = 0
-    now = time.monotonic()
-    keep: list[dict[str, Any]] = []
-    for job in list(_float_jobs):
-        if overdue_only:
-            t0 = float(job.get("t0") or now)
-            dur = max(0.35, float(job.get("dur") or 1.0))
-            # Still hovering / mid-fall — leave alone (Stop uses overdue_only=False).
-            if now < (t0 + dur + 0.55):
-                keep.append(job)
-                continue
-        inv = _job_inv_live(job)
-        if inv is None:
-            try:
-                for cand_addr, candidate in _raw_pickup_scan(fresh=True):
-                    if int(cand_addr or 0) == int(job.get("addr") or 0) and candidate is not None:
-                        inv = candidate
-                        _pickup_by_addr[int(cand_addr)] = candidate
-                        break
-            except Exception:
-                inv = None
-        if inv is None:
-            # Never drop the job silently — that stranded guns mid-air on the host
-            # while guests already had a mid-flight pose.
-            if overdue_only:
-                misses = int(job.get("misses") or 0) + 1
-                job["misses"] = misses
-                if misses < 48:
-                    keep.append(job)
-            continue
-        try:
-            x1 = float(job["x1"])
-            y1 = float(job["y1"])
-            z1 = float(job["z1"])
-            idx = int(job.get("index") or 0)
-        except Exception:
-            continue
-        try:
-            if _pin_pickup_to_slot(inv, (x1, y1, z1), index=idx, hold=want_hold or bool(job.get("hold"))):
-                pinned += 1
-            elif _teleport_pickup(
-                inv,
-                x1,
-                y1,
-                z1,
-                float(job.get("yaw") or 0.0),
-                pitch=float(job.get("pitch") or 0.0),
-                roll=float(job.get("roll") or 0.0),
-                freeze=True,
-                replicate=False,
-            ):
-                _remember_pin(
-                    inv,
-                    x1,
-                    y1,
-                    z1,
-                    float(job.get("yaw") or 0.0),
-                    pitch=float(job.get("pitch") or 0.0),
-                    roll=float(job.get("roll") or 0.0),
-                    hold=want_hold,
-                    slot_index=idx,
-                )
-                pinned += 1
-            elif overdue_only:
-                keep.append(job)
-        except Exception:
-            if overdue_only:
-                keep.append(job)
-            continue
-    if overdue_only:
-        _float_jobs = keep
-    else:
-        _float_jobs = []
-    if pinned:
-        _log(f"Finished {pinned} settle flight(s) onto silhouette slots.")
-    return pinned
-
-
-
-def _release_temp_dump_pins() -> int:
-    """After settle with Stay in air = No: keep items on slots briefly, do not sky-hold."""
-    global _pinned_slots
-    changed = 0
-    for row in _pinned_slots:
-        if not row.get("hold"):
-            continue
-        row["hold"] = False
-        row["expires"] = time.monotonic() + 8.0
-        changed += 1
-    if changed:
-        _log_dev(f"Cleared permanent hold on {changed} pin(s) (Stay in air = No).")
-    return changed
-
-
-def _pin_inflight_float_jobs(*, hold: bool = True) -> int:
-    """Snap active settle flights onto their end slots before a new shape starts.
-
-    Clearing `_float_jobs` mid-flight used to strand / despawn prior silhouette items
-    when the user spawned a second or third shape.
-    """
-    global _float_jobs
-    if not _float_jobs:
-        return 0
-    pinned = 0
-    for job in list(_float_jobs):
-        inv = _job_inv_live(job)
-        if inv is None:
-            continue
-        try:
-            x1 = float(job["x1"])
-            y1 = float(job["y1"])
-            z1 = float(job["z1"])
-        except Exception:
-            continue
-        idx = int(job.get("index") or 0)
-        want_hold = bool(hold) or bool(job.get("hold"))
-        try:
-            if _pin_pickup_to_slot(inv, (x1, y1, z1), index=idx, hold=want_hold):
-                pinned += 1
-        except Exception:
-            continue
-    _float_jobs = []
-    if pinned:
-        _log_dev(f"Committed {pinned} in-flight settle item(s) before new shape.")
-    return pinned
-
-
 def _preserve_prior_held_shapes() -> None:
-    """Keep prior silhouettes frozen when starting another shape.
-
-    Lobby used to physics-wake prior pins past a budget (house dropped for guests).
-    Soft-dormant instead: host keeps freeze, guests keep the already-synced pose,
-    and we skip re-net storms on the old silhouette.
-    """
+    """Keep frozen silhouettes when arming a new shape — do not wipe prior world loot."""
     global _pinned_slots, _pickup_by_addr, _drop_seen, _drop_preexisting, _float_jobs, _land_slot_pools
-    hold_n = sum(1 for row in _pinned_slots if row.get("hold"))
-    if _want_coop_replicate() and hold_n > 180:
-        # Soft-archive prior silhouette — do NOT wake physics (that dropped the house).
-        for row in list(_pinned_slots):
-            if not row.get("hold"):
-                continue
-            row["dormant"] = True
-            row["guest_ok"] = True
-            row.pop("guest_fail", None)
-            addr = int(row.get("addr") or 0)
-            inv = _pickup_by_addr.get(addr) if addr else None
-            if inv is not None:
-                try:
-                    _set_physics(inv, False, keep_grab_collision=True)
-                    _zero_velocity(inv)
-                except Exception:
-                    pass
-                try:
-                    inv.bAlwaysRelevant = False
-                    inv.NetUpdateFrequency = 2.0
-                except Exception:
-                    pass
-        _log_dev(f"Dormant-preserved {hold_n} prior held pin(s) for new shape (lobby).")
     kept: list[dict[str, Any]] = []
     preserved: dict[int, Any] = {}
-    frozen = set(_drop_preexisting)
+    frozen: set[str] = set(_drop_preexisting)
     kept_addrs: set[int] = set()
     kept_pools = dict(_land_slot_pools)
     for row in _pinned_slots:
@@ -8611,54 +8147,22 @@ def _tick_pins() -> None:
     now = time.monotonic()
     if not _pinned_slots or _peel_started:
         return
-    hold_rows_flag = any(row.get("hold") for row in _pinned_slots)
+    hold_rows = any(row.get("hold") for row in _pinned_slots)
+    if _in_join_quiet() and not hold_rows:
+        return
     if _join_refresh_needed:
         _join_refresh_needed = False
         try:
             _refresh_live_pickups()
         except Exception:
             pass
-    join_quiet = _in_join_quiet(now)
-    if join_quiet and hold_rows_flag:
-        # Host-only physics latch — must run even mid-dump or joiners see a flat house.
-        flying = {int(job.get("addr") or 0) for job in _float_jobs}
-        live: list[dict[str, Any]] = []
-        checked = 0
-        for row in _pinned_slots:
-            if checked >= 16:
-                live.append(row)
-                continue
-            if not row.get("hold"):
-                live.append(row)
-                continue
-            addr = int(row.get("addr") or 0)
-            if addr in flying:
-                live.append(row)
-                continue
-            inv = _resolve_pin_inv(row, fresh=False)
-            if inv is None and addr:
-                inv = _live_pickup(addr)
-            if inv is None:
-                misses = int(row.get("misses") or 0) + 1
-                if misses < 80:
-                    row["misses"] = misses
-                    live.append(row)
-                continue
-            row["misses"] = 0
-            checked += 1
-            try:
-                _set_physics(inv, False, keep_grab_collision=True)
-                _zero_velocity(inv)
-            except Exception:
-                pass
-            live.append(row)
-        _pinned_slots = live
-        return
     # Mid-dump: pins happen in after_dump_spawn. Restamping hundreds of slots AVs.
     if _land_active and not _landing_settle_done:
         return
     holding = _shape_hold_active()
-    hold_rows = hold_rows_flag
+    join_quiet = _in_join_quiet(now)
+    if join_quiet and hold_rows:
+        return
     # 2D / non-hold drains: skip pin maintenance while slots are still filling.
     if _land_active and not holding:
         return
@@ -8670,9 +8174,7 @@ def _tick_pins() -> None:
     live: list[dict[str, Any]] = []
     checked = 0
     pin_check_budget = 28 if (join_quiet and hold_rows) else (12 if (_land_active and holding) else 8)
-    # Host-only restamp — guest ForceNetUpdate on drift caused AV 0xffffffffffffffff
-    # (same hash as house crashes with party). Guests get spread sync separately.
-    coop_hold = False
+    coop_hold = bool(_want_coop_replicate() and hold_rows and not join_quiet)
     for row in _pinned_slots:
         expires = float(row.get("expires") or 0.0)
         if expires and now > expires and not row.get("hold"):
@@ -8694,14 +8196,8 @@ def _tick_pins() -> None:
         if inv is None:
             # Addr map can lag one tick behind find_all. Held silhouettes must
             # not be dropped after a join (empty map used to flatten the house).
-            # In lobby, guests loot constantly — drop missing pins fast (no UObject probe).
             misses = int(row.get("misses") or 0) + 1
-            if row.get("dormant") and row.get("hold"):
-                keep = 120
-            elif _want_coop_replicate() and row.get("hold"):
-                keep = 3
-            else:
-                keep = 80 if row.get("hold") else 4
+            keep = 80 if row.get("hold") else 4
             if misses < keep:
                 row["misses"] = misses
                 live.append(row)
@@ -8709,13 +8205,11 @@ def _tick_pins() -> None:
         row["misses"] = 0
         checked += 1
         try:
-            _set_physics(inv, False, keep_grab_collision=True)
+            _set_physics(inv, False)
         except Exception:
             pass
         drifted = False
         try:
-            if not _live(inv):
-                raise RuntimeError("dead pin")
             loc = inv.K2_GetActorLocation()
             dx = float(loc.X) - float(row["x"])
             dy = float(loc.Y) - float(row["y"])
@@ -8723,12 +8217,6 @@ def _tick_pins() -> None:
             drifted = (dx * dx + dy * dy + dz * dz) > 3025.0  # ~55uu
         except Exception:
             drifted = True
-            if not _live(inv):
-                misses = int(row.get("misses") or 0) + 1
-                if misses < 80 and row.get("hold"):
-                    row["misses"] = misses
-                    live.append(row)
-                continue
         if drifted:
             try:
                 _teleport_pickup(
@@ -8743,7 +8231,7 @@ def _tick_pins() -> None:
                     replicate=coop_hold,
                     guest_push=coop_hold and row.get("hold"),
                 )
-                _set_physics(inv, False, keep_grab_collision=True)
+                _set_physics(inv, False)
                 _zero_velocity(inv)
             except Exception:
                 live.append(row)
@@ -8768,8 +8256,7 @@ def _sample_flight_xyz(job: dict[str, Any], t: float) -> tuple[float, float, flo
     if mode_n == "fountain":
         x = x0 + (x1 - x0) * t
         y = y0 + (y1 - y0) * t
-        # Modest arc above the slot — 340uu looked like items being shot skyward.
-        z = z0 + (z1 - z0) * t + math.sin(t * math.pi) * 110.0
+        z = z0 + (z1 - z0) * t + math.sin(t * math.pi) * 340.0
         x, y = _clamp_xy_to_shape(x, y, pad=20.0)
         return x, y, z
     if mode_n == "spiral":
@@ -8849,56 +8336,20 @@ def _queue_drop_job(
     if not ok:
         return False
     try:
-        _set_physics(inv, False, keep_grab_collision=True)
+        _set_physics(inv, False)
         _zero_velocity(inv)
     except Exception:
         pass
     now = time.monotonic()
-    # Slow = start falling almost immediately when caught.
-    # A global rain queue used to race ahead of realtime → whole word hung, then snapped.
-    hang = 0.0
-    delay = 0.0
-    global _slow_rain_next_at
-    if style in ("straight",) and _drop_mode in ("slow", "medium", "fast", "snap"):
-        if _drop_mode == "slow":
-            # Dump pace creates the cascade; each gun falls after a tiny hover.
-            # Text used to hang longer (slow "writing") — land faster.
-            is_text = str(_drop_shape or "") == "text"
-            t0 = now + (0.04 if is_text else 0.10)
-            pin_hold = bool(_should_hold_in_air())
-            fall_dur = 0.95 if is_text else 1.35
-            _float_jobs.append(
-                {
-                    "addr": addr,
-                    "x0": x0,
-                    "y0": y0,
-                    "z0": z0,
-                    "x1": x1,
-                    "y1": y1,
-                    "z1": z1,
-                    "t0": t0,
-                    "dur": max(0.55, min(2.0, fall_dur)),
-                    "yaw": yaw_r,
-                    "pitch": pitch,
-                    "roll": roll,
-                    "mode": _drop_mode,
-                    "index": int(index),
-                    "hold": pin_hold,
-                }
-            )
-            _slow_rain_next_at = 0.0
-            arm_overhead_catch(max(8.0, fall_dur + 2.0))
-            return True
-        hang = {"medium": 1.05, "fast": 0.45, "snap": 0.12}.get(_drop_mode, 0.0)
-        wave = 16 if _drop_mode == "medium" else 10
-        stagger = max(float(stagger), 0.025)
-        stagger_slot = max(0, int(index)) % wave
-        delay = float(stagger) * float(stagger_slot)
-    else:
-        wave = 24 if (_drop_mode == "drip" or _is_peel_drop()) else (6 if _drop_mode == "stagger" else 10)
-        stagger_slot = max(0, int(index)) % wave
-        delay = float(stagger) * float(stagger_slot)
-    pin_hold = bool(_should_hold_in_air())
+    # Global item index made rain/fountain/stagger wait tens of seconds in a
+    # large Spawn All. Keep the visible cascade, bounded to one short wave.
+    wave = 24 if (_drop_mode == "drip" or _is_peel_drop()) else (6 if _drop_mode == "stagger" else 10)
+    stagger_slot = max(0, int(index)) % wave
+    pin_hold = hold_shape
+    if not pin_hold and _should_hold_in_air():
+        shape_n = _normalize_shape_name(_drop_shape or _land_user_shape or "")
+        if shape_n in SHAPE_3D_NAMES:
+            pin_hold = True
     _float_jobs.append(
         {
             "addr": addr,
@@ -8908,7 +8359,7 @@ def _queue_drop_job(
             "x1": x1,
             "y1": y1,
             "z1": z1,
-            "t0": now + hang + delay,
+            "t0": now + stagger * stagger_slot,
             "dur": max(0.35, dur),
             "yaw": yaw_r,
             "pitch": pitch,
@@ -8918,7 +8369,7 @@ def _queue_drop_job(
             "hold": pin_hold,
         }
     )
-    arm_overhead_catch(max(8.0, dur + delay + 2.0))
+    arm_overhead_catch(max(8.0, dur + stagger * stagger_slot + 2.0))
     return True
 
 
@@ -9067,27 +8518,8 @@ def apply_settle(
 
 
 def _job_inv_live(job: dict[str, Any]) -> Any | None:
-    """Resolve the in-flight pickup. Prefer the live addr map; recover from scan if
-    refresh briefly dropped a flying actor (settle modes were freezing mid-air)."""
-    addr = int(job.get("addr") or 0)
-    if not addr:
-        return None
-    inv = _live_pickup(addr)
-    if inv is not None:
-        return inv
-    try:
-        for cand_addr, candidate in _raw_pickup_scan(fresh=False):
-            if int(cand_addr or 0) != addr or candidate is None:
-                continue
-            try:
-                if _uobject_addr(candidate) == addr:
-                    _pickup_by_addr[addr] = candidate
-                    return candidate
-            except Exception:
-                continue
-    except Exception:
-        pass
-    return None
+    """Never reuse a stored wrapper — stale dump actors AV after peel/travel."""
+    return _live_pickup(int(job.get("addr") or 0))
 
 
 def _push_coop_flight_guest(
@@ -9136,9 +8568,9 @@ def _tick_float_jobs(now: float) -> None:
     remaining: list[dict[str, Any]] = []
     moved = 0
     n_jobs = len(_float_jobs)
-    # Large house dumps (~400) need a fat budget or flights stall mid-air at dump height.
+    # Large dumps need a fat budget or flights stall mid-air at dump height.
     budget = min(n_jobs, 64 if n_jobs > 80 else (40 if n_jobs > 24 else (20 if n_jobs > 10 else 10)))
-    # Sparse mid-air guest samples so lobby sees rain/slow/medium — not a net storm.
+    # Sparse mid-air guest samples so lobby sees rain/slow/medium — not shoot-high-then-snap.
     coop_fly_shape = bool(_want_coop_replicate() and _shape_hold_active())
     if coop_fly_shape:
         if n_jobs > 180:
@@ -9158,33 +8590,16 @@ def _tick_float_jobs(now: float) -> None:
         roll = float(job.get("roll") or 0.0)
         x1, y1, z1 = float(job["x1"]), float(job["y1"]), float(job["z1"])
         addr = int(job.get("addr") or 0)
-        overdue = now >= (t0 + dur + 0.45)
         if inv is None:
-            # Stale wrapper mid-flight — try one fresh resolve before abandoning.
-            if addr and (overdue or now >= t0):
-                try:
-                    for cand_addr, candidate in _raw_pickup_scan(fresh=True):
-                        if int(cand_addr or 0) == addr and candidate is not None:
-                            inv = candidate
-                            _pickup_by_addr[addr] = candidate
-                            break
-                except Exception:
-                    inv = None
-            if inv is None:
-                # Keep retrying — dropping the job here left 2–3 guns stuck mid-air on host.
-                misses = int(job.get("misses") or 0) + 1
-                job["misses"] = misses
-                if misses < 60 or now <= (t0 + dur + 14.0):
-                    remaining.append(job)
-                continue
+            # Give a transient wrapper one short recovery window, then discard
+            # it instead of retaining a stale UObject indefinitely.
+            if now <= t0 + dur + 2.0:
+                remaining.append(job)
+            continue
         if now < t0:
             remaining.append(job)
             continue
         u = min(1.0, (now - t0) / dur)
-        if overdue:
-            u = 1.0
-        # Soft overdue: finish onto the slot even when the move budget is full.
-        force_land = overdue or (now >= t0 + dur)
         t = u * u * (3.0 - 2.0 * u)
         if u < 1.0:
             x, y, z = _sample_flight_xyz(job, t)
@@ -9201,7 +8616,6 @@ def _tick_float_jobs(now: float) -> None:
                 if _teleport_pickup(inv, x, y, z, yaw, pitch=pitch, roll=roll, replicate=False):
                     job["last_move"] = now
             if coop_fly_shape and guest_fly_budget[0] > 0:
-                # Fewer mid samples on huge dumps — land + post-settle fill do the rest.
                 mid_gap = 0.55 if n_jobs > 120 else 0.28
                 if not job.get("guest_start") and u > 0.02:
                     x0 = float(job.get("x0") or x)
@@ -9223,12 +8637,16 @@ def _tick_float_jobs(now: float) -> None:
                         job["guest_net"] = now
             remaining.append(job)
             continue
-        if moved < budget or force_land:
+        if moved < budget:
             if _teleport_pickup(inv, x1, y1, z1, yaw, pitch=pitch, roll=roll, freeze=True, replicate=False):
                 mode_n = str(job.get("mode") or "")
                 peel_land = mode_n == "drip" and _is_peel_drop()
                 if not peel_land:
-                    hold = bool(_should_hold_in_air()) or bool(job.get("hold"))
+                    hold = bool(job.get("hold")) or _shape_hold_active()
+                    if _should_hold_in_air():
+                        shape_n = _normalize_shape_name(_drop_shape or _land_user_shape or "")
+                        if shape_n in SHAPE_3D_NAMES:
+                            hold = True
                     slot_idx = job.get("index")
                     slot_i = int(slot_idx) if slot_idx is not None else None
                     if hold:
@@ -9265,20 +8683,12 @@ def _tick_float_jobs(now: float) -> None:
 
 
 def finish_drop_jobs() -> str:
-    """Stop settle motion by snapping in-flight items onto their slots (not mid-air)."""
-    global _float_jobs, _drop_until, _status, _slow_rain_next_at
+    """Cancel remaining animation without touching potentially stale wrappers."""
+    global _float_jobs, _drop_until, _status
     n = len(_float_jobs)
-    pinned = 0
-    if n:
-        try:
-            pinned = int(_force_complete_float_jobs(hold=_should_hold_in_air()))
-        except Exception:
-            pinned = 0
-            _float_jobs = []
     _float_jobs = []
-    _slow_rain_next_at = 0.0
     _drop_until = 0.0
-    _status = f"Stopped drop — snapped {pinned}/{n} item(s) onto slots."
+    _status = f"Stopped drop motion for {n} item(s)."
     _log(_status)
     return _status
 
@@ -9366,49 +8776,30 @@ def _tick_deferred_dump_catch(now: float) -> None:
         _deferred_catch_until = 0.0
 
 
-def _shape_motion_active(now: float | None = None) -> bool:
-    """True when loot-shape tick work is needed — idle loads must not touch find_all."""
-    t = time.monotonic() if now is None else float(now)
-    waiting_peel = _peel_after_sec > 0.0 and not _peel_started and _land_active
-    return bool(
-        _land_active
-        or _float_jobs
-        or _pinned_slots
-        or _peel_queue
-        or waiting_peel
-        or _join_reapply_pending
-        or _join_serial_reapply_active
-        or _guest_sync_active
-        or _absorb_orphans_after_abandon
-        or (_deferred_catch_until > 0.0 and t <= _deferred_catch_until)
-        or _float_force_at > 0.0
-    )
-
-
 def tick_drop_motion(now: float | None = None) -> None:
     """Fly rain/fountain/spiral/etc into shape slots. No find_all — HUD-tick safe."""
-    global _float_tick_at, _pickup_by_addr, _float_force_at
+    global _float_tick_at, _pickup_by_addr
     try:
-        from .session_guards import session_safe, session_warm
+        from .session_guards import session_safe
 
-        if not session_safe() or not session_warm():
+        if not session_safe():
+            abandon_world_loot()
             return
     except Exception:
-        return
-    if not _world_alive():
-        # Dump/HUD ticks can miss pawn for a frame. Keep the armed silhouette.
-        if _land_active:
-            return
-        abandon_world_loot()
-        return
+        pass
     if _player_left_drop_site():
         abandon_world_loot()
         return
-    now = time.monotonic() if now is None else float(now)
-    if not _shape_motion_active(now):
+    if not _world_alive():
+        abandon_world_loot()
         return
+    now = time.monotonic() if now is None else float(now)
     try:
         _absorb_orphan_pickups_if_due(now)
+    except Exception:
+        pass
+    try:
+        _poll_party_join(now)
     except Exception:
         pass
     try:
@@ -9436,14 +8827,7 @@ def tick_drop_motion(now: float | None = None) -> None:
         return
     _float_tick_at = now
     waiting_peel = _peel_after_sec > 0.0 and not _peel_started and _land_active
-    if not (
-        _float_jobs
-        or _pinned_slots
-        or _peel_queue
-        or waiting_peel
-        or (_land_active and _deferred_catch_until > 0.0)
-        or _float_force_at > 0.0
-    ):
+    if not (_float_jobs or _pinned_slots or _peel_queue or waiting_peel or (_land_active and _deferred_catch_until > 0.0)):
         return
     try:
         _tick_delayed_peel(now)
@@ -9453,23 +8837,6 @@ def tick_drop_motion(now: float | None = None) -> None:
         _tick_float_jobs(now)
     except Exception:
         pass
-    # After dump: only snap leftovers that never finished their hang+fall.
-    if _float_force_at > 0.0 and now >= _float_force_at:
-        _float_force_at = 0.0
-        if _float_jobs:
-            try:
-                # Slow: only snap stuck leftovers, never the whole mid-air cloud.
-                only_over = str(_drop_mode or "") == "slow"
-                _force_complete_float_jobs(hold=_should_hold_in_air(), overdue_only=only_over)
-                if only_over and _float_jobs:
-                    _float_force_at = now + 2.5
-            except Exception:
-                pass
-        if not _should_hold_in_air():
-            try:
-                _release_temp_dump_pins()
-            except Exception:
-                pass
     try:
         _tick_guest_sync(now)
     except Exception:
@@ -9502,27 +8869,17 @@ def tick_loot_shapes(now: float | None = None) -> None:
     global _deferred_catch_at, _deferred_catch_until, _deferred_catch_empty
     global _burst_replicate_at, _guest_sync_cursor, _guest_sync_active, _guest_sync_last
     global _coop_followup_sync_at, _coop_followup_waves
-    try:
-        from .session_guards import session_safe, session_warm
-
-        if not session_safe() or not session_warm():
-            return
-    except Exception:
-        return
     if not _world_alive():
         if _land_active:
             return
         abandon_world_loot()
         return
     now = time.monotonic() if now is None else float(now)
-    if _shape_motion_active(now):
-        tick_drop_motion(now)
     try:
         _poll_party_join(now)
     except Exception:
         pass
-    if not _shape_motion_active(now):
-        return
+    tick_drop_motion(now)
     try:
         _tick_coop_hold_sync(now)
     except Exception:
@@ -9551,6 +8908,8 @@ def tick_loot_shapes(now: float | None = None) -> None:
                 map_fog_hide.tick_fog_hide(now)
         except Exception:
             pass
+        # Deferred dump catch runs from tick_drop_motion (HUD tick, even while
+        # catch is paused). Nothing to do here unless motion is idle.
         if _deferred_catch_until > 0.0 and not (_float_jobs or _pinned_slots):
             _tick_deferred_dump_catch(now)
         if _join_reapply_can_run(now):
@@ -9564,22 +8923,10 @@ def tick_loot_shapes(now: float | None = None) -> None:
 def install_loot_shapes_hooks(*, force: bool = False) -> None:
     """Install a light PlayerTick poll for late-joiner re-apply."""
     global _hooks_installed
-    already = bool(_hooks_installed)
-    if already and not force:
+    if _hooks_installed and not force:
         return
     try:
         from unrealsdk import hooks
-
-        def _try_add(path: str, hook_type: Any, ident: str, cb: Any) -> bool:
-            try:
-                hooks.remove_hook(path, hook_type, ident)
-            except Exception:
-                pass
-            try:
-                hooks.add_hook(path, hook_type, ident, cb)
-                return True
-            except Exception:
-                return False
 
         def _on_tick(
             _obj: Any,
@@ -9587,13 +8934,6 @@ def install_loot_shapes_hooks(*, force: bool = False) -> None:
             _ret: Any,
             _func: Any,
         ) -> None:
-            try:
-                from .session_guards import session_safe, session_warm
-
-                if not session_safe() or not session_warm():
-                    return
-            except Exception:
-                return
             try:
                 if _player_left_drop_site():
                     abandon_world_loot()
@@ -9641,19 +8981,25 @@ def install_loot_shapes_hooks(*, force: bool = False) -> None:
                 except Exception:
                     pass
 
-        tick_ok = False
-        for path in (
-            "/Script/Oak2.OakPlayerController:PlayerTick",
-            "/Script/OakGame.OakPlayerController:PlayerTick",
-            "/Script/Engine.PlayerController:PlayerTick",
+        for i, path in enumerate(
+            (
+                "/Script/Oak2.OakPlayerController:PlayerTick",
+                "/Script/OakGame.OakPlayerController:PlayerTick",
+                "/Script/Engine.PlayerController:PlayerTick",
+            )
         ):
-            ident = "Squ1ggsBoostingTools.loot_shapes.tick"
-            if _try_add(path, Type.POST, ident, _on_tick) or _try_add(
-                path, Type.POST_UNCONDITIONAL, ident, _on_tick
-            ):
-                tick_ok = True
-                break
-        teardown_ok = 0
+            ident_list = (
+                f"Squ1ggsBoostingTools.loot_shapes.tick.{i}",
+                f"sqbt_loot_shapes_tick_{i}",
+            )
+            for ident in ident_list:
+                try:
+                    hooks.add_hook(path, Type.POST, ident, _on_tick)
+                except Exception:
+                    try:
+                        hooks.add_hook(path, Type.POST_UNCONDITIONAL, ident, _on_tick)
+                    except Exception:
+                        pass
         for i, path in enumerate(
             (
                 "/Script/Engine.Engine:PreLoadMap",
@@ -9666,18 +9012,23 @@ def install_loot_shapes_hooks(*, force: bool = False) -> None:
                 "/Script/Engine.GameInstance:ReturnToMainMenu",
             )
         ):
-            ident = f"Squ1ggsBoostingTools.loot_shapes.teardown.{i}"
-            if _try_add(path, Type.PRE, ident, _on_world_teardown) or _try_add(
-                path, Type.PRE_UNCONDITIONAL, ident, _on_world_teardown
-            ):
-                teardown_ok += 1
+            ident_list = (
+                f"Squ1ggsBoostingTools.loot_shapes.teardown.{i}",
+                f"sqbt_loot_shapes_teardown_{i}",
+            )
+            for ident in ident_list:
+                try:
+                    hooks.add_hook(path, Type.PRE, ident, _on_world_teardown)
+                except Exception:
+                    try:
+                        hooks.add_hook(path, Type.PRE_UNCONDITIONAL, ident, _on_world_teardown)
+                    except Exception:
+                        try:
+                            hooks.add_hook(path, Type.POST, ident, _on_world_teardown)
+                        except Exception:
+                            pass
         _hooks_installed = True
         _last_layout["party_count"] = _party_count()
-        if not already:
-            _log(
-                f"Loot shape hooks installed (tick={'yes' if tick_ok else 'no'}, "
-                f"teardown={teardown_ok}/8)."
-            )
     except Exception as exc:
         _log(f"Could not install loot shape hooks: {exc!r}")
 
@@ -9704,7 +9055,6 @@ def _tuned_layout(shape: str, radius: float, spacing: float, per_ring: int) -> t
         "figure8": (1.3, 1.0, 1.0),
         "wave": (1.2, 1.15, 1.0),
         "letter_s": (1.15, 1.0, 1.0),
-        "text": (1.45, 1.05, 1.0),
         "lightning": (1.4, 1.15, 1.0),
         "vault": (1.12, 1.0, 1.0),
         "psycho": (1.45, 1.05, 1.0),
@@ -9728,6 +9078,14 @@ def _tuned_layout(shape: str, radius: float, spacing: float, per_ring: int) -> t
         "claptrap": (1.18, 1.0, 1.0),
         "pyramid_3d": (1.0, 1.0, 1.0),
         "globe": (1.0, 1.0, 1.0),
+        "diamond_3d": (1.05, 1.0, 1.0),
+        "blocks": (1.08, 1.0, 1.0),
+        "cube": (1.05, 1.0, 1.0),
+        "torus": (1.05, 1.0, 1.0),
+        "crown": (1.05, 1.0, 1.0),
+        "ufo": (1.1, 1.0, 1.0),
+        "rocket": (1.05, 1.0, 1.0),
+        "gear": (1.08, 1.0, 1.0),
         "forbidden_one": (1.35, 1.0, 1.0),
         "forbidden_pair": (1.28, 1.0, 1.0),
     }

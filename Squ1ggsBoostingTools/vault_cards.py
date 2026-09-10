@@ -239,118 +239,79 @@ def load_saved_tokens(card_number: int) -> list[str]:
     return [str(value).strip() for value in tokens if str(value).strip()]
 
 
-def _catalog_entry_for_index(
-    pc: Any,
-    ps: Any,
-    *,
-    index: int,
-    card: Any | None,
-    currency_rows: list[tuple[int, Any, str, int]],
-) -> VaultCardEntry:
-    """Build one catalog row. ``card`` may be None when VaultCards[] omits this slot."""
-    del pc
-    vault_def = _resolve_vault_card_def_struct(card) if card is not None else None
-    def_name = gbx_ptr_name(vault_def) if vault_def is not None else ""
-    dlc_name = ""
-    display_name = ""
-    if vault_def is not None:
-        try:
-            dlc_name = gbx_ptr_name(getattr(vault_def, "DLCDef", None))
-        except Exception:  # noqa: BLE001
-            pass
-        try:
-            exp_def = getattr(vault_def, "ExperienceDef", None)
-            display_name = _safe_str(getattr(exp_def, "DisplayName", "") or "")
-        except Exception:  # noqa: BLE001
-            pass
-    needle = (
-        _DEFAULT_CURRENCY_NEEDLES[index]
-        if index < len(_DEFAULT_CURRENCY_NEEDLES)
-        else f"vaultcard{index + 1:02d}"
-    )
-    fallbacks = _DEFAULT_EXP_FALLBACKS.get(
-        index,
-        (f"VaultCard{index + 1:02d}", f"VaultCard{index + 1}"),
-    )
-    if not def_name and index < len(_DEFAULT_CURRENCY_NEEDLES):
-        # Synthetic row so MAX ALL still hits vault card 4 when the manager lags.
-        def_name = f"VaultCard{index + 1:02d}"
-    exp_slot, exp_token = _match_exp_slot(
-        ps,
-        (def_name, dlc_name, display_name, *fallbacks),
-        allow_card3_override=index == 2,
-    )
-    if exp_slot is None and index in _MANAGER_EXP_SLOT_DEFAULTS:
-        exp_slot = _MANAGER_EXP_SLOT_DEFAULTS[index]
-    currency_slot, currency_name, currency_amount = _match_currency(
-        currency_rows,
-        (needle, def_name, dlc_name, *fallbacks),
-    )
-    rewards = _extract_reward_unique_names(vault_def) if vault_def is not None else []
-    saved_rewards = load_saved_tokens(index + 1)
-    rewards = list(dict.fromkeys([*rewards, *saved_rewards]))
-    level = xp = 0
-    unlocked: bool | None = None
-    if exp_slot is not None:
-        try:
-            row = getattr(ps, "ExperienceState")[exp_slot]
-            level = int(getattr(row, "ExperienceLevel", 0) or 0)
-            xp = int(getattr(row, "ExperiencePoints", 0) or 0)
-            unlocked = bool(getattr(row, "bIsUnlocked", False))
-        except Exception:  # noqa: BLE001
-            pass
-    return VaultCardEntry(
-        index=index,
-        def_name=def_name,
-        dlc_name=dlc_name,
-        display_name=display_name,
-        currency_needle=needle,
-        currency_slot=currency_slot,
-        currency_name=currency_name,
-        currency_amount=currency_amount,
-        exp_slot=exp_slot,
-        exp_token=exp_token,
-        exp_level=level,
-        exp_xp=xp,
-        exp_unlocked=unlocked,
-        reward_tokens=rewards,
-    )
-
-
 def build_catalog(
     pc: Any,
     ps: Any,
     *,
     currency_rows: list[tuple[int, Any, str, int]],
 ) -> list[VaultCardEntry]:
-    live_cards = _vault_cards_sequence(pc)
     catalog: list[VaultCardEntry] = []
-    for index, card in enumerate(live_cards):
+    for index, card in enumerate(_vault_cards_sequence(pc)):
+        vault_def = _resolve_vault_card_def_struct(card)
+        def_name = gbx_ptr_name(vault_def)
+        dlc_name = ""
+        display_name = ""
+        if vault_def is not None:
+            try:
+                dlc_name = gbx_ptr_name(getattr(vault_def, "DLCDef", None))
+            except Exception:  # noqa: BLE001
+                pass
+            try:
+                exp_def = getattr(vault_def, "ExperienceDef", None)
+                display_name = _safe_str(getattr(exp_def, "DisplayName", "") or "")
+            except Exception:  # noqa: BLE001
+                pass
+        needle = (
+            _DEFAULT_CURRENCY_NEEDLES[index]
+            if index < len(_DEFAULT_CURRENCY_NEEDLES)
+            else f"vaultcard{index + 1:02d}"
+        )
+        fallbacks = _DEFAULT_EXP_FALLBACKS.get(
+            index,
+            (f"VaultCard{index + 1:02d}", f"VaultCard{index + 1}"),
+        )
+        exp_slot, exp_token = _match_exp_slot(
+            ps,
+            (def_name, dlc_name, display_name, *fallbacks),
+            allow_card3_override=index == 2,
+        )
+        if exp_slot is None and index in _MANAGER_EXP_SLOT_DEFAULTS:
+            exp_slot = _MANAGER_EXP_SLOT_DEFAULTS[index]
+        currency_slot, currency_name, currency_amount = _match_currency(
+            currency_rows,
+            (needle, def_name, dlc_name, *fallbacks),
+        )
+        rewards = _extract_reward_unique_names(vault_def) if vault_def is not None else []
+        saved_rewards = load_saved_tokens(index + 1)
+        rewards = list(dict.fromkeys([*rewards, *saved_rewards]))
+        level = xp = 0
+        unlocked: bool | None = None
+        if exp_slot is not None:
+            try:
+                row = getattr(ps, "ExperienceState")[exp_slot]
+                level = int(getattr(row, "ExperienceLevel", 0) or 0)
+                xp = int(getattr(row, "ExperiencePoints", 0) or 0)
+                unlocked = bool(getattr(row, "bIsUnlocked", False))
+            except Exception:  # noqa: BLE001
+                pass
         catalog.append(
-            _catalog_entry_for_index(
-                pc,
-                ps,
+            VaultCardEntry(
                 index=index,
-                card=card,
-                currency_rows=currency_rows,
+                def_name=def_name,
+                dlc_name=dlc_name,
+                display_name=display_name,
+                currency_needle=needle,
+                currency_slot=currency_slot,
+                currency_name=currency_name,
+                currency_amount=currency_amount,
+                exp_slot=exp_slot,
+                exp_token=exp_token,
+                exp_level=level,
+                exp_xp=xp,
+                exp_unlocked=unlocked,
+                reward_tokens=rewards,
             )
         )
-    # VaultCards[] often only has 1–3 until Desert Dreams / card 4 is warm.
-    # Still expose synthetic slots 0–3 so MAX ALL never silently skips card 4.
-    present = {entry.index for entry in catalog}
-    for index in range(4):
-        if index in present:
-            continue
-        catalog.append(
-            _catalog_entry_for_index(
-                pc,
-                ps,
-                index=index,
-                card=None,
-                currency_rows=currency_rows,
-            )
-        )
-    catalog.sort(key=lambda entry: entry.index)
     return catalog
 
 

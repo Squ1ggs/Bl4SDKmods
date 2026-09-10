@@ -223,9 +223,6 @@ class MobSpawnerController:
             "local",
             "party",
             "npc_nearest",
-            "freecam",
-            "debug_cam",
-            "debugcam",
         ):
             self.ui.spawn_anchor = "local"
         _log.info(
@@ -374,19 +371,6 @@ class MobSpawnerController:
             from mods_base import get_pc  # noqa: PLC0415
 
             host_pc = get_pc()
-            try:
-                from Squ1ggsBoostingTools.dev_tools import (  # noqa: PLC0415
-                    _gameplay_pc,
-                    _is_freecam_controller,
-                    is_debug_cam_active,
-                )
-
-                if is_debug_cam_active() or _is_freecam_controller(host_pc):
-                    gp = _gameplay_pc()
-                    if gp is not None:
-                        host_pc = gp
-            except Exception:
-                pass
             host_ps = getattr(host_pc, "PlayerState", None) if host_pc is not None else None
             for candidate in _args[:2]:
                 if candidate is None or isinstance(candidate, (bool, int, float, str, bytes)):
@@ -433,11 +417,7 @@ class MobSpawnerController:
                 observe_generation()
                 self._last_lobby_observe_at = now
             if deferred.has_pending():
-                io_batch = deferred.pending_label_count("IO spawn")
-                deferred.flush_tick(
-                    max_items=2 if io_batch else 1,
-                    owner="Squ1ggsBoostingTools",
-                )
+                deferred.flush_tick(max_items=1, owner="Squ1ggsBoostingTools")
         except Exception:
             pass
         try:
@@ -579,22 +559,10 @@ class MobSpawnerController:
             return None
 
     def _with_spawn_anchor(self):
-        """Context manager: place Oak Spawner spawn at the chosen player/NPC/freecam anchor."""
+        """Context manager: place Oak Spawner spawn at the chosen player/NPC anchor."""
         from contextlib import nullcontext  # noqa: PLC0415
 
         anchor = str(getattr(self.ui, "spawn_anchor", "local") or "local").strip().lower()
-        if anchor in ("freecam", "debug_cam", "debugcam") or self._spawn_at_freecam():
-            try:
-                from Squ1ggsBoostingTools.dev_tools import _cached_dcc, is_debug_cam_active  # noqa: PLC0415
-                from Squ1ggsBoostingTools.embedded_oak.engine import spawn_at_actor  # noqa: PLC0415
-
-                if is_debug_cam_active():
-                    dcc = _cached_dcc()
-                    if dcc is not None:
-                        return spawn_at_actor(dcc, clear_on_exit=True)
-            except Exception:
-                return nullcontext()
-            return nullcontext()
         if anchor == "npc_nearest":
             actor = self._resolve_spawn_anchor_actor()
             if actor is None:
@@ -616,17 +584,6 @@ class MobSpawnerController:
             return spawn_at_player_controller(pc, clear_on_exit=True)
         except Exception:
             return nullcontext()
-
-    def _spawn_at_freecam(self) -> bool:
-        anchor = str(getattr(self.ui, "spawn_anchor", "local") or "local").strip().lower()
-        if anchor in ("freecam", "debug_cam", "debugcam"):
-            return True
-        try:
-            from Squ1ggsBoostingTools.dev_tools import is_debug_cam_active  # noqa: PLC0415
-
-            return bool(is_debug_cam_active())
-        except Exception:
-            return False
 
     def _deploy_gbx(self, code: str, *, count: int | None = None) -> tuple[bool, str]:
         cap = int(getattr(self.ui, "max_deploy_count", MAX_DEPLOY_COUNT))
@@ -1292,7 +1249,6 @@ class MobSpawnerController:
             oak_wake_vending,
             safe_world_io_spawn,
             short_io_token,
-            spawn_io_prefers_ai,
         )
 
         # Black Market / Maurice: embedded oak_spawnai → settle → PersistentLevel oak_spawn.
@@ -1390,16 +1346,15 @@ class MobSpawnerController:
                 try:
                     # Always async-fire like mob spawner. Dual world pass waits on
                     # later ticks via find_object — never block PlayerTick with polls.
-                    with self._with_spawn_anchor():
-                        ok, msg = spawn_actor_def(
-                            short,
-                            count=1,
-                            distance=float(self.ui.spawn_distance),
-                            spacing=float(self.ui.spawn_spacing),
-                            allow_summon_fallback=False,
-                            fast_path=True,
-                            async_fire=True,
-                        )
+                    ok, msg = spawn_actor_def(
+                        short,
+                        count=1,
+                        distance=float(self.ui.spawn_distance),
+                        spacing=float(self.ui.spawn_spacing),
+                        allow_summon_fallback=False,
+                        fast_path=True,
+                        async_fire=True,
+                    )
                     fired = bool(ok) or ("stream" in msg.lower()) or msg.lower().startswith("oak_")
                     return True if fired else bool(ok), f"oak_spawnai {short}: {msg}"
                 except Exception as ex:  # noqa: BLE001
@@ -1407,22 +1362,11 @@ class MobSpawnerController:
 
             def _do_world_followup() -> tuple[bool, str]:
                 try:
-                    # PlayerBank world duplicate freezes GameThread / drops guests.
-                    if "playerbank" in short.lower() or short.lower() in ("bank", "io_playerbank"):
-                        act_msg = ""
-                        if activate:
-                            try:
-                                _a_ok, a_msg = activate_spawned_io(short)
-                                act_msg = f"; {a_msg}"
-                            except Exception as act_ex:  # noqa: BLE001
-                                act_msg = f"; activate skipped: {type(act_ex).__name__}"
-                        return True, f"playerbank: skip world duplicate (AI+activate only){act_msg}"
-                    with self._with_spawn_anchor():
-                        ok, msg = safe_world_io_spawn(
-                            short,
-                            distance=float(self.ui.spawn_distance),
-                            spacing=float(self.ui.spawn_spacing),
-                        )
+                    ok, msg = safe_world_io_spawn(
+                        short,
+                        distance=float(self.ui.spawn_distance),
+                        spacing=float(self.ui.spawn_spacing),
+                    )
                     act_msg = ""
                     if activate:
                         try:
@@ -1436,45 +1380,36 @@ class MobSpawnerController:
                     return False, f"world follow-up failed safely: {type(ex).__name__}: {ex}"
 
             def _do_io() -> tuple[bool, str]:
-                # World PersistentLevel paths must go through oak_spawn (template duplicate).
-                # PlayerBank must NOT use world duplicate — that freezes and kicks the lobby.
+                # World PersistentLevel paths must go through oak_spawn (template duplicate),
+                # not OakSpawner actor-def spawn — that's what unlocks PlayerBank etc.
                 try:
                     use_world = (
                         "persistentlevel." in token.lower()
                         or token.lower().startswith("/game/")
                         or low.startswith("oak_spawn ")
                     )
-                    if use_world and any(
-                        tok in short.lower() for tok in ("floor", "breakaway", "placeable")
-                    ):
-                        use_world = False
-                    if spawn_io_prefers_ai(short, line) and not is_oak_dual_vending(short):
-                        use_world = False
-                    if "playerbank" in short.lower() or short.lower() in ("bank", "io_playerbank"):
-                        use_world = False
                     if dual and not use_world:
                         # Dual sequence is queued separately below.
                         return _do_ai_only()
-                    with self._with_spawn_anchor():
-                        if use_world:
-                            ok, msg = safe_world_io_spawn(
-                                short,
-                                distance=float(self.ui.spawn_distance),
-                                spacing=float(self.ui.spawn_spacing),
-                            )
-                        else:
-                            # One Oak Spawner fire only. spawn_actor_def often returns False when the prop
-                            # has not appeared in the 0.05–0.28s poll yet; the old run_oak_line
-                            # fallback ResetSpawner'd again and duplicated IO_AscensionBeam etc.
-                            ok, msg = spawn_actor_def(
-                                short,
-                                count=1,
-                                distance=float(self.ui.spawn_distance),
-                                spacing=float(self.ui.spawn_spacing),
-                                allow_summon_fallback=False,
-                                fast_path=True,
-                                async_fire=True,
-                            )
+                    if use_world:
+                        ok, msg = safe_world_io_spawn(
+                            short,
+                            distance=float(self.ui.spawn_distance),
+                            spacing=float(self.ui.spawn_spacing),
+                        )
+                    else:
+                        # One Oak Spawner fire only. spawn_actor_def often returns False when the prop
+                        # has not appeared in the 0.05–0.28s poll yet; the old run_oak_line
+                        # fallback ResetSpawner'd again and duplicated IO_AscensionBeam etc.
+                        ok, msg = spawn_actor_def(
+                            short,
+                            count=1,
+                            distance=float(self.ui.spawn_distance),
+                            spacing=float(self.ui.spawn_spacing),
+                            allow_summon_fallback=False,
+                            fast_path=True,
+                            async_fire=True,
+                        )
                     fired = bool(ok) or ("stream" in str(msg).lower()) or str(msg).lower().startswith("oak_")
                     if fired and activate and not dual:
                         a_ok, a_msg = activate_spawned_io(short)
@@ -1482,24 +1417,6 @@ class MobSpawnerController:
                         return True, msg
                     if fired:
                         return True, msg
-                    # Debug cam: world-path rows sometimes fail — retry AI at camera once.
-                    if spawn_io_prefers_ai(short, line) and use_world:
-                        with self._with_spawn_anchor():
-                            ok2, msg2 = spawn_actor_def(
-                                short,
-                                count=1,
-                                distance=float(self.ui.spawn_distance),
-                                spacing=float(self.ui.spawn_spacing),
-                                allow_summon_fallback=False,
-                                fast_path=True,
-                                async_fire=True,
-                            )
-                        fired2 = bool(ok2) or ("stream" in str(msg2).lower()) or str(msg2).lower().startswith("oak_")
-                        if fired2 and activate:
-                            a_ok, a_msg = activate_spawned_io(short)
-                            msg2 = f"{msg2}; {a_msg}" if a_ok else f"{msg2}; activate: {a_msg}"
-                        if fired2:
-                            return True, msg2
                     return ok, msg
                 except Exception as ex:  # noqa: BLE001
                     return False, f"IO spawn failed safely: {type(ex).__name__}: {ex}"
@@ -1634,8 +1551,8 @@ class MobSpawnerController:
                     self.ui.aggro_mode = mode_ids[i]
             imgui.end_combo()
 
-        anchor_labels = ("From me", "From selected player", "Near nearest NPC", "At debug cam")
-        anchor_ids = ("local", "party", "npc_nearest", "freecam")
+        anchor_labels = ("From me", "From selected player", "Near nearest NPC")
+        anchor_ids = ("local", "party", "npc_nearest")
         a_cur = anchor_ids.index(self.ui.spawn_anchor) if self.ui.spawn_anchor in anchor_ids else 0
         if _collapsing_show(imgui.begin_combo("Spawn location##mob_spawn_anchor", anchor_labels[a_cur])):
             for i, label in enumerate(anchor_labels):

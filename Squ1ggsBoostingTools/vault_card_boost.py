@@ -39,13 +39,18 @@ def _economy_max_vault_cards(
             fail = True
 
     # Direct BP writes use the already-resolved PlayerState and do not depend on display names.
-    # Slots 2–5 = vault card 1–4 XP. Always try 2..5 even if ExperienceState looks short —
-    # card 4 (slot 5) may appear after currency write / content warm-up.
-    for slot in range(2, 6):
-        if _set_experience_level_via_bp(ps, slot, _MAX_VAULT_XP_LEVEL):
-            ok_bits.append(f"slot{slot}=BP@{_MAX_VAULT_XP_LEVEL}")
-        else:
-            fail = True
+    # Slots 2–5 = vault card 1–4 XP (when ExperienceState is long enough).
+    es = getattr(ps, "ExperienceState", None)
+    if es is not None:
+        try:
+            n = len(es)
+        except Exception:  # noqa: BLE001
+            n = 0
+        for slot in range(2, min(n, 6)):
+            if _set_experience_level_via_bp(ps, slot, _MAX_VAULT_XP_LEVEL):
+                ok_bits.append(f"slot{slot}=BP@{_MAX_VAULT_XP_LEVEL}")
+            else:
+                fail = True
 
     summary = ", ".join(ok_bits) if ok_bits else "no writes"
     return not fail, summary
@@ -69,14 +74,12 @@ def max_all_vault_cards_for_pc(
     summary = "; ".join(bits[:14])
     if ok:
         log_fn(f"Vault cards max (Boosting Tools): {summary}")
-    else:
-        log_fn(f"Vault cards max partial (Boosting Tools): {summary}")
+        return True, summary
+    log_fn(f"Vault cards max partial (Boosting Tools): {summary}")
 
-    # Always run the direct wallet/XP path too. Catalog success used to return early and
-    # skip vault card 4 when VaultCards[] only listed cards 1–3 (second MAX ALL then worked).
-    ok2, summary2 = _economy_max_vault_cards(target_pc, log=log_fn)
-    log_fn(f"Vault cards max (direct ensure 1–4): {summary2}")
-    return bool(ok or ok2), f"{summary}; ensure: {summary2}"
+    ok, summary = _economy_max_vault_cards(target_pc, log=log_fn)
+    log_fn(f"Vault cards max (direct fallback): {summary}")
+    return ok, summary
 
 
 def max_vault_card_three_for_pc(

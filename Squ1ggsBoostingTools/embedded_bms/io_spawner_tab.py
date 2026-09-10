@@ -15,7 +15,6 @@ class IoUi:
     world_prop_idx: int = 0
     io_category: str = "All"
     io_category_idx: int = 0
-    show_worldpaths: bool = False
     status_text: str = "Ready."
     error_text: str = ""
     spawn_pending: bool = False

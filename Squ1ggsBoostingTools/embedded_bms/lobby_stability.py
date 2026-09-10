@@ -59,27 +59,7 @@ def _host_context() -> tuple[Any, Any, Any]:
         pc = get_pc()
         viewport = getattr(ENGINE, "GameViewport", None) if ENGINE is not None else None
         world = getattr(viewport, "World", None) if viewport is not None else None
-        pawn = _pawn_from_pc(pc)
-        if pawn is None:
-            try:
-                from Squ1ggsBoostingTools.dev_tools import (  # noqa: PLC0415
-                    _cached_dcc,
-                    _gameplay_pc,
-                    is_debug_cam_active,
-                )
-
-                if is_debug_cam_active():
-                    gp = _gameplay_pc()
-                    if gp is not None:
-                        pc = pc or gp
-                        pawn = _pawn_from_pc(gp)
-                    if pawn is None:
-                        dcc = _cached_dcc()
-                        if dcc is not None:
-                            pawn = dcc
-            except Exception:
-                pass
-        return pc, pawn, world
+        return pc, _pawn_from_pc(pc), world
     except Exception:
         return None, None, None
 
@@ -156,31 +136,12 @@ def _queue_thin_air_prewarm() -> None:
         _log.debug("thin-air spawner prewarm unavailable", exc_info=True)
 
 
-def _lobby_host_pc(host_pc: Any | None) -> Any | None:
-    """Stable listen-host PC for roster keys — not the freecam shell."""
-    try:
-        from Squ1ggsBoostingTools.dev_tools import (  # noqa: PLC0415
-            _gameplay_pc,
-            _is_freecam_controller,
-            is_debug_cam_active,
-        )
-
-        if is_debug_cam_active() or _is_freecam_controller(host_pc):
-            gp = _gameplay_pc()
-            if gp is not None:
-                return gp
-    except Exception:
-        pass
-    return host_pc
-
-
 def observe_generation() -> tuple[int, bool, Any, Any, Any]:
     """Return generation/stability plus freshly resolved host PC, pawn, and world."""
     global _generation, _signature, _changed_at
     now = time.monotonic()
     host_pc, host_pawn, world = _host_context()
-    lobby_pc = _lobby_host_pc(host_pc)
-    signature = (_object_key(world), _roster_keys(lobby_pc, world))
+    signature = (_object_key(world), _roster_keys(host_pc, world))
     if signature != _signature:
         previous = _signature
         _signature = signature
@@ -192,28 +153,13 @@ def observe_generation() -> tuple[int, bool, Any, Any, Any]:
         if host_pawn is not None and world is not None:
             _queue_thin_air_prewarm()
     ready = (
-        world is not None
-        and _is_authoritative_world(world)
-        and host_pc is not None
+        host_pc is not None
         and host_pawn is not None
+        and world is not None
+        and _is_authoritative_world(world)
     )
     stable = ready and (now - _changed_at) >= _STABLE_FOR_SEC
     return _generation, stable, host_pc, host_pawn, world
-
-
-def _freecam_spawn_ready() -> tuple[bool, Any | None, Any | None]:
-    """Fast path: debug cam active with a live world — skip lobby generation churn."""
-    try:
-        from Squ1ggsBoostingTools.dev_tools import is_debug_cam_active  # noqa: PLC0415
-    except Exception:
-        return False, None, None
-    if not is_debug_cam_active():
-        return False, None, None
-    actor = _resolve_freecam_actor()
-    _pc, _pawn, world = _host_context()
-    if actor is None or world is None or not _is_authoritative_world(world):
-        return False, actor, world
-    return True, actor, world
 
 
 def current_generation() -> int:
@@ -232,27 +178,7 @@ def _resolve_anchor(anchor: str, party_index: int) -> Any:
         return None
 
 
-def _resolve_freecam_actor() -> Any | None:
-    try:
-        from Squ1ggsBoostingTools.dev_tools import _cached_dcc, is_debug_cam_active  # noqa: PLC0415
-
-        if not is_debug_cam_active():
-            return None
-        return _cached_dcc()
-    except Exception:
-        return None
-
-
-def _normalize_spawn_anchor(anchor: str) -> str:
-    requested = str(anchor or "local").strip().lower()
-    if requested in ("debug_cam", "debugcam", "debug"):
-        return "freecam"
-    if requested in ("party", "npc_nearest", "freecam"):
-        return requested
-    return "local"
-
-
-def _resolve_npc_anchor(host_pawn: Any, anchor: str) -> Any | None:
+def _resolve_npc_anchor(host_pawn: Any, anchor: str) -> Any:
     if anchor != "npc_nearest":
         return None
     try:
@@ -306,13 +232,6 @@ class SpawnRequest:
         """Run once stable, or requeue this same request without firing."""
         generation, stable, _host_pc, host_pawn, world = observe_generation()
         elapsed = time.monotonic() - self.created_at
-        freecam_ready, freecam_actor, freecam_world = _freecam_spawn_ready()
-        use_freecam = self.anchor == "freecam" or (
-            freecam_ready and self.anchor == "local" and freecam_actor is not None
-        )
-        if use_freecam and freecam_actor is not None and freecam_world is not None:
-            stable = True
-            world = freecam_world
         if world is not None and not _is_authoritative_world(world):
             self.state = "failed"
             self._crumb("host authority unavailable")
@@ -335,19 +254,9 @@ class SpawnRequest:
 
         anchor_pc = _resolve_anchor(self.anchor, self.party_index)
         anchor_actor = _resolve_npc_anchor(host_pawn, self.anchor)
-        if use_freecam:
-            freecam_actor = freecam_actor or _resolve_freecam_actor()
-        else:
-            freecam_actor = _resolve_freecam_actor() if self.anchor == "freecam" else None
         if self.anchor == "party" and anchor_pc is None:
             stable = False
             self._crumb(f"party anchor {self.party_index} unavailable")
-        if self.anchor == "freecam" and freecam_actor is None:
-            stable = False
-            self._crumb("debug cam unavailable — enable freecam first")
-        elif use_freecam and freecam_actor is None:
-            stable = False
-            self._crumb("debug cam unavailable — enable freecam first")
         # Serialize only briefly: a stuck 18s detect job used to block every new
         # spawn until this request timed out at 15s ("nothing spawns"). Allow the
         # next fire once detection has already had a short head start.
@@ -369,12 +278,7 @@ class SpawnRequest:
             from Squ1ggsBoostingTools import spawn_deferred as deferred  # noqa: PLC0415
 
             deferred.queue_action(self.label, self.execute)
-            wait_hint = (
-                "enable freecam first"
-                if self.anchor == "freecam" and freecam_actor is None
-                else "waiting for world to settle"
-            )
-            return self._result(True, f"Queued: {self.label} — {wait_hint}")
+            return self._result(True, f"{self.label}: waiting_for_stable_lobby (generation {self.generation})")
 
         try:
             from Squ1ggsBoostingTools.embedded_oak import engine as ssp  # noqa: PLC0415
@@ -382,9 +286,7 @@ class SpawnRequest:
             self.state = "fired"
             self._crumb(f"fired generation {self.generation} anchor={self.anchor}")
             # Resolve the target now, scope the placement override, and always clear it.
-            if (use_freecam or self.anchor == "freecam") and freecam_actor is not None:
-                context = ssp.spawn_at_actor(freecam_actor, clear_on_exit=True)
-            elif self.anchor == "npc_nearest" and anchor_actor is not None:
+            if self.anchor == "npc_nearest" and anchor_actor is not None:
                 context = ssp.spawn_at_actor(anchor_actor, clear_on_exit=True)
             else:
                 context = ssp.spawn_at_player_controller(anchor_pc, clear_on_exit=True)
@@ -418,7 +320,8 @@ def make_request(
     status_ui: Any = None,
 ) -> SpawnRequest:
     generation, _stable, _host_pc, _host_pawn, world = observe_generation()
-    normalized_anchor = _normalize_spawn_anchor(anchor)
+    requested_anchor = str(anchor).strip().lower()
+    normalized_anchor = requested_anchor if requested_anchor in ("party", "npc_nearest") else "local"
     return SpawnRequest(
         label=str(label or "spawn"),
         fn=fn,

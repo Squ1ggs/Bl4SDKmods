@@ -30,9 +30,9 @@ from . import spawn_targets
 from .movement_adjustments import set_no_target
 
 _OPEN_REWARDS_LARGE_WARNING = (
-    "WARNING: Opening lots of Reward Center mail (especially 250–600+ items) can lag BL4 and, "
-    "on console / cross-play characters, make the backpack look empty until the save is under "
-    "~250–300 items. Prefer solo, open in smaller batches, then bank / mule gear before rejoining multiplayer."
+    "Open rewards runs one mail package at a time with a 3–5s wait between opens "
+    "(never bulk-open — that can crash or blank backpacks in multiplayer). "
+    "Large sends (250+) still take a while; prefer solo for big opens, then bank/mule before rejoining MP."
 )
 from .panel_manifest import get_panel_manifest
 from .party_helpers import _kick_party_player_by_index, _list_party_players
@@ -42,6 +42,7 @@ from .serial_converter import human_to_serial, serial_to_human
 from .serial_rewards import (
     _do_give_serial_to_player_indices,
     _expand_serial_token,
+    _extract_yaml_serial_fields,
     _is_single_pasted_base85,
     _join_wrapped_serial_lines,
     open_all_party_reward_packages,
@@ -87,14 +88,32 @@ def _serials_from_text(raw: str) -> list[str]:
             s = s[1:-1].strip()
         if len(s) >= 2 and s[0] == "`" and s[-1] == "`" and s.count("`") == 2:
             s = s[1:-1].strip()
-        return s
+        return s.rstrip("'\"`,}])")
 
     def _add(token: str) -> None:
         s = _unwrap(token)
         if not s or s in seen:
             return
+        # Keep @U and human (comma) forms; resolve_serials converts later.
+        if not (s.startswith("@U") or ("," in s and any(ch.isdigit() for ch in s))):
+            return
         seen.add(s)
         out.append(s)
+
+    # Save-editor / STBX YAML: inventory.items.*.serial: '@U…'
+    yaml_hits = _extract_yaml_serial_fields(raw)
+    if yaml_hits:
+        for serial in yaml_hits:
+            _add(serial)
+        return out
+
+    # Moxsy-style: one @U per line
+    non_empty = [ln.strip() for ln in str(raw or "").replace("\r", "\n").split("\n") if ln.strip()]
+    at_u_lines = [ln for ln in non_empty if ln.startswith("@U") or re.match(r"^['\"]@U", ln)]
+    if len(non_empty) >= 2 and len(at_u_lines) >= max(2, int(0.8 * len(non_empty))):
+        for ln in at_u_lines:
+            _add(ln)
+        return out
 
     for line in _join_wrapped_serial_lines(raw):
         token = _unwrap(line)
@@ -111,12 +130,7 @@ def _serials_from_text(raw: str) -> list[str]:
             continue
         # Human serial paste: commas + digits, no @U
         if "," in token and any(ch.isdigit() for ch in token):
-            try:
-                converted = human_to_serial(token)
-            except Exception:
-                converted = None
-            if isinstance(converted, str) and converted.startswith("@U"):
-                _add(converted)
+            _add(token)
     return out
 
 def _all_player_indices() -> list[int]:
@@ -367,8 +381,11 @@ def deliver_serials(payload: dict[str, Any]) -> dict[str, Any]:
             f"{message} {skipped} selected row(s) had no usable serial or were not loaded "
             f"(checked {selected_n} selected) — use Select all filtered, then Deliver."
         )
-    if open_rewards:
-        message = f"{message} Rewards will open automatically in the background after delivery."
+    if (open_rewards):
+        message = (
+            f"{message} Rewards will open one-by-one in the background "
+            "(~4s between packages — stay in-world until status says Rewards opened)."
+        )
     open_warning = ""
     if open_rewards and len(serials) >= 250:
         open_warning = _OPEN_REWARDS_LARGE_WARNING
@@ -399,6 +416,38 @@ def serial_store_save(payload: dict[str, Any]) -> dict[str, Any]:
     except ValueError as exc:
         return _fail(str(exc))
     return _ok(f"Saved {entry.get('name') or 'entry'}.", entry=entry)
+
+
+def serial_store_import_serials(payload: dict[str, Any]) -> dict[str, Any]:
+    """Save one or more paste-box serials into My Library under a named set."""
+    from . import serial_store
+
+    name = str(payload.get("name") or "").strip()
+    group = str(payload.get("group") or name or "Paste").strip() or "Paste"
+    raw = payload.get("serials")
+    if isinstance(raw, list):
+        serials = [str(item).strip() for item in raw if str(item).strip()]
+    else:
+        serials = _serials_from_text(str(raw or payload.get("text") or ""))
+    if not name:
+        return _fail("Enter a name for this library set.")
+    if not serials:
+        return _fail("No serials to save. Paste or Browse into the send box first.")
+    added: list[dict[str, str]] = []
+    try:
+        for index, serial in enumerate(serials, start=1):
+            entry_name = name if len(serials) == 1 else f"{name} #{index}"
+            added.append(
+                serial_store.save_entry(name=entry_name, group=group, serial=serial)
+            )
+    except ValueError as exc:
+        return _fail(str(exc))
+    return _ok(
+        f"Saved {len(added)} serial(s) to My Library under “{group}”.",
+        added=len(added),
+        group=group,
+        entries=added,
+    )
 
 
 def serial_store_delete(payload: dict[str, Any]) -> dict[str, Any]:
@@ -464,8 +513,8 @@ def max_sdu(payload: dict[str, Any] | None = None) -> dict[str, Any]:
 
 def inventory_set_sizes(payload: dict[str, Any]) -> dict[str, Any]:
     try:
-        backpack = int(str(payload.get("backpack_size") or 500).strip().replace(",", ""))
-        bank = int(str(payload.get("bank_size") or 500).strip().replace(",", ""))
+        backpack = int(payload.get("backpack_size") or 500)
+        bank = int(payload.get("bank_size") or 500)
     except Exception:
         return _fail("backpack_size and bank_size must be integers.")
     scope = str(payload.get("scope") or "target").lower()
@@ -530,9 +579,22 @@ def uvhm_start(payload: dict[str, Any] | None = None) -> dict[str, Any]:
     idx = _player_index_from_payload(payload)
     max_rank = _uvhm_max_rank_from_payload(payload)
     if idx < 0:
-        return _fail("Pick one player for Start UVHM, or use Start UVHM (all lobby).")
+        return _fail(
+            "Start UVHM (target) needs one Boost target player — "
+            "set the player bar under the tabs (not All players), or use Start UVHM (all lobby)."
+        )
+    try:
+        from .uvhm_progression import selected_lobby_identity
+
+        identity = selected_lobby_identity(int(idx))
+    except Exception as exc:
+        return _fail(
+            f"Could not resolve Boost target index {idx} in the lobby: {exc}. "
+            "Refresh status / pick the player again, then retry."
+        )
     if uvhm_runtime.request_selected(idx, max_rank=max_rank):
-        return _ok(f"UVHM workflow queued for index {idx} (up to rank {max_rank}).")
+        who = getattr(identity, "display_name", None) or f"index {idx}"
+        return _ok(f"UVHM workflow queued for {who} (up to rank {max_rank}).")
     return _fail(uvhm_runtime.status().get("message") or "UVHM request failed.")
 
 
@@ -776,24 +838,6 @@ def spawn_item_pool_all_action(payload: dict[str, Any]) -> dict[str, Any]:
         if not rows:
             return _fail("No item pools match the current search/category filter.")
         land = _loot_landing_kwargs(payload)
-        # Only pass kwargs queue_all_filtered_item_pools accepts (avoids TypeError
-        # when land helpers grow new fields ahead of the bulk queue signature).
-        land_keys = (
-            "shape",
-            "settle",
-            "drop_height",
-            "line_length",
-            "radius",
-            "spacing",
-            "z_bias",
-            "spawn_then_shape",
-            "stay_in_air",
-            "peel_after",
-            "land_profile",
-            "fill_until_complete",
-            "shape_text",
-        )
-        land = {k: land[k] for k in land_keys if k in land}
         shape_l = str(land.get("shape") or "none").strip().lower()
         if (
             "fill_until_complete" not in payload
@@ -927,27 +971,8 @@ def _apply_bms_ui(controller: Any, payload: dict[str, Any]) -> None:
             pass
     if "spawn_anchor" in payload:
         anchor = str(payload.get("spawn_anchor") or "local").strip().lower()
-        if anchor in ("debug_cam", "debugcam", "debug"):
-            anchor = "freecam"
-        if anchor in ("local", "party", "npc_nearest", "freecam"):
+        if anchor in ("local", "party", "npc_nearest"):
             ui.spawn_anchor = anchor
-            try:
-                from . import spawn_targets
-
-                spawn_targets.apply_from_payload(
-                    {"spawn_anchor": anchor, "player_index": getattr(ui, "party_index", None)}
-                )
-            except Exception:
-                pass
-    else:
-        try:
-            from . import spawn_targets
-
-            mode = str(spawn_targets.mode() or "").strip().lower()
-            if mode in ("local", "party", "npc_nearest", "freecam"):
-                ui.spawn_anchor = mode
-        except Exception:
-            pass
     if "spawn_distance" in payload:
         try:
             ui.spawn_distance = float(payload.get("spawn_distance"))
@@ -1209,18 +1234,11 @@ def barrel_logo_clear(_payload: dict[str, Any] | None = None) -> dict[str, Any]:
         return _fail(repr(exc))
 
 
-def _io_spawn_use_spawnai_only(short: str, cmd: str = "") -> bool:
-    """Floor / placeable world-path oak_spawn freezes — always oak_spawnai."""
-    blob = f"{short} {cmd}".lower()
-    if "persistentlevel." in blob or blob.startswith("oak_spawn /game/"):
-        return True
-    return any(tok in blob for tok in ("floor", "breakaway", "placeable"))
-
-
-def _prepare_io_spawn_cmd(payload: dict[str, Any], raw_cmd: str = "", raw_token: str = "") -> tuple[str, str]:
-    """Resolve oak_spawnai / oak_dual line + short token for IO spawn."""
-    cmd = str(raw_cmd or payload.get("cmd") or "").strip()
-    token = str(raw_token or payload.get("token") or "").strip()
+def spawn_io(payload: dict[str, Any]) -> dict[str, Any]:
+    cmd = str(payload.get("cmd") or "").strip()
+    token = str(payload.get("token") or "").strip()
+    # Alias shortcuts must map to catalog tokens. Bare "goldenchest" is not an
+    # is_io_code() and falls through to run_oak_line — that crashed the game.
     _IO_TOKEN_ALIASES = {
         "goldenchest": "Lootable_GoldenChest",
         "golden_chest": "Lootable_GoldenChest",
@@ -1232,8 +1250,8 @@ def _prepare_io_spawn_cmd(payload: dict[str, Any], raw_cmd: str = "", raw_token:
         key = raw.lower().replace("-", "_").replace(" ", "")
         return _IO_TOKEN_ALIASES.get(key, raw)
 
-    def _token_from_cmd(raw_cmd_line: str) -> str:
-        parts = raw_cmd_line.split(None, 1)
+    def _token_from_cmd(raw_cmd: str) -> str:
+        parts = raw_cmd.split(None, 1)
         if len(parts) == 2 and parts[0].lower() in ("oak_spawnai", "oak_spawn", "oak_dual", "asd_dual"):
             return parts[1].strip()
         return ""
@@ -1251,46 +1269,33 @@ def _prepare_io_spawn_cmd(payload: dict[str, Any], raw_cmd: str = "", raw_token:
         elif token:
             token = _alias(token)
     if not cmd:
-        return "", ""
-    from .embedded_bms.io_activate import (
-        is_oak_dual_vending,
-        needs_dual_world_spawn,
-        oak_dual_cmd,
-        short_io_token,
-        spawn_io_prefers_ai,
-    )
-
-    short = short_io_token(token) or short_io_token(_token_from_cmd(cmd)) or token
-    if short and spawn_io_prefers_ai(short, cmd):
-        cmd = f"oak_spawnai {short}"
-    elif short and _io_spawn_use_spawnai_only(short, cmd):
-        cmd = f"oak_spawnai {short}"
-    elif short and is_oak_dual_vending(short):
-        cmd = oak_dual_cmd(short) or f"oak_dual {short}"
-    elif short and needs_dual_world_spawn(short):
-        cmd = f"oak_spawnai {short}"
-    return cmd, short
-
-
-def spawn_io(payload: dict[str, Any]) -> dict[str, Any]:
-    cmd, _short = _prepare_io_spawn_cmd(payload)
-    if not cmd:
         return _fail("cmd or token required.")
     if not world_spawn.is_host():
         return _fail("Host / in-world session required for IO spawn.")
     try:
         from .embedded_bms import get_controller
+        from .embedded_bms.io_activate import (
+            is_oak_dual_vending,
+            needs_dual_world_spawn,
+            oak_dual_cmd,
+            short_io_token,
+        )
+
+        # Prefer the short IO token (Lootable_GoldenChest), never the whole cmd line.
+        short = short_io_token(token) or short_io_token(_token_from_cmd(cmd)) or token
+        if short and is_oak_dual_vending(short):
+            cmd = oak_dual_cmd(short) or f"oak_dual {short}"
+        elif short and needs_dual_world_spawn(short):
+            # Keep a clean oak_spawnai <Token> line for dual machines only.
+            cmd = f"oak_spawnai {short}"
 
         _raise_spawn_caps()
         controller = get_controller()
         _apply_bms_ui(controller, payload)
         activate = str(payload.get("activate") or "yes").strip().lower() in ("1", "true", "yes", "on")
-        defer = payload.get("defer", True)
-        if isinstance(defer, str):
-            defer = defer.strip().lower() not in ("0", "false", "no", "off")
-        else:
-            defer = bool(defer) if defer is not None else True
-        ok, msg = controller.run_encounter_line(cmd, defer=defer, activate=activate)
+        # Activation belongs inside the deferred spawn action. Doing it here
+        # races the queue and reports "no last IO" before the object exists.
+        ok, msg = controller.run_encounter_line(cmd, defer=True, activate=activate)
         return _ok(msg) if ok else _fail(msg)
     except Exception as exc:
         return _fail(repr(exc))
@@ -1311,71 +1316,17 @@ def spawn_ios(payload: dict[str, Any]) -> dict[str, Any]:
         count = max(1, min(int(payload.get("count") or 1), 999))
     except Exception:
         return _fail("count must be an integer.")
-    if not world_spawn.is_host():
-        return _fail("Host / in-world session required for IO spawn.")
-    total = len(cmds) * count
-    if total <= 1:
-        return spawn_io({**payload, "cmd": cmds[0]})
     _raise_spawn_caps()
-    try:
-        from .embedded_bms import get_controller
-        from .embedded_bms.spawn_safe import queue_spawn_actions
-
-        controller = get_controller()
-        _apply_bms_ui(controller, payload)
-        activate_wanted = str(payload.get("activate") or "yes").strip().lower() in (
-            "1",
-            "true",
-            "yes",
-            "on",
-        )
-        # Per-spawn activate on 20+ IOs spammed script states and hitched the game thread.
-        activate_each = activate_wanted and total <= 3
-
-        resolved: list[tuple[str, str]] = []
-        for cmd in cmds:
-            line, short = _prepare_io_spawn_cmd(payload, raw_cmd=cmd)
-            if not line:
-                return _fail(f"Invalid IO cmd: {cmd!r}")
-            resolved.append((line, short))
-
-        actions: list[Any] = []
-        step = 0
-        for line, _short in resolved:
-            for _ in range(count):
-                step += 1
-                is_last = step >= total
-                do_activate = activate_each or (activate_wanted and is_last)
-                cmd_line = line
-
-                def _make_fn(cl: str = cmd_line, act: bool = do_activate) -> Any:
-                    def _run() -> tuple[bool, str]:
-                        return controller.run_encounter_line(
-                            cl,
-                            defer=False,
-                            activate=act,
-                        )
-
-                    return _run
-
-                actions.append(_make_fn())
-
-        ok, msg = queue_spawn_actions(f"IO spawn ×{total}", actions, controller.ui)
-        if not ok:
-            return _fail(str(msg or "IO spawn queue failed."))
-        tail = (
-            " Use Activate last IO spawn when the queue finishes."
-            if activate_wanted and not activate_each
-            else ""
-        )
-        return _ok(
-            f"Queued {total} IO spawn(s) (×{count} each type).{tail}",
-            queued=total,
-            count=count,
-            detail=msg,
-        )
-    except Exception as exc:
-        return _fail(repr(exc))
+    queued = 0
+    last_msg = ""
+    for cmd in cmds:
+        for _ in range(count):
+            result = spawn_io({**payload, "cmd": cmd})
+            last_msg = str(result.get("message") or "")
+            if not result.get("ok"):
+                return _fail(f"Stopped after {queued} IO spawn(s): {last_msg}")
+            queued += 1
+    return _ok(f"Queued {queued} IO spawn(s) (×{count} each type).", queued=queued, count=count, detail=last_msg)
 
 
 def spawn_encounter(payload: dict[str, Any]) -> dict[str, Any]:
@@ -1695,7 +1646,7 @@ def shiny_drop_all(payload: dict[str, Any] | None = None) -> dict[str, Any]:
         {"spawn_anchor": anchor, "player_index": idx},
         default_party_index=get_target_player_index(),
     )
-    target_idx = idx if spawn_targets.mode() == "party" and idx >= 0 else None
+    target_idx = idx if anchor == "party" and idx >= 0 else None
     shape = str(payload.get("shape") if payload.get("shape") is not None else "none").strip() or "none"
     from .loot_shapes import clamp_layout_params, normalize_drop_mode
 
@@ -1812,7 +1763,6 @@ def spawn_text_shape(payload: dict[str, Any] | None = None) -> dict[str, Any]:
         itempool=pool,
         **{k: layout[k] for k in ("row1", "row2", "row3", "distance", "height", "spacing", "scale")},
     )
-
 
 def shiny_mail_all(payload: dict[str, Any] | None = None) -> dict[str, Any]:
     from .shinies import grant_all_shiny_serials
@@ -2083,36 +2033,24 @@ def lab_intrinsic_element(payload: dict[str, Any] | None = None) -> dict[str, An
 
 def mobility_infinite_jump(payload: dict[str, Any]) -> dict[str, Any]:
     scope = str(payload.get("scope") or "target").lower()
-    idx_raw = int(_single_target_index(payload))
-    # Boost target = All players (−1) means the whole lobby — same as scope=all.
-    want_all = scope == "all" or idx_raw < 0
     if "enabled" in payload:
         enabled = _as_bool(payload.get("enabled"), True)
-    elif want_all:
-        # Toggle party-wide mode (not “anyone has jump”).
-        enabled = not bool(getattr(mobility_runtime, "_infinite_jump_all_mode", False))
+    elif scope == "all":
+        enabled = not bool(mobility_runtime.infinite_jump_indices)
     else:
-        idx_probe = mobility_runtime.normalize_mobility_target_index(idx_raw)
-        try:
-            enabled = not bool(mobility_runtime._may_mutate_infinite_jump(int(idx_probe)))
-        except Exception:
-            enabled = int(idx_probe) not in mobility_runtime.infinite_jump_indices
-    if want_all:
+        idx_probe = mobility_runtime.normalize_mobility_target_index(_single_target_index(payload))
+        enabled = int(idx_probe) not in mobility_runtime.infinite_jump_indices
+    if scope == "all":
         mobility_runtime.set_infinite_jump_all(enabled)
         return _ok(
             f"Infinite jump {'ON' if enabled else 'OFF'} for all.",
             infinite_jump_on=enabled,
             infinite_jump_scope="all",
         )
-    idx = mobility_runtime.normalize_mobility_target_index(idx_raw)
+    idx = mobility_runtime.normalize_mobility_target_index(_single_target_index(payload))
     mobility_runtime.set_infinite_jump_for_index(idx, enabled)
-    try:
-        local = mobility_runtime.local_party_index()
-        who = "you" if local is not None and int(idx) == int(local) else f"party slot {idx}"
-    except Exception:
-        who = f"party slot {idx}"
     return _ok(
-        f"Infinite jump {'ON' if enabled else 'OFF'} for {who}.",
+        f"Infinite jump {'ON' if enabled else 'OFF'}.",
         infinite_jump_on=enabled,
         infinite_jump_scope="target",
     )
@@ -2192,25 +2130,18 @@ def mobility_force_fly(payload: dict[str, Any]) -> dict[str, Any]:
         mobility_runtime.reapply_all_force_fly()
     speed = float(mobility_runtime.force_fly_speed)
     preset = str(getattr(mobility_runtime, "force_fly_preset", "fast"))
-    host_note = (
-        " Host-only — guests judder; use Infinite jump for the lobby."
-        if enabled
-        else ""
-    )
     if want_all:
         return _ok(
-            f"Force fly {'ON' if enabled else 'OFF'} for you at {preset} ({speed:.0f})."
-            + (" Hold WASD." if enabled else "")
-            + host_note,
+            f"Force fly {'ON' if enabled else 'OFF'} for you at {preset} ({speed:.0f}). "
+            + ("Hold WASD to move." if enabled else ""),
             fly_speed=speed,
             fly_preset=preset,
             force_fly_on=enabled,
             force_fly_scope="all",
         )
     return _ok(
-        f"Force fly {'ON' if enabled else 'OFF'} — {preset} ({speed:.0f})."
-        + (" Hold WASD." if enabled else "")
-        + host_note,
+        f"Force fly {'ON' if enabled else 'OFF'} — {preset} ({speed:.0f}). "
+        + ("Hold WASD to move." if enabled else ""),
         fly_speed=speed,
         fly_preset=preset,
         force_fly_on=enabled,
@@ -2387,18 +2318,11 @@ def mobility_noclip(payload: dict[str, Any]) -> dict[str, Any]:
     enabled = _as_bool(payload.get("enabled"), True)
     mobility_runtime.set_noclip_enabled(enabled)
     mobility_runtime.apply_noclip()
-    try:
-        local = mobility_runtime.local_party_index()
-        fly_idx = int(local) if local is not None else 0
-    except Exception:
-        fly_idx = 0
     return _ok(
         str(mobility_runtime.status_message or f"Noclip {'ON' if enabled else 'OFF'}."),
         noclip=bool(mobility_runtime.get_noclip_enabled()),
         fall_through_map=bool(mobility_runtime.get_fall_through_map_enabled()),
-        force_fly=bool(mobility_runtime.force_fly_enabled_for_index(fly_idx)),
-        fly_speed=float(getattr(mobility_runtime, "force_fly_speed", 0.0) or 0.0),
-        fly_preset=str(getattr(mobility_runtime, "force_fly_preset", "") or ""),
+        force_fly=bool(mobility_runtime.force_fly_enabled_for_index(0)),
     )
 
 
@@ -2715,9 +2639,9 @@ def _legit_unlock_rules(payload: dict[str, Any]) -> bool:
 
 def _legit_level(payload: dict[str, Any]) -> int:
     try:
-        return max(1, min(60, int(payload.get("level") or 60)))
+        return max(1, min(70, int(payload.get("level") or 70)))
     except Exception:
-        return 60
+        return 70
 
 
 def _max_passive_lines(root_key: str) -> tuple[list[str], int]:
@@ -3094,10 +3018,6 @@ def faafo_drop_backpack(payload: dict[str, Any] | None = None) -> dict[str, Any]
                         est = max(8, min(400, int(cnt)))
             except Exception:
                 pass
-        spawn_targets.apply_from_payload(
-            payload,
-            default_party_index=get_target_player_index(),
-        )
         begin_spawn_landing(
             est,
             shape=shape_l,
@@ -3285,6 +3205,7 @@ _EXTENDED_ACTION_NAMES: tuple[str, ...] = (
     "rewards_open_everyone",
     "deliver_serials",
     "serial_store_save",
+    "serial_store_import_serials",
     "serial_store_delete",
     "serial_store_duplicate",
     "serial_delivery_status",
@@ -3342,8 +3263,8 @@ _EXTENDED_ACTION_NAMES: tuple[str, ...] = (
     "devperk_activate",
     "kill_all_enemies",
     "shiny_drop_all",
-    "shiny_drop_status",
     "spawn_text_shape",
+    "shiny_drop_status",
     "shiny_mail_all",
     "rarity_weights_set",
     "loot_feed_appear",

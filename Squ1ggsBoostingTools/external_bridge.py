@@ -237,8 +237,7 @@ class _SqbtBridgeHandler(BaseHTTPRequestHandler):
         return
 
     def _json(self, status: int, data: Any) -> None:
-        # Compact JSON — indented mob catalogs were multi-100KB and slow under dump hitch.
-        body = json.dumps(data, separators=(",", ":"), ensure_ascii=False).encode("utf-8")
+        body = json.dumps(data, indent=2).encode("utf-8")
         try:
             self.send_response(status)
             self.send_header("Content-Type", "application/json; charset=utf-8")
@@ -256,10 +255,9 @@ class _SqbtBridgeHandler(BaseHTTPRequestHandler):
         self._json(200, {"ok": True})
 
     def do_GET(self) -> None:
+        _maybe_reclaim_from_exe(self)
         path = (self.path or "").split("?", 1)[0]
-        # Reclaim only on status/action — never on catalog (dump + reclaim = false offline).
         if path in ("/", "/status", "/health"):
-            _maybe_reclaim_from_exe(self)
             self._json(200, _status_payload())
             return
         if path == "/manifest":

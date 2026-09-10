@@ -1,6 +1,6 @@
 {
   "schema": "bl4.io_spawn_catalog.v1",
-  "count": 1972,
+  "count": 2118,
   "categories": [
     "CarryableObjects",
     "ContractSpecific",
@@ -134,6 +134,13 @@
       "source": "preset"
     },
     {
+      "token": "IO_Audio_Mandolin_Doorknock",
+      "label": "Audio Mandolin Doorknock",
+      "category": "Doors",
+      "cmd": "oak_spawnai IO_Audio_Mandolin_Doorknock",
+      "source": "nexus_gbxactor"
+    },
+    {
       "token": "IO_AugurBounty_SightDoor",
       "label": "AugurBounty SightDoor",
       "category": "Doors",
@@ -257,6 +264,13 @@
       "label": "Grappleable TrapDoorGear",
       "category": "Doors",
       "cmd": "oak_spawnai IO_Grappleable_TrapDoorGear",
+      "source": "nexus_gbxactor"
+    },
+    {
+      "token": "Mandolin_IO_Audio_Mandolin_FF_Beam_Door",
+      "label": "Mandolin IO Audio Mandolin FF Beam Door",
+      "category": "Doors",
+      "cmd": "oak_spawnai Mandolin_IO_Audio_Mandolin_FF_Beam_Door",
       "source": "nexus_gbxactor"
     },
     {
@@ -509,6 +523,811 @@
       "label": "AscensionPod V2",
       "category": "GbxActor",
       "cmd": "oak_spawnai IO_AscensionPod_V2",
+      "source": "gbxactor"
+    },
+    {
+      "token": "IO_Audio_Airlock_Alarm",
+      "label": "Audio Airlock Alarm",
+      "category": "GbxActor",
+      "cmd": "oak_spawnai IO_Audio_Airlock_Alarm",
+      "source": "gbxactor"
+    },
+    {
+      "token": "IO_Audio_Alarm_OneShot",
+      "label": "Audio Alarm OneShot",
+      "category": "GbxActor",
+      "cmd": "oak_spawnai IO_Audio_Alarm_OneShot",
+      "source": "gbxactor"
+    },
+    {
+      "token": "IO_Audio_Banjo_Destructbile_Fan",
+      "label": "Audio Banjo Destructbile Fan",
+      "category": "GbxActor",
+      "cmd": "oak_spawnai IO_Audio_Banjo_Destructbile_Fan",
+      "source": "gbxactor"
+    },
+    {
+      "token": "IO_Audio_BruteFactory_Alarm",
+      "label": "Audio BruteFactory Alarm",
+      "category": "GbxActor",
+      "cmd": "oak_spawnai IO_Audio_BruteFactory_Alarm",
+      "source": "gbxactor"
+    },
+    {
+      "token": "IO_Audio_Cast_CrowdWalla",
+      "label": "Audio Cast CrowdWalla",
+      "category": "GbxActor",
+      "cmd": "oak_spawnai IO_Audio_Cast_CrowdWalla",
+      "source": "gbxactor"
+    },
+    {
+      "token": "IO_Audio_City1_EntranceMoment",
+      "label": "Audio City1 EntranceMoment",
+      "category": "GbxActor",
+      "cmd": "oak_spawnai IO_Audio_City1_EntranceMoment",
+      "source": "gbxactor"
+    },
+    {
+      "token": "IO_Audio_Cowbell_Amb_Emt_CataclysmStorm",
+      "label": "Audio Cowbell Amb Emt CataclysmStorm",
+      "category": "GbxActor",
+      "cmd": "oak_spawnai IO_Audio_Cowbell_Amb_Emt_CataclysmStorm",
+      "source": "gbxactor"
+    },
+    {
+      "token": "IO_Audio_Cowbell_Main2_Moment_EllieKnock",
+      "label": "Audio Cowbell Main2 Moment EllieKnock",
+      "category": "GbxActor",
+      "cmd": "oak_spawnai IO_Audio_Cowbell_Main2_Moment_EllieKnock",
+      "source": "gbxactor"
+    },
+    {
+      "token": "IO_Audio_Cowbell_Main4_Moment_EllieKnock_Metal",
+      "label": "Audio Cowbell Main4 Moment EllieKnock Metal",
+      "category": "GbxActor",
+      "cmd": "oak_spawnai IO_Audio_Cowbell_Main4_Moment_EllieKnock_Metal",
+      "source": "gbxactor"
+    },
+    {
+      "token": "IO_Audio_Cowbell_Micro_Operation_Restraints_Fail",
+      "label": "Audio Cowbell Micro Operation Restraints Fail",
+      "category": "GbxActor",
+      "cmd": "oak_spawnai IO_Audio_Cowbell_Micro_Operation_Restraints_Fail",
+      "source": "gbxactor"
+    },
+    {
+      "token": "IO_Audio_Cowbell_Side_Invasive_Species1_NutrientMachine",
+      "label": "Audio Cowbell Side Invasive Species1 NutrientMachine",
+      "category": "GbxActor",
+      "cmd": "oak_spawnai IO_Audio_Cowbell_Side_Invasive_Species1_NutrientMachine",
+      "source": "gbxactor"
+    },
+    {
+      "token": "IO_Audio_Cowbell_Side_SaveHaven_RadioMusic",
+      "label": "Audio Cowbell Side SaveHaven RadioMusic",
+      "category": "GbxActor",
+      "cmd": "oak_spawnai IO_Audio_Cowbell_Side_SaveHaven_RadioMusic",
+      "source": "gbxactor"
+    },
+    {
+      "token": "IO_Audio_DialogPlacer",
+      "label": "Audio DialogPlacer",
+      "category": "GbxActor",
+      "cmd": "oak_spawnai IO_Audio_DialogPlacer",
+      "source": "gbxactor"
+    },
+    {
+      "token": "IO_Audio_Elpis_Amara_PunchConsole",
+      "label": "Audio Elpis Amara PunchConsole",
+      "category": "GbxActor",
+      "cmd": "oak_spawnai IO_Audio_Elpis_Amara_PunchConsole",
+      "source": "gbxactor"
+    },
+    {
+      "token": "IO_Audio_Elpis_CraneAndThruster",
+      "label": "Audio Elpis CraneAndThruster",
+      "category": "GbxActor",
+      "cmd": "oak_spawnai IO_Audio_Elpis_CraneAndThruster",
+      "source": "gbxactor"
+    },
+    {
+      "token": "IO_Audio_Elpis_DoorControlFlameUp",
+      "label": "Audio Elpis DoorControlFlameUp",
+      "category": "GbxActor",
+      "cmd": "oak_spawnai IO_Audio_Elpis_DoorControlFlameUp",
+      "source": "gbxactor"
+    },
+    {
+      "token": "IO_Audio_Elpis_PhaseDimension_Core",
+      "label": "Audio Elpis PhaseDimension Core",
+      "category": "GbxActor",
+      "cmd": "oak_spawnai IO_Audio_Elpis_PhaseDimension_Core",
+      "source": "gbxactor"
+    },
+    {
+      "token": "IO_Audio_Elpis_PhasePortal",
+      "label": "Audio Elpis PhasePortal",
+      "category": "GbxActor",
+      "cmd": "oak_spawnai IO_Audio_Elpis_PhasePortal",
+      "source": "gbxactor"
+    },
+    {
+      "token": "IO_Audio_Epilogue_SirenCube",
+      "label": "Audio Epilogue SirenCube",
+      "category": "GbxActor",
+      "cmd": "oak_spawnai IO_Audio_Epilogue_SirenCube",
+      "source": "gbxactor"
+    },
+    {
+      "token": "IO_Audio_Epilogue_TeleportToVault",
+      "label": "Audio Epilogue TeleportToVault",
+      "category": "GbxActor",
+      "cmd": "oak_spawnai IO_Audio_Epilogue_TeleportToVault",
+      "source": "gbxactor"
+    },
+    {
+      "token": "IO_Audio_Facility_High_Lp",
+      "label": "Audio Facility High Lp",
+      "category": "GbxActor",
+      "cmd": "oak_spawnai IO_Audio_Facility_High_Lp",
+      "source": "gbxactor"
+    },
+    {
+      "token": "IO_Audio_Facility_Low_Lp",
+      "label": "Audio Facility Low Lp",
+      "category": "GbxActor",
+      "cmd": "oak_spawnai IO_Audio_Facility_Low_Lp",
+      "source": "gbxactor"
+    },
+    {
+      "token": "IO_Audio_Facility_Medium_Lp",
+      "label": "Audio Facility Medium Lp",
+      "category": "GbxActor",
+      "cmd": "oak_spawnai IO_Audio_Facility_Medium_Lp",
+      "source": "gbxactor"
+    },
+    {
+      "token": "IO_Audio_Facility_SingleShot",
+      "label": "Audio Facility SingleShot",
+      "category": "GbxActor",
+      "cmd": "oak_spawnai IO_Audio_Facility_SingleShot",
+      "source": "gbxactor"
+    },
+    {
+      "token": "IO_Audio_Facility_Top_Lp",
+      "label": "Audio Facility Top Lp",
+      "category": "GbxActor",
+      "cmd": "oak_spawnai IO_Audio_Facility_Top_Lp",
+      "source": "gbxactor"
+    },
+    {
+      "token": "IO_Audio_FireAlarm_OneShot",
+      "label": "Audio FireAlarm OneShot",
+      "category": "GbxActor",
+      "cmd": "oak_spawnai IO_Audio_FireAlarm_OneShot",
+      "source": "gbxactor"
+    },
+    {
+      "token": "IO_Audio_GL_Micro_FactionSurvivalist02_ChargingReactor",
+      "label": "Audio GL Micro FactionSurvivalist02 ChargingReactor",
+      "category": "GbxActor",
+      "cmd": "oak_spawnai IO_Audio_GL_Micro_FactionSurvivalist02_ChargingReactor",
+      "source": "gbxactor"
+    },
+    {
+      "token": "IO_Audio_GL_Micro_FactionSurvivalist02_WaterDrain",
+      "label": "Audio GL Micro FactionSurvivalist02 WaterDrain",
+      "category": "GbxActor",
+      "cmd": "oak_spawnai IO_Audio_GL_Micro_FactionSurvivalist02_WaterDrain",
+      "source": "gbxactor"
+    },
+    {
+      "token": "IO_Audio_GL_Micro_GottaGoFast_Walla",
+      "label": "Audio GL Micro GottaGoFast Walla",
+      "category": "GbxActor",
+      "cmd": "oak_spawnai IO_Audio_GL_Micro_GottaGoFast_Walla",
+      "source": "gbxactor"
+    },
+    {
+      "token": "IO_Audio_GL_Micro_PowerUp_MachineElectricity",
+      "label": "Audio GL Micro PowerUp MachineElectricity",
+      "category": "GbxActor",
+      "cmd": "oak_spawnai IO_Audio_GL_Micro_PowerUp_MachineElectricity",
+      "source": "gbxactor"
+    },
+    {
+      "token": "IO_Audio_GL_Micro_PowerUp_MachineExhaust",
+      "label": "Audio GL Micro PowerUp MachineExhaust",
+      "category": "GbxActor",
+      "cmd": "oak_spawnai IO_Audio_GL_Micro_PowerUp_MachineExhaust",
+      "source": "gbxactor"
+    },
+    {
+      "token": "IO_Audio_GL_Side_PlanetaryEscape_Alarm",
+      "label": "Audio GL Side PlanetaryEscape Alarm",
+      "category": "GbxActor",
+      "cmd": "oak_spawnai IO_Audio_GL_Side_PlanetaryEscape_Alarm",
+      "source": "gbxactor"
+    },
+    {
+      "token": "IO_Audio_GL_Side_SalvageRipper_CrashSurvivor_Dialog",
+      "label": "Audio GL Side SalvageRipper CrashSurvivor Dialog",
+      "category": "GbxActor",
+      "cmd": "oak_spawnai IO_Audio_GL_Side_SalvageRipper_CrashSurvivor_Dialog",
+      "source": "gbxactor"
+    },
+    {
+      "token": "IO_Audio_GL_Side_SalvageRipper_SignalDevice",
+      "label": "Audio GL Side SalvageRipper SignalDevice",
+      "category": "GbxActor",
+      "cmd": "oak_spawnai IO_Audio_GL_Side_SalvageRipper_SignalDevice",
+      "source": "gbxactor"
+    },
+    {
+      "token": "IO_Audio_GL_Side_SumOfHisParts_SoapOpera",
+      "label": "Audio GL Side SumOfHisParts SoapOpera",
+      "category": "GbxActor",
+      "cmd": "oak_spawnai IO_Audio_GL_Side_SumOfHisParts_SoapOpera",
+      "source": "gbxactor"
+    },
+    {
+      "token": "IO_Audio_Gore_Pickup",
+      "label": "Audio Gore Pickup",
+      "category": "GbxActor",
+      "cmd": "oak_spawnai IO_Audio_Gore_Pickup",
+      "source": "gbxactor"
+    },
+    {
+      "token": "IO_Audio_Grasslands1_Claptrap_DoorBonk",
+      "label": "Audio Grasslands1 Claptrap DoorBonk",
+      "category": "GbxActor",
+      "cmd": "oak_spawnai IO_Audio_Grasslands1_Claptrap_DoorBonk",
+      "source": "gbxactor"
+    },
+    {
+      "token": "IO_Audio_Grasslands1_OrderPowercore",
+      "label": "Audio Grasslands1 OrderPowercore",
+      "category": "GbxActor",
+      "cmd": "oak_spawnai IO_Audio_Grasslands1_OrderPowercore",
+      "source": "gbxactor"
+    },
+    {
+      "token": "IO_Audio_Grasslands2_EscapePlant_Alarm",
+      "label": "Audio Grasslands2 EscapePlant Alarm",
+      "category": "GbxActor",
+      "cmd": "oak_spawnai IO_Audio_Grasslands2_EscapePlant_Alarm",
+      "source": "gbxactor"
+    },
+    {
+      "token": "IO_Audio_Grasslands2_InteruptZadraTK2_Alarm",
+      "label": "Audio Grasslands2 InteruptZadraTK2 Alarm",
+      "category": "GbxActor",
+      "cmd": "oak_spawnai IO_Audio_Grasslands2_InteruptZadraTK2_Alarm",
+      "source": "gbxactor"
+    },
+    {
+      "token": "IO_Audio_Grasslands2_PatchedRoofDebris",
+      "label": "Audio Grasslands2 PatchedRoofDebris",
+      "category": "GbxActor",
+      "cmd": "oak_spawnai IO_Audio_Grasslands2_PatchedRoofDebris",
+      "source": "gbxactor"
+    },
+    {
+      "token": "IO_Audio_Grasslands2b_AirshipEngine",
+      "label": "Audio Grasslands2b AirshipEngine",
+      "category": "GbxActor",
+      "cmd": "oak_spawnai IO_Audio_Grasslands2b_AirshipEngine",
+      "source": "gbxactor"
+    },
+    {
+      "token": "IO_Audio_Grasslands2b_ZadraLabExit_Mech",
+      "label": "Audio Grasslands2b ZadraLabExit Mech",
+      "category": "GbxActor",
+      "cmd": "oak_spawnai IO_Audio_Grasslands2b_ZadraLabExit_Mech",
+      "source": "gbxactor"
+    },
+    {
+      "token": "IO_Audio_Grasslands3_BioArmor_DoorHuge",
+      "label": "Audio Grasslands3 BioArmor DoorHuge",
+      "category": "GbxActor",
+      "cmd": "oak_spawnai IO_Audio_Grasslands3_BioArmor_DoorHuge",
+      "source": "gbxactor"
+    },
+    {
+      "token": "IO_Audio_Grasslands_Side_Heist_Alarm",
+      "label": "Audio Grasslands Side Heist Alarm",
+      "category": "GbxActor",
+      "cmd": "oak_spawnai IO_Audio_Grasslands_Side_Heist_Alarm",
+      "source": "gbxactor"
+    },
+    {
+      "token": "IO_Audio_GrasslandsMain1_BroadcastAntenna",
+      "label": "Audio GrasslandsMain1 BroadcastAntenna",
+      "category": "GbxActor",
+      "cmd": "oak_spawnai IO_Audio_GrasslandsMain1_BroadcastAntenna",
+      "source": "gbxactor"
+    },
+    {
+      "token": "IO_Audio_IO_Audio_MurderM_Moment_MeatGrinder_Shutdown",
+      "label": "Audio IO Audio MurderM Moment MeatGrinder Shutdown",
+      "category": "GbxActor",
+      "cmd": "oak_spawnai IO_Audio_IO_Audio_MurderM_Moment_MeatGrinder_Shutdown",
+      "source": "gbxactor"
+    },
+    {
+      "token": "IO_Audio_LifesPurpose_RocketReady",
+      "label": "Audio LifesPurpose RocketReady",
+      "category": "GbxActor",
+      "cmd": "oak_spawnai IO_Audio_LifesPurpose_RocketReady",
+      "source": "gbxactor"
+    },
+    {
+      "token": "IO_Audio_LilithVOReadbackProxy",
+      "label": "Audio LilithVOReadbackProxy",
+      "category": "GbxActor",
+      "cmd": "oak_spawnai IO_Audio_LilithVOReadbackProxy",
+      "source": "gbxactor"
+    },
+    {
+      "token": "IO_Audio_LS_Grasslands_Main2b_LocustLab_Tank_Large_Lp",
+      "label": "Audio LS Grasslands Main2b LocustLab Tank Large Lp",
+      "category": "GbxActor",
+      "cmd": "oak_spawnai IO_Audio_LS_Grasslands_Main2b_LocustLab_Tank_Large_Lp",
+      "source": "gbxactor"
+    },
+    {
+      "token": "IO_Audio_Main1_Moment_Pickles_Ambush",
+      "label": "Audio Main1 Moment Pickles Ambush",
+      "category": "GbxActor",
+      "cmd": "oak_spawnai IO_Audio_Main1_Moment_Pickles_Ambush",
+      "source": "gbxactor"
+    },
+    {
+      "token": "IO_Audio_Main1_Moment_TravelExitFake",
+      "label": "Audio Main1 Moment TravelExitFake",
+      "category": "GbxActor",
+      "cmd": "oak_spawnai IO_Audio_Main1_Moment_TravelExitFake",
+      "source": "gbxactor"
+    },
+    {
+      "token": "IO_Audio_Main4_Moment_CargoBayDoors_Creeps_Ambush",
+      "label": "Audio Main4 Moment CargoBayDoors Creeps Ambush",
+      "category": "GbxActor",
+      "cmd": "oak_spawnai IO_Audio_Main4_Moment_CargoBayDoors_Creeps_Ambush",
+      "source": "gbxactor"
+    },
+    {
+      "token": "IO_Audio_Main4_Moment_Creeps_Ambush",
+      "label": "Audio Main4 Moment Creeps Ambush",
+      "category": "GbxActor",
+      "cmd": "oak_spawnai IO_Audio_Main4_Moment_Creeps_Ambush",
+      "source": "gbxactor"
+    },
+    {
+      "token": "IO_Audio_Main4_Moment_HoloTable",
+      "label": "Audio Main4 Moment HoloTable",
+      "category": "GbxActor",
+      "cmd": "oak_spawnai IO_Audio_Main4_Moment_HoloTable",
+      "source": "gbxactor"
+    },
+    {
+      "token": "IO_Audio_Main5_Moment_Antenna_Stress",
+      "label": "Audio Main5 Moment Antenna Stress",
+      "category": "GbxActor",
+      "cmd": "oak_spawnai IO_Audio_Main5_Moment_Antenna_Stress",
+      "source": "gbxactor"
+    },
+    {
+      "token": "IO_Audio_Mission_CombatAlarm_Lp",
+      "label": "Audio Mission CombatAlarm Lp",
+      "category": "GbxActor",
+      "cmd": "oak_spawnai IO_Audio_Mission_CombatAlarm_Lp",
+      "source": "gbxactor"
+    },
+    {
+      "token": "IO_Audio_MissionScripted",
+      "label": "Audio MissionScripted",
+      "category": "GbxActor",
+      "cmd": "oak_spawnai IO_Audio_MissionScripted",
+      "source": "gbxactor"
+    },
+    {
+      "token": "IO_Audio_MissionScripted_AbductionInduction_Dropship",
+      "label": "Audio MissionScripted AbductionInduction Dropship",
+      "category": "GbxActor",
+      "cmd": "oak_spawnai IO_Audio_MissionScripted_AbductionInduction_Dropship",
+      "source": "gbxactor"
+    },
+    {
+      "token": "IO_Audio_MIssionScripted_BubbleCage_Lp",
+      "label": "Audio MIssionScripted BubbleCage Lp",
+      "category": "GbxActor",
+      "cmd": "oak_spawnai IO_Audio_MIssionScripted_BubbleCage_Lp",
+      "source": "gbxactor"
+    },
+    {
+      "token": "IO_Audio_MIssionScripted_City_PylonConsole",
+      "label": "Audio MIssionScripted City PylonConsole",
+      "category": "GbxActor",
+      "cmd": "oak_spawnai IO_Audio_MIssionScripted_City_PylonConsole",
+      "source": "gbxactor"
+    },
+    {
+      "token": "IO_Audio_MIssionScripted_DropGigi",
+      "label": "Audio MIssionScripted DropGigi",
+      "category": "GbxActor",
+      "cmd": "oak_spawnai IO_Audio_MIssionScripted_DropGigi",
+      "source": "gbxactor"
+    },
+    {
+      "token": "IO_Audio_MissionScripted_Elpis_SpaceElevatorRoom",
+      "label": "Audio MissionScripted Elpis SpaceElevatorRoom",
+      "category": "GbxActor",
+      "cmd": "oak_spawnai IO_Audio_MissionScripted_Elpis_SpaceElevatorRoom",
+      "source": "gbxactor"
+    },
+    {
+      "token": "IO_Audio_MIssionScripted_Example",
+      "label": "Audio MIssionScripted Example",
+      "category": "GbxActor",
+      "cmd": "oak_spawnai IO_Audio_MIssionScripted_Example",
+      "source": "gbxactor"
+    },
+    {
+      "token": "IO_Audio_MIssionScripted_GenericActivation_Mech",
+      "label": "Audio MIssionScripted GenericActivation Mech",
+      "category": "GbxActor",
+      "cmd": "oak_spawnai IO_Audio_MIssionScripted_GenericActivation_Mech",
+      "source": "gbxactor"
+    },
+    {
+      "token": "IO_Audio_MIssionScripted_GenericActivation_MechAndTelemetry",
+      "label": "Audio MIssionScripted GenericActivation MechAndTelemetry",
+      "category": "GbxActor",
+      "cmd": "oak_spawnai IO_Audio_MIssionScripted_GenericActivation_MechAndTelemetry",
+      "source": "gbxactor"
+    },
+    {
+      "token": "IO_Audio_MIssionScripted_GenericActivation_Telemetry",
+      "label": "Audio MIssionScripted GenericActivation Telemetry",
+      "category": "GbxActor",
+      "cmd": "oak_spawnai IO_Audio_MIssionScripted_GenericActivation_Telemetry",
+      "source": "gbxactor"
+    },
+    {
+      "token": "IO_Audio_MIssionScripted_GenericDeactivation_Mech",
+      "label": "Audio MIssionScripted GenericDeactivation Mech",
+      "category": "GbxActor",
+      "cmd": "oak_spawnai IO_Audio_MIssionScripted_GenericDeactivation_Mech",
+      "source": "gbxactor"
+    },
+    {
+      "token": "IO_Audio_MissionScripted_Mountains2a_PowerGen",
+      "label": "Audio MissionScripted Mountains2a PowerGen",
+      "category": "GbxActor",
+      "cmd": "oak_spawnai IO_Audio_MissionScripted_Mountains2a_PowerGen",
+      "source": "gbxactor"
+    },
+    {
+      "token": "IO_Audio_MissionScripted_Mountains_LazerDrill_Beam",
+      "label": "Audio MissionScripted Mountains LazerDrill Beam",
+      "category": "GbxActor",
+      "cmd": "oak_spawnai IO_Audio_MissionScripted_Mountains_LazerDrill_Beam",
+      "source": "gbxactor"
+    },
+    {
+      "token": "IO_Audio_MissionScripted_Mountains_LazerDrill_RockMelting",
+      "label": "Audio MissionScripted Mountains LazerDrill RockMelting",
+      "category": "GbxActor",
+      "cmd": "oak_spawnai IO_Audio_MissionScripted_Mountains_LazerDrill_RockMelting",
+      "source": "gbxactor"
+    },
+    {
+      "token": "IO_Audio_MissionScripted_Mountains_LazerDrill_WallScrape",
+      "label": "Audio MissionScripted Mountains LazerDrill WallScrape",
+      "category": "GbxActor",
+      "cmd": "oak_spawnai IO_Audio_MissionScripted_Mountains_LazerDrill_WallScrape",
+      "source": "gbxactor"
+    },
+    {
+      "token": "IO_Audio_MIssionScripted_RefineryLEgs",
+      "label": "Audio MIssionScripted RefineryLEgs",
+      "category": "GbxActor",
+      "cmd": "oak_spawnai IO_Audio_MIssionScripted_RefineryLEgs",
+      "source": "gbxactor"
+    },
+    {
+      "token": "IO_Audio_MissionScripted_RocketMonsters_Alarm",
+      "label": "Audio MissionScripted RocketMonsters Alarm",
+      "category": "GbxActor",
+      "cmd": "oak_spawnai IO_Audio_MissionScripted_RocketMonsters_Alarm",
+      "source": "gbxactor"
+    },
+    {
+      "token": "IO_Audio_MIssionScripted_Sh_Vending_Jukebox",
+      "label": "Audio MIssionScripted Sh Vending Jukebox",
+      "category": "GbxActor",
+      "cmd": "oak_spawnai IO_Audio_MIssionScripted_Sh_Vending_Jukebox",
+      "source": "gbxactor"
+    },
+    {
+      "token": "IO_Audio_MountainsMain1_Dropships",
+      "label": "Audio MountainsMain1 Dropships",
+      "category": "GbxActor",
+      "cmd": "oak_spawnai IO_Audio_MountainsMain1_Dropships",
+      "source": "gbxactor"
+    },
+    {
+      "token": "IO_Audio_MountainsMain1_EridiumRelic",
+      "label": "Audio MountainsMain1 EridiumRelic",
+      "category": "GbxActor",
+      "cmd": "oak_spawnai IO_Audio_MountainsMain1_EridiumRelic",
+      "source": "gbxactor"
+    },
+    {
+      "token": "IO_Audio_MountainsMain2B_FortressActivation",
+      "label": "Audio MountainsMain2B FortressActivation",
+      "category": "GbxActor",
+      "cmd": "oak_spawnai IO_Audio_MountainsMain2B_FortressActivation",
+      "source": "gbxactor"
+    },
+    {
+      "token": "IO_Audio_MountainsMain2B_GrandPlan_Dialog",
+      "label": "Audio MountainsMain2B GrandPlan Dialog",
+      "category": "GbxActor",
+      "cmd": "oak_spawnai IO_Audio_MountainsMain2B_GrandPlan_Dialog",
+      "source": "gbxactor"
+    },
+    {
+      "token": "IO_Audio_MT_Side_ObstacleCourse_ClaptrapHolo",
+      "label": "Audio MT Side ObstacleCourse ClaptrapHolo",
+      "category": "GbxActor",
+      "cmd": "oak_spawnai IO_Audio_MT_Side_ObstacleCourse_ClaptrapHolo",
+      "source": "gbxactor"
+    },
+    {
+      "token": "IO_Audio_MT_Side_ObstacleCourse_HoverPlatform",
+      "label": "Audio MT Side ObstacleCourse HoverPlatform",
+      "category": "GbxActor",
+      "cmd": "oak_spawnai IO_Audio_MT_Side_ObstacleCourse_HoverPlatform",
+      "source": "gbxactor"
+    },
+    {
+      "token": "IO_Audio_MurderM_Moment_KillSwitchFail",
+      "label": "Audio MurderM Moment KillSwitchFail",
+      "category": "GbxActor",
+      "cmd": "oak_spawnai IO_Audio_MurderM_Moment_KillSwitchFail",
+      "source": "gbxactor"
+    },
+    {
+      "token": "IO_Audio_OneGassyIssue_LocustGas_TankTube_Lp",
+      "label": "Audio OneGassyIssue LocustGas TankTube Lp",
+      "category": "GbxActor",
+      "cmd": "oak_spawnai IO_Audio_OneGassyIssue_LocustGas_TankTube_Lp",
+      "source": "gbxactor"
+    },
+    {
+      "token": "IO_Audio_Prison_GunshipWreck",
+      "label": "Audio Prison GunshipWreck",
+      "category": "GbxActor",
+      "cmd": "oak_spawnai IO_Audio_Prison_GunshipWreck",
+      "source": "gbxactor"
+    },
+    {
+      "token": "IO_Audio_Prison_Possession",
+      "label": "Audio Prison Possession",
+      "category": "GbxActor",
+      "cmd": "oak_spawnai IO_Audio_Prison_Possession",
+      "source": "gbxactor"
+    },
+    {
+      "token": "IO_Audio_Prison_PrisonBreak_Walla",
+      "label": "Audio Prison PrisonBreak Walla",
+      "category": "GbxActor",
+      "cmd": "oak_spawnai IO_Audio_Prison_PrisonBreak_Walla",
+      "source": "gbxactor"
+    },
+    {
+      "token": "IO_Audio_Prison_PrisonBreak_Warden_Dialog",
+      "label": "Audio Prison PrisonBreak Warden Dialog",
+      "category": "GbxActor",
+      "cmd": "oak_spawnai IO_Audio_Prison_PrisonBreak_Warden_Dialog",
+      "source": "gbxactor"
+    },
+    {
+      "token": "IO_Audio_Prison_SearchParty",
+      "label": "Audio Prison SearchParty",
+      "category": "GbxActor",
+      "cmd": "oak_spawnai IO_Audio_Prison_SearchParty",
+      "source": "gbxactor"
+    },
+    {
+      "token": "IO_Audio_Prison_Warden_Shipspeaker",
+      "label": "Audio Prison Warden Shipspeaker",
+      "category": "GbxActor",
+      "cmd": "oak_spawnai IO_Audio_Prison_Warden_Shipspeaker",
+      "source": "gbxactor"
+    },
+    {
+      "token": "IO_Audio_RainbowEgg_BeerVat_Lp",
+      "label": "Audio RainbowEgg BeerVat Lp",
+      "category": "GbxActor",
+      "cmd": "oak_spawnai IO_Audio_RainbowEgg_BeerVat_Lp",
+      "source": "gbxactor"
+    },
+    {
+      "token": "IO_AudiO_SafeSoundBox_BadSpot",
+      "label": "AudiO SafeSoundBox BadSpot",
+      "category": "GbxActor",
+      "cmd": "oak_spawnai IO_AudiO_SafeSoundBox_BadSpot",
+      "source": "gbxactor"
+    },
+    {
+      "token": "IO_Audio_SafeSoundBox_GoodSpot",
+      "label": "Audio SafeSoundBox GoodSpot",
+      "category": "GbxActor",
+      "cmd": "oak_spawnai IO_Audio_SafeSoundBox_GoodSpot",
+      "source": "gbxactor"
+    },
+    {
+      "token": "IO_Audio_SFL_AccessLift",
+      "label": "Audio SFL AccessLift",
+      "category": "GbxActor",
+      "cmd": "oak_spawnai IO_Audio_SFL_AccessLift",
+      "source": "gbxactor"
+    },
+    {
+      "token": "IO_Audio_SFL_AccessLift_Blocked",
+      "label": "Audio SFL AccessLift Blocked",
+      "category": "GbxActor",
+      "cmd": "oak_spawnai IO_Audio_SFL_AccessLift_Blocked",
+      "source": "gbxactor"
+    },
+    {
+      "token": "IO_Audio_SFL_CommanderBolt",
+      "label": "Audio SFL CommanderBolt",
+      "category": "GbxActor",
+      "cmd": "oak_spawnai IO_Audio_SFL_CommanderBolt",
+      "source": "gbxactor"
+    },
+    {
+      "token": "IO_Audio_SFL_SpaceElevator_Thruster",
+      "label": "Audio SFL SpaceElevator Thruster",
+      "category": "GbxActor",
+      "cmd": "oak_spawnai IO_Audio_SFL_SpaceElevator_Thruster",
+      "source": "gbxactor"
+    },
+    {
+      "token": "IO_Audio_Sh_Side_CastingCall_Combat",
+      "label": "Audio Sh Side CastingCall Combat",
+      "category": "GbxActor",
+      "cmd": "oak_spawnai IO_Audio_Sh_Side_CastingCall_Combat",
+      "source": "gbxactor"
+    },
+    {
+      "token": "IO_Audio_Sha_Side_AGreatDisturbance_Tremmors",
+      "label": "Audio Sha Side AGreatDisturbance Tremmors",
+      "category": "GbxActor",
+      "cmd": "oak_spawnai IO_Audio_Sha_Side_AGreatDisturbance_Tremmors",
+      "source": "gbxactor"
+    },
+    {
+      "token": "IO_Audio_Shat_Micro_VGZink_Cannon",
+      "label": "Audio Shat Micro VGZink Cannon",
+      "category": "GbxActor",
+      "cmd": "oak_spawnai IO_Audio_Shat_Micro_VGZink_Cannon",
+      "source": "gbxactor"
+    },
+    {
+      "token": "IO_Audio_Shat_Side_CastingCall_Walla",
+      "label": "Audio Shat Side CastingCall Walla",
+      "category": "GbxActor",
+      "cmd": "oak_spawnai IO_Audio_Shat_Side_CastingCall_Walla",
+      "source": "gbxactor"
+    },
+    {
+      "token": "IO_Audio_ShatterdlandsMain3_Commander_Dialog",
+      "label": "Audio ShatterdlandsMain3 Commander Dialog",
+      "category": "GbxActor",
+      "cmd": "oak_spawnai IO_Audio_ShatterdlandsMain3_Commander_Dialog",
+      "source": "gbxactor"
+    },
+    {
+      "token": "IO_Audio_ShatterdlandsMain3_Mudmouth_Dialog",
+      "label": "Audio ShatterdlandsMain3 Mudmouth Dialog",
+      "category": "GbxActor",
+      "cmd": "oak_spawnai IO_Audio_ShatterdlandsMain3_Mudmouth_Dialog",
+      "source": "gbxactor"
+    },
+    {
+      "token": "IO_Audio_Shatteredlands_Main2_WaterPipes",
+      "label": "Audio Shatteredlands Main2 WaterPipes",
+      "category": "GbxActor",
+      "cmd": "oak_spawnai IO_Audio_Shatteredlands_Main2_WaterPipes",
+      "source": "gbxactor"
+    },
+    {
+      "token": "IO_Audio_ShatterlandsMain3_Holey_Dialog",
+      "label": "Audio ShatterlandsMain3 Holey Dialog",
+      "category": "GbxActor",
+      "cmd": "oak_spawnai IO_Audio_ShatterlandsMain3_Holey_Dialog",
+      "source": "gbxactor"
+    },
+    {
+      "token": "IO_Audio_SideMIssion_STR_Drill_Empty",
+      "label": "Audio SideMIssion STR Drill Empty",
+      "category": "GbxActor",
+      "cmd": "oak_spawnai IO_Audio_SideMIssion_STR_Drill_Empty",
+      "source": "gbxactor"
+    },
+    {
+      "token": "IO_Audio_SOHP_AntennaRemoved",
+      "label": "Audio SOHP AntennaRemoved",
+      "category": "GbxActor",
+      "cmd": "oak_spawnai IO_Audio_SOHP_AntennaRemoved",
+      "source": "gbxactor"
+    },
+    {
+      "token": "IO_Audio_SOHP_Wheel",
+      "label": "Audio SOHP Wheel",
+      "category": "GbxActor",
+      "cmd": "oak_spawnai IO_Audio_SOHP_Wheel",
+      "source": "gbxactor"
+    },
+    {
+      "token": "IO_Audio_Success_Bell",
+      "label": "Audio Success Bell",
+      "category": "GbxActor",
+      "cmd": "oak_spawnai IO_Audio_Success_Bell",
+      "source": "gbxactor"
+    },
+    {
+      "token": "IO_Audio_Survivalist01_Busted",
+      "label": "Audio Survivalist01 Busted",
+      "category": "GbxActor",
+      "cmd": "oak_spawnai IO_Audio_Survivalist01_Busted",
+      "source": "gbxactor"
+    },
+    {
+      "token": "IO_Audio_Survivalist01_Void",
+      "label": "Audio Survivalist01 Void",
+      "category": "GbxActor",
+      "cmd": "oak_spawnai IO_Audio_Survivalist01_Void",
+      "source": "gbxactor"
+    },
+    {
+      "token": "IO_Audio_Survivalist03_Alarm",
+      "label": "Audio Survivalist03 Alarm",
+      "category": "GbxActor",
+      "cmd": "oak_spawnai IO_Audio_Survivalist03_Alarm",
+      "source": "gbxactor"
+    },
+    {
+      "token": "IO_Audio_Vend_ZaneLegend",
+      "label": "Audio Vend ZaneLegend",
+      "category": "GbxActor",
+      "cmd": "oak_spawnai IO_Audio_Vend_ZaneLegend",
+      "source": "gbxactor"
+    },
+    {
+      "token": "IO_Audio_VGDave_StreamsLoudspeaker",
+      "label": "Audio VGDave StreamsLoudspeaker",
+      "category": "GbxActor",
+      "cmd": "oak_spawnai IO_Audio_VGDave_StreamsLoudspeaker",
+      "source": "gbxactor"
+    },
+    {
+      "token": "IO_Audio_WorldEvent_Colosseum_Announcer",
+      "label": "Audio WorldEvent Colosseum Announcer",
+      "category": "GbxActor",
+      "cmd": "oak_spawnai IO_Audio_WorldEvent_Colosseum_Announcer",
+      "source": "gbxactor"
+    },
+    {
+      "token": "IO_Audio_WorldEvent_Colosseum_Music",
+      "label": "Audio WorldEvent Colosseum Music",
+      "category": "GbxActor",
+      "cmd": "oak_spawnai IO_Audio_WorldEvent_Colosseum_Music",
       "source": "gbxactor"
     },
     {
@@ -12454,6 +13273,132 @@
       "source": "nexus_gbxactor"
     },
     {
+      "token": "Audio_IO_Cowbell_Main1_Moment_PicklesDeath",
+      "label": "Audio IO Cowbell Main1 Moment PicklesDeath",
+      "category": "OakInteractiveObjects",
+      "cmd": "oak_spawnai Audio_IO_Cowbell_Main1_Moment_PicklesDeath",
+      "source": "nexus_gbxactor"
+    },
+    {
+      "token": "Audio_IO_Cowbell_Main3_Moment_TinctureGasReleased",
+      "label": "Audio IO Cowbell Main3 Moment TinctureGasReleased",
+      "category": "OakInteractiveObjects",
+      "cmd": "oak_spawnai Audio_IO_Cowbell_Main3_Moment_TinctureGasReleased",
+      "source": "nexus_gbxactor"
+    },
+    {
+      "token": "Audio_IO_Cowbell_Main3_Moment_WaterColumn_Bubbles",
+      "label": "Audio IO Cowbell Main3 Moment WaterColumn Bubbles",
+      "category": "OakInteractiveObjects",
+      "cmd": "oak_spawnai Audio_IO_Cowbell_Main3_Moment_WaterColumn_Bubbles",
+      "source": "nexus_gbxactor"
+    },
+    {
+      "token": "Audio_IO_Cowbell_Main4_MegalithBlast",
+      "label": "Audio IO Cowbell Main4 MegalithBlast",
+      "category": "OakInteractiveObjects",
+      "cmd": "oak_spawnai Audio_IO_Cowbell_Main4_MegalithBlast",
+      "source": "nexus_gbxactor"
+    },
+    {
+      "token": "Audio_IO_Cowbell_Side_RomeoRomeo_RezMachine",
+      "label": "Audio IO Cowbell Side RomeoRomeo RezMachine",
+      "category": "OakInteractiveObjects",
+      "cmd": "oak_spawnai Audio_IO_Cowbell_Side_RomeoRomeo_RezMachine",
+      "source": "nexus_gbxactor"
+    },
+    {
+      "token": "Audio_IO_Cowbell_Side_SummoningCircle_BeatingHeart",
+      "label": "Audio IO Cowbell Side SummoningCircle BeatingHeart",
+      "category": "OakInteractiveObjects",
+      "cmd": "oak_spawnai Audio_IO_Cowbell_Side_SummoningCircle_BeatingHeart",
+      "source": "nexus_gbxactor"
+    },
+    {
+      "token": "Audio_IO_Cowbell_Side_SummoningCircle_RitualSite",
+      "label": "Audio IO Cowbell Side SummoningCircle RitualSite",
+      "category": "OakInteractiveObjects",
+      "cmd": "oak_spawnai Audio_IO_Cowbell_Side_SummoningCircle_RitualSite",
+      "source": "nexus_gbxactor"
+    },
+    {
+      "token": "Audio_IO_Cowbell_Side_SummoningCircle_ScavMachine_BlueHolo",
+      "label": "Audio IO Cowbell Side SummoningCircle ScavMachine BlueHolo",
+      "category": "OakInteractiveObjects",
+      "cmd": "oak_spawnai Audio_IO_Cowbell_Side_SummoningCircle_ScavMachine_BlueHolo",
+      "source": "nexus_gbxactor"
+    },
+    {
+      "token": "Audio_IO_Cowbell_Side_SummoningCircle_ScavMachine_GreenHOlo",
+      "label": "Audio IO Cowbell Side SummoningCircle ScavMachine GreenHOlo",
+      "category": "OakInteractiveObjects",
+      "cmd": "oak_spawnai Audio_IO_Cowbell_Side_SummoningCircle_ScavMachine_GreenHOlo",
+      "source": "nexus_gbxactor"
+    },
+    {
+      "token": "Audio_IO_Cowbell_Side_SummoningCircle_ScavMachine_MiddleBeam_Main",
+      "label": "Audio IO Cowbell Side SummoningCircle ScavMachine MiddleBeam Main",
+      "category": "OakInteractiveObjects",
+      "cmd": "oak_spawnai Audio_IO_Cowbell_Side_SummoningCircle_ScavMachine_MiddleBeam_Main",
+      "source": "nexus_gbxactor"
+    },
+    {
+      "token": "Audio_IO_Cowbell_Side_SummoningCircle_ScavMachine_MiddleBeam_Tip",
+      "label": "Audio IO Cowbell Side SummoningCircle ScavMachine MiddleBeam Tip",
+      "category": "OakInteractiveObjects",
+      "cmd": "oak_spawnai Audio_IO_Cowbell_Side_SummoningCircle_ScavMachine_MiddleBeam_Tip",
+      "source": "nexus_gbxactor"
+    },
+    {
+      "token": "Audio_IO_Cowbell_Side_SummoningCircle_ScavMachine_QuadBeam",
+      "label": "Audio IO Cowbell Side SummoningCircle ScavMachine QuadBeam",
+      "category": "OakInteractiveObjects",
+      "cmd": "oak_spawnai Audio_IO_Cowbell_Side_SummoningCircle_ScavMachine_QuadBeam",
+      "source": "nexus_gbxactor"
+    },
+    {
+      "token": "Audio_IO_Cowbell_Side_SummoningCircle_ScavMachine_SUccess",
+      "label": "Audio IO Cowbell Side SummoningCircle ScavMachine SUccess",
+      "category": "OakInteractiveObjects",
+      "cmd": "oak_spawnai Audio_IO_Cowbell_Side_SummoningCircle_ScavMachine_SUccess",
+      "source": "nexus_gbxactor"
+    },
+    {
+      "token": "Audio_IO_Cowbell_Side_SummoningCircle_ScavMachine_Top",
+      "label": "Audio IO Cowbell Side SummoningCircle ScavMachine Top",
+      "category": "OakInteractiveObjects",
+      "cmd": "oak_spawnai Audio_IO_Cowbell_Side_SummoningCircle_ScavMachine_Top",
+      "source": "nexus_gbxactor"
+    },
+    {
+      "token": "Audio_IO_Cowbell_Side_SummoningCircle_ShuggEgg",
+      "label": "Audio IO Cowbell Side SummoningCircle ShuggEgg",
+      "category": "OakInteractiveObjects",
+      "cmd": "oak_spawnai Audio_IO_Cowbell_Side_SummoningCircle_ShuggEgg",
+      "source": "nexus_gbxactor"
+    },
+    {
+      "token": "Audio_IO_Harp_OrderTech",
+      "label": "Audio IO Harp OrderTech",
+      "category": "OakInteractiveObjects",
+      "cmd": "oak_spawnai Audio_IO_Harp_OrderTech",
+      "source": "nexus_gbxactor"
+    },
+    {
+      "token": "Audio_IO_Harp_WaterSplash_01",
+      "label": "Audio IO Harp WaterSplash 01",
+      "category": "OakInteractiveObjects",
+      "cmd": "oak_spawnai Audio_IO_Harp_WaterSplash_01",
+      "source": "nexus_gbxactor"
+    },
+    {
+      "token": "Audio_IO_Harp_WaterSplash_02",
+      "label": "Audio IO Harp WaterSplash 02",
+      "category": "OakInteractiveObjects",
+      "cmd": "oak_spawnai Audio_IO_Harp_WaterSplash_02",
+      "source": "nexus_gbxactor"
+    },
+    {
       "token": "CameraShaker",
       "label": "CameraShaker",
       "category": "OakInteractiveObjects",
@@ -12507,6 +13452,48 @@
       "label": "ArcadeMotorbike",
       "category": "OakInteractiveObjects",
       "cmd": "oak_spawnai IO_ArcadeMotorbike",
+      "source": "nexus_gbxactor"
+    },
+    {
+      "token": "IO_Audio_Harp_BombDelivered",
+      "label": "Audio Harp BombDelivered",
+      "category": "OakInteractiveObjects",
+      "cmd": "oak_spawnai IO_Audio_Harp_BombDelivered",
+      "source": "nexus_gbxactor"
+    },
+    {
+      "token": "IO_Audio_Harp_CageOpen",
+      "label": "Audio Harp CageOpen",
+      "category": "OakInteractiveObjects",
+      "cmd": "oak_spawnai IO_Audio_Harp_CageOpen",
+      "source": "nexus_gbxactor"
+    },
+    {
+      "token": "IO_Audio_Harp_GeneratorBreak_Lp",
+      "label": "Audio Harp GeneratorBreak Lp",
+      "category": "OakInteractiveObjects",
+      "cmd": "oak_spawnai IO_Audio_Harp_GeneratorBreak_Lp",
+      "source": "nexus_gbxactor"
+    },
+    {
+      "token": "IO_Audio_Harp_SkankEyes_Concert",
+      "label": "Audio Harp SkankEyes Concert",
+      "category": "OakInteractiveObjects",
+      "cmd": "oak_spawnai IO_Audio_Harp_SkankEyes_Concert",
+      "source": "nexus_gbxactor"
+    },
+    {
+      "token": "IO_Audio_Harp_SkankEyes_Concert_SpeakerPop",
+      "label": "Audio Harp SkankEyes Concert SpeakerPop",
+      "category": "OakInteractiveObjects",
+      "cmd": "oak_spawnai IO_Audio_Harp_SkankEyes_Concert_SpeakerPop",
+      "source": "nexus_gbxactor"
+    },
+    {
+      "token": "IO_Audio_Mandolin_CoS_Crowd",
+      "label": "Audio Mandolin CoS Crowd",
+      "category": "OakInteractiveObjects",
+      "cmd": "oak_spawnai IO_Audio_Mandolin_CoS_Crowd",
       "source": "nexus_gbxactor"
     },
     {
@@ -13392,6 +14379,41 @@
       "source": "nexus_gbxactor"
     },
     {
+      "token": "Mandolin_IO_Audio_Bloodsplats_Lp",
+      "label": "Mandolin IO Audio Bloodsplats Lp",
+      "category": "OakInteractiveObjects",
+      "cmd": "oak_spawnai Mandolin_IO_Audio_Bloodsplats_Lp",
+      "source": "nexus_gbxactor"
+    },
+    {
+      "token": "Mandolin_IO_Audio_Mandolin_FF_Beam_Center",
+      "label": "Mandolin IO Audio Mandolin FF Beam Center",
+      "category": "OakInteractiveObjects",
+      "cmd": "oak_spawnai Mandolin_IO_Audio_Mandolin_FF_Beam_Center",
+      "source": "nexus_gbxactor"
+    },
+    {
+      "token": "Mandolin_IO_Audio_Mandolin_FF_Beam_Extension",
+      "label": "Mandolin IO Audio Mandolin FF Beam Extension",
+      "category": "OakInteractiveObjects",
+      "cmd": "oak_spawnai Mandolin_IO_Audio_Mandolin_FF_Beam_Extension",
+      "source": "nexus_gbxactor"
+    },
+    {
+      "token": "Mandolin_IO_Audio_Mandolin_FF_Beam_Left",
+      "label": "Mandolin IO Audio Mandolin FF Beam Left",
+      "category": "OakInteractiveObjects",
+      "cmd": "oak_spawnai Mandolin_IO_Audio_Mandolin_FF_Beam_Left",
+      "source": "nexus_gbxactor"
+    },
+    {
+      "token": "Mandolin_IO_Audio_Mandolin_FF_Beam_Right",
+      "label": "Mandolin IO Audio Mandolin FF Beam Right",
+      "category": "OakInteractiveObjects",
+      "cmd": "oak_spawnai Mandolin_IO_Audio_Mandolin_FF_Beam_Right",
+      "source": "nexus_gbxactor"
+    },
+    {
       "token": "SiloTestSlider",
       "label": "SiloTestSlider",
       "category": "OakInteractiveObjects",
@@ -13519,7 +14541,7 @@
     },
     {
       "token": "io_cinDECO_GrassBoss",
-      "label": "Cinema deco GrassBoss (Idolator Sol mesh \u2014 not the fight boss)",
+      "label": "Cinema deco GrassBoss (Idolator Sol mesh — not the fight boss)",
       "category": "Presets",
       "cmd": "oak_spawnai io_cinDECO_GrassBoss",
       "source": "preset"

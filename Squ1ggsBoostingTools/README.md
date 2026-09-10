@@ -1,62 +1,81 @@
 # Squ1ggs Boosting Tools
 
-Borderlands 4 boosting toolkit — **desktop EXE** + in-game **SDK mod**.
+Borderlands 4 boosting toolkit — **desktop app (.exe)** + **SDK mod**.  
+Author: **[Squ1ggs](https://github.com/Squ1ggs)** · Bridge: `http://127.0.0.1:49775` · **GPL-3.0**
 
-**Author:** [Squ1ggs](https://github.com/Squ1ggs) · **License:** MIT  
-**Current:** mod **3.8.139** · EXE **1.1.133**
+**Repo:** [github.com/Squ1ggs/Bl4SDKmods](https://github.com/Squ1ggs/Bl4SDKmods)
 
-Download from **[Releases](https://github.com/Squ1ggs/Bl4SDKmods/releases)** (GitHub only — not on Mod DB).
-
----
-
-## Quick start
-
-1. Download the **portable zip** from Releases and run **`Squ1ggsBoostingTools.exe`**.
-2. Point it at your Borderlands 4 folder if asked — the EXE installs the Oak2 SDK + this mod for you.
-3. **Fully restart** Borderlands 4, load a character, then click **Refresh status**.
-4. When status shows connected (mod **3.8.139+**), you’re good.
-
-Use the **desktop app** for the full UI. The SDK mod is the in-game bridge.
+**Distribution:** [GitHub / this repo only](https://github.com/Squ1ggs/Bl4SDKmods) — **not** on the [BL Oak2 Mod DB](https://bl-sdk.github.io/oak2-mod-db/).
 
 ---
 
-## What you can do
+## Interface
 
-| Area | Examples |
-|------|----------|
-| **Loot** | Drop shinies, pool spawners, 3D loot shapes (house, globe, …) |
-| **Serials** | Paste `@U` codes, send to mailbox / Reward Center |
-| **Boost** | MAX ALL, vault cards, UVHM ranks, inventory sizes |
-| **Spawn** | Mobs (`Char_*`), IO machines (vendors, bank, beams, …) |
-| **Movement** | Force fly (host), infinite jump, travel bookmarks |
-| **Co-op** | Boost target / Send to stay in sync across the party |
-
-Host-only actions need you to be **session host** and in-world.
+Use the **desktop app** for the full interface. The SDK mod supplies the localhost bridge and lightweight console commands; it does not register an additional pause-menu or BLImGui panel.
 
 ---
 
-## After updating
+## Quick start (SQBT-style)
 
-1. Close the old EXE and Borderlands 4 completely.
-2. Run the new portable EXE (or unzip over your previous portable folder).
-3. Fully restart BL4 once so the new mod version loads.
-4. Confirm the mod version in **Refresh status**.
+1. Run **Squ1ggs Boosting Tools** (desktop app) → browse to Borderlands 4 if needed → **Install SDK + Squ1ggs mod** (pulls official [oak2-mod-manager](https://github.com/bl-sdk/oak2-mod-manager/releases) when the base SDK is missing).
+2. **Fully restart Borderlands 4**.
+3. Refresh status in the app — mod version should match (**3.7.0**).
+
+Same idea as Squ1ggs Boosting Tools: exe installs the mod, restart game, control from outside.
+
+**Thanks:** GZO catalog from save-editor.be. Thank you to **Tobgun** for feedback, ideas, testing, and bug reports.
+
+### What's new (short)
+- Favourites on GZO / Lootlemon
+- Loot shapes work for players already in the lobby (no crash)
+- House silhouette looks right again
+- Shaped Drop All / Spawn All smoother; guests still see the held shape when it finishes
 
 ---
 
-## Tips
+## Desktop app tabs
 
-- **Shiny cosmetics** must be unlocked on the save (UVHM new game after story, or a save editor). Otherwise they drop as normal legendaries.
-- **Spawn** = world loot on the ground. **Reward / mail** actions are separate — don’t mix them to “fix” a spawn.
-- After a **ULM dump**, wait until it finishes, then **Refresh status** before loading big catalogs (mobs, pools).
-- GZO codes: [save-editor.be](https://save-editor.be/GZO/Borderlands4/Codes.html). Thanks **Tobgun** for testing and feedback.
+| Tab | Highlights |
+|-----|------------|
+| **Home** | MAX ALL, currency/XP/SDU, serial delivery, golden chest, party kick |
+| **Player** | Dev perks, gravity, force fly, ammo regen, freecam, party teleports |
+| **Challenges** | UVHM workflow start/cancel/resume and challenge bulk actions |
+| **Loot** | **Loot Pool Spawner** + **Legit Item Forge** (validate/build/give) |
+| **Serials** | GZO + Lootlemon catalog delivery, serial convert |
+| **Mobility** | Presets, movement sliders, noclip, time dilation, slot teleports |
+| **Vehicle** | Vehicle handling + personal vehicle spawn (embedded bl4_vehicle_movement) |
+| **Damage & More** | Combat damage sliders (embedded) |
+| **Kits & Shields** | Repair kits, shields, ammo regen, cooldowns (embedded) |
+| **World** | Map/station travel and world utilities |
+| **Mob and IO Spawner** | Spawn mixes, NPCs, AI, bosses, IO objects and encounter presets |
+| **Loot Shapes** | Arrange ground loot (circle, vault, firehawk, grid, rarity lanes, and more); Place Fully for co-op joiners |
+| **Keybinds** | Custom in-game action keybinds |
+| **Support** | Discord invite/QR code, Ko-fi link and release information |
+
+**GZO Codes:** catalog from [Borderlands 4 Items on save-editor.be](https://save-editor.be/GZO/Borderlands4/Codes.html) . Thank you to **Tobgun** for feedback, ideas, testing, and bug reports.
+
+Searchable catalog dropdowns are provided directly by the desktop app.
 
 ---
 
-## License
+## Install (folder build)
 
-**MIT** — see the repo root [`LICENSE`](../LICENSE) (and this folder’s `LICENSE` when present).
+Requires [Oak2 Mod Manager v0.3+](https://github.com/bl-sdk/oak2-mod-manager/releases/tag/v0.3).
 
-## Changelog
+1. Copy the `Squ1ggsBoostingTools` folder into `sdk_mods` (do not nest a second `Squ1ggsBoostingTools` folder inside it).
+2. Enable **Squ1ggs's Boosting Tools** in the mods menu.
 
-See **[CHANGELOG.md](CHANGELOG.md)** for what’s new in each release.
+**Tuning:** Player / Vehicle / Damage / Kits & Shields tabs work standalone or alongside the separate tuning mods — if a standalone mod is enabled, SQBT uses it automatically with shared settings.
+
+---
+
+## Notes
+
+- Host-only actions (travel, BMS spawns, UVHM bulk) require session host in-world.
+- After any mod update, **fully restart BL4** — partial reload can leave an old bridge running.
+- The desktop app does not require the SDK console. If `~` loses focus in exclusive
+  fullscreen, click back into the game and press it twice, or use borderless
+  fullscreen; the SDK log should report `Console key is already set to Tilde`.
+- In-game diagnostics: console `sqbt_bridge status`.
+
+Desktop app build/docs: [`../squ1ggs_boosting_tools_app/README.md`](../squ1ggs_boosting_tools_app/README.md)

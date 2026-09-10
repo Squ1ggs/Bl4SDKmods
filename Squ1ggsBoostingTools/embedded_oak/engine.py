@@ -2623,10 +2623,58 @@ def _spawn_deployed_actor(
                 )
             return cached_actor
 
-    # Player bank: NEVER duplicate live PersistentLevel.IO_PlayerBank — that
-    # freezes GameThread and kicks co-op guests. Offline OakSpawner + activate
-    # unlocks without cloning the map bank.
+    # Player bank: prefer a live PersistentLevel.IO_PlayerBank template (unlocked)
+    # over Script_PlayerBank offline deploy (often Locked).
     if entry_key in ("playerbank", "bank", "player_bank", "io_playerbank", "io_player_bank"):
+        bank_cls, bank_src, bank_cn = _find_io_playerbank_template_safe(class_override)
+        if bank_cls is not None and bank_src is not None:
+            _log_info(f"Using live IO_PlayerBank template for {name!r}: {bank_src}")
+            _cache_actor_def("IO_PlayerBank", bank_src)
+            total = max(1, int(count))
+            first_actor: Optional[Any] = None
+            for idx in range(total):
+                transform = _spawn_transform_for_index(
+                    pawn,
+                    index=idx,
+                    count=total,
+                    distance=distance,
+                    spacing=spacing,
+                    z_offset=z_offset,
+                    scale=scale,
+                )
+                actor = _spawn_actor_deferred(
+                    gs,
+                    world,
+                    bank_cls,
+                    transform,
+                    class_name=bank_cn,
+                    source=bank_src,
+                    collision_handling=1,
+                )
+                if actor is None:
+                    continue
+                _SPAWNED.append(
+                    DeployedActor(
+                        label="IO_PlayerBank",
+                        source=bank_src,
+                        actor=actor,
+                        actor_key=_actor_key(actor),
+                        class_name=_class_name(actor),
+                    )
+                )
+                if first_actor is None:
+                    first_actor = actor
+            if first_actor is not None:
+                if activate:
+                    _schedule_script_activation(
+                        first_actor,
+                        "playerbank",
+                        source=bank_src,
+                        enable=enable,
+                        disable=disable,
+                        delay=delay,
+                    )
+                return first_actor
         offline_bank = _spawn_offline_deploy_preset(
             name,
             distance=distance,
@@ -2635,7 +2683,7 @@ def _spawn_deployed_actor(
             coop_safe=True,
         )
         if offline_bank is not None:
-            _log_info(f"Spawned IO_PlayerBank via offline preset for alias {name!r} (no live template)")
+            _log_info(f"Spawned IO_PlayerBank via offline preset for alias {name!r}")
             if activate:
                 _schedule_script_activation(
                     offline_bank,
@@ -2658,7 +2706,7 @@ def _spawn_deployed_actor(
             single_spawn=True,
         )
         if direct_bank is not None:
-            _log_info(f"Spawned IO_PlayerBank via thin-air for alias {name!r} (no live template)")
+            _log_info(f"Spawned IO_PlayerBank via thin-air for alias {name!r}")
             if activate:
                 _schedule_script_activation(
                     direct_bank,
@@ -2669,8 +2717,6 @@ def _spawn_deployed_actor(
                     delay=delay,
                 )
             return direct_bank
-        _log_info(f"IO_PlayerBank offline/thin-air failed for {name!r}; skipping live template duplicate")
-        return None
 
     # World-placed OakVendingMachine shortcut (scripts=0 risk). Skip when the
     # caller asks for OakInteractiveObject / PersistentLevel dual (ASD-shaped).

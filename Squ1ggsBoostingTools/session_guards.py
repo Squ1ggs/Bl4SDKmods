@@ -29,8 +29,6 @@ _listeners: list[Callable[[str], None]] = []
 _hooks_installed = False
 _mutations_armed = True
 _was_playable = False
-_playable_since: float = 0.0
-_LOAD_WARM_SEC = 4.0
 
 
 def _log(msg: str) -> None:
@@ -56,28 +54,15 @@ def session_playable() -> bool:
 
 def tick_session_arm() -> None:
     """Call once per HUD tick before deciding whether game mutations are safe."""
-    global _was_playable, _mutations_armed, _playable_since
+    global _was_playable, _mutations_armed
     playable = session_playable()
     if not playable:
         _was_playable = False
         return
-    if not _was_playable:
-        _playable_since = time.monotonic()
     if not _mutations_armed and not _was_playable:
         _mutations_armed = True
         _log("Session re-armed after load.")
     _was_playable = True
-
-
-def session_warm() -> bool:
-    """True after character load / travel settle — blocks heavy find_all shape work."""
-    tick_session_arm()
-    if not session_playable() or not _mutations_armed:
-        return False
-    since = float(_playable_since or 0.0)
-    if since <= 0.0:
-        return False
-    return (time.monotonic() - since) >= _LOAD_WARM_SEC
 
 
 def session_safe() -> bool:
@@ -89,12 +74,11 @@ def session_safe() -> bool:
 
 
 def notify_session_teardown(reason: str = "session_teardown") -> None:
-    global _mutations_armed, _was_playable, _playable_since
-    if not _mutations_armed and not _listeners and not _playable_since:
+    global _mutations_armed, _was_playable
+    if not _mutations_armed and not _listeners:
         return
     _mutations_armed = False
     _was_playable = session_playable()
-    _playable_since = 0.0
     label = str(reason or "session_teardown").strip() or "session_teardown"
     _log(f"Teardown: {label}")
     try:
@@ -124,33 +108,27 @@ def install_session_teardown_hooks() -> None:
     if _hooks_installed:
         return
     try:
-        from unrealsdk import hooks
-        from unrealsdk.hooks import Type
+        from unrealsdk import HookManager, RegisterHook
+
+        Type = HookManager.EHookType
+        hooks = RegisterHook
     except Exception as exc:
         _log(f"Could not import hook API: {exc!r}")
         return
 
-    installed = 0
     for i, path in enumerate(_TEARDOWN_HOOK_PATHS):
-        ident = f"Squ1ggsBoostingTools.session.teardown.{i}"
-        for hook_type in (Type.PRE, Type.PRE_UNCONDITIONAL):
-            try:
-                hooks.remove_hook(path, hook_type, ident)
-            except Exception:
-                pass
-        ok = False
-        for hook_type in (Type.PRE, Type.PRE_UNCONDITIONAL):
-            try:
-                hooks.add_hook(path, hook_type, ident, _on_teardown_hook)
-                installed += 1
-                ok = True
-                break
-            except Exception:
-                continue
-        if not ok:
-            _log(f"Teardown hook skipped (path missing): {path}")
+        for ident in (
+            f"Squ1ggsBoostingTools.session.teardown.{i}",
+            f"sqbt_session_teardown_{i}",
+        ):
+            for hook_type in (Type.PRE, Type.PRE_UNCONDITIONAL, Type.POST):
+                try:
+                    hooks.add_hook(path, hook_type, ident, _on_teardown_hook)
+                    break
+                except Exception:
+                    continue
     _hooks_installed = True
-    _log(f"Session teardown hooks installed ({installed}/{len(_TEARDOWN_HOOK_PATHS)}).")
+    _log("Session teardown hooks installed.")
 
 
 def _register_builtin_listeners() -> None:

@@ -11,7 +11,6 @@ MODES: tuple[tuple[str, str], ...] = (
     ("local", "From me"),
     ("party", "From selected player"),
     ("npc_nearest", "Near nearest NPC"),
-    ("freecam", "At debug cam"),
 )
 
 _mode = "local"
@@ -29,8 +28,6 @@ _npc_cache_max_d = 0.0
 def set_target(mode: str, party_index: int | None = None) -> None:
     global _mode, _party_index
     requested = str(mode or "local").strip().lower()
-    if requested in ("debug_cam", "debugcam", "debug"):
-        requested = "freecam"
     _mode = requested if requested in {key for key, _label in MODES} else "local"
     _party_index = None if party_index is None else max(0, int(party_index))
 
@@ -147,34 +144,7 @@ def resolve_pose(local_pc: Any) -> tuple[Any, Any] | None:
     """Resolve current spawn target, falling back safely to the local pawn."""
     global _last_label
     local_pawn = getattr(local_pc, "Pawn", None)
-    if _mode in ("freecam", "debug_cam", "debugcam"):
-        try:
-            from .dev_tools import _cached_dcc, get_debug_cam_location, is_debug_cam_active
-
-            if is_debug_cam_active():
-                dcc = _cached_dcc()
-                pose = _actor_pose(dcc)
-                if pose is not None:
-                    _last_label = "debug cam"
-                    return pose
-                loc = get_debug_cam_location().get("location")
-                if isinstance(loc, dict) and loc.get("x") is not None:
-                    try:
-                        vector = unrealsdk.make_struct(
-                            "Vector",
-                            X=float(loc.get("x") or 0.0),
-                            Y=float(loc.get("y") or 0.0),
-                            Z=float(loc.get("z") or 0.0),
-                        )
-                        rot = unrealsdk.make_struct("Rotator", Pitch=0, Yaw=0, Roll=0)
-                        _last_label = "debug cam"
-                        return vector, rot
-                    except Exception:
-                        pass
-            _last_label = "debug cam inactive; using me"
-        except Exception:
-            _last_label = "debug cam unavailable; using me"
-    elif _mode == "party":
+    if _mode == "party":
         pc = _selected_pc()
         pawn = getattr(pc, "Pawn", None) if pc is not None else None
         pose = _actor_pose(pawn)
@@ -194,29 +164,6 @@ def resolve_pose(local_pc: Any) -> tuple[Any, Any] | None:
     return _actor_pose(local_pawn)
 
 
-def party_index() -> int | None:
-    return _party_index
-
-
-def anchor_pawn(local_pc: Any) -> Any | None:
-    """Pawn at the current spawn anchor (party target, NPC, or local)."""
-    if _mode == "party":
-        pc = _selected_pc()
-        return getattr(pc, "Pawn", None) if pc is not None else None
-    if _mode == "npc_nearest":
-        local_pawn = getattr(local_pc, "Pawn", None) if local_pc is not None else None
-        return _nearest_npc(local_pawn)
-    if _mode in ("freecam", "debug_cam", "debugcam"):
-        try:
-            from .dev_tools import _cached_dcc, is_debug_cam_active
-
-            if is_debug_cam_active():
-                return _cached_dcc()
-        except Exception:
-            pass
-    return getattr(local_pc, "Pawn", None) if local_pc is not None else None
-
-
 def apply_from_payload(
     payload: dict[str, Any] | None = None,
     *,
@@ -233,16 +180,5 @@ def apply_from_payload(
             party_idx = int(payload["party_index"])
         elif default_party_index is not None:
             party_idx = int(default_party_index)
-    elif default_party_index is not None and anchor in ("", "local"):
-        # Boost target selected in EXE — shape/spawn at them, not host feet.
-        try:
-            from .mobility_runtime import local_party_index
-
-            local = local_party_index()
-            if local is not None and int(default_party_index) != int(local):
-                anchor = "party"
-                party_idx = int(default_party_index)
-        except Exception:
-            pass
     set_target(anchor, party_idx)
     return label()

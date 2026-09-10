@@ -258,25 +258,17 @@ def _sticky_toggle_status() -> dict[str, Any]:
                 out["force_fly"] = bool(out["force_fly_all"])
         except Exception:
             out["force_fly_all"] = False
-        jump_on = False
-        all_mode = bool(getattr(mr, "_infinite_jump_all_mode", False))
-        try:
-            if all_mode:
-                jump_on = True
-            elif idx < 0:
-                jump_on = False
-            elif hasattr(mr, "_may_mutate_infinite_jump"):
-                jump_on = bool(mr._may_mutate_infinite_jump(idx))
-            else:
-                jump_on = idx in getattr(mr, "infinite_jump_indices", set())
-        except Exception:
-            jump_on = idx in getattr(mr, "infinite_jump_indices", set()) if idx >= 0 else False
+        jump_on = idx in getattr(mr, "infinite_jump_indices", set()) if idx >= 0 else False
         out["infinite_jump"] = bool(jump_on)
-        # Trust the latch — comparing live indices made the Toggles row flip OFF
-        # while jump was still on, so the next click turned it off.
-        out["infinite_jump_all"] = bool(all_mode)
-        if idx < 0:
-            out["infinite_jump"] = bool(all_mode)
+        try:
+            rows = _player_rows()
+            indices = [int(r.get("index", 0)) for r in rows]
+            jump_set = {int(x) for x in (mr.infinite_jump_indices or set())}
+            out["infinite_jump_all"] = bool(indices) and all(i in jump_set for i in indices)
+            if idx < 0:
+                out["infinite_jump"] = bool(out["infinite_jump_all"])
+        except Exception:
+            out["infinite_jump_all"] = False
         out["noclip"] = bool(mr.get_noclip_enabled())
         out["fall_through_map"] = bool(mr.fall_through_enabled_for_index(idx if idx >= 0 else 0))
         try:

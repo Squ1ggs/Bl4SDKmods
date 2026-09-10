@@ -222,9 +222,7 @@ def _tick(*args: Any, **_kwargs: Any) -> None:
     if not _is_host_tick_context(args):
         return
     now = time.monotonic()
-    # Keep UVHM moving: settle phases are short; do not pause ~0.12s between every +1.
-    min_gap = 0.04 if (_machine.running or _pending_request is not None) else 0.12
-    if now - _last_tick_at < min_gap:
+    if now - _last_tick_at < 0.12:
         return
     _last_tick_at = now
     _last_tick_seen_at = now
@@ -239,19 +237,10 @@ def _tick(*args: Any, **_kwargs: Any) -> None:
         pass
     if _pending_request is not None:
         _consume_request()
-        # Start immediately on this same tick — do not wait another gap.
-        if not _machine.running:
-            return
+        return
     if not _machine.running:
         return
     current = _machine.tick()
-    # Extra pump on settle/verify so one frame can finish a grace poll + next command.
-    if current.running and current.phase in (
-        Phase.WAIT_OBJECTIVE,
-        Phase.WAIT_FINAL,
-        Phase.VERIFY_RANK,
-    ):
-        current = _machine.tick()
     line = (
         f"{current.phase.value}|{current.target_name}|{current.rank}|"
         f"{current.token}|{current.message}"

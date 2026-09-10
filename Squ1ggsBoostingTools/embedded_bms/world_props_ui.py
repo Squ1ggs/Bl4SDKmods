@@ -31,28 +31,13 @@ def _invalidate_io_filter_cache() -> None:
     _io_filter_cache_rows = None
 
 
-def is_worldpath_catalog_row(token: str, row_cat: str) -> bool:
-    """Duplicate PersistentLevel picker rows — hidden unless show WorldPaths is on."""
-    cat = str(row_cat or "").strip()
-    if cat == "WorldPath":
-        return True
-    return str(token or "").strip().lower().startswith("persistentlevel.")
-
-
-def _cached_filtered_presets(
-    query: str, category: str = "", *, show_worldpaths: bool = False
-) -> list[tuple[str, str, str, str]]:
+def _cached_filtered_presets(query: str, category: str = "") -> list[tuple[str, str, str, str]]:
     """Rebuild IO filter only when search/category/favorites change."""
     global _io_filter_cache_key, _io_filter_cache_rows
-    key = (
-        str(query or "").strip().lower(),
-        str(category or "").strip().lower(),
-        len(_favorite_world_props),
-        bool(show_worldpaths),
-    )
+    key = (str(query or "").strip().lower(), str(category or "").strip().lower(), len(_favorite_world_props))
     if _io_filter_cache_rows is not None and _io_filter_cache_key == key:
         return list(_io_filter_cache_rows)
-    rows = _sort_favorites_first(_filter_presets(query, category=category, show_worldpaths=show_worldpaths))
+    rows = _sort_favorites_first(_filter_presets(query, category=category))
     _io_filter_cache_key = key
     _io_filter_cache_rows = rows
     return list(rows)
@@ -152,8 +137,8 @@ def _world_path_cmd(token: str) -> str:
 # Machines that often spawn Locked via oak_spawnai / script aliases — prefer world path.
 # Keep this narrow: blanket "vendingmachine" forced oak_spawn find_all and hitch'd EXE clicks.
 # Dual-sequence machines keep oak_spawnai; controller appends the world pass automatically.
-# PlayerBank: NEVER world path — PersistentLevel duplicate freezes host / kicks lobby.
 _PREFER_WORLD_PATH_SUBSTR: tuple[str, ...] = (
+    "playerbank",
     "lostloot",
     "goldenchest",
     "firmware",
@@ -162,6 +147,7 @@ _PREFER_WORLD_PATH_SUBSTR: tuple[str, ...] = (
 _DUAL_KEEP_AI_CMD_SUBSTR: tuple[str, ...] = (
     # Maurice / Black Market: world-template oak_spawn only (OakVendingMachine).
     "vendingmachine_munitions_splice",
+    "playerbank",
     "lostloot",
     "goldenchest",
 )
@@ -249,8 +235,6 @@ def _read_catalog_rows() -> list[tuple[str, str, str, str]]:
 
                 if is_hidden_io_token(token):
                     continue
-                if is_catalog_excluded_io(token, str(entry.get("label", "") or "")):
-                    continue
                 short = canonical_io_token(token) or short
             except Exception:
                 is_oak_dual_vending = lambda _t: False  # type: ignore[assignment,misc]
@@ -276,11 +260,8 @@ def _read_catalog_rows() -> list[tuple[str, str, str, str]]:
                 seen.add(key)
                 # Prefer unlocked world path for banks / vending / similar machines.
                 # Dual-auto / oak-dual machines keep their curated command.
-                # PlayerBank: never PersistentLevel clone (freezes host / kicks lobby).
                 if is_oak_dual_vending(short) or key == "io_vendingmachine_blackmarket":
                     pass
-                elif "playerbank" in short.lower() or short.lower() in ("bank", "io_playerbank"):
-                    cmd = f"oak_spawnai {short if short.lower().startswith('io_') else 'IO_PlayerBank'}"
                 elif _prefer_world_path(short):
                     wcmd = _world_path_cmd(short)
                     if wcmd:
@@ -289,12 +270,11 @@ def _read_catalog_rows() -> list[tuple[str, str, str, str]]:
                     cmd = f"oak_spawnai {short}"
                 rows.append((short, label, cmd, category))
             # Extra PersistentLevel rows only for machines that still need a manual
-            # world-path pick. Dual-auto / oak-dual / PlayerBank stay as one row.
+            # world-path pick. Dual-auto / oak-dual machines stay as one row.
             if (
                 short.lower().startswith("io_")
                 and not _is_dual_auto_machine(short)
                 and not is_oak_dual_vending(short)
-                and "playerbank" not in short.lower()
             ):
                 wkey = f"persistentlevel.{short.lower()}"
                 if wkey not in seen:
@@ -377,29 +357,21 @@ def load_io_entries(*, reload: bool = False) -> list[tuple[str, str, str, str]]:
     return list(rows)
 
 
-def load_io_categories(*, reload: bool = False, show_worldpaths: bool = False) -> list[str]:
+def load_io_categories(*, reload: bool = False) -> list[str]:
     if reload:
         _read_catalog_rows()
     if _categories_cache:
-        cats = list(_categories_cache)
-    else:
-        rows = load_io_entries(reload=reload)
-        cats = sorted({r[3] for r in rows})
-    if not show_worldpaths:
-        cats = [c for c in cats if c != "WorldPath"]
-    return cats
+        return list(_categories_cache)
+    rows = load_io_entries(reload=reload)
+    return sorted({r[3] for r in rows})
 
 
-def _filter_presets(
-    query: str, category: str = "", *, show_worldpaths: bool = False
-) -> list[tuple[str, str, str, str]]:
+def _filter_presets(query: str, category: str = "") -> list[tuple[str, str, str, str]]:
     q = (query or "").strip().lower()
     cat = (category or "").strip().lower()
     rows = load_io_entries()
     out: list[tuple[str, str, str, str]] = []
     for token, label, cmd, row_cat in rows:
-        if not show_worldpaths and is_worldpath_catalog_row(token, row_cat):
-            continue
         if cat and cat not in ("all", "*") and row_cat.lower() != cat:
             continue
         if q:
@@ -532,10 +504,7 @@ def draw_world_props_section(
         str(getattr(ui, "world_prop_filter", "") or ""),
         96,
     )
-    hits = _cached_filtered_presets(
-        str(ui.world_prop_filter),
-        show_worldpaths=bool(getattr(ui, "show_worldpaths", False)),
-    )
+    hits = _cached_filtered_presets(str(ui.world_prop_filter))
     imgui.text_disabled(f"Matches: {len(hits)}  ·  Favorites: {len(_favorite_world_props)}")
     _draw_io_list(imgui, ui, hits, run_line=run_line, id_prefix=id_prefix, list_height=220.0)
     _draw_favorites_row(imgui, ui, run_line=run_line, id_prefix=id_prefix)
@@ -556,20 +525,8 @@ def draw_io_spawner_panel(
         "once (that wake-up finishes the machine), then Activate last IO if needed. "
         "Star favorites — saved in settings/bl4_mob_spawner_hookedwidget.json.",
     )
-    if imgui.button(f"Player Bank##{id_prefix}_bank"):
-        # AI + activate only — world PersistentLevel clone freezes / kicks lobby.
-        ok, msg = run_line("oak_spawnai IO_PlayerBank")
-        if ok:
-            try:
-                if callable(activate_fn):
-                    _a_ok, a_msg = activate_fn()
-                else:
-                    from .io_activate import activate_spawned_io  # noqa: PLC0415
-
-                    _a_ok, a_msg = activate_spawned_io("IO_PlayerBank")
-                msg = f"{msg}; {a_msg}"
-            except Exception as act_ex:  # noqa: BLE001
-                msg = f"{msg}; activate: {type(act_ex).__name__}"
+    if imgui.button(f"Player Bank (unlocked)##{id_prefix}_bank"):
+        ok, msg = run_line(_world_path_cmd("IO_PlayerBank"))
         ui.status_text = msg
         ui.error_text = "" if ok else msg
     imgui.same_line()
@@ -605,24 +562,7 @@ def draw_io_spawner_panel(
     total = len(load_io_entries())
     imgui.text_disabled(f"{total} entries · {src.name}")
 
-    show_wp = bool(getattr(ui, "show_worldpaths", False))
-    _wp_changed, show_wp = imgui.checkbox(f"Show WorldPaths##{id_prefix}_worldpath", show_wp)
-    ui.show_worldpaths = show_wp
-    if _wp_changed:
-        _invalidate_io_filter_cache()
-        if not show_wp and str(getattr(ui, "io_category", "")).strip() == "WorldPath":
-            ui.io_category = "All"
-            ui.io_category_idx = 0
-    if imgui.is_item_hovered():
-        imgui.set_tooltip(
-            "PersistentLevel duplicate rows (advanced). Most IOs use oak_spawnai — "
-            "only enable for bank/vending fallbacks."
-        )
-    if show_wp:
-        imgui.same_line()
-        imgui.text_disabled("(PersistentLevel duplicates visible)")
-
-    categories = ["All"] + load_io_categories(show_worldpaths=show_wp)
+    categories = ["All"] + load_io_categories()
     cat_idx = int(getattr(ui, "io_category_idx", 0) or 0)
     cat_idx = max(0, min(len(categories) - 1, cat_idx))
     ui.io_category_idx = cat_idx
@@ -641,9 +581,7 @@ def draw_io_spawner_panel(
         96,
     )
     cat_filter = "" if str(ui.io_category).lower() == "all" else str(ui.io_category)
-    hits = _cached_filtered_presets(
-        str(ui.world_prop_filter), category=cat_filter, show_worldpaths=show_wp
-    )
+    hits = _cached_filtered_presets(str(ui.world_prop_filter), category=cat_filter)
     imgui.text_disabled(f"Matches: {len(hits)}  ·  Favorites: {len(_favorite_world_props)}")
     _draw_io_list(imgui, ui, hits, run_line=run_line, id_prefix=id_prefix, list_height=420.0)
     _draw_favorites_row(imgui, ui, run_line=run_line, id_prefix=id_prefix)

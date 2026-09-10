@@ -21,7 +21,7 @@ _state: dict[str, Any] = {
     "root_index": 0,
     "root_search": "",
     "parts_text": "",
-    "level": 60,
+    "level": 70,
     "unlock_rules": False,
     "status": "Pick type + manufacturer, add part keys (one per line), then Validate or Build.",
     "human": "",
@@ -222,7 +222,7 @@ def draw_legit_builder_tab(
             width=820,
             height=110,
         )
-        _state["level"] = input_int_clamped("Level###sqbt_legit_level", int(_state["level"]), 1, 60)
+        _state["level"] = input_int_clamped("Level###sqbt_legit_level", int(_state["level"]), 1, 70)
         draw_target_selector()
 
         root_key = str(root.get("key") if root else "")

@@ -17,10 +17,10 @@ from typing import Any
 # duplicate. Keep this conservative — only known crashy / locked IOs.
 # Do NOT put goldenchest / Lootable_* here: substring match would dual-spawn
 # Lootable_GoldenChest and freeze via PersistentLevel oak_spawn of the map chest.
-# Do NOT put playerbank here: dual world duplicate freezes the host and kicks guests.
 _DUAL_WORLD_SPAWN_SUBSTR: tuple[str, ...] = (
     # Maurice / Black Market are OakVendingMachine world-placed only — not dual.
     "vendingmachine_munitions_splice",
+    "playerbank",
     "lostloot",
 )
 
@@ -205,56 +205,6 @@ def _oak_dual_key(token: str) -> str:
 def is_hidden_io_token(token: str) -> bool:
     """True for catalog rows that must not appear in EXE/UI dropdowns."""
     return _oak_dual_key(token) in _HIDDEN_IO_TOKENS
-
-
-def is_audio_io_token(token: str, label: str = "") -> bool:
-    """Sound-only / ambient IO actors — not placeable props."""
-    short = short_io_token(token).lower().replace("-", "_")
-    blob = f"{short} {(label or '').strip()}".lower().replace("-", "_")
-    if short.startswith("io_audio_") or short.startswith("audio_io_"):
-        return True
-    if short.startswith("mandolin_io_audio"):
-        return True
-    if "audio_io_" in short:
-        return True
-    if short.startswith("io_") and "_audio_" in short:
-        return True
-    if blob.startswith("audio ") or " audio " in f" {blob} ":
-        return True
-    return False
-
-
-def is_catalog_excluded_io(token: str, label: str = "") -> bool:
-    """Hide from EXE/in-game IO lists — non-visual or unsupported spawns."""
-    if is_audio_io_token(token, label):
-        return True
-    short = short_io_token(token).lower().replace("-", "_")
-    blob = f"{short} {(label or '').strip()}".lower()
-    if "dialogplacer" in blob:
-        return True
-    return False
-
-
-def spawn_io_prefers_ai(short: str, cmd: str = "") -> bool:
-    """Prefer oak_spawnai — world PersistentLevel paths fail or freeze (esp. PlayerBank)."""
-    key = short_io_token(short).lower().replace("-", "_")
-    # Always AI for bank — dual/world duplicate hitch kicks co-op lobbies.
-    if "playerbank" in key or key in ("bank", "io_playerbank", "player_bank"):
-        return True
-    try:
-        from Squ1ggsBoostingTools.dev_tools import is_debug_cam_active  # noqa: PLC0415
-        from Squ1ggsBoostingTools import spawn_targets  # noqa: PLC0415
-
-        at_cam = bool(is_debug_cam_active()) or str(spawn_targets.mode() or "").strip().lower() == "freecam"
-    except Exception:
-        at_cam = False
-    if not at_cam:
-        return False
-    if _oak_dual_key(short) in _OAK_DUAL_VENDING:
-        return False
-    if str(cmd or "").strip().lower().startswith(("oak_dual ", "asd_dual ")):
-        return False
-    return bool(short_io_token(short))
 
 
 def is_oak_dual_vending(token: str) -> bool:
@@ -655,16 +605,6 @@ def safe_world_io_spawn(
     short = canonical_io_token(token) or short_io_token(token)
     if not short:
         return False, "empty IO token"
-    low = short.lower().replace("-", "_")
-    # PlayerBank live template clone freezes host / kicks lobby — never do it.
-    if "playerbank" in low or low in ("bank", "io_playerbank"):
-        try:
-            a_ok, a_msg = activate_spawned_io(short)
-            if a_ok:
-                return True, f"player bank activate-only (no world duplicate): {a_msg}"
-        except Exception as act_ex:  # noqa: BLE001
-            return False, f"player bank: refused world duplicate; activate failed: {act_ex}"
-        return False, "player bank: refused world PersistentLevel duplicate (use oak_spawnai)"
     try:
         from Squ1ggsBoostingTools.embedded_oak import engine as ssp  # noqa: PLC0415
     except Exception as ex:  # noqa: BLE001
@@ -702,6 +642,16 @@ def safe_world_io_spawn(
 
     if actor is not None and _actor_still_valid(actor):
         return True, f"world oak_spawn: {short} -> {actor}"
+
+    low = short.lower().replace("-", "_")
+    if "playerbank" in low or low in ("bank", "io_playerbank"):
+        try:
+            a_ok, a_msg = activate_spawned_io(short)
+            if a_ok:
+                return True, f"player bank activate-only (no world scan): {a_msg}"
+        except Exception as act_ex:  # noqa: BLE001
+            err = f"{err}; activate: {act_ex}" if err else f"activate: {act_ex}"
+        return False, err or f"world oak_spawn found no live template for {short}"
 
     return False, err or f"world oak_spawn found no live template for {short}"
 

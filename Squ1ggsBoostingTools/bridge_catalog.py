@@ -16,7 +16,6 @@ _GZO_CACHE_NAMES = (
     "MattsSDKBoostingTools_gzo_codes.json",
 )
 _BMS_DATA = Path(__file__).resolve().parent / "embedded_bms" / "data"
-_MOB_ACTOR_CATALOG_CACHE: dict[str, Any] | None = None
 
 
 def _ok(message: str = "OK", **extra: Any) -> dict[str, Any]:
@@ -360,20 +359,8 @@ def catalog_lootlemon(payload: dict[str, Any] | None = None) -> dict[str, Any]:
     return _ok(f"{len(entries)} Lootlemon code(s).", rows=entries, categories=["All", *categories], total=total)
 
 
-def _mob_actor_catalog_data() -> dict[str, Any]:
-    """Cached bundled Char_* catalog — avoid re-reading ~270KB JSON on every EXE poll."""
-    global _MOB_ACTOR_CATALOG_CACHE
-    if _MOB_ACTOR_CATALOG_CACHE is not None:
-        return _MOB_ACTOR_CATALOG_CACHE
-    data = _load_json_path(_BMS_DATA / "squ1ggs_actor_catalog.json") or {}
-    if not isinstance(data, dict):
-        data = {}
-    _MOB_ACTOR_CATALOG_CACHE = data
-    return data
-
-
 def _mob_actor_sections() -> list[dict[str, str]]:
-    data = _mob_actor_catalog_data()
+    data = _load_json_path(_BMS_DATA / "squ1ggs_actor_catalog.json") or {}
     out: list[dict[str, str]] = []
     for sec in data.get("sections") or []:
         if not isinstance(sec, dict):
@@ -390,7 +377,7 @@ def catalog_mob_actors(payload: dict[str, Any] | None = None) -> dict[str, Any]:
     search = str(payload.get("search") or "")
     section = str(payload.get("section") or payload.get("category") or "All")
     limit = max(1, min(int(payload.get("limit") or 500), 2000))
-    data = _mob_actor_catalog_data()
+    data = _load_json_path(_BMS_DATA / "squ1ggs_actor_catalog.json") or {}
     rows: list[dict[str, Any]] = []
     for sec in data.get("sections") or []:
         if not isinstance(sec, dict):
@@ -424,59 +411,13 @@ def catalog_io_spawns(payload: dict[str, Any] | None = None) -> dict[str, Any]:
     search = str(payload.get("search") or "")
     category = str(payload.get("category") or "All")
     limit = max(1, min(int(payload.get("limit") or 500), 2000))
-    show_worldpaths = str(payload.get("show_worldpaths") or "no").strip().lower() in (
-        "1",
-        "true",
-        "yes",
-        "on",
-    )
     try:
-        from .embedded_bms.world_props_ui import (
-            is_worldpath_catalog_row,
-            load_io_categories,
-            load_io_entries,
-        )
+        from .embedded_bms.world_props_ui import load_io_categories, load_io_entries
 
-        base = ["All", "Carryables", "Floor / placeables", *load_io_categories(show_worldpaths=show_worldpaths)]
-        categories: list[str] = []
-        for c in base:
-            if c not in categories:
-                categories.append(c)
+        categories = ["All", *load_io_categories()]
         rows: list[dict[str, str]] = []
         for token, label, cmd, row_cat in load_io_entries():
-            if not show_worldpaths and is_worldpath_catalog_row(token, row_cat):
-                continue
-            try:
-                from .embedded_bms.io_activate import is_catalog_excluded_io  # noqa: PLC0415
-
-                if is_catalog_excluded_io(token, label):
-                    continue
-            except Exception:
-                pass
-            blob = f"{token} {label} {row_cat}".lower()
-            if category == "Carryables":
-                if "carry" not in blob:
-                    continue
-            elif category == "Floor / placeables":
-                if not any(tok in blob for tok in ("floor", "placeable", "breakaway")):
-                    continue
-                # World-path floor duplicates freeze BL4 — oak_spawnai only (BreakawayFloor etc.).
-                if "persistentlevel." in str(cmd).lower() or row_cat == "WorldPath":
-                    continue
-                if any(
-                    bad in blob
-                    for bad in (
-                        "crackedfloor",
-                        "firefloor",
-                        "damageablefloor",
-                        "floorelectric",
-                        "floorlever",
-                        "uppercity",
-                        "missiondamageable",
-                    )
-                ):
-                    continue
-            elif category != "All" and row_cat != category:
+            if category != "All" and row_cat != category:
                 continue
             rows.append({"token": token, "label": label, "cmd": cmd, "category": row_cat})
         rows = _search_rows(rows, search, "token", "label", "category", "cmd")[:limit]

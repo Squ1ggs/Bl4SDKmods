@@ -193,7 +193,7 @@ _lootlemon_cache_autoload_attempted: bool = False
 _serial_store_search: str = ""
 _currency_amount: int = 1000000
 _currency_kind_index: int = 0
-_exp_level: int = 60
+_exp_level: int = 70
 _exp_track_index: int = 0
 _inventory_settings = load_inventory_settings()
 _backpack_size: int = int(_inventory_settings.get("backpack_size", _DEFAULT_BACKPACK_SIZE))
@@ -202,15 +202,15 @@ _auto_inventory_sizes: bool = bool(_inventory_settings.get("auto_inventory_sizes
 _auto_inventory_last_log: float = 0.0
 _debug_cam_speed: float = get_debug_cam_speed()
 _serial_delivery_override_level: bool = False
-_serial_delivery_level: int = 60
+_serial_delivery_level: int = 70
 _serial_delivery_advanced_timing: bool = False
 _serial_delivery_pre_open_delay: float = 0.0
 _serial_delivery_post_open_delay: float = 0.05
 _serial_level_override_cache: dict[tuple, tuple] = {}
 _gzo_delivery_override_level: bool = False
-_gzo_delivery_level: int = 60
+_gzo_delivery_level: int = 70
 _lootlemon_delivery_override_level: bool = False
-_lootlemon_delivery_level: int = 60
+_lootlemon_delivery_level: int = 70
 _async_refresh_lock = threading.RLock()
 _gzo_refresh_thread: threading.Thread | None = None
 _gzo_refresh_result: tuple[list[dict[str, str]] | None, str | None, list[str]] | None = None
@@ -318,7 +318,7 @@ _EXP_TRACKS = [
     "vaultcard_xp_4",
 ]
 _MAX_WALLET_AMOUNT = 2_147_483_647
-_MAX_PLAYER_LEVEL = 60
+_MAX_PLAYER_LEVEL = 70
 _MAX_SPEC_LEVEL = 701
 _MAX_VAULT_CARD_LEVEL = 9_999  # NCS Oak2_VaultCardXP_Progression levelcap
 
@@ -690,7 +690,7 @@ def _serial_with_level_override(serial: str, level: int) -> str:
     raw = str(serial or "").strip()
     if not raw:
         return raw
-    level_i = _clamp_int(level, 1, 60)
+    level_i = _clamp_int(level, 1, _MAX_PLAYER_LEVEL)
     human = _serial_to_human(raw) if raw.startswith("@U") else raw
     new_human, count = re.subn(r"^(\s*\d+\s*,\s*\d+\s*,\s*\d+\s*,\s*)\d+", rf"\g<1>{level_i}", human, count=1)
     if count <= 0:
@@ -701,7 +701,7 @@ def _serial_with_level_override(serial: str, level: int) -> str:
 def _serials_with_level_override(serials: list[str], enabled: bool, level: int) -> tuple[list[str], int, str | None]:
     if not enabled:
         return list(serials), 0, None
-    level_i = _clamp_int(level, 1, 60)
+    level_i = _clamp_int(level, 1, _MAX_PLAYER_LEVEL)
     cleaned = tuple(str(s or "").strip() for s in serials if str(s or "").strip())
     key = (True, level_i, len(cleaned), hash(cleaned))
     cached = _serial_level_override_cache.get(key)
@@ -729,7 +729,7 @@ def _draw_catalog_level_override(prefix: str, enabled: bool, level: int) -> tupl
     new_enabled = _checkbox(f"Override delivery level###sqbt_{prefix}_override_level", bool(enabled))
     imgui = _blimgui.imgui
     imgui.same_line()
-    new_level = _input_int_clamped(f"Level###sqbt_{prefix}_delivery_level", int(level), 1, 60)
+    new_level = _input_int_clamped(f"Level###sqbt_{prefix}_delivery_level", int(level), 1, _MAX_PLAYER_LEVEL)
     if new_enabled:
         _muted_wrapped(f"Deliver buttons deserialize selected serials, set level to {new_level}, reserialize, then deliver.")
     else:
@@ -1306,8 +1306,8 @@ def _max_player_level_selected() -> None:
     if not name:
         _log("No party player selected.")
         return
-    _do_give_experience("player", 60, name)
-    _log(f"Requested player level 60 for {name}.")
+    _do_give_experience("player", _MAX_PLAYER_LEVEL, name)
+    _log(f"Requested player level {_MAX_PLAYER_LEVEL} for {name}.")
 
 
 def _max_spec_level_selected() -> None:
@@ -1366,7 +1366,7 @@ def _max_all_selected() -> None:
         return
     label = name or (f"index {pidx}" if pidx is not None else "local")
     if name:
-        _do_give_experience("player", 60, name)
+        _do_give_experience("player", _MAX_PLAYER_LEVEL, name)
         _do_give_experience("specialization", 701, name)
     cash_ok, cash_msg = _do_set_currency_absolute(
         "cash",
@@ -1638,7 +1638,7 @@ def _give_serial_selected(mode: str = "selected") -> None:
         return
     status = _deliver_serials_with_target(serials, mode, "Boosting Menu")
     if changed:
-        status += f" Level override: {changed} serial(s) set to level {_clamp_int(_serial_delivery_level, 1, 60)}."
+        status += f" Level override: {changed} serial(s) set to level {_clamp_int(_serial_delivery_level, 1, _MAX_PLAYER_LEVEL)}."
     _log(status)
 
 
@@ -1704,7 +1704,7 @@ def _draw_quick_max() -> None:
         imgui.same_line()
         _button("ERIDIUM", _max_eridium_selected, BTN_ERIDIUM, 98, 0)
         imgui.same_line()
-        _button("LV 60", _max_player_level_selected, BTN_XP, 72, 0)
+        _button("LV 70", _max_player_level_selected, BTN_XP, 72, 0)
         imgui.same_line()
         _button("SPEC 701", _max_spec_level_selected, BTN_SPEC, 92, 0)
         _muted_wrapped(
@@ -3099,7 +3099,7 @@ def _lootlemon_deliver_selected(mode: str = "selected") -> None:
         return
     _lootlemon_status = _deliver_serials_with_target(serials, mode, "Lootlemon Codes")
     if changed:
-        _lootlemon_status += f" Level override: {changed} serial(s) set to level {_clamp_int(_lootlemon_delivery_level, 1, 60)}."
+        _lootlemon_status += f" Level override: {changed} serial(s) set to level {_clamp_int(_lootlemon_delivery_level, 1, _MAX_PLAYER_LEVEL)}."
     _log(f"Lootlemon Codes delivered {len(serials)} serial(s): {_lootlemon_status}")
 
 
@@ -4027,7 +4027,7 @@ def _gzo_deliver_selected(mode: str = "selected") -> None:
         return
     _gzo_status = _deliver_serials_with_target(serials, mode, "GZO Codes")
     if changed:
-        _gzo_status += f" Level override: {changed} serial(s) set to level {_clamp_int(_gzo_delivery_level, 1, 60)}."
+        _gzo_status += f" Level override: {changed} serial(s) set to level {_clamp_int(_gzo_delivery_level, 1, _MAX_PLAYER_LEVEL)}."
     _log(f"GZO Codes delivered {len(serials)} serial(s): {_gzo_status}")
 
 def _draw_gzo_codes_tab() -> None:
