@@ -248,6 +248,11 @@ class UVHMProgression:
         }
 
     def cancel(self) -> bool:
+        if self._phase in (Phase.ERROR, Phase.COMPLETE, Phase.IDLE):
+            self._phase = Phase.IDLE
+            self._message = "Idle."
+            self._cancel_resume_phase = None
+            return True
         if not self.running:
             return False
         self._cancel_resume_phase = self._phase
@@ -293,13 +298,14 @@ class UVHMProgression:
         try:
             pc = self._resolve_pc(target)
         except Exception as exc:  # noqa: BLE001
-            self._fail(f"Could not resolve {target.display_name}: {exc}")
-            return self.status()
-        if pc is None:
-            self._fail(
-                f"Player {target.display_name!r} ({target.key}) is no longer resolvable."
+            return self._skip_or_fail_unresolvable(
+                target, f"Could not resolve {target.display_name}: {exc}"
             )
-            return self.status()
+        if pc is None:
+            return self._skip_or_fail_unresolvable(
+                target,
+                f"Player {target.display_name!r} ({target.key}) is no longer resolvable.",
+            )
 
         try:
             if self._phase == Phase.READY:
@@ -441,6 +447,20 @@ class UVHMProgression:
                 )
             else:
                 self._message = "UVHM ranks 1-7 completed for every target."
+
+
+    def _skip_or_fail_unresolvable(self, target: TargetIdentity, reason: str) -> ProgressionStatus:
+        """Lobby churn: skip missing remotes and keep the all-lobby job alive."""
+        note = str(reason).strip() or f"{target.display_name} is no longer resolvable."
+        self._results.append(f"skipped:{target.display_name}:{note}")
+        if self._target_index + 1 < len(self._targets):
+            self._message = (
+                f"Skipped {target.display_name} (left / unresolvable); continuing."
+            )
+            self._advance_target()
+            return self.status()
+        self._fail(note)
+        return self.status()
 
     def _fail(self, message: str) -> None:
         self._phase = Phase.ERROR

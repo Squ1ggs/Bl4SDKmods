@@ -3133,27 +3133,16 @@ def _sync_party_wide_mobility_targets() -> None:
 
 
 def _prune_remote_mobility_toggles() -> None:
-    """Guest indices in saved toggles read as OFF in the EXE but still poison pawns on join."""
-    global infinite_jump_indices
-    if _infinite_jump_party_wide():
+    """Do not wipe intentional remote infinite-jump targets.
+
+    Older builds cleared every non-local index whenever all-party mode was off,
+    so \"Infinite jump (target)\" for a friend died after one join blip / jump.
+    Remotes that are *not* in infinite_jump_indices are still scrubbed via
+    scrub_remote_party_mobility / _restore_remote_walk_pawn.
+    """
+    if _infinite_jump_party_wide() or _infinite_jump_all_mode:
         return
-    local = local_party_index()
-    if local is None:
-        return
-    stale = {int(i) for i in infinite_jump_indices if int(i) != int(local)}
-    if not stale:
-        return
-    for idx in stale:
-        infinite_jump_indices.discard(idx)
-    try:
-        _restore_jump_limits_for_indices(stale)
-    except Exception:
-        pass
-    try:
-        save_settings()
-    except Exception:
-        pass
-    _log(f"Cleared stale infinite-jump on remote slot(s) {sorted(stale)} (host-only mode).")
+    # Keep explicit per-player targets (including remotes). Nothing to prune.
 
 
 def _restore_remote_walk_pawn(pc: object, pawn: object, move: object | None, idx: int) -> int:

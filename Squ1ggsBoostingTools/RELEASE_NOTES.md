@@ -1,23 +1,13 @@
-# Squ1ggs Boosting Tools — v1.1.134 / mod 3.8.140
-
-Paste-ready notes for GitHub Releases.
+# Squ1ggs Boosting Tools — v1.1.135 / mod 3.8.141
 
 ## Highlights
-
-### Character level 70 (pre-update)
-Boosting now targets the **level 70** character cap. MAX ALL, Player level, in-game LV, and keybinds apply **70** (not the old 60 wiring).
-
-Gear spawn / serial override defaults follow **70** for this bump.
-
-**Coming soon:** item-pool / main-page catalog refresh for the new cap — this drop is the boost-to-70 prep so you are not stuck at 60 while that lands.
-
-### Still in this line
-- Spawn shapes (UFO, rocket, gear, crown, torus, cube, blocks, diamond 3D)
-- Send serials: Browse/YAML → paste box; Add to library…
-- Open rewards: one package at a time (safe)
+- Loveless (Corpo Hacker Raid 2) class mod spawn via dedicated merge
+- Spawn All Filtered + shapes (`shape_text`) fixed
+- Infinite jump all/others sticky fix
+- Shiny shape crash mitigation; single-pool spawn count 1–999
+- Party teleport names, Dev Testing Map travel, sticky bridge error clear
 
 ## Install
-
-1. Download the portable zip below and run **Squ1ggsBoostingTools.exe**.
-2. Point it at Borderlands 4 if asked — the EXE installs the SDK + mod for you.
-3. **Fully restart Borderlands 4**, then confirm mod **3.8.140** in Refresh status.
+1. Download the portable zip and run **Squ1ggsBoostingTools.exe**.
+2. Point it at Borderlands 4 if asked — the EXE installs the SDK + mod.
+3. **Fully restart Borderlands 4**, then confirm mod **3.8.141** in Refresh status.

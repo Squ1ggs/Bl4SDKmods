@@ -16,7 +16,6 @@ TAB_LABELS: tuple[str, ...] = (
     "Progress",
     "Loot",
     "Serials",
-    "Backpack",
     "Mobility",
     "Vehicle",
     "Damage & More",
@@ -181,7 +180,6 @@ TAB_SHORT_LABELS: tuple[str, ...] = (
     "Progress",
     "Loot",
     "Serials",
-    "Backpack",
     "Mobility",
     "Vehicle",
     "Damage",
@@ -197,10 +195,13 @@ TAB_SHORT_LABELS: tuple[str, ...] = (
 
 # Recent release highlights on Home (collapsible — not the dev changelog).
 HOME_WHATS_NEW: tuple[str, ...] = (
+    "Spawn All Filtered shapes fixed; infinite jump all/others stays on; shiny house fill capped.",
+    "Backpack tab removed again (scan/relevel was too heavy).",
+    "Party teleport shows Boost target names; Dev map travel queue no longer cancels on blips.",
+    "UVHM — fast progression restored; left players still skipped in all-lobby.",
+    "Home Send serials — paste/Browse/@U deliver is back on the main page.",
+    "Loveless (Corpo Hacker) — Raid 2 classmod pool spawn + searchable labels.",
     "Character cap 70 — MAX ALL / Player level / keybinds boost to 70 (gear defaults follow).",
-    "Item-pool catalog refresh for the main page is coming soon — this drop is the level-70 pre-update.",
-    "Send serials — Browse/YAML into paste box; Add to library…; open rewards one-at-a-time.",
-    "Spawn shapes — UFO, rocket, gear, crown, torus, cube, blocks, diamond (3D).",
 )
 
 _AGGRO_MODES = ["attack_me", "attack_party", "free_for_all", "nearest_other", "passive"]
@@ -294,7 +295,14 @@ def _progression_target_fields(*, include_max_rank: bool = False) -> list[dict[s
 def _item_pool_spawn_fields(*, land: bool = False) -> list[dict[str, Any]]:
     fields: list[dict[str, Any]] = [
         {"key": "level", "label": "Item level", "type": "number", "default": _DEFAULT_ITEM_LEVEL},
-        {"key": "count", "label": "Count per pool", "type": "number", "default": 1},
+        {
+            "key": "count",
+            "label": "Count per pool (1–999)",
+            "type": "number",
+            "default": 1,
+            "min": 1,
+            "max": 999,
+        },
         *_world_drop_location_fields(),
     ]
     if land:
@@ -464,7 +472,12 @@ def _mobility_slider_fields() -> list[dict[str, Any]]:
 
 
 def _party_slot_field() -> dict[str, Any]:
-    return {"key": "slot", "label": "Party slot", "type": "select", "options": ["0", "1", "2", "3"], "default": "0"}
+    return {
+        "key": "slot",
+        "label": "Player (party slot)",
+        "type": "player_select",
+        "default": "0",
+    }
 
 
 def _legit_item_types() -> list[str]:
@@ -1372,11 +1385,60 @@ def get_panel_manifest() -> dict[str, Any]:
                         ],
                     },
                     {
+                        "title": "Send serials",
+                        "featured": True,
+                        "hint": (
+                            "Paste or Browse @Ug serials here (YAML/STBX ok), then Send items. "
+                            "Browse fills this paste box — not the queue or My Library. "
+                            "Full tools (GZO / Lootlemon / library) stay on the Serials tab. "
+                            f"{_OPEN_REWARDS_LARGE_WARNING}"
+                        ),
+                        "warning": _REWARDS_AND_INVENTORY_WARNING,
+                        "serialSendList": True,
+                        "actions": [
+                            _action(
+                                "Send items",
+                                "deliver_serials",
+                                deliver_from_paste=True,
+                                tooltip="Reads the paste box above — does not require Add to queue.",
+                                fields=[
+                                    {"key": "count", "label": "Amount per serial", "type": "number", "default": 1},
+                                    {
+                                        "key": "level_override",
+                                        "label": "Rewrite item level",
+                                        "type": "select",
+                                        "options": ["no", "yes"],
+                                        "default": "no",
+                                    },
+                                    {
+                                        "key": "level",
+                                        "label": "Item level",
+                                        "type": "number",
+                                        "default": _DEFAULT_ITEM_LEVEL,
+                                    },
+                                    *_delivery_recipient_fields(),
+                                ],
+                            ),
+                            _action(
+                                "Open pending rewards (everyone)",
+                                "rewards_open_everyone",
+                                confirm=(
+                                    "Open every pending Reward Center package for all live party members? "
+                                    "Packages open in the background — stay in-world until the progress line finishes."
+                                ),
+                                tooltip=(
+                                    "Open every pending Reward Center package for all live party players "
+                                    "using Squ1ggs Boosting Tools."
+                                ),
+                            ),
+                        ],
+                    },
+                    {
                         "title": "Jump to",
                         "featured": True,
                         "hint": "Shortcuts into the tabs that hold the rest of the toolkit.",
                         "quickLinks": [
-                            {"label": "Send serials (paste & deliver)", "tab": "serials"},
+                            {"label": "Send serials (full tools)", "tab": "serials"},
                             {"label": "Progress / UVHM / challenges", "tab": "progression"},
                             {"label": "Mobility / fly / sprint", "tab": "mobility"},
                             {"label": "Loot pools / drop backpack shape", "tab": "loot"},
@@ -1583,6 +1645,7 @@ def get_panel_manifest() -> dict[str, Any]:
                     },
                     {
                         "title": "Party teleport",
+                        "hint": "Buttons use the Boost target name (player bar under the tabs).",
                         "actions": [
                             _action("Me → selected", "teleport_party", payload={"mode": "me_to_selected"}),
                             _action("Selected → me", "teleport_party", payload={"mode": "selected_to_me"}),
@@ -1890,58 +1953,9 @@ def get_panel_manifest() -> dict[str, Any]:
                 ],
             },
             {
-                "id": "backpack",
+                "id": "mobility",
                 "label": TAB_LABELS[5],
                 "short": TAB_SHORT_LABELS[5],
-                "sections": [
-                    {
-                        "title": "Backpack scan & relevel",
-                        "featured": True,
-                        "hint": (
-                            "Reads the Boost target's backpack only when you open this tab or press Refresh. "
-                            "Tick gear, pick a new level, then relevel — decodes @U, rewrites level, swaps in-place."
-                        ),
-                        "warning": _REWARDS_AND_INVENTORY_WARNING,
-                        "multiselect": {
-                            "catalog": "backpack",
-                            "kind": "backpack",
-                            "valueKey": "slot",
-                            "labelKey": "title",
-                            "idKey": "id",
-                        },
-                        "actions": [
-                            _action(
-                                "Refresh backpack list",
-                                "backpack_scan_status",
-                                tooltip="Rescan the Boost target's backpack for @U serials.",
-                            ),
-                            _action(
-                                "Relevel selected",
-                                "backpack_relevel_selected",
-                                backpack_multiselect=True,
-                                confirm=(
-                                    "Rewrite level on every ticked backpack item for the Boost target? "
-                                    "Works best in solo with room in the pack."
-                                ),
-                                fields=[
-                                    {
-                                        "key": "level",
-                                        "label": "New item level",
-                                        "type": "number",
-                                        "default": _DEFAULT_ITEM_LEVEL,
-                                        "min": 1,
-                                        "max": 100,
-                                    },
-                                ],
-                            ),
-                        ],
-                    },
-                ],
-            },
-            {
-                "id": "mobility",
-                "label": TAB_LABELS[6],
-                "short": TAB_SHORT_LABELS[6],
                 "sections": [
                     {
                         "title": "Movement tuning",
@@ -2123,8 +2137,8 @@ def get_panel_manifest() -> dict[str, Any]:
             },
             {
                 "id": "vehicle",
-                "label": TAB_LABELS[7],
-                "short": TAB_SHORT_LABELS[7],
+                "label": TAB_LABELS[6],
+                "short": TAB_SHORT_LABELS[6],
                 "sections": [
                     {
                         "title": "Vehicle tuning",
@@ -2208,8 +2222,8 @@ def get_panel_manifest() -> dict[str, Any]:
             },
             {
                 "id": "damage",
-                "label": TAB_LABELS[8],
-                "short": TAB_SHORT_LABELS[8],
+                "label": TAB_LABELS[7],
+                "short": TAB_SHORT_LABELS[7],
                 "sections": [
                     {
                         "title": "Combat sliders",
@@ -2224,8 +2238,8 @@ def get_panel_manifest() -> dict[str, Any]:
             },
             {
                 "id": "resources",
-                "label": TAB_LABELS[9],
-                "short": TAB_SHORT_LABELS[9],
+                "label": TAB_LABELS[8],
+                "short": TAB_SHORT_LABELS[8],
                 "sections": [
                     {
                         "title": "Shield / repkit / recovery",
@@ -2240,8 +2254,8 @@ def get_panel_manifest() -> dict[str, Any]:
             },
             {
                 "id": "world",
-                "label": TAB_LABELS[10],
-                "short": TAB_SHORT_LABELS[10],
+                "label": TAB_LABELS[9],
+                "short": TAB_SHORT_LABELS[9],
                 "sections": [
                     {
                         "title": "Fast travel",
@@ -2435,8 +2449,8 @@ def get_panel_manifest() -> dict[str, Any]:
             },
             {
                 "id": "mob_io",
-                "label": TAB_LABELS[11],
-                "short": TAB_SHORT_LABELS[11],
+                "label": TAB_LABELS[10],
+                "short": TAB_SHORT_LABELS[10],
                 "sections": [
                     {
                         "title": "Mix spawn groups",
@@ -2642,8 +2656,8 @@ def get_panel_manifest() -> dict[str, Any]:
             },
             {
                 "id": "loot_shapes",
-                "label": TAB_LABELS[12],
-                "short": TAB_SHORT_LABELS[12],
+                "label": TAB_LABELS[11],
+                "short": TAB_SHORT_LABELS[11],
                 "sections": [
                     _loot_text_section(),
                     {
@@ -2689,8 +2703,8 @@ def get_panel_manifest() -> dict[str, Any]:
             },
             {
                 "id": "faafo",
-                "label": TAB_LABELS[13],
-                "short": TAB_SHORT_LABELS[13],
+                "label": TAB_LABELS[12],
+                "short": TAB_SHORT_LABELS[12],
                 "sections": [
                     {
                         "title": "F.A.A.F.O.",
@@ -2819,8 +2833,8 @@ def get_panel_manifest() -> dict[str, Any]:
             },
             {
                 "id": "keybinds",
-                "label": TAB_LABELS[14],
-                "short": TAB_SHORT_LABELS[14],
+                "label": TAB_LABELS[13],
+                "short": TAB_SHORT_LABELS[13],
                 "sections": [
                     {
                         "title": "Custom keybinds",
@@ -2834,8 +2848,8 @@ def get_panel_manifest() -> dict[str, Any]:
             },
             {
                 "id": "toggles",
-                "label": TAB_LABELS[15],
-                "short": TAB_SHORT_LABELS[15],
+                "label": TAB_LABELS[14],
+                "short": TAB_SHORT_LABELS[14],
                 "sections": [
                     {
                         "title": "Sticky toggles",
@@ -2849,8 +2863,8 @@ def get_panel_manifest() -> dict[str, Any]:
             },
             {
                 "id": "activity",
-                "label": TAB_LABELS[16],
-                "short": TAB_SHORT_LABELS[16],
+                "label": TAB_LABELS[15],
+                "short": TAB_SHORT_LABELS[15],
                 "sections": [
                     {
                         "title": "Support",

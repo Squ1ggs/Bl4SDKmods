@@ -19,11 +19,12 @@ SPAWN_CIRCLE_RADIUS = 110.0
 SPAWN_CIRCLE_HEIGHT_STEP = 2.5
 # Cap only for accidental "All" without fill. Fill-until-complete may exceed this up to shape want.
 MAX_DROP_ALL_SHINIES = 250
-# Hard ceiling when padding a silhouette (house ≈ 420).
-MAX_SHINY_SHAPE_FILL = 480
+# Hard ceiling when padding a silhouette. House wants ~420; keep well under that —
+# recent D3D12 AVs lined up with 420-slot shiny house dumps.
+MAX_SHINY_SHAPE_FILL = 220
 # Legacy blocking pace (unused by default — kept for env/opt-in sync).
 DROP_ALL_SHINIES_PACE_SEC = 0.08
-# Frame-paced world drops: keep ≤2 — higher per-tick rates AVd under shape find_all.
+# Frame-paced world drops: keep at 1 — higher per-tick rates AVd under shape find_all.
 DROP_ALL_SHINIES_PER_TICK = 1
 
 SHINY_ITEMPOOLS: tuple[str, ...] = (
@@ -834,7 +835,13 @@ def _process_pending_shiny_drop_jobs() -> None:
     remaining: list[dict[str, Any]] = []
     per_tick = max(1, int(DROP_ALL_SHINIES_PER_TICK or 1))
     try:
-        per_tick = max(1, min(int(os.environ.get("SQU1GGS_SHINY_DROP_PER_TICK", str(per_tick))), 2))
+        # Shaped dumps must stay at 1/tick — 2+ under house find_all correlated with D3D12 AVs.
+        shaped = any(
+            str(j.get("shape") or "none").strip().lower() not in ("", "none", "off")
+            for j in _pending_shiny_drop_jobs
+        )
+        env_cap = 1 if shaped else 2
+        per_tick = max(1, min(int(os.environ.get("SQU1GGS_SHINY_DROP_PER_TICK", str(per_tick))), env_cap))
     except (TypeError, ValueError):
         pass
 

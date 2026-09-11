@@ -261,14 +261,18 @@ def _sticky_toggle_status() -> dict[str, Any]:
         jump_on = idx in getattr(mr, "infinite_jump_indices", set()) if idx >= 0 else False
         out["infinite_jump"] = bool(jump_on)
         try:
+            all_mode = bool(getattr(mr, "_infinite_jump_all_mode", False))
             rows = _player_rows()
             indices = [int(r.get("index", 0)) for r in rows]
             jump_set = {int(x) for x in (mr.infinite_jump_indices or set())}
-            out["infinite_jump_all"] = bool(indices) and all(i in jump_set for i in indices)
-            if idx < 0:
-                out["infinite_jump"] = bool(out["infinite_jump_all"])
+            # Sticky all-mode must win over brief roster gaps (missing pawn → false OFF).
+            out["infinite_jump_all"] = bool(all_mode) or (
+                bool(indices) and all(i in jump_set for i in indices)
+            )
+            if idx < 0 or all_mode:
+                out["infinite_jump"] = bool(out["infinite_jump_all"] or jump_on)
         except Exception:
-            out["infinite_jump_all"] = False
+            out["infinite_jump_all"] = bool(getattr(mr, "_infinite_jump_all_mode", False))
         out["noclip"] = bool(mr.get_noclip_enabled())
         out["fall_through_map"] = bool(mr.fall_through_enabled_for_index(idx if idx >= 0 else 0))
         try:

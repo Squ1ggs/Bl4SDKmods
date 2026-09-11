@@ -46,6 +46,8 @@ _POOL_HEALTH_MTIME: float = -1.0
 # gap here turns the deferred queue into a frame-rate burst and can leave hundreds
 # of live pickups in the world before the engine has had a chance to settle.
 MAX_SPAWN_ALL_COUNT = 32
+# "Spawn this one item" / single-pool count — user-chosen; paced tick keeps it smooth.
+MAX_SINGLE_POOL_SPAWN_COUNT = 999
 SPAWN_ALL_TEST_COUNT = 1
 # One continuous queue — small waves + cooldown felt like "bursts" of loot.
 SPAWN_ALL_WAVE_SIZE = 10000
@@ -3470,6 +3472,11 @@ def _catalog_key_from_itempool(pool_name: str) -> str:
         match = re.match(r"^itempool_(.+)_05_legendary_(.+)$", stem)
         if match:
             return f"{match.group(1)}_comp_05_legendary_{match.group(2)}"
+    # Dedicated classmod pools: itempool_classmod_corpohacker_05_legendary_raid2
+    # → classmod_corpohacker_comp_05_legendary_raid2
+    match = re.match(r"^itempool_(classmod_[a-z0-9_]+)_05_legendary_(.+)$", pool_l)
+    if match:
+        return f"{match.group(1)}_comp_05_legendary_{match.group(2)}"
     return ""
 
 
@@ -4621,7 +4628,7 @@ def _balanced_generic_pearl_request(
 ) -> list[tuple[dict[str, str], int, int]]:
     """Keep an exact total while adding Pearls omitted by the live parent pool."""
     pool = str(entry.get("itempool") or "").strip()
-    total = max(1, min(int(count), MAX_SPAWN_ALL_COUNT))
+    total = max(1, min(int(count), MAX_SINGLE_POOL_SPAWN_COUNT))
     if not _is_generic_pearl_pool(pool):
         return [(dict(entry), max(1, int(level)), total)]
 
@@ -5329,7 +5336,7 @@ def _try_direct_generic_pearl_ncs(pool_l: str, level: int, count: int) -> int | 
     from .item_spawn.ncs_pool_spawn import spawn_legacy_itempool
     from .item_spawn.squ1ggs_spawn_bridge import spawn_native_pool, try_ncs_native_for_pool
 
-    total = max(1, min(int(count), 32))
+    total = max(1, min(int(count), MAX_SINGLE_POOL_SPAWN_COUNT))
     lvl = max(1, int(level))
 
     hit = spawn_native_pool(pool_l, count=total, level=lvl)
@@ -5773,7 +5780,7 @@ def _spawn_proven_pearl_supplement(
     """
     catalog = str(entry.get("catalog_key") or "").strip().lower()
     pool = str(entry.get("itempool") or "").strip()
-    total = max(1, min(int(count), MAX_SPAWN_ALL_COUNT))
+    total = max(1, min(int(count), MAX_SINGLE_POOL_SPAWN_COUNT))
     if catalog not in _PEARL_PARENT_SUPPLEMENT_CATALOGS:
         raise RuntimeError(f"Not a Pearl parent supplement: {catalog or pool}")
     spawned = 0
@@ -5795,7 +5802,7 @@ def _spawn_generic_pearl_pool_entries(pool: str, level: int, count: int) -> int:
     )
 
     pool_l = str(pool or "").strip().lower()
-    total = max(1, min(int(count), 32))
+    total = max(1, min(int(count), MAX_SINGLE_POOL_SPAWN_COUNT))
 
     if not generic_pearl_pool_spawnable(pool_l):
         raise RuntimeError(
@@ -6631,7 +6638,7 @@ def spawn_item_pool(pool_name: str, level: int = DEFAULT_ITEM_LEVEL, count: int 
         raise RuntimeError(
             f"Synthetic pool {pool_name} is not a live NCS row — use dump catalog / live *_05_* id."
         )
-    count = max(1, min(int(count), 100))
+    count = max(1, min(int(count), MAX_SINGLE_POOL_SPAWN_COUNT))
     level = max(1, int(level))
 
     from .item_spawn.ncs_pool_spawn import spawn_legacy_itempool
@@ -7434,6 +7441,33 @@ def _spawn_item_pool_entry_impl(
                 f"{display}: blocked wrong-family shiny pool "
                 f"({pool}) — no catalog dump (would spawn Fearstalker)."
             )
+
+    # Dedicated single-comp classmods (incl. Loveless / Raid2) — merge inline BEFORE
+    # bulk NCS. Fake pool ids like itempool_classmod_corpohacker_05_legendary_raid2
+    # are not live NCS rows; silent RPC "ok" + lag with zero loot.
+    from .item_spawn.classmod_comp_spawn import (
+        is_dedicated_classmod_catalog,
+        is_dedicated_classmod_inline_pool,
+        is_native_roll_classmod_pool,
+    )
+
+    if not catalog and pool:
+        catalog = _catalog_key_from_itempool(pool)
+        if catalog:
+            entry["catalog_key"] = catalog
+    if catalog and _is_generic_subjugator_classmod(catalog):
+        return _spawn_classmod_dedicated(catalog, entry, level=level, count=count, display=display)
+    if catalog and is_dedicated_classmod_catalog(catalog):
+        return _spawn_classmod_dedicated(catalog, entry, level=level, count=count, display=display)
+    if pool and is_dedicated_classmod_inline_pool(pool):
+        return _spawn_classmod_dedicated(
+            catalog or _catalog_key_from_itempool(pool),
+            entry,
+            level=level,
+            count=count,
+            display=display,
+        )
+
     # Named uniques: dump-only above — skip live pool (silent RPC / shiny twin).
     bulk_hit = 0
     if (
@@ -7443,6 +7477,7 @@ def _spawn_item_pool_entry_impl(
         and not (named_unique_base and not wants_shiny)
         and "_comp_05_" not in pool_l
         and "_comp_06_" not in pool_l
+        and not is_dedicated_classmod_inline_pool(pool)
     ):
         if wants_shiny and not _is_wrong_family_shiny_pool(pool) and not bulk_spawn_is_mass():
             try:
@@ -7468,11 +7503,6 @@ def _spawn_item_pool_entry_impl(
                 pass
         return bulk_hit
 
-    from .item_spawn.classmod_comp_spawn import (
-        is_dedicated_classmod_inline_pool,
-        is_native_roll_classmod_pool,
-    )
-
     from .item_spawn.pearlescent_manifest import is_pearlescent_catalog, pearlescent_row
 
     if str(entry.get("pearl_supplement") or "").strip() == "1" and not (
@@ -7484,10 +7514,7 @@ def _spawn_item_pool_entry_impl(
             count=count,
         )
 
-    if catalog and _is_generic_subjugator_classmod(catalog):
-        return _spawn_classmod_dedicated(catalog, entry, level=level, count=count, display=display)
-    if is_dedicated_classmod_inline_pool(pool):
-        return _spawn_classmod_dedicated(catalog, entry, level=level, count=count, display=display)
+    # (subjugator / dedicated already handled above)
 
     from .item_spawn.comp_tier import (
         comp_tier_for_catalog,
@@ -9144,7 +9171,7 @@ def queue_item_pool_entry(
     settle_l = str(settle or "none").strip().lower()
     if shape_l not in ("", "none", "off", "no", "vanilla") or settle_l not in ("", "none"):
         configure_bulk_spawn(random_spread=False)
-    count = max(1, min(int(count), MAX_SPAWN_ALL_COUNT))
+    count = max(1, min(int(count), MAX_SINGLE_POOL_SPAWN_COUNT))
     level = max(1, int(level))
     # Stuck verify-only leftovers blocked Selected ("already queued") and made
     # new_batch clear dead (clear ran only when verify was already empty).
@@ -9277,6 +9304,7 @@ def queue_all_filtered_item_pools(
     peel_after: float = 0.0,
     land_profile: str = "bulk",
     fill_until_complete: bool = False,
+    shape_text: str = "",
     exclude_currency: bool = False,
     exclude_ai_guns: bool = False,
 ) -> int:
@@ -9291,6 +9319,16 @@ def queue_all_filtered_item_pools(
 
     shape_l = str(shape or "none").strip().lower()
     settle_l = str(settle or "none").strip().lower()
+    shape_text_l = str(shape_text or "").strip()
+    if shape_text_l or shape_l in ("text", "text_shape", "words", "word", "write"):
+        try:
+            from .loot_shapes import set_shape_text  # noqa: PLC0415
+
+            shape_text_l = set_shape_text(shape_text_l)
+            shape_l = "text"
+            shape = "text"
+        except Exception:
+            pass
     if shape_l not in ("", "none", "off", "no", "vanilla") or settle_l not in ("", "none"):
         random_spread = False
         try:
@@ -9418,6 +9456,7 @@ def queue_all_filtered_item_pools(
             stay_in_air=stay_in_air,
             peel_after=peel_after,
             land_profile=land_profile,
+            shape_text=shape_text_l,
         )
         pause_catch_for_shape(shape_l)
     except Exception as land_exc:

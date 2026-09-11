@@ -43,11 +43,18 @@ def is_dedicated_classmod_catalog(catalog_key: str) -> bool:
 
 
 def is_dedicated_classmod_inline_pool(pool_name: str) -> bool:
-    """Single-comp synthetic pools (Artificer, Bombastic, …) — safe for inline merge."""
+    """Single-comp synthetic pools (Artificer, Bombastic, …) — safe for inline merge.
+
+    Requires a merge payload entry so empty/fake pool ids (e.g. Loveless before payload)
+    do not force a flaky dedicated path with nothing to spawn.
+    """
     low = str(pool_name or "").strip().lower()
     if low == "itempool_classmod_comp_05_legendary":
         return True
-    return bool(_DEDICATED_INLINE_POOL_RE.match(low))
+    if not bool(_DEDICATED_INLINE_POOL_RE.match(low)):
+        return False
+    _, by_pool = _load_classmod_merge_index()
+    return low in by_pool
 
 
 def is_native_roll_classmod_pool(pool_name: str) -> bool:

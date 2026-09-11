@@ -2085,19 +2085,20 @@ def _draw_quick_mods(scope: str = "hub") -> None:
             _button("Unlock", lambda: _faafo_run("faafo_unlock"), ACCENT_SUCCESS, 100, 0)
             _sq_section_header("Party Teleport", ACCENT_INFO)
             _muted_wrapped("Uses the party picker above. Host/listen-server only.")
+            _tp_name = _selected_player_name() or "Selected"
             _button(
-                "Me → Selected",
+                f"Me → {_tp_name}",
                 lambda: _mobility_runtime.teleport_local_to_selected(_selected_player_index_value()),
                 ACCENT_SUCCESS,
-                140,
+                180,
                 0,
             )
             imgui.same_line()
             _button(
-                "Selected → Me",
+                f"{_tp_name} → Me",
                 lambda: _mobility_runtime.teleport_selected_to_local(_selected_player_index_value()),
                 ACCENT_PRIMARY,
-                140,
+                180,
                 0,
             )
             if _quick_mods_status:

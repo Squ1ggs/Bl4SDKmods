@@ -1940,12 +1940,21 @@ def teleport_party(payload: dict[str, Any]) -> dict[str, Any]:
     idx = get_target_player_index() if parsed is None else int(parsed)
     if idx < 0:
         return _fail("Pick a single player to teleport (All players is not valid).")
+    who = ""
+    try:
+        for row in _list_party_players():
+            if int(row[0]) == int(idx):
+                who = str(row[1] or "").strip()
+                break
+    except Exception:
+        who = ""
+    label = who or f"player #{idx}"
     if mode in ("me_to_selected", "local_to_selected"):
         mobility_runtime.teleport_local_to_selected(idx)
-        return _ok("Teleported you to selected player.")
+        return _ok(f"Teleported you to {label}.")
     if mode in ("selected_to_me", "selected_to_local"):
         mobility_runtime.teleport_selected_to_local(idx)
-        return _ok("Teleported selected player to you.")
+        return _ok(f"Teleported {label} to you.")
     return _fail("mode must be me_to_selected or selected_to_me.")
 
 
@@ -2036,7 +2045,11 @@ def mobility_infinite_jump(payload: dict[str, Any]) -> dict[str, Any]:
     if "enabled" in payload:
         enabled = _as_bool(payload.get("enabled"), True)
     elif scope == "all":
-        enabled = not bool(mobility_runtime.infinite_jump_indices)
+        # Prefer the sticky all-mode flag so a brief empty roster cannot flip ON→OFF.
+        all_on = bool(getattr(mobility_runtime, "_infinite_jump_all_mode", False)) or bool(
+            mobility_runtime.infinite_jump_indices
+        )
+        enabled = not all_on
     else:
         idx_probe = mobility_runtime.normalize_mobility_target_index(_single_target_index(payload))
         enabled = int(idx_probe) not in mobility_runtime.infinite_jump_indices
@@ -2049,8 +2062,17 @@ def mobility_infinite_jump(payload: dict[str, Any]) -> dict[str, Any]:
         )
     idx = mobility_runtime.normalize_mobility_target_index(_single_target_index(payload))
     mobility_runtime.set_infinite_jump_for_index(idx, enabled)
+    who = ""
+    try:
+        for row_idx, name in _list_party_players():
+            if int(row_idx) == int(idx):
+                who = str(name or "").strip()
+                break
+    except Exception:
+        who = ""
+    label = who or f"player #{idx}"
     return _ok(
-        f"Infinite jump {'ON' if enabled else 'OFF'}.",
+        f"Infinite jump {'ON' if enabled else 'OFF'} for {label}.",
         infinite_jump_on=enabled,
         infinite_jump_scope="target",
     )

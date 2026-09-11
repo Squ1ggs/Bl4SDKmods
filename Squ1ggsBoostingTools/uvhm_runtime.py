@@ -117,6 +117,11 @@ def status() -> dict[str, Any]:
         message = "Queued for the host game tick."
     elif not current.running and _runtime_message:
         message = _runtime_message
+    # EXE-only: stabilize settle text (does not slow the game tick).
+    ui_message = message
+    if "to settle (" in str(message or ""):
+        token = str(current.token or "challenge").strip() or "challenge"
+        ui_message = f"Waiting for {token} to settle..."
     target_count = max(1, int(current.target_count or 1))
     target_number = max(1, int(current.target_number or 1))
     rank = max(0, int(current.rank or 0))
@@ -145,7 +150,8 @@ def status() -> dict[str, Any]:
         "progress_total": progress_total,
         "token": current.token,
         "poll_count": current.poll_count,
-        "message": message,
+        "message": ui_message,
+        "detail_message": message,
         "can_resume": current.phase == Phase.CANCELLED,
         "results": current.results,
         "hook_ready": bool(_hook_path),

@@ -416,7 +416,10 @@ def _queue_travel(cmd: str, description: str, *, teleport_delay: float | None = 
         execute_at,
     )
     _log(f"Queued outside BLImGui: {description}")
-    return f"Queued {description}. Closing the panel before travel."
+    return (
+        f"Queued {description}. Travel runs on the next game tick "
+        "(keep BL4 focused; no need to close the EXE)."
+    )
 
 
 def pending_travel() -> bool:
@@ -464,12 +467,16 @@ def abort_pending_travel(reason: str = "session teardown") -> None:
 
 
 def _travel_queue_tick(*_args: Any, **_kwargs: Any) -> None:
-    """Execute only after the ImGui callback has unwound and its host can close."""
+    """Execute deferred travel on the game thread (EXE or in-game panel).
+
+    Brief session_safe blips must not cancel a queued travel — teardown hooks
+    already call abort_pending_travel. Skipping until safe avoids the Dev Map
+    \"nothing happened\" no-op.
+    """
     try:
         from .session_guards import session_safe
 
         if not session_safe():
-            abort_pending_travel("left session")
             return
     except Exception:
         pass

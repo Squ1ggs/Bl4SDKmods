@@ -203,13 +203,17 @@ def _process_queue(*_args: Any, **_kwargs: Any) -> None:
                     )
                 except Exception:
                     pass
-        elif _flight:
-            try:
-                from . import runtime_log
+        else:
+            # Clear sticky bridge errors so a prior failure does not keep showing
+            # while loot / other actions are succeeding.
+            _last_bridge_error = ""
+            if _flight:
+                try:
+                    from . import runtime_log
 
-                runtime_log.mark_action(action, ok=True)
-            except Exception:
-                pass
+                    runtime_log.mark_action(action, ok=True)
+                except Exception:
+                    pass
         with _lock:
             _results[rid or uuid.uuid4().hex] = result
     try:
