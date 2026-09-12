@@ -1239,15 +1239,49 @@ def _io_short_token(name: str) -> str:
 
 
 def _looks_like_io_name(name: str) -> bool:
-    low = (name or "").strip().lower()
+    low = (name or "").strip().lower().replace("-", "_").replace(" ", "_")
     if not low:
         return False
-    return (
+    if (
         low.startswith("io_")
         or low.startswith("lootable_")
         or "persistentlevel.io_" in low
         or "persistentlevel.lootable_" in low
-    )
+        or "playerbank" in low
+        or "goldenchest" in low
+        or "vendingmachine" in low
+        or "lostloot" in low
+        or "firmware" in low
+        or "blackmarket" in low
+    ):
+        return True
+    # Short aliases used by the EXE / BMS catalog — never treat as Char_ find_all bait.
+    if _alias_key(name) in (
+        "bank",
+        "playerbank",
+        "player_bank",
+        "io_playerbank",
+        "io_player_bank",
+        "goldenchest",
+        "golden_chest",
+        "golden",
+        "firmware",
+        "blackmarket",
+        "black_market",
+        "lostloot",
+        "lost_loot",
+        "vending",
+        "munitions",
+        "maurice",
+        "barrel",
+        "barrels",
+        "breakable_chest",
+        "moneybox",
+        "electisafe",
+        "ammogeyser",
+    ):
+        return True
+    return False
 
 
 def _exact_persistent_io_paths(name: str) -> Tuple[str, ...]:
@@ -1439,15 +1473,31 @@ def _find_template(name: str, class_override: Optional[str] = None, generated_on
         for c in ("OakVendingMachine", "OakLostLootMachine", "OakLootable", "OakLootableContainer"):
             if c not in scan_classes:
                 scan_classes.append(c)
+        # Still no broad OakInteractiveObject / Actor — those find_all freezes with held loot.
+        if not scan_classes:
+            _log_error(
+                f"No safe class scan for IO {name!r} (refusing Actor/OakInteractiveObject find_all)."
+            )
+            return None, None, class_name
+        matches = _candidate_sources_multi(scan_classes, needles, generated_only=generated_only)
+        if not matches and generated_only:
+            _log_info("No _Generated_ matches; retrying non-generated keyword scan (IO-safe classes only).")
+            matches = _candidate_sources_multi(scan_classes, needles, generated_only=False)
+        if not matches:
+            _log_error(
+                f"No live template found for IO name={name!r} needles={needles} "
+                "(skipped Actor find_all)."
+            )
+            return None, None, class_name
     else:
         scan_classes.extend(c for c in _CLASS_SCAN_ORDER if c not in scan_classes)
-    matches = _candidate_sources_multi(scan_classes, needles, generated_only=generated_only)
-    if not matches and generated_only:
-        _log_info("No _Generated_ matches; retrying non-generated keyword scan.")
-        matches = _candidate_sources_multi(scan_classes, needles, generated_only=False)
-    if not matches:
-        _log_error(f"No live template found for name={name!r} needles={needles}. Try oak_targets {name} --include-non-generated or oak_spawn {name} --class <known class>.")
-        return None, None, class_name
+        matches = _candidate_sources_multi(scan_classes, needles, generated_only=generated_only)
+        if not matches and generated_only:
+            _log_info("No _Generated_ matches; retrying non-generated keyword scan.")
+            matches = _candidate_sources_multi(scan_classes, needles, generated_only=False)
+        if not matches:
+            _log_error(f"No live template found for name={name!r} needles={needles}. Try oak_targets {name} --include-non-generated or oak_spawn {name} --class <known class>.")
+            return None, None, class_name
 
     matched_class_name, source = matches[0]
     cls = _source_class(source, matched_class_name)
@@ -2717,6 +2767,12 @@ def _spawn_deployed_actor(
                     delay=delay,
                 )
             return direct_bank
+        # Never fall through to _find_template — that find_all(Actor) freezes with held shapes.
+        _log_error(
+            f"IO_PlayerBank spawn failed for {name!r} without world scan "
+            "(no live template / offline / thin-air). Visit a bank once or retry later."
+        )
+        return None
 
     # World-placed OakVendingMachine shortcut (scripts=0 risk). Skip when the
     # caller asks for OakInteractiveObject / PersistentLevel dual (ASD-shaped).
@@ -5000,8 +5056,31 @@ def _overdrive_spawn_style_object(style: Any, multiplier: int) -> int:
     return changed
 
 
+def _held_shape_heavy() -> bool:
+    """True when loot-shape pins make find_all unsafe (freezes host + lobby)."""
+    try:
+        from Squ1ggsBoostingTools import loot_shapes as ls
+
+        pins = list(getattr(ls, "_pinned_slots", []) or [])
+        hold_n = sum(1 for row in pins if row.get("hold"))
+        if hold_n >= 40:
+            return True
+        if bool(getattr(ls, "_guest_sync_active", False)):
+            return True
+        quiet_fn = getattr(ls, "_in_join_quiet", None)
+        if callable(quiet_fn) and quiet_fn():
+            return True
+    except Exception:
+        pass
+    return False
+
+
 def _overdrive_spawn_manager(multiplier: int) -> int:
     """Raise global spawn caps similar to the old BL3 SpawnCap hook."""
+    if _held_shape_heavy():
+        # find_all(SpawnManager) with hundreds of held pickups freezes BL4 for everyone.
+        _log_warn("Skipping SpawnManager find_all while a large held shape / join quiet is active.")
+        return 0
     changed = 0
     for cls_name in ("SpawnManager", "OakSpawnManager"):
         try:

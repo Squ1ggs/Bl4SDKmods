@@ -1002,9 +1002,11 @@ def _infinite_jump_party_wide() -> bool:
         indices = [int(i) for i, _n, _pc, pawn, _m in contexts if pawn is not None and not _is_default_obj(pawn)]
     except Exception:
         return False
-    if len(indices) <= 1:
-        return True
-    return bool(indices) and all(i in infinite_jump_indices for i in indices)
+    if not indices:
+        return False
+    # Solo must still have that player enabled — len<=1 used to return True and
+    # skip remote scrub during join blips (leftover JumpMaxCount / gravity poison).
+    return all(i in infinite_jump_indices for i in indices)
 
 
 def _may_mutate_infinite_jump(idx: int | None) -> bool:
@@ -1031,9 +1033,9 @@ def _force_fly_party_wide() -> bool:
                 return False
     except Exception:
         return False
-    if len(keys) <= 1:
-        return True
-    return bool(keys) and all(k in force_fly_targets for k in keys)
+    if not keys:
+        return False
+    return all(k in force_fly_targets for k in keys)
 
 
 def pawn_party_index(pawn: object) -> int | None:
@@ -1068,6 +1070,10 @@ def set_infinite_jump_for_index(idx: int, enabled: bool) -> None:
             _infinite_jump_disabling.add(idx)
             _infinite_jump_disable_until[idx] = time.monotonic() + 4.0
             _restore_jump_limits_for_indices({idx})
+            try:
+                scrub_remote_party_mobility(reason="jump-off")
+            except Exception:
+                pass
         _infinite_jump_context_cache = []
         _infinite_jump_context_cache_time = 0.0
         save_settings()
@@ -1108,6 +1114,10 @@ def set_infinite_jump_all(enabled: bool) -> None:
                 _infinite_jump_disabling.add(i)
                 _infinite_jump_disable_until[i] = now + 4.0
             _restore_jump_limits_for_indices(None)
+            try:
+                scrub_remote_party_mobility(reason="jump-all-off")
+            except Exception:
+                pass
         _infinite_jump_context_cache = []
         _infinite_jump_context_cache_time = 0.0
         save_settings()
@@ -3258,8 +3268,20 @@ def scrub_remote_party_mobility(*, reason: str = "") -> int:
 
 
 def _maintain_remote_party_walk() -> None:
-    """Disabled — periodic remote writes were re-poisoning joiners (moon-jump). Join scrub only."""
-    return
+    """Gentle scrub of leftover fly/jump poison on remotes when toggles are off."""
+    global _last_remote_walk_scrub_at
+    if _infinite_jump_party_wide() or _force_fly_party_wide():
+        return
+    if _infinite_jump_all_mode or _force_fly_all_mode:
+        return
+    now = time.monotonic()
+    if now - float(_last_remote_walk_scrub_at or 0.0) < 2.5:
+        return
+    _last_remote_walk_scrub_at = now
+    try:
+        scrub_remote_party_mobility(reason="maintain")
+    except Exception:
+        pass
 
 
 def _tick_remote_join_scrub(now: float) -> None:
@@ -3392,6 +3414,10 @@ def _force_fly_hud_tick() -> None:
         pass
     try:
         _tick_remote_join_scrub(now)
+    except Exception:
+        pass
+    try:
+        _maintain_remote_party_walk()
     except Exception:
         pass
     try:

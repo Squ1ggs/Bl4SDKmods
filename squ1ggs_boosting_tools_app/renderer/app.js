@@ -1,7 +1,31 @@
 "use strict";
 
 const OPEN_REWARDS_LARGE_WARNING =
-  "Opening 250+ items in one go (especially if modded) will likely cause the game to lag, especially in a multiplayer lobby — solo lobby is often best to open.";
+  "WARNING: Open rewards opens one mail package every 3–5 seconds (never bulk). Opening hundreds still takes time and can lag BL4; on console / cross-play, ~250–300+ carried items can make the backpack look empty until the save is under that in solo. Prefer solo for big opens, then bank / mule before rejoining multiplayer.";
+
+const SERIAL_RISK_ACK_KEY = "sqbt.serialRiskAcknowledged";
+
+function serialRiskAcknowledged() {
+  try {
+    return localStorage.getItem(SERIAL_RISK_ACK_KEY) === "1";
+  } catch {
+    return false;
+  }
+}
+
+function setSerialRiskAcknowledged(on) {
+  try {
+    if (on) localStorage.setItem(SERIAL_RISK_ACK_KEY, "1");
+    else localStorage.removeItem(SERIAL_RISK_ACK_KEY);
+  } catch {
+    /* ignore */
+  }
+}
+
+function confirmSerialRisk(message) {
+  if (serialRiskAcknowledged()) return true;
+  return window.confirm(message);
+}
 
 const i18n = window.SqbtI18n;
 function t(key, vars) {
@@ -128,6 +152,9 @@ let manifest = null;
 let activeTabId = "home";
 let fieldValues = {};
 let progressPollTimer = null;
+let lastCatalogRosterSig = "";
+let uvhmBusyGraceUntil = 0;
+let uvhmErrorShownUntil = 0;
 let setupDismissed = false;
 let setupPinned = false;
 let lastSeenConnected = false;
@@ -150,6 +177,7 @@ const itemPoolSelection = new Map();
 const itemPoolRows = new Map();
 let lastRosterSignature = "";
 let lastGlobalPlayersSignature = "";
+let lastTabPlayerSelectsSignature = "";
 let pendingTargetIndex = null;
 let pendingTargetUntil = 0;
 const TARGET_STORAGE_KEY = "sqbt.boostTargetIndex";
@@ -171,7 +199,7 @@ let lastChallengeStatus = null;
 let lastUvhmStatus = null;
 let lastSpawnAllStatus = null;
 let pendingUpdateUrl = "";
-const STATUS_CATALOG_TABS = new Set(["serials", "world", "vehicle", "progression", "backpack"]);
+const STATUS_CATALOG_TABS = new Set(["serials", "world", "vehicle", "progression"]);
 const poolBrowserSignatures = new Map();
 
 const FAVORITE_BUCKET_BY_CATALOG = Object.freeze({
@@ -371,7 +399,43 @@ document.addEventListener(
 
 function decorateActionButton(button, label, actionDef) {
   button.dataset.accent = actionAccent(actionDef);
-  setIconLabel(button, label, actionIcon(actionDef));
+  let finalLabel = label;
+  if (actionDef?.action === "teleport_party") {
+    const mode = String(actionDef?.payload?.mode || "").toLowerCase();
+    button.dataset.teleportParty = "1";
+    button.dataset.teleportMode = mode;
+    finalLabel = teleportPartyButtonLabel(actionDef);
+  }
+  setIconLabel(button, finalLabel, actionIcon(actionDef));
+}
+
+function boostTargetDisplayName() {
+  const raw = latestStatus?.raw || {};
+  const idx = effectiveTargetIndex(raw);
+  if (idx == null || Number(idx) === -1) return "selected";
+  const name = String(raw.target_player_name || playerNameForIndex(raw.players, idx) || "").trim();
+  return name || "selected";
+}
+
+function teleportPartyButtonLabel(actionDef) {
+  const mode = String(actionDef?.payload?.mode || "").toLowerCase();
+  const name = boostTargetDisplayName();
+  if (mode === "me_to_selected" || mode === "local_to_selected") return `Me → ${name}`;
+  if (mode === "selected_to_me" || mode === "selected_to_local") return `${name} → me`;
+  return actionDef?.label || "Teleport";
+}
+
+function refreshTeleportPartyLabels() {
+  for (const button of document.querySelectorAll("button[data-teleport-party='1']")) {
+    const mode = String(button.dataset.teleportMode || "").toLowerCase();
+    const name = boostTargetDisplayName();
+    const label =
+      mode === "me_to_selected" || mode === "local_to_selected"
+        ? `Me → ${name}`
+        : `${name} → me`;
+    const icon = button.querySelector("img")?.getAttribute("src") || "";
+    setIconLabel(button, label, icon);
+  }
 }
 
 function friendlyActionError(text) {
@@ -588,10 +652,10 @@ function persistStickyTarget(idx) {
 }
 
 function stickyTargetInRoster(players) {
-  return (
-    stickyTargetIndex != null &&
-    (players || []).some((row) => Number(row.index) === Number(stickyTargetIndex))
-  );
+  if (stickyTargetIndex == null) return false;
+  // "All players" (-1) is always a valid sticky target.
+  if (Number(stickyTargetIndex) === -1) return true;
+  return (players || []).some((row) => Number(row.index) === Number(stickyTargetIndex));
 }
 
 function clearStickyTargetIfGone(players) {
@@ -703,8 +767,45 @@ function localizeSpawnLabel(raw) {
   return map[value] ? t(map[value]) : value || "—";
 }
 
+function bridgeConnectedHeld() {
+  // True while Online, or during the short offline hysteresis that avoids UI flicker.
+  if (latestStatus?.connected) return true;
+  return Boolean(lastSeenConnected && offlineStreak > 0 && offlineStreak < 3);
+}
+
+function clearToolsToWaiting(message) {
+  manifest = null;
+  if (tabBar) tabBar.innerHTML = "";
+  hideToolSearchResults();
+  const msg = String(message || "").trim();
+  const gameOff =
+    !msg || /fetch failed|econnrefused|not running|still loading|game not connected/i.test(msg);
+  const needsSetup = !gameOff && setupNeedsUserAction();
+  if (!tabContent) return;
+  tabContent.innerHTML = needsSetup
+    ? `<div class="panel-section panel-section-featured">
+      <h3>${t("waiting.tools")}</h3>
+      <p class="setup-attention">${msg || t("waiting.manifestUnavailable")}</p>
+      <ol class="section-guide">
+        <li>${t("waiting.setup1")}</li>
+        <li>${t("waiting.toolsSetup2")}</li>
+        <li>${t("waiting.toolsSetup3")}</li>
+      </ol>
+    </div>`
+    : `<div class="panel-section panel-section-featured">
+      <h3>${t("waiting.tools")}</h3>
+      <p class="setup-attention">${msg || t("waiting.manifestUnavailable")}</p>
+      <ol class="section-guide">
+        <li>${t("waiting.toolsAuto1")}</li>
+        <li>${t("waiting.toolsAuto2")}</li>
+        <li>${t("waiting.toolsAuto3")}</li>
+      </ol>
+    </div>`;
+}
+
 function setStatusUi(payload) {
   const incoming = payload || {};
+  const wasConnected = Boolean(lastSeenConnected);
   let connectedNow = Boolean(incoming.connected);
   // Hold Online through 2 brief offline polls so tab switches / catalog loads
   // cannot flash the "Start Borderlands 4" waiting panel.
@@ -800,6 +901,7 @@ function setStatusUi(payload) {
       ? "All players"
       : raw.target_player_name || playerNameForIndex(raw.players, targetIdx) || "";
   applyTargetMeta(targetIdx, targetName);
+  refreshTeleportPartyLabels();
   metaSpawn.textContent = localizeSpawnLabel(raw.spawn_anchor_label || raw.spawn_anchor || "—");
   if (metaFreecam) {
     const fc = raw.freecam || {};
@@ -833,7 +935,17 @@ function setStatusUi(payload) {
     autoTargetInitialized = true;
   }
   if (payload?.connected && STATUS_CATALOG_TABS.has(activeTabId)) {
-    window.setTimeout(() => reloadCatalogSelects(), 0);
+    // Roster-change only — reloading catalogs every status poll scrolled the page and flipped lists.
+    const rosterSig = JSON.stringify(
+      (Array.isArray(raw.players) ? raw.players : []).map((row) => [
+        row.index,
+        row.name || row.display_name || "",
+      ])
+    );
+    if (rosterSig !== lastCatalogRosterSig) {
+      lastCatalogRosterSig = rosterSig;
+      window.setTimeout(() => reloadCatalogSelects(), 0);
+    }
   }
   // Collapse Setup once when we go Online. Keep it hidden on later polls unless
   // the user clicked Setup. Status polls used to snap the card back open.
@@ -861,27 +973,39 @@ function setStatusUi(payload) {
     if (modVersion) lastSeenModVersion = modVersion;
     loadManifest().catch(() => {});
   }
+  // Sustained Offline again — hide tool tabs until the game is Online (old dash / waiting UI).
+  if (!connectedNow && wasConnected) {
+    clearToolsToWaiting(t("waiting.manifestUnavailable"));
+  }
   lastSeenConnected = connectedNow;
 }
 
+function isPlaceholderPlayerRow(row) {
+  const rawName = String(row?.name || "").trim();
+  if (!rawName) return !row?.is_host;
+  if (/^Player\s*\d+$/i.test(rawName) && !row?.is_host) return true;
+  return false;
+}
+
 function renderRoster(players, targetIndex) {
-  const signature = JSON.stringify(players) + ":" + String(targetIndex ?? "");
+  const filtered = (players || []).filter((row) => !isPlaceholderPlayerRow(row));
+  const signature = JSON.stringify(filtered) + ":" + String(targetIndex ?? "");
   if (signature === lastRosterSignature && rosterList.childElementCount > 0) {
     return;
   }
   lastRosterSignature = signature;
   rosterList.innerHTML = "";
-  if (!players.length) {
+  if (!filtered.length) {
     const li = document.createElement("li");
     li.textContent = t("roster.empty");
     rosterList.appendChild(li);
     return;
   }
-  for (const row of players) {
+  for (const row of filtered) {
     const li = document.createElement("li");
     if (row.index === targetIndex) li.classList.add("active");
     const name = document.createElement("span");
-    name.textContent = row.name || `Player ${row.index}`;
+    name.textContent = row.name || (row.is_host ? "Host" : `Player ${row.index}`);
     const idx = document.createElement("span");
     idx.className = "muted";
     idx.textContent = `#${row.index}`;
@@ -922,6 +1046,7 @@ async function selectTarget(index) {
     latestStatus.raw.target_player_name = playerNameForIndex(latestStatus.raw.players, idx);
   }
   applyTargetMeta(idx, playerNameForIndex(latestStatus?.raw?.players, idx));
+  refreshTeleportPartyLabels();
   refreshGlobalTargetSelect();
   renderRoster(latestStatus?.raw?.players || [], idx);
   // Keep catalog "Send to" dropdowns aligned with Boost target so GZO/Lootlemon
@@ -975,6 +1100,7 @@ async function selectTarget(index) {
         data?.name || playerNameForIndex(latestStatus.raw.players, confirmed);
     }
     applyTargetMeta(confirmed, latestStatus?.raw?.target_player_name || "");
+    refreshTeleportPartyLabels();
     refreshGlobalTargetSelect();
     renderRoster(latestStatus?.raw?.players || [], confirmed);
     refreshBackpackIfActive();
@@ -1388,6 +1514,7 @@ function collectSelectedSerials(sectionId, config) {
     if (serial) rememberMultiselectSerial(sectionId, rowId, serial);
   }
   const serials = [];
+  const libraryRows = [];
   const seen = new Set();
   for (const id of selected) {
     const row = rowById.get(id);
@@ -1397,8 +1524,23 @@ function collectSelectedSerials(sectionId, config) {
     if (seen.has(serial)) continue;
     seen.add(serial);
     serials.push(serial);
+    const title = String(
+      (row && (row.title || row.name || row[config.labelKey || "title"])) || serial.slice(0, 48)
+    ).trim();
+    libraryRows.push({ serial, title, name: title });
   }
-  return { serials, selectedCount: selected.size };
+  return { serials, rows: libraryRows, selectedCount: selected.size };
+}
+
+function refreshAllSerialStoreSections() {
+  for (const box of document.querySelectorAll("[data-multiselect-section]")) {
+    const sectionId = box.dataset.multiselectSection;
+    if (!sectionId) continue;
+    const config = getMultiselectConfig(sectionId);
+    if (config?.catalog !== "serial_store") continue;
+    catalogCache.delete(catalogCacheKey("serial_store", multiselectParams(sectionId, config)));
+    refreshMultiselectSection(sectionId, config);
+  }
 }
 
 const WORLD_SPAWN_ACTIONS = new Set([
@@ -1478,10 +1620,10 @@ function enrichPayload(action, payload) {
     "faafo_drop_backpack",
   ]);
   // These actions need a single concrete player — never stamp "All players" (-1).
+  // uvhm_start accepts All and routes to all-lobby on the bridge.
   const BOOST_TARGET_NO_ALL = new Set([
     "party_kick",
     "teleport_party",
-    "uvhm_start",
     "backpack_scan_status",
     "backpack_relevel_selected",
   ]);
@@ -1514,7 +1656,7 @@ function applyDeliveryRecipient(payload, sectionId) {
   } else if (openRaw === "no" || openRaw === false) {
     payload.open_rewards = false;
   } else if (openRaw === undefined || openRaw === "") {
-    payload.open_rewards = true;
+    payload.open_rewards = false;
   } else {
     payload.open_rewards = Boolean(openRaw);
   }
@@ -1602,7 +1744,7 @@ function collectPayload(sectionId, actionDef) {
     payload.serials = raw;
     if (fieldValues[`${sectionId}:level_override`] === "yes") {
       payload.level_override = true;
-      payload.level = Number(fieldValues[`${sectionId}:level`] || 60);
+      payload.level = Number(fieldValues[`${sectionId}:level`] || 70);
     }
     return applyDeliveryRecipient(payload, sectionId);
   }
@@ -1613,7 +1755,7 @@ function collectPayload(sectionId, actionDef) {
     payload.serials = picked.serials;
     if (fieldValues[`${sectionId}:level_override`] === "yes") {
       payload.level_override = true;
-      payload.level = Number(fieldValues[`${sectionId}:level`] || 60);
+      payload.level = Number(fieldValues[`${sectionId}:level`] || 70);
     }
     payload._selected_count = picked.selectedCount;
     return applyDeliveryRecipient(payload, sectionId);
@@ -1662,19 +1804,67 @@ function collectPayload(sectionId, actionDef) {
     payload.serials = picked.serials;
     if (fieldValues[`${sectionId}:level_override`] === "yes") {
       payload.level_override = true;
-      payload.level = Number(fieldValues[`${sectionId}:level`] || 60);
+      payload.level = Number(fieldValues[`${sectionId}:level`] || 70);
     }
     payload._selected_count = picked.selectedCount;
     return applyDeliveryRecipient(payload, sectionId);
   }
 
+  if (actionDef.addSelectedToLibrary) {
+    const config = getMultiselectConfig(sectionId);
+    const picked = collectSelectedSerials(sectionId, config);
+    payload.rows = picked.rows;
+    payload.serials = picked.serials;
+    payload.titles = picked.rows.map((row) => row.title || row.name || "");
+    if (!payload.group) {
+      const cat = String(config?.catalog || "").toLowerCase();
+      payload.group = cat === "lootlemon" ? "Lootlemon" : cat === "gzo" ? "GZO" : "Imported";
+    }
+    payload._selected_count = picked.selectedCount;
+    return payload;
+  }
+
+  if (actionDef.action === "serial_store_import_serials") {
+    const nameKey = actionFieldKey(sectionId, actionDef, { key: "name" });
+    if (payload.name === undefined || payload.name === "") {
+      payload.name = fieldValues[nameKey] || "";
+    }
+    if (!payload.group) payload.group = String(payload.name || "").trim() || "Paste";
+    const hasSerials = Array.isArray(payload.serials) && payload.serials.length;
+    if (!hasSerials) {
+      const convertText = String(fieldValues[`${sectionId}:serial_convert:input`] || "").trim();
+      const pasteEl = document.querySelector(
+        `[data-section-id="${sectionId}"] textarea[data-serial-paste-area]`
+      );
+      const pasteText = String(pasteEl?.value || "").trim();
+      const text = String(payload.input || payload.text || convertText || pasteText || "").trim();
+      if (text) payload.text = text;
+    }
+    return payload;
+  }
+
   if (actionDef.action === "serial_store_save") {
     syncSerialStoreEditFromForm(sectionId);
     const edit = serialStoreEdit.get(sectionId) || {};
+    let serial = String(edit.serial || "").trim();
+    if (!serial) {
+      const pasteEl = document.querySelector(
+        `[data-section-id="${sectionId}"] textarea[data-serial-paste-area]`
+      );
+      serial = String(pasteEl?.value || "").trim();
+    }
+    let name = String(edit.name || "").trim();
+    if (!name && serial) {
+      name = serial.replace(/\s+/g, " ").slice(0, 40);
+      if (serial.length > 40) name += "…";
+    }
     payload.id = edit.id || "";
-    payload.name = edit.name || "";
-    payload.group = edit.group || "Default";
-    payload.serial = edit.serial || "";
+    payload.name = name;
+    payload.group = String(edit.group || "Default").trim() || "Default";
+    payload.serial = serial;
+    if (!payload.serial) {
+      throw new Error("Paste a serial into the Serial box (My Library form) before Save entry.");
+    }
     return payload;
   }
 
@@ -1776,7 +1966,7 @@ function collectPayload(sectionId, actionDef) {
       payload.level = Number(payload.level);
     }
     if (payload.open_rewards === undefined) {
-      payload.open_rewards = true;
+      payload.open_rewards = false;
     }
     if (payload.player_index === undefined || payload.player_index === "") {
       payload.player_index = preferredDeliveryPlayerIndex(latestStatus?.raw?.players || []);
@@ -1898,7 +2088,7 @@ async function runAction(action, payload, confirmText, context = {}) {
     finalPayload.player_index = Number(deliverIdx);
     finalPayload.mode = Number(finalPayload.player_index) === -1 ? "all" : "player";
     if (finalPayload.open_rewards === undefined) {
-      finalPayload.open_rewards = true;
+      finalPayload.open_rewards = false;
     }
     // Queue returns quickly; scale wait so large GZO batches don't false-timeout.
     const nSerials = finalPayload.serials.length;
@@ -1909,19 +2099,19 @@ async function runAction(action, payload, confirmText, context = {}) {
       if (selectedHintCount > nSerials) {
         confirmText = `Deliver ${nSerials} unique serial(s) (${selectedHintCount} row(s) selected) in ${packages} mail package(s)?`;
       }
-      if (finalPayload.open_rewards && nSerials >= 250) {
+      if (finalPayload.open_rewards) {
         confirmText = `${OPEN_REWARDS_LARGE_WARNING}\n\n${confirmText}`;
       }
-      if (!window.confirm(confirmText)) {
+      if (!confirmSerialRisk(confirmText)) {
         actionBusy = false;
         refreshActionButtons();
         actionMessage.className = "action-message muted";
         actionMessage.textContent = "Cancelled.";
         return;
       }
-    } else if (finalPayload.open_rewards && nSerials >= 250) {
+    } else if (finalPayload.open_rewards) {
       if (
-        !window.confirm(
+        !confirmSerialRisk(
           `${OPEN_REWARDS_LARGE_WARNING}\n\nContinue with auto-open for ${nSerials} item(s)?`
         )
       ) {
@@ -2015,8 +2205,15 @@ async function runAction(action, payload, confirmText, context = {}) {
     if (action === "mobility_infinite_jump" && data?.ok !== false) {
       showMobilityToast(data?.message, data?.infinite_jump_on ? "ok" : "off");
       const scope = String(data?.infinite_jump_scope || finalPayload.scope || "target").toLowerCase();
-      const syncKey = scope === "all" ? "infinite_jump_all" : "infinite_jump";
-      syncMobilityToggleButtons(syncKey, Boolean(data?.infinite_jump_on));
+      const on = Boolean(data?.infinite_jump_on);
+      if (scope === "all") {
+        syncMobilityToggleButtons("infinite_jump_all", on);
+        syncMobilityToggleButtons("infinite_jump", on);
+      } else {
+        syncMobilityToggleButtons("infinite_jump", on);
+        // Turning a single target off must not leave the All button stuck ON.
+        if (!on) syncMobilityToggleButtons("infinite_jump_all", false);
+      }
     }
     if (action === "mobility_noclip" && data?.ok !== false) {
       syncMobilityToggleButtons("noclip", Boolean(data?.noclip));
@@ -2034,6 +2231,9 @@ async function runAction(action, payload, confirmText, context = {}) {
     }
     if (action === "map_fog_hide" && data?.ok !== false) {
       syncMobilityToggleButtons("map_fog", Boolean(data?.hidden));
+    }
+    if (action === "hold_session" && data?.ok !== false) {
+      syncMobilityToggleButtons("hold_session", Boolean(data?.enabled));
     }
     if (action === "rarity_weights_set" && data?.ok && data?.weights) {
       applyFieldValues(data.weights);
@@ -2112,6 +2312,10 @@ async function runAction(action, payload, confirmText, context = {}) {
         }, 800);
       }
       if (action === "deliver_serials" && data?.ok) {
+        // Paste-send: clear the box so the next batch is obvious.
+        for (const area of document.querySelectorAll("textarea[data-serial-paste-area]")) {
+          if (String(area.value || "").trim()) area.value = "";
+        }
         const nSerials = Array.isArray(finalPayload.serials) ? finalPayload.serials.length : 0;
         const packages = Math.max(1, Math.ceil(nSerials / 25));
         const openPollMs = finalPayload.open_rewards
@@ -2139,6 +2343,14 @@ async function runAction(action, payload, confirmText, context = {}) {
         serialStoreEdit.set(context.sectionId, { ...data.entry });
       }
       refreshMultiselectSection(context.sectionId, context.config || { catalog: "serial_store" });
+    }
+    if (
+      (action === "serial_store_add_selected" ||
+        action === "serial_store_import_text" ||
+        action === "serial_store_import_serials") &&
+      data?.ok
+    ) {
+      refreshAllSerialStoreSections();
     }
     if (action === "backpack_scan_status" && context.sectionId) {
       const config = getMultiselectConfig(context.sectionId);
@@ -2186,12 +2398,23 @@ async function runAction(action, payload, confirmText, context = {}) {
 
 function applyFieldValues(values) {
   if (!values || typeof values !== "object") return;
+  const focused = document.activeElement;
+  // If the user is typing anywhere in the tools panel, do not rewrite fields.
+  if (
+    focused &&
+    tabContent?.contains(focused) &&
+    (focused.matches("input, textarea, select") || focused.isContentEditable)
+  ) {
+    return;
+  }
   for (const [key, value] of Object.entries(values)) {
     for (const node of tabContent.querySelectorAll("[data-field-key]")) {
       const fk = node.dataset.fieldKey || "";
       if (!fk.endsWith(`:${key}`)) continue;
       const input = node.querySelector("input, select, textarea");
       if (!input) continue;
+      // Never clobber a field the user is actively editing (typing / spinner).
+      if (focused === input) continue;
       input.value = String(value);
       fieldValues[fk] = input.value;
     }
@@ -2210,7 +2433,32 @@ function isChallengeBusy(challenge) {
 }
 
 function isUvhmBusy(uvhm) {
-  return Boolean(uvhm && (uvhm.active || uvhm.queued || uvhm.running));
+  const phase = String(uvhm?.phase || "").toLowerCase();
+  if (phase === "error" || phase === "cancelled") {
+    if (!uvhmErrorShownUntil) uvhmErrorShownUntil = Date.now() + 4500;
+    uvhmBusyGraceUntil = 0;
+    return Date.now() < uvhmErrorShownUntil;
+  }
+  uvhmErrorShownUntil = 0;
+  const live = Boolean(
+    uvhm &&
+      (uvhm.active || uvhm.queued || uvhm.running) &&
+      phase !== "complete" &&
+      phase !== "idle"
+  );
+  if (live) {
+    uvhmBusyGraceUntil = Date.now() + 3500;
+    return true;
+  }
+  // Brief gaps between ranks / ticks used to hide the bar for a flash.
+  if (Date.now() < uvhmBusyGraceUntil) {
+    if (phase === "complete" || phase === "idle") {
+      uvhmBusyGraceUntil = 0;
+      return false;
+    }
+    return true;
+  }
+  return false;
 }
 
 function isSpawnAllBusy(spawnAll) {
@@ -2260,11 +2508,18 @@ function renderProgressPanel(challenge, uvhm, spawnAll) {
   if (uvhmBusy) {
     const total = Math.max(1, Number(uvhmState.progress_total || uvhmState.total || uvhmState.steps_total || 7));
     const index = Math.max(0, Number(uvhmState.progress_index || uvhmState.index || uvhmState.step || 0));
+    // Round to whole ranks for the bar so settle creep does not thrash the sticky panel.
     const pct = clampPct(index, total);
-    const detail = uvhmState.message || `Step ${index}/${total}`;
-    html += `<h4>UVHM progression</h4>
+    let detail = String(uvhmState.message || `Step ${index}/${total}`);
+    detail = detail.replace(/Allowing .+ to settle \(\d+\/\d+\)\.?/i, "Waiting for challenge settle…");
+    const target = uvhmState.target_name ? `${uvhmState.target_name} · ` : "";
+    const rankBit =
+      uvhmState.rank != null && uvhmState.rank !== ""
+        ? `rank ${uvhmState.rank}${uvhmState.max_rank ? `/${uvhmState.max_rank}` : ""} · `
+        : "";
+    html += `<div data-progress-job="uvhm"><h4>UVHM progression</h4>
       <div class="progress-bar"><span style="width:${pct}%"></span></div>
-      <p class="progress-meta muted">${detail}</p>`;
+      <p class="progress-meta muted">${target}${rankBit}${detail}</p></div>`;
   }
   if (spawnBusy) {
     const total = Math.max(1, Number(spawnState.total || 0));
@@ -2291,6 +2546,24 @@ function renderProgressPanel(challenge, uvhm, spawnAll) {
     nextHtml = "";
   }
 
+  // Prefer in-place UVHM bar/text updates to avoid sticky-panel flicker.
+  const existingUvhm = panel.querySelector('[data-progress-job="uvhm"]');
+  const nextHasUvhm = nextHtml.includes('data-progress-job="uvhm"');
+  if (busy && existingUvhm && nextHasUvhm && !challengeBusy && !spawnBusy) {
+    const tmp = document.createElement("div");
+    tmp.innerHTML = nextHtml;
+    const fresh = tmp.querySelector('[data-progress-job="uvhm"]');
+    if (fresh) {
+      const span = existingUvhm.querySelector(".progress-bar > span");
+      const meta = existingUvhm.querySelector(".progress-meta");
+      const freshSpan = fresh.querySelector(".progress-bar > span");
+      const freshMeta = fresh.querySelector(".progress-meta");
+      if (span && freshSpan) span.style.width = freshSpan.style.width;
+      if (meta && freshMeta) meta.textContent = freshMeta.textContent;
+      lastProgressHtml = nextHtml;
+      return;
+    }
+  }
   if (nextHtml === lastProgressHtml) {
     return;
   }
@@ -2366,9 +2639,11 @@ function refreshGlobalTargetSelect() {
       allOpt.textContent = t("target.all");
       globalTargetSelect.appendChild(allOpt);
       for (const row of players) {
+        if (isPlaceholderPlayerRow(row)) continue;
         const opt = document.createElement("option");
         opt.value = String(row.index);
-        opt.textContent = `${row.name || `Player ${row.index}`} (#${row.index})`;
+        const rawName = String(row.name || "").trim();
+        opt.textContent = `${rawName || (row.is_host ? "Host" : `Player ${row.index}`)} (#${row.index})`;
         globalTargetSelect.appendChild(opt);
       }
     }
@@ -2383,7 +2658,9 @@ function refreshGlobalTargetSelect() {
           ? String(targetIndex)
           : previous;
   if (next !== "" && [...globalTargetSelect.options].some((opt) => opt.value === next)) {
-    if (globalTargetSelect.value !== next) {
+    if (document.activeElement === globalTargetSelect) {
+      // Don't yank an open Boost target dropdown.
+    } else if (globalTargetSelect.value !== next) {
       globalTargetSelect.value = next;
     }
   }
@@ -2392,10 +2669,13 @@ function refreshGlobalTargetSelect() {
 function refreshPlayerSelects() {
   refreshGlobalTargetSelect();
   const players = latestStatus?.raw?.players || [];
+  const playersSig = JSON.stringify(players);
   const globalIdx =
     globalTargetSelect && !globalTargetSelect.disabled && globalTargetSelect.value !== ""
       ? String(globalTargetSelect.value)
       : "";
+  const needRebuild = playersSig !== lastTabPlayerSelectsSignature;
+  if (needRebuild) lastTabPlayerSelectsSignature = playersSig;
   for (const select of tabContent.querySelectorAll("select[data-role='player-select']")) {
     if (select === globalTargetSelect) continue;
     const fieldWrap = select.closest("[data-field-key]");
@@ -2412,33 +2692,47 @@ function refreshPlayerSelects() {
     if (current === undefined || current === "") {
       current = String(preferredDeliveryPlayerIndex(players));
     }
-    select.innerHTML = "";
-    if (includeAll) {
-      const allOpt = document.createElement("option");
-      allOpt.value = "-1";
-      allOpt.textContent = t("target.all");
-      select.appendChild(allOpt);
-    } else if (current === "-1") {
-      // Dropdown has no All option — fall back to preferred concrete player.
+    if (needRebuild || select.options.length === 0) {
+      if (document.activeElement === select) {
+        // Keep open dropdown intact; only sync value below if still valid.
+      } else {
+        select.innerHTML = "";
+        if (includeAll) {
+          const allOpt = document.createElement("option");
+          allOpt.value = "-1";
+          allOpt.textContent = t("target.all");
+          select.appendChild(allOpt);
+        } else if (current === "-1") {
+          // Dropdown has no All option — fall back to preferred concrete player.
+          current = String(preferredDeliveryPlayerIndex(players.filter((p) => Number(p.index) !== -1)));
+        }
+        for (const row of players) {
+          if (isPlaceholderPlayerRow(row)) continue;
+          const rawName = String(row.name || "").trim();
+          const opt = document.createElement("option");
+          opt.value = String(row.index);
+          opt.textContent = `${rawName || (row.is_host ? "Host" : `Player ${row.index}`)} (#${row.index})`;
+          select.appendChild(opt);
+        }
+        if (!players.length) {
+          const opt = document.createElement("option");
+          opt.value = "0";
+          opt.textContent = actionsEnabled() ? t("target.host") : t("target.connect");
+          select.appendChild(opt);
+          current = "0";
+        }
+      }
+    } else if (!includeAll && current === "-1") {
       current = String(preferredDeliveryPlayerIndex(players.filter((p) => Number(p.index) !== -1)));
-    }
-    for (const row of players) {
-      const opt = document.createElement("option");
-      opt.value = String(row.index);
-      opt.textContent = `${row.name || `Player ${row.index}`} (#${row.index})`;
-      select.appendChild(opt);
-    }
-    if (!players.length) {
-      const opt = document.createElement("option");
-      opt.value = "0";
-      opt.textContent = actionsEnabled() ? t("target.host") : t("target.connect");
-      select.appendChild(opt);
-      current = "0";
     }
     if (![...select.options].some((opt) => opt.value === String(current))) {
       current = String(preferredDeliveryPlayerIndex(players));
     }
-    select.value = String(current);
+    if (document.activeElement === select) {
+      // Don't yank value while user is choosing.
+    } else if (select.value !== String(current)) {
+      select.value = String(current);
+    }
     if (deliverKey) fieldValues[deliverKey] = select.value;
     else if (fieldKeyName) fieldValues[fieldKeyName] = select.value;
   }
@@ -2755,7 +3049,8 @@ function splitBase85SerialBlob(blob) {
   if (!text) return [];
   if (isSinglePastedBase85(text)) return [text];
   const starts = [];
-  const re = /(?:^|\s)@Ug/gi;
+  // STBX / save YAML: serial: '@Ug…' — allow quote / colon / equals before @Ug.
+  const re = /(?:^|[\s'"`:=\(\[{,])@Ug/gi;
   let m;
   while ((m = re.exec(text)) !== null) {
     const at = text[m.index] === "@" ? m.index : m.index + (m[0].length - 3);
@@ -2769,10 +3064,43 @@ function splitBase85SerialBlob(blob) {
   }
   const out = [];
   for (let i = 0; i < starts.length; i += 1) {
-    const part = text.slice(starts[i], starts[i + 1] ?? text.length).trim();
+    let part = text.slice(starts[i], starts[i + 1] ?? text.length).trim();
+    part = part.replace(/['"`]+\s*$/, "").replace(/[,}\]]+\s*$/, "").trim();
     if (part) out.push(part);
   }
   return out;
+}
+
+/** Pull serial: '@U…' / serial: "@U…" / serial: @U… from save/editor YAML. */
+function extractYamlSerialFields(rawText) {
+  const found = [];
+  const seen = new Set();
+  const push = (serial) => {
+    let cleaned = String(serial || "").trim();
+    if (
+      (cleaned.startsWith('"') && cleaned.endsWith('"')) ||
+      (cleaned.startsWith("'") && cleaned.endsWith("'"))
+    ) {
+      cleaned = cleaned.slice(1, -1).trim();
+    }
+    if (!cleaned.startsWith("@U") || cleaned.length < 12) return;
+    if (seen.has(cleaned)) return;
+    seen.add(cleaned);
+    found.push(cleaned);
+  };
+  const text = String(rawText || "");
+  const patterns = [
+    /\bserial\s*:\s*'([^']+)'/gi,
+    /\bserial\s*:\s*"([^"]+)"/gi,
+    /\bserial\s*:\s*(@U\S+)/gi,
+  ];
+  for (const re of patterns) {
+    let m;
+    while ((m = re.exec(text)) !== null) {
+      push(m[1]);
+    }
+  }
+  return found;
 }
 
 function extractSerialsFromText(rawText) {
@@ -2793,6 +3121,7 @@ function extractSerialsFromText(rawText) {
         cleaned = inner.trim();
       }
     }
+    cleaned = cleaned.replace(/['"`]+$/, "").trim();
     if (!cleaned) return;
     if (!(cleaned.startsWith("@U") || (cleaned.includes(",") && /\d/.test(cleaned)))) {
       return;
@@ -2801,6 +3130,28 @@ function extractSerialsFromText(rawText) {
     seen.add(cleaned);
     found.push(cleaned);
   };
+
+  // Save-editor / STBX YAML: inventory.items.*.serial: '@U…'
+  for (const serial of extractYamlSerialFields(text)) {
+    push(serial);
+  }
+  if (found.length) {
+    return found;
+  }
+
+  // Moxsy-style .txt: one @U per line — never rejoin / mid-split.
+  const nonEmpty = String(text || "")
+    .replace(/\r/g, "\n")
+    .split("\n")
+    .map((line) => line.trim())
+    .filter(Boolean);
+  const atULines = nonEmpty.filter((line) => line.startsWith("@U") || /^['"]@U/.test(line));
+  if (nonEmpty.length >= 2 && atULines.length >= Math.max(2, Math.floor(0.8 * nonEmpty.length))) {
+    for (const line of atULines) {
+      push(line);
+    }
+    return found;
+  }
   const pushAtUParts = (blob) => {
     for (const token of splitBase85SerialBlob(blob)) {
       push(token);
@@ -2944,13 +3295,23 @@ function applyShapeLayoutDefaults(sectionId, actionDef, shapeField, shapeValue, 
   const row = table[shape] || table.circle || table.house;
   if (!row) return;
   for (const sibling of allFields || []) {
-    if (sibling.key !== "radius" && sibling.key !== "spacing" && sibling.key !== "drop_height") {
+    if (
+      sibling.key !== "radius" &&
+      sibling.key !== "spacing" &&
+      sibling.key !== "drop_height" &&
+      sibling.key !== "z_bias"
+    ) {
       continue;
     }
     let val = row[sibling.key];
     // Car: keep the player inside the silhouette — near-ground drop on first select.
     if (sibling.key === "drop_height" && shape === "car" && (val == null || val === "")) {
       val = 8;
+    }
+    // UFO: hover above the party by default.
+    if (shape === "ufo") {
+      if (sibling.key === "z_bias" && (val == null || val === "")) val = 175;
+      if (sibling.key === "drop_height" && (val == null || val === "")) val = 220;
     }
     if (val == null) continue;
     const skey = actionFieldKey(sectionId, actionDef, sibling);
@@ -2995,12 +3356,12 @@ function renderSerialSendList(section, sectionId, sectionEl) {
   const addWrap = document.createElement("label");
   addWrap.className = "field field-wide";
   addWrap.innerHTML =
-    "<span>Paste @Ug serials or a .txt / .docx path — leave a <strong>full blank line</strong> between each code. Then press <strong>Send items</strong> next to Add to queue.</span>";
+    "<span>Paste @Ug serials or a .txt / .docx / .yaml path — leave a <strong>full blank line</strong> between each code. <strong>Browse</strong> loads into this box (not the queue / My Library). Then press <strong>Send items</strong>, or <strong>Add to library</strong> to save with a name.</span>";
   const addArea = document.createElement("textarea");
   addArea.rows = 4;
   addArea.dataset.serialPasteArea = sectionId;
   addArea.placeholder =
-    '@U… (blank line between each serial)\n\n@U…\n\nor one line: "C:\\Users\\…\\Downloads\\BP 4 Gear.txt"';
+    '@U… (blank line between each)\n\n@U…\n\nor human: 300, 0, 1, 60| …\n\nor "C:\\Users\\…\\gear.txt" / .yaml';
   addWrap.appendChild(addArea);
 
   const btnRow = document.createElement("div");
@@ -3010,6 +3371,7 @@ function renderSerialSendList(section, sectionId, sectionEl) {
   browseBtn.type = "button";
   browseBtn.className = "ghost";
   browseBtn.textContent = "Browse file…";
+  browseBtn.title = "Load a .txt / .yaml / .docx into the paste box above — then Send items or Add to library.";
 
   const addBtn = document.createElement("button");
   addBtn.type = "button";
@@ -3017,11 +3379,40 @@ function renderSerialSendList(section, sectionId, sectionEl) {
   addBtn.textContent = "Add to queue (optional)";
   addBtn.title = "Build a list when you want to mix serials before sending. Paste + Send items is enough for most boosts.";
 
+  const clearPasteBtn = document.createElement("button");
+  clearPasteBtn.type = "button";
+  clearPasteBtn.className = "ghost serial-clear-paste-btn";
+  clearPasteBtn.textContent = "Clear";
+  clearPasteBtn.title = "Clear the paste box (handy after Send items).";
+  clearPasteBtn.addEventListener("click", () => {
+    addArea.value = "";
+    addArea.focus();
+    actionMessage.className = "action-message muted";
+    actionMessage.textContent = "Paste box cleared.";
+  });
+
+  const fillPasteBox = (lines, note) => {
+    if (!lines.length) {
+      actionMessage.className = "action-message error";
+      actionMessage.textContent =
+        note ||
+        "No @U / human serials found. For STBX / save YAML, look for lines like serial: '@U…'.";
+      return;
+    }
+    addArea.value = lines.map((line) => String(line).trim()).filter(Boolean).join("\n\n");
+    addArea.focus();
+    actionMessage.className = "action-message ok";
+    actionMessage.textContent =
+      note ||
+      `Loaded ${lines.length} serial(s) into the paste box — press Send items, or Add to library…`;
+  };
+
   const appendSerials = (lines, note) => {
     if (!lines.length) {
       actionMessage.className = "action-message error";
       actionMessage.textContent =
-        note || "Paste at least one @U / human serial, or a .txt / .docx path first.";
+        note ||
+        "No @U / human serials found. For STBX / save YAML, look for lines like serial: '@U…'.";
       return;
     }
     const rows = multiselectRows.get(sectionId) || [];
@@ -3037,8 +3428,9 @@ function renderSerialSendList(section, sectionId, sectionEl) {
     }
     multiselectRows.set(sectionId, rows);
     multiselectState.set(sectionId, selected);
-    addArea.value = "";
     renderSerialSendListRows(sectionId, box);
+    const fold = box.querySelector(".serial-queue-fold");
+    if (fold) fold.open = true;
     actionMessage.className = "action-message ok";
     actionMessage.textContent = note || `Added ${lines.length} serial(s) to queue.`;
   };
@@ -3077,7 +3469,8 @@ function renderSerialSendList(section, sectionId, sectionEl) {
         actionMessage.textContent = result?.message || "Could not read that file.";
         return;
       }
-      appendSerials(result.serials || [], result.message);
+      // Browse always fills the paste box — never the optional queue or My Library.
+      fillPasteBox(result.serials || [], result.message);
     } catch (error) {
       actionMessage.className = "action-message error";
       actionMessage.textContent = String(error?.message || error || "File pick failed.");
@@ -3087,13 +3480,72 @@ function renderSerialSendList(section, sectionId, sectionEl) {
     }
   });
 
-  btnRow.append(browseBtn, addBtn);
+  const libraryBtn = document.createElement("button");
+  libraryBtn.type = "button";
+  libraryBtn.className = "ghost serial-save-library-btn";
+  libraryBtn.textContent = "Add to library…";
+  libraryBtn.title =
+    "Save whatever is in the paste box into My Library under a name you choose (reuse later).";
+  libraryBtn.addEventListener("click", async () => {
+    if (!actionsEnabled()) {
+      actionMessage.className = "action-message error";
+      actionMessage.textContent = "Connect in-game first before saving to My Library.";
+      return;
+    }
+    libraryBtn.disabled = true;
+    actionMessage.className = "action-message muted";
+    actionMessage.textContent = "Reading paste box…";
+    try {
+      const resolved = await resolveSerialInputText(addArea.value);
+      const serials = resolved.serials || [];
+      if (!serials.length) {
+        actionMessage.className = "action-message error";
+        actionMessage.textContent =
+          resolved.message || "Paste or Browse serials into the box first.";
+        return;
+      }
+      const name = window.prompt(
+        serials.length === 1
+          ? "Name for this My Library entry:"
+          : `Name for this My Library set (${serials.length} serials):`,
+        ""
+      );
+      if (name == null) {
+        actionMessage.className = "action-message muted";
+        actionMessage.textContent = "Library save cancelled.";
+        return;
+      }
+      const cleanName = String(name).trim();
+      if (!cleanName) {
+        actionMessage.className = "action-message error";
+        actionMessage.textContent = "Enter a name to save into My Library.";
+        return;
+      }
+      await runAction(
+        "serial_store_import_serials",
+        {
+          name: cleanName,
+          group: cleanName,
+          serials,
+        },
+        "",
+        { sectionId, config: { catalog: "serial_store" } }
+      );
+    } catch (error) {
+      actionMessage.className = "action-message error";
+      actionMessage.textContent = String(error?.message || error || "Could not save to library.");
+    } finally {
+      libraryBtn.disabled = false;
+    }
+  });
 
-  // Send items lands here (next to Add to queue) when the action card renders.
+  btnRow.append(browseBtn, addBtn, clearPasteBtn);
+
+  // Send items + Add to library land here when the action card renders.
   const sendBtnSlot = document.createElement("div");
   sendBtnSlot.className = "serial-send-btn-slot";
   sendBtnSlot.dataset.serialSendBtn = sectionId;
-  btnRow.appendChild(sendBtnSlot);
+  btnRow.append(sendBtnSlot, libraryBtn);
 
   // Send options (Send to / amount / open rewards) stay visible under the button row.
   const primarySlot = document.createElement("div");
@@ -3121,8 +3573,12 @@ function renderSerialSendList(section, sectionId, sectionEl) {
   const queueDetails = document.createElement("details");
   queueDetails.className = "serial-queue-fold";
   const queueSummary = document.createElement("summary");
-  queueSummary.textContent = "Optional queue (usually skip this)";
-  queueDetails.append(queueSummary, meta, listEl);
+  queueSummary.textContent = "Optional queue";
+  const queueHint = document.createElement("p");
+  queueHint.className = "muted small";
+  queueHint.textContent =
+    "Use Add to queue only when mixing sets. Deliver queued serials lives in this same fold.";
+  queueDetails.append(queueSummary, queueHint, meta, listEl);
 
   box.append(addWrap, btnRow, primarySlot, queueDetails);
   sectionEl.appendChild(box);
@@ -3373,7 +3829,11 @@ function renderField(sectionId, actionDef, field, sectionEl, allFields) {
           const opt = document.createElement("option");
           opt.value = option;
           const labels = field.option_labels || {};
-          opt.textContent = labels[option] || String(option).replaceAll("_", " ");
+          const badges = field.option_badges || {};
+          const base = labels[option] || String(option).replaceAll("_", " ");
+          opt.textContent = badges[option] && !String(base).includes("NEW")
+            ? `✦ NEW · ${base}`
+            : base;
           og.appendChild(opt);
         }
         input.appendChild(og);
@@ -3391,6 +3851,15 @@ function renderField(sectionId, actionDef, field, sectionEl, allFields) {
       }
     }
     input.addEventListener("change", () => {
+      if (field.key === "open_rewards" && String(input.value).toLowerCase() === "yes") {
+        if (
+          !confirmSerialRisk(`${OPEN_REWARDS_LARGE_WARNING}\n\nTurn Open rewards ON for this send?`)
+        ) {
+          input.value = "no";
+          fieldValues[key] = "no";
+          return;
+        }
+      }
       fieldValues[key] = input.value;
       if (field.key === "shape" && field.land_profile) {
         applyShapeLayoutDefaults(sectionId, actionDef, field, input.value, allFields, sectionEl);
@@ -3411,13 +3880,33 @@ function renderField(sectionId, actionDef, field, sectionEl, allFields) {
   } else if (field.type === "number") {
     input = document.createElement("input");
     input.type = "number";
+    input.inputMode = "numeric";
     if (field.min != null) input.min = String(field.min);
     if (field.max != null) input.max = String(field.max);
     if (field.step != null) input.step = String(field.step);
+    // Wheel over a focused number field steals edits / feels like arrows "don't work".
+    input.addEventListener(
+      "wheel",
+      (event) => {
+        if (document.activeElement === input) {
+          event.preventDefault();
+        }
+      },
+      { passive: false }
+    );
   } else {
     input = document.createElement("input");
     input.type = "text";
     if (field.placeholder) input.placeholder = field.placeholder;
+    if (field.key === "backpack_size" || field.key === "bank_size") {
+      input.inputMode = "numeric";
+      input.autocomplete = "off";
+      input.spellcheck = false;
+      input.addEventListener("input", () => {
+        const cleaned = String(input.value || "").replace(/[^\d]/g, "");
+        if (cleaned !== input.value) input.value = cleaned;
+      });
+    }
   }
   if (field.key === "shape") {
     const retired = String(fieldValues[key] || "");
@@ -3459,6 +3948,22 @@ function renderField(sectionId, actionDef, field, sectionEl, allFields) {
   });
   wrap.appendChild(input);
   wrap.dataset.fieldKey = key;
+  if (field.key === "open_rewards") {
+    const ackWrap = document.createElement("label");
+    ackWrap.className = "serial-risk-ack field-serial-risk-ack";
+    ackWrap.title =
+      "Skip amount / console-backpack confirmations after you acknowledge the risks.";
+    const ackBox = document.createElement("input");
+    ackBox.type = "checkbox";
+    ackBox.checked = serialRiskAcknowledged();
+    const ackText = document.createElement("span");
+    ackText.textContent = "Don't warn again (amounts / console)";
+    ackBox.addEventListener("change", () => {
+      setSerialRiskAcknowledged(ackBox.checked);
+    });
+    ackWrap.append(ackBox, ackText);
+    wrap.appendChild(ackWrap);
+  }
   return wrap;
 }
 
@@ -3755,7 +4260,7 @@ async function refreshMultiselectSection(sectionId, config) {
         });
         const text = document.createElement("span");
         const title = String(row[config.labelKey || "title"] || row.name || rowId);
-        const extraBits = [row.type, row.manufacturer, row.group || row.listing || row.category];
+        const extraBits = [row.type, row.manufacturer, row.creator, row.group || row.listing || row.category];
         if (config.kind === "backpack" || config.catalog === "backpack") {
           if (row.level != null && row.level !== "") extraBits.unshift(`L${row.level}`);
           const serial = String(row.serial || "");
@@ -3788,6 +4293,7 @@ async function refreshMultiselectSection(sectionId, config) {
       category: data.categories,
       type: data.types,
       manufacturer: data.manufacturers,
+      creator: data.creators,
     };
     for (const filterSelect of box.querySelectorAll("select[data-filter-key]")) {
       const key = filterSelect.dataset.filterKey || "";
@@ -3916,10 +4422,32 @@ function renderMultiselectControls(section, sectionId, sectionEl) {
   search.type = "search";
   search.placeholder = "Search catalog…";
   search.value = fieldValues[searchKey];
+  let searchDebounce = 0;
   search.addEventListener("input", () => {
     fieldValues[searchKey] = search.value;
     catalogCache.delete(catalogCacheKey(config.catalog, multiselectParams(sectionId, config)));
-    refreshMultiselectSection(sectionId, config);
+    window.clearTimeout(searchDebounce);
+    searchDebounce = window.setTimeout(() => {
+      // Keep focus if the list remounts mid-type.
+      const keepFocus = document.activeElement === search;
+      const caret = keepFocus ? search.selectionStart : null;
+      refreshMultiselectSection(sectionId, config).then(() => {
+        if (!keepFocus) return;
+        const again = document.querySelector(
+          `[data-multiselect-section="${sectionId}"] input[type="search"]`
+        );
+        if (again) {
+          again.focus();
+          if (caret != null) {
+            try {
+              again.setSelectionRange(caret, caret);
+            } catch {
+              /* ignore */
+            }
+          }
+        }
+      });
+    }, 220);
   });
   toolbar.appendChild(search);
 
@@ -3944,11 +4472,23 @@ function renderMultiselectControls(section, sectionId, sectionEl) {
     filterSelect.value = fieldValues[filterKey];
     filterSelect.addEventListener("change", () => {
       fieldValues[filterKey] = filterSelect.value;
-      if (filter.key === "category") {
-        const typeKey = `${sectionId}:type`;
-        fieldValues[typeKey] = "All";
-        const typeSelect = box.querySelector('select[data-filter-key="type"]');
-        if (typeSelect) typeSelect.value = "All";
+      if (filter.key === "category" || filter.key === "type" || filter.key === "manufacturer") {
+        if (filter.key === "category") {
+          const typeKey = `${sectionId}:type`;
+          fieldValues[typeKey] = "All";
+          const typeSelect = box.querySelector('select[data-filter-key="type"]');
+          if (typeSelect) typeSelect.value = "All";
+        }
+        if (filter.key === "category" || filter.key === "type") {
+          const makerKey = `${sectionId}:manufacturer`;
+          fieldValues[makerKey] = "All";
+          const makerSelect = box.querySelector('select[data-filter-key="manufacturer"]');
+          if (makerSelect) makerSelect.value = "All";
+        }
+        const creatorKey = `${sectionId}:creator`;
+        fieldValues[creatorKey] = "All";
+        const creatorSelect = box.querySelector('select[data-filter-key="creator"]');
+        if (creatorSelect) creatorSelect.value = "All";
       }
       catalogCache.delete(catalogCacheKey(config.catalog, multiselectParams(sectionId, config)));
       refreshMultiselectSection(sectionId, config);
@@ -3994,19 +4534,47 @@ function renderMultiselectControls(section, sectionId, sectionEl) {
       opt.textContent = label;
       openToggle.appendChild(opt);
     }
-    openToggle.value = fieldValues[openRewardsKey];
+    openToggle.value =
+      fieldValues[openRewardsKey] === "yes" || fieldValues[openRewardsKey] === true ? "yes" : "no";
+    if (fieldValues[openRewardsKey] === undefined || fieldValues[openRewardsKey] === "") {
+      fieldValues[openRewardsKey] = "no";
+    }
     openToggle.addEventListener("change", () => {
+      if (openToggle.value === "yes") {
+        if (
+          !confirmSerialRisk(`${OPEN_REWARDS_LARGE_WARNING}\n\nTurn Open rewards ON for this send?`)
+        ) {
+          openToggle.value = "no";
+          fieldValues[openRewardsKey] = "no";
+          return;
+        }
+      }
       fieldValues[openRewardsKey] = openToggle.value;
     });
     openWrap.appendChild(openToggle);
     toolbar.appendChild(openWrap);
+
+    const ackWrap = document.createElement("label");
+    ackWrap.className = "multiselect-filter serial-risk-ack";
+    ackWrap.title =
+      "Skip amount / console-backpack confirmations after you acknowledge the risks.";
+    const ackBox = document.createElement("input");
+    ackBox.type = "checkbox";
+    ackBox.checked = serialRiskAcknowledged();
+    const ackText = document.createElement("span");
+    ackText.textContent = "Don't warn again (amounts / console)";
+    ackBox.addEventListener("change", () => {
+      setSerialRiskAcknowledged(ackBox.checked);
+    });
+    ackWrap.append(ackBox, ackText);
+    toolbar.appendChild(ackWrap);
   }
 
   if (config.levelOverride) {
     const levelOverrideKey = `${sectionId}:level_override`;
     const levelKey = `${sectionId}:level`;
     if (fieldValues[levelOverrideKey] === undefined) fieldValues[levelOverrideKey] = "no";
-    if (fieldValues[levelKey] === undefined) fieldValues[levelKey] = "60";
+    if (fieldValues[levelKey] === undefined) fieldValues[levelKey] = "70";
     const levelWrap = document.createElement("label");
     levelWrap.className = "multiselect-filter";
     const levelToggle = document.createElement("select");
@@ -4023,7 +4591,7 @@ function renderMultiselectControls(section, sectionId, sectionEl) {
     const levelInput = document.createElement("input");
     levelInput.type = "number";
     levelInput.min = "1";
-    levelInput.max = "60";
+    levelInput.max = "70";
     levelInput.value = fieldValues[levelKey];
     levelInput.addEventListener("input", () => {
       fieldValues[levelKey] = levelInput.value;
@@ -4216,7 +4784,6 @@ function renderActionCard(sectionId, actionDef, sectionEl, featured) {
       "line_length",
       "z_bias",
       "stay_in_air",
-      "peel_after",
     ].includes(String(field.key || ""))
   );
   // Tall land/shape cards must span the row — half-width left empty "missing button" holes.
@@ -4561,7 +5128,92 @@ const TOGGLE_BOARD_ROWS = Object.freeze([
   ["zoom_injured", "Zoom while downed"],
   ["auto_revive", "Auto revive"],
   ["map_fog", "Hide map fog"],
+  ["hold_session", "Hold session (no menu kick)"],
 ]);
+
+/** How Toggles-tab rows map to bridge actions. null = not clickable. */
+const TOGGLE_BOARD_ACTIONS = Object.freeze({
+  force_fly: {
+    action: "mobility_force_fly",
+    payloadOn: { enabled: true, scope: "target" },
+    payloadOff: { enabled: false, scope: "target" },
+  },
+  force_fly_all: null,
+  infinite_jump: {
+    action: "mobility_infinite_jump",
+    payloadOn: { enabled: true, scope: "target" },
+    payloadOff: { enabled: false, scope: "target" },
+  },
+  infinite_jump_all: {
+    action: "mobility_infinite_jump",
+    payloadOn: { enabled: true, scope: "all" },
+    payloadOff: { enabled: false, scope: "all" },
+  },
+  vehicle_jump: {
+    action: "bvm_vehicle_jump",
+    payloadOn: { enabled: true },
+    payloadOff: { enabled: false },
+  },
+  noclip: {
+    action: "mobility_noclip",
+    payloadOn: { enabled: true },
+    payloadOff: { enabled: false },
+  },
+  fall_through_map: {
+    action: "faafo_fall_through_map",
+    payloadOn: { enabled: true },
+    payloadOff: { enabled: false },
+  },
+  auto_apply: {
+    action: "mobility_auto_apply",
+    payloadOn: { enabled: true },
+    payloadOff: { enabled: false },
+  },
+  shoot_sprint: {
+    action: "character_flag",
+    payloadOn: { flag: "shoot_sprint", enabled: true },
+    payloadOff: { flag: "shoot_sprint", enabled: false },
+  },
+  zoom_sprint: {
+    action: "character_flag",
+    payloadOn: { flag: "zoom_sprint", enabled: true },
+    payloadOff: { flag: "zoom_sprint", enabled: false },
+  },
+  zoom_injured: {
+    action: "character_flag",
+    payloadOn: { flag: "zoom_injured", enabled: true },
+    payloadOff: { flag: "zoom_injured", enabled: false },
+  },
+  auto_revive: {
+    action: "character_flag",
+    payloadOn: { flag: "auto_revive", enabled: true },
+    payloadOff: { flag: "auto_revive", enabled: false },
+  },
+  map_fog: {
+    action: "map_fog_hide",
+    payloadOn: { enabled: true },
+    payloadOff: { enabled: false },
+  },
+  hold_session: {
+    action: "hold_session",
+    payloadOn: { enabled: true },
+    payloadOff: { enabled: false },
+  },
+});
+
+function patchStickyToggleLocal(key, on) {
+  if (!latestStatus) latestStatus = {};
+  if (!latestStatus.sticky_toggles || typeof latestStatus.sticky_toggles !== "object") {
+    latestStatus.sticky_toggles = {};
+  }
+  latestStatus.sticky_toggles[key] = Boolean(on);
+  if (latestStatus.raw && typeof latestStatus.raw === "object") {
+    if (!latestStatus.raw.sticky_toggles || typeof latestStatus.raw.sticky_toggles !== "object") {
+      latestStatus.raw.sticky_toggles = {};
+    }
+    latestStatus.raw.sticky_toggles[key] = Boolean(on);
+  }
+}
 
 function renderTogglesBoard(sectionEl) {
   const host = document.createElement("div");
@@ -4582,14 +5234,35 @@ function fillTogglesBoard() {
   for (const [key, label] of TOGGLE_BOARD_ROWS) {
     const on = Boolean(sticky[key]);
     if (on) anyOn = true;
+    const spec = TOGGLE_BOARD_ACTIONS[key];
     const row = document.createElement("li");
     row.className = on ? "toggles-board-row is-on" : "toggles-board-row is-off";
+    if (!spec) {
+      row.classList.add("is-disabled");
+      row.title = "Party-wide Force fly is disabled (unreliable). Use Infinite jump (all).";
+    } else {
+      row.classList.add("is-clickable");
+      row.title = on ? `Click to turn ${label} OFF` : `Click to turn ${label} ON`;
+      row.tabIndex = 0;
+      row.setAttribute("role", "button");
+      row.addEventListener("click", () => toggleBoardRow(key, label, !on));
+      row.addEventListener("keydown", (event) => {
+        if (event.key === "Enter" || event.key === " ") {
+          event.preventDefault();
+          toggleBoardRow(key, label, !on);
+        }
+      });
+    }
     const name = document.createElement("span");
     name.className = "toggles-board-name";
     name.textContent = label;
     const state = document.createElement("span");
     state.className = "toggles-board-state";
-    state.textContent = on ? "ON" : "OFF";
+    if (!spec) {
+      state.textContent = "N/A";
+    } else {
+      state.textContent = on ? "ON" : "OFF";
+    }
     row.append(name, state);
     list.appendChild(row);
   }
@@ -4601,9 +5274,36 @@ function fillTogglesBoard() {
   const extra = [];
   if (preset) extra.push(`Fly preset: ${preset}`);
   if (speed != null && speed !== "") extra.push(`Fly speed: ${speed}`);
-  extra.push(anyOn ? "At least one sticky boost is on." : "All listed sticky boosts are off.");
+  extra.push(anyOn ? "Click a row to toggle." : "All listed sticky boosts are off — click a row to enable.");
   note.textContent = extra.join(" · ");
   host.appendChild(note);
+}
+
+let toggleBoardBusy = false;
+async function toggleBoardRow(key, label, wantOn) {
+  if (toggleBoardBusy) return;
+  const spec = TOGGLE_BOARD_ACTIONS[key];
+  if (!spec) return;
+  toggleBoardBusy = true;
+  actionMessage.className = "action-message muted";
+  actionMessage.textContent = `${wantOn ? "Enabling" : "Disabling"} ${label}…`;
+  try {
+    const payload = wantOn ? { ...spec.payloadOn } : { ...spec.payloadOff };
+    await runAction(spec.action, payload, "", {});
+    patchStickyToggleLocal(key, wantOn);
+    if (key === "force_fly" || key === "infinite_jump" || key === "infinite_jump_all" || key === "noclip" || key === "map_fog" || key === "hold_session") {
+      syncMobilityToggleButtons(key, wantOn);
+    } else {
+      syncMobilityToggleButtons(key, wantOn);
+    }
+    if (key === "force_fly") syncMobilityToggleButtons("force_fly_all", false);
+    fillTogglesBoard();
+  } catch (error) {
+    actionMessage.className = "action-message error";
+    actionMessage.textContent = String(error?.message || error);
+  } finally {
+    toggleBoardBusy = false;
+  }
 }
 
 function renderKeybindsEditor(sectionEl) {
@@ -4659,6 +5359,11 @@ function renderSection(section, tabId) {
   }
   if (section.title === "Most used" || section.title === "Essentials") {
     sectionEl.classList.add("panel-section-most-used");
+  }
+  const aura = String(section.aura || "").trim().toLowerCase();
+  if (aura) {
+    sectionEl.dataset.aura = aura;
+    sectionEl.classList.add("panel-section-aura", `panel-section-aura-${aura}`);
   }
   const sectionId = sectionKey(tabId, section);
   sectionEl.dataset.sectionId = sectionId;
@@ -4954,7 +5659,48 @@ function renderSection(section, tabId) {
       decorateActionButton(button, actionDef.label, actionDef);
       if (actionDef.tooltip) button.title = actionDef.tooltip;
       button.dataset.runAction = actionDef.action;
-      button.addEventListener("click", () => {
+      button.addEventListener("click", async () => {
+        const context = {
+          sectionId,
+          config: section.multiselect || { catalog: section.serialSendList ? "serial_send_list" : "serial_store" },
+        };
+        if (actionDef.importSerialFile) {
+          try {
+            actionMessage.className = "action-message muted";
+            actionMessage.textContent = "Opening file…";
+            const result = await window.sqbt.pickSerialFile();
+            if (result?.cancelled) {
+              actionMessage.className = "action-message muted";
+              actionMessage.textContent = "File pick cancelled.";
+              return;
+            }
+            if (!result?.ok) {
+              actionMessage.className = "action-message error";
+              actionMessage.textContent = result?.message || "Could not read that file.";
+              return;
+            }
+            const text =
+              String(result.text || "").trim() ||
+              (Array.isArray(result.serials) ? result.serials.join("\n") : "");
+            if (!text) {
+              actionMessage.className = "action-message error";
+              actionMessage.textContent = result?.message || "No serials found in that file.";
+              return;
+            }
+            const payload = {
+              ...(actionDef.payload || {}),
+              text,
+              group: "Import",
+              source_name: result.path ? String(result.path).split(/[/\\]/).pop() : "",
+              filename: result.path ? String(result.path).split(/[/\\]/).pop() : "",
+            };
+            runAction(actionDef.action, payload, actionDef.confirm || "", context);
+          } catch (error) {
+            actionMessage.className = "action-message error";
+            actionMessage.textContent = String(error?.message || error || "File pick failed.");
+          }
+          return;
+        }
         const payload = collectPayload(sectionId, actionDef);
         // Field controls (count/level/recipient) live on action cards for send-list.
         if (section.serialSendList) {
@@ -4989,10 +5735,6 @@ function renderSection(section, tabId) {
             payload[field.key] = value;
           }
         }
-        const context = {
-          sectionId,
-          config: section.multiselect || { catalog: section.serialSendList ? "serial_send_list" : "serial_store" },
-        };
         runAction(actionDef.action, payload, actionDef.confirm || "", context);
       });
       // For send-list, also render field controls (Send to / amount / etc.).
@@ -5033,6 +5775,11 @@ function renderSection(section, tabId) {
             button.classList.add("serial-send-primary-btn");
             card.appendChild(button);
           }
+        } else if (actionDef.deliverMultiselect) {
+          card.appendChild(button);
+          const queueFold = sectionEl.querySelector(".serial-queue-fold");
+          if (queueFold) queueFold.appendChild(card);
+          else actionHost.appendChild(card);
         } else {
           card.appendChild(button);
           actionHost.appendChild(card);
@@ -5052,7 +5799,7 @@ function renderSection(section, tabId) {
           const tip = document.createElement("p");
           tip.className = "muted small";
           tip.textContent =
-            "Tick rows above, choose Send to (yourself / friend / All players), keep Open rewards = Yes (default), then deliver.";
+            "Tick rows above, choose Send to (yourself / friend / All players). Open rewards defaults to No — turn Yes only if you want mail opened automatically (large opens can blank the backpack).";
           card.appendChild(tip);
         }
         if (actionDef.backpackMultiselect) {
@@ -5398,8 +6145,8 @@ async function loadManifest() {
   const result = await window.sqbt.getManifest();
   if (gen !== manifestLoadGen) return;
   if (!result.ok) {
-    // Never wipe a healthy tools UI on a transient bridge blip.
-    if (manifest?.tabs?.length) {
+    // Keep tools only through a brief Online blip — not while truly Offline.
+    if (manifest?.tabs?.length && bridgeConnectedHeld()) {
       if (actionMessage) {
         actionMessage.className = "action-message muted";
         actionMessage.textContent = String(result.message || "").trim()
@@ -5408,28 +6155,12 @@ async function loadManifest() {
       }
       return;
     }
-    const msg = String(result.message || "");
-    const gameOff = /fetch failed|econnrefused|not running|still loading|game not connected/i.test(msg);
-    const needsSetup = !gameOff && setupNeedsUserAction();
-    tabContent.innerHTML = needsSetup
-      ? `<div class="panel-section panel-section-featured">
-      <h3>${t("waiting.tools")}</h3>
-      <p class="setup-attention">${result.message || t("waiting.manifestUnavailable")}</p>
-      <ol class="section-guide">
-        <li>${t("waiting.setup1")}</li>
-        <li>${t("waiting.toolsSetup2")}</li>
-        <li>${t("waiting.toolsSetup3")}</li>
-      </ol>
-    </div>`
-      : `<div class="panel-section panel-section-featured">
-      <h3>${t("waiting.tools")}</h3>
-      <p class="setup-attention">${result.message || t("waiting.manifestUnavailable")}</p>
-      <ol class="section-guide">
-        <li>${t("waiting.toolsAuto1")}</li>
-        <li>${t("waiting.toolsAuto2")}</li>
-        <li>${t("waiting.toolsAuto3")}</li>
-      </ol>
-    </div>`;
+    clearToolsToWaiting(result.message);
+    return;
+  }
+  // Do not paint the full tools UI until the bridge is Online in-game.
+  if (!bridgeConnectedHeld()) {
+    clearToolsToWaiting(t("waiting.manifestUnavailable"));
     return;
   }
   manifest = result.manifest;
@@ -5721,11 +6452,38 @@ function applyModSyncUi(modSync, baseSdk = null) {
   });
 }
 
+async function applyGameFolderPickResult(result) {
+  if (!result?.ok || result.cancelled) return false;
+  if (result.gameRoot) gameRootInput.value = result.gameRoot;
+  applyInstallLocationUi({
+    gameRoot: result.gameRoot,
+    storedGameRoot: result.storedGameRoot || result.gameRoot,
+    pathSource: result.pathSource || "stored",
+    candidates: result.candidates || [],
+  });
+  lastSetup = {
+    ...(lastSetup || {}),
+    gameRoot: result.gameRoot,
+    storedGameRoot: result.storedGameRoot || result.gameRoot,
+    pathSource: result.pathSource || "stored",
+    candidates: result.candidates || [],
+  };
+  if (result.baseSdk || result.modSync) {
+    applyBaseSdkUi(result.baseSdk, result.modSync);
+    applyModSyncUi(result.modSync, result.baseSdk);
+  }
+  updateSetupVisibility({
+    ...(lastSetup || {}),
+    gameRoot: result.gameRoot,
+  });
+  return true;
+}
+
 async function loadSetup() {
   const setup = await window.sqbt.getSetup();
   await refreshListFavorites();
   // Prefer a real saved/detected root — never pretend a missing default C: path is set.
-  const resolved =
+  let resolved =
     setup.gameRoot ||
     setup.storedGameRoot ||
     (setup.candidates || []).find(Boolean) ||
@@ -5752,6 +6510,24 @@ async function loadSetup() {
       setup.settingsMode === "appdata" || setup.isPackaged
         ? t("setup.appdata")
         : t("setup.devmode");
+  }
+  // Default Steam/Epic path first; if still missing, pop the folder picker once.
+  if (!resolved && typeof window.sqbt.promptMissingGameFolder === "function") {
+    try {
+      const prompted = await window.sqbt.promptMissingGameFolder();
+      if (prompted?.ok && prompted.gameRoot) {
+        resolved = prompted.gameRoot;
+        await applyGameFolderPickResult(prompted);
+        if (setupMessage) {
+          setupMessage.className = "setup-message attention";
+          setupMessage.textContent = prompted.skipped
+            ? "Borderlands 4 folder detected."
+            : "Install folder saved. Squ1ggs mod auto-syncs on EXE launch.";
+        }
+      }
+    } catch {
+      /* user can still use Set install folder */
+    }
   }
 }
 
@@ -5839,9 +6615,10 @@ if (watchaGotItBtn) {
 }
 
 window.addEventListener("keydown", (event) => {
-  if (!(event.ctrlKey && event.altKey && event.shiftKey && event.key === "F9")) return;
   const tag = String(event.target?.tagName || "").toLowerCase();
-  if (tag === "input" || tag === "textarea") return;
+  const typing = tag === "input" || tag === "textarea";
+  if (!(event.ctrlKey && event.altKey && event.shiftKey && event.key === "F9")) return;
+  if (typing) return;
   event.preventDefault();
   unlockDevSmokePanel();
   if (hiddenShapesUnlocked) {
@@ -6006,22 +6783,7 @@ if (globalTargetSelect) {
 browseGameBtn.addEventListener("click", async () => {
   const result = await window.sqbt.pickGameFolder();
   if (result.ok) {
-    gameRootInput.value = result.gameRoot;
-    applyInstallLocationUi({
-      gameRoot: result.gameRoot,
-      storedGameRoot: result.storedGameRoot || result.gameRoot,
-      pathSource: result.pathSource || "stored",
-      candidates: result.candidates || [],
-    });
-    lastSetup = {
-      ...(lastSetup || {}),
-      gameRoot: result.gameRoot,
-      storedGameRoot: result.storedGameRoot || result.gameRoot,
-      pathSource: result.pathSource || "stored",
-      candidates: result.candidates || [],
-    };
-    applyBaseSdkUi(result.baseSdk, result.modSync);
-    applyModSyncUi(result.modSync, result.baseSdk);
+    await applyGameFolderPickResult(result);
     if (!(result.modSync?.updated && result.modSync?.ok) && setupMessage) {
       setupMessage.className = "setup-message";
       setupMessage.textContent = result.baseSdk?.installed
@@ -6227,8 +6989,11 @@ if (toolSearchInput) {
 }
 document.addEventListener("click", (event) => {
   if (!toolSearchResults || toolSearchResults.classList.contains("hidden")) return;
-  const inside = event.target?.closest?.(".tool-search-bar");
-  if (!inside) hideToolSearchResults();
+  // Results live in .tool-search-bar; also ignore hit buttons explicitly so a
+  // bubble order quirk cannot dismiss before jumpToTool runs.
+  const t = event.target;
+  if (t?.closest?.(".tool-search-bar") || t?.closest?.(".tool-search-hit")) return;
+  hideToolSearchResults();
 });
 window.sqbt.onStatus(setStatusUi);
 loadSetup();

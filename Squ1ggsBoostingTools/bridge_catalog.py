@@ -597,7 +597,7 @@ def catalog_serial_store(payload: dict[str, Any] | None = None) -> dict[str, Any
         )
     groups = serial_store.groups()
     if not out:
-        return _ok("No saved serials yet. Save entries from My Library below.", rows=[], groups=groups)
+        return _ok("No saved serials yet. Fill Name (optional) + Serial above, then Save entry.", rows=[], groups=groups)
     return _ok(f"{len(out)} saved serial(s).", rows=out, groups=groups, total=len(rows))
 
 

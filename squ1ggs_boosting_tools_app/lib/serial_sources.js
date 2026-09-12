@@ -51,32 +51,6 @@ function joinWrappedSerialLines(raw) {
   return out;
 }
 
-/** Split a blob into Base85 serials. @Ug starts a serial only at start/whitespace. */
-function splitBase85SerialBlob(blob) {
-  const text = String(blob || "").trim();
-  if (!text) return [];
-  if (isSinglePastedBase85(text)) return [text];
-  const starts = [];
-  const re = /(?:^|\s)@Ug/gi;
-  let m;
-  while ((m = re.exec(text)) !== null) {
-    const at = text[m.index] === "@" ? m.index : m.index + (m[0].length - 3);
-    starts.push(at);
-  }
-  if (!starts.length) {
-    return text.startsWith("@U") ? [text] : [];
-  }
-  if (starts.length === 1) {
-    return [text.slice(starts[0]).trim()];
-  }
-  const out = [];
-  for (let i = 0; i < starts.length; i += 1) {
-    const part = text.slice(starts[i], starts[i + 1] ?? text.length).trim();
-    if (part) out.push(part);
-  }
-  return out;
-}
-
 function stripQuotes(raw) {
   let s = String(raw || "").trim();
   if (
@@ -205,6 +179,67 @@ function readSourceText(filePath) {
   throw new Error(`Unsupported file type: ${ext || "(none)"}`);
 }
 
+/** Split a blob into Base85 serials. @Ug starts after start/whitespace/quotes/YAML punctuation. */
+function splitBase85SerialBlob(blob) {
+  const text = String(blob || "").trim();
+  if (!text) return [];
+  if (isSinglePastedBase85(text)) return [text];
+  const starts = [];
+  // STBX / save YAML: serial: '@Ug…'  — allow quote / colon / equals before @Ug.
+  const re = /(?:^|[\s'"`:=\(\[{,])@Ug/gi;
+  let m;
+  while ((m = re.exec(text)) !== null) {
+    const at = text[m.index] === "@" ? m.index : m.index + (m[0].length - 3);
+    starts.push(at);
+  }
+  if (!starts.length) {
+    return text.startsWith("@U") ? [text] : [];
+  }
+  if (starts.length === 1) {
+    return [text.slice(starts[0]).trim()];
+  }
+  const out = [];
+  for (let i = 0; i < starts.length; i += 1) {
+    let part = text.slice(starts[i], starts[i + 1] ?? text.length).trim();
+    // Strip trailing YAML/JSON punctuation from quoted serial values.
+    part = part.replace(/['"`]+\s*$/, "").replace(/[,}\]]+\s*$/, "").trim();
+    if (part) out.push(part);
+  }
+  return out;
+}
+
+/** Pull serial: '@U…' / serial: "@U…" / serial: @U… from save/editor YAML. */
+function extractYamlSerialFields(rawText) {
+  const found = [];
+  const seen = new Set();
+  const push = (serial) => {
+    let cleaned = String(serial || "").trim();
+    if (
+      (cleaned.startsWith('"') && cleaned.endsWith('"')) ||
+      (cleaned.startsWith("'") && cleaned.endsWith("'"))
+    ) {
+      cleaned = cleaned.slice(1, -1).trim();
+    }
+    if (!cleaned.startsWith("@U") || cleaned.length < 12) return;
+    if (seen.has(cleaned)) return;
+    seen.add(cleaned);
+    found.push(cleaned);
+  };
+  const text = String(rawText || "");
+  const patterns = [
+    /\bserial\s*:\s*'([^']+)'/gi,
+    /\bserial\s*:\s*"([^"]+)"/gi,
+    /\bserial\s*:\s*(@U\S+)/gi,
+  ];
+  for (const re of patterns) {
+    let m;
+    while ((m = re.exec(text)) !== null) {
+      push(m[1]);
+    }
+  }
+  return found;
+}
+
 function extractSerialsFromText(rawText) {
   const text = decodeHtmlEntities(String(rawText || ""));
   const found = [];
@@ -225,6 +260,7 @@ function extractSerialsFromText(rawText) {
         cleaned = inner.trim();
       }
     }
+    cleaned = cleaned.replace(/['"`]+$/, "").trim();
     if (!cleaned) return;
     if (!(cleaned.startsWith("@U") || (cleaned.includes(",") && /\d/.test(cleaned)))) {
       return;
@@ -233,6 +269,28 @@ function extractSerialsFromText(rawText) {
     seen.add(cleaned);
     found.push(cleaned);
   };
+
+  // Save-editor / STBX YAML: inventory.items.*.serial: '@U…'
+  for (const serial of extractYamlSerialFields(text)) {
+    push(serial);
+  }
+  if (found.length) {
+    return found;
+  }
+
+  // Moxsy-style .txt: one @U per line — never rejoin / mid-split.
+  const nonEmpty = String(text || "")
+    .replace(/\r/g, "\n")
+    .split("\n")
+    .map((line) => line.trim())
+    .filter(Boolean);
+  const atULines = nonEmpty.filter((line) => line.startsWith("@U") || /^['"]@U/.test(line));
+  if (nonEmpty.length >= 2 && atULines.length >= Math.max(2, Math.floor(0.8 * nonEmpty.length))) {
+    for (const line of atULines) {
+      push(line);
+    }
+    return found;
+  }
 
   const pushAtUParts = (blob) => {
     for (const token of splitBase85SerialBlob(blob)) {
@@ -261,7 +319,7 @@ function readSerialSource(rawPath) {
   if (!looksLikeSerialFilePath(cleaned)) {
     return {
       ok: false,
-      message: "Path must be a .txt / .docx / .csv / .md / .json file.",
+      message: "Path must be a .txt / .docx / .csv / .md / .json / .yaml / .yml file.",
     };
   }
   const resolved = path.resolve(cleaned);
@@ -274,6 +332,7 @@ function readSerialSource(rawPath) {
     return {
       ok: true,
       path: resolved,
+      text,
       serials,
       count: serials.length,
       message:

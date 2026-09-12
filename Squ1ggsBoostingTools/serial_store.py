@@ -165,10 +165,14 @@ def save_entry(
     clean_name = str(name or "").strip()
     clean_group = str(group or "Default").strip() or "Default"
     clean_serial = str(serial or "").strip()
-    if not clean_name:
-        raise ValueError("Name is required before saving.")
     if not clean_serial:
         raise ValueError("Serial is required before saving.")
+    if not clean_name:
+        # Auto-name from serial so Save entry works with paste-only.
+        snippet = clean_serial.replace("\n", " ").strip()
+        if len(snippet) > 40:
+            snippet = snippet[:37] + "…"
+        clean_name = snippet or "Saved serial"
     if validate_serial is not None:
         validate_serial(clean_serial)
     entry_id = str(entry_id or "").strip()

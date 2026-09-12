@@ -1,5 +1,16 @@
 # Changelog
 
+## 3.8.142 / EXE 1.1.136
+- **Hold session (no menu kick):** sticky host toggle cancels travel-to-menu and blocks return-to-menu / session-end leave so guests cannot pull the lobby out. Auto-arms during All UVHM / Complete ALL challenges; turn OFF before you quit to the menu yourself.
+- **Loot shapes co-op:** Place Fully / settle no longer ForceNetUpdates hundreds of pins in one frame (house AV). Host layout stays local; guest sync drips so grabs match the shape.
+- **Soft clear (hide loot):** on Home -> Most used and Loot -> Shiny drops (same as Loot Shapes).
+- **Party teleport:** Everyone -> me (plus Me -> selected / Selected -> me).
+- **MAX ALL:** Vault cards labeled **1-5**; already-maxed levels treated as success.
+- **My Library / Serials:** optional Save entry name; GZO / Lootlemon Add to library; Deliver converts human/deserialized codes to @U before mail.
+- **Home -> Most used:** Complete ALL challenges + All UVHM (target) one-taps.
+- **Nova:** 3D sphere pulse; Stay in air on/off landing behavior; pulse no longer stalls behind bulk pause.
+- **Stability:** PlayerBank/IO freeze (no world find_all on every spawn); quit soft-clear; mobility scrub; Find a tool / catalog search click hardening.
+
 ## 3.8.141 / EXE 1.1.135
 - **Loveless (Corpo Hacker Raid 2 class mod):** dedicated merge spawn (was silent NCS lag / no loot). Dedicated classmods run before bulk native.
 - **Spawn All Filtered:** fixed `shape_text` TypeError (queues/shapes work again).

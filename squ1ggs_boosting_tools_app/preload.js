@@ -19,6 +19,7 @@ contextBridge.exposeInMainWorld("sqbt", {
   readSerialSource: (filePath) => ipcRenderer.invoke("sqbt:read-serial-source", filePath),
   pickSerialFile: () => ipcRenderer.invoke("sqbt:pick-serial-file"),
   pickGameFolder: () => ipcRenderer.invoke("sqbt:pick-game-folder"),
+  promptMissingGameFolder: () => ipcRenderer.invoke("sqbt:prompt-missing-game-folder"),
   installSdkmod: (options = {}) => ipcRenderer.invoke("sqbt:install-sdkmod", options || {}),
   applyGithubUpdate: (currentModVersion = "") =>
     ipcRenderer.invoke("sqbt:apply-github-update", currentModVersion || ""),

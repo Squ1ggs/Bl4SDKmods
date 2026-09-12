@@ -42,6 +42,7 @@ SHAPE_3D_NAMES: tuple[str, ...] = (
     "ufo",
     "rocket",
     "gear",
+    "nova",
     "forbidden_one",
     "forbidden_pair",
 )
@@ -90,6 +91,7 @@ SHAPE_LABELS: dict[str, str] = {
     "claptrap": "Claptrap",
     "x_mark": "X mark",
     "globe": "globe",
+    "nova": "nova (3D ball -> pulse)",
     "letter_s": "letter S",
     "text": "text",
     "star_filled": "star filled",
@@ -1247,6 +1249,16 @@ def _normalize_shape_name(shape: str) -> str:
         "cogwheel": "gear",
         "the_forbidden_one": "forbidden_one",
         "the_forbidden_pair": "forbidden_pair",
+        "boom": "nova",
+        "lootbomb": "nova",
+        "loot_bomb": "nova",
+        "bigbang": "nova",
+        "big_bang": "nova",
+        "singularity": "nova",
+        "explosion": "nova",
+        "explode": "nova",
+        "pulse": "nova",
+        "loot_pulse": "nova",
     }
     return aliases.get(raw, raw)
 
@@ -1627,6 +1639,7 @@ def shape_offsets(
         "honeycomb": lambda: _offsets_honeycomb(n, spacing),
         "scatter": lambda: _offsets_scatter(n, radius),
         "poisson": lambda: _offsets_poisson(n, radius, spacing),
+        "nova": lambda: _offsets_nova(n, radius),
         "type_piles": lambda: _offsets_rings(n, radius, spacing, max(6, per_ring // 2)),
         "unique_piles": lambda: _offsets_rings(n, radius, spacing, max(6, per_ring // 2)),
         "rarity_lanes": lambda: _offsets_rows(n, spacing, max(6, per_ring)),
@@ -1657,6 +1670,7 @@ def shape_offsets(
         raw = maker()
     if shape in (
         "globe",
+        "nova",
         "pyramid",
         "pyramid_3d",
         "dome",
@@ -4072,6 +4086,28 @@ def _offsets_scatter(n: int, radius: float) -> list[tuple[float, float, float]]:
     return out
 
 
+def _offsets_nova(n: int, radius: float) -> list[tuple[float, float, float]]:
+    """Final pulse resting spots: Fibonacci sphere in front. Dump packs to a small ball first."""
+    n = max(0, int(n))
+    if n <= 0:
+        return []
+    r = max(180.0, min(520.0, float(radius) * 1.45))
+    if n == 1:
+        return [(r * 0.15, 0.0, r * 0.35)]
+    golden = math.pi * (3.0 - math.sqrt(5.0))
+    out: list[tuple[float, float, float]] = []
+    for index in range(n):
+        # Even area on the sphere, then lift so the bottom sits above ground.
+        y = 1.0 - (2.0 * index) / max(1, n - 1)
+        rr = math.sqrt(max(0.0, 1.0 - y * y))
+        theta = golden * index
+        lx = r * rr * math.cos(theta)
+        ly = r * rr * math.sin(theta)
+        lz = r * y + r + 48.0
+        out.append((lx, ly, lz))
+    return out
+
+
 def _offsets_poisson(n: int, radius: float, spacing: float) -> list[tuple[float, float, float]]:
     """Filled scatter patch (min distance) in front of the player — not random dump spit."""
     min_d = max(48.0, spacing * 0.55)
@@ -4339,11 +4375,35 @@ def current_drop_mode() -> str:
     return str(_drop_mode or "none")
 
 
-def _force_net_update(inv: Any, *, coop_pin: bool = False, guest_push: bool = False) -> None:
-    """One net flush. Doubling ForceNetUpdate on every pin lagged the host."""
+_net_push_window_at: float = 0.0
+_net_push_window_n: int = 0
+# Hard cap — Place Fully house (~250+) ForceNetUpdates in one frame AVs the host.
+_NET_PUSH_WINDOW_SEC = 0.05
+_NET_PUSH_PER_WINDOW = 6
+
+
+def _force_net_update(inv: Any, *, coop_pin: bool = False, guest_push: bool = False) -> bool:
+    """One net flush. Returns False if skipped (budget / quiet / dead) so callers can retry."""
+    global _net_push_window_at, _net_push_window_n
+    # Join stream/GC turns wrappers into 0xffffffffffffffff mid-call — bail first.
     if not _live(inv):
-        return
+        return False
+    if _in_join_quiet() and guest_push:
+        # Guest ForceNetUpdate during join quiet is the place_fully + joiner AV.
+        return False
+    addr0 = _uobject_addr(inv)
+    if not addr0:
+        return False
+    if guest_push or coop_pin:
+        now = time.monotonic()
+        if now - _net_push_window_at >= _NET_PUSH_WINDOW_SEC:
+            _net_push_window_at = now
+            _net_push_window_n = 0
+        if _net_push_window_n >= _NET_PUSH_PER_WINDOW:
+            return False
     for name in ("SetReplicates", "SetReplicateMovement"):
+        if _uobject_addr(inv) != addr0:
+            return False
         fn = getattr(inv, name, None)
         if callable(fn):
             try:
@@ -4351,6 +4411,8 @@ def _force_net_update(inv: Any, *, coop_pin: bool = False, guest_push: bool = Fa
             except Exception:
                 pass
     if guest_push:
+        if _uobject_addr(inv) != addr0:
+            return False
         dorm = getattr(inv, "SetNetDormancy", None)
         if callable(dorm):
             try:
@@ -4358,20 +4420,29 @@ def _force_net_update(inv: Any, *, coop_pin: bool = False, guest_push: bool = Fa
             except Exception:
                 pass
     try:
+        if _uobject_addr(inv) != addr0:
+            return False
         inv.bReplicates = True
         inv.bReplicateMovement = True
         inv.bAlwaysRelevant = bool(guest_push or coop_pin)
         inv.NetUpdateFrequency = 40.0 if guest_push else (24.0 if coop_pin else 100.0)
     except Exception:
         pass
-    for name in ("FlushNetDormancy", "ForceNetUpdate"):
+    flushed = False
+    for name in ("ForceNetUpdate", "FlushNetDormancy"):
+        if _uobject_addr(inv) != addr0:
+            return False
         fn = getattr(inv, name, None)
         if callable(fn):
             try:
                 fn()
+                flushed = True
             except Exception:
-                pass
+                return False
             break
+    if flushed and (guest_push or coop_pin):
+        _net_push_window_n += 1
+    return bool(flushed)
 
 
 def _relax_pinned_net_load() -> None:
@@ -4768,68 +4839,42 @@ def _tick_coop_hold_guest_heartbeat(now: float, *, join_quiet: bool = False) -> 
     if _mid_shape_dump() and not join_quiet:
         return 0
     if join_quiet:
+        # Join quiet = stream/GC. Host-local freeze only — never ForceNetUpdate / guest push.
         elapsed = max(0.0, now - float(_join_quiet_started_at or 0.0))
-        gap = 0.06
+        gap = 0.28 if elapsed < 2.0 else 0.45
         if now - _guest_maint_last < gap:
             return 0
         _guest_maint_last = now
-        hold_rows = [row for row in _pinned_slots if row.get("hold")]
-        if not hold_rows:
+        try:
+            return _repin_host_hold_pins(
+                limit=_join_hold_repin_cap(base=18), refresh_cache=False
+            )
+        except Exception:
             return 0
-        # Brief host re-freeze, then guest net immediately (2s host-only left pins falling for joiners).
-        if elapsed < 0.35:
-            try:
-                return _repin_host_hold_pins(
-                    limit=_join_hold_repin_cap(base=56), refresh_cache=False
-                )
-            except Exception:
-                return 0
-        if int(elapsed * 8.0) % 2 == 0:
-            try:
-                return _repin_host_hold_pins(
-                    limit=_join_hold_repin_cap(base=40), refresh_cache=False
-                )
-            except Exception:
-                return 0
-        synced = 0
-        budget = 14
-        n = len(hold_rows)
-        for _ in range(min(budget, n)):
-            row = hold_rows[_guest_maint_cursor % n]
-            _guest_maint_cursor += 1
-            addr = int(row.get("addr") or 0)
-            inv = _live_pickup(addr) if addr else None
-            if inv is None:
-                inv = _resolve_pin_inv(row, fresh=False)
-            if inv is None or not _live(inv):
-                continue
-            try:
-                if _push_pin_to_guests(row, inv):
-                    row["guest_ok"] = True
-                    row.pop("guest_fail", None)
-                    synced += 1
-            except Exception:
-                continue
-        if synced:
-            _guest_sync_active = True
-        return synced
     gap = 1.8
+    hold_n = held_pin_count()
+    if hold_n > 160:
+        gap = 3.2
+    elif hold_n > 80:
+        gap = 2.4
     if now - _guest_maint_last < gap:
         return 0
     _guest_maint_last = now
-    hold_rows = [row for row in _pinned_slots if row.get("hold")]
+    hold_rows = [row for row in _pinned_slots if row.get("hold") or not row.get("guest_ok")]
     if not hold_rows:
         return 0
-    budget = 12
+    budget = 3 if hold_n > 160 else (4 if hold_n > 80 else 8)
     synced = 0
     n = len(hold_rows)
     for _ in range(min(budget, n)):
         row = hold_rows[_guest_maint_cursor % n]
         _guest_maint_cursor += 1
+        if row.get("guest_skip"):
+            continue
         addr = int(row.get("addr") or 0)
         inv = _live_pickup(addr) if addr else None
         if inv is None:
-            inv = _resolve_pin_inv(row, fresh=join_quiet)
+            inv = _resolve_pin_inv(row, fresh=False)
         if inv is None or not _live(inv):
             continue
         try:
@@ -4892,6 +4937,13 @@ def _tick_guest_sync(now: float) -> None:
         _guest_sync_active = False
         return
     gap = 0.12 if _landing_settle_done else 0.22
+    hold_n = held_pin_count()
+    if hold_n > 200:
+        gap = max(gap, 0.55)
+    elif hold_n > 120:
+        gap = max(gap, 0.38)
+    elif hold_n > 80:
+        gap = max(gap, 0.28)
     if now - _guest_sync_last < gap:
         return
     _guest_sync_last = now
@@ -4899,7 +4951,8 @@ def _tick_guest_sync(now: float) -> None:
         _guest_sync_refresh_at = now
         if not (_bulk_healthcheck_mode and _land_active and not _landing_settle_done):
             try:
-                if not (_held_coop_shape_active() and len(_pinned_slots) > 120):
+                # Large held shapes: skip fresh find_all during sync (AV / hitch).
+                if not (_held_coop_shape_active() and hold_n > 80):
                     _refresh_live_pickups()
             except Exception:
                 pass
@@ -4921,13 +4974,16 @@ def _tick_guest_sync(now: float) -> None:
     synced = 0
     held_shape = any(row.get("hold") for row in _pinned_slots)
     budget = 48 if join_boost else (28 if held_shape else 16)
-    hold_n = held_pin_count()
     if join_boost and hold_n > 120:
-        budget = min(budget, 14)
+        budget = min(budget, 8)
     elif join_boost and hold_n > 80:
-        budget = min(budget, 22)
+        budget = min(budget, 12)
+    elif held_shape and hold_n > 200:
+        budget = min(budget, 4)
     elif held_shape and hold_n > 140:
-        budget = min(budget, 18)
+        budget = min(budget, 6)
+    elif held_shape and hold_n > 80:
+        budget = min(budget, 10)
     if join_boost:
         max_fail = 128
     elif held_shape:
@@ -5004,7 +5060,7 @@ def _coop_sync_pins_tail(*, limit: int = 4, allow_mid_dump: bool = False) -> int
     synced = 0
     budget = max(1, min(2 if (_mid_shape_dump() and allow_mid_dump) else 8, int(limit)))
     # Prefer newest pending pins so the live build keeps up with the host.
-    pending = [row for row in _pinned_slots if row.get("hold") and not row.get("guest_ok")]
+    pending = [row for row in _pinned_slots if not row.get("guest_ok")]
     if not pending:
         _coop_pins_synced = len(_pinned_slots)
         return 0
@@ -5019,7 +5075,7 @@ def _coop_sync_pins_tail(*, limit: int = 4, allow_mid_dump: bool = False) -> int
         try:
             ok = _push_pin_to_guests(row, inv)
             if ok:
-                _set_physics(inv, False)
+                _set_physics(inv, False, keep_grab_collision=True)
                 _zero_velocity(inv)
                 row["guest_ok"] = True
                 synced += 1
@@ -5067,13 +5123,22 @@ def _teleport_pickup(
     freeze: bool | None = None,
     replicate: bool = True,
     guest_push: bool = False,
+    keep_grab_collision: bool = False,
+    require_net: bool = False,
 ) -> bool:
     """Freeze first, then K2_TeleportTo. Never physics-on (that flattened houses)."""
-    if not _live(inv):
+    addr0 = _uobject_addr(inv)
+    if not addr0:
         return False
+    # Join stream: never net-push; host-local freeze only.
+    if _in_join_quiet():
+        replicate = False
+        guest_push = False
     try:
         loc = _make_vector(x, y, z)
         rot = _make_rotator(float(pitch), math.degrees(yaw), float(roll))
+        if _uobject_addr(inv) != addr0:
+            return False
         if replicate:
             try:
                 inv.bReplicateMovement = True
@@ -5082,9 +5147,11 @@ def _teleport_pickup(
                 pass
         if freeze is True:
             try:
-                _set_physics(inv, False)
+                _set_physics(inv, False, keep_grab_collision=bool(keep_grab_collision))
             except Exception:
                 pass
+        if _uobject_addr(inv) != addr0:
+            return False
         ok = False
         fn = getattr(inv, "K2_TeleportTo", None)
         if callable(fn):
@@ -5094,10 +5161,21 @@ def _teleport_pickup(
             except Exception:
                 ok = False
         if ok and replicate:
+            if _uobject_addr(inv) != addr0:
+                return False
             _stamp_replicated_movement(inv, loc, rot)
-            _force_net_update(inv, coop_pin=True, guest_push=bool(guest_push))
+            net_ok = _force_net_update(inv, coop_pin=True, guest_push=bool(guest_push))
+            if require_net and not net_ok:
+                # Budget skipped the flush — caller must retry (do not mark guest_ok).
+                if freeze is True:
+                    try:
+                        _set_physics(inv, False, keep_grab_collision=bool(keep_grab_collision))
+                        _zero_velocity(inv)
+                    except Exception:
+                        pass
+                return False
         if ok and freeze is True:
-            _set_physics(inv, False)
+            _set_physics(inv, False, keep_grab_collision=bool(keep_grab_collision))
             _zero_velocity(inv)
         return ok
     except Exception:
@@ -5150,6 +5228,7 @@ def _pin_pickup_to_slot(
         freeze=True,
         replicate=net_push,
         guest_push=net_push,
+        keep_grab_collision=True,
     )
     if ok:
         _set_physics(inv, False, keep_grab_collision=True)
@@ -5181,24 +5260,31 @@ def _burst_replicate_pins(*, limit: int = 64) -> None:
 
 
 def _repin_all_for_guests(*, limit: int = 0, only_pending: bool = True) -> int:
-    """Push held pins to lobby guests. Default: skip already guest_ok (avoids settle double-push piles)."""
+    """Push pinned slots to lobby guests. Hard-capped — unlimited settle blasts AVd the host."""
     global _coop_pins_synced
     if not _want_coop_replicate() or not _pinned_slots:
         return 0
-    try:
-        _refresh_live_pickups()
-    except Exception:
-        pass
+    # Large silhouettes: skip find_all here (AV / hitch); resolve from pin addrs.
+    if held_pin_count() <= 80:
+        try:
+            _refresh_live_pickups()
+        except Exception:
+            pass
     rows = [
         row
         for row in list(_pinned_slots)
-        if row.get("hold") and (not only_pending or not row.get("guest_ok"))
+        if (not only_pending or not row.get("guest_ok"))
     ]
     total = len(rows)
     if total <= 0:
         _coop_pins_synced = len(_pinned_slots)
         return 0
-    cap = total if int(limit or 0) <= 0 else max(1, min(total, int(limit)))
+    # Never ForceNetUpdate hundreds in one call (shiny house settle AV).
+    hard_cap = 6 if held_pin_count() > 120 else (8 if held_pin_count() > 60 else 12)
+    if int(limit or 0) <= 0:
+        cap = hard_cap
+    else:
+        cap = max(1, min(total, int(limit), hard_cap))
     stamped = 0
     for row in rows[:cap]:
         inv = _resolve_pin_inv(row, fresh=False)
@@ -5771,6 +5857,8 @@ DROP_MODES: dict[str, dict[str, float | str]] = {
     "spiral": {"dur": 2.2, "style": "spiral", "height_mul": 1.2, "stagger": 0.0},
     "rain": {"dur": 2.0, "style": "rain", "height_mul": 2.2, "stagger": 0.08},
     "fountain": {"dur": 2.1, "style": "fountain", "height_mul": 1.55, "stagger": 0.06},
+    # Pack at center (nova) / fly from center outward to the 3D sphere.
+    "explode": {"dur": 1.35, "style": "explode", "height_mul": 0.55, "stagger": 0.028},
     "stagger": {"dur": 1.15, "style": "straight", "height_mul": 1.22, "stagger": 0.12},
     # Fall from Drop height onto each slot (heart/circle XY). none = ground instant.
     "snap": {"dur": 0.0, "style": "straight", "height_mul": 1.0, "stagger": 0.0},
@@ -5803,6 +5891,8 @@ def normalize_drop_mode(mode: str | None) -> str:
         return "fast" if raw == "instant" else "slow"
     if raw in ("peel", "drip_peel"):
         return "drip"
+    if raw in ("boom", "blast", "burst", "nova_explode", "pulse"):
+        return "explode"
     return raw if raw in DROP_MODES else "none"
 
 
@@ -5823,6 +5913,67 @@ _peel_after_sec: float = 0.0
 _peel_armed_at: float = 0.0
 _peel_started: bool = False
 _peel_queue: list[dict[str, Any]] = []
+_nova_explode_armed_at: float = 0.0
+_nova_explode_started: bool = False
+_nova_explode_queue: list[dict[str, Any]] = []
+
+
+def _is_nova_shape(shape: str | None = None) -> bool:
+    name = _normalize_shape_name(shape or _drop_shape or _land_user_shape or "")
+    return name == "nova"
+
+
+def _nova_ball_center() -> tuple[float, float, float]:
+    """Condensed ball sits in front of the player (plan centroid), not on their feet."""
+    ox, oy, oz = _drop_origin
+    if _drop_plan:
+        cx = sum(float(p[0]) for p in _drop_plan) / float(len(_drop_plan))
+        cy = sum(float(p[1]) for p in _drop_plan) / float(len(_drop_plan))
+        return cx, cy, oz + 110.0
+    fx, fy, _rx, _ry = _yaw_basis(float(_drop_yaw))
+    return ox + fx * 220.0, oy + fy * 220.0, oz + 110.0
+
+
+def _nova_condensed_world(index: int) -> tuple[float, float, float]:
+    """Tight ball in front of the player while the dump is still packing."""
+    cx, cy, cz = _nova_ball_center()
+    golden = math.pi * (3.0 - math.sqrt(5.0))
+    y = 1.0 - (2.0 * ((int(index) % 89) + 0.5) / 89.0)
+    rr = math.sqrt(max(0.0, 1.0 - y * y))
+    theta = golden * int(index)
+    rad = 28.0
+    return (
+        cx + rad * rr * math.cos(theta),
+        cy + rad * rr * math.sin(theta),
+        cz + rad * y,
+    )
+
+
+def _nova_catch_slot(
+    slot: tuple[float, float, float], index: int
+) -> tuple[float, float, float]:
+    """Mid-dump nova packs into the ball; after settle, use final pulse slots."""
+    if _is_nova_shape() and _land_active and not _landing_settle_done:
+        return _nova_condensed_world(index)
+    return slot
+
+
+def _reset_nova_explode() -> None:
+    global _nova_explode_armed_at, _nova_explode_started, _nova_explode_queue
+    _nova_explode_armed_at = 0.0
+    _nova_explode_started = False
+    _nova_explode_queue = []
+
+
+def _arm_nova_explode(*, delay: float = 0.35) -> None:
+    """After dump settle: brief hold on the ball, then pulse outward."""
+    global _nova_explode_armed_at, _nova_explode_started
+    if not _is_nova_shape():
+        return
+    if _nova_explode_started or _nova_explode_queue:
+        return
+    _nova_explode_started = False
+    _nova_explode_armed_at = time.monotonic() + max(0.12, float(delay))
 
 
 def parse_stay_in_air(value: Any, default: bool = True) -> bool:
@@ -5889,6 +6040,14 @@ def _shape_hold_active() -> bool:
     if not _land_active:
         return False
     shape = _normalize_shape_name(_drop_shape or _land_user_shape or "")
+    if shape == "nova":
+        # Condensed ball until the pulse starts. Once bursting, Stay in air alone
+        # decides whether the final sphere stays pinned (do not force-hold mid-pulse).
+        if not _landing_settle_done:
+            return True
+        if _nova_explode_armed_at > 0.0 and not _nova_explode_started:
+            return True
+        return False
     return shape in SHAPE_3D_NAMES
 
 
@@ -5899,6 +6058,7 @@ def _reset_air_hold() -> None:
     _peel_armed_at = 0.0
     _peel_started = False
     _peel_queue = []
+    _reset_nova_explode()
 
 
 _drop_plan: list[tuple[float, float, float]] = []
@@ -6254,9 +6414,10 @@ def _repin_host_hold_pins(*, limit: int = 0, refresh_cache: bool = True) -> int:
                 freeze=True,
                 replicate=False,
                 guest_push=False,
+                keep_grab_collision=True,
             )
             if ok:
-                _set_physics(inv, False)
+                _set_physics(inv, False, keep_grab_collision=True)
                 _zero_velocity(inv)
                 pinned += 1
         except Exception:
@@ -6604,6 +6765,8 @@ def _push_pin_to_guests(
             freeze=True,
             replicate=True,
             guest_push=True,
+            keep_grab_collision=True,
+            require_net=True,
         )
         if ok:
             _set_physics(inv, False, keep_grab_collision=True)
@@ -6834,7 +6997,7 @@ def _player_left_drop_site() -> bool:
         return False
 
 
-def abandon_world_loot() -> None:
+def abandon_world_loot(*, schedule_orphan_absorb: bool = True) -> None:
     """Drop every pickup wrapper without calling into Unreal. Safe on teardown."""
     global _land_active, _land_pose_index, _drop_plan, _drop_until, _float_jobs
     global _deferred_catch_at, _deferred_catch_until, _spawn_cursor
@@ -6845,6 +7008,7 @@ def abandon_world_loot() -> None:
     global _peel_queue, _loot_world_id, _drop_local_dirs, _land_slot_pools
     global _coop_followup_sync_at, _coop_followup_waves, _abandon_epoch
     global _last_layout
+    global _absorb_orphans_after_abandon, _absorb_orphans_at
     had_pins = bool(_pinned_slots)
     _abandon_epoch = int(_abandon_epoch or 0) + 1
     _last_layout["abandon_epoch"] = _abandon_epoch
@@ -6880,8 +7044,22 @@ def abandon_world_loot() -> None:
     _clear_pins()
     _land_slot_pools = {}
     _reset_air_hold()
-    if had_pins:
-        _schedule_orphan_pickup_absorb()
+    # Teardown must not schedule a later find_all absorb — that AVs on a dying world.
+    if schedule_orphan_absorb and had_pins:
+        try:
+            from .session_guards import session_safe
+
+            if session_safe():
+                _schedule_orphan_pickup_absorb()
+            else:
+                _absorb_orphans_after_abandon = False
+                _absorb_orphans_at = 0.0
+        except Exception:
+            _absorb_orphans_after_abandon = False
+            _absorb_orphans_at = 0.0
+    else:
+        _absorb_orphans_after_abandon = False
+        _absorb_orphans_at = 0.0
 
 
 def spawn_landing_active() -> bool:
@@ -7341,7 +7519,7 @@ def arm_deferred_catch(seconds: float = 1.0) -> None:
 
 def settle_landing_loot(*, limit: int = 16) -> int:
     """End of Drop All / Spawn All: pull leftover feet-spit onto remaining slots."""
-    global _landing_settle_done, _burst_replicate_at
+    global _landing_settle_done, _burst_replicate_at, _deferred_catch_until, _deferred_catch_at
     if not _land_active or not _world_alive():
         return 0
     if _landing_settle_done:
@@ -7354,24 +7532,59 @@ def settle_landing_loot(*, limit: int = 16) -> int:
         n += int(pin_stragglers(limit=max(8, min(48, int(limit))), fresh=True))
     except Exception:
         pass
-    arm_deferred_catch(10.0)
+    hold_n_early = held_pin_count()
+    coop = False
+    try:
+        coop = bool(_want_coop_replicate())
+    except Exception:
+        coop = False
+    # Large co-op houses: skip deferred catch — it grew pins during ForceNetUpdate and AVd.
+    if not (coop and hold_n_early > 80):
+        arm_deferred_catch(10.0)
+    else:
+        _deferred_catch_until = 0.0
+        _deferred_catch_at = 0.0
     _arm_peel_clock()
-    if _want_coop_replicate() and _pinned_slots:
+    if _is_nova_shape():
+        # Pulse must run even if a prior dump left catch/bulk paused.
+        try:
+            pause_landing_catch(False)
+            set_bulk_healthcheck_mode(False)
+        except Exception:
+            pass
+        # Stay in air only keeps the final 3D sphere after the pulse finishes.
+        _arm_nova_explode(delay=0.35)
+        _log("Nova ball packed — pulse armed.")
+    if coop and _pinned_slots:
         try:
             tracked = _build_layout_entries_from_pins()
+            # Never blast hundreds of ForceNetUpdates on settle — drip via guest sync ticks.
+            stamped = 0
             try:
-                # Only pins guests do not have yet — re-pushing all 200+ created floor ghosts.
-                stamped = _repin_all_for_guests(limit=0, only_pending=True)
+                stamped = _repin_all_for_guests(limit=6, only_pending=True)
             except Exception:
                 stamped = 0
             if not _guest_sync_active:
                 _begin_guest_sync(force=True, clear_ok=False)
-            gap = 8.5 if _in_join_quiet() else 1.5
-            _schedule_coop_followup_sync(waves=2, gap=gap)
+            hold_n = held_pin_count()
+            # Large houses need quiet before drip-sync; short gap + catch growth AVd.
+            if _in_join_quiet():
+                gap = 8.5
+                waves = 2
+            elif hold_n > 160:
+                gap = 6.0
+                waves = 3
+            elif hold_n > 80:
+                gap = 3.5
+                waves = 2
+            else:
+                gap = 2.0
+                waves = 2
+            _schedule_coop_followup_sync(waves=waves, gap=gap)
             _log("Co-op shape ready for party.")
             _log_dev(
                 f"Co-op settle: {len(_pinned_slots)} pin(s), {tracked} serial(s), "
-                f"{stamped} pending repin(s)."
+                f"{stamped} seed repin(s)."
             )
         except Exception as exc:
             _log_dev(f"guest sync at settle failed: {exc!r}")
@@ -7400,6 +7613,7 @@ _SHINY_LAYOUT_BASES: dict[str, tuple[float, float]] = {
     "ufo": (200.0, 68.0),
     "rocket": (175.0, 66.0),
     "gear": (185.0, 70.0),
+    "nova": (210.0, 72.0),
     "forbidden_one": (210.0, 70.0),
     "forbidden_pair": (200.0, 72.0),
     "type_piles": (220.0, 76.0),
@@ -7428,6 +7642,7 @@ _BULK_LAYOUT_BASES: dict[str, tuple[float, float]] = {
     "ufo": (240.0, 64.0),
     "rocket": (210.0, 64.0),
     "gear": (220.0, 66.0),
+    "nova": (280.0, 68.0),
     "forbidden_one": (280.0, 68.0),
     "forbidden_pair": (250.0, 70.0),
     "type_piles": (280.0, 72.0),
@@ -7506,6 +7721,7 @@ def shape_complete_slot_count(shape: str, *, profile: str = "shiny") -> int:
         "forbidden_one": 260,
         "forbidden_pair": 280,
         "globe": 200,
+        "nova": 140,
         "dome": 180,
         "pyramid_3d": 200,
         "pyramid": 160,
@@ -7624,6 +7840,10 @@ def begin_overhead_drop(
         prof = "shiny"
     _land_layout_profile = prof
     mode_l = normalize_drop_mode(mode)
+    if shape == "nova":
+        # Always pack -> pulse into the 3D sphere; honor stay-in-air for the final ball.
+        if mode_l in ("none", "snap", "drip"):
+            mode_l = "explode"
     _set_air_hold(stay_in_air, peel_after)
     n = max(1, int(count))
     anchor = _player_anchor()
@@ -7833,9 +8053,12 @@ def catch_overhead_drops(
         # Spawn already placed the gun on a silhouette slot. Freeze there.
         # Nearest-slot snap at 72u yanked later items onto occupied neighbors.
         slot = _slot_for_caught_pickup(inv, idx, pool_name=pool_name)
-        if _instant_land_mode():
+        slot = _nova_catch_slot(slot, idx)
+        if _instant_land_mode() or (
+            _is_nova_shape() and _land_active and not _landing_settle_done
+        ):
             if not _pin_pickup_to_slot(
-                inv, slot, index=idx, hold=_shape_hold_active()
+                inv, slot, index=idx, hold=_shape_hold_active() or _is_nova_shape()
             ):
                 if not _queue_drop_job(inv, slot, index=idx):
                     continue
@@ -7872,6 +8095,9 @@ def _start_xyz_for_slot(slot: tuple[float, float, float], index: int = 0) -> tup
     if style == "fountain":
         sx, sy = _clamp_xy_to_shape(ox, oy, pad=40.0)
         return sx, sy, oz + 64.0
+    if style == "explode":
+        # Condensed start in front — pulse out to the final slot.
+        return _nova_condensed_world(index)
     if style == "rain":
         rng = random.Random(int(index) * 7919 + 104729)
         jitter = 90.0
@@ -8259,6 +8485,13 @@ def _sample_flight_xyz(job: dict[str, Any], t: float) -> tuple[float, float, flo
         z = z0 + (z1 - z0) * t + math.sin(t * math.pi) * 340.0
         x, y = _clamp_xy_to_shape(x, y, pad=20.0)
         return x, y, z
+    if mode_n == "explode":
+        # Bigger ease-out pulse from the condensed ball onto the 3D sphere.
+        u = 1.0 - (1.0 - t) ** 3
+        x = x0 + (x1 - x0) * u
+        y = y0 + (y1 - y0) * u
+        z = z0 + (z1 - z0) * u + math.sin(t * math.pi) * 220.0
+        return x, y, z
     if mode_n == "spiral":
         idx = int(job.get("index") or 0)
         spin = (1.0 - t) * math.pi * 6.0 + idx * 0.47
@@ -8282,6 +8515,13 @@ def _queue_drop_job(
     index: int = 0,
 ) -> bool:
     cfg = DROP_MODES.get(_drop_mode) or DROP_MODES["slow"]
+    # Nova dump phase: pack into the condensed ball; pulse fires after settle.
+    if _is_nova_shape() and _land_active and not _landing_settle_done:
+        condensed = _nova_condensed_world(index)
+        ok = _pin_pickup_to_slot(inv, condensed, index=index, hold=True)
+        if ok and not _catch_paused:
+            _arm_peel_clock()
+        return ok
     x1, y1, z1 = slot
     x0, y0, z0 = _start_xyz_for_slot(slot, index)
     dur = float(cfg.get("dur") or 0.0)
@@ -8295,7 +8535,7 @@ def _queue_drop_job(
         if ok and not _catch_paused:
             _arm_peel_clock()
         return ok
-    if str(_drop_shape) in SHAPE_2D_NAMES and _instant_land_mode():
+    if str(_drop_shape) in SHAPE_2D_NAMES and _instant_land_mode() and not _is_nova_shape():
         ok = _teleport_pickup(
             inv, x1, y1, z1, yaw_r, pitch=pitch, roll=roll, freeze=True, replicate=replicate
         )
@@ -8466,6 +8706,117 @@ def _tick_delayed_peel(now: float) -> None:
         arm_overhead_catch(8.0)
 
 
+def _tick_nova_explode(now: float) -> None:
+    """After dump settle: pulse condensed-ball pins out to the 3D sphere slots."""
+    global _nova_explode_started, _nova_explode_queue, _pinned_slots, _stay_in_air, _float_jobs
+    global _nova_explode_armed_at
+    if not _is_nova_shape():
+        return
+    if _nova_explode_armed_at <= 0.0 and not _nova_explode_started and not _nova_explode_queue:
+        return
+    if not _nova_explode_started:
+        # Once armed, never wait on bulk/catch pause — that left the ball hanging forever.
+        if _nova_explode_armed_at > 0.0 and now < _nova_explode_armed_at:
+            return
+        if not _pinned_slots:
+            # Settle armed with no pins yet (late catch). Keep waiting briefly, then give up.
+            if _nova_explode_armed_at > 0.0 and now < _nova_explode_armed_at + 4.0:
+                return
+            _reset_nova_explode()
+            _log("Nova pulse cancelled — no pinned ball items.")
+            return
+        _nova_explode_started = True
+        _nova_explode_armed_at = 0.0
+        final_hold = _should_hold_in_air()
+        ox, oy, oz = _drop_origin
+        pending: list[dict[str, Any]] = []
+        for row in _pinned_slots:
+            addr = int(row.get("addr") or 0)
+            if not addr:
+                continue
+            idx = int(row.get("slot_index") if row.get("slot_index") is not None else row.get("index") or 0)
+            if _drop_plan and 0 <= idx < len(_drop_plan):
+                x1, y1, z1 = _drop_plan[idx]
+            else:
+                cx, cy, cz = _nova_ball_center()
+                ang = (2.0 * math.pi * idx) / max(1, len(_pinned_slots))
+                rad = 280.0
+                x1 = cx + math.cos(ang) * rad
+                y1 = cy + math.sin(ang) * rad
+                z1 = cz + 40.0 + (idx % 7) * 22.0
+            # Stay in air off → pulse ends on the ground under the sphere slot.
+            if not final_hold:
+                z1 = float(oz)
+            pending.append(
+                {
+                    "addr": addr,
+                    "x0": float(row["x"]),
+                    "y0": float(row["y"]),
+                    "z0": float(row["z"]),
+                    "x1": float(x1),
+                    "y1": float(y1),
+                    "z1": float(z1),
+                    "yaw": float(row.get("yaw") or _drop_yaw),
+                    "pitch": float(row.get("pitch") or 0.0),
+                    "roll": float(row.get("roll") or 0.0),
+                    "index": idx,
+                    "hold": final_hold,
+                }
+            )
+        _pinned_slots = []
+        _nova_explode_queue = pending
+        _log(
+            f"Nova pulse: {len(pending)} item(s) bursting from the ball"
+            f"{' (stay in air)' if final_hold else ' → ground'}."
+        )
+    if not _nova_explode_queue:
+        return
+    room = max(0, 28 - len(_float_jobs))
+    take = min(10, room, len(_nova_explode_queue))
+    if take <= 0:
+        return
+    _refresh_live_pickups()
+    batch = _nova_explode_queue[:take]
+    _nova_explode_queue = _nova_explode_queue[take:]
+    started = 0
+    retry: list[dict[str, Any]] = []
+    final_hold = _should_hold_in_air()
+    for row in batch:
+        addr = int(row.get("addr") or 0)
+        inv = _live_pickup(addr)
+        if not addr or inv is None:
+            misses = int(row.get("misses") or 0) + 1
+            if misses < 10:
+                row["misses"] = misses
+                retry.append(row)
+            continue
+        hold = bool(row.get("hold")) if "hold" in row else final_hold
+        _float_jobs.append(
+            {
+                "addr": addr,
+                "x0": float(row["x0"]),
+                "y0": float(row["y0"]),
+                "z0": float(row["z0"]),
+                "x1": float(row["x1"]),
+                "y1": float(row["y1"]),
+                "z1": float(row["z1"]),
+                "t0": now + 0.025 * started,
+                "dur": 1.25,
+                "yaw": float(row.get("yaw") or _drop_yaw),
+                "pitch": float(row.get("pitch") or 0.0),
+                "roll": float(row.get("roll") or 0.0),
+                "mode": "explode",
+                "index": int(row.get("index") or started),
+                "hold": hold,
+            }
+        )
+        started += 1
+    if retry:
+        _nova_explode_queue.extend(retry)
+    if started:
+        arm_overhead_catch(8.0)
+
+
 def enqueue_placed_drops(
     placed: list[tuple[Any, float, float, float]],
     *,
@@ -8497,6 +8848,33 @@ def enqueue_placed_drops(
     return n
 
 
+def _arm_coop_guest_sync_after_place(*, pin_count: int = 0) -> None:
+    """Drip ForceNetUpdate after host-local Place Fully — never blast hundreds at once."""
+    if not _want_coop_replicate() or not _pinned_slots:
+        return
+    try:
+        _build_layout_entries_from_pins()
+    except Exception:
+        pass
+    try:
+        _repin_all_for_guests(limit=4, only_pending=True)
+    except Exception:
+        pass
+    try:
+        _begin_guest_sync(force=True, clear_ok=False)
+    except Exception:
+        pass
+    n = int(pin_count or held_pin_count() or len(_pinned_slots))
+    if n > 160:
+        gap, waves = 6.0, 3
+    elif n > 80:
+        gap, waves = 3.5, 3
+    else:
+        gap, waves = 2.0, 2
+    _schedule_coop_followup_sync(waves=waves, gap=gap)
+    _log("Co-op shape ready for party.")
+
+
 def apply_settle(
     placed: list[tuple[Any, float, float, float]],
     *,
@@ -8507,12 +8885,48 @@ def apply_settle(
     """none = instant on slots. snap = fall from drop height onto slots. others = group drop."""
     mode_l = normalize_drop_mode(mode)
     if mode_l == "none":
+        coop = False
+        try:
+            coop = bool(_want_coop_replicate())
+        except Exception:
+            coop = False
+        # Mass ForceNetUpdate on Place Fully house (~250+) is the co-op AV in CrashContext.
+        mass = len(placed) > 40
+        replicate_now = not (coop or mass)
+        shape_n = _normalize_shape_name(_drop_shape or _last_layout.get("shape") or "")
+        hold_pins = bool(coop or shape_n in SHAPE_3D_NAMES)
         n = 0
         for i, (inv, x, y, z) in enumerate(placed):
             yaw_r, pitch, roll = _rot_for_xyz(i, x, y, z)
-            if _teleport_pickup(inv, x, y, z, yaw_r, pitch=pitch, roll=roll, freeze=True):
-                _remember_pin(inv, x, y, z, yaw_r, pitch=pitch, roll=roll)
+            if _teleport_pickup(
+                inv,
+                x,
+                y,
+                z,
+                yaw_r,
+                pitch=pitch,
+                roll=roll,
+                freeze=True,
+                replicate=replicate_now,
+                guest_push=False,
+                keep_grab_collision=True,
+            ):
+                _set_physics(inv, False, keep_grab_collision=True)
+                _zero_velocity(inv)
+                _remember_pin(
+                    inv,
+                    x,
+                    y,
+                    z,
+                    yaw_r,
+                    pitch=pitch,
+                    roll=roll,
+                    hold=hold_pins,
+                    slot_index=i,
+                )
                 n += 1
+        if coop and n:
+            _arm_coop_guest_sync_after_place(pin_count=n)
         return n
     return enqueue_placed_drops(placed, mode=mode_l, drop_height=drop_height, yaw=yaw)
 
@@ -8642,11 +9056,15 @@ def _tick_float_jobs(now: float) -> None:
                 mode_n = str(job.get("mode") or "")
                 peel_land = mode_n == "drip" and _is_peel_drop()
                 if not peel_land:
-                    hold = bool(job.get("hold")) or _shape_hold_active()
-                    if _should_hold_in_air():
-                        shape_n = _normalize_shape_name(_drop_shape or _land_user_shape or "")
-                        if shape_n in SHAPE_3D_NAMES:
-                            hold = True
+                    if mode_n == "explode":
+                        # Nova pulse: honor the job's stay-in-air flag only.
+                        hold = bool(job.get("hold")) or _should_hold_in_air()
+                    else:
+                        hold = bool(job.get("hold")) or _shape_hold_active()
+                        if _should_hold_in_air():
+                            shape_n = _normalize_shape_name(_drop_shape or _land_user_shape or "")
+                            if shape_n in SHAPE_3D_NAMES:
+                                hold = True
                     slot_idx = job.get("index")
                     slot_i = int(slot_idx) if slot_idx is not None else None
                     if hold:
@@ -8740,12 +9158,19 @@ def _tick_deferred_dump_catch(now: float) -> None:
         and now <= _deferred_catch_until
     ):
         return
+    # While drip-syncing a big co-op silhouette, do not keep find_all-catching
+    # more pins onto it (grew house 294→407 and AVd during ForceNetUpdate).
+    if _guest_sync_active and held_pin_count() > 80:
+        _deferred_catch_at = now + 1.2
+        return
     if not _landing_settle_done and not (_land_active and _shape_hold_active()):
         return
     slots_left = max(0, len(_drop_plan) - int(_drop_next)) if _drop_plan else 0
     try:
         if bulk_shaped:
             batch = 2
+        elif _guest_sync_active:
+            batch = 1
         elif slots_left > 40:
             batch = 10
         elif slots_left > 12:
@@ -8783,14 +9208,14 @@ def tick_drop_motion(now: float | None = None) -> None:
         from .session_guards import session_safe
 
         if not session_safe():
-            abandon_world_loot()
+            abandon_world_loot(schedule_orphan_absorb=False)
             return
     except Exception:
         pass
-    if _player_left_drop_site():
-        abandon_world_loot()
-        return
     if not _world_alive():
+        abandon_world_loot(schedule_orphan_absorb=False)
+        return
+    if _player_left_drop_site():
         abandon_world_loot()
         return
     now = time.monotonic() if now is None else float(now)
@@ -8827,10 +9252,28 @@ def tick_drop_motion(now: float | None = None) -> None:
         return
     _float_tick_at = now
     waiting_peel = _peel_after_sec > 0.0 and not _peel_started and _land_active
-    if not (_float_jobs or _pinned_slots or _peel_queue or waiting_peel or (_land_active and _deferred_catch_until > 0.0)):
+    waiting_nova = (
+        _is_nova_shape()
+        and (
+            (_nova_explode_armed_at > 0.0 and not _nova_explode_started)
+            or bool(_nova_explode_queue)
+        )
+    )
+    if not (
+        _float_jobs
+        or _pinned_slots
+        or _peel_queue
+        or waiting_peel
+        or waiting_nova
+        or (_land_active and _deferred_catch_until > 0.0)
+    ):
         return
     try:
         _tick_delayed_peel(now)
+    except Exception:
+        pass
+    try:
+        _tick_nova_explode(now)
     except Exception:
         pass
     try:
@@ -8870,9 +9313,11 @@ def tick_loot_shapes(now: float | None = None) -> None:
     global _burst_replicate_at, _guest_sync_cursor, _guest_sync_active, _guest_sync_last
     global _coop_followup_sync_at, _coop_followup_waves
     if not _world_alive():
-        if _land_active:
-            return
-        abandon_world_loot()
+        if _land_active or _pinned_slots or _float_jobs:
+            try:
+                abandon_world_loot(schedule_orphan_absorb=False)
+            except Exception:
+                pass
         return
     now = time.monotonic() if now is None else float(now)
     try:
@@ -8908,6 +9353,12 @@ def tick_loot_shapes(now: float | None = None) -> None:
                 map_fog_hide.tick_fog_hide(now)
         except Exception:
             pass
+        try:
+            from . import hold_session
+
+            hold_session.tick_hold_session(now)
+        except Exception:
+            pass
         # Deferred dump catch runs from tick_drop_motion (HUD tick, even while
         # catch is paused). Nothing to do here unless motion is idle.
         if _deferred_catch_until > 0.0 and not (_float_jobs or _pinned_slots):
@@ -8935,10 +9386,23 @@ def install_loot_shapes_hooks(*, force: bool = False) -> None:
             _func: Any,
         ) -> None:
             try:
+                # World/session first — never touch pawn locations during teardown.
+                if not _world_alive():
+                    try:
+                        abandon_world_loot(schedule_orphan_absorb=False)
+                    except Exception:
+                        pass
+                    return
+                try:
+                    from .session_guards import session_safe
+
+                    if not session_safe():
+                        abandon_world_loot(schedule_orphan_absorb=False)
+                        return
+                except Exception:
+                    pass
                 if _player_left_drop_site():
                     abandon_world_loot()
-                    return
-                if not _world_alive():
                     return
             except Exception:
                 return
@@ -8946,6 +9410,12 @@ def install_loot_shapes_hooks(*, force: bool = False) -> None:
                 from . import map_fog_hide
 
                 map_fog_hide.tick_fog_hide()
+            except Exception:
+                pass
+            try:
+                from . import hold_session
+
+                hold_session.tick_hold_session()
             except Exception:
                 pass
             try:
@@ -8972,14 +9442,15 @@ def install_loot_shapes_hooks(*, force: bool = False) -> None:
             _func: Any,
         ) -> None:
             try:
+                abandon_world_loot(schedule_orphan_absorb=False)
+            except Exception:
+                pass
+            try:
                 from .session_guards import notify_session_teardown
 
                 notify_session_teardown("loot_shapes_hook")
             except Exception:
-                try:
-                    abandon_world_loot()
-                except Exception:
-                    pass
+                pass
 
         for i, path in enumerate(
             (
@@ -9086,6 +9557,7 @@ def _tuned_layout(shape: str, radius: float, spacing: float, per_ring: int) -> t
         "ufo": (1.1, 1.0, 1.0),
         "rocket": (1.05, 1.0, 1.0),
         "gear": (1.08, 1.0, 1.0),
+        "nova": (1.25, 1.0, 1.0),
         "forbidden_one": (1.35, 1.0, 1.0),
         "forbidden_pair": (1.28, 1.0, 1.0),
     }
@@ -9119,6 +9591,9 @@ def arrange_from_payload(payload: dict[str, Any] | None, *, mode: str = "place_f
     drop_height = float(layout["drop_height"])
     line_length = float(layout["line_length"])
     settle = normalize_drop_mode(payload.get("settle") if payload.get("settle") is not None else "none")
+    # Nova Place Fully: pulse out of the center unless the user picked another motion.
+    if shape == "nova" and settle in ("none", "snap", "drip"):
+        settle = "explode"
     _set_air_hold(payload.get("stay_in_air", "yes"), payload.get("peel_after", 0))
     radius, spacing, per_ring = _tuned_layout(shape, radius, spacing, per_ring)
     raw_include = payload.get("include_consumables")

@@ -1,13 +1,20 @@
-# Squ1ggs Boosting Tools — v1.1.135 / mod 3.8.141
+# Squ1ggs Boosting Tools — v1.1.136 / mod 3.8.142
+
+Paste-ready notes for GitHub Releases.
 
 ## Highlights
-- Loveless (Corpo Hacker Raid 2) class mod spawn via dedicated merge
-- Spawn All Filtered + shapes (`shape_text`) fixed
-- Infinite jump all/others sticky fix
-- Shiny shape crash mitigation; single-pool spawn count 1–999
-- Party teleport names, Dev Testing Map travel, sticky bridge error clear
+
+- **Hold session (no menu kick):** sticky host toggle; auto-arms during UVHM / Complete ALL challenges
+- **Loot shapes co-op:** no mass ForceNetUpdate house AV; drip guest sync
+- **Soft clear** on Home Most used + Loot Shiny drops
+- **Party teleport:** Everyone -> me
+- **Vault cards 1-5** on MAX ALL
+- **My Library / Deliver:** optional save name; GZO/Lootlemon; human serials -> @U
+- **Nova** sphere pulse + Stay in air behavior
+- **Stability:** PlayerBank freeze, quit soft-clear, search click hardening
 
 ## Install
-1. Download the portable zip and run **Squ1ggsBoostingTools.exe**.
-2. Point it at Borderlands 4 if asked — the EXE installs the SDK + mod.
-3. **Fully restart Borderlands 4**, then confirm mod **3.8.141** in Refresh status.
+
+1. Download the portable zip below and run **Squ1ggsBoostingTools.exe**.
+2. Point it at Borderlands 4 if asked — the EXE installs the SDK + mod for you.
+3. **Fully restart Borderlands 4**, then confirm mod **3.8.142** in Refresh status.

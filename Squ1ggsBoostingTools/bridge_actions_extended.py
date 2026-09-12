@@ -299,7 +299,22 @@ def deliver_serials(payload: dict[str, Any]) -> dict[str, Any]:
     else:
         serials = _serials_from_text(str(payload.get("text") or ""))
     if not serials:
-        return _fail("No @U serials in payload.")
+        return _fail("No serials in payload (paste @U or human/deserialized codes).")
+    # Human / deserialized lines → @U (same path as ImGui Give_Serial), including self-send.
+    try:
+        from .serial_rewards import _resolve_give_serial_strings
+
+        resolved = _resolve_give_serial_strings(list(serials))
+    except Exception as exc:
+        return _fail(f"Could not convert serial(s) for delivery: {exc}")
+    if not resolved:
+        return _fail(
+            "Could not convert those codes to @U serials. "
+            "Use Convert first, or paste @U / valid human lines (serialize must be enabled)."
+        )
+    serials = [str(s).strip() for s in resolved if str(s).strip()]
+    if not serials:
+        return _fail("No @U serials after conversion.")
     raw_count = len(serials)
     serials, duplicate_serials = _dedupe_serials_preserve_order(serials)
     if not serials:
@@ -450,6 +465,64 @@ def serial_store_import_serials(payload: dict[str, Any]) -> dict[str, Any]:
     )
 
 
+def serial_store_add_selected(payload: dict[str, Any]) -> dict[str, Any]:
+    """Import ticked GZO / Lootlemon / queue rows into My Library."""
+    from . import serial_store
+
+    group = str(payload.get("group") or "Imported").strip() or "Imported"
+    rows = payload.get("rows")
+    titles = payload.get("titles")
+    serials_raw = payload.get("serials")
+    items: list[tuple[str, str]] = []
+    if isinstance(rows, list) and rows:
+        for row in rows:
+            if not isinstance(row, dict):
+                continue
+            serial = str(row.get("serial") or "").strip()
+            if not serial:
+                continue
+            title = str(row.get("title") or row.get("name") or serial[:48]).strip() or serial[:48]
+            items.append((title, serial))
+    elif isinstance(serials_raw, list):
+        title_list = titles if isinstance(titles, list) else []
+        for index, serial in enumerate(serials_raw):
+            s = str(serial).strip()
+            if not s:
+                continue
+            title = ""
+            if index < len(title_list):
+                title = str(title_list[index] or "").strip()
+            items.append((title or s[:48], s))
+    if not items:
+        return _fail("Tick one or more catalog rows first, then Add to library.")
+    existing = {str(e.get("serial") or "").strip() for e in serial_store.reload_entries()}
+    added = 0
+    skipped = 0
+    saved: list[dict[str, str]] = []
+    try:
+        for title, serial in items:
+            if serial in existing:
+                skipped += 1
+                continue
+            entry = serial_store.save_entry(name=title, group=group, serial=serial)
+            existing.add(serial)
+            saved.append(entry)
+            added += 1
+    except ValueError as exc:
+        return _fail(str(exc))
+    if added <= 0 and skipped:
+        return _ok(
+            f"All {skipped} selected serial(s) were already in My Library.",
+            added=0,
+            skipped=skipped,
+            group=group,
+        )
+    msg = f"Added {added} serial(s) to My Library under “{group}”."
+    if skipped:
+        msg += f" Skipped {skipped} duplicate(s)."
+    return _ok(msg, added=added, skipped=skipped, group=group, entries=saved)
+
+
 def serial_store_delete(payload: dict[str, Any]) -> dict[str, Any]:
     from . import serial_store
 
@@ -594,6 +667,12 @@ def uvhm_start(payload: dict[str, Any] | None = None) -> dict[str, Any]:
         )
     if uvhm_runtime.request_selected(idx, max_rank=max_rank):
         who = getattr(identity, "display_name", None) or f"index {idx}"
+        try:
+            from . import hold_session
+
+            hold_session.arm_for_job("uvhm")
+        except Exception:
+            pass
         return _ok(f"UVHM workflow queued for {who} (up to rank {max_rank}).")
     return _fail(uvhm_runtime.status().get("message") or "UVHM request failed.")
 
@@ -602,6 +681,12 @@ def uvhm_start_all(payload: dict[str, Any] | None = None) -> dict[str, Any]:
     payload = payload or {}
     max_rank = _uvhm_max_rank_from_payload(payload)
     if uvhm_runtime.request_all(confirmed=bool(payload.get("confirmed", True)), max_rank=max_rank):
+        try:
+            from . import hold_session
+
+            hold_session.arm_for_job("uvhm")
+        except Exception:
+            pass
         return _ok(f"All-lobby UVHM workflow queued (up to rank {max_rank}).")
     return _fail(uvhm_runtime.status().get("message") or "UVHM all-lobby request failed.")
 
@@ -609,6 +694,12 @@ def uvhm_start_all(payload: dict[str, Any] | None = None) -> dict[str, Any]:
 def uvhm_cancel(_payload: dict[str, Any] | None = None) -> dict[str, Any]:
     del _payload
     if uvhm_runtime.cancel():
+        try:
+            from . import hold_session
+
+            hold_session.release_job("uvhm")
+        except Exception:
+            pass
         return _ok("UVHM cancelled.")
     return _fail("Nothing to cancel.")
 
@@ -638,6 +729,12 @@ def challenge_bulk_start(payload: dict[str, Any]) -> dict[str, Any]:
         tokens = [str(t).strip() for t in tokens_raw if str(t).strip()]
     if challenge_request(idx, category, confirmed=True, tokens=tokens or None):
         who = "All players" if int(idx) < 0 else f"player index {idx}"
+        try:
+            from . import hold_session
+
+            hold_session.arm_for_job("challenges")
+        except Exception:
+            pass
         if tokens:
             return _ok(f"Queued {len(tokens)} selected challenge(s) for {who}.")
         return _ok(f"Challenge bulk queued: {category} for {who}.")
@@ -659,6 +756,12 @@ def challenge_complete_selected(payload: dict[str, Any]) -> dict[str, Any]:
         return _fail("Confirmation required.")
     if challenge_request(idx, "All non-UVHM", confirmed=True, tokens=tokens):
         who = "All players" if int(idx) < 0 else f"player index {idx}"
+        try:
+            from . import hold_session
+
+            hold_session.arm_for_job("challenges")
+        except Exception:
+            pass
         return _ok(f"Queued {len(tokens)} selected challenge(s) for {who}.", count=len(tokens))
     return _fail(challenge_status().get("message") or "Could not queue selected challenges.")
 
@@ -666,6 +769,12 @@ def challenge_complete_selected(payload: dict[str, Any]) -> dict[str, Any]:
 def challenge_bulk_cancel(_payload: dict[str, Any] | None = None) -> dict[str, Any]:
     del _payload
     if challenge_cancel():
+        try:
+            from . import hold_session
+
+            hold_session.release_job("challenges")
+        except Exception:
+            pass
         return _ok("Challenge bulk cancelled.")
     return _fail("Nothing to cancel.")
 
@@ -986,11 +1095,21 @@ def _apply_bms_ui(controller: Any, payload: dict[str, Any]) -> None:
 
 
 def _raise_spawn_caps() -> None:
-    """Lift SpawnManager actor caps so large Count / multi-select spawns are not silently truncated."""
+    """Lift SpawnManager caps once per map — never find_all on every BMS click."""
     try:
         from .embedded_oak import engine as oak
+        from mods_base import get_pc
 
-        oak._overdrive_spawn_manager(2147483647)
+        pc = get_pc()
+        world = getattr(getattr(pc, "Pawn", None), "GetWorld", lambda: None)() if pc else None
+        if world is None and pc is not None:
+            try:
+                world = pc.GetWorld()
+            except Exception:
+                world = None
+        # Once-per-map path. Calling _overdrive_spawn_manager every click find_all's
+        # SpawnManager and freezes the lobby when held shapes filled the UObject graph.
+        oak._overdrive_spawn_manager_if_needed(world)
     except Exception:
         pass
 
@@ -1936,6 +2055,32 @@ def ammo_regen(payload: dict[str, Any]) -> dict[str, Any]:
 
 def teleport_party(payload: dict[str, Any]) -> dict[str, Any]:
     mode = str(payload.get("mode") or "").lower()
+    if mode in ("all_to_me", "everyone_to_me", "lobby_to_me"):
+        try:
+            rows = list(_list_party_players() or [])
+        except Exception:
+            rows = []
+        if not rows:
+            return _fail("No party members found.")
+        local_idx = mobility_runtime.local_party_index()
+        if local_idx is None:
+            local_idx = 0
+        moved = 0
+        for row in rows:
+            try:
+                slot = int(row[0])
+            except Exception:
+                continue
+            if slot == int(local_idx):
+                continue
+            try:
+                mobility_runtime.teleport_party_slot_to_local(slot)
+                moved += 1
+            except Exception:
+                continue
+        if moved <= 0:
+            return _fail("No other players to teleport (solo lobby?).")
+        return _ok(f"Teleported {moved} player(s) to you.")
     parsed = _payload_player_index(payload)
     idx = get_target_player_index() if parsed is None else int(parsed)
     if idx < 0:
@@ -1955,7 +2100,7 @@ def teleport_party(payload: dict[str, Any]) -> dict[str, Any]:
     if mode in ("selected_to_me", "selected_to_local"):
         mobility_runtime.teleport_selected_to_local(idx)
         return _ok(f"Teleported {label} to you.")
-    return _fail("mode must be me_to_selected or selected_to_me.")
+    return _fail("mode must be all_to_me, me_to_selected, or selected_to_me.")
 
 
 def mobility_preset_apply(payload: dict[str, Any]) -> dict[str, Any]:
@@ -2456,6 +2601,24 @@ def map_fog_hide(payload: dict[str, Any] | None = None) -> dict[str, Any]:
         enabled = not fog.is_hidden()
     msg = fog.set_hidden(enabled)
     return _ok(msg, hidden=fog.is_hidden())
+
+
+def hold_session(payload: dict[str, Any] | None = None) -> dict[str, Any]:
+    from . import hold_session as hold
+
+    payload = payload or {}
+    if "enabled" in payload:
+        enabled = bool(payload.get("enabled"))
+    else:
+        enabled = not hold.is_enabled()
+    before = hold.is_enabled()
+    msg = hold.set_enabled(enabled)
+    after = hold.is_enabled()
+    if enabled and not after:
+        return _fail(msg or "Hold session needs the listen-server host.", enabled=False)
+    if (not enabled) and before and after:
+        return _fail(msg or "Could not turn hold session off.", enabled=True)
+    return _ok(msg, enabled=after)
 
 
 def map_fog_unlock(_payload: dict[str, Any] | None = None) -> dict[str, Any]:
@@ -3228,6 +3391,7 @@ _EXTENDED_ACTION_NAMES: tuple[str, ...] = (
     "deliver_serials",
     "serial_store_save",
     "serial_store_import_serials",
+    "serial_store_add_selected",
     "serial_store_delete",
     "serial_store_duplicate",
     "serial_delivery_status",
@@ -3325,6 +3489,7 @@ _EXTENDED_ACTION_NAMES: tuple[str, ...] = (
     "loot_shape_status",
     "loot_shape_stop_drop",
     "map_fog_hide",
+    "hold_session",
     "map_fog_unlock",
     "oak_travel",
     "world_personal_vehicle",

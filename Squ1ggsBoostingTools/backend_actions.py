@@ -240,6 +240,7 @@ def _sticky_toggle_status() -> dict[str, Any]:
         "zoom_injured": False,
         "auto_revive": False,
         "map_fog": False,
+        "hold_session": False,
         "fly_speed": 16000.0,
         "fly_preset": "fast",
     }
@@ -305,6 +306,12 @@ def _sticky_toggle_status() -> dict[str, Any]:
         out["map_fog"] = bool(_map_fog_hidden())
     except Exception:
         out["map_fog"] = False
+    try:
+        from .hold_session import is_enabled as _hold_session_on
+
+        out["hold_session"] = bool(_hold_session_on())
+    except Exception:
+        out["hold_session"] = False
     try:
         from . import tuning_embed as te
 

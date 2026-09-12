@@ -261,7 +261,15 @@ ipcMain.handle("sqbt:check-for-updates", async (_event, force, currentModVersion
 ipcMain.handle("sqbt:post-action", async (_event, action, payload, timeout) => {
   try {
     const result = await postAction(action, payload || {}, timeout ?? 12);
-    await refreshStatus().catch(() => {});
+    const name = String(action || "");
+    // Status-only polls must not rebuild the whole UI (dropdown flicker during UVHM).
+    const skipStatusRefresh =
+      name === "uvhm_status" ||
+      name === "challenge_bulk_status" ||
+      name === "spawn_item_pool_status";
+    if (!skipStatusRefresh) {
+      await refreshStatus().catch(() => {});
+    }
     return result;
   } catch (error) {
     return {
@@ -337,10 +345,10 @@ ipcMain.handle("sqbt:unlock-hidden-shapes", async () => {
 ipcMain.handle("sqbt:read-serial-source", async (_event, rawPath) => readSerialSource(rawPath));
 ipcMain.handle("sqbt:pick-serial-file", async () => {
   const result = await dialog.showOpenDialog(mainWindow, {
-    title: "Select a serial list (.txt or .docx)",
+    title: "Select a serial list (.txt / .yaml / .json / .docx)",
     properties: ["openFile"],
     filters: [
-      { name: "Serial lists", extensions: ["txt", "docx", "csv", "md", "json", "log"] },
+      { name: "Serial lists", extensions: ["txt", "yaml", "yml", "json", "docx", "csv", "md", "log"] },
       { name: "All files", extensions: ["*"] },
     ],
   });
@@ -349,9 +357,11 @@ ipcMain.handle("sqbt:pick-serial-file", async () => {
   }
   return readSerialSource(result.filePaths[0]);
 });
-ipcMain.handle("sqbt:pick-game-folder", async () => {
+
+async function pickAndSaveGameFolder() {
   const result = await dialog.showOpenDialog(mainWindow, {
     title: "Select Borderlands 4 install folder (contains Borderlands4.exe / OakGame)",
+    defaultPath: defaultGameRootHint(),
     properties: ["openDirectory"],
   });
   if (result.canceled || !result.filePaths?.length) {
@@ -377,6 +387,39 @@ ipcMain.handle("sqbt:pick-game-folder", async () => {
     baseSdk,
     modSync,
   };
+}
+
+ipcMain.handle("sqbt:pick-game-folder", async () => pickAndSaveGameFolder());
+
+ipcMain.handle("sqbt:prompt-missing-game-folder", async () => {
+  const gameRoot = resolveGameRoot(storedGameRoot);
+  if (gameRoot) {
+    return {
+      ok: true,
+      skipped: true,
+      gameRoot,
+      storedGameRoot: storedGameRoot || gameRoot,
+      pathSource: storedGameRoot ? "stored" : "detected",
+      candidates: defaultInstallCandidates(),
+    };
+  }
+  const hint = defaultGameRootHint();
+  const choice = await dialog.showMessageBox(mainWindow, {
+    type: "info",
+    buttons: ["Choose Borderlands 4 folder…", "Not now"],
+    defaultId: 0,
+    cancelId: 1,
+    title: "Borderlands 4 not found",
+    message: "Could not find Borderlands 4 in the default install location.",
+    detail:
+      `Usually:\n${hint}\n\n` +
+      "Choose the folder that contains Borderlands4.exe / OakGame " +
+      "(Steam library folder named Borderlands 4 — not sdk_mods).",
+  });
+  if (choice.response !== 0) {
+    return { ok: false, cancelled: true };
+  }
+  return pickAndSaveGameFolder();
 });
 ipcMain.handle("sqbt:install-sdkmod", async (_event, options = {}) => {
   try {

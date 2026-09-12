@@ -188,7 +188,7 @@ def _register_builtin_listeners() -> None:
         try:
             from . import loot_shapes
 
-            loot_shapes.abandon_world_loot()
+            loot_shapes.abandon_world_loot(schedule_orphan_absorb=False)
         except Exception:
             pass
 

@@ -53,6 +53,9 @@ _CURRENCY_KIND_ALIASES: Dict[str, str] = {
     "vaultcard4": "VaultCard04_Tokens",
     "vaultcard_4": "VaultCard04_Tokens",
     "vc4": "VaultCard04_Tokens",
+    "vaultcard5": "VaultCard05_Tokens",
+    "vaultcard_5": "VaultCard05_Tokens",
+    "vc5": "VaultCard05_Tokens",
 }
 
 # OakPlayerState.ExperienceState fixed slots (aliases → index).
@@ -62,6 +65,7 @@ _CURRENCY_KIND_ALIASES: Dict[str, str] = {
 #   3 — Vault card 02 XP
 #   4 — Vault card 03 XP (Raid 3)
 #   5 — Vault card 04 XP (Desert Dreams)
+#   6 — Vault card 05 XP
 # Level changes now go through OakPlayerState.BP_SetExperienceLevel using an
 # FGbxDefPtr to /Script/GbxGame.GbxExperienceDef. This is much safer than
 # writing ExperienceState fields directly, because the engine updates related
@@ -89,6 +93,7 @@ _EXPERIENCE_TRACK_ALIASES: Dict[str, int] = {
     "3": 3,
     "4": 4,
     "5": 5,
+    "6": 6,
     "character": 0,
     "player": 0,
     "main": 0,
@@ -108,6 +113,9 @@ _EXPERIENCE_TRACK_ALIASES: Dict[str, int] = {
     "vaultcard_xp_4": 5,
     "vaultcard4_xp": 5,
     "vc4_xp": 5,
+    "vaultcard_xp_5": 6,
+    "vaultcard5_xp": 6,
+    "vc5_xp": 6,
 }
 
 
@@ -909,14 +917,14 @@ def _do_give_currency(kind_raw: str, amount: int, name_sub: str) -> None:
     if not name_sub:
         _log_err(
             "Usage: givecurrency <kind> <amount> name <substring>  — kinds: cash, eridium, "
-            "vaultcard1, vaultcard2, vaultcard3, vaultcard4"
+            "vaultcard1, vaultcard2, vaultcard3, vaultcard4, vaultcard5"
         )
         return
     key = (kind_raw or "").strip().lower()
     token = _CURRENCY_KIND_ALIASES.get(key)
     if not token:
         _log_err(
-            "Unknown currency kind %r — use cash, eridium, vaultcard1, vaultcard2, vaultcard3, vaultcard4.",
+            "Unknown currency kind %r — use cash, eridium, vaultcard1, vaultcard2, vaultcard3, vaultcard4, vaultcard5.",
             kind_raw,
         )
         return
@@ -959,13 +967,13 @@ def _do_give_experience(track_raw: str, level: int, name_sub: str) -> None:
         _log_err(
             "Usage: giveexperience <track> <level> name <substring>  — slots: 0 player level, 1 specialization, "
             "2 vault card 01, 3 vault card 02, 4 vault card 03, 5 vault card 04 "
-            "(or aliases character/player, specialization, vaultcard_xp_1/2/3/4), or digit 0..5."
+            "(or aliases character/player, specialization, vaultcard_xp_1/2/3/4/5), or digit 0..6."
         )
         return
     tkey = _normalize_track_key(track_raw)
     if tkey not in _EXPERIENCE_TRACK_ALIASES:
         _log_err(
-            "Unknown track %r — use slots 0..5 or character/player, specialization, vaultcard_xp_1/2/3/4.",
+            "Unknown track %r — use slots 0..6 or character/player, specialization, vaultcard_xp_1/2/3/4/5.",
             track_raw,
         )
         return
@@ -1124,7 +1132,7 @@ def max_all_for_target(
             vc_ok, vc_msg = max_all_vault_cards_for_pc(pc, log=_log)
             bits.append(f"vault cards={'OK' if vc_ok else 'partial'}: {vc_msg[:120]}")
         except Exception as ex:  # noqa: BLE001
-            for vc_kind in ("vaultcard1", "vaultcard2", "vaultcard3", "vaultcard4"):
+            for vc_kind in ("vaultcard1", "vaultcard2", "vaultcard3", "vaultcard4", "vaultcard5"):
                 _do_set_currency_absolute(
                     vc_kind,
                     _MAX_WALLET_AMOUNT,
@@ -1133,7 +1141,13 @@ def max_all_for_target(
                     player_index=pidx,
                 )
             if apply_name:
-                for vc_xp in ("vaultcard_xp_1", "vaultcard_xp_2", "vaultcard_xp_3", "vaultcard_xp_4"):
+                for vc_xp in (
+                    "vaultcard_xp_1",
+                    "vaultcard_xp_2",
+                    "vaultcard_xp_3",
+                    "vaultcard_xp_4",
+                    "vaultcard_xp_5",
+                ):
                     _do_give_experience(vc_xp, 9_999, apply_name)
             bits.append(f"vault fallback ({type(ex).__name__})")
     else:
@@ -1146,6 +1160,8 @@ def max_all_for_target(
         if _want("max_player_level"):
             ok_p = _ensure_experience_level_via_bp(ps, 0, _MAX_PLAYER_LEVEL_ENGINE)
             got_p = _get_experience_level_via_bp(ps, 0)
+            if (got_p or 0) >= _MAX_PLAYER_LEVEL_ENGINE:
+                ok_p = True
             bits.append(f"player BP={'OK' if ok_p else 'FAIL'} (now={got_p})")
             if (not ok_p) and apply_name:
                 try:
@@ -1160,6 +1176,8 @@ def max_all_for_target(
         if _want("max_spec_level"):
             ok_s = _ensure_experience_level_via_bp(ps, 1, 701)
             got_s = _get_experience_level_via_bp(ps, 1)
+            if (got_s or 0) >= 701:
+                ok_s = True
             bits.append(f"spec BP={'OK' if ok_s else 'FAIL'} (now={got_s})")
             if (not ok_s) and apply_name:
                 try:
@@ -1206,7 +1224,7 @@ def max_all_for_target(
     description=(
         "Listen host: GbxCurrencyFunctionLibrary.GiveCurrency for one player. "
         "Usage: givecurrency <kind> <amount> name <substring>  — kinds: cash, eridium, "
-        "vaultcard1, vaultcard2, vaultcard3, vaultcard4. "
+        "vaultcard1, vaultcard2, vaultcard3, vaultcard4, vaultcard5. "
         "Verify in-game: client wallet updates; ambiguous name → gbc_players."
     ),
 )

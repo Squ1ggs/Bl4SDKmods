@@ -308,7 +308,7 @@ _favorite_lootlemon_descriptions: dict[str, str] = {
     if str(k).strip() and str(v).strip()
 }
 
-_CURRENCY_KINDS = ["cash", "eridium", "vaultcard1", "vaultcard2", "vaultcard3", "vaultcard4"]
+_CURRENCY_KINDS = ["cash", "eridium", "vaultcard1", "vaultcard2", "vaultcard3", "vaultcard4", "vaultcard5"]
 _EXP_TRACKS = [
     "player",
     "specialization",
@@ -316,6 +316,7 @@ _EXP_TRACKS = [
     "vaultcard_xp_2",
     "vaultcard_xp_3",
     "vaultcard_xp_4",
+    "vaultcard_xp_5",
 ]
 _MAX_WALLET_AMOUNT = 2_147_483_647
 _MAX_PLAYER_LEVEL = 70
@@ -1391,10 +1392,10 @@ def _max_all_selected() -> None:
         _log(
             f"Max All for {label}: player 60, spec 701, cash ({'OK' if cash_ok else 'FAIL'}: {cash_msg[:80]}), "
             f"eridium ({'OK' if erid_ok else 'FAIL'}: {erid_msg[:80]}), "
-            f"max SDU, vault cards 1–4 ({'OK' if vc_ok else 'partial'}: {vc_msg[:120]}).",
+            f"max SDU, vault cards 1–5 ({'OK' if vc_ok else 'partial'}: {vc_msg[:120]}).",
         )
     else:
-        for vc_kind in ("vaultcard1", "vaultcard2", "vaultcard3", "vaultcard4"):
+        for vc_kind in ("vaultcard1", "vaultcard2", "vaultcard3", "vaultcard4", "vaultcard5"):
             _do_set_currency_absolute(
                 vc_kind,
                 _MAX_WALLET_AMOUNT,
@@ -1403,7 +1404,13 @@ def _max_all_selected() -> None:
                 player_index=pidx,
             )
         if name:
-            for vc_xp in ("vaultcard_xp_1", "vaultcard_xp_2", "vaultcard_xp_3", "vaultcard_xp_4"):
+            for vc_xp in (
+                "vaultcard_xp_1",
+                "vaultcard_xp_2",
+                "vaultcard_xp_3",
+                "vaultcard_xp_4",
+                "vaultcard_xp_5",
+            ):
                 _do_give_experience(vc_xp, _MAX_VAULT_CARD_LEVEL, name)
         _log(
             f"Max All for {label}: cash ({'OK' if cash_ok else 'FAIL'}), eridium ({'OK' if erid_ok else 'FAIL'}), "
@@ -2252,6 +2259,30 @@ def _draw_sdu_card() -> None:
             tooltip=(
                 "Hides the map fog overlay this session. Open the map after turning it on. "
                 "Fog comes back after reload. Does not unlock safehouses."
+            ),
+        )
+        imgui.same_line()
+
+        def _flip_hold_session() -> None:
+            from . import hold_session as hold
+
+            _set_action_status(hold.set_enabled(not hold.is_enabled()))
+
+        try:
+            from . import hold_session as _hold_ui
+
+            hold_on = _hold_ui.is_enabled()
+        except Exception:
+            hold_on = False
+        _button(
+            f"Hold session {'ON' if hold_on else 'OFF'}",
+            _flip_hold_session,
+            ACCENT_SUCCESS if hold_on else ACCENT_MUTED,
+            160,
+            0,
+            tooltip=(
+                "Host only. Cancels travel-to-menu countdown and blocks return to main menu. "
+                "Turn OFF before you quit to the menu yourself."
             ),
         )
         imgui.same_line()
@@ -5910,6 +5941,29 @@ def _draw_travel_tab() -> None:
             ACCENT_PRIMARY,
             200,
             0,
+        )
+
+        def _flip_hold_session_travel() -> None:
+            from . import hold_session as hold
+
+            _set_action_status(hold.set_enabled(not hold.is_enabled()))
+
+        try:
+            from . import hold_session as _hold_travel
+
+            hold_travel_on = _hold_travel.is_enabled()
+        except Exception:
+            hold_travel_on = False
+        _button(
+            f"Hold session {'ON' if hold_travel_on else 'OFF'}",
+            _flip_hold_session_travel,
+            ACCENT_SUCCESS if hold_travel_on else ACCENT_MUTED,
+            160,
+            0,
+            tooltip=(
+                "Host only. Cancels travel-to-menu countdown and blocks return to main menu. "
+                "Turn OFF before you quit to the menu yourself."
+            ),
         )
         _button(
             f"Allow personal vehicles {'ON' if _travel_allow_vehicle else 'OFF'}",

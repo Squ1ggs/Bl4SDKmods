@@ -102,6 +102,7 @@ _SHAPE_3D_OPTIONS: list[str] = [
     "ufo",
     "rocket",
     "gear",
+    "nova",
 ]
 _SHAPE_SELECT_OPTIONS: list[str] = [*_SHAPE_3D_OPTIONS, *_SHAPE_2D_OPTIONS]
 _SHAPE_OPTION_LABELS: dict[str, str] = {
@@ -111,6 +112,7 @@ _SHAPE_OPTION_LABELS: dict[str, str] = {
     "claptrap": "Claptrap",
     "x_mark": "X mark",
     "globe": "globe",
+    "nova": "nova (3D ball -> pulse)",
     "letter_s": "letter S",
     "star_filled": "star filled",
     "double_ring": "double ring",
@@ -137,6 +139,7 @@ _SETTLE_SELECT_OPTIONS: list[str] = [
     "rain",
     "fountain",
     "stagger",
+    "explode",
     "snap",
     "drip",
 ]
@@ -149,6 +152,7 @@ _SETTLE_OPTION_LABELS: dict[str, str] = {
     "rain": "Rain",
     "fountain": "Fountain",
     "stagger": "Stagger",
+    "explode": "Pulse (3D ball -> out)",
     "snap": "Snap onto slots",
     "drip": "Drip peel to ground",
 }
@@ -195,7 +199,6 @@ TAB_SHORT_LABELS: tuple[str, ...] = (
 
 # Recent release highlights on Home (collapsible — not the dev changelog).
 HOME_WHATS_NEW: tuple[str, ...] = (
-    "Spawn All Filtered shapes fixed; infinite jump all/others stays on; shiny house fill capped.",
     "Backpack tab removed again (scan/relevel was too heavy).",
     "Party teleport shows Boost target names; Dev map travel queue no longer cancels on blips.",
     "UVHM — fast progression restored; left players still skipped in all-lobby.",
@@ -295,14 +298,7 @@ def _progression_target_fields(*, include_max_rank: bool = False) -> list[dict[s
 def _item_pool_spawn_fields(*, land: bool = False) -> list[dict[str, Any]]:
     fields: list[dict[str, Any]] = [
         {"key": "level", "label": "Item level", "type": "number", "default": _DEFAULT_ITEM_LEVEL},
-        {
-            "key": "count",
-            "label": "Count per pool (1–999)",
-            "type": "number",
-            "default": 1,
-            "min": 1,
-            "max": 999,
-        },
+        {"key": "count", "label": "Count per pool", "type": "number", "default": 1},
         *_world_drop_location_fields(),
     ]
     if land:
@@ -803,7 +799,7 @@ def _max_all_option_fields() -> list[dict[str, Any]]:
         {"key": "max_cash", "label": "Cash", "type": "checkbox", "default": True, "compact": True},
         {"key": "max_eridium", "label": "Eridium", "type": "checkbox", "default": True, "compact": True},
         {"key": "max_sdu", "label": "SDU", "type": "checkbox", "default": True, "compact": True},
-        {"key": "max_vault_cards", "label": "Vault 1–4", "type": "checkbox", "default": True, "compact": True},
+        {"key": "max_vault_cards", "label": "Vault 1–5", "type": "checkbox", "default": True, "compact": True},
         {"key": "max_player_level", "label": "Level 70", "type": "checkbox", "default": True, "compact": True},
         {"key": "max_spec_level", "label": "Spec 701", "type": "checkbox", "default": True, "compact": True},
     ]
@@ -824,6 +820,7 @@ def _action(
     deliver_multiselect: bool = False,
     deliver_from_paste: bool = False,
     deliver_store: bool = False,
+    add_selected_to_library: bool = False,
     spawn_multiselect: bool = False,
     challenge_multiselect: bool = False,
     backpack_multiselect: bool = False,
@@ -854,6 +851,8 @@ def _action(
         row["deliverFromPaste"] = True
     if deliver_store:
         row["deliverStore"] = True
+    if add_selected_to_library:
+        row["addSelectedToLibrary"] = True
     if spawn_multiselect:
         row["spawnMultiselect"] = True
     if challenge_multiselect:
@@ -952,11 +951,10 @@ def _gzo_multiselect_section() -> dict[str, Any]:
         "title": "GZO catalog",
         "hint": (
             "GZO codes from save-editor.be. Thank you to Tobgun for feedback, ideas, testing, and bug reports. "
-            "How to send: Select all filtered (or tick rows) → set Send to → Deliver selected. "
+            "Tick rows → Deliver selected (mail), or Add to library to keep them in My Library. "
             "Open rewards on send opens only this delivery's mail automatically in the background (one package at a time). "
-            f"{_OPEN_REWARDS_LARGE_WARNING} Every selected row is one mail item. "
+            f"{_OPEN_REWARDS_LARGE_WARNING} "
             "Host must run the EXE while in-game. Empty list → Refresh GZO (needs network). "
-            "Use Item category (Weapons / Shields / Class Mods / …) then Item type (Pistol, SMG, …). "
             "★ pins favourites to the top (shared with in-game)."
         ),
         "catalog": "gzo",
@@ -1031,6 +1029,13 @@ def _gzo_multiselect_section() -> dict[str, Any]:
         },
         "actions": [
             _action(
+                "Add to library",
+                "serial_store_add_selected",
+                payload={"group": "GZO"},
+                add_selected_to_library=True,
+                tooltip="Save ticked GZO rows into My Library (skips duplicates).",
+            ),
+            _action(
                 "Deliver selected",
                 "deliver_serials",
                 payload={"mode": "player"},
@@ -1045,7 +1050,7 @@ def _lootlemon_multiselect_section(lootlemon_categories: list[str]) -> dict[str,
     return {
         "title": "Lootlemon catalog",
         "hint": (
-            "How to send: Select all filtered (or tick rows) → set Send to → Deliver selected. "
+            "Tick rows → Deliver selected (mail), or Add to library for My Library. "
             "Open rewards opens only mail from this delivery (default No). "
             f"{_OPEN_REWARDS_LARGE_WARNING} "
             "Empty/stale list → Refresh Lootlemon (can take a few minutes). "
@@ -1075,6 +1080,13 @@ def _lootlemon_multiselect_section(lootlemon_categories: list[str]) -> dict[str,
         },
         "actions": [
             _action(
+                "Add to library",
+                "serial_store_add_selected",
+                payload={"group": "Lootlemon"},
+                add_selected_to_library=True,
+                tooltip="Save ticked Lootlemon rows into My Library (skips duplicates).",
+            ),
+            _action(
                 "Deliver selected",
                 "deliver_serials",
                 payload={"mode": "player"},
@@ -1088,8 +1100,13 @@ def _lootlemon_multiselect_section(lootlemon_categories: list[str]) -> dict[str,
 def _serial_store_section() -> dict[str, Any]:
     return {
         "title": "My Library",
+        "featured": True,
         "catalog": "serial_store",
         "serialStore": True,
+        "hint": (
+            "Your saved lists (by Group). Paste a Serial (Name optional — auto-fills), then Save entry. "
+            "Or add from GZO/Lootlemon “Add to library”. Tick rows → Deliver selected."
+        ),
         "actions": [
             _action(
                 "Deliver selected",
@@ -1098,13 +1115,13 @@ def _serial_store_section() -> dict[str, Any]:
                 deliver_store=True,
                 tooltip="Tick saved rows, pick Send to, then deliver.",
             ),
-            _action("Save entry", "serial_store_save", fold="Library tools"),
-            _action("Duplicate entry", "serial_store_duplicate", fold="Library tools"),
             _action(
-                "Delete selected",
-                "serial_store_delete",
-                fold="Library tools",
+                "Save entry",
+                "serial_store_save",
+                tooltip="Save/update the Name + Group + Serial form into My Library.",
             ),
+            _action("Duplicate entry", "serial_store_duplicate"),
+            _action("Delete selected", "serial_store_delete"),
         ],
     }
 
@@ -1181,7 +1198,15 @@ def _loot_text_section() -> dict[str, Any]:
 def get_panel_manifest() -> dict[str, Any]:
     from .loot_shapes import land_layout_defaults
 
-    currency_kinds = ["cash", "eridium", "vaultcard_1", "vaultcard_2", "vaultcard_3", "vaultcard_4"]
+    currency_kinds = [
+        "cash",
+        "eridium",
+        "vaultcard_1",
+        "vaultcard_2",
+        "vaultcard_3",
+        "vaultcard_4",
+        "vaultcard_5",
+    ]
     exp_tracks = [
         "player",
         "specialization",
@@ -1189,6 +1214,7 @@ def get_panel_manifest() -> dict[str, Any]:
         "vaultcard_xp_2",
         "vaultcard_xp_3",
         "vaultcard_xp_4",
+        "vaultcard_xp_5",
     ]
     pool_categories = [
         "All",
@@ -1264,6 +1290,7 @@ def get_panel_manifest() -> dict[str, Any]:
                         "hint": (
                             "Daily one-taps for the boost target. MAX ALL checkboxes pick "
                             "cash, eridium, SDU, vault cards, level 70, spec 701. "
+                            "Complete ALL challenges / All UVHM are the same as Progression. "
                             "Vault cards / SDU alone are under Economy below."
                         ),
                         "actions": [
@@ -1273,10 +1300,41 @@ def get_panel_manifest() -> dict[str, Any]:
                                 fields=_max_all_option_fields(),
                                 tooltip=(
                                     "Apply checked options for the boost target: cash, eridium, "
-                                    "SDU, vault cards 1–4 (+ XP tracks), player 70, spec 701."
+                                    "SDU, vault cards 1–5 (+ XP tracks), player 70, spec 701."
                                 ),
                             ),
                             _action("Unlock all cosmetics", "devperk_activate", payload={"perk_index": 4}),
+                            _action(
+                                "Complete ALL challenges",
+                                "challenge_bulk_start",
+                                payload={"category": "All non-UVHM"},
+                                confirm=(
+                                    "Complete every non-UVHM challenge (including Vault of the Damned) "
+                                    "for the boost target? Uses Boost target — set All players to hit everyone."
+                                ),
+                                tooltip=(
+                                    "Same as Progression → Complete ALL non-UVHM. "
+                                    "UVHM ranks use All UVHM (below)."
+                                ),
+                            ),
+                            _action(
+                                "All UVHM (target)",
+                                "uvhm_start",
+                                confirm=(
+                                    "Start UVHM ranks 1–7 for the Boost target player? "
+                                    "This is progression, not a loot spawn. Pick one player (not All players)."
+                                ),
+                                tooltip=(
+                                    "Same as Progression → Start UVHM (target). "
+                                    "Needs a single boost target — not All players."
+                                ),
+                            ),
+                            _action(
+                                "Soft clear (hide loot)",
+                                "loot_shape_clear",
+                                confirm="Hide ground loot from play (teleports pickups away)?",
+                                tooltip="Same as Loot / Loot Shapes soft clear — removes ground pile clutter.",
+                            ),
                             _action(
                                 "Open pending rewards (everyone)",
                                 "rewards_open_everyone",
@@ -1341,6 +1399,20 @@ def get_panel_manifest() -> dict[str, Any]:
                                 payload_off={"enabled": False},
                                 sticky=True,
                                 sync_key="map_fog",
+                            ),
+                            _toggle(
+                                "Hold session (no menu kick)",
+                                "hold_session",
+                                payload_on={"enabled": True},
+                                payload_off={"enabled": False},
+                                sticky=True,
+                                sync_key="hold_session",
+                                tooltip=(
+                                    "Host only. Cancels travel-to-menu countdown and blocks return to "
+                                    "main menu / session-end so guests cannot pull the lobby apart. "
+                                    "Auto-arms during UVHM / Complete ALL challenges. "
+                                    "Turn OFF before you quit to the menu yourself."
+                                ),
                             ),
                             _action("Toggle freecam", "freecam_toggle"),
                             _action("Freecam OFF if stuck", "freecam_disable"),
@@ -1645,8 +1717,17 @@ def get_panel_manifest() -> dict[str, Any]:
                     },
                     {
                         "title": "Party teleport",
-                        "hint": "Buttons use the Boost target name (player bar under the tabs).",
+                        "hint": (
+                            "Everyone → me pulls the whole lobby to you. "
+                            "Me → selected / Selected → me use the Boost target (player bar under the tabs)."
+                        ),
                         "actions": [
+                            _action(
+                                "Everyone → me",
+                                "teleport_party",
+                                payload={"mode": "all_to_me"},
+                                tooltip="Teleport every other party member to you (host).",
+                            ),
                             _action("Me → selected", "teleport_party", payload={"mode": "me_to_selected"}),
                             _action("Selected → me", "teleport_party", payload={"mode": "selected_to_me"}),
                         ],
@@ -1795,6 +1876,12 @@ def get_panel_manifest() -> dict[str, Any]:
                                     *_shiny_land_fields(),
                                 ],
                             ),
+                            _action(
+                                "Soft clear (hide loot)",
+                                "loot_shape_clear",
+                                confirm="Hide ground loot from play (teleports pickups away)?",
+                                tooltip="Same as Home / Loot Shapes soft clear — clears ground pile clutter.",
+                            ),
                         ],
                     },
                     _loot_text_section(),
@@ -1855,10 +1942,8 @@ def get_panel_manifest() -> dict[str, Any]:
                         "title": "Send serials",
                         "featured": True,
                         "hint": (
-                            "Paste or Browse @Ug serials into the box (YAML/STBX ok), then Send items. "
-                            "Browse fills the paste box — not the queue or My Library. "
-                            "Add to library… saves the paste box under a name for later. "
-                            "Optional queue is only for mixing sets. "
+                            "Paste or Browse @Ug serials, then Send items (mail). "
+                            "Add to library… saves the paste box as a named set in My Library. "
                             f"{_OPEN_REWARDS_LARGE_WARNING}"
                         ),
                         "warning": _REWARDS_AND_INVENTORY_WARNING,
@@ -1886,6 +1971,8 @@ def get_panel_manifest() -> dict[str, Any]:
                                 "Deliver queued serials",
                                 "deliver_serials",
                                 deliver_multiselect=True,
+                                fold="Optional queue",
+                                fold_hint="Only if you used Add to queue under the paste box.",
                                 fields=[
                                     {"key": "count", "label": "Amount per serial", "type": "number", "default": 1},
                                     {
@@ -1901,10 +1988,16 @@ def get_panel_manifest() -> dict[str, Any]:
                             ),
                         ],
                     },
+                    _serial_store_section(),
+                    _gzo_multiselect_section(),
+                    _lootlemon_multiselect_section(lootlemon_categories),
                     {
                         "title": "Serial tools",
                         "fold": "Expert: convert serials",
-                        "hint": "Convert human ↔ @U. Optional rewrite changes the 4th header level (300, 0, 1, LEVEL| …).",
+                        "hint": (
+                            "Convert human ↔ @U. After convert, copy the result into My Library "
+                            "(Name / Serial form) or paste it above and Add to library…"
+                        ),
                         "actions": [
                             _action(
                                 "Open pending rewards (everyone)",
@@ -1937,11 +2030,27 @@ def get_panel_manifest() -> dict[str, Any]:
                                 ],
                                 showResult=True,
                             ),
+                            _action(
+                                "Add convert box to library",
+                                "serial_store_import_serials",
+                                tooltip="Saves whatever is in the convert textarea into My Library (prompts for a name).",
+                                fields=[
+                                    {
+                                        "key": "name",
+                                        "label": "Library set name",
+                                        "type": "text",
+                                        "default": "",
+                                        "placeholder": "My set",
+                                    },
+                                    {
+                                        "key": "input",
+                                        "type": "hidden",
+                                        "default": "",
+                                    },
+                                ],
+                            ),
                         ],
                     },
-                    _gzo_multiselect_section(),
-                    _lootlemon_multiselect_section(lootlemon_categories),
-                    _serial_store_section(),
                     {
                         "title": "Shiny mail",
                         "hint": "Mailbox only. World shiny drops live under Loot.",
@@ -2364,9 +2473,24 @@ def get_panel_manifest() -> dict[str, Any]:
                         "title": "Travel / vehicle",
                         "hint": (
                             "Block fast travel from this character, cancel a travel countdown, "
+                            "hold the session so guests cannot pull you to the main menu, "
                             "or allow personal vehicles in this world."
                         ),
                         "actions": [
+                            _toggle(
+                                "Hold session (no menu kick)",
+                                "hold_session",
+                                payload_on={"enabled": True},
+                                payload_off={"enabled": False},
+                                sticky=True,
+                                sync_key="hold_session",
+                                tooltip=(
+                                    "Host only. Cancels travel-to-menu countdown and blocks return to "
+                                    "main menu / session-end so guests cannot pull the lobby apart. "
+                                    "Auto-arms during UVHM / Complete ALL challenges. "
+                                    "Turn OFF before you quit to the menu yourself."
+                                ),
+                            ),
                             _toggle(
                                 "Block local fast travel",
                                 "oak_travel",
@@ -2659,7 +2783,6 @@ def get_panel_manifest() -> dict[str, Any]:
                 "label": TAB_LABELS[11],
                 "short": TAB_SHORT_LABELS[11],
                 "sections": [
-                    _loot_text_section(),
                     {
                         "title": "Place shape",
                         "featured": True,
@@ -2699,6 +2822,7 @@ def get_panel_manifest() -> dict[str, Any]:
                             ),
                         ],
                     },
+                    _loot_text_section(),
                 ],
             },
             {
