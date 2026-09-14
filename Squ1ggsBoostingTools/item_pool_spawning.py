@@ -1993,6 +1993,45 @@ def _is_classmod_pool(pool_name: str) -> bool:
     return "class_mod" in low or "classmod" in low
 
 
+def _spawn_classmods_raid2_parent(
+    entry: dict[str, str],
+    *,
+    level: int,
+    count: int,
+    display: str,
+) -> int:
+    """Expand ClassMods_Raid2 bags into dedicated merges (live NCS freezes)."""
+    from .item_spawn.classmod_comp_spawn import raid2_dedicated_classmod_pools
+
+    total = 0
+    last_err = ""
+    for child_pool in raid2_dedicated_classmod_pools():
+        child_entry = {
+            "itempool": child_pool,
+            "display_name": f"{display} / {child_pool}",
+            "category": "Class Mod",
+        }
+        try:
+            total += int(
+                _spawn_classmod_dedicated(
+                    "",
+                    child_entry,
+                    level=level,
+                    count=count,
+                    display=str(child_entry["display_name"]),
+                )
+            )
+        except Exception as exc:  # noqa: BLE001
+            last_err = str(exc)[:200]
+            _log_warning(f"{display}: Raid2 child {child_pool} missed ({exc}).")
+    if total > 0:
+        _log_info(f"Spawned {display} via Raid2 dedicated expand x{total}.")
+        return total
+    raise RuntimeError(
+        last_err or f"{display}: ClassMods Raid2 expand failed (no dedicated children)."
+    )
+
+
 def _is_classmod_entry(entry: dict[str, str], catalog: str = "") -> bool:
     cat = str(catalog or entry.get("catalog_key") or "").strip().lower()
     if cat.startswith("classmod_"):
@@ -6634,6 +6673,22 @@ def spawn_item_pool(pool_name: str, level: int = DEFAULT_ITEM_LEVEL, count: int 
     count = max(1, min(int(count), 100))
     level = max(1, int(level))
 
+    try:
+        from .item_spawn.classmod_comp_spawn import is_classmods_raid2_parent_pool
+    except Exception:  # noqa: BLE001
+        is_classmods_raid2_parent_pool = lambda _p: False  # noqa: E731
+    if is_classmods_raid2_parent_pool(pool_name):
+        return _spawn_classmods_raid2_parent(
+            {
+                "itempool": pool_name,
+                "display_name": pool_name,
+                "category": "Class Mod",
+            },
+            level=level,
+            count=count,
+            display=pool_name,
+        )
+
     from .item_spawn.ncs_pool_spawn import spawn_legacy_itempool
 
     # Live registered pools spawn directly via NCS (the proven baseline).
@@ -7434,6 +7489,17 @@ def _spawn_item_pool_entry_impl(
                 f"{display}: blocked wrong-family shiny pool "
                 f"({pool}) — no catalog dump (would spawn Fearstalker)."
             )
+
+    # ClassMods_Raid2 / GoldSilver_ClassMods_Raid2 — never live NCS (freezes).
+    try:
+        from .item_spawn.classmod_comp_spawn import is_classmods_raid2_parent_pool
+    except Exception:  # noqa: BLE001
+        is_classmods_raid2_parent_pool = lambda _p: False  # noqa: E731
+    if pool and is_classmods_raid2_parent_pool(pool):
+        return _spawn_classmods_raid2_parent(
+            entry, level=level, count=count, display=display
+        )
+
     # Named uniques: dump-only above — skip live pool (silent RPC / shiny twin).
     bulk_hit = 0
     if (
@@ -9120,6 +9186,7 @@ def queue_item_pool_entry(
     z_bias: float = 30.0,
     spawn_then_shape: bool = False,
     stay_in_air: bool = True,
+    float_on_grab: bool = False,
     peel_after: float = 0.0,
     land_profile: str = "bulk",
     fill_until_complete: bool = False,
@@ -9221,6 +9288,7 @@ def queue_item_pool_entry(
                 z_bias=z_bias,
                 spawn_then_shape=spawn_then_shape,
                 stay_in_air=stay_in_air,
+                float_on_grab=float_on_grab,
                 peel_after=peel_after,
                 land_profile=land_profile,
                 shape_text=shape_text,
@@ -9274,6 +9342,7 @@ def queue_all_filtered_item_pools(
     z_bias: float = 30.0,
     spawn_then_shape: bool = False,
     stay_in_air: bool = True,
+    float_on_grab: bool = False,
     peel_after: float = 0.0,
     land_profile: str = "bulk",
     fill_until_complete: bool = False,
@@ -9427,6 +9496,7 @@ def queue_all_filtered_item_pools(
             z_bias=z_bias,
             spawn_then_shape=spawn_then_shape,
             stay_in_air=stay_in_air,
+            float_on_grab=float_on_grab,
             peel_after=peel_after,
             land_profile=land_profile,
             shape_text=shape_text_l,

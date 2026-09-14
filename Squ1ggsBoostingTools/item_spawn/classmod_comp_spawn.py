@@ -43,16 +43,15 @@ def is_dedicated_classmod_catalog(catalog_key: str) -> bool:
 
 
 def is_dedicated_classmod_inline_pool(pool_name: str) -> bool:
-    """Single-comp synthetic pools (Artificer, Bombastic, …) — safe for inline merge.
+    """Single-comp synthetic pools (Artificer, Bombastic, Loveless, …) — inline merge.
 
-    Regex match alone is not enough: pools like Loveless/corpohacker raid2 matched the
-    pattern before a merge payload existed, which forced a flaky dedicated path.
+    Requires a merge payload entry so empty/fake pool ids do not force a flaky path.
+    Loveless / CorpoHacker Raid 2 uses the dedicated merge that shipped in 3.8.141
+    (live NCS on this pool freezes / silent-lags).
     """
     low = str(pool_name or "").strip().lower()
+    # Generic roll pool — never treat as single-comp dedicated (NCS freeze magnet).
     if low == "itempool_classmod_comp_05_legendary":
-        return True
-    # Loveless / CorpoHacker: live NCS only. Bundled merge inline lags/crashes on this build.
-    if "corpohacker" in low:
         return False
     if not bool(_DEDICATED_INLINE_POOL_RE.match(low)):
         return False
@@ -60,10 +59,33 @@ def is_dedicated_classmod_inline_pool(pool_name: str) -> bool:
     return low in by_pool
 
 
+def is_classmods_raid2_parent_pool(pool_name: str) -> bool:
+    """Parent Raid2 classmod bags — expand to dedicated children (NCS freezes)."""
+    low = str(pool_name or "").strip().lower()
+    return low in {
+        "itempool_classmods_raid2",
+        "itempool_goldsilver_classmods_raid2",
+    }
+
+
+def raid2_dedicated_classmod_pools() -> tuple[str, ...]:
+    """Live Raid2 single-comp pools (incl. Loveless / CorpoHacker)."""
+    return (
+        "itempool_classmod_dark_siren_05_legendary_raid2",
+        "itempool_classmod_exo_soldier_05_legendary_raid2",
+        "itempool_classmod_gravitar_05_legendary_raid2",
+        "itempool_classmod_paladin_05_legendary_raid2",
+        "itempool_classmod_robodealer_05_legendary_raid2",
+        "itempool_classmod_corpohacker_05_legendary_raid2",
+    )
+
+
 def is_native_roll_classmod_pool(pool_name: str) -> bool:
     """Mixed / criteria classmod pools — live NCS roll only, never inline merge."""
     low = str(pool_name or "").strip().lower()
     if not low or "classmod" not in low and "class_mod" not in low:
+        return False
+    if is_classmods_raid2_parent_pool(low):
         return False
     return not is_dedicated_classmod_inline_pool(low)
 

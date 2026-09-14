@@ -994,6 +994,26 @@
         "inv'CLASSMOD_ROBODEALER.comp_05_legendary_tuba'",
         "inv'CLASSMOD_ROBODEALER.comp_05_legendary_Tuba'"
       ]
+    },
+    "itempool_classmod_corpohacker_05_legendary_raid2": {
+      "__synthetic": true,
+      "source_comp": "classmod_corpohacker_comp_05_legendary_raid2",
+      "spawn_serial": "classmod_corpohacker.comp_05_legendary_raid2",
+      "items": [
+        {
+          "item": {
+            "item": {
+              "handle": "inv'classmod_corpohacker.comp_05_legendary_raid2'"
+            }
+          }
+        }
+      ],
+      "mingamestage": "attribute'Att_MinGameStage_ClassMod'",
+      "handle_variants": [
+        "inv'classmod_corpohacker.comp_05_legendary_raid2'",
+        "inv'classmod_corpohacker.comp_05_legendary_Raid2'",
+        "inv'CLASSMOD_CORPOHACKER.comp_05_legendary_raid2'"
+      ]
     }
   }
 }

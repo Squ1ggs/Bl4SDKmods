@@ -42,11 +42,19 @@ _PAUSE_INTERFERING_MODS = frozenset({
     "bl4_coop_session_tools",
     "bl4_challenge_ticker",
     "bl4_inventory_capacity_tools",
+    "bl4_teleport_tools",
     "whatamilookingat",
     "azzyuvhbooster",
     "bot_suite",
     "actorscriptdeployer",
     "bvm_vehicle_spawn_catalog",
+    "echo4bot",
+    "echo4bot_vps",
+    "echo4bot_windows",
+    "echobot",
+    "mattssdkboostingtools",
+    "matts_sdk_boosting_tools",
+    "mattboostingtools",
 })
 
 # Already inside Squ1ggs — extra copies of these fight the all-in-one session.
@@ -309,16 +317,21 @@ def status_fields() -> dict[str, Any]:
 
 
 def reclaim_runtime_hooks() -> None:
-    """Re-stamp our PlayerTick hooks after other mods may have overwritten them."""
+    """Re-stamp our PlayerTick hooks after other mods may have overwritten them.
+
+    Never force-reinstall when already present — EXE bridge reclaim ran every ~8s
+    and stacked/churned hooks (same pyunrealsdk AV hash across dumps).
+    """
     try:
         from .loot_shapes import install_loot_shapes_hooks
 
-        install_loot_shapes_hooks(force=True)
+        install_loot_shapes_hooks(force=False)
     except Exception:
         pass
     try:
         from . import mobility_runtime
 
+        # No-op if already on (avoids log spam + prune every poll).
         mobility_runtime.enable_mobility_runtime()
     except Exception:
         pass

@@ -11,22 +11,72 @@ from .uvhm_progression import TargetIdentity, resolve_lobby_pc, selected_lobby_i
 
 
 _PREFIX = "[Squ1ggs Boosting Tools | Challenges]"
-_pending: tuple[int, str, tuple[str, ...]] | None = None
+# (player_index, category, tokens, prebuilt_rows)
+_pending: tuple[int, str, tuple[str, ...], tuple[tuple[str, int], ...]] | None = None
 _targets: tuple[TargetIdentity, ...] = ()
 _for_all = False
 _rows: tuple[tuple[str, int], ...] = ()
 _index = 0
+_target_index = 0
 _ok = 0
 _failed = 0
 _active = False
 _message = "Idle."
 _last_error = ""
 _last_tick_at = 0.0
-_CHALLENGE_BATCH = 16
+_catalog_cache: tuple[tuple[str, int], ...] | None = None
+# Remote-target pacing only. Host-local jobs stay fast even in a live lobby —
+# COS/library writes do not need the guest replication throttle.
+_remote_target_pacing = False
+# ULM-style batches (see ultra_local_menu challenge_complete._queue_tick_config):
+# solo/host-local can drain several tokens per tick; remote stays tiny.
+_CHALLENGE_TICK_GAP_LOCAL = 0.04
+_CHALLENGE_TICK_GAP_REMOTE = 0.10
+_CHALLENGE_BATCH_LOCAL = 6
+_CHALLENGE_BATCH_REMOTE = 2
+
+
+def _tick_gap() -> float:
+    """Seconds between batches. Remote guests stay slower; host-local stays fast."""
+    if _remote_target_pacing:
+        return float(_CHALLENGE_TICK_GAP_REMOTE)
+    return float(_CHALLENGE_TICK_GAP_LOCAL)
+
+
+def _batch_size() -> int:
+    if _remote_target_pacing:
+        return int(_CHALLENGE_BATCH_REMOTE)
+    return int(_CHALLENGE_BATCH_LOCAL)
+
+
+def _identity_is_local(identity: TargetIdentity) -> bool:
+    """True when the snapshotted identity resolves to the listen-host PC."""
+    try:
+        from mods_base import get_pc
+
+        local = get_pc()
+    except Exception:
+        local = None
+    if local is None or identity is None:
+        return False
+    try:
+        from .party_helpers import _gbc_resolve_player_display_name
+        from .uvhm_progression import _player_state_key
+
+        ps = getattr(local, "PlayerState", None)
+        if ps is None:
+            return False
+        name = _gbc_resolve_player_display_name(ps)
+        return _player_state_key(ps, name) == identity.key
+    except Exception:
+        return False
 
 
 CATEGORY_LABELS: tuple[str, ...] = (
     "All non-UVHM",
+    "Vault Hunters — Robo Dealer / Loveless",
+    "FL4K / Providence DLC",
+    "All DLC / Story Packs",
     "Vault of the Damned",
     "Story challenge flags",
     "Activities",
@@ -48,6 +98,36 @@ CATEGORY_LABELS: tuple[str, ...] = (
 # Specific category filters. "Other" is computed as leftovers (not matched by any
 # rule below). "Combat" is true combat/misc — not every weapon challenge.
 _CATEGORY_RULES: dict[str, tuple[str, ...]] = {
+    "vault hunters — robo dealer / loveless": (
+        "robodealer",
+        "robo_dealer",
+        "corpohacker",
+        "corpo_hacker",
+        "loveless",
+    ),
+    "fl4k / providence dlc": (
+        "fl4k",
+        "providence",
+        "lastresort",
+        "last_resort",
+        "harmonica",
+    ),
+    "all dlc / story packs": (
+        "_dlc",
+        "cowbell_",
+        "_cowbell",
+        "_banjo_",
+        "_cello_",
+        "_tuba_",
+        "_mandolin_",
+        "_harp_",
+        "harmonica",
+        "_raid1_",
+        "_raid2_",
+        "providence",
+        "lastresort",
+        "last_resort",
+    ),
     "vault of the damned": (
         "cowbell_",
         "challenge_cowbell_",
@@ -76,7 +156,11 @@ _CATEGORY_RULES: dict[str, tuple[str, ...]] = {
         "challenge_activity_",
         "cowbell_complete_all_activities",
     ),
-    "collectibles": ("challenge_tutorial_collectible_", "challenge_collect_"),
+    "collectibles": (
+        "challenge_tutorial_collectible_",
+        "challenge_collect_",
+        "challenge_echolog_",
+    ),
     "loot": ("challenge_loot_",),
     "weapons": (
         "challenge_assault_",
@@ -101,6 +185,7 @@ _CATEGORY_RULES: dict[str, tuple[str, ...]] = {
     ),
     "combat": (
         "cowbell_challenges_combat_",
+        "_challenge_combat_",
         "challenge_melee_",
         "challenge_shield_",
         "challenge_spareparts_",
@@ -112,6 +197,7 @@ _CATEGORY_RULES: dict[str, tuple[str, ...]] = {
         "challenge_kill_",
         "challenge_killarmy_",
         "cowbell_challenges_enemies_",
+        "_challenge_enemies_",
     ),
     "elemental": (
         "challenge_fire_",
@@ -138,7 +224,7 @@ _CATEGORY_RULES: dict[str, tuple[str, ...]] = {
         "challenge_exosoldier_",
         "challenge_gravitar_",
         "challenge_paladin_",
-        "cowbell_challenges_characters_",
+        "_challenges_characters_",
         "challenge_robodealer_",
     ),
     "shinies": ("challenge_shiny_",),
@@ -148,6 +234,7 @@ _CATEGORY_RULES: dict[str, tuple[str, ...]] = {
         "worldevents_",
         "worldboss_",
         "cowbell_challenges_world_",
+        "_challenge_world_",
         "_world_rift_",
         "_world_spooky",
     ),
@@ -163,11 +250,31 @@ _CATEGORY_RULES: dict[str, tuple[str, ...]] = {
 }
 
 
+_last_apply_log_at = 0.0
+_apply_log_count = 0
+
+
 def _log(message: str) -> None:
     try:
         logging.info(f"{_PREFIX} {message}")
     except Exception:
         pass
+    try:
+        from . import runtime_log
+
+        runtime_log.note(f"challenge: {message}")
+    except Exception:
+        pass
+
+
+def _log_apply_throttled(token: str, amount: int, who: str) -> None:
+    """Do not spam unrealsdk with 1200+ apply lines — that starved the EXE progress bar."""
+    global _last_apply_log_at, _apply_log_count
+    _apply_log_count += 1
+    now = time.monotonic()
+    if _apply_log_count <= 3 or _apply_log_count % 50 == 0 or (now - _last_apply_log_at) >= 0.75:
+        _last_apply_log_at = now
+        _log(f"Applied {token} +{amount} -> {who} (#{_apply_log_count})")
 
 
 def _pc_matches_identity(pc: Any, identity: TargetIdentity) -> bool:
@@ -199,7 +306,7 @@ def _apply_one(token: str, amount: int, identity: TargetIdentity, owner: Any) ->
         )
     if not increment_challenge(pc, token, amount, owner_pc=owner):
         raise RuntimeError(f"challenge increment failed for {describe_target(pc)}")
-    _log(f"Applied {token} +{amount} -> {describe_target(pc)}")
+    _log_apply_throttled(token, amount, describe_target(pc))
 
 
 def _is_uvhm(token: str) -> bool:
@@ -209,7 +316,7 @@ def _is_uvhm(token: str) -> bool:
 def _is_vault_card_or_junk(token: str) -> bool:
     """Vault-card dailies/weeklies + demo/test noise — not part of All non-UVHM boosts."""
     key = token.casefold().replace("-", "_")
-    if key.startswith(("vc1_", "vc2_", "vc3_", "vc4_", "vcchallenge_")):
+    if key.startswith(("vc1_", "vc2_", "vc3_", "vc4_", "vc5_", "vcchallenge_")):
         return True
     if "vault_card" in key:
         return True
@@ -238,6 +345,10 @@ def _all_specific_rules() -> tuple[str, ...]:
 
 
 def _iter_catalog_challenges() -> list[tuple[str, int]]:
+    global _catalog_cache
+    if _catalog_cache is not None:
+        return list(_catalog_cache)
+
     from .data_files import read_data_json  # noqa: PLC0415
 
     raw = read_data_json("challenge_catalog.json")
@@ -258,7 +369,8 @@ def _iter_catalog_challenges() -> list[tuple[str, int]]:
             goal = 1
         seen.add(token)
         result.append((token, goal))
-    return result
+    _catalog_cache = tuple(result)
+    return list(_catalog_cache)
 
 
 def _load_rows(category: str) -> tuple[tuple[str, int], ...]:
@@ -301,11 +413,13 @@ def _load_token_rows(tokens: list[str] | tuple[str, ...]) -> tuple[tuple[str, in
     goals = {token: goal for token, goal in _iter_catalog_challenges()}
     result: list[tuple[str, int]] = []
     for token in wanted:
-        result.append((token, int(goals.get(token) or 1)))
+        if token not in goals:
+            raise ValueError(f"Challenge token is unavailable or excluded: {token}")
+        result.append((token, int(goals[token])))
     return tuple(result)
 
 
-def catalog_rows(search: str = "", category: str = "All non-UVHM", *, limit: int = 500) -> tuple[tuple[str, int], ...]:
+def catalog_rows(search: str = "", category: str = "All non-UVHM", *, limit: int = 5000) -> tuple[tuple[str, int], ...]:
     """Filtered challenge rows for UI pickers (non-UVHM only)."""
     rows = _load_rows(category)
     needle = str(search or "").strip().casefold()
@@ -315,7 +429,7 @@ def catalog_rows(search: str = "", category: str = "All non-UVHM", *, limit: int
             for token, goal in rows
             if needle in token.casefold() or needle in token.replace("_", " ").casefold()
         )
-    cap = max(1, min(int(limit or 500), 2000))
+    cap = max(1, min(int(limit or 5000), 5000))
     return rows[:cap]
 
 
@@ -348,10 +462,26 @@ def request_selected(
     tokens: list[str] | tuple[str, ...] | None = None,
 ) -> bool:
     """Queue bulk or selected-token completion. ``player_index == -1`` means all lobby players."""
-    global _pending, _message
+    global _pending, _message, _rows, _index
     if not confirmed:
         _message = "A second confirmation click is required."
         return False
+    world, _gs = _gbc_session_world_and_gamestate()
+    if not _gbc_is_listen_host_world(world):
+        _message = "Challenge completion needs the listen host (you must be hosting the lobby)."
+        return False
+    try:
+        from . import uvhm_runtime
+
+        uvhm = uvhm_runtime.status()
+        if bool(uvhm.get("running") or uvhm.get("queued")):
+            _message = (
+                "Complete ALL / bulk challenges cannot start while UVHM is running. "
+                "Wait for UVHM to finish or cancel it first."
+            )
+            return False
+    except Exception:
+        pass
     if _active or _pending is not None:
         _message = "Another non-UVHM challenge workflow is already active."
         return False
@@ -361,20 +491,48 @@ def request_selected(
             token = str(raw or "").strip()
             if token and token not in cleaned_tokens:
                 cleaned_tokens.append(token)
-    _pending = (int(player_index), str(category), tuple(cleaned_tokens))
+    try:
+        rows = (
+            _load_token_rows(cleaned_tokens)
+            if cleaned_tokens
+            else _load_rows(str(category))
+        )
+        if not rows:
+            raise ValueError(f"No non-UVHM challenges matched {category!r}.")
+    except Exception as exc:
+        _message = f"Could not build challenge list: {exc}"
+        return False
+    # Prebuild on the bridge thread so status already has a real total — never
+    # lie with "Building challenge list…" while the game tick is just waiting.
+    _rows = rows
+    _index = 0
+    _pending = (int(player_index), str(category), tuple(cleaned_tokens), rows)
+    who = "all players" if int(player_index) < 0 else "selected player"
     if cleaned_tokens:
-        _message = f"Confirmed {len(cleaned_tokens)} selected challenge(s) queued for the game tick."
-    elif int(player_index) < 0:
-        _message = "Confirmed all-players request queued for the game tick."
+        _message = (
+            f"Queued {len(rows)} selected challenge(s) for {who} — starting…"
+        )
     else:
-        _message = "Confirmed request queued for the game tick."
+        _message = (
+            f"Queued {category}: {len(rows)} challenges for {who} — starting…"
+        )
+    # Activate immediately on the bridge/HTTP path when listen-host is already OK.
+    # Waiting solely for BP_TickWidget left jobs stuck on "waiting for game tick"
+    # whenever session_safe briefly blocked the shared UMG tick.
+    try:
+        _consume_request()
+    except Exception as exc:
+        _message = f"Queued but could not activate yet: {exc}"
+        _log(_message)
     return True
 
 
 def cancel() -> bool:
-    global _pending, _active, _message
+    global _pending, _active, _message, _rows, _index
     if _pending is not None:
         _pending = None
+        _rows = ()
+        _index = 0
         _message = "Queued request cancelled."
         return True
     if not _active:
@@ -386,13 +544,21 @@ def cancel() -> bool:
 
 def status() -> dict[str, Any]:
     token = _rows[_index][0] if _active and 0 <= _index < len(_rows) else ""
+    total = len(_rows)
+    queued = _pending is not None
+    active = bool(_active or queued)
     return {
-        "active": bool(_active or _pending is not None),
-        "queued": _pending is not None,
+        "active": active,
+        "queued": queued,
         "target": _target_label(),
         "for_all": bool(_for_all),
         "index": _index,
-        "total": len(_rows),
+        "progress_index": _index,
+        "target_index": _target_index,
+        "target_total": len(_targets),
+        "total": total,
+        "progress_total": total,
+        "queued_count": total if queued else 0,
         "ok": _ok,
         "failed": _failed,
         "token": token,
@@ -403,18 +569,18 @@ def status() -> dict[str, Any]:
 
 
 def _consume_request() -> None:
-    global _pending, _targets, _for_all, _rows, _index, _ok, _failed, _active, _message, _last_error
+    global _pending, _targets, _for_all, _rows, _index, _target_index
+    global _ok, _failed, _active, _message, _last_error, _remote_target_pacing
     request = _pending
     if request is None:
         return
-    _pending = None
+    # Keep queue until start succeeds (same pattern as UVHM).
     world, _gs = _gbc_session_world_and_gamestate()
     if not _gbc_is_listen_host_world(world):
-        _message = "Request refused: run this on the listen host."
+        _message = "Challenge bulk waiting for listen-host world (stay in lobby / unpause)."
         return
-    player_index, category, tokens = request
+    player_index, category, tokens, rows = request
     try:
-        rows = _load_token_rows(tokens) if tokens else _load_rows(category)
         if not rows:
             raise ValueError(f"No non-UVHM challenges matched {category!r}.")
         if int(player_index) < 0:
@@ -428,75 +594,155 @@ def _consume_request() -> None:
             for_all = False
             label = targets[0].display_name
     except Exception as exc:
+        _pending = None
         _message = f"Could not start: {exc}"
         _last_error = str(exc)
+        try:
+            from . import hold_session
+
+            hold_session.release_job("challenges")
+        except Exception:
+            pass
         return
+    _pending = None
     _targets = tuple(targets)
     _for_all = bool(for_all)
+    # Pace by whether any job target is remote — not by lobby size. Host boosting
+    # themselves in a full lobby can still use the fast local batch.
+    try:
+        _remote_target_pacing = bool(for_all) or any(
+            not _identity_is_local(identity) for identity in _targets
+        )
+    except Exception:
+        _remote_target_pacing = len(_targets) > 1 or bool(for_all)
+    global _apply_log_count, _last_apply_log_at
     _rows = rows
     _index = 0
+    _target_index = 0
     _ok = 0
     _failed = 0
+    _apply_log_count = 0
+    _last_apply_log_at = 0.0
     _last_error = ""
     _active = True
+    pace = "remote" if _remote_target_pacing else "local"
     if tokens:
-        _message = f"Started {len(rows)} selected challenge(s) for {label}."
+        _message = (
+            f"Starting {len(rows)} selected challenge(s) for {label} "
+            f"({pace} {_batch_size()}/tick)."
+        )
     else:
-        _message = f"Started {category}: {len(rows)} challenges for {label}."
+        _message = (
+            f"Starting {category}: {len(rows)} challenges for {label} "
+            f"({pace} {_batch_size()}/tick)."
+        )
     _log(_message)
 
 
 def runtime_tick(*_args: Any, **_kwargs: Any) -> None:
-    global _last_tick_at, _index, _ok, _failed, _active, _message, _last_error
+    global _last_tick_at, _index, _target_index, _ok, _failed, _active, _message, _last_error
     now = time.monotonic()
-    if now - _last_tick_at < 0.12:
+    # Consume queued jobs even during brief menu/inventory flicker — the list is
+    # already built; only the host-world check is needed to activate.
+    if _pending is not None:
+        if now - _last_tick_at < 0.05:
+            return
+        _last_tick_at = now
+        _consume_request()
+        return
+    if now - _last_tick_at < _tick_gap():
         return
     _last_tick_at = now
+    if not _active or not _targets:
+        return
+    try:
+        from . import uvhm_runtime
+
+        uvhm = uvhm_runtime.status()
+        if bool(uvhm.get("running") or uvhm.get("queued")):
+            _message = (
+                f"Paused at {_index}/{len(_rows)} — UVHM is running. "
+                "Challenge bulk resumes when UVHM finishes."
+            )
+            return
+    except Exception:
+        pass
     try:
         from .session_guards import session_safe
 
         if not session_safe():
-            if _pending is not None or _active:
-                cancel()
+            # Keep the job armed; tell the EXE why the counter is not moving.
+            _message = (
+                f"Paused at {_index}/{len(_rows)} — unpause / leave inventory so "
+                "challenge applies can run."
+            )
             return
     except Exception:
         pass
-    if _pending is not None:
-        _consume_request()
-        return
-    if not _active or not _targets:
-        return
     if _index >= len(_rows):
         _active = False
         _message = f"Complete: {_ok} accepted, {_failed} failed for {_target_label()}."
         _log(_message)
-        return
-    batch_end = min(len(_rows), _index + _CHALLENGE_BATCH)
-    while _index < batch_end:
-        token, amount = _rows[_index]
         try:
-            from mods_base import get_pc
+            from . import hold_session
 
-            owner = get_pc()
-            if _for_all:
-                if owner is None:
-                    raise RuntimeError("local player controller is unavailable")
-                applied_n = 0
-                last_err = ""
-                for identity in _targets:
-                    try:
-                        _apply_one(token, amount, identity, owner)
-                        applied_n += 1
-                    except Exception as exc:
-                        last_err = str(exc)
-                if applied_n == 0:
-                    raise RuntimeError(last_err or "per-player challenge apply failed for all targets")
-            else:
-                _apply_one(token, amount, _targets[0], owner)
+            hold_session.release_job("challenges")
+        except Exception:
+            pass
+        return
+    try:
+        from mods_base import get_pc
+
+        owner = get_pc()
+        if owner is None:
+            raise RuntimeError("local player controller is unavailable")
+    except Exception as exc:
+        _failed += 1
+        _last_error = f"owner PC unavailable: {type(exc).__name__}: {exc}"
+        _log(_last_error)
+        return
+
+    # Drain a small batch per tick (ULM pattern) instead of 1 challenge / 0.18s.
+    budget = max(1, int(_batch_size()))
+    applied_this_tick = 0
+    while budget > 0 and _active and _index < len(_rows):
+        token, amount = _rows[_index]
+        identity = _targets[min(_target_index, len(_targets) - 1)]
+        try:
+            _apply_one(token, amount, identity, owner)
             _ok += 1
+            applied_this_tick += 1
         except Exception as exc:
             _failed += 1
-            _last_error = f"{token}: {type(exc).__name__}: {exc}"
+            _last_error = (
+                f"{token} -> {identity.display_name}: {type(exc).__name__}: {exc}"
+            )
             _log(_last_error)
-        _index += 1
-    _message = f"Applied {_index}/{len(_rows)} challenges -> {_target_label()}."
+        _target_index += 1
+        if _target_index >= len(_targets):
+            _target_index = 0
+            _index += 1
+        budget -= 1
+
+    if _index >= len(_rows):
+        _active = False
+        _message = f"Complete: {_ok} accepted, {_failed} failed for {_target_label()}."
+        _log(_message)
+        try:
+            from . import hold_session
+
+            hold_session.release_job("challenges")
+        except Exception:
+            pass
+        return
+
+    player_progress = (
+        f", player {_target_index + 1}/{len(_targets)}"
+        if len(_targets) > 1 and _index < len(_rows)
+        else ""
+    )
+    batch_bit = f" (+{applied_this_tick} this tick)" if applied_this_tick > 1 else ""
+    _message = (
+        f"Applied {_index}/{len(_rows)} challenges{player_progress}{batch_bit} "
+        f"-> {_target_label()}."
+    )

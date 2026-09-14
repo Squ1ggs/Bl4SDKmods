@@ -64,6 +64,56 @@ def _runtime_log_status() -> dict[str, Any]:
         return {"path": "", "error": repr(exc)}
 
 
+def _auto_lobby_status() -> dict[str, Any]:
+    try:
+        from . import auto_lobby
+
+        return dict(auto_lobby.status())
+    except Exception as exc:
+        return {"enabled": False, "error": repr(exc), "last": ""}
+
+
+def auto_lobby_get(payload: dict[str, Any] | None = None, **_kwargs: Any) -> dict[str, Any]:
+    del payload, _kwargs
+    from . import auto_lobby
+
+    return _ok_status("Auto lobby settings.", auto_lobby.status())
+
+
+def auto_lobby_set(payload: dict[str, Any] | None = None, **_kwargs: Any) -> dict[str, Any]:
+    from . import auto_lobby
+
+    data = dict(payload or {})
+    data.update(_kwargs)
+    st = auto_lobby.apply_config(data)
+    return _ok_status(str(st.get("last") or st.get("message") or "Saved."), st)
+
+
+def auto_lobby_start(payload: dict[str, Any] | None = None, **_kwargs: Any) -> dict[str, Any]:
+    from . import auto_lobby
+
+    data = dict(payload or {})
+    data.update(_kwargs)
+    st = auto_lobby.start(data)
+    return _ok_status(str(st.get("last") or st.get("message") or "Auto lobby on."), st)
+
+
+def auto_lobby_stop(payload: dict[str, Any] | None = None, **_kwargs: Any) -> dict[str, Any]:
+    del payload, _kwargs
+    from . import auto_lobby
+
+    st = auto_lobby.stop()
+    return _ok_status(str(st.get("last") or st.get("message") or "Auto lobby off."), st)
+
+
+def _ok_status(message: str, st: dict[str, Any] | None = None) -> dict[str, Any]:
+    """Merge status dict into _ok without double-passing message/ok."""
+    extra = dict(st or {})
+    extra.pop("message", None)
+    extra.pop("ok", None)
+    return _ok(message, **extra)
+
+
 def runtime_log_action(payload: dict[str, Any] | None = None) -> dict[str, Any]:
     """Dev-only: flush / tail the low-overhead crash flight log."""
     from . import runtime_log
@@ -156,12 +206,26 @@ def set_target_player(player_index: int) -> dict[str, Any]:
     if idx < 0:
         _target_player_index = -1
         name = "All players"
+        try:
+            from . import runtime_log
+
+            runtime_log.note("set_target_player -> All players (-1)")
+        except Exception:
+            pass
         return _ok("Target set to All players.", player_index=_target_player_index, name=name)
     _target_player_index = idx
     rows = _player_rows()
     name = next((r["name"] for r in rows if r["index"] == _target_player_index), "")
     if spawn_targets.mode() == "party":
         spawn_targets.set_target("party", _target_player_index)
+    try:
+        from . import runtime_log
+
+        runtime_log.note(
+            f"set_target_player -> index {_target_player_index} name={name or '?'}"
+        )
+    except Exception:
+        pass
     return _ok(f"Target set to index {_target_player_index}.", player_index=_target_player_index, name=name)
 
 
@@ -241,6 +305,12 @@ def _sticky_toggle_status() -> dict[str, Any]:
         "auto_revive": False,
         "map_fog": False,
         "hold_session": False,
+        "god_mode": False,
+        "infinite_ammo": False,
+        "no_target": False,
+        "weapons_restricted": False,
+        "ammo_regen": False,
+        "vehicle_lock": False,
         "fly_speed": 16000.0,
         "fly_preset": "fast",
     }
@@ -319,6 +389,24 @@ def _sticky_toggle_status() -> dict[str, Any]:
         out["vehicle_jump"] = bool(getattr(eng, "BVM_REPEAT_JUMP_PRESS", False))
     except Exception:
         pass
+    try:
+        from . import dev_tools as dt
+
+        idx = int(_target_player_index)
+        out["god_mode"] = bool(dt.devperk_toggle_state(6, idx if idx >= 0 else None))
+        out["infinite_ammo"] = bool(dt.devperk_toggle_state(5, idx if idx >= 0 else None))
+        pc, _ = dt._pc_for_party_index(idx if idx >= 0 else None)
+        key = dt._devperk_player_key_from_pc(pc, idx if idx >= 0 else None)
+        out["weapons_restricted"] = bool(dt._weapons_restricted_sticky.get(key, False))
+        out["ammo_regen"] = float(dt._ammo_regen_sticky.get(key, 0.0) or 0.0) > 0.0
+    except Exception:
+        pass
+    try:
+        from . import mobility_runtime as mr
+
+        out["no_target"] = bool(mr.no_target_enabled())
+    except Exception:
+        pass
     return out
 
 
@@ -336,7 +424,22 @@ def _peer_status_fields() -> dict[str, Any]:
         }
 
 
+_peer_pause_last = 0.0
+
+
 def get_status() -> dict[str, Any]:
+    global _peer_pause_last
+    try:
+        import time as _time
+
+        now = _time.monotonic()
+        if now - _peer_pause_last >= 8.0:
+            _peer_pause_last = now
+            from .peer_session import pause_overlapping_peers
+
+            pause_overlapping_peers()
+    except Exception:
+        pass
     pc = get_pc()
     gameplay = gameplay_ready()
     has_pc = pc is not None
@@ -383,6 +486,7 @@ def get_status() -> dict[str, Any]:
         last_error=_last_error,
         sticky_toggles=_sticky_toggle_status(),
         runtime_log=_runtime_log_status(),
+        auto_lobby=_auto_lobby_status(),
         **_peer_status_fields(),
     )
 
@@ -523,22 +627,33 @@ def give_experience(payload: dict[str, Any]) -> dict[str, Any]:
 
 def max_all(payload: dict[str, Any] | None = None) -> dict[str, Any]:
     payload = payload or {}
+
+    def _flag(key: str, default: bool = True) -> bool:
+        if key not in payload:
+            return bool(default)
+        val = payload.get(key)
+        if isinstance(val, bool):
+            return val
+        return str(val or "").strip().lower() in ("1", "true", "yes", "on")
+
     indices = _boost_targets_from_payload(payload)
     if not indices:
         return _fail("No boost target players in lobby.")
     ok_n = 0
     details: list[str] = []
     fails: list[str] = []
+    extras: list[str] = []
+    uvhm_queued = False
     for idx in indices:
         ok, detail = max_all_for_target(
             player_index=idx,
             options={
-                "max_cash": payload.get("max_cash", True),
-                "max_eridium": payload.get("max_eridium", True),
-                "max_sdu": payload.get("max_sdu", True),
-                "max_vault_cards": payload.get("max_vault_cards", True),
-                "max_player_level": payload.get("max_player_level", True),
-                "max_spec_level": payload.get("max_spec_level", True),
+                "max_cash": _flag("max_cash", True),
+                "max_eridium": _flag("max_eridium", True),
+                "max_sdu": _flag("max_sdu", True),
+                "max_vault_cards": _flag("max_vault_cards", True),
+                "max_player_level": _flag("max_player_level", True),
+                "max_spec_level": _flag("max_spec_level", True),
             },
         )
         details.append(detail)
@@ -546,16 +661,81 @@ def max_all(payload: dict[str, Any] | None = None) -> dict[str, Any]:
             ok_n += 1
         else:
             fails.append(f"index {idx}: {detail}")
-    if ok_n == 0:
+
+    if _flag("max_cosmetics", False):
+        try:
+            from .dev_tools import activate_devperk
+
+            cos_ok = 0
+            for idx in indices:
+                try:
+                    activate_devperk(4, player_index=idx)
+                    cos_ok += 1
+                except Exception as exc:
+                    extras.append(f"cosmetics index {idx}: {exc}")
+            if cos_ok:
+                extras.append(f"cosmetics+hover {cos_ok}/{len(indices)}")
+        except Exception as exc:
+            extras.append(f"cosmetics failed: {exc}")
+
+    if _flag("max_uvhm_challenges", False):
+        try:
+            from . import challenge_bulk_runtime
+            from . import uvhm_runtime
+            from .bridge_actions_extended import uvhm_start, uvhm_start_all
+
+            busy = ""
+            try:
+                st = uvhm_runtime.status()
+                if st.get("running") or st.get("queued"):
+                    busy = "UVHM"
+            except Exception:
+                pass
+            if not busy:
+                try:
+                    st = challenge_bulk_runtime.status()
+                    if st.get("active") or st.get("queued"):
+                        busy = "challenges"
+                except Exception:
+                    pass
+            if busy:
+                extras.append(f"UVHM skipped — {busy} already running")
+            elif len(indices) > 1:
+                result = uvhm_start_all({"confirmed": True, "max_rank": 7})
+                if result.get("ok", True):
+                    uvhm_queued = True
+                    extras.append(str(result.get("message") or "UVHM 1–7 queued for lobby"))
+                else:
+                    extras.append(str(result.get("message") or "UVHM lobby queue failed"))
+            else:
+                result = uvhm_start(
+                    {
+                        "confirmed": True,
+                        "max_rank": 7,
+                        "player_index": int(indices[0]),
+                    }
+                )
+                if result.get("ok", True):
+                    uvhm_queued = True
+                    extras.append(str(result.get("message") or "UVHM 1–7 queued for target"))
+                else:
+                    extras.append(str(result.get("message") or "UVHM target queue failed"))
+        except Exception as exc:
+            extras.append(f"UVHM failed: {exc}")
+
+    if ok_n == 0 and not extras:
         return _fail("; ".join(details) or "max_all failed.")
-    if len(indices) == 1:
-        return _ok(details[0])
-    if fails:
-        return _ok(
+    extra_txt = (" · " + "; ".join(extras)) if extras else ""
+    if len(indices) == 1 and ok_n == 1:
+        msg = f"{details[0]}{extra_txt}"
+    elif fails:
+        msg = (
             f"MAX ALL applied to {ok_n}/{len(indices)} player(s). "
-            f"Failed: {'; '.join(fails)}"
+            f"Failed: {'; '.join(fails)}{extra_txt}"
         )
-    return _ok(f"MAX ALL applied to {ok_n}/{len(indices)} player(s).")
+    else:
+        msg = f"MAX ALL applied to {ok_n}/{len(indices)} player(s).{extra_txt}"
+    return _ok(msg, uvhm_queued=uvhm_queued)
 
 
 def _max_currency_kind(kind: str, payload: dict[str, Any] | None = None) -> dict[str, Any]:
@@ -833,6 +1013,60 @@ def mayhem_level(payload: dict[str, Any] | None = None) -> dict[str, Any]:
     return ext.mayhem_level(payload or {})
 
 
+def desktop_session_end(_payload: dict[str, Any] | None = None) -> dict[str, Any]:
+    """Stop queued/high-network desktop jobs when the EXE closes."""
+    stopped: list[str] = []
+    try:
+        from . import uvhm_runtime
+
+        if uvhm_runtime.cancel():
+            stopped.append("UVHM")
+    except Exception:
+        pass
+    try:
+        from . import challenge_bulk_runtime
+
+        if challenge_bulk_runtime.cancel():
+            stopped.append("bulk challenges")
+    except Exception:
+        pass
+    try:
+        from . import shinies
+
+        shinies.cancel_pending_shiny_drops("desktop EXE closed")
+    except Exception:
+        pass
+    try:
+        from . import item_pool_spawning
+
+        queued, _done = item_pool_spawning.cancel_bulk_spawn_batch(log=False)
+        if queued:
+            stopped.append("pool spawn")
+    except Exception:
+        pass
+    try:
+        from . import serial_rewards
+
+        serial_rewards.cancel_deferred_reward_work("desktop EXE closed")
+    except Exception:
+        pass
+    try:
+        from . import loot_shapes
+
+        loot_shapes.abandon_world_loot(schedule_orphan_absorb=False)
+        stopped.append("shape network work")
+    except Exception:
+        pass
+    try:
+        from . import hold_session
+
+        hold_session.stop_hold(force=True)
+    except Exception:
+        pass
+    detail = ", ".join(stopped) if stopped else "no active bulk jobs"
+    return _ok(f"Desktop session closed safely ({detail}).")
+
+
 _ACTIONS: dict[str, Any] = {
     "status": lambda _p: get_status(),
     "party_roster": lambda _p: party_roster(),
@@ -864,6 +1098,11 @@ _ACTIONS: dict[str, Any] = {
     "runtime_log": runtime_log_action,
     "black_market": black_market,
     "mayhem_level": mayhem_level,
+    "desktop_session_end": desktop_session_end,
+    "auto_lobby_get": auto_lobby_get,
+    "auto_lobby_set": auto_lobby_set,
+    "auto_lobby_start": auto_lobby_start,
+    "auto_lobby_stop": auto_lobby_stop,
 }
 
 
@@ -954,19 +1193,23 @@ def run_action(action: str, payload: dict[str, Any] | None = None) -> dict[str, 
             result = handler(data)
         else:
             result = handler(data)
-    except TypeError:
-        return _fail(
-            "The desktop app is out of date with the loaded SDK. "
-            "Press Refresh status. If you just installed an SDK update, fully restart "
-            "Borderlands 4 first, load a character, then wait for Online."
-        )
-    except Exception as exc:
+    except TypeError as exc:
         text = repr(exc)
-        if "TypeError" in text or "unexpected keyword" in text.lower():
+        # Only the classic kwargs mismatch means EXE/mod API drift.
+        if "unexpected keyword" in text.lower() or "positional arguments" in text.lower():
             return _fail(
                 "The desktop app is out of date with the loaded SDK. "
                 "Press Refresh status. If you just installed an SDK update, fully restart "
-                "Borderlands 4 first, load a character, then wait for Online."
+                f"Borderlands 4 first, load a character, then wait for Online. ({text})"
+            )
+        return _fail(text)
+    except Exception as exc:
+        text = repr(exc)
+        if "unexpected keyword" in text.lower():
+            return _fail(
+                "The desktop app is out of date with the loaded SDK. "
+                "Press Refresh status. If you just installed an SDK update, fully restart "
+                f"Borderlands 4 first, load a character, then wait for Online. ({text})"
             )
         return _fail(text)
     if isinstance(result, dict):

@@ -276,7 +276,7 @@
     "category": "Class Mod"
   },
   {
-    "display_name": "> Loveless (Corpo Hacker) Raid 2 Class Mod",
+    "display_name": "> Loveless (dedicated merge — safe)",
     "itempool": "itempool_classmod_corpohacker_05_legendary_raid2",
     "category": "Class Mod"
   },
@@ -286,7 +286,7 @@
     "category": "Class Mod"
   },
   {
-    "display_name": "Classmods Raid2 (incl. Loveless)",
+    "display_name": "Classmods Raid2 (all VH dedicated, incl. Loveless)",
     "itempool": "itempool_ClassMods_Raid2",
     "category": "Class Mod"
   },
@@ -754,7 +754,7 @@
     "category": "Class Mod"
   },
   {
-    "display_name": "Goldsilver Classmods Raid2",
+    "display_name": "Goldsilver Classmods Raid2 (all VH dedicated)",
     "itempool": "itempool_GoldSilver_ClassMods_Raid2",
     "category": "Class Mod"
   },
@@ -2563,5 +2563,165 @@
     "display_name": "Oak Guns All",
     "itempool": "oak_guns_all",
     "category": "Other"
+  },
+  {
+    "display_name": "Loveless Class Mods (Legendary)",
+    "itempool": "itempool_class_mods_05_legendary_corpohacker",
+    "category": "Class Mod"
+  },
+  {
+    "display_name": "Loveless Class Mods (All Rarities)",
+    "itempool": "itempool_class_mods_corpohacker",
+    "category": "Class Mod"
+  },
+  {
+    "display_name": "FL4K / Providence Class Mods (All Vault Hunters)",
+    "itempool": "itempool_ClassMods_Harmonica",
+    "category": "Class Mod"
+  },
+  {
+    "display_name": "Schadenfreude Shiny",
+    "itempool": "itempool_dad_ar_05_legendary_Shardenfreude_shiny",
+    "category": "Assault Rifle"
+  },
+  {
+    "display_name": "Handfrag Shiny",
+    "itempool": "itempool_dad_sm_05_legendary_handfrag_shiny",
+    "category": "SMG"
+  },
+  {
+    "display_name": "Infection Shiny",
+    "itempool": "itempool_jak_ps_05_legendary_Infection_shiny",
+    "category": "Pistol"
+  },
+  {
+    "display_name": "Assembler Shiny",
+    "itempool": "itempool_mal_sg_05_legendary_assembler_shiny",
+    "category": "Shotgun"
+  },
+  {
+    "display_name": "Devourer Shiny",
+    "itempool": "itempool_mal_sg_05_legendary_devourer_shiny",
+    "category": "Shotgun"
+  },
+  {
+    "display_name": "Accretion Shiny",
+    "itempool": "itempool_mal_sm_05_legendary_accretion_shiny",
+    "category": "SMG"
+  },
+  {
+    "display_name": "Avarice Shiny",
+    "itempool": "itempool_ord_ar_05_legendary_Avarice_shiny",
+    "category": "Assault Rifle"
+  },
+  {
+    "display_name": "Petanque Shiny",
+    "itempool": "itempool_ord_sr_05_legendary_petanque_shiny",
+    "category": "Sniper"
+  },
+  {
+    "display_name": "Hot Mod Shiny",
+    "itempool": "itempool_ted_ar_05_legendary_HotMod_shiny",
+    "category": "Assault Rifle"
+  },
+  {
+    "display_name": "Ripple Shiny",
+    "itempool": "itempool_tor_ar_05_legendary_Ripple_shiny",
+    "category": "Assault Rifle"
+  },
+  {
+    "display_name": "Sledge Shiny",
+    "itempool": "itempool_tor_PS_05_legendary_Sledge_shiny",
+    "category": "Pistol"
+  },
+  {
+    "display_name": "Fourier Shiny",
+    "itempool": "itempool_tor_sg_05_legendary_Fourier_shiny",
+    "category": "Shotgun"
+  },
+  {
+    "display_name": "Hippogun Shiny",
+    "itempool": "itempool_tor_sg_05_legendary_Hippogun_shiny",
+    "category": "Shotgun"
+  },
+  {
+    "display_name": "Exhibition Shiny",
+    "itempool": "itempool_vla_sr_05_legendary_exhibition_shiny",
+    "category": "Sniper"
+  },
+  {
+    "display_name": "Enumeration Shiny",
+    "itempool": "itempool_bor_sm_05_legendary_enumeration_shiny",
+    "category": "SMG"
+  },
+  {
+    "display_name": "Pragmate Shiny",
+    "itempool": "itempool_dad_sg_05_legendary_pragmate_shiny",
+    "category": "Shotgun"
+  },
+  {
+    "display_name": "Triplicate Shiny",
+    "itempool": "itempool_jak_sr_legendary_Triplicate_shiny",
+    "category": "Sniper"
+  },
+  {
+    "display_name": "Outback Shiny",
+    "itempool": "itempool_mal_sg_05_legendary_outback_shiny",
+    "category": "Shotgun"
+  },
+  {
+    "display_name": "Clarity Shiny",
+    "itempool": "itempool_mal_sr_05_legendary_Clarity_shiny",
+    "category": "Sniper"
+  },
+  {
+    "display_name": "Relay Shiny",
+    "itempool": "itempool_bor_sg_05_legendary_relay_shiny",
+    "category": "Shotgun"
+  },
+  {
+    "display_name": "Blackout Shiny",
+    "itempool": "itempool_dad_ps_05_legendary_blackout_shiny",
+    "category": "Pistol"
+  },
+  {
+    "display_name": "Flash Fuel Shiny",
+    "itempool": "itempool_jak_ar_05_legendary_FlashFuel_shiny",
+    "category": "Assault Rifle"
+  },
+  {
+    "display_name": "Jak Sg 05 Legendary Verce Shiny",
+    "itempool": "itempool_JAK_sg_05_legendary_Verce_shiny",
+    "category": "Shotgun"
+  },
+  {
+    "display_name": "Jak Sr Legendary Burrow Shiny",
+    "itempool": "itempool_jak_sr_legendary_Burrow_shiny",
+    "category": "Sniper"
+  },
+  {
+    "display_name": "Jak Sr Legendary Extinction Shiny",
+    "itempool": "itempool_jak_sr_legendary_Extinction_shiny",
+    "category": "Sniper"
+  },
+  {
+    "display_name": "Aero Dramatic Shiny",
+    "itempool": "itempool_mal_sg_05_legendary_AeroDramatic_shiny",
+    "category": "Shotgun"
+  },
+  {
+    "display_name": "Mal Sr 05 Legendary Stealth Shiny",
+    "itempool": "itempool_mal_sr_05_legendary_Stealth_shiny",
+    "category": "Sniper"
+  },
+  {
+    "display_name": "Ord Ar 05 Legendary Pchonk Shiny",
+    "itempool": "itempool_ord_ar_05_legendary_Pchonk_shiny",
+    "category": "Assault Rifle"
+  },
+  {
+    "display_name": "Aura Shiny",
+    "itempool": "itempool_vla_sm_05_legendary_aura_shiny",
+    "category": "SMG"
   }
 ]

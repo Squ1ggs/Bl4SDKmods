@@ -316,14 +316,25 @@ class _SqbtBridgeHandler(BaseHTTPRequestHandler):
         rid = uuid.uuid4().hex
         enqueued_at = _now()
         with _lock:
-            _queue.append(
-                {
-                    "id": rid,
-                    "action": action,
-                    "payload": payload,
-                    "enqueued_at": enqueued_at,
-                }
-            )
+            item = {
+                "id": rid,
+                "action": action,
+                "payload": payload,
+                "enqueued_at": enqueued_at,
+            }
+            if action == "desktop_session_end":
+                while _queue:
+                    stale = _queue.popleft()
+                    stale_id = str(stale.get("id") or "")
+                    if stale_id:
+                        _results[stale_id] = {
+                            "ok": False,
+                            "message": "Cancelled because the desktop session closed.",
+                        }
+                        _abandoned.discard(stale_id)
+                _queue.appendleft(item)
+            else:
+                _queue.append(item)
 
         deadline = enqueued_at + timeout
         while _now() < deadline:
@@ -386,7 +397,8 @@ def _maybe_reclaim_from_exe(handler: BaseHTTPRequestHandler) -> None:
     if client != "squ1ggs-boosting-tools-exe":
         return
     now = _now()
-    if now - _last_exe_reclaim < 8.0:
+    # Was 8s — too aggressive with force hook reclaim (pyunrealsdk AV magnet).
+    if now - _last_exe_reclaim < 45.0:
         return
     _last_exe_reclaim = now
     try:

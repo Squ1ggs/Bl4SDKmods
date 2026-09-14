@@ -19,8 +19,8 @@ from typing import Any
 # Lootable_GoldenChest and freeze via PersistentLevel oak_spawn of the map chest.
 _DUAL_WORLD_SPAWN_SUBSTR: tuple[str, ...] = (
     # Maurice / Black Market are OakVendingMachine world-placed only — not dual.
+    # PlayerBank uses single safe spawn path only (dual world follow-up froze with held shapes).
     "vendingmachine_munitions_splice",
-    "playerbank",
     "lostloot",
 )
 

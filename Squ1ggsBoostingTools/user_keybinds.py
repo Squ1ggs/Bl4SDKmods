@@ -91,7 +91,7 @@ BINDABLE_ACTIONS: tuple[dict[str, Any], ...] = (
         },
     },
     {"id": "world_text_clear", "label": "Clear world text", "action": "barrel_logo_clear", "payload": {}},
-    {"id": "rewards_open_everyone", "label": "Open pending rewards (everyone)", "action": "rewards_open_everyone", "payload": {}},
+    {"id": "rewards_open_everyone", "label": "Open pending rewards (you)", "action": "rewards_open_everyone", "payload": {}},
     {"id": "kill_all_enemies", "label": "Kill all enemies", "action": "kill_all_enemies", "payload": {}},
     {"id": "no_target_toggle", "label": "Toggle no-target", "action": "mobility_toggle_no_target", "payload": {}},
     {"id": "force_fly_toggle", "label": "Toggle force fly", "action": "mobility_force_fly", "payload": {}},

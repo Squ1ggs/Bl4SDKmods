@@ -16,6 +16,8 @@ _GZO_CACHE_NAMES = (
     "MattsSDKBoostingTools_gzo_codes.json",
 )
 _BMS_DATA = Path(__file__).resolve().parent / "embedded_bms" / "data"
+# path resolve key -> (payload, mtime_ns). Same memoize pattern as data_files.read_data_json.
+_PATH_JSON_CACHE: dict[str, tuple[Any, int]] = {}
 
 
 def _ok(message: str = "OK", **extra: Any) -> dict[str, Any]:
@@ -36,10 +38,30 @@ def _mod_dir() -> Path:
     return Path(__file__).resolve().parent
 
 
+def clear_path_json_cache() -> None:
+    """Drop memoized ``_load_json_path`` payloads (tests / hot reload)."""
+    _PATH_JSON_CACHE.clear()
+
+
 def _load_json_path(path: Path) -> Any:
-    if not path.is_file():
+    try:
+        resolved = path.resolve()
+    except Exception:
+        resolved = path
+    if not resolved.is_file():
         return None
-    return json.loads(path.read_text(encoding="utf-8"))
+    key = str(resolved)
+    try:
+        mtime_ns = int(resolved.stat().st_mtime_ns)
+    except Exception:
+        mtime_ns = -1
+    cached = _PATH_JSON_CACHE.get(key)
+    if cached is not None and cached[1] == mtime_ns:
+        return cached[0]
+    payload = json.loads(resolved.read_text(encoding="utf-8"))
+    if mtime_ns >= 0:
+        _PATH_JSON_CACHE[key] = (payload, mtime_ns)
+    return payload
 
 
 def _gzo_cache_paths() -> list[Path]:
@@ -291,31 +313,42 @@ def catalog_lootlemon(payload: dict[str, Any] | None = None) -> dict[str, Any]:
     payload = payload or {}
     search = str(payload.get("search") or "")
     category = str(payload.get("category") or "All")
-    cache_names = (
-        "squ1ggs_lootlemon_codes.json",
-        "Squ1ggsBoostingTools_lootlemon_codes.json",
-    )
-    paths: list[Path] = []
-    for name in cache_names:
-        paths.append(_mod_dir() / name)
+    dynamic_name = "Squ1ggsBoostingTools_lootlemon_codes.json"
+    seed_name = "squ1ggs_lootlemon_codes.json"
+    roots: list[Path] = [_mod_dir()]
     try:
         cwd = Path.cwd()
-        for name in cache_names:
-            paths.append(cwd / "sdk_mods" / name)
-            paths.append(cwd / name)
+        roots.extend((cwd / "sdk_mods", cwd))
     except Exception:
         pass
     try:
         saved = Path.home() / "Documents" / "My Games" / "Borderlands 4" / "Saved"
-        for name in cache_names:
-            paths.append(saved / name)
+        roots.append(saved)
     except Exception:
         pass
+    dynamic_paths = [root / dynamic_name for root in roots]
+    seed_paths = [root / seed_name for root in roots]
     data: dict[str, Any] | list[Any] | None = None
-    for path in paths:
-        loaded = _load_json_path(path)
-        if isinstance(loaded, (dict, list)):
-            data = loaded
+    # A refreshed writable cache always wins over the bundled lowercase seed.
+    # Within each group prefer the newest valid file.
+    for candidates in (dynamic_paths, seed_paths):
+        existing: list[Path] = []
+        for path in candidates:
+            try:
+                if path.exists():
+                    existing.append(path)
+            except Exception:
+                continue
+        existing.sort(
+            key=lambda path: path.stat().st_mtime_ns,
+            reverse=True,
+        )
+        for path in existing:
+            loaded = _load_json_path(path)
+            if isinstance(loaded, (dict, list)):
+                data = loaded
+                break
+        if data is not None:
             break
     data = data or {}
     entries: list[dict[str, Any]] = []
@@ -597,7 +630,11 @@ def catalog_serial_store(payload: dict[str, Any] | None = None) -> dict[str, Any
         )
     groups = serial_store.groups()
     if not out:
-        return _ok("No saved serials yet. Fill Name (optional) + Serial above, then Save entry.", rows=[], groups=groups)
+        return _ok(
+            "No saved serials yet. Import a pack, or choose New entry, paste a serial, then Save entry.",
+            rows=[],
+            groups=groups,
+        )
     return _ok(f"{len(out)} saved serial(s).", rows=out, groups=groups, total=len(rows))
 
 
@@ -626,7 +663,7 @@ def catalog_challenges(payload: dict[str, Any] | None = None) -> dict[str, Any]:
     payload = payload or {}
     search = str(payload.get("search") or "")
     category = str(payload.get("category") or "All non-UVHM")
-    limit = max(1, min(int(payload.get("limit") or 500), 2000))
+    limit = max(1, min(int(payload.get("limit") or 5000), 5000))
     try:
         from .challenge_bulk_runtime import (
             CATEGORY_LABELS,

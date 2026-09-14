@@ -15,23 +15,55 @@ _MOD_DIR = Path(__file__).resolve().parent
 _DATA_DIR = _MOD_DIR / "data"
 _MISSING = object()
 
+# Memoize parsed JSON — catalog/search paths used to re-read 100–270KB files
+# on every bridge request (same pattern as item_spawn/runtime_cache.py).
+# key -> (payload, mtime_ns|None). None mtime = immutable pkgutil blob.
+_JSON_CACHE: dict[str, tuple[Any, int | None]] = {}
+
+
+def clear_data_json_cache() -> None:
+    """Drop all memoized ``read_data_json`` payloads (tests / hot reload)."""
+    _JSON_CACHE.clear()
+
 
 def read_data_json(relative_name: str, default: Any = _MISSING) -> Any:
     """Read ``data/<relative_name>`` from the package (folder or zip)."""
+    name = str(relative_name or "").strip().replace("\\", "/")
+    if not name:
+        return {} if default is _MISSING else default
+
+    pkg_key = f"pkg:{name}"
+    cached = _JSON_CACHE.get(pkg_key)
+    if cached is not None:
+        return cached[0]
+
     try:
-        blob = pkgutil.get_data(__package__ or __name__.rpartition(".")[0], f"data/{relative_name}")
+        blob = pkgutil.get_data(__package__ or __name__.rpartition(".")[0], f"data/{name}")
         if blob:
-            return json.loads(blob.decode("utf-8"))
+            payload = json.loads(blob.decode("utf-8"))
+            _JSON_CACHE[pkg_key] = (payload, None)
+            return payload
     except Exception:  # noqa: BLE001
         pass
+
     try:
-        path = _DATA_DIR / relative_name
+        path = _DATA_DIR / name
         if path.is_file():
-            return json.loads(path.read_text(encoding="utf-8"))
+            file_key = f"file:{path.resolve()}"
+            try:
+                mtime_ns = int(path.stat().st_mtime_ns)
+            except Exception:  # noqa: BLE001
+                mtime_ns = None
+            cached_file = _JSON_CACHE.get(file_key)
+            if cached_file is not None and cached_file[1] == mtime_ns:
+                return cached_file[0]
+            payload = json.loads(path.read_text(encoding="utf-8"))
+            _JSON_CACHE[file_key] = (payload, mtime_ns)
+            return payload
     except Exception:  # noqa: BLE001
         pass
     logging.warning(
-        f"[Squ1ggs's Boosting Tools] data/{relative_name} unavailable — feature limited this session."
+        f"[Squ1ggs's Boosting Tools] data/{name} unavailable — feature limited this session."
     )
     return {} if default is _MISSING else default
 

@@ -30,9 +30,9 @@ from . import spawn_targets
 from .movement_adjustments import set_no_target
 
 _OPEN_REWARDS_LARGE_WARNING = (
-    "Open rewards runs one mail package at a time with a 3–5s wait between opens "
-    "(never bulk-open — that can crash or blank backpacks in multiplayer). "
-    "Large sends (250+) still take a while; prefer solo for big opens, then bank/mule before rejoining MP."
+    "Open rewards on send auto-opens mail for delivery targets (host + guests), paced. "
+    "Only packages with SerialNumbers are opened. "
+    "Do not use Open pending after Complete ALL non-UVHM — bank / mule first."
 )
 from .panel_manifest import get_panel_manifest
 from .party_helpers import _kick_party_player_by_index, _list_party_players
@@ -359,7 +359,14 @@ def deliver_serials(payload: dict[str, Any]) -> dict[str, Any]:
     if not indices:
         return _fail("No delivery targets available. Connect in-game as host and pick Send to.")
     open_raw = payload.get("open_rewards")
-    open_rewards = _coerce_bool(open_raw, default=True)
+    open_rewards = _coerce_bool(open_raw, default=False)
+    open_rewards_suppressed = False
+    try:
+        if open_rewards and bool(challenge_status().get("active")):
+            open_rewards = False
+            open_rewards_suppressed = True
+    except Exception:
+        pass
     scope = str(payload.get("mode") or "player")
     if len(indices) == 1:
         scope = f"player {indices[0]}"
@@ -396,10 +403,16 @@ def deliver_serials(payload: dict[str, Any]) -> dict[str, Any]:
             f"{message} {skipped} selected row(s) had no usable serial or were not loaded "
             f"(checked {selected_n} selected) — use Select all filtered, then Deliver."
         )
-    if (open_rewards):
+    if open_rewards_suppressed:
         message = (
-            f"{message} Rewards will open one-by-one in the background "
-            "(~4s between packages — stay in-world until status says Rewards opened)."
+            f"{message} Open rewards forced Off while Complete ALL / challenge bulk is running "
+            "(Reward Center often has hundreds of packages)."
+        )
+    elif open_rewards:
+        message = (
+            f"{message} Rewards will open one-by-one for delivery targets "
+            "(~4s between packages; guests get a longer first delay). "
+            "Empty loyalty shells stay closed."
         )
     open_warning = ""
     if open_rewards and len(serials) >= 250:
@@ -415,6 +428,7 @@ def deliver_serials(payload: dict[str, Any]) -> dict[str, Any]:
         open_rewards=open_rewards,
         selected_count=selected_n,
         skipped=skipped,
+        open_rewards_suppressed=bool(open_rewards_suppressed),
     )
 
 
@@ -553,6 +567,99 @@ def serial_store_duplicate(payload: dict[str, Any]) -> dict[str, Any]:
     return _ok(f"Duplicated as {entry.get('name') or 'copy'}.", entry=entry)
 
 
+def serial_store_export_text(payload: dict[str, Any] | None = None) -> dict[str, Any]:
+    from . import serial_store
+
+    payload = payload or {}
+    group = str(payload.get("group") or "All").strip() or "All"
+    try:
+        text = serial_store.export_text(group=group)
+    except Exception as exc:
+        return _fail(repr(exc))
+    if not str(text or "").strip():
+        return _fail("Library is empty — nothing to export.")
+    label = "all packs" if group == "All" else f"pack “{group}”"
+    return _ok(f"Exported {label}.", text=text, group=group)
+
+
+def serial_store_import_merge(payload: dict[str, Any] | None = None) -> dict[str, Any]:
+    from . import serial_store
+
+    payload = payload or {}
+    text = str(payload.get("text") or payload.get("input") or "")
+    default_group = str(payload.get("group") or payload.get("name") or "Imported").strip() or "Imported"
+    try:
+        result = serial_store.import_merge_text(text, default_group=default_group)
+    except ValueError as exc:
+        return _fail(str(exc))
+    added = int(result.get("added") or 0)
+    skipped = int(result.get("skipped") or 0)
+    return _ok(
+        f"Imported {added} serial(s) into My Library "
+        f"(skipped {skipped} duplicate(s)). Expand packs below to browse/edit — nothing was wiped.",
+        **result,
+    )
+
+
+def serial_store_rename_group(payload: dict[str, Any] | None = None) -> dict[str, Any]:
+    from . import serial_store
+
+    payload = payload or {}
+    old = str(payload.get("old_group") or payload.get("group") or "").strip()
+    new = str(payload.get("new_group") or payload.get("name") or "").strip()
+    try:
+        changed = serial_store.rename_group(old, new)
+    except ValueError as exc:
+        return _fail(str(exc))
+    return _ok(f"Renamed pack “{old}” → “{new}” ({changed} entr(y/ies)).", changed=changed)
+
+
+def serial_store_create_group(payload: dict[str, Any] | None = None) -> dict[str, Any]:
+    from . import serial_store
+
+    payload = payload or {}
+    name = str(payload.get("group") or payload.get("name") or "").strip()
+    try:
+        cleaned = serial_store.create_group(name)
+    except ValueError as exc:
+        return _fail(str(exc))
+    return _ok(
+        f"Pack “{cleaned}” ready — set Pack name, paste serials, then Save entry.",
+        group=cleaned,
+        entry={"id": "", "name": "", "group": cleaned, "serial": ""},
+    )
+
+
+def serial_store_delete_group(payload: dict[str, Any] | None = None) -> dict[str, Any]:
+    from . import serial_store
+
+    payload = payload or {}
+    name = str(payload.get("group") or payload.get("name") or "").strip()
+    try:
+        deleted = serial_store.delete_group(name)
+    except ValueError as exc:
+        return _fail(str(exc))
+    return _ok(f"Deleted pack “{name}” ({deleted} entr(y/ies)).", deleted=deleted, group=name)
+
+
+def serial_store_export_json(payload: dict[str, Any] | None = None) -> dict[str, Any]:
+    from . import serial_store
+
+    payload = payload or {}
+    group = str(payload.get("group") or "All").strip() or "All"
+    try:
+        text = serial_store.export_json(group=group)
+    except Exception as exc:
+        return _fail(repr(exc))
+    if not str(text or "").strip() or '"entries": []' in text.replace(" ", ""):
+        # Still allow empty structured export when library truly empty.
+        rows = serial_store.filter_entries(group=group)
+        if not rows:
+            return _fail("Library is empty — nothing to export.")
+    label = "all packs" if group == "All" else f"pack “{group}”"
+    return _ok(f"Exported {label} as JSON.", text=text, group=group)
+
+
 def serial_delivery_status_action(_payload: dict[str, Any] | None = None) -> dict[str, Any]:
     del _payload
     prog = serial_delivery_progress()
@@ -647,34 +754,107 @@ def _uvhm_max_rank_from_payload(payload: dict[str, Any]) -> int:
     return max(1, min(7, rank))
 
 
+def _progression_job_busy() -> str:
+    try:
+        uvhm = uvhm_runtime.status()
+        if bool(uvhm.get("running") or uvhm.get("queued")):
+            return "UVHM"
+    except Exception:
+        pass
+    try:
+        bulk = challenge_status()
+        if bool(bulk.get("active") or bulk.get("queued")):
+            return "bulk challenges"
+    except Exception:
+        pass
+    return ""
+
+
 def uvhm_start(payload: dict[str, Any] | None = None) -> dict[str, Any]:
     payload = payload or {}
     idx = _player_index_from_payload(payload)
     max_rank = _uvhm_max_rank_from_payload(payload)
+    want_name = str(payload.get("target_name") or payload.get("name") or "").strip()
     if idx < 0:
         return _fail(
             "Start UVHM (target) needs one Boost target player — "
             "set the player bar under the tabs (not All players), or use Start UVHM (all lobby)."
         )
     try:
-        from .uvhm_progression import selected_lobby_identity
+        from .uvhm_progression import (
+            _names_match,
+            selected_lobby_identity,
+            selected_lobby_identity_by_name,
+        )
 
         identity = selected_lobby_identity(int(idx))
+        # EXE sends the Boost-target label. If the index drifted to host (0) while
+        # the UI still showed a guest, prefer the named player.
+        if want_name and not _names_match(want_name, identity.display_name):
+            by_name = selected_lobby_identity_by_name(want_name)
+            try:
+                from . import runtime_log
+
+                runtime_log.note(
+                    f"uvhm_start: index {idx} was {identity.display_name!r} but UI "
+                    f"asked for {want_name!r} — using named player."
+                )
+            except Exception:
+                pass
+            identity = by_name
     except Exception as exc:
         return _fail(
-            f"Could not resolve Boost target index {idx} in the lobby: {exc}. "
+            f"Could not resolve Boost target "
+            f"{(want_name or f'index {idx}')!r} in the lobby: {exc}. "
             "Refresh status / pick the player again, then retry."
         )
-    if uvhm_runtime.request_selected(idx, max_rank=max_rank):
-        who = getattr(identity, "display_name", None) or f"index {idx}"
+    # Queue by the resolved identity's current lobby index so the tick path
+    # still uses the proven index consume, but name already matched.
+    try:
+        from .party_helpers import (
+            _gbc_resolve_player_display_name,
+            _gbc_session_world_and_gamestate,
+        )
+        from .uvhm_progression import _player_state_key
+
+        _world, gs = _gbc_session_world_and_gamestate()
+        players = getattr(gs, "PlayerArray", None) if gs is not None else None
+        resolved_idx = int(idx)
+        if players is not None:
+            for i in range(len(players)):
+                ps = players[i]
+                if ps is None:
+                    continue
+                nm = _gbc_resolve_player_display_name(ps)
+                if _player_state_key(ps, nm) == identity.key:
+                    resolved_idx = int(i)
+                    break
+    except Exception:
+        resolved_idx = int(idx)
+    if uvhm_runtime.request_selected(resolved_idx, max_rank=max_rank):
+        who = getattr(identity, "display_name", None) or f"index {resolved_idx}"
         try:
             from . import hold_session
 
             hold_session.arm_for_job("uvhm")
         except Exception:
             pass
+        try:
+            from . import runtime_log
+
+            runtime_log.note(
+                f"uvhm_start ok for {who} (index {resolved_idx}, want_name={want_name or '-'})"
+            )
+        except Exception:
+            pass
         return _ok(f"UVHM workflow queued for {who} (up to rank {max_rank}).")
-    return _fail(uvhm_runtime.status().get("message") or "UVHM request failed.")
+    st = uvhm_runtime.status()
+    return _fail(
+        st.get("last_request_error")
+        or st.get("detail_message")
+        or st.get("message")
+        or "UVHM request failed."
+    )
 
 
 def uvhm_start_all(payload: dict[str, Any] | None = None) -> dict[str, Any]:
@@ -688,7 +868,13 @@ def uvhm_start_all(payload: dict[str, Any] | None = None) -> dict[str, Any]:
         except Exception:
             pass
         return _ok(f"All-lobby UVHM workflow queued (up to rank {max_rank}).")
-    return _fail(uvhm_runtime.status().get("message") or "UVHM all-lobby request failed.")
+    st = uvhm_runtime.status()
+    return _fail(
+        st.get("last_request_error")
+        or st.get("detail_message")
+        or st.get("message")
+        or "UVHM all-lobby request failed."
+    )
 
 
 def uvhm_cancel(_payload: dict[str, Any] | None = None) -> dict[str, Any]:
@@ -707,6 +893,12 @@ def uvhm_cancel(_payload: dict[str, Any] | None = None) -> dict[str, Any]:
 def uvhm_resume(_payload: dict[str, Any] | None = None) -> dict[str, Any]:
     del _payload
     if uvhm_runtime.resume():
+        try:
+            from . import hold_session
+
+            hold_session.arm_for_job("uvhm")
+        except Exception:
+            pass
         return _ok("UVHM resumed.")
     return _fail("UVHM could not resume.")
 
@@ -729,15 +921,48 @@ def challenge_bulk_start(payload: dict[str, Any]) -> dict[str, Any]:
         tokens = [str(t).strip() for t in tokens_raw if str(t).strip()]
     if challenge_request(idx, category, confirmed=True, tokens=tokens or None):
         who = "All players" if int(idx) < 0 else f"player index {idx}"
+        st = challenge_status()
+        queued_n = int(st.get("queued_count") or st.get("progress_total") or st.get("total") or 0)
         try:
             from . import hold_session
 
             hold_session.arm_for_job("challenges")
         except Exception:
             pass
+        # Full All non-UVHM floods Reward Center — keep Open pending rewards off.
+        mass_all = (not tokens) and str(category).strip() == "All non-UVHM"
+        if mass_all:
+            try:
+                from .serial_rewards import block_open_all_after_challenge_bulk
+
+                block_open_all_after_challenge_bulk(reason="Complete ALL non-UVHM")
+            except Exception:
+                pass
+        live_msg = str(st.get("message") or "").strip()
         if tokens:
-            return _ok(f"Queued {len(tokens)} selected challenge(s) for {who}.")
-        return _ok(f"Challenge bulk queued: {category} for {who}.")
+            return _ok(
+                live_msg or f"Queued {len(tokens)} selected challenge(s) for {who}.",
+                queued_count=queued_n or len(tokens),
+                progress_total=queued_n or len(tokens),
+                challenge=st,
+            )
+        note = live_msg or f"Challenge bulk queued: {category} for {who}."
+        if queued_n and "Queued" not in note and "Starting" not in note:
+            note = f"Challenge bulk queued: {category} ({queued_n}) for {who}."
+        if mass_all:
+            note = (
+                f"{note} Leave Open pending rewards OFF — this run often dumps hundreds of "
+                "mail packages. Bank / mule first; Serials Open rewards on send stays Yes for "
+                "normal GZO/Lootlemon only."
+            )
+        return _ok(
+            note,
+            suppress_open_all=bool(mass_all),
+            category=category,
+            queued_count=queued_n,
+            progress_total=queued_n,
+            challenge=st,
+        )
     return _fail(challenge_status().get("message") or "Challenge bulk failed.")
 
 
@@ -756,13 +981,20 @@ def challenge_complete_selected(payload: dict[str, Any]) -> dict[str, Any]:
         return _fail("Confirmation required.")
     if challenge_request(idx, "All non-UVHM", confirmed=True, tokens=tokens):
         who = "All players" if int(idx) < 0 else f"player index {idx}"
+        st = challenge_status()
+        queued_n = int(st.get("queued_count") or st.get("progress_total") or len(tokens))
         try:
             from . import hold_session
 
             hold_session.arm_for_job("challenges")
         except Exception:
             pass
-        return _ok(f"Queued {len(tokens)} selected challenge(s) for {who}.", count=len(tokens))
+        return _ok(
+            f"Queued {len(tokens)} selected challenge(s) for {who}.",
+            count=len(tokens),
+            queued_count=queued_n,
+            progress_total=queued_n,
+        )
     return _fail(challenge_status().get("message") or "Could not queue selected challenges.")
 
 
@@ -781,7 +1013,30 @@ def challenge_bulk_cancel(_payload: dict[str, Any] | None = None) -> dict[str, A
 
 def challenge_bulk_status(_payload: dict[str, Any] | None = None) -> dict[str, Any]:
     del _payload
-    return _ok("Challenge bulk status.", challenge=challenge_status(), categories=list(CATEGORY_LABELS))
+    st = challenge_status()
+    suppress = False
+    try:
+        from .serial_rewards import open_all_blocked_after_challenge_bulk
+
+        suppress = bool(open_all_blocked_after_challenge_bulk())
+    except Exception:
+        suppress = False
+    # Never spread st["ok"] (accepted-count int) onto the response — it overwrites
+    # bridge ok:True and makes EXE polls look failed while the count is still 0.
+    return _ok(
+        "Challenge bulk status.",
+        challenge=st,
+        categories=list(CATEGORY_LABELS),
+        suppress_open_all=suppress,
+        active=st.get("active"),
+        queued=st.get("queued"),
+        message=st.get("message"),
+        index=st.get("index"),
+        total=st.get("total"),
+        accepted=st.get("ok"),
+        failed=st.get("failed"),
+        token=st.get("token"),
+    )
 
 
 def _resolve_item_pool_entry(payload: dict[str, Any]) -> dict[str, str] | None:
@@ -848,6 +1103,8 @@ def _loot_landing_kwargs(payload: dict[str, Any]) -> dict[str, Any]:
         spawn_then_shape = str(raw_defer or "").strip().lower() in ("1", "true", "yes", "on")
     stay_raw = payload.get("stay_in_air")
     stay_in_air = True if stay_raw is None or str(stay_raw).strip() == "" else str(stay_raw).strip().lower() in ("1", "true", "yes", "on")
+    float_grab_raw = payload.get("float_on_grab")
+    float_on_grab = str(float_grab_raw or "").strip().lower() in ("1", "true", "yes", "on")
     fill_raw = payload.get("fill_until_complete")
     if isinstance(fill_raw, bool):
         fill_until_complete = fill_raw
@@ -880,6 +1137,7 @@ def _loot_landing_kwargs(payload: dict[str, Any]) -> dict[str, Any]:
         "z_bias": float(layout["z_bias"]),
         "spawn_then_shape": spawn_then_shape,
         "stay_in_air": stay_in_air,
+        "float_on_grab": float_on_grab,
         "peel_after": peel_after,
         "land_profile": land_profile,
         "fill_until_complete": fill_until_complete,
@@ -911,6 +1169,9 @@ def spawn_item_pool_action(payload: dict[str, Any]) -> dict[str, Any]:
 
 
 def spawn_item_pool_all_action(payload: dict[str, Any]) -> dict[str, Any]:
+    busy = _progression_job_busy()
+    if busy:
+        return _fail(f"Spawn All Filtered cannot start while {busy} is running.")
     search = str(payload.get("search") or "").strip()
     category = str(payload.get("category") or "All").strip() or "All"
     try:
@@ -1719,6 +1980,13 @@ def devperk_activate(payload: dict[str, Any]) -> dict[str, Any]:
         perk_index = int(payload.get("perk_index"))
     except Exception:
         return _fail("perk_index required.")
+    if perk_index == 7:
+        from .dev_tools import loot_perk_batch_allowed
+
+        if not loot_perk_batch_allowed():
+            return _fail(
+                "Spawn Legendary/Epic Loot is on cooldown — wait a second (spam freezes/crashes)."
+            )
     indices = _boost_targets_from_payload(payload)
     if not indices:
         return _fail("No boost target players in lobby.")
@@ -1745,6 +2013,9 @@ def shiny_drop_status_action(_payload: dict[str, Any] | None = None) -> dict[str
 
 def shiny_drop_all(payload: dict[str, Any] | None = None) -> dict[str, Any]:
     payload = payload or {}
+    busy = _progression_job_busy()
+    if busy:
+        return _fail(f"Drop All Shinies cannot start while {busy} is running.")
     try:
         from .uvhm_runtime import _is_host_tick_context  # noqa: PLC0415
         from .party_helpers import _gbc_is_listen_host_world, _gbc_session_world_and_gamestate
@@ -1793,6 +2064,7 @@ def shiny_drop_all(payload: dict[str, Any] | None = None) -> dict[str, Any]:
             spacing=float(land.get("spacing") or 90),
             spawn_then_shape=bool(land.get("spawn_then_shape")),
             stay_in_air=bool(land.get("stay_in_air", True)),
+            float_on_grab=bool(land.get("float_on_grab", False)),
             peel_after=float(land.get("peel_after") or 0),
             land_profile=str(land.get("land_profile") or "shiny"),
             fill_until_complete=bool(land.get("fill_until_complete")),
@@ -1849,6 +2121,7 @@ def spawn_text_shape(payload: dict[str, Any] | None = None) -> dict[str, Any]:
         "line_length": payload.get("line_length", 1100),
         "z_bias": payload.get("z_bias", 12),
         "stay_in_air": payload.get("stay_in_air", "yes"),
+        "float_on_grab": payload.get("float_on_grab", "no"),
         "peel_after": payload.get("peel_after", 0),
         # One gun per glyph pixel (pad short shiny lists; trim overflow in drop queue).
         "fill_until_complete": True,
@@ -1983,9 +2256,63 @@ def loot_feed_appear(payload: dict[str, Any] | None = None) -> dict[str, Any]:
     return _ok(msg)
 
 
+def god_mode(payload: dict[str, Any] | None = None) -> dict[str, Any]:
+    from .dev_tools import set_god_mode
+
+    payload = payload or {}
+    enabled = bool(payload.get("enabled", True))
+    indices = _boost_targets_from_payload(payload)
+    if not indices:
+        return _fail("No boost target players in lobby.")
+    details: list[str] = []
+    for idx in indices:
+        try:
+            details.append(set_god_mode(enabled, player_index=idx))
+        except Exception as exc:
+            details.append(f"index {idx}: {exc}")
+    ok_n = sum(1 for d in details if "ON" in d or "OFF" in d)
+    if ok_n <= 0:
+        return _fail("; ".join(details) or "God Mode failed.")
+    return _ok(
+        f"God Mode {'ON' if enabled else 'OFF'} ({ok_n}).",
+        god_mode=enabled,
+        details=details,
+    )
+
+
+def infinite_ammo(payload: dict[str, Any] | None = None) -> dict[str, Any]:
+    from .dev_tools import set_infinite_ammo
+
+    payload = payload or {}
+    enabled = bool(payload.get("enabled", True))
+    indices = _boost_targets_from_payload(payload)
+    if not indices:
+        return _fail("No boost target players in lobby.")
+    details: list[str] = []
+    for idx in indices:
+        try:
+            details.append(set_infinite_ammo(enabled, player_index=idx))
+        except Exception as exc:
+            details.append(f"index {idx}: {exc}")
+    ok_n = sum(1 for d in details if "ON" in d or "OFF" in d or "already" in d.lower())
+    if ok_n <= 0:
+        return _fail("; ".join(details) or "Infinite Ammo failed.")
+    return _ok(
+        f"Infinite Ammo {'ON' if enabled else 'OFF'} ({ok_n}).",
+        infinite_ammo=enabled,
+        details=details,
+    )
+
+
 def pawn_no_target(payload: dict[str, Any]) -> dict[str, Any]:
     enabled = bool(payload.get("enabled", True))
-    return _ok(set_no_target(enabled))
+    try:
+        from . import mobility_runtime
+
+        msg = mobility_runtime.set_no_target_enabled(enabled)
+        return _ok(msg, no_target=bool(mobility_runtime.no_target_enabled()))
+    except Exception as exc:
+        return _fail(str(exc))
 
 
 def pawn_gravity(payload: dict[str, Any]) -> dict[str, Any]:
@@ -2000,7 +2327,7 @@ def pawn_gravity(payload: dict[str, Any]) -> dict[str, Any]:
 
 def weapons_restricted(payload: dict[str, Any]) -> dict[str, Any]:
     restricted = bool(payload.get("restricted", True))
-    sticky = bool(payload.get("sticky", False))
+    sticky = bool(payload.get("sticky", True))
     indices = _boost_targets_from_payload(payload)
     if not indices:
         return _fail("No boost target players in lobby.")
@@ -2017,11 +2344,13 @@ def weapons_restricted(payload: dict[str, Any]) -> dict[str, Any]:
             ok_n += 1
         except Exception as exc:
             details.append(f"index {idx}: {exc}")
-    if ok_n == 0:
+    if ok_n <= 0:
         return _fail("; ".join(details) or "Weapons restricted failed.")
-    if len(indices) == 1:
-        return _ok(details[0])
-    return _ok(f"Weapons restricted applied to {ok_n}/{len(indices)} player(s).")
+    return _ok(
+        f"Weapons restricted {'ON' if restricted else 'OFF'} ({ok_n}).",
+        weapons_restricted=restricted,
+        details=details,
+    )
 
 
 def ammo_regen(payload: dict[str, Any]) -> dict[str, Any]:
@@ -2029,7 +2358,7 @@ def ammo_regen(payload: dict[str, Any]) -> dict[str, Any]:
         rate = float(payload.get("rate") or 0.0)
     except Exception:
         return _fail("rate must be a number.")
-    sticky = bool(payload.get("sticky", False))
+    sticky = bool(payload.get("sticky", True))
     indices = _boost_targets_from_payload(payload)
     if not indices:
         return _fail("No boost target players in lobby.")
@@ -2048,9 +2377,12 @@ def ammo_regen(payload: dict[str, Any]) -> dict[str, Any]:
             details.append(f"index {idx}: {exc}")
     if ok_n == 0:
         return _fail("; ".join(details) or "Ammo regen failed.")
-    if len(indices) == 1:
-        return _ok(details[0])
-    return _ok(f"Ammo regen applied to {ok_n}/{len(indices)} player(s).")
+    return _ok(
+        details[0] if len(indices) == 1 else f"Ammo regen applied to {ok_n}/{len(indices)} player(s).",
+        ammo_regen=rate > 0.0,
+        rate=rate,
+        details=details,
+    )
 
 
 def teleport_party(payload: dict[str, Any]) -> dict[str, Any]:
@@ -2558,6 +2890,9 @@ def mobility_delete_ground(_payload: dict[str, Any] | None = None) -> dict[str, 
 
 
 def loot_shape_place_fully(payload: dict[str, Any] | None = None) -> dict[str, Any]:
+    busy = _progression_job_busy()
+    if busy:
+        return _fail(f"Place Fully cannot start while {busy} is running.")
     msg = loot_shapes.arrange_from_payload(payload or {}, mode="place_fully")
     return _ok(msg, summary=loot_shapes.get_last_layout_summary())
 
@@ -2572,6 +2907,11 @@ def loot_shape_clear(_payload: dict[str, Any] | None = None) -> dict[str, Any]:
     return _ok(loot_shapes.soft_clear_ground_loot())
 
 
+def loot_cleanup(_payload: dict[str, Any] | None = None) -> dict[str, Any]:
+    del _payload
+    return _ok(loot_shapes.cleanup_world_loot())
+
+
 def loot_shape_reapply(_payload: dict[str, Any] | None = None) -> dict[str, Any]:
     del _payload
     return _ok(loot_shapes.reapply_last_layout(), summary=loot_shapes.get_last_layout_summary())
@@ -2579,10 +2919,15 @@ def loot_shape_reapply(_payload: dict[str, Any] | None = None) -> dict[str, Any]
 
 def loot_shape_status(_payload: dict[str, Any] | None = None) -> dict[str, Any]:
     del _payload
+    prog = loot_shapes.get_progress_status()
+    # progress blob includes message/ok — do not double-pass into _ok()
+    prog_extra = {k: v for k, v in prog.items() if k not in ("message", "ok")}
     return _ok(
         loot_shapes.get_status(),
         summary=loot_shapes.get_last_layout_summary(),
         shapes=list(loot_shapes.SHAPE_NAMES),
+        shape_progress=prog,
+        **prog_extra,
     )
 
 
@@ -2615,9 +2960,9 @@ def hold_session(payload: dict[str, Any] | None = None) -> dict[str, Any]:
     msg = hold.set_enabled(enabled)
     after = hold.is_enabled()
     if enabled and not after:
-        return _fail(msg or "Hold session needs the listen-server host.", enabled=False)
+        return _fail(msg or "No main menu needs the listen-server host.", enabled=False)
     if (not enabled) and before and after:
-        return _fail(msg or "Could not turn hold session off.", enabled=True)
+        return _fail(msg or "Could not turn No main menu off.", enabled=True)
     return _ok(msg, enabled=after)
 
 
@@ -2658,13 +3003,26 @@ def oak_travel(payload: dict[str, Any] | None = None) -> dict[str, Any]:
         else:
             notes.append("missing")
         if status is not None:
+            # Match No main menu / live-edit: pin at 4 then clear leave flags.
             try:
-                setattr(status, "CountdownTime", 0.0)
+                setattr(status, "CountdownTime", 4.0)
+            except Exception:
+                pass
+            try:
+                setattr(status, "bIsTravelingToMainMenu", False)
+            except Exception:
+                pass
+            try:
+                setattr(status, "status", 0)
+            except Exception:
+                pass
+            try:
+                setattr(pc, "TravelStatus", status)
             except Exception:
                 pass
         if any(n.startswith("interrupt fail") or n == "missing" for n in notes) and "ok" not in notes:
             return _fail("Could not cancel the travel countdown.")
-        return _ok("Travel countdown cancelled.")
+        return _ok("Travel countdown cancelled (pinned at 4s).")
     elif action in ("disallow_local", "local_lock", ""):
         want = bool(payload.get("enabled", True))
         wrote = False
@@ -3014,27 +3372,79 @@ def activity_log(payload: dict[str, Any] | None = None) -> dict[str, Any]:
     return _ok(f"{len(lines)} log line(s).", lines=lines[-80:])
 
 
-def rewards_open_everyone(_payload: dict[str, Any] | None = None) -> dict[str, Any]:
-    """Queue paced open for every pending reward package (never bulk-open in one frame)."""
-    del _payload
+def rewards_open_everyone(payload: dict[str, Any] | None = None) -> dict[str, Any]:
+    """Queue paced open for pending packages on live party mailboxes (host + guests)."""
+    payload = payload or {}
+    force = _coerce_bool(payload.get("force") or payload.get("confirmed_large"), default=False)
+    try:
+        if bool(challenge_status().get("active")):
+            return _fail(
+                "Complete ALL / challenge bulk is still running. Do not Open pending rewards yet — "
+                "that pass often leaves hundreds of packages. Wait until it finishes, bank / mule, "
+                "then open in solo if you really need every package.",
+                opened=0,
+                needs_force=False,
+                challenge_bulk_active=True,
+            )
+    except Exception:
+        pass
     packages, managers = 0, 0
     try:
-        from .serial_rewards import _queue_open_all_pending_packages, _reward_open_gap_sec
+        from .serial_rewards import (
+            _OPEN_ALL_CHALLENGE_WARN_PACKAGES,
+            _queue_open_all_pending_packages,
+            _reward_open_gap_sec,
+            clear_open_all_challenge_block,
+            count_pending_reward_packages,
+            open_all_blocked_after_challenge_bulk,
+        )
 
+        pending = int(count_pending_reward_packages() or 0)
+        blocked = bool(open_all_blocked_after_challenge_bulk())
+        if blocked and not force:
+            return _fail(
+                f"Open pending rewards is blocked after Complete ALL non-UVHM "
+                f"({pending} package(s) pending in the lobby). Users often have hundreds — "
+                "bank / mule first. Confirm again only if you mean to open them now.",
+                opened=0,
+                needs_force=True,
+                packages=pending,
+                suppress_open_all=True,
+            )
+        if (
+            not blocked
+            and not force
+            and pending >= int(_OPEN_ALL_CHALLENGE_WARN_PACKAGES)
+        ):
+            return _fail(
+                f"{pending} pending mail package(s) in the lobby — that is a long paced open. "
+                "Confirm again to open packages that already have SerialNumbers.",
+                opened=0,
+                needs_force=True,
+                packages=pending,
+            )
         packages, managers = _queue_open_all_pending_packages()
         gap_fn = _reward_open_gap_sec
+        if packages > 0 and blocked:
+            clear_open_all_challenge_block()
     except Exception as exc:
         return _fail(f"Could not queue reward opens: {exc!r}", opened=0)
     if packages > 0:
         gap = float(gap_fn(max(1, int(packages))))
         eta = max(2, int(round(packages * gap)))
         return _ok(
-            f"Opening {packages} mail package(s) paced (~{eta}s). Stay in-world until done.",
-            opened=managers,
+            f"Opening {packages} mail package(s) paced (~{eta}s) for the lobby. "
+            "Empty loyalty shells stay closed; guests get a longer first delay.",
+            opened=packages,
+            managers=managers,
             packages=packages,
             eta_sec=eta,
         )
-    return _fail("No pending rewards could be queued for opening.", opened=0)
+    return _ok(
+        "No pending mail packages with openable SerialNumbers found in the lobby.",
+        opened=0,
+        managers=0,
+    )
 
 
 _ll_refresh_lock = threading.Lock()
@@ -3050,8 +3460,11 @@ def gzo_refresh_start(_payload: dict[str, Any] | None = None) -> dict[str, Any]:
     try:
         from .blimgui_panel import _gzo_refresh_catalog, _gzo_status
     except Exception as exc:
-        return _fail(f"GZO refresh unavailable: {exc!r}")
-    _gzo_refresh_catalog()
+        return _fail(f"GZO catalog unavailable: {exc}")
+    try:
+        _gzo_refresh_catalog()
+    except Exception as exc:
+        return _fail(f"GZO catalog refresh failed: {exc}")
     return _ok(str(_gzo_status or "GZO refresh started."), busy=True)
 
 
@@ -3065,8 +3478,11 @@ def gzo_refresh_status(_payload: dict[str, Any] | None = None) -> dict[str, Any]
             _poll_gzo_refresh_result,
         )
     except Exception as exc:
-        return _fail(f"GZO status unavailable: {exc!r}")
-    _poll_gzo_refresh_result()
+        return _fail(f"GZO catalog unavailable: {exc}")
+    try:
+        _poll_gzo_refresh_result()
+    except Exception as exc:
+        return _fail(f"GZO catalog status failed: {exc}")
     busy = _gzo_refresh_thread is not None and _gzo_refresh_thread.is_alive()
     count = len(_gzo_entries) if isinstance(_gzo_entries, list) else 0
     msg = str(_gzo_status or ("Refreshing GZO…" if busy else "GZO idle."))
@@ -3094,7 +3510,7 @@ def lootlemon_refresh_start(_payload: dict[str, Any] | None = None) -> dict[str,
                     or f"Loaded {_ll_refresh_count} Lootlemon code(s)."
                 )
             except Exception as exc:
-                _ll_refresh_message = f"Lootlemon refresh failed: {exc}"
+                _ll_refresh_message = f"Lootlemon catalog unavailable: {exc}"
                 _ll_refresh_count = 0
             finally:
                 _ll_refresh_busy = False
@@ -3125,8 +3541,8 @@ def lootlemon_refresh_status(_payload: dict[str, Any] | None = None) -> dict[str
 
             count = len(_lootlemon_entries) if isinstance(_lootlemon_entries, list) else 0
             msg = str(_lootlemon_status or f"{count} Lootlemon code(s) cached.")
-        except Exception:
-            pass
+        except Exception as exc:
+            return _fail(f"Lootlemon catalog unavailable: {exc}")
     return _ok(msg, busy=busy, count=count)
 
 
@@ -3214,6 +3630,7 @@ def faafo_drop_backpack(payload: dict[str, Any] | None = None) -> dict[str, Any]
             z_bias=float(land.get("z_bias") or 18),
             spawn_then_shape=bool(land.get("spawn_then_shape")),
             stay_in_air=bool(land.get("stay_in_air", True)),
+            float_on_grab=bool(land.get("float_on_grab", False)),
             peel_after=float(land.get("peel_after") or 0),
             land_profile=str(land.get("land_profile") or "shiny"),
         )
@@ -3394,6 +3811,12 @@ _EXTENDED_ACTION_NAMES: tuple[str, ...] = (
     "serial_store_add_selected",
     "serial_store_delete",
     "serial_store_duplicate",
+    "serial_store_export_text",
+    "serial_store_export_json",
+    "serial_store_import_merge",
+    "serial_store_rename_group",
+    "serial_store_create_group",
+    "serial_store_delete_group",
     "serial_delivery_status",
     "gzo_refresh_start",
     "gzo_refresh_status",
@@ -3447,6 +3870,8 @@ _EXTENDED_ACTION_NAMES: tuple[str, ...] = (
     "black_market",
     "mayhem_level",
     "devperk_activate",
+    "god_mode",
+    "infinite_ammo",
     "kill_all_enemies",
     "shiny_drop_all",
     "spawn_text_shape",
@@ -3485,6 +3910,7 @@ _EXTENDED_ACTION_NAMES: tuple[str, ...] = (
     "loot_shape_place_fully",
     "loot_shape_arrange",
     "loot_shape_clear",
+    "loot_cleanup",
     "loot_shape_reapply",
     "loot_shape_status",
     "loot_shape_stop_drop",

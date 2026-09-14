@@ -1,20 +1,18 @@
-# Squ1ggs Boosting Tools — v1.1.136 / mod 3.8.142
+# Squ1ggs Boosting Tools — v1.1.137 / mod 3.8.143
 
-Paste-ready notes for GitHub Releases.
+## Highlights (the fun stuff)
 
-## Highlights
-
-- **Hold session (no menu kick):** sticky host toggle; auto-arms during UVHM / Complete ALL challenges
-- **Loot shapes co-op:** no mass ForceNetUpdate house AV; drip guest sync
-- **Soft clear** on Home Most used + Loot Shiny drops
-- **Party teleport:** Everyone -> me
-- **Vault cards 1-5** on MAX ALL
-- **My Library / Deliver:** optional save name; GZO/Lootlemon; human serials -> @U
-- **Nova** sphere pulse + Stay in air behavior
-- **Stability:** PlayerBank freeze, quit soft-clear, search click hardening
+- **Drop All Shinies** — world phosphene dumps (needs shiny cosmetics unlocked on the save)
+- **Loot shapes** — house / boat / vault silhouettes; co-op friends can Use / grab slots
+- **No main menu** — guests can’t yank the host to title; map FT blocked while ON
+- **MAX ALL** — cash / eridium / SDU / vault / level, plus optional **cosmetics + hover** and **UVHM 1–7**
+- **Serials** — GZO / Lootlemon browse + My packs library; mail codes to the lobby
+- **Drop backpack** — spill the Boost target’s pack onto the ground (Most used)
+- **Auto Lobby (WIP)** — timed host boosts; treat as work-in-progress for long lobbies
 
 ## Install
 
-1. Download the portable zip below and run **Squ1ggsBoostingTools.exe**.
-2. Point it at Borderlands 4 if asked — the EXE installs the SDK + mod for you.
-3. **Fully restart Borderlands 4**, then confirm mod **3.8.142** in Refresh status.
+1. Download the portable zip and run **Squ1ggsBoostingTools.exe**.
+2. Point it at Borderlands 4 if asked — it installs the SDK + mod.
+3. **Fully restart Borderlands 4**, then confirm mod **3.8.143** in Refresh status.
+4. Turn **No main menu** OFF before you quit to the title screen yourself.

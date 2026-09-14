@@ -461,7 +461,8 @@ def do_drop_backpack(pc: Any = None, player_index: int | None = None) -> str:
     last: Exception | None = None
     stagnant = 0
     prev = before
-    max_passes = 80 if before < 0 else min(400, max(int(before) + 8, 8))
+    # Cap passes hard — long SpillOut + shape pulls was a pyunrealsdk AV magnet.
+    max_passes = 40 if before < 0 else min(120, max(int(before) + 6, 6))
     # spawnpattern_default_loot is a one-item chest spit. Keep calling until
     # the backpack is empty instead of returning after the first success.
     for _pass in range(max_passes):
@@ -491,17 +492,17 @@ def do_drop_backpack(pc: Any = None, player_index: int | None = None) -> str:
                 pull_new_pickups_into_shape,
             )
 
-            if landing_armed():
-                # after_dump_spawn caps at 2/call — backpack SpillOut needs a bigger backlog pull.
-                arm_overhead_catch(12.0)
-                arm_deferred_catch(12.0)
-                pull_new_pickups_into_shape(limit=6 if (_pass % 2 == 0) else 3, fresh=True)
+            # Rare, light pulls only — fresh find_all every SpillOut pass AVs mid-drop.
+            if landing_armed() and (_pass % 5 == 0):
+                arm_overhead_catch(6.0)
+                arm_deferred_catch(6.0)
+                pull_new_pickups_into_shape(limit=2, fresh=False)
         except Exception:
             pass
         now = _backpack_occupied_count(pc)
         if now >= 0 and prev >= 0 and now >= prev:
             stagnant += 1
-            if stagnant >= 4:
+            if stagnant >= 3:
                 break
         else:
             stagnant = 0

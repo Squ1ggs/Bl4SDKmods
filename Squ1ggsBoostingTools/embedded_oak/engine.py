@@ -2571,6 +2571,25 @@ def _spawn_offline_deploy_preset(
     return None
 
 
+def _is_player_bank_spawn(name: str) -> bool:
+    """True for any bank alias / IO_PlayerBank / PersistentLevel bank path.
+
+    Must catch full world paths — exact entry_key matching missed those and fell
+    through to find_all(Actor), which freezes with held loot shapes.
+    """
+    raw = (name or "").strip()
+    if not raw:
+        return False
+    key = _alias_key(raw)
+    if key in ("playerbank", "bank", "player_bank", "io_playerbank", "io_player_bank"):
+        return True
+    short = _io_short_token(raw)
+    if short and _alias_key(short) in ("io_playerbank", "playerbank"):
+        return True
+    low = raw.lower().replace("-", "_").replace(" ", "")
+    return "playerbank" in low or low.endswith(".io_playerbank")
+
+
 def _find_io_playerbank_template_safe(
     class_override: Optional[str] = None,
 ) -> Tuple[Optional[Any], Optional[Any], Optional[str]]:
@@ -2675,7 +2694,9 @@ def _spawn_deployed_actor(
 
     # Player bank: prefer a live PersistentLevel.IO_PlayerBank template (unlocked)
     # over Script_PlayerBank offline deploy (often Locked).
-    if entry_key in ("playerbank", "bank", "player_bank", "io_playerbank", "io_player_bank"):
+    # Match ANY bank-shaped name (full PersistentLevel paths included) — never
+    # fall through to _find_template / find_all(Actor).
+    if _is_player_bank_spawn(name):
         bank_cls, bank_src, bank_cn = _find_io_playerbank_template_safe(class_override)
         if bank_cls is not None and bank_src is not None:
             _log_info(f"Using live IO_PlayerBank template for {name!r}: {bank_src}")

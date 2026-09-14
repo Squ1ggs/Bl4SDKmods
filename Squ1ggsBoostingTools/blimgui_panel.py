@@ -13,11 +13,19 @@ import urllib.parse
 import html
 from pathlib import Path
 
-import blimgui as _blimgui
+_blimgui = None
+_cyber = None
+_BLIMGUI_IMPORT_ERROR: str | None = None
 try:
-    from blimgui import cyber as _cyber
-except Exception:  # fall back cleanly if an older BLImGui is installed
+    import blimgui as _blimgui  # type: ignore[no-redef]
+    try:
+        from blimgui import cyber as _cyber  # type: ignore[no-redef]
+    except Exception:  # fall back cleanly if an older BLImGui is installed
+        _cyber = None
+except Exception as exc:  # EXE / no BLImGui mod — catalog refresh must still import
+    _blimgui = None
     _cyber = None
+    _BLIMGUI_IMPORT_ERROR = f"{type(exc).__name__}: {exc}"
 from mods_base import command, keybind, get_pc
 import unrealsdk
 from unrealsdk import logging
@@ -50,13 +58,30 @@ from .serial_rewards import (
 from . import mobility_runtime as _mobility_runtime
 from . import uvhm_runtime as _uvhm_runtime
 from . import challenge_bulk_runtime as _challenge_bulk_runtime
-from . import mobility_ui as _mobility_ui
-from . import tuning_ui as _tuning_ui
 from . import rarity_weights as _rarity_weights
 from . import serial_store as _serial_store_mod
-from . import mob_spawner_ui as _mob_spawner_ui
-from . import world_spawn_ui as _world_spawn_ui
-from . import encounter_ui as _encounter_ui
+
+# UI tabs hard-import blimgui; keep them optional so catalog helpers load without it.
+try:
+    from . import mobility_ui as _mobility_ui
+except Exception:
+    _mobility_ui = None
+try:
+    from . import tuning_ui as _tuning_ui
+except Exception:
+    _tuning_ui = None
+try:
+    from . import mob_spawner_ui as _mob_spawner_ui
+except Exception:
+    _mob_spawner_ui = None
+try:
+    from . import world_spawn_ui as _world_spawn_ui
+except Exception:
+    _world_spawn_ui = None
+try:
+    from . import encounter_ui as _encounter_ui
+except Exception:
+    _encounter_ui = None
 from .squ1ggs_theme import (
     ACCENT_DANGER,
     ACCENT_INFO,
@@ -150,6 +175,7 @@ _serial_tools_deserialized: str = ""
 _serial_tools_parts_breakdown: str = ""
 _serial_tools_status: str = "Paste a @U serial or deserialized serial text above."
 _serial_store_entries: list[dict[str, str]] = []
+_serial_store_last_mtime_ns: int = -1
 _serial_store_selected_ids: set[str] = set()
 _serial_store_active_id: str = ""
 _serial_store_name: str = ""
@@ -378,6 +404,12 @@ def _request_party_snapshot() -> None:
     if _party_refresh_pending:
         return
     _party_refresh_pending = True
+    if _blimgui is None:
+        try:
+            _update_party_snapshot()
+        except Exception:
+            _party_refresh_pending = False
+        return
     try:
         _blimgui.defer_post_frame(_update_party_snapshot)
     except Exception:
@@ -447,6 +479,15 @@ def _log(message: str) -> None:
     logging.info(line)
     _log_lines.append(line)
     del _log_lines[:-80]
+
+
+def _require_blimgui() -> bool:
+    """True when BLImGui is available; log and return False for draw/open entry points."""
+    if _blimgui is not None:
+        return True
+    detail = _BLIMGUI_IMPORT_ERROR or "blimgui package is not installed"
+    _log(f"BLImGui unavailable — panel UI disabled ({detail})")
+    return False
 
 
 _mobility_runtime.bind_ui_callbacks(_log, lambda msg, _accent: _log(msg))
@@ -2275,7 +2316,7 @@ def _draw_sdu_card() -> None:
         except Exception:
             hold_on = False
         _button(
-            f"Hold session {'ON' if hold_on else 'OFF'}",
+            f"No main menu {'ON' if hold_on else 'OFF'}",
             _flip_hold_session,
             ACCENT_SUCCESS if hold_on else ACCENT_MUTED,
             160,
@@ -2496,17 +2537,28 @@ def _serial_store_new_id() -> str:
 
 
 def _serial_store_load() -> None:
-    global _serial_store_entries
-    if _serial_store_entries:
+    global _serial_store_entries, _serial_store_last_mtime_ns
+    path = _serial_store_mod.path_for_read()
+    try:
+        mtime_ns = path.stat().st_mtime_ns if path is not None else -1
+    except Exception:
+        mtime_ns = -1
+    if _serial_store_entries and mtime_ns == _serial_store_last_mtime_ns:
         return
     _serial_store_entries = _serial_store_mod.reload_entries(force=True)
+    _serial_store_last_mtime_ns = mtime_ns
     if _serial_store_entries:
         _log(f"Serial Store loaded {len(_serial_store_entries)} saved serial(s).")
 
 
 def _serial_store_save() -> None:
+    global _serial_store_last_mtime_ns
     try:
         path = _serial_store_mod.sync_entries(_serial_store_entries)
+        try:
+            _serial_store_last_mtime_ns = path.stat().st_mtime_ns
+        except Exception:
+            _serial_store_last_mtime_ns = -1
         _log(f"Serial Store saved {len(_serial_store_entries)} serial(s) to {path.name}.")
     except Exception as exc:
         _log(f"Serial Store save failed: {exc!r}")
@@ -5955,7 +6007,7 @@ def _draw_travel_tab() -> None:
         except Exception:
             hold_travel_on = False
         _button(
-            f"Hold session {'ON' if hold_travel_on else 'OFF'}",
+            f"No main menu {'ON' if hold_travel_on else 'OFF'}",
             _flip_hold_session_travel,
             ACCENT_SUCCESS if hold_travel_on else ACCENT_MUTED,
             160,
@@ -6059,6 +6111,10 @@ def _draw_travel_tab() -> None:
     _sq_end_card()
 
 def _draw_encounter_builder_tab() -> None:
+    if _encounter_ui is None:
+        _muted_wrapped("Encounter builder UI unavailable (blimgui missing).")
+        return
+
     def _begin_card(title: str, accent: str, height: float) -> bool:
         return _sq_begin_card(title, "world", height)
 
@@ -6076,6 +6132,10 @@ def _draw_encounter_builder_tab() -> None:
 
 
 def _draw_mob_spawner_tab() -> None:
+    if _mob_spawner_ui is None:
+        _muted_wrapped("Mob spawner UI unavailable (blimgui missing).")
+        return
+
     def _begin_card(title: str, accent: str, height: float) -> bool:
         return _sq_begin_card(title, "world", height)
 
@@ -6091,6 +6151,10 @@ def _draw_mob_spawner_tab() -> None:
 
 
 def _draw_world_spawn_tab() -> None:
+    if _world_spawn_ui is None:
+        _muted_wrapped("World spawn UI unavailable (blimgui missing).")
+        return
+
     def _begin_card(title: str, accent: str, height: float) -> bool:
         return _sq_begin_card(title, "world", height)
 
@@ -6110,6 +6174,10 @@ def _draw_world_spawn_tab() -> None:
 
 
 def _draw_mobility_tab() -> None:
+    if _mobility_ui is None:
+        _muted_wrapped("Mobility UI unavailable (blimgui missing).")
+        return
+
     def _begin_card(title: str, accent: str, height: float) -> bool:
         return _sq_begin_card(title, "mobility", height)
 
@@ -6140,6 +6208,9 @@ def _draw_mobility_tab() -> None:
 
 
 def _draw_player_movement_tab() -> None:
+    if _tuning_ui is None:
+        _muted_wrapped("Tuning UI unavailable (blimgui missing).")
+        return
     _tuning_ui.draw_player_movement_tab(
         muted_wrapped=_muted_wrapped,
         tab_height=_tab_card_height(760.0),
@@ -6147,6 +6218,9 @@ def _draw_player_movement_tab() -> None:
 
 
 def _draw_vehicle_movement_tab() -> None:
+    if _tuning_ui is None:
+        _muted_wrapped("Tuning UI unavailable (blimgui missing).")
+        return
     _tuning_ui.draw_vehicle_tab(
         muted_wrapped=_muted_wrapped,
         tab_height=_tab_card_height(760.0),
@@ -6154,6 +6228,9 @@ def _draw_vehicle_movement_tab() -> None:
 
 
 def _draw_damage_tuning_tab() -> None:
+    if _tuning_ui is None:
+        _muted_wrapped("Tuning UI unavailable (blimgui missing).")
+        return
     _tuning_ui.draw_damage_tab(
         muted_wrapped=_muted_wrapped,
         tab_height=_tab_card_height(760.0),
@@ -6161,6 +6238,9 @@ def _draw_damage_tuning_tab() -> None:
 
 
 def _draw_resources_tuning_tab() -> None:
+    if _tuning_ui is None:
+        _muted_wrapped("Tuning UI unavailable (blimgui missing).")
+        return
     _tuning_ui.draw_resources_tab(
         muted_wrapped=_muted_wrapped,
         tab_height=_tab_card_height(760.0),
@@ -6246,6 +6326,8 @@ def _draw_panel_contents() -> None:
 
 def _sqbt_panel_draw() -> None:
     """Dedicated Squ1ggs Boosting Tools window — never a tab inside BL4 Mod Menu."""
+    if not _require_blimgui():
+        return
     imgui = _blimgui.imgui
     style_count = push_squ1ggs_window_style(imgui, _cyber)
     try:
@@ -6275,6 +6357,8 @@ def draw_window() -> None:
 
 
 def squ1ggs_boost_tools_open() -> None:
+    if not _require_blimgui():
+        return
     try:
         if hasattr(_blimgui, "close_conflicting_menus"):
             _blimgui.close_conflicting_menus(keep_callback=_sqbt_panel_draw)
@@ -6289,6 +6373,8 @@ def squ1ggs_boost_tools_open() -> None:
 
 def squ1ggs_boost_tools_close() -> None:
     _PANEL_CONTROLLER.window_owned = False
+    if _blimgui is None:
+        return
     try:
         if hasattr(_blimgui, "close_window_if_draw_callback"):
             _blimgui.close_window_if_draw_callback(_sqbt_panel_draw)
@@ -6300,6 +6386,8 @@ def squ1ggs_boost_tools_close() -> None:
 
 @keybind("Show/hide BLImGui menu — Squ1ggs's Boosting Tools")
 def squ1ggs_boost_tools_toggle() -> None:
+    if not _require_blimgui():
+        return
     if hasattr(_blimgui, "is_callback_active") and _blimgui.is_callback_active(_sqbt_panel_draw):
         if hasattr(_blimgui, "prepare_menu_toggle") and not _blimgui.prepare_menu_toggle():
             _log("toggle ignored (debounce) — wait briefly or run blimgui_reset")

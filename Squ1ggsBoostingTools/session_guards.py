@@ -15,14 +15,22 @@ _TEARDOWN_HOOK_PATHS: tuple[str, ...] = (
     "/Script/Engine.Engine:PreLoadMap",
     "/Script/Engine.World:BeginTearingDown",
     "/Script/Engine.PlayerController:ClientTravel",
+    "/Script/Engine.PlayerController:ClientTravelInternal",
     "/Script/Engine.PlayerController:ServerTravel",
     "/Script/Engine.PlayerController:ClientRestart",
     "/Script/Engine.PlayerController:ClientReturnToMainMenuWithTextReason",
     "/Script/OakGame.OakPlayerController:ClientReturnToMainMenu",
     "/Script/Oak2.OakPlayerController:ClientReturnToMainMenu",
+    "/Script/OakGame.OakPlayerController:ClientTravelInternal",
+    "/Script/Oak2.OakPlayerController:ClientTravelInternal",
     "/Script/Engine.GameInstance:ReturnToMainMenu",
+    "/Script/OakGame.OakGameMode:ReturnToMainMenuHost",
+    "/Script/Oak2.OakGameMode:ReturnToMainMenuHost",
     "/Script/OakGame.OakPlayerController:K2_ClientRestart",
     "/Script/Oak2.OakPlayerController:K2_ClientRestart",
+    "/Script/Engine.PlayerController:ClientEndOnlineSession",
+    "/Script/OakGame.OakPlayerController:ClientEndOnlineSession",
+    "/Script/Oak2.OakPlayerController:ClientEndOnlineSession",
 )
 
 _listeners: list[Callable[[str], None]] = []
@@ -100,6 +108,15 @@ def _on_teardown_hook(_obj: Any, _args: Any, _ret: Any, _func: Any) -> None:
         name = str(getattr(_func, "Name", "") or getattr(_func, "__name__", "") or "hook")
     except Exception:
         name = "hook"
+    # Hold session PRE-blocks menu/travel; do not cancel UVHM/shapes as if we left.
+    try:
+        from . import hold_session
+
+        if hold_session.suppress_teardown_for_hook(name):
+            _log(f"Teardown skipped (hold session ON): {name}")
+            return
+    except Exception:
+        pass
     notify_session_teardown(name)
 
 
@@ -192,6 +209,15 @@ def _register_builtin_listeners() -> None:
         except Exception:
             pass
 
+    def _auto_lobby(reason: str) -> None:
+        del reason
+        try:
+            from . import auto_lobby
+
+            auto_lobby.abandon()
+        except Exception:
+            pass
+
     for fn in (
         _serial_rewards,
         _challenge_bulk,
@@ -200,6 +226,7 @@ def _register_builtin_listeners() -> None:
         _spawn_deferred,
         _travel,
         _loot_shapes,
+        _auto_lobby,
     ):
         register_teardown_listener(fn)
 

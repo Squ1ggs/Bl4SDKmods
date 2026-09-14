@@ -51,7 +51,22 @@ def _distance_sq(a: Any, b: Any) -> float:
     return dx * dx + dy * dy + dz * dz
 
 
+def _uobject_live(obj: Any) -> bool:
+    if obj is None:
+        return False
+    try:
+        name = getattr(obj, "Name", None)
+        if name is None and not hasattr(obj, "K2_GetActorLocation"):
+            return False
+        _ = str(name or obj)[:1]
+        return True
+    except Exception:
+        return False
+
+
 def _is_golden_chest_actor(actor: Any) -> bool:
+    if not _uobject_live(actor):
+        return False
     text = str(actor or "").lower()
     return "lootable_goldenchest" in text or "goldenchest" in text
 
@@ -71,10 +86,15 @@ def remember_golden_chest(actor: Any) -> None:
         return
     key = str(actor)
     global _RECENT_GOLDEN_CHESTS
-    _RECENT_GOLDEN_CHESTS = [c for c in _RECENT_GOLDEN_CHESTS if str(c) != key]
-    _RECENT_GOLDEN_CHESTS.append(actor)
-    if len(_RECENT_GOLDEN_CHESTS) > _MAX_RECENT:
-        _RECENT_GOLDEN_CHESTS = _RECENT_GOLDEN_CHESTS[-_MAX_RECENT:]
+    live: list[Any] = []
+    for c in _RECENT_GOLDEN_CHESTS:
+        if not _uobject_live(c):
+            continue
+        if str(c) == key:
+            continue
+        live.append(c)
+    live.append(actor)
+    _RECENT_GOLDEN_CHESTS = live[-_MAX_RECENT:]
 
 
 def _script_from_chest(chest: Any) -> Optional[Any]:
@@ -173,21 +193,54 @@ def _list_golden_chest_quick() -> list[Any]:
     return chests
 
 
-def _list_golden_chest_actors(*, allow_full_scan: bool = True) -> list[Any]:
+def _list_golden_chest_actors(*, allow_full_scan: bool = False) -> list[Any]:
+    """List golden chests. Full LootableObject find_all is opt-in (AV magnet)."""
     global _CHEST_LIST_CACHE, _CHEST_LIST_CACHE_AT
     now = time.monotonic()
     heavy = _shape_pins_heavy()
-    if heavy:
-        quick = _list_golden_chest_quick()
+    quick = _list_golden_chest_quick()
+    if heavy or not allow_full_scan:
         if quick:
             return quick
         if not allow_full_scan:
+            # Prefer nearby OakSpawner alive rows over world-wide LootableObject scan.
+            pawn = _get_player_pawn()
+            player_loc = None
+            if pawn is not None and _uobject_live(pawn):
+                try:
+                    player_loc = pawn.K2_GetActorLocation()
+                except Exception:
+                    player_loc = None
+            if player_loc is not None:
+                max_sq = (_OPEN_RADIUS_UU * 2.0) ** 2
+                seen = {str(c) for c in quick}
+                try:
+                    for spawner in _iter_find_all("OakSpawner"):
+                        if not _uobject_live(spawner):
+                            continue
+                        try:
+                            sl = spawner.K2_GetActorLocation()
+                            if _distance_sq(sl, player_loc) > max_sq:
+                                continue
+                        except Exception:
+                            continue
+                        for alive in _alive_from_spawner(spawner):
+                            if not _is_golden_chest_actor(alive):
+                                continue
+                            key = str(alive)
+                            if key in seen:
+                                continue
+                            seen.add(key)
+                            quick.append(alive)
+                            remember_golden_chest(alive)
+                except Exception:
+                    pass
             return quick
     elif (
         _CHEST_LIST_CACHE
         and now - float(_CHEST_LIST_CACHE_AT or 0.0) < float(_CHEST_LIST_CACHE_TTL_S)
     ):
-        return list(_CHEST_LIST_CACHE)
+        return [c for c in _CHEST_LIST_CACHE if _uobject_live(c)]
 
     chests: list[Any] = []
     seen: set[str] = set()
@@ -202,72 +255,27 @@ def _list_golden_chest_actors(*, allow_full_scan: bool = True) -> list[Any]:
         chests.append(actor)
         remember_golden_chest(actor)
 
-    if not heavy:
-        for actor in _list_golden_chest_quick():
-            _add(actor)
+    for actor in quick:
+        _add(actor)
 
-    try:
-        for obj in _iter_find_all("LootableObject"):
-            _add(obj)
-    except Exception as e:
-        _log_err("Could not scan LootableObject instances: %s", e)
+    if allow_full_scan:
+        try:
+            for obj in _iter_find_all("LootableObject"):
+                _add(obj)
+        except Exception as e:
+            _log_err("Could not scan LootableObject instances: %s", e)
 
-    # Dump path: Script_Lootable_GoldenChest_C lives under each chest Outer.
     for script_cls in ("Script_Lootable_GoldenChest_C", "Script_Lootable_GoldenChest"):
         try:
             for script in _iter_find_all(script_cls):
+                if not _uobject_live(script):
+                    continue
                 try:
                     _add(getattr(script, "Outer", None))
                 except Exception:
                     continue
         except Exception:
             continue
-
-    for actor in list(_RECENT_GOLDEN_CHESTS):
-        _add(actor)
-
-    try:
-        from Squ1ggsBoostingTools.embedded_oak import engine as oak  # noqa: PLC0415
-    except Exception:
-        oak = None
-    if oak is not None:
-        try:
-            for deployed in getattr(oak, "_SPAWNED", []) or []:
-                actor = getattr(deployed, "actor", None)
-                label = str(getattr(deployed, "label", "") or "").lower()
-                if label == "barrel_logo" or "goldenchest" in label or "golden" in label:
-                    _add(actor)
-                elif _is_golden_chest_actor(actor):
-                    _add(actor)
-                source = getattr(deployed, "source", None)
-                if source is not None:
-                    for alive in _alive_from_spawner(source):
-                        _add(alive)
-        except Exception:
-            pass
-
-    # Nearby OakSpawner alive rows (covers AI chests find_all missed).
-    pawn = _get_player_pawn()
-    player_loc = None
-    if pawn is not None:
-        try:
-            player_loc = pawn.K2_GetActorLocation()
-        except Exception:
-            player_loc = None
-    if player_loc is not None:
-        max_sq = (_OPEN_RADIUS_UU * 2.0) ** 2
-        try:
-            for spawner in _iter_find_all("OakSpawner"):
-                try:
-                    sl = spawner.K2_GetActorLocation()
-                    if _distance_sq(sl, player_loc) > max_sq:
-                        continue
-                except Exception:
-                    continue
-                for alive in _alive_from_spawner(spawner):
-                    _add(alive)
-        except Exception:
-            pass
 
     _CHEST_LIST_CACHE = list(chests)
     _CHEST_LIST_CACHE_AT = now
@@ -322,6 +330,8 @@ def _is_spawned_or_logo_chest(chest: Any) -> bool:
 
 
 def _open_script(script: Any) -> bool:
+    if not _uobject_live(script):
+        return False
     state_key = _new_state_key()
     if state_key is None:
         return False
@@ -369,15 +379,26 @@ def open_golden_chest() -> tuple[bool, str]:
         for d, c in ranked
         if not _is_logo_spawned_chest(c) and not _is_spawned_or_logo_chest(c) and not _is_map_seed_chest(c)
     ]
-    # Prefer AI / logo copies first; still open the map seed if it is in range.
+    # Prefer AI / logo copies first; still open the map seed if it is nearby.
     ordered = logo_rows + spawned_rows + other_rows + seed_rows
+    # Cap opens — opening every chest in a 6k radius (distant map + thin-air) AVd.
+    ordered = ordered[:4]
 
     opened = 0
     opened_scripts: set[str] = set()
     skipped_no_script = 0
     for dist_sq, chest in ordered:
+        if not _uobject_live(chest):
+            continue
+        # Skip far map seeds when a closer spawned/logo chest already exists.
+        if (
+            opened > 0
+            and _is_map_seed_chest(chest)
+            and float(dist_sq) ** 0.5 > 1800.0
+        ):
+            continue
         script = _script_from_chest(chest)
-        if script is None:
+        if script is None or not _uobject_live(script):
             skipped_no_script += 1
             continue
         script_key = str(script)
@@ -410,6 +431,8 @@ def open_golden_chest() -> tuple[bool, str]:
 
 
 def _finish_close_on_script(script: Any) -> None:
+    if not _uobject_live(script):
+        return
     try:
         script.SetScriptStateEnabled("Open", False)
         script.SetScriptStateEnabled("Idle", True)
@@ -428,8 +451,10 @@ def close_golden_chest() -> tuple[bool, str]:
     scripts: list[Any] = []
     seen_scripts: set[str] = set()
     for _dist, chest in ranked:
+        if not _uobject_live(chest):
+            continue
         script = _script_from_chest(chest)
-        if script is None:
+        if script is None or not _uobject_live(script):
             continue
         key = str(script)
         if key in seen_scripts:
@@ -466,7 +491,8 @@ def golden_chest_tick() -> None:
     _pending_close_script = None
     _pending_close_due = 0.0
     for script in scripts:
-        _finish_close_on_script(script)
+        if _uobject_live(script):
+            _finish_close_on_script(script)
 
 
 # Back-compat aliases used by keybinds / older imports.

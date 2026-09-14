@@ -13,10 +13,28 @@ from typing import Any, Optional
 
 CHALLENGE_TYPE_HANDLE = 16413
 
+_LIBRARY_CDO: Any = None
+_INCREMENT_FN: Any = None
+_TEARDOWN_HOOKED = False
+
+
+def _clear_library_cache(_reason: str = "") -> None:
+    """Drop cached UObjects after map/menu teardown — they go stale."""
+    global _LIBRARY_CDO, _INCREMENT_FN
+    del _reason
+    _LIBRARY_CDO = None
+    _INCREMENT_FN = None
+
 
 def _challenge_library() -> Any:
+    """Resolve OakChallengeBlueprintLibrary CDO once (static/reuse), not every apply."""
+    global _LIBRARY_CDO, _TEARDOWN_HOOKED
+    if _LIBRARY_CDO is not None:
+        return _LIBRARY_CDO
+
     import unrealsdk
 
+    cdo: Any = None
     for class_name in (
         "OakChallengeBlueprintLibrary",
         "/Script/OakGame.OakChallengeBlueprintLibrary",
@@ -25,16 +43,39 @@ def _challenge_library() -> Any:
             cls = unrealsdk.find_class(class_name)
             cdo = getattr(cls, "ClassDefaultObject", None) if cls is not None else None
             if cdo is not None:
-                return cdo
+                break
         except Exception:
             continue
-    try:
-        cls = unrealsdk.find_object("Class", "/Script/OakGame.OakChallengeBlueprintLibrary")
-        cdo = getattr(cls, "ClassDefaultObject", None) if cls is not None else None
-        if cdo is not None:
-            return cdo
-    except Exception:
-        pass
+    if cdo is None:
+        try:
+            cls = unrealsdk.find_object("Class", "/Script/OakGame.OakChallengeBlueprintLibrary")
+            cdo = getattr(cls, "ClassDefaultObject", None) if cls is not None else None
+        except Exception:
+            cdo = None
+    if cdo is not None:
+        _LIBRARY_CDO = cdo
+        if not _TEARDOWN_HOOKED:
+            try:
+                from .session_guards import register_teardown_listener
+
+                register_teardown_listener(_clear_library_cache)
+                _TEARDOWN_HOOKED = True
+            except Exception:
+                pass
+    return cdo
+
+
+def _increment_fn() -> Any:
+    global _INCREMENT_FN
+    if _INCREMENT_FN is not None:
+        return _INCREMENT_FN
+    lib = _challenge_library()
+    if lib is None:
+        return None
+    fn = getattr(lib, "IncrementChallengeForPlayer", None)
+    if callable(fn):
+        _INCREMENT_FN = fn
+        return fn
     return None
 
 
@@ -170,11 +211,8 @@ def _write_cos(pc: Any, token: str) -> int:
 
 def _lib_increment_for_player(target_pc: Any, token: str, amount: int) -> bool:
     """Apply library increment to ``target_pc`` only. Prefer verified progress movement."""
-    lib = _challenge_library()
-    if lib is None or target_pc is None:
-        return False
-    fn = getattr(lib, "IncrementChallengeForPlayer", None)
-    if not callable(fn):
+    fn = _increment_fn()
+    if not callable(fn) or target_pc is None:
         return False
     amount_i = max(1, int(amount))
     world = _world_context(target_pc)
@@ -199,6 +237,15 @@ def _lib_increment_for_player(target_pc: Any, token: str, amount: int) -> bool:
                 break
         if not called:
             continue
+        # Final / parent rank-up tokens mutate challenge state — skip immediate
+        # IsChallengeComplete / progress re-read (AV magnet during AUVHM).
+        token_l = str(token or "").casefold()
+        if (
+            "finalchallenge" in token_l
+            or token_l.endswith("_parent")
+            or "bloomreaper" in token_l
+        ):
+            return True
         after_prog = _read_progress(target_pc, handle)
         after_done = _read_complete(target_pc, handle)
         if before_done is True or after_done is True:

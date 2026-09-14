@@ -19,17 +19,18 @@ Use the **desktop app** for the full interface. The SDK mod supplies the localho
 
 1. Run **Squ1ggs Boosting Tools** (desktop app) → browse to Borderlands 4 if needed → **Install SDK + Squ1ggs mod** (pulls official [oak2-mod-manager](https://github.com/bl-sdk/oak2-mod-manager/releases) when the base SDK is missing).
 2. **Fully restart Borderlands 4**.
-3. Refresh status in the app — mod version should match (**3.7.0**).
+3. Refresh status in the app — mod version should match (**3.8.143**).
 
 Same idea as Squ1ggs Boosting Tools: exe installs the mod, restart game, control from outside.
 
 **Thanks:** GZO catalog from save-editor.be. Thank you to **Tobgun** for feedback, ideas, testing, and bug reports.
 
 ### What's new (short)
-- Favourites on GZO / Lootlemon
-- Loot shapes work for players already in the lobby (no crash)
-- House silhouette looks right again
-- Shaped Drop All / Spawn All smoother; guests still see the held shape when it finishes
+- Drop All Shinies + loot shapes (co-op grabs)
+- No main menu (guests can’t yank the host)
+- MAX ALL: optional cosmetics + UVHM 1–7
+- GZO / Lootlemon + My packs; Drop backpack on Most used
+- Auto Lobby (WIP) timed boosts
 
 ---
 

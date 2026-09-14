@@ -70,7 +70,7 @@ SHAPE_2D_NAMES: tuple[str, ...] = (
     "lightning",
     "vault",
     "psycho",
-    "pyramid",
+    "triangle",
     "hexagon",
     "honeycomb",
     "scatter",
@@ -87,6 +87,7 @@ SHAPE_NAMES: tuple[str, ...] = (*SHAPE_3D_NAMES, *SHAPE_2D_NAMES)
 SHAPE_LABELS: dict[str, str] = {
     "dna_helix": "DNA helix",
     "pyramid_3d": "pyramid",
+    "triangle": "triangle",
     "psycho": "psycho",
     "claptrap": "Claptrap",
     "x_mark": "X mark",
@@ -178,8 +179,30 @@ _status = "Idle."
 _hooks_installed = False
 _join_reapply_pending = False
 _join_reapply_at = 0.0
+_join_push_at: float = 0.0
+_join_world_pending: int = 0
+_join_world_pending_at: float = 0.0
+_JOIN_PUSH_COOLDOWN_SEC = 90.0
+_JOIN_WORLD_STABLE_SEC = 1.1
 _coop_followup_sync_at: float = 0.0
 _coop_followup_waves: int = 0
+# After clients receive the settled pose: keep held/3D/Stay pins frozen.
+# Mass gravity wake collapses silhouettes and hitchs the lobby.
+_coop_pickup_safe_active: bool = False
+_coop_pickup_unlock_at: float = 0.0
+_coop_pickup_unlock_cursor: int = 0
+# Snapshot at arm time — do not re-evaluate Stay mid-publish (shape/stay can flicker).
+_coop_keep_freeze: bool = False
+# After settle: briefly drop then re-open each actor's net channel so guests who
+# were already in the lobby get the same fresh copy a rejoin would give them.
+_channel_refresh_off: list[int] = []
+_channel_refresh_on: list[int] = []
+_channel_refresh_log_at: float = 0.0
+# Visibility-only ForceNet after GLH-style pickable place (no pin / no freeze).
+_coop_vis_addrs: list[int] = []
+_coop_vis_cursor: int = 0
+_coop_vis_until: float = 0.0
+_coop_vis_ok: set[int] = set()
 _float_jobs: list[dict[str, Any]] = []
 _pinned_slots: list[dict[str, Any]] = []
 _pin_tick: int = 0
@@ -548,9 +571,11 @@ _SHAPE_GEAR_TYPES: frozenset[str] = frozenset(
 _SHAPE_REJECT_BLOB = (
     "stringlight",
     "string_light",
+    "stringlights",
     "pile_string",
     "sm_pile",
     "pile_stringlights",
+    "sm_pile_stringlights",
     "io_placeable",
     "placeable",
     "mercenary day",
@@ -561,7 +586,13 @@ _SHAPE_REJECT_BLOB = (
     "decoration",
     "hotdog",
     "hot_dog",
+    "fairylight",
+    "fairy_light",
 )
+# Hard pin ceiling — 500+ Place Fully + ForceNet guest sync AVs (0xffffffffffffffff).
+_MAX_SHAPE_PINS_SOLO = 360
+# Shiny dumps are ~220; 180 left a ring of orphans after Place Fully in lobby.
+_MAX_SHAPE_PINS_COOP = 240
 
 
 def _classify_gear_type(inv: Any) -> str:
@@ -677,6 +708,98 @@ def _is_shape_gear_pickup(inv: Any, *, pool_name: str = "") -> bool:
     if any(k in blob for k in ("oakweapon", "inventoryweapon", "weap_", "shielddata", "grenadedata", "classmod")):
         return True
     return False
+
+
+def _shape_gear_list(candidates: list[Any]) -> list[Any]:
+    """Filter + cap ground loot for Place Fully / arrange (stringlight piles AV)."""
+    gear: list[Any] = []
+    skipped = 0
+    for inv in candidates:
+        if not _live(inv):
+            continue
+        try:
+            if not _is_shape_gear_pickup(inv):
+                skipped += 1
+                continue
+        except Exception:
+            skipped += 1
+            continue
+        gear.append(inv)
+    # Prefer the dump pile — find_all order left nearby guns out and kept distant junk.
+    ox, oy, oz = _drop_origin
+    if gear and (abs(ox) + abs(oy) + abs(oz)) > 1.0:
+
+        def _near_key(inv: Any) -> float:
+            try:
+                loc = inv.K2_GetActorLocation()
+                dx = float(loc.X) - ox
+                dy = float(loc.Y) - oy
+                dz = float(loc.Z) - oz
+                return dx * dx + dy * dy + dz * dz
+            except Exception:
+                return 1.0e18
+
+        try:
+            gear.sort(key=_near_key)
+        except Exception:
+            pass
+    cap = _MAX_SHAPE_PINS_COOP if _want_coop_replicate() else _MAX_SHAPE_PINS_SOLO
+    if len(gear) > cap:
+        _log_dev(f"Shape pin cap: using {cap}/{len(gear)} gear (skipped decor={skipped}).")
+        gear = gear[:cap]
+    elif skipped:
+        _log_dev(f"Shape gear filter skipped {skipped} placeable/light/non-gun pickup(s).")
+    return gear
+
+
+def _pile_unshaped_gear_near_origin(
+    *,
+    used: set[int],
+    ox: float,
+    oy: float,
+    oz: float,
+    yaw: float,
+) -> int:
+    """Pull leftover dump guns into a small foot pile so reshape does not leave a ring."""
+    try:
+        loot = sorted_ground_loot(include_consumables=False)
+    except Exception:
+        return 0
+    used_addrs = {int(a) for a in used if a}
+    leftovers: list[Any] = []
+    for inv in loot.get("Gear") or []:
+        if not _live(inv):
+            continue
+        addr = int(_uobject_addr(inv) or 0)
+        if not addr or addr in used_addrs:
+            continue
+        try:
+            if not _is_shape_gear_pickup(inv):
+                continue
+        except Exception:
+            continue
+        try:
+            loc = inv.K2_GetActorLocation()
+            dx = float(loc.X) - ox
+            dy = float(loc.Y) - oy
+            dz = float(loc.Z) - oz
+            if (dx * dx + dy * dy + dz * dz) > (2200.0 * 2200.0):
+                continue
+        except Exception:
+            continue
+        leftovers.append(inv)
+        if len(leftovers) >= 80:
+            break
+    moved = 0
+    for i, inv in enumerate(leftovers):
+        ang = (i * 0.55) % (math.pi * 2.0)
+        rad = 55.0 + (i % 8) * 12.0
+        wx = ox + math.cos(ang + yaw) * rad
+        wy = oy + math.sin(ang + yaw) * rad
+        wz = oz + 8.0 + (i % 5) * 4.0
+        if _teleport_pickup(inv, wx, wy, wz, yaw, freeze=False, replicate=False):
+            moved += 1
+    return moved
 
 
 def _purge_decor_pins() -> int:
@@ -849,9 +972,285 @@ def _build_layout_entries_from_pins() -> int:
     return len(entries)
 
 
+def _progression_network_busy() -> bool:
+    """Pause shape net pushes while challenge RPC workflows own the co-op lane."""
+    try:
+        from . import uvhm_runtime
+
+        status = uvhm_runtime.status()
+        if bool(status.get("running") or status.get("queued")):
+            return True
+    except Exception:
+        pass
+    try:
+        from . import challenge_bulk_runtime
+
+        status = challenge_bulk_runtime.status()
+        if bool(status.get("active") or status.get("queued")):
+            return True
+    except Exception:
+        pass
+    return False
+
+
+def _arm_coop_pickup_safe(*, delay: float = 2.5) -> None:
+    """Queue one bounded slot publish, then keep freeze (or rare ground unlock)."""
+    global _coop_pickup_safe_active, _coop_pickup_unlock_at, _coop_pickup_unlock_cursor
+    global _guest_sync_active, _guest_sync_cursor, _guest_sync_last
+    global _coop_followup_sync_at, _coop_followup_waves, _coop_pins_synced
+    global _coop_keep_freeze
+    if not _want_coop_replicate() or not _pinned_slots:
+        return
+    _coop_pickup_safe_active = True
+    _coop_keep_freeze = bool(_coop_should_keep_freeze())
+    _coop_pickup_unlock_at = time.monotonic() + max(0.0, float(delay))
+    _coop_pickup_unlock_cursor = 0
+    # Dedicated pickup-safe tick owns the one-time publish. Never start the old
+    # guest retry/follow-up machinery.
+    _guest_sync_active = False
+    _guest_sync_cursor = 0
+    _guest_sync_last = 0.0
+    _coop_followup_sync_at = 0.0
+    _coop_followup_waves = 0
+    _coop_pins_synced = 0
+    _last_layout["pickup_safe_ready"] = False
+    _last_layout["pickup_safe_armed_at"] = time.monotonic()
+    _last_layout["pickup_safe_progress_at"] = 0.0
+    keep_hold = bool(_should_hold_in_air())
+    for row in _pinned_slots:
+        row.pop("guest_ok", None)
+        row.pop("guest_fail", None)
+        row.pop("guest_skip", None)
+        row.pop("guest_synced_at", None)
+        row.pop("client_motion_unlocked", None)
+        row.pop("attract_ready", None)
+        row["guest_publish_attempts"] = 0
+        # Temporary hold only while Stay/3D needs it — publish unlock clears this.
+        if keep_hold:
+            row["hold"] = True
+        try:
+            row["expires"] = time.monotonic() + 600.0
+        except Exception:
+            pass
+    _log(
+        f"Co-op shape publish queued ({len(_pinned_slots)} pin(s)) — then unlock for normal grab. "
+        "Friends: join after Ready, or rejoin once if they watched it form."
+    )
+
+
+def _tick_coop_pickup_safe(now: float) -> None:
+    """Publish each slot once. Held/Stay/3D pins stay frozen — never mass-drop."""
+    global _coop_pickup_unlock_at, _coop_pickup_unlock_cursor
+    global _coop_pins_synced, _coop_pickup_safe_active
+    global _pinned_slots, _pickup_by_addr
+    global _guest_sync_active, _coop_followup_waves, _coop_followup_sync_at
+    global _coop_keep_freeze
+    if not _coop_pickup_safe_active or _coop_pickup_unlock_at <= 0.0:
+        return
+    if not _pinned_slots:
+        # Pins evaporated mid-publish (old 6s TTL) — stop hanging forever.
+        _coop_pickup_safe_active = False
+        _coop_keep_freeze = False
+        _coop_pickup_unlock_at = 0.0
+        _log("Co-op shape publish aborted: pins cleared before guest sync finished.")
+        return
+    if now < _coop_pickup_unlock_at:
+        return
+    if _progression_network_busy() or _in_join_quiet(now):
+        _coop_pickup_unlock_at = now + 0.5
+        return
+    rows = _pinned_slots
+    n = len(rows)
+    keep_freeze = bool(_coop_keep_freeze)
+    armed_at = float(_last_layout.get("pickup_safe_armed_at") or now)
+    # Force finish so we never leave a partial frozen house for guests.
+    force_done = (now - armed_at) >= 40.0
+    # Stay/held: stay conservative. Ground: still avoid ForceNet storms (lag).
+    if keep_freeze:
+        publish_budget = 3 if n > 100 else 4
+        unlock_budget = 8
+        retry_gap = 0.14 if n > 100 else 0.10
+    else:
+        publish_budget = 4 if n > 80 else 5
+        unlock_budget = 10
+        retry_gap = 0.10
+    attempted = 0
+    walked = 0
+    while walked < n and attempted < publish_budget:
+        idx = _coop_pickup_unlock_cursor % max(1, n)
+        _coop_pickup_unlock_cursor = (idx + 1) % max(1, n)
+        walked += 1
+        row = rows[idx]
+        if row.get("guest_ok") or row.get("guest_skip"):
+            continue
+        attempted += 1
+        addr = int(row.get("addr") or 0)
+        inv = _live_pickup(addr) if addr else None
+        if inv is None:
+            inv = _resolve_pin_inv(row, fresh=False)
+        if inv is None or not _live(inv):
+            misses = int(row.get("guest_publish_attempts") or 0) + 1
+            row["guest_publish_attempts"] = misses
+            if misses >= 8 or force_done:
+                row["guest_skip"] = True
+                row["guest_synced_at"] = now
+            continue
+        try:
+            ok = _push_pin_to_guests(row, inv)
+        except Exception:
+            ok = False
+        if ok or row.get("guest_ok") or row.get("guest_skip"):
+            row["guest_ok"] = True
+            row["guest_synced_at"] = now
+            row.pop("guest_fail", None)
+            continue
+        # Net budget / quiet miss — retry until force_done (do not guest_skip early).
+        if force_done:
+            row["guest_skip"] = True
+            row["guest_ok"] = True
+            row["guest_synced_at"] = now
+
+    unlocked = 0
+    for row in rows:
+        if unlocked >= unlock_budget and not force_done:
+            break
+        if row.get("client_motion_unlocked"):
+            continue
+        if row.get("guest_skip") and not row.get("guest_ok"):
+            row["client_motion_unlocked"] = True
+            continue
+        synced_at = float(row.get("guest_synced_at") or 0.0)
+        if not force_done:
+            if not (row.get("guest_ok") or row.get("guest_skip")):
+                continue
+            if synced_at <= 0.0 or now - synced_at < 0.35:
+                continue
+        addr = int(row.get("addr") or 0)
+        inv = _live_pickup(addr) if addr else None
+        if inv is None or not _live(inv):
+            row["client_motion_unlocked"] = True
+            continue
+        try:
+            # Soft stamp during publish for visibility; final unlock turns on Attract.
+            if keep_freeze:
+                _stamp_guest_grab_ready(inv)
+            else:
+                _unlock_pin_for_normal_grab(inv)
+                row["hold"] = False
+                row["attract_ready"] = True
+            row["client_motion_unlocked"] = True
+            unlocked += 1
+        except Exception:
+            if force_done:
+                row["client_motion_unlocked"] = True
+            continue
+
+    _coop_pins_synced = sum(1 for row in rows if row.get("guest_ok"))
+    pending = sum(
+        1
+        for row in rows
+        if not ((row.get("guest_ok") or row.get("guest_skip")) and row.get("client_motion_unlocked"))
+    )
+    ready = pending <= 0 or force_done
+    if force_done and pending:
+        # Last-chance unlock whatever is still tracked.
+        for row in rows:
+            if row.get("client_motion_unlocked"):
+                continue
+            addr = int(row.get("addr") or 0)
+            inv = _live_pickup(addr) if addr else None
+            if inv is not None and _live(inv):
+                try:
+                    _unlock_pin_for_normal_grab(inv)
+                    row["hold"] = False
+                    row["attract_ready"] = True
+                except Exception:
+                    pass
+            row["client_motion_unlocked"] = True
+            if not (row.get("guest_ok") or row.get("guest_skip")):
+                row["guest_skip"] = True
+                row["guest_ok"] = True
+        pending = 0
+        ready = True
+
+    prog_at = float(_last_layout.get("pickup_safe_progress_at") or 0.0)
+    if now - prog_at >= 2.5 and not ready:
+        _last_layout["pickup_safe_progress_at"] = now
+        _log(
+            f"Co-op shape publish… {_coop_pins_synced}/{n} netted, "
+            f"{n - pending}/{n} grab-ready ({pending} left)."
+        )
+
+    _coop_pickup_unlock_at = now + (0.8 if ready else retry_gap)
+    if ready and not bool(_last_layout.get("pickup_safe_ready")):
+        _last_layout["pickup_safe_ready"] = True
+        skipped = sum(1 for row in rows if row.get("guest_skip"))
+        kept = [row for row in rows if not row.get("guest_skip")]
+        # Final Attract unlock pass — clears frozen Use-only state for the lobby.
+        for i, row in enumerate(kept):
+            row["hold"] = False
+            row["attract_ready"] = True
+            addr = int(row.get("addr") or 0)
+            inv = _live_pickup(addr) if addr else None
+            if inv is None or not _live(inv):
+                continue
+            try:
+                # Sparse ForceNet so 120+ unlocks do not hitch the lobby.
+                _unlock_pin_for_normal_grab(inv, net_push=(i % 4 == 0))
+            except Exception:
+                pass
+        _pinned_slots = kept
+        addr_map: dict[int, Any] = {}
+        for row in kept:
+            addr = int(row.get("addr") or 0)
+            if not addr:
+                continue
+            inv = _live_pickup(addr)
+            if inv is not None:
+                addr_map[addr] = inv
+        _pickup_by_addr = addr_map
+        _log(
+            f"Co-op shape ready: {_coop_pins_synced}/{n} visible — grab normally"
+            + (f" ({skipped} skipped)" if skipped else "")
+            + (" (forced)" if force_done else "")
+            + "."
+        )
+        _coop_pickup_safe_active = False
+        _coop_keep_freeze = False
+        _coop_pickup_unlock_at = 0.0
+        _coop_pickup_unlock_cursor = 0
+        _guest_sync_active = False
+        _coop_followup_waves = 0
+        _coop_followup_sync_at = 0.0
+
+
+def _arm_coop_clean_respawn() -> None:
+    """Disabled for release — respawn dropped guns and still refused guest Use.
+
+    Guests grab shaped loot cleanly if they join after the silhouette is done,
+    or rejoin once. That is the only proven path; do not invent mail/floor piles.
+    """
+    global _reissue_queue
+    if _reissue_queue:
+        _reissue_queue.clear()
+    return
+
+
+def _arm_coop_channel_refresh() -> None:
+    """No-op — SetReplicates toggle and clean respawn both failed guest grab."""
+    return
+
+
+def _tick_coop_channel_refresh(_now: float) -> None:
+    """No-op."""
+    return
+
+
 def _schedule_coop_followup_sync(*, waves: int = 3, gap: float = 3.0) -> None:
     """Late join / streaming clients often miss the first net burst."""
     global _coop_followup_sync_at, _coop_followup_waves
+    if _coop_pickup_safe_active:
+        return
     if not _want_coop_replicate() or not _pinned_slots:
         return
     _coop_followup_waves = max(0, int(waves))
@@ -861,6 +1260,9 @@ def _schedule_coop_followup_sync(*, waves: int = 3, gap: float = 3.0) -> None:
 def _tick_coop_followup_sync(now: float) -> None:
     global _coop_followup_sync_at, _coop_followup_waves, _coop_pins_synced, _guest_sync_cursor
     if _coop_followup_waves <= 0 or now < _coop_followup_sync_at:
+        return
+    if _progression_network_busy():
+        _coop_followup_sync_at = now + 2.0
         return
     if _in_join_quiet(now):
         return
@@ -1195,7 +1597,9 @@ def _normalize_shape_name(shape: str) -> str:
         "gearbox_logo": "house",
         "world_globe": "globe",
         "earth": "globe",
-        "triangle": "pyramid",
+        "triangle": "triangle",
+        "flat_pyramid": "triangle",
+        "pyramid": "pyramid_3d",
         "hex": "hexagon",
         "random": "scatter",
         "random_scatter": "scatter",
@@ -1634,7 +2038,8 @@ def shape_offsets(
         "vault": lambda: _offsets_vault(n, radius),
         "firehawk": lambda: _offsets_firehawk(n, radius),
         "psycho": lambda: _offsets_psycho(n, radius),
-        "pyramid": lambda: _offsets_pyramid(n, spacing),
+        "triangle": lambda: _offsets_pyramid(n, spacing),
+        "pyramid": lambda: _offsets_pyramid_3d(n, radius),
         "hexagon": lambda: _offsets_hexagon(n, radius),
         "honeycomb": lambda: _offsets_honeycomb(n, spacing),
         "scatter": lambda: _offsets_scatter(n, radius),
@@ -4258,11 +4663,11 @@ def _type_pile_centers(types: list[str], radius: float, spacing: float) -> dict[
 # --- teleport / physics -------------------------------------------------------
 
 def _physics_components(inv: Any) -> list[Any]:
-    """Only the pickup primitive. Mesh/RootComponent SetSimulatePhysics AVs on some actors."""
+    """Pickup primitive only. Live dumps: RootPrimitiveComponent is GbxSkeletalMeshComponent."""
     if not _live(inv):
         return []
     out: list[Any] = []
-    for name in ("RootPrimitiveComponent", "CapsuleComponent"):
+    for name in ("RootPrimitiveComponent", "RootComponent", "CapsuleComponent"):
         try:
             comp = getattr(inv, name, None)
         except Exception:
@@ -4297,6 +4702,30 @@ def _zero_velocity(inv: Any) -> None:
                 sleep()
             except Exception:
                 pass
+    # Live dump: keep RepMovement sleep so guests don't get a physics launch.
+    try:
+        movement = getattr(inv, "ReplicatedMovement", None)
+        if movement is not None:
+            try:
+                setattr(movement, "LinearVelocity", zero)
+            except Exception:
+                pass
+            try:
+                setattr(movement, "AngularVelocity", zero)
+            except Exception:
+                pass
+            try:
+                setattr(movement, "bSimulatedPhysicSleep", True)
+            except Exception:
+                pass
+            try:
+                setattr(movement, "bRepPhysics", False)
+            except Exception:
+                pass
+            # Never reassign the RepMovement struct in shipping BL4; native
+            # pickup destruction can race this copy and AV pyunrealsdk.
+    except Exception:
+        pass
 
 
 def _set_pickup_collision(inv: Any, *, block: bool) -> None:
@@ -4329,6 +4758,9 @@ def _set_physics(inv: Any, enabled: bool, *, keep_grab_collision: bool = False) 
 
     keep_grab_collision=True leaves QueryAndPhysics on while frozen so lobby guests
     can still interact with silhouette items (QueryOnly was leaving only the floor pile grabable).
+
+    Never call ForceDisableSimulatePhysics — it sticks and leaves lobby mates unable
+    to Use even after a later SetSimulatePhysics(True) / world unlock (3.8.172).
     """
     if not _uobject_addr(inv):
         return
@@ -4380,11 +4812,71 @@ _net_push_window_n: int = 0
 # Hard cap — Place Fully house (~250+) ForceNetUpdates in one frame AVs the host.
 _NET_PUSH_WINDOW_SEC = 0.05
 _NET_PUSH_PER_WINDOW = 6
+# ENetDormancy: 0 Never, 1 Awake, 2 DormantAll, 3 DormantPartial, 4 Initial.
+# Live loot dumps read NetDormancy=3 — that is the engine's per-connection bandwidth
+# saver, not "never". Writing 3 let shaped pickups go dormant for guests, so host
+# teleports stopped replicating and the lobby only ever saw the settle flush.
+_DORM_NEVER = 0
+_DORM_AWAKE = 1
+
+
+def _stamp_shape_net_live(inv: Any, *, freq: float = 30.0, flush: bool = True) -> bool:
+    """Keep one shaped pickup permanently replicating (DORM_Never) for lobby guests.
+
+    One stamp per item; normal replication then carries every later teleport, so
+    the drop animation needs no per-frame ForceNetUpdate storm.
+    """
+    if inv is None or not _live(inv):
+        return False
+    addr0 = _uobject_addr(inv)
+    if not addr0:
+        return False
+    try:
+        for name in ("SetReplicates", "SetReplicateMovement"):
+            fn = getattr(inv, name, None)
+            if callable(fn):
+                try:
+                    fn(True)
+                except Exception:
+                    pass
+        if _uobject_addr(inv) != addr0:
+            return False
+        inv.bReplicates = True
+        inv.bReplicateMovement = True
+        inv.bAlwaysRelevant = True
+        inv.bOnlyRelevantToOwner = False
+        inv.bNetUseOwnerRelevancy = False
+        inv.NetUpdateFrequency = float(freq)
+        inv.MinNetUpdateFrequency = 2.0
+        try:
+            inv.RemoteRole = 1
+        except Exception:
+            pass
+    except Exception:
+        return False
+    try:
+        dorm = getattr(inv, "SetNetDormancy", None)
+        if callable(dorm) and _uobject_addr(inv) == addr0:
+            dorm(_DORM_NEVER)
+    except Exception:
+        pass
+    if flush:
+        try:
+            if _uobject_addr(inv) != addr0:
+                return False
+            fn = getattr(inv, "FlushNetDormancy", None)
+            if callable(fn):
+                fn()
+        except Exception:
+            return False
+    return True
 
 
 def _force_net_update(inv: Any, *, coop_pin: bool = False, guest_push: bool = False) -> bool:
     """One net flush. Returns False if skipped (budget / quiet / dead) so callers can retry."""
     global _net_push_window_at, _net_push_window_n
+    if (guest_push or coop_pin) and _progression_network_busy():
+        return False
     # Join stream/GC turns wrappers into 0xffffffffffffffff mid-call — bail first.
     if not _live(inv):
         return False
@@ -4394,55 +4886,73 @@ def _force_net_update(inv: Any, *, coop_pin: bool = False, guest_push: bool = Fa
     addr0 = _uobject_addr(inv)
     if not addr0:
         return False
+    try:
+        if _pickup_skip_shape(inv):
+            return False
+    except Exception:
+        return False
     if guest_push or coop_pin:
         now = time.monotonic()
         if now - _net_push_window_at >= _NET_PUSH_WINDOW_SEC:
             _net_push_window_at = now
             _net_push_window_n = 0
-        if _net_push_window_n >= _NET_PUSH_PER_WINDOW:
+        # Pickup-safe publish: slightly higher cap, still bounded (no 14/window lag).
+        push_cap = _NET_PUSH_PER_WINDOW
+        try:
+            if guest_push and _coop_pickup_safe_active:
+                push_cap = 8
+        except Exception:
+            push_cap = _NET_PUSH_PER_WINDOW
+        if _net_push_window_n >= push_cap:
             return False
-    for name in ("SetReplicates", "SetReplicateMovement"):
-        if _uobject_addr(inv) != addr0:
-            return False
-        fn = getattr(inv, name, None)
-        if callable(fn):
-            try:
-                fn(True)
-            except Exception:
-                pass
-    if guest_push:
-        if _uobject_addr(inv) != addr0:
-            return False
-        dorm = getattr(inv, "SetNetDormancy", None)
-        if callable(dorm):
-            try:
-                dorm(3)  # DORM_Never
-            except Exception:
-                pass
     try:
-        if _uobject_addr(inv) != addr0:
-            return False
-        inv.bReplicates = True
-        inv.bReplicateMovement = True
-        inv.bAlwaysRelevant = bool(guest_push or coop_pin)
-        inv.NetUpdateFrequency = 40.0 if guest_push else (24.0 if coop_pin else 100.0)
-    except Exception:
-        pass
-    flushed = False
-    for name in ("ForceNetUpdate", "FlushNetDormancy"):
-        if _uobject_addr(inv) != addr0:
-            return False
-        fn = getattr(inv, name, None)
-        if callable(fn):
-            try:
-                fn()
-                flushed = True
-            except Exception:
+        for name in ("SetReplicates", "SetReplicateMovement"):
+            if _uobject_addr(inv) != addr0:
                 return False
-            break
-    if flushed and (guest_push or coop_pin):
-        _net_push_window_n += 1
-    return bool(flushed)
+            fn = getattr(inv, name, None)
+            if callable(fn):
+                try:
+                    fn(True)
+                except Exception:
+                    pass
+        if guest_push:
+            if _uobject_addr(inv) != addr0:
+                return False
+            dorm = getattr(inv, "SetNetDormancy", None)
+            if callable(dorm):
+                try:
+                    dorm(_DORM_NEVER)
+                except Exception:
+                    pass
+        try:
+            if _uobject_addr(inv) != addr0:
+                return False
+            inv.bReplicates = True
+            inv.bReplicateMovement = True
+            inv.bAlwaysRelevant = bool(guest_push or coop_pin)
+            inv.NetUpdateFrequency = 40.0 if guest_push else (24.0 if coop_pin else 100.0)
+        except Exception:
+            pass
+        flushed = False
+        for name in ("ForceNetUpdate", "FlushNetDormancy"):
+            if _uobject_addr(inv) != addr0:
+                return False
+            fn = getattr(inv, name, None)
+            if callable(fn):
+                try:
+                    fn()
+                    flushed = True
+                except Exception:
+                    return False
+                break
+        # Wrapper can die mid-ForceNet — never touch it again.
+        if _uobject_addr(inv) != addr0:
+            return False
+        if flushed and (guest_push or coop_pin):
+            _net_push_window_n += 1
+        return bool(flushed)
+    except Exception:
+        return False
 
 
 def _relax_pinned_net_load() -> None:
@@ -4675,7 +5185,7 @@ def _begin_join_quiet(*, seconds: float = 8.0, reason: str = "") -> None:
     hold_shape = _held_coop_shape_active()
     hold_n = sum(1 for row in _pinned_slots if row.get("hold"))
     if hold_shape and hold_n > 120:
-        seconds = max(float(seconds), min(20.0, 8.0 + hold_n * 0.015))
+        seconds = max(float(seconds), min(12.0, 4.0 + hold_n * 0.01))
     until = time.monotonic() + max(3.0, float(seconds))
     if until <= float(_join_quiet_until or 0.0):
         return
@@ -4688,19 +5198,9 @@ def _begin_join_quiet(*, seconds: float = 8.0, reason: str = "") -> None:
         if row.get("hold") and int(row.get("addr") or 0)
     }
     if hold_shape:
-        # Do not invalidate/wipe the addr map at join start — half the house lost wrappers
-        # and fell before rebind could catch up.
-        try:
-            rebound = _rebind_hold_pins_after_join()
-            repinned = _repin_host_hold_pins(
-                limit=_join_hold_repin_cap(base=64), refresh_cache=False
-            )
-            if rebound or repinned:
-                _log_dev(
-                    f"Join hold prep: {rebound} pin(s) remapped, {repinned} re-frozen before quiet."
-                )
-        except Exception:
-            pass
+        # Held silhouettes stay frozen as-is. Rebind/repin during join was the
+        # null AV right after guest Use (C87FB5F6 — double heartbeat + Use).
+        pass
     else:
         preserved = {a: _pickup_by_addr[a] for a in hold_addrs if a in _pickup_by_addr}
         invalidate_pickup_cache()
@@ -4716,18 +5216,14 @@ def _begin_join_quiet(*, seconds: float = 8.0, reason: str = "") -> None:
             row.pop("guest_ok", None)
             row.pop("guest_fail", None)
     if hold_shape:
-        # Never go fully dark on net during join quiet — guests simulate physics and the house falls.
+        # Quiet only — no ForceNet / teleport prep on hundreds of pins.
         global _join_guest_boost_until, _join_hold_freeze_at
-        _join_guest_boost_until = time.monotonic() + 90.0
+        _join_guest_boost_until = time.monotonic() + 45.0
         _join_hold_freeze_at = 0.0
-        _guest_sync_active = True
+        _guest_sync_active = False
         _guest_sync_cursor = 0
         _guest_sync_last = 0.0
         _guest_maint_last = 0.0
-        try:
-            _purge_decor_pins()
-        except Exception:
-            pass
     else:
         _guest_sync_active = False
         _guest_sync_cursor = 0
@@ -4735,7 +5231,7 @@ def _begin_join_quiet(*, seconds: float = 8.0, reason: str = "") -> None:
         f"Join wrapper drop {seconds:.0f}s"
         + (f" ({reason})" if reason else "")
         + (
-            " — held shape guest heartbeat stays on."
+            " — held shape left frozen (no join teleports)."
             if hold_shape
             else " — host pins stay frozen; no stale teleports."
         )
@@ -4745,22 +5241,59 @@ def _begin_join_quiet(*, seconds: float = 8.0, reason: str = "") -> None:
 def _poll_party_join(now: float) -> None:
     """Detect lobby joins before pin/guest ticks. Must run first on the shape poll."""
     global _party_poll_at, _join_reapply_pending, _join_reapply_at, _coop_pins_synced
+    global _join_world_pending, _join_world_pending_at
     gap = 0.45 if _pinned_slots else 1.5
     if now - _party_poll_at < gap:
         return
     _party_poll_at = now
     try:
         count = _party_count()
+        in_world = _party_in_world_count()
     except Exception:
         return
     prev = int(_last_layout.get("party_count") or 0)
+    prev_world = int(_last_layout.get("party_in_world") or 0)
     if count <= 0:
+        return
+    # Character select still bumps PlayerArray — wait for a real pawn before
+    # join quiet / heartbeat or the host hitchs on a guest who is not in-world yet.
+    if count > prev and in_world <= prev_world and _pinned_slots:
+        _last_layout["party_count"] = count
+        _last_layout["party_in_world"] = in_world
+        _join_world_pending = 0
+        _log_dev(
+            f"Party grew {prev}->{count} but in-world {prev_world}->{in_world} "
+            "(character select?) — skip shape join work."
+        )
         return
     if count > prev:
         pass  # mobility_runtime party-join scrub handles remote jump/gravity (not loot_shapes)
-    if count > prev and _pinned_slots:
+    # Pawn can flicker once at spawn — require a stable higher in-world count.
+    if in_world > prev_world and _pinned_slots:
+        if _join_world_pending != in_world:
+            _join_world_pending = in_world
+            _join_world_pending_at = now
+            _last_layout["party_count"] = count
+            _log_dev(
+                f"In-world {prev_world}->{in_world} seen — wait {_JOIN_WORLD_STABLE_SEC:.1f}s "
+                "before shape join work."
+            )
+            return
+        if (now - float(_join_world_pending_at or 0.0)) < _JOIN_WORLD_STABLE_SEC:
+            _last_layout["party_count"] = count
+            return
+        _join_world_pending = 0
         _last_layout["party_count"] = count
-        _begin_join_quiet(seconds=8.0, reason=f"party {prev}->{count}")
+        _last_layout["party_in_world"] = in_world
+        if _coop_pickup_safe_active:
+            _join_reapply_pending = False
+            _arm_coop_pickup_safe(delay=0.15)
+            _log_dev(f"In-world grew {prev_world}->{in_world}; pickup-safe republish queued.")
+            return
+        # Held silhouettes: short quiet only. No mass repin (that AVd after guest Use).
+        hold_n = sum(1 for row in _pinned_slots if row.get("hold"))
+        quiet_s = 3.0 if hold_n > 80 else 5.0
+        _begin_join_quiet(seconds=quiet_s, reason=f"in-world {prev_world}->{in_world}")
         _coop_pins_synced = 0
         if not _held_coop_shape_active():
             try:
@@ -4769,34 +5302,81 @@ def _poll_party_join(now: float) -> None:
                     _log_dev(f"Join layout refresh: {tracked} mirror slot(s) for re-apply.")
             except Exception:
                 pass
-        _join_reapply_pending = True
-        _join_reapply_at = float(_join_quiet_until) + 0.12
-        _log_dev(f"Party grew {prev}->{count}; guest shape push after join quiet.")
-    elif count > prev and not _pinned_slots:
+            _join_reapply_pending = True
+            _join_reapply_at = float(_join_quiet_until) + 0.12
+        else:
+            # Held shape: soft republish after quiet so late joiners can Use slots.
+            # Leaving pins "alone" left guests staring at a silhouette they could not grab.
+            _join_reapply_pending = True
+            _join_reapply_at = float(_join_quiet_until) + 0.20
+            try:
+                _build_layout_entries_from_pins()
+            except Exception:
+                pass
+            _log(
+                f"Guest in-world — held shape soft-republish queued "
+                f"({len(_pinned_slots)} pin(s)) after join quiet."
+            )
+        _log_dev(f"In-world grew {prev_world}->{in_world}; join quiet armed.")
+        return
+    if in_world < prev_world:
+        _join_world_pending = 0
+    if count > prev and not _pinned_slots:
         stale = len(_last_layout.get("entries") or [])
         if stale:
             _clear_stale_layout_entries()
             _cancel_join_reapply_work()
             _log_dev(f"Party grew {prev}->{count}; cleared {stale} stale layout entries (no live pins).")
         _last_layout["party_count"] = count
-    elif count != prev:
+        _last_layout["party_in_world"] = in_world
+        _join_world_pending = 0
+        if in_world > prev_world:
+            try:
+                _stamp_loose_world_pickups_for_guests(limit=64)
+            except Exception:
+                pass
+    elif in_world > prev_world and not _pinned_slots:
         _last_layout["party_count"] = count
+        _last_layout["party_in_world"] = in_world
+        _join_world_pending = 0
+        try:
+            _stamp_loose_world_pickups_for_guests(limit=64)
+        except Exception:
+            pass
+    elif count != prev or in_world != prev_world:
+        _last_layout["party_count"] = count
+        _last_layout["party_in_world"] = in_world
+        if in_world <= prev_world:
+            _join_world_pending = 0
 
 
 def _schedule_coop_pin_tail(*, limit: int = 2) -> None:
-    """3.8.169 path: ~2 pins/sec to lobby while host builds — freeze-first guest push, no owner-only."""
+    """Drip a few slot poses to lobby while host builds — never every spawn."""
     global _coop_tail_throttle_at
+    if _coop_pickup_safe_active:
+        return
     if not _want_coop_replicate():
+        return
+    if _progression_network_busy():
         return
     now = time.monotonic()
     mid = bool(_land_active and not _landing_settle_done)
-    min_gap = 0.50 if mid else 0.14
+    # ULM / Spawn All mid-dump: host hitch was from ForceNet every catch.
+    if mid and _bulk_healthcheck_mode:
+        min_gap = 1.35
+        push_n = 1
+    elif mid:
+        min_gap = 0.85
+        push_n = 1
+    else:
+        min_gap = 0.14
+        push_n = max(1, min(4, int(limit)))
     if now - _coop_tail_throttle_at < min_gap:
         return
     _coop_tail_throttle_at = now
     try:
         _coop_sync_pins_tail(
-            limit=max(1, min(2 if mid else 4, int(limit))),
+            limit=push_n,
             allow_mid_dump=True,
         )
     except Exception:
@@ -4807,6 +5387,9 @@ def _begin_guest_sync(*, force: bool = False, clear_ok: bool = True) -> None:
     """Spread co-op pin pushes over many ticks — never blast 200+ ForceNetUpdates at once."""
     global _guest_sync_cursor, _guest_sync_active, _guest_sync_last, _coop_pins_synced
     global _guest_sync_complete_announced
+    if _coop_pickup_safe_active:
+        _guest_sync_active = False
+        return
     if _in_join_quiet():
         return
     if not _want_coop_replicate() or not _pinned_slots:
@@ -4851,6 +5434,15 @@ def _tick_coop_hold_guest_heartbeat(now: float, *, join_quiet: bool = False) -> 
             )
         except Exception:
             return 0
+    # After settle: NEVER restamp guest_ok pins — that ForceNet freeze is why guests
+    # float mid-air when they grab (host pin never drifts, heartbeat yanks).
+    if bool(_landing_settle_done) and not _mid_shape_dump():
+        pending = [row for row in _pinned_slots if not row.get("guest_ok") and not row.get("guest_skip")]
+        if not pending:
+            return 0
+        hold_rows = pending
+    else:
+        hold_rows = [row for row in _pinned_slots if row.get("hold") or not row.get("guest_ok")]
     gap = 1.8
     hold_n = held_pin_count()
     if hold_n > 160:
@@ -4860,7 +5452,6 @@ def _tick_coop_hold_guest_heartbeat(now: float, *, join_quiet: bool = False) -> 
     if now - _guest_maint_last < gap:
         return 0
     _guest_maint_last = now
-    hold_rows = [row for row in _pinned_slots if row.get("hold") or not row.get("guest_ok")]
     if not hold_rows:
         return 0
     budget = 3 if hold_n > 160 else (4 if hold_n > 80 else 8)
@@ -4925,6 +5516,13 @@ def _abandon_unsyncable_guest_pins(*, max_fail: int = 12) -> int:
 
 def _tick_guest_sync(now: float) -> None:
     global _guest_sync_active, _guest_sync_last, _guest_sync_refresh_at, _guest_sync_complete_announced
+    if _coop_pickup_safe_active:
+        _guest_sync_active = False
+        return
+    # Local pins keep the shape stable; guest net pushes resume once the
+    # progression RPC lane is idle.
+    if _progression_network_busy():
+        return
     join_quiet = _in_join_quiet(now)
     if join_quiet:
         if _held_coop_shape_active():
@@ -4936,23 +5534,27 @@ def _tick_guest_sync(now: float) -> None:
     if not _guest_sync_active or not _want_coop_replicate() or not _pinned_slots:
         _guest_sync_active = False
         return
-    gap = 0.12 if _landing_settle_done else 0.22
+    try:
+        _purge_decor_pins()
+    except Exception:
+        pass
+    gap = 0.18 if _landing_settle_done else 0.28
     hold_n = held_pin_count()
     if hold_n > 200:
-        gap = max(gap, 0.55)
+        gap = max(gap, 0.75)
     elif hold_n > 120:
-        gap = max(gap, 0.38)
+        gap = max(gap, 0.50)
     elif hold_n > 80:
-        gap = max(gap, 0.28)
+        gap = max(gap, 0.35)
     if now - _guest_sync_last < gap:
         return
     _guest_sync_last = now
-    if now - _guest_sync_refresh_at >= 2.5:
+    if now - _guest_sync_refresh_at >= 3.5:
         _guest_sync_refresh_at = now
         if not (_bulk_healthcheck_mode and _land_active and not _landing_settle_done):
             try:
                 # Large held shapes: skip fresh find_all during sync (AV / hitch).
-                if not (_held_coop_shape_active() and hold_n > 80):
+                if not (_held_coop_shape_active() and hold_n > 60):
                     _refresh_live_pickups()
             except Exception:
                 pass
@@ -4973,17 +5575,17 @@ def _tick_guest_sync(now: float) -> None:
         return
     synced = 0
     held_shape = any(row.get("hold") for row in _pinned_slots)
-    budget = 48 if join_boost else (28 if held_shape else 16)
+    budget = 24 if join_boost else (12 if held_shape else 10)
     if join_boost and hold_n > 120:
-        budget = min(budget, 8)
-    elif join_boost and hold_n > 80:
-        budget = min(budget, 12)
-    elif held_shape and hold_n > 200:
         budget = min(budget, 4)
-    elif held_shape and hold_n > 140:
+    elif join_boost and hold_n > 80:
         budget = min(budget, 6)
+    elif held_shape and hold_n > 200:
+        budget = min(budget, 2)
+    elif held_shape and hold_n > 140:
+        budget = min(budget, 3)
     elif held_shape and hold_n > 80:
-        budget = min(budget, 10)
+        budget = min(budget, 5)
     if join_boost:
         max_fail = 128
     elif held_shape:
@@ -5106,7 +5708,8 @@ def _stamp_replicated_movement(inv: Any, loc: Any, rot: Any) -> None:
             setattr(movement, "LinearVelocity", _make_vector(0.0, 0.0, 0.0))
         except Exception:
             pass
-        setattr(inv, "ReplicatedMovement", movement)
+        # K2_TeleportTo + ForceNetUpdate publish the native transform. Do not
+        # reassign this struct: it raced actor destruction and AV'd.
     except Exception:
         pass
 
@@ -5123,10 +5726,14 @@ def _teleport_pickup(
     freeze: bool | None = None,
     replicate: bool = True,
     guest_push: bool = False,
-    keep_grab_collision: bool = False,
+    keep_grab_collision: bool = True,
     require_net: bool = False,
 ) -> bool:
-    """Freeze first, then K2_TeleportTo. Never physics-on (that flattened houses)."""
+    """Freeze first, then K2_TeleportTo. Never physics-on (that flattened houses).
+
+    keep_grab_collision defaults True so lobby guests can grab frozen shape slots
+    (QueryOnly on 2D grids left interact-looking items that floated instead of picking up).
+    """
     addr0 = _uobject_addr(inv)
     if not addr0:
         return False
@@ -5193,6 +5800,8 @@ def _pin_pickup_to_slot(
     hold: bool | None = None,
 ) -> bool:
     """Freeze on the slot. Lobby: net the pose — dump XYZ never reaches guests."""
+    if _shape_grab_excluded_inv(inv):
+        return False
     pool_name = str(_land_slot_pools.get(int(index)) or "")
     if not _is_shape_gear_pickup(inv, pool_name=pool_name):
         try:
@@ -5317,6 +5926,33 @@ def soft_clear_ground_loot() -> str:
             continue
     global _status
     _status = f"Soft clear: moved {moved} item(s) out of play." if moved else "Soft clear: no ground loot found."
+    _log(_status)
+    return _status
+
+
+def cleanup_world_loot() -> str:
+    """Stronger tidy for Most used: stop floats/nova, clear pins, then soft-clear ground loot."""
+    global _float_jobs, _pinned_slots, _status
+    try:
+        finish_drop_jobs()
+    except Exception:
+        _float_jobs = []
+    try:
+        _reset_nova_explode()
+    except Exception:
+        pass
+    try:
+        _pinned_slots = []
+    except Exception:
+        pass
+    try:
+        from . import shinies
+
+        shinies.cancel_pending_shiny_drops("loot_cleanup")
+    except Exception:
+        pass
+    soft = soft_clear_ground_loot()
+    _status = f"Cleanup loot: stopped motion/pins, then {soft}"
     _log(_status)
     return _status
 
@@ -5478,7 +6114,9 @@ def _spawn_serial_at(serial: str, x: float, y: float, z: float) -> bool:
     if newest is None:
         # Fallback: move any gear closest to the player toward the target.
         return False
-    return _teleport_pickup(newest, x, y, z)
+    return _teleport_pickup(
+        newest, x, y, z, freeze=True, replicate=True, keep_grab_collision=True
+    )
 
 
 def _hide_pickup(inv: Any) -> None:
@@ -5642,6 +6280,7 @@ def quick_arrange(
 ) -> str:
     global _status, _last_layout, _float_jobs, _land_active, _drop_until
     global _deferred_catch_at, _deferred_catch_until, _drop_shape, _drop_origin, _drop_yaw
+    global _landing_settle_done
     anchor = _player_anchor()
     if anchor is None:
         _status = "Quick Arrange: load into a character first."
@@ -5660,7 +6299,7 @@ def quick_arrange(
     _drop_origin = (ox, oy, oz)
     _drop_yaw = yaw
     loot = sorted_ground_loot(include_consumables=include_consumables)
-    gear = [inv for inv in loot["Gear"] if _live(inv)]
+    gear = _shape_gear_list([inv for inv in loot["Gear"] if _live(inv)])
     consumables = [inv for inv in loot["Pickups"] if _live(inv)] if include_consumables else []
 
     # Consumables pile at feet; gear gets the shape.
@@ -5684,7 +6323,13 @@ def quick_arrange(
     )
     entries: list[dict[str, Any]] = []
     moved += apply_settle(placed, mode=settle, drop_height=drop_height, yaw=yaw)
+    try:
+        _purge_decor_pins()
+    except Exception:
+        pass
     _arm_peel_clock()
+    # Arrange is already settled — guest grab hand-off / Use hooks need this True.
+    _landing_settle_done = True
 
     _last_layout.update(
         {
@@ -5701,6 +6346,7 @@ def quick_arrange(
             "mode": "quick",
             "entries": entries,
             "party_count": _party_count(),
+            "party_in_world": _party_in_world_count(),
             "applied_at": time.time(),
         }
     )
@@ -5725,6 +6371,7 @@ def place_fully(
     """Hardened teleport using a fresh pickup gather; no raw serial memory reads."""
     global _status, _last_layout, _float_jobs, _land_active, _drop_until
     global _deferred_catch_at, _deferred_catch_until, _drop_shape, _drop_origin, _drop_yaw
+    global _landing_settle_done
     anchor = _player_anchor()
     if anchor is None:
         _status = "Place Fully: load into a character first."
@@ -5743,7 +6390,7 @@ def place_fully(
     _drop_origin = (ox, oy, oz)
     _drop_yaw = yaw
     loot = sorted_ground_loot(include_consumables=include_consumables)
-    gear = [inv for inv in loot["Gear"] if _live(inv)]
+    gear = _shape_gear_list([inv for inv in loot["Gear"] if _live(inv)])
     consumables = [inv for inv in loot["Pickups"] if _live(inv)] if include_consumables else []
 
     for inv in consumables:
@@ -5766,7 +6413,26 @@ def place_fully(
     teleported = 0
     settle_l = normalize_drop_mode(settle)
     teleported = apply_settle(placed, mode=settle_l, drop_height=drop_height, yaw=yaw)
+    try:
+        leftovers = _pile_unshaped_gear_near_origin(
+            used={_uobject_addr(inv) for inv, _x, _y, _z in placed},
+            ox=ox,
+            oy=oy,
+            oz=oz,
+            yaw=yaw,
+        )
+        if leftovers:
+            _log_dev(f"Place Fully piled {leftovers} leftover gear near feet (over pin cap).")
+    except Exception:
+        leftovers = 0
+    try:
+        purged = _purge_decor_pins()
+        if purged:
+            _log_dev(f"Place Fully purged {purged} stringlight/placeable pin(s).")
+    except Exception:
+        pass
     _arm_peel_clock()
+    _landing_settle_done = True
     tracked = _build_layout_entries_from_pins()
 
     _last_layout.update(
@@ -5784,11 +6450,13 @@ def place_fully(
             "mode": "place_fully",
             "entries": list(_last_layout.get("entries") or []),
             "party_count": _party_count(),
+            "party_in_world": _party_in_world_count(),
             "applied_at": time.time(),
         }
     )
+    extra = f" +{leftovers} piled" if leftovers else ""
     _status = (
-        f"Place Fully ({shape}/{settle_l}): {teleported} placed, "
+        f"Place Fully ({shape}/{settle_l}): {teleported} placed{extra}, "
         f"tracked {tracked} serial(s) for co-op."
         f"{_group_summary(shape, gear)}"
     )
@@ -5841,6 +6509,72 @@ def reapply_last_layout() -> str:
 
 def get_status() -> str:
     return _status
+
+
+def get_progress_status() -> dict[str, Any]:
+    """Structured shape progress for the EXE floating panel."""
+    pins = list(_pinned_slots)
+    pin_n = len(pins)
+    hold = any(bool(row.get("hold")) for row in pins)
+    synced = int(_coop_pins_synced or 0)
+    mid = bool(_land_active and not _landing_settle_done)
+    publishing = bool(_coop_pickup_safe_active)
+    try:
+        coop = bool(_want_coop_replicate())
+    except Exception:
+        coop = False
+    try:
+        shape = last_shape_name()
+    except Exception:
+        shape = "spiral"
+    msg = str(_status or "").strip() or "Idle."
+    hint = ""
+    if mid:
+        phase = "dumping"
+        detail = f"Placing {shape}… ({pin_n} pin(s))"
+        active = True
+    elif publishing:
+        phase = "publishing"
+        total = max(pin_n, 1)
+        detail = f"Co-op publish {synced}/{total}"
+        active = True
+        hint = "Friends: wait until Ready, then walk up and grab normally."
+    elif hold and pin_n and coop:
+        phase = "ready"
+        detail = f"Co-op ready — {pin_n} held ({shape})"
+        active = True
+        hint = "Grab normally (Attract). Stay/3D may sag a little as items are taken."
+    elif pin_n and coop and bool(_last_layout.get("pickup_safe_ready")):
+        phase = "ready"
+        detail = f"Co-op ready — {pin_n} grabable ({shape})"
+        active = True
+        hint = "Guests: walk up and grab like normal ground loot."
+    elif hold and pin_n:
+        phase = "held"
+        detail = f"Held shape ({shape}) — {pin_n} pin(s)"
+        active = True
+    elif pin_n > 0 and (_land_active or _landing_settle_done):
+        phase = "active"
+        detail = msg if msg and msg != "Idle." else f"{shape} active — {pin_n} pin(s)"
+        active = True
+    else:
+        phase = "idle"
+        detail = msg
+        active = False
+    return {
+        "active": active,
+        "phase": phase,
+        "shape": shape,
+        "pins": pin_n,
+        "synced": synced,
+        "hold": hold,
+        "coop": coop,
+        "message": msg,
+        "detail": detail,
+        "hint": hint,
+        "progress_index": synced if publishing else pin_n if mid else (pin_n if active else 0),
+        "progress_total": max(pin_n, 1) if active else 0,
+    }
 
 
 def last_shape_name() -> str:
@@ -5908,7 +6642,7 @@ def _is_peel_drop() -> bool:
     return _drop_mode == "drip"
 
 
-_stay_in_air: bool = True
+_stay_in_air: bool = False
 _peel_after_sec: float = 0.0
 _peel_armed_at: float = 0.0
 _peel_started: bool = False
@@ -5976,7 +6710,7 @@ def _arm_nova_explode(*, delay: float = 0.35) -> None:
     _nova_explode_armed_at = time.monotonic() + max(0.12, float(delay))
 
 
-def parse_stay_in_air(value: Any, default: bool = True) -> bool:
+def parse_stay_in_air(value: Any, default: bool = False) -> bool:
     if value is None or str(value).strip() == "":
         return default
     return _truthy(value)
@@ -5989,10 +6723,25 @@ def parse_peel_after(value: Any) -> float:
         return 0.0
 
 
-def _set_air_hold(stay_in_air: Any = True, peel_after: Any = 0.0) -> None:
-    """yes + 0 sec = keep the 3D silhouette. Any Drop-after seconds = hold, then peel."""
+def set_float_on_grab(_value: Any = False) -> None:
+    """Removed — kept as a no-op so older EXE payloads do not error."""
+    del _value
+
+
+def float_on_grab_enabled() -> bool:
+    return False
+
+
+def _set_air_hold(stay_in_air: Any = False, peel_after: Any = 0.0, *, shape: str | None = None) -> None:
+    """yes + 0 sec = keep the 3D silhouette. Any Drop-after seconds = hold, then peel.
+
+    Nova defaults to ground shoot-out when Stay is unset; other shapes default to hold
+    when unset. The EXE Stay field default is \"no\" (opt-in silhouette).
+    """
     global _stay_in_air, _peel_after_sec, _peel_armed_at, _peel_started, _peel_queue
-    stay = parse_stay_in_air(stay_in_air, True)
+    shape_n = _normalize_shape_name(shape or _drop_shape or _land_user_shape or "")
+    default = False if shape_n == "nova" else True
+    stay = parse_stay_in_air(stay_in_air, default)
     sec = parse_peel_after(peel_after)
     _peel_started = False
     _peel_queue = []
@@ -6023,7 +6772,7 @@ def _arm_peel_clock() -> None:
 def _should_hold_in_air() -> bool:
     if _peel_started:
         return False
-    shape = _normalize_shape_name(_drop_shape)
+    shape = _normalize_shape_name(_drop_shape or _land_user_shape or "")
     if shape not in SHAPE_3D_NAMES:
         return False
     if _stay_in_air:
@@ -6031,6 +6780,318 @@ def _should_hold_in_air() -> bool:
     # Timed peel: hold as soon as items land. Dump catch runs before
     # settle_landing_loot arms the clock — do not wait for _peel_armed_at.
     return _peel_after_sec > 0.0
+
+
+def _coop_should_keep_freeze() -> bool:
+    """False after publish — lobby guests need normal Attract grab, not frozen Use-only.
+
+    Keeping freeze forever left friends able to 'swap' / Use awkwardly while
+    walk-up Attract never completed. Shape may settle a bit; grab works again.
+    """
+    return False
+
+
+def _unlock_pin_for_normal_grab(inv: Any, *, net_push: bool = False) -> None:
+    """Turn a shaped pin back into ordinary world loot guests can Attract/Use."""
+    if inv is None or not _live(inv):
+        return
+    try:
+        _apply_dump_usable_state(inv, gravity=True)
+    except Exception:
+        pass
+    try:
+        inv.SetActorEnableCollision(True)
+    except Exception:
+        pass
+    try:
+        state = getattr(inv, "UsableActorState", None)
+        if state is not None:
+            setattr(state, "bInteractabilityLockedReplicated", False)
+    except Exception:
+        pass
+    if net_push:
+        try:
+            _force_net_update(inv, coop_pin=True, guest_push=True)
+        except Exception:
+            pass
+
+
+def _apply_dump_usable_state(inv: Any, *, gravity: bool) -> None:
+    """Per-item hand-off to natural InventoryPickup state (never mass-call this).
+
+    Dump LIVE_OK: bReplicates=True, RemoteRole=1, AlwaysRelevant, NetFreq=40,
+    bRepPhysics=True, sleep=True. Host-only restore left guests on the
+    non-replicating row — ForceNet after this so they can Use the dropped gun.
+    Dormancy stays Never here: the dump's 3 (DormantPartial) is what stopped
+    guests from receiving later host updates.
+    """
+    if inv is None or not _live(inv):
+        return
+    try:
+        if not _live(inv):
+            return
+        set_rep = getattr(inv, "SetReplicates", None)
+        if callable(set_rep):
+            set_rep(True)
+        set_rm = getattr(inv, "SetReplicateMovement", None)
+        if callable(set_rm):
+            set_rm(True)
+        inv.bOnlyRelevantToOwner = False
+        inv.bNetUseOwnerRelevancy = False
+        inv.bReplicates = True
+        inv.bReplicateMovement = True
+        inv.bAlwaysRelevant = True
+        inv.NetUpdateFrequency = 40.0
+        inv.MinNetUpdateFrequency = 2.0
+        # Dump LIVE_OK RemoteRole=1 (ROLE_SimulatedProxy).
+        try:
+            inv.RemoteRole = 1
+        except Exception:
+            pass
+    except Exception:
+        pass
+    try:
+        dorm = getattr(inv, "SetNetDormancy", None)
+        if callable(dorm):
+            dorm(_DORM_NEVER)
+    except Exception:
+        pass
+    try:
+        if _live(inv):
+            state = getattr(inv, "UsableActorState", None)
+            if state is not None:
+                setattr(state, "bInteractabilityLockedReplicated", False)
+    except Exception:
+        pass
+    try:
+        if _live(inv):
+            inv.SetActorEnableCollision(True)
+    except Exception:
+        pass
+    zero = _make_vector(0.0, 0.0, 0.0)
+    for comp in _physics_components(inv):
+        if not _live(inv):
+            return
+        for name, args in (
+            ("SetPhysicsLinearVelocity", (zero,)),
+            ("SetPhysicsAngularVelocityInRadians", (zero,)),
+            ("SetPhysicsAngularVelocity", (zero,)),
+        ):
+            fn = getattr(comp, name, None)
+            if callable(fn):
+                try:
+                    fn(*args)
+                except Exception:
+                    pass
+        if not _live(inv):
+            return
+        # Undo sticky disable from older freeze paths.
+        reset = getattr(comp, "ResetAllBodiesSimulatePhysics", None)
+        if callable(reset):
+            try:
+                reset()
+            except Exception:
+                pass
+        if not _live(inv):
+            return
+        sim = getattr(comp, "SetSimulatePhysics", None)
+        if callable(sim):
+            try:
+                sim(True)
+            except Exception:
+                pass
+        if not _live(inv):
+            return
+        _set_gravity_all_bodies(inv, gravity)
+        # Held shape slots sleep so the silhouette holds. A released slot must
+        # wake, or it keeps the frozen pose and the collect never reaches anyone.
+        if gravity:
+            wake = getattr(comp, "WakeAllRigidBodies", None) or getattr(
+                comp, "WakeRigidBody", None
+            )
+        else:
+            wake = getattr(comp, "PutRigidBodyToSleep", None) or getattr(
+                comp, "PutAllRigidBodiesToSleep", None
+            )
+        if callable(wake):
+            for args in ((), ("",), ("None",)):
+                try:
+                    wake(*args)
+                    break
+                except Exception:
+                    continue
+        col = getattr(comp, "SetCollisionEnabled", None)
+        if callable(col):
+            try:
+                col(3)
+            except Exception:
+                try:
+                    col("QueryAndPhysics")
+                except Exception:
+                    pass
+    try:
+        if _live(inv):
+            _set_pickup_collision(inv, block=True)
+    except Exception:
+        pass
+    try:
+        if not _live(inv):
+            return
+        movement = getattr(inv, "ReplicatedMovement", None)
+        if movement is not None:
+            try:
+                setattr(movement, "LinearVelocity", zero)
+            except Exception:
+                pass
+            try:
+                setattr(movement, "AngularVelocity", zero)
+            except Exception:
+                pass
+            try:
+                setattr(movement, "bSimulatedPhysicSleep", not gravity)
+            except Exception:
+                pass
+            try:
+                setattr(movement, "bRepPhysics", True)
+            except Exception:
+                pass
+    except Exception:
+        pass
+
+
+def _force_net_guest_handoff(inv: Any) -> None:
+    """No-op — ForceNet during Use/release AVd lobbies (A2F2D77E / C87FB5F6)."""
+    del inv
+    return
+
+
+def _stamp_guest_grab_ready(inv: Any) -> None:
+    """After publish: dump net/usable flags only — keep pose frozen (no physics wake).
+
+    Mass SetSimulatePhysics on 120 slots lagged the lobby and dropped the shape
+    while still leaving picks dead for guests (pins were cleared). Hand-off is
+    per-item via ServerUse / proximity / drift → _release_pin_for_pickup.
+    """
+    if inv is None or not _live(inv):
+        return
+    try:
+        inv.bOnlyRelevantToOwner = False
+        inv.bNetUseOwnerRelevancy = False
+        inv.bReplicates = True
+        inv.bReplicateMovement = True
+        inv.bAlwaysRelevant = True
+        inv.NetUpdateFrequency = 40.0
+        inv.MinNetUpdateFrequency = 2.0
+    except Exception:
+        pass
+    try:
+        dorm = getattr(inv, "SetNetDormancy", None)
+        if callable(dorm):
+            dorm(_DORM_NEVER)
+    except Exception:
+        pass
+    try:
+        state = getattr(inv, "UsableActorState", None)
+        if state is not None:
+            setattr(state, "bInteractabilityLockedReplicated", False)
+    except Exception:
+        pass
+    try:
+        inv.SetActorEnableCollision(True)
+    except Exception:
+        pass
+    try:
+        _set_physics(inv, False, keep_grab_collision=True)
+        _zero_velocity(inv)
+    except Exception:
+        pass
+    try:
+        _set_pickup_collision(inv, block=True)
+    except Exception:
+        pass
+
+
+def _stamp_pickup_net_for_guests(inv: Any, *, held: bool) -> None:
+    """Net relevancy stamp without waking physics."""
+    _ = held
+    _stamp_guest_grab_ready(inv)
+
+
+def _party_pawn_xy() -> list[tuple[float, float, float]]:
+    """Live party pawn positions for guest-grab hand-off (no ForceNet)."""
+    out: list[tuple[float, float, float]] = []
+    try:
+        from .party_helpers import _gbc_session_world_and_gamestate
+
+        _world, gs = _gbc_session_world_and_gamestate()
+        pa = getattr(gs, "PlayerArray", None) if gs is not None else None
+        if pa is None:
+            return out
+        for i in range(len(pa)):
+            try:
+                ps = pa[i]
+            except Exception:
+                continue
+            if ps is None:
+                continue
+            pawn = getattr(ps, "PawnPrivate", None) or getattr(ps, "Pawn", None)
+            if pawn is None:
+                continue
+            try:
+                loc = pawn.K2_GetActorLocation()
+                out.append((float(loc.X), float(loc.Y), float(loc.Z)))
+            except Exception:
+                continue
+    except Exception:
+        pass
+    if not out:
+        try:
+            anchor = _player_anchor()
+            if anchor is not None:
+                out.append((float(anchor[1]), float(anchor[2]), float(anchor[3])))
+        except Exception:
+            pass
+    return out
+
+
+def _drop_dead_pin(row: dict[str, Any]) -> None:
+    """Remove a pin whose actor is gone — never call restore/ForceNet on it."""
+    global _pinned_slots, _pickup_by_addr, _shape_grab_exclude
+    addr = int(row.get("addr") or 0)
+    if not addr:
+        return
+    _pickup_by_addr.pop(addr, None)
+    try:
+        _pinned_slots = [
+            r for r in _pinned_slots if int(r.get("addr") or 0) != int(addr)
+        ]
+    except Exception:
+        pass
+    try:
+        _shape_grab_exclude[_key_for_addr(addr)] = time.monotonic() + 120.0
+    except Exception:
+        pass
+
+
+def _party_near_pin(row: dict[str, Any], party_xyz: list[tuple[float, float, float]]) -> bool:
+    """True when any party pawn is close enough that Attract/grab needs a hand-off."""
+    if not party_xyz:
+        return False
+    try:
+        px = float(row.get("x") or 0.0)
+        py = float(row.get("y") or 0.0)
+        pz = float(row.get("z") or 0.0)
+    except Exception:
+        return False
+    # lim2 ~150uu — guests must stand in the shape to hand off.
+    lim2 = 22500.0
+    for ax, ay, az in party_xyz:
+        dx = ax - px
+        dy = ay - py
+        dz = az - pz
+        if (dx * dx + dy * dy + dz * dz) <= lim2:
+            return True
+    return False
 
 
 def _shape_hold_active() -> bool:
@@ -6053,13 +7114,12 @@ def _shape_hold_active() -> bool:
 
 def _reset_air_hold() -> None:
     global _stay_in_air, _peel_after_sec, _peel_armed_at, _peel_started, _peel_queue
-    _stay_in_air = True
+    _stay_in_air = False
     _peel_after_sec = 0.0
     _peel_armed_at = 0.0
     _peel_started = False
     _peel_queue = []
     _reset_nova_explode()
-
 
 _drop_plan: list[tuple[float, float, float]] = []
 _drop_plan_target: int = 0
@@ -6073,6 +7133,8 @@ _drop_mode: str = "slow"
 _drop_yaw: float = 0.0
 _drop_seen: set[str] = set()
 _drop_preexisting: set[str] = set()
+# Released for player grab — never re-pin / overhead-catch (that was the fly-up loop).
+_shape_grab_exclude: dict[str, float] = {}
 _frozen_dump: set[str] = set()
 _CATCH_CLASSES: tuple[str, ...] = ("OakInventoryPickup", "InventoryPickup", "OakPickup")
 _CATCH_CLASSES_DUMP: tuple[str, ...] = ("InventoryPickup", "OakInventoryPickup")
@@ -6113,6 +7175,339 @@ def _pickup_key(inv: Any) -> str:
         return _key_for_addr(addr)
     return f"id:{id(inv)}"
 
+
+def _prune_shape_grab_exclude(now: float | None = None) -> None:
+    global _shape_grab_exclude
+    t = time.monotonic() if now is None else float(now)
+    if not _shape_grab_exclude:
+        return
+    if len(_shape_grab_exclude) > 400 or any(True for _ in _shape_grab_exclude):
+        _shape_grab_exclude = {k: exp for k, exp in _shape_grab_exclude.items() if exp > t}
+
+
+def _mark_shape_grab_exclude(inv: Any, *, seconds: float = 120.0) -> None:
+    """Block reshape/catch by actor address while a player takes it.
+
+    Do not read the item serial during pickup hand-off: touching GbxItem while
+    native pickup code owns it can race destruction and AV pyunrealsdk.
+    """
+    global _shape_grab_exclude, _drop_seen, _drop_preexisting
+    until = time.monotonic() + max(5.0, float(seconds))
+    keys: list[str] = []
+    try:
+        keys.append(_pickup_key(inv))
+    except Exception:
+        pass
+    addr = _uobject_addr(inv)
+    if addr:
+        keys.append(_key_for_addr(int(addr)))
+    for key in keys:
+        if not key:
+            continue
+        _shape_grab_exclude[key] = until
+        _drop_seen.add(key)
+        _drop_preexisting.add(key)
+
+
+def _shape_grab_excluded_inv(inv: Any) -> bool:
+    if inv is None:
+        return False
+    _prune_shape_grab_exclude()
+    now = time.monotonic()
+    try:
+        key = _pickup_key(inv)
+        if key and float(_shape_grab_exclude.get(key) or 0.0) > now:
+            return True
+    except Exception:
+        pass
+    addr = _uobject_addr(inv)
+    if addr and float(_shape_grab_exclude.get(_key_for_addr(int(addr))) or 0.0) > now:
+        return True
+    return False
+
+
+def _shape_grab_excluded_addr(addr: int) -> bool:
+    if not addr:
+        return False
+    _prune_shape_grab_exclude()
+    return float(_shape_grab_exclude.get(_key_for_addr(int(addr))) or 0.0) > time.monotonic()
+
+
+def _restore_world_pickup_for_grab(inv: Any, *, gravity: bool = True) -> None:
+    """No-op — mid-grab actor writes raced native Use and crashed the host."""
+    del inv, gravity
+    return
+
+
+def _is_local_player_controller(pc: Any) -> bool:
+    if pc is None:
+        return True
+    local = None
+    try:
+        from unrealsdk import get_pc
+
+        local = get_pc()
+    except Exception:
+        local = None
+    if local is None:
+        try:
+            from .item_spawn.pearl_serial_spawn import _get_pc
+
+            local = _get_pc()
+        except Exception:
+            local = None
+    if local is None:
+        return True
+    try:
+        return int(_uobject_addr(pc) or 0) == int(_uobject_addr(local) or 0)
+    except Exception:
+        return pc is local
+
+
+def _destroy_world_pickup(inv: Any) -> None:
+    if inv is None or not _live(inv):
+        return
+    for name in ("GbxDestroyActor", "K2_DestroyActor", "DestroyActor", "Destroy"):
+        try:
+            if not _live(inv):
+                return
+            fn = getattr(inv, name, None)
+            if callable(fn):
+                fn()
+                return
+        except Exception:
+            continue
+
+
+_use_probe_log_at: float = 0.0
+
+
+_use_probe_keys: dict[int, float] = {}
+
+
+def _log_use_probe(msg: str, key: int = 0) -> None:
+    """Throttled Use trace — shows whether a guest's RPC even reaches the host.
+
+    Keyed by slot address where we have one. A single global gate dropped the
+    release line whenever two Uses landed inside 0.45s, which made the log look
+    like the wrong slot was being released.
+    """
+    global _use_probe_log_at
+    now = time.monotonic()
+    if key:
+        if len(_use_probe_keys) > 64:
+            _use_probe_keys.clear()
+        if now - float(_use_probe_keys.get(key) or 0.0) < 0.45:
+            return
+        _use_probe_keys[key] = now
+    else:
+        if now - _use_probe_log_at < 0.45:
+            return
+        _use_probe_log_at = now
+    _log(msg)
+
+
+# addr -> (wrapper, deadline, who). Answers the one thing the log never showed:
+# did the game actually take the item after we handed it back?
+_use_followups: dict[int, tuple[Any, float, str]] = {}
+# Soft post-Use unlock — never touch actors inside the PRE ServerUse hook.
+_pending_grab_unlock: list[tuple[int, float]] = []
+_PENDING_GRAB_UNLOCK_DELAY = 0.05
+
+
+def _queue_grab_unlock(addr: int) -> None:
+    if not addr:
+        return
+    due = time.monotonic() + _PENDING_GRAB_UNLOCK_DELAY
+    for i, (a, _) in enumerate(_pending_grab_unlock):
+        if int(a) == int(addr):
+            _pending_grab_unlock[i] = (int(addr), due)
+            return
+    _pending_grab_unlock.append((int(addr), due))
+
+
+def _tick_pending_grab_unlock(now: float | None = None) -> None:
+    """Disabled — deferred physics wake still AVd after grabs (DE983863)."""
+    global _pending_grab_unlock
+    del now
+    _pending_grab_unlock = []
+    return
+
+# Slots a guest has asked for that still need a fresh actor, and the slots that
+# already got one. Reissue is deferred to the tick so the native Use call this
+# frame never runs against an actor we just destroyed.
+_reissue_queue: list[dict[str, Any]] = []
+_slot_reissued: dict[int, float] = {}
+_reissue_next_at: float = 0.0
+_reissue_log_at: float = 0.0
+
+
+def _slot_index_of(row: dict[str, Any]) -> int:
+    try:
+        return int(row.get("slot_index") or 0)
+    except Exception:
+        return 0
+
+
+def _queue_slot_reissue(row: dict[str, Any], inv: Any, *, first: bool = False) -> bool:
+    """Queue one pin for a lobby-spawned replacement. Keyed by actor address."""
+    addr = int(_uobject_addr(inv) or (row or {}).get("addr") or 0)
+    if not addr:
+        return False
+    if any(int(r.get("addr") or 0) == addr for r in _reissue_queue):
+        if first:
+            _reissue_queue.sort(key=lambda r: 0 if int(r.get("addr") or 0) == addr else 1)
+        return True
+    try:
+        _serial_for_pin_row(row)
+    except Exception:
+        pass
+    pending = dict(row)
+    pending["addr"] = addr
+    if first:
+        _reissue_queue.insert(0, pending)
+    else:
+        _reissue_queue.append(pending)
+    return True
+
+
+def _tick_reissue_queue() -> None:
+    """Clean-respawn disabled — drain any leftover queue without touching actors."""
+    global _reissue_queue
+    if _reissue_queue:
+        _reissue_queue.clear()
+    return
+
+
+def _check_use_followups() -> None:
+    """Drop follow-up bookkeeping only — never touch pickup wrappers (AV on collect)."""
+    if not _use_followups:
+        return
+    now = time.monotonic()
+    for addr, (_inv, deadline, _who) in list(_use_followups.items()):
+        if now < deadline:
+            continue
+        _use_followups.pop(addr, None)
+
+
+_use_snapshot_seen: dict[int, float] = {}
+
+
+def _log_use_snapshot(addr: int, msg: str) -> None:
+    """One state line per pickup per 6s — enough for the shaped/plain diff."""
+    now = time.monotonic()
+    if len(_use_snapshot_seen) > 64:
+        _use_snapshot_seen.clear()
+    if now - float(_use_snapshot_seen.get(addr) or 0.0) < 6.0:
+        return
+    _use_snapshot_seen[addr] = now
+    _log(msg)
+
+
+def _set_gravity_all_bodies(inv: Any, enabled: bool) -> None:
+    """Gravity across every body, both directions.
+
+    SetEnableGravity only covers a skeletal pickup's root body. 3.8.180 disabled
+    the rest but never re-enabled them, so any item that passed a freeze path
+    hung wherever it was — the mid-air loot the host saw. Re-enabling has to walk
+    the same bodies or the item can never fall again.
+    """
+    want = bool(enabled)
+    for comp in _physics_components(inv):
+        if not _live(inv):
+            return
+        below = getattr(comp, "SetEnableGravityOnAllBodiesBelow", None)
+        if callable(below):
+            for args in ((want, "", True), (want, "None", True), (want,)):
+                try:
+                    below(*args)
+                    break
+                except Exception:
+                    continue
+        body = getattr(comp, "SetEnableBodyGravity", None)
+        if callable(body):
+            for args in ((want, ""), (want, "None"), (want,)):
+                try:
+                    body(*args)
+                    break
+                except Exception:
+                    continue
+        grav = getattr(comp, "SetEnableGravity", None)
+        if callable(grav):
+            try:
+                grav(want)
+            except Exception:
+                pass
+
+
+def _unpin_keep_pose(inv: Any, row: dict[str, Any] | None = None) -> None:
+    """Stop heartbeat on one slot without waking gravity / ForceNet."""
+    global _float_jobs, _pickup_by_addr, _pinned_slots
+    addr = 0
+    if row is not None:
+        addr = int(row.get("addr") or 0)
+    if not addr and inv is not None:
+        addr = int(_uobject_addr(inv) or 0)
+    if inv is not None:
+        try:
+            _mark_shape_grab_exclude(inv)
+        except Exception:
+            pass
+    elif addr:
+        try:
+            _shape_grab_exclude[_key_for_addr(int(addr))] = time.monotonic() + 8.0
+        except Exception:
+            pass
+    if addr:
+        _float_jobs = [j for j in _float_jobs if int(j.get("addr") or 0) != int(addr)]
+        _pickup_by_addr.pop(int(addr), None)
+        try:
+            _pinned_slots = [
+                r for r in _pinned_slots if int(r.get("addr") or 0) != int(addr)
+            ]
+        except Exception:
+            pass
+
+
+def _release_pin_for_pickup(inv: Any, row: dict[str, Any] | None = None) -> None:
+    """Drop pin tracking only — never ForceNet/restore mid-Use (that AVd A2F2D77E).
+
+    Native Use finishes the collect. Touching the actor in the PRE hook raced
+    destroy/collect and null-crashed through pyunrealsdk.
+    """
+    global _float_jobs, _pickup_by_addr, _pinned_slots
+    addr = 0
+    if row is not None:
+        try:
+            addr = int(row.get("addr") or 0)
+        except Exception:
+            addr = 0
+    if not addr and inv is not None:
+        try:
+            addr = int(_uobject_addr(inv) or 0)
+        except Exception:
+            addr = 0
+    if inv is not None:
+        try:
+            _mark_shape_grab_exclude(inv)
+        except Exception:
+            pass
+    elif addr:
+        try:
+            _shape_grab_exclude[_key_for_addr(int(addr))] = time.monotonic() + 8.0
+        except Exception:
+            pass
+    if addr:
+        _float_jobs = [j for j in _float_jobs if int(j.get("addr") or 0) != int(addr)]
+        _pickup_by_addr.pop(int(addr), None)
+        try:
+            _pinned_slots = [
+                r for r in _pinned_slots if int(r.get("addr") or 0) != int(addr)
+            ]
+        except Exception:
+            pass
+    elif row is not None:
+        _drop_dead_pin(row)
 
 def _catch_radius() -> float:
     return _CATCH_RADIUS_LAND if _land_active else _CATCH_RADIUS_IDLE
@@ -6439,6 +7834,8 @@ _JOIN_SERIAL_GAP = 0.28
 
 def _spawn_pool_pickup_at_pin(row: dict[str, Any]) -> Any | None:
     """Respawn one itempool pickup at a shaped slot (late-join mirror for guests)."""
+    if not _world_alive():
+        return None
     pool = str(row.get("pool_name") or "")
     if not pool:
         try:
@@ -6462,21 +7859,15 @@ def _spawn_pool_pickup_at_pin(row: dict[str, Any]) -> Any | None:
         x, y, z = float(row["x"]), float(row["y"]), float(row["z"])
     except Exception:
         return None
-    slot_i = int(row.get("slot_index") or 0)
     yaw = float(row.get("yaw") or 0.0)
     pitch = float(row.get("pitch") or 0.0)
     roll = float(row.get("roll") or 0.0)
     world = _get_world()
     pc = _get_runtime_pc()
-    if world is None or pc is None:
+    if world is None or pc is None or not _live(pc):
         return None
-    before: set[int] = set()
-    try:
-        for inv in unrealsdk.find_all("InventoryPickup", False) or []:
-            if _live(inv):
-                before.add(id(inv))
-    except Exception:
-        pass
+    # Cache scan only — unrealsdk.find_all(InventoryPickup) mid-session AVs.
+    before = {addr for addr, _inv in _raw_pickup_scan(fresh=False)}
     try:
         transform = pc.GetTransform()
     except Exception:
@@ -6493,28 +7884,43 @@ def _spawn_pool_pickup_at_pin(row: dict[str, Any]) -> Any | None:
     except Exception:
         return None
     newest = None
+    best_d2 = None
     try:
-        for inv in unrealsdk.find_all("InventoryPickup", False) or []:
-            if not _live(inv) or id(inv) in before:
+        invalidate_pickup_cache()
+        for addr, inv in _raw_pickup_scan(fresh=True):
+            if not addr or addr in before or not _live(inv):
                 continue
-            newest = inv
+            try:
+                loc = inv.K2_GetActorLocation()
+                dx = float(loc.X) - x
+                dy = float(loc.Y) - y
+                dz = float(loc.Z) - z
+                d2 = dx * dx + dy * dy + dz * dz
+            except Exception:
+                d2 = 1.0e18
+            if best_d2 is None or d2 < best_d2:
+                best_d2 = d2
+                newest = inv
     except Exception:
         newest = None
-    if newest is None:
+    if newest is None or not _live(newest):
         return None
-    _teleport_pickup(
-        newest,
-        x,
-        y,
-        z,
-        yaw,
-        pitch=pitch,
-        roll=roll,
-        freeze=True,
-        replicate=True,
-        guest_push=True,
-    )
-    return newest
+    try:
+        _teleport_pickup(
+            newest,
+            x,
+            y,
+            z,
+            yaw,
+            pitch=pitch,
+            roll=roll,
+            freeze=True,
+            replicate=True,
+            guest_push=False,
+        )
+    except Exception:
+        return None
+    return newest if _live(newest) else None
 
 
 def _pin_row_for_addr(addr: int) -> dict[str, Any] | None:
@@ -6526,24 +7932,23 @@ def _pin_row_for_addr(addr: int) -> dict[str, Any] | None:
     return None
 
 
+def _spawn_replacement_at_pin(row: dict[str, Any]) -> Any | None:
+    """Fresh pickup at the slot — pool spawn in place (the unshaped-loot path).
+
+    @U at the host's feet then teleport is the same dump-then-move poison that
+    made 3.8.185 'clean copies' still refuse native collect.
+    """
+    new_inv = _spawn_pool_pickup_at_pin(row)
+    return new_inv if new_inv is not None and _live(new_inv) else None
+
+
 def _join_mirror_pin_row(row: dict[str, Any]) -> bool:
     """Late joiner: spawn a guest-visible replica at the slot — never retire host pins."""
     try:
         x, y, z = float(row["x"]), float(row["y"]), float(row["z"])
     except Exception:
         return False
-    new_inv = _spawn_pool_pickup_at_pin(row)
-    if new_inv is None:
-        serial = str(row.get("serial") or "")
-        if serial.startswith("@U"):
-            try:
-                if _spawn_serial_at(serial, x, y, z):
-                    new_inv = _resolve_pin_inv(
-                        {"serial": serial, "x": x, "y": y, "z": z, "slot_index": row.get("slot_index")},
-                        fresh=True,
-                    )
-            except Exception:
-                new_inv = None
+    new_inv = _spawn_replacement_at_pin(row)
     if new_inv is None or not _live(new_inv):
         return False
     mirror_row = {
@@ -6556,7 +7961,7 @@ def _join_mirror_pin_row(row: dict[str, Any]) -> bool:
         "hold": True,
     }
     try:
-        _set_physics(new_inv, False)
+        _set_physics(new_inv, False, keep_grab_collision=True)
         _zero_velocity(new_inv)
         return bool(_push_pin_to_guests(mirror_row, new_inv))
     except Exception:
@@ -6594,6 +7999,8 @@ def _tick_join_serial_reapply(now: float) -> None:
     global _join_serial_reapply_active, _join_serial_reapply_at, _join_serial_reapply_cursor
     if not _join_serial_reapply_active:
         return
+    if _progression_network_busy():
+        return
     if _held_coop_shape_active():
         _join_serial_reapply_active = False
         _log_dev("Join mirror skipped — held shape uses net push only (duplicate spawns knock pins down).")
@@ -6628,37 +8035,54 @@ def _tick_join_serial_reapply(now: float) -> None:
 
 
 def _run_join_guest_shape_push() -> None:
-    """Late joiner: held shapes — host freeze during quiet, then guest heartbeat."""
+    """Late joiner: soft-republish held silhouettes; flat layouts get a bounded sync."""
     global _join_guest_boost_until, _guest_sync_active, _guest_sync_cursor, _guest_sync_last
+    global _join_push_at
+    now = time.monotonic()
+    if (now - float(_join_push_at or 0.0)) < _JOIN_PUSH_COOLDOWN_SEC:
+        _log_dev(
+            f"Join guest push skipped — cooldown "
+            f"({_JOIN_PUSH_COOLDOWN_SEC:.0f}s after last push)."
+        )
+        return
+    if _coop_pickup_safe_active:
+        _guest_sync_active = False
+        return
     if not _want_coop_replicate() or not _pinned_slots:
         return
-    _join_guest_boost_until = time.monotonic() + 120.0
+    _join_push_at = now
+    _join_guest_boost_until = now + 60.0
     hold_shape = any(row.get("hold") for row in _pinned_slots)
+    if hold_shape:
+        # Soft path only: clear stale guest_ok from the *previous* lobby publish,
+        # then bounded ForceNet + grab stamp. No mass teleport / serial mirror
+        # (mirrors on held silhouettes knock pins down).
+        try:
+            _build_layout_entries_from_pins()
+        except Exception:
+            pass
+        try:
+            invalidate_pickup_cache()
+            _refresh_live_pickups()
+        except Exception:
+            pass
+        for row in _pinned_slots:
+            row.pop("inv", None)
+            row["misses"] = 0
+        _arm_coop_pickup_safe(delay=0.35)
+        _guest_sync_active = False
+        try:
+            _stamp_loose_world_pickups_for_guests(limit=64)
+        except Exception:
+            pass
+        _log(
+            f"Guest joined — soft-republishing held shape ({len(_pinned_slots)} pin(s))."
+        )
+        return
     try:
         _purge_decor_pins()
     except Exception:
         pass
-    if hold_shape:
-        _guest_sync_active = True
-        _guest_sync_cursor = 0
-        _guest_sync_last = 0.0
-        try:
-            now = time.monotonic()
-            if not _join_hold_rebind_recent(now, within=3.0):
-                _rebind_hold_pins_after_join()
-            repin_gap = 0.45 if held_pin_count() > 120 else 0.28
-            if now - float(_join_hold_repin_last or 0.0) >= repin_gap:
-                _repin_host_hold_pins(
-                    limit=_join_hold_repin_cap(base=24), refresh_cache=False
-                )
-            # Heartbeat already running from join quiet — do not reset guest_ok / cursor.
-        except Exception:
-            pass
-        _log(f"Guest joined — held shape heartbeat ({len(_pinned_slots)} pin(s)).")
-        _log_dev(
-            "Join guest push: held shape — throttled repin; guest heartbeat continues."
-        )
-        return
     global _coop_pins_synced, _peel_armed_at, _peel_started
     _coop_pins_synced = 0
     _peel_armed_at = 0.0
@@ -6704,12 +8128,47 @@ def _tick_join_refresh(now: float) -> None:
             row["misses"] = 0
         if hold_rows:
             _log_dev(
-                "Join quiet ended — pickup map refreshed; held shape repin deferred to guest push."
+                "Join quiet ended — pickup map refreshed; held shape soft-republish via join push."
             )
             return
         _log_dev("Join quiet ended — pickup map refreshed for guest shape sync.")
     except Exception:
         pass
+
+
+def _stamp_loose_world_pickups_for_guests(*, limit: int = 48) -> int:
+    """After join: stamp ordinary (non-pin) dump loot so guests can Use ground piles.
+
+    Held silhouette pins are handled by soft-republish. This covers 'just drop loot'
+    piles that otherwise stayed host-only after a shape session.
+    """
+    if not _want_coop_replicate():
+        return 0
+    pin_addrs = {
+        int(row.get("addr") or 0)
+        for row in _pinned_slots
+        if int(row.get("addr") or 0)
+    }
+    stamped = 0
+    try:
+        rows = _raw_pickup_scan(fresh=True)
+    except Exception:
+        return 0
+    for addr, inv in rows:
+        if stamped >= max(1, int(limit)):
+            break
+        if not addr or int(addr) in pin_addrs:
+            continue
+        if inv is None or not _live(inv):
+            continue
+        try:
+            _unlock_pin_for_normal_grab(inv)
+            stamped += 1
+        except Exception:
+            continue
+    if stamped:
+        _log_dev(f"Join world stamp: {stamped} loose pickup(s) unlocked for guest grab.")
+    return stamped
 
 
 def _join_reapply_can_run(now: float) -> bool:
@@ -6733,11 +8192,17 @@ def _join_reapply_can_run(now: float) -> bool:
 def _tick_join_reapply(now: float) -> None:
     """Late joiner push — runs from motion tick (not throttled loot poll)."""
     global _join_reapply_pending
+    if _progression_network_busy():
+        return
     if not _join_reapply_can_run(now):
         return
     _join_reapply_pending = False
     if _pinned_slots:
         _run_join_guest_shape_push()
+    try:
+        _stamp_loose_world_pickups_for_guests(limit=64)
+    except Exception:
+        pass
     return
 
 
@@ -6748,7 +8213,34 @@ def _push_pin_to_guests(
     allow_during_dump: bool = False,
 ) -> bool:
     """Freeze on slot XYZ and net to lobby guests (never wake physics — that drops the house)."""
+    if _progression_network_busy():
+        return False
     if not _live(inv):
+        return False
+    if _shape_grab_excluded_inv(inv):
+        return False
+    addr = _uobject_addr(inv) or int(row.get("addr") or 0)
+    if addr and _shape_grab_excluded_addr(int(addr)):
+        return False
+    # Mid-grab Attract already moved this gun — hand off instead of yanking to slot.
+    try:
+        loc = inv.K2_GetActorLocation()
+        dx = float(loc.X) - float(row["x"])
+        dy = float(loc.Y) - float(row["y"])
+        dz = float(loc.Z) - float(row["z"])
+        if (dx * dx + dy * dy + dz * dz) > 1600.0 or dz > 28.0:
+            _release_pin_for_pickup(inv, row)
+            return False
+    except Exception:
+        pass
+    try:
+        pool = str(row.get("pool_name") or "")
+        if _pickup_skip_shape(inv, pool_name=pool) or not _is_shape_gear_pickup(inv, pool_name=pool):
+            row["guest_skip"] = True
+            row["guest_ok"] = True
+            # Treat as done so pickup-safe can unlock / finish (False used to stall ready).
+            return True
+    except Exception:
         return False
     # Mid-dump mass push AVs — allow_during_dump is sparse flight/land samples only.
     if _mid_shape_dump() and not allow_during_dump:
@@ -6768,6 +8260,8 @@ def _push_pin_to_guests(
             keep_grab_collision=True,
             require_net=True,
         )
+        if not _live(inv):
+            return False
         if ok:
             _set_physics(inv, False, keep_grab_collision=True)
             _zero_velocity(inv)
@@ -6780,9 +8274,10 @@ def _push_pin_to_guests(
             except Exception:
                 pass
             try:
-                inv.bOnlyRelevantToOwner = False
-                inv.bAlwaysRelevant = True
-                inv.bReplicateMovement = True
+                if _live(inv):
+                    inv.bOnlyRelevantToOwner = False
+                    inv.bAlwaysRelevant = True
+                    inv.bReplicateMovement = True
             except Exception:
                 pass
         return ok
@@ -6871,7 +8366,8 @@ def begin_spawn_landing(
     per_ring: int = _DEFAULT_PER_RING,
     z_bias: float = _DEFAULT_Z_BIAS,
     spawn_then_shape: bool | str = False,
-    stay_in_air: Any = True,
+    stay_in_air: Any = None,
+    float_on_grab: Any = False,
     peel_after: Any = 0.0,
     land_profile: str = "shiny",
     shape_text: str = "",
@@ -6888,7 +8384,11 @@ def begin_spawn_landing(
         if sanitize_shape_text(get_shape_text()):
             raw = "text"
     _land_settle = normalize_drop_mode(settle)
-    _set_air_hold(stay_in_air, peel_after)
+    shape_for_air = _normalize_shape_name(raw) if not _is_none_shape(raw) else "none"
+    if shape_for_air == "nova" and (stay_in_air is None or str(stay_in_air).strip() == ""):
+        stay_in_air = False
+    _set_air_hold(stay_in_air, peel_after, shape=shape_for_air)
+    set_float_on_grab(float_on_grab)
     try:
         _land_drop_height = float(
             clamp_layout_params(drop_height=drop_height)["drop_height"]
@@ -7002,7 +8502,7 @@ def abandon_world_loot(*, schedule_orphan_absorb: bool = True) -> None:
     global _land_active, _land_pose_index, _drop_plan, _drop_until, _float_jobs
     global _deferred_catch_at, _deferred_catch_until, _spawn_cursor
     global _pickup_cache, _pickup_cache_at, _pickup_by_addr, _drop_seen, _frozen_dump
-    global _drop_preexisting
+    global _drop_preexisting, _shape_grab_exclude
     global _join_reapply_pending, _landing_settle_done, _defer_shape, _defer_dump_index
     global _coop_pins_synced, _guest_sync_cursor, _guest_sync_active, _guest_sync_last
     global _peel_queue, _loot_world_id, _drop_local_dirs, _land_slot_pools
@@ -7024,6 +8524,7 @@ def abandon_world_loot(*, schedule_orphan_absorb: bool = True) -> None:
     _deferred_catch_at = 0.0
     _deferred_catch_until = 0.0
     _landing_settle_done = False
+    _shape_grab_exclude = {}
     _loot_world_id = 0
     _join_reapply_pending = False
     _coop_pins_synced = 0
@@ -7227,13 +8728,17 @@ def pin_stragglers(*, limit: int = 8, fresh: bool = True) -> int:
         key = _pickup_key(inv)
         if key in _drop_preexisting or key in _drop_seen:
             continue
+        if _shape_grab_excluded_inv(inv) or _shape_grab_excluded_addr(addr):
+            continue
         hd2 = _horiz_dist2(inv, ox, oy)
         if hd2 is None or hd2 > near_player2:
             continue
         idx = _drop_next
         slot = _slot_for_new_pickup(inv, idx)
         if _shape_hold_active():
-            if not _pin_pickup_to_slot(inv, slot, index=idx, hold=True):
+            if not _instant_land_mode() and _queue_drop_job(inv, slot, index=idx):
+                pass
+            elif not _pin_pickup_to_slot(inv, slot, index=idx, hold=True):
                 if not _queue_drop_job(inv, slot, index=idx):
                     continue
         elif not _queue_drop_job(inv, slot, index=idx):
@@ -7441,11 +8946,19 @@ def _lock_unseen_dump(*, limit: int = 8, fresh: bool = False) -> int:
         key = _pickup_key(inv)
         if key in _drop_seen:
             continue
+        if _shape_grab_excluded_inv(inv):
+            _drop_seen.add(key)
+            continue
         idx = _drop_next
         slot = _slot_for_caught_pickup(inv, idx)
-        pinned = _pin_pickup_to_slot(inv, slot, index=idx, hold=True)
-        if not pinned:
+        if not _instant_land_mode():
             pinned = _queue_drop_job(inv, slot, index=idx)
+            if not pinned:
+                pinned = _pin_pickup_to_slot(inv, slot, index=idx, hold=True)
+        else:
+            pinned = _pin_pickup_to_slot(inv, slot, index=idx, hold=True)
+            if not pinned:
+                pinned = _queue_drop_job(inv, slot, index=idx)
         if not pinned:
             continue
         _drop_next += 1
@@ -7465,15 +8978,15 @@ def after_dump_spawn(count: int = 1) -> None:
         return
     if not (_bulk_healthcheck_mode and not _landing_settle_done) and not _shape_hold_active():
         arm_deferred_catch(12.0)
-    n = max(1, min(6, int(count)))
+    n = max(1, min(10, int(count)))
     now = time.monotonic()
     is_2d = str(_drop_shape or "") in SHAPE_2D_NAMES
     is_hold = _shape_hold_active()
     if is_hold:
-        # Spawn All + dump was find_all'ing ~every 0.22s → multi-minute car builds.
-        fresh_gap = 0.95 if _bulk_healthcheck_mode else 0.55
-        if _want_coop_replicate():
-            fresh_gap = max(fresh_gap, 1.65 if _bulk_healthcheck_mode else 1.05)
+        # Catch as they dump so rain/slow/fountain plays during spawn, not after.
+        fresh_gap = 0.40 if _want_coop_replicate() else 0.28
+        if _bulk_healthcheck_mode:
+            fresh_gap = max(fresh_gap, 0.55)
         allow_fresh = (now - _bulk_after_dump_scan_at) >= fresh_gap
         caught = catch_overhead_drops(fresh=False, limit=n)
         if caught <= 0:
@@ -7482,18 +8995,16 @@ def after_dump_spawn(count: int = 1) -> None:
             invalidate_pickup_cache()
             caught = catch_overhead_drops(fresh=True, limit=n)
             if caught <= 0:
-                caught = _lock_unseen_dump(limit=n, fresh=True)
+                caught = pull_new_pickups_into_shape(limit=n, fresh=True)
+        # Instant pin only when there is no drop animation — otherwise wait for
+        # the next catch so items fly into the house instead of popping after.
+        if caught <= 0 and allow_fresh and _instant_land_mode():
+            caught = _lock_unseen_dump(limit=n, fresh=True)
         if caught or allow_fresh:
             _bulk_after_dump_scan_at = now
-        # Live lobby build: drip slot poses after suppress (same silhouette host just froze).
-        if caught > 0 and _want_coop_replicate() and is_hold:
-            try:
-                _schedule_coop_pin_tail(limit=2)
-            except Exception:
-                pass
         return
     if is_2d:
-        fresh = (now - _bulk_after_dump_scan_at) >= 0.55
+        fresh = (now - _bulk_after_dump_scan_at) >= (1.05 if _want_coop_replicate() else 0.70)
         if fresh:
             invalidate_pickup_cache()
     else:
@@ -7558,34 +9069,14 @@ def settle_landing_loot(*, limit: int = 16) -> int:
     if coop and _pinned_slots:
         try:
             tracked = _build_layout_entries_from_pins()
-            # Never blast hundreds of ForceNetUpdates on settle — drip via guest sync ticks.
-            stamped = 0
-            try:
-                stamped = _repin_all_for_guests(limit=6, only_pending=True)
-            except Exception:
-                stamped = 0
-            if not _guest_sync_active:
-                _begin_guest_sync(force=True, clear_ok=False)
-            hold_n = held_pin_count()
-            # Large houses need quiet before drip-sync; short gap + catch growth AVd.
-            if _in_join_quiet():
-                gap = 8.5
-                waves = 2
-            elif hold_n > 160:
-                gap = 6.0
-                waves = 3
-            elif hold_n > 80:
-                gap = 3.5
-                waves = 2
+            if _is_nova_shape():
+                _log("Co-op nova finishing locally; final pickup-safe publish follows.")
             else:
-                gap = 2.0
-                waves = 2
-            _schedule_coop_followup_sync(waves=waves, gap=gap)
-            _log("Co-op shape ready for party.")
-            _log_dev(
-                f"Co-op settle: {len(_pinned_slots)} pin(s), {tracked} serial(s), "
-                f"{stamped} seed repin(s)."
-            )
+                _arm_coop_pickup_safe(delay=0.15)
+                _log(
+                    "Co-op shape ready — shape first then join, or rejoin once if already in lobby."
+                )
+            _log_dev(f"Co-op settle: tracked={tracked}.")
         except Exception as exc:
             _log_dev(f"guest sync at settle failed: {exc!r}")
     return n
@@ -7812,14 +9303,15 @@ def begin_overhead_drop(
     stack_height: float = 0.0,
     line_length: float = _DEFAULT_LINE_LENGTH,
     user_shape: str | None = None,
-    stay_in_air: Any = True,
+    stay_in_air: Any = None,
+    float_on_grab: Any = False,
     peel_after: Any = 0.0,
     shape_text: str = "",
     land_profile: str = "shiny",
 ) -> str:
     """Shape = land slots. Mode = motion into those slots. Combinations share this path."""
     global _drop_plan, _drop_next, _spawn_cursor, _drop_mode, _drop_yaw, _drop_seen, _frozen_dump, _float_jobs
-    global _drop_preexisting
+    global _drop_preexisting, _shape_grab_exclude
     global _pickup_by_addr, _defer_dump_index
     global _status, _DROP_HEIGHT, _drop_origin, _drop_shape, _drop_radius, _drop_spacing
     global _drop_per_ring, _drop_stack, _drop_line_length, _drop_type_counts, _drop_until
@@ -7841,10 +9333,13 @@ def begin_overhead_drop(
     _land_layout_profile = prof
     mode_l = normalize_drop_mode(mode)
     if shape == "nova":
-        # Always pack -> pulse into the 3D sphere; honor stay-in-air for the final ball.
+        # Always pack -> pulse into the 3D sphere; Stay in air (opt-in) keeps the final ball.
         if mode_l in ("none", "snap", "drip"):
             mode_l = "explode"
-    _set_air_hold(stay_in_air, peel_after)
+        if stay_in_air is None or str(stay_in_air).strip() == "":
+            stay_in_air = False
+    _set_air_hold(stay_in_air, peel_after, shape=shape)
+    set_float_on_grab(float_on_grab)
     n = max(1, int(count))
     anchor = _player_anchor()
     if anchor is None:
@@ -7898,6 +9393,7 @@ def begin_overhead_drop(
     _land_pose_index = 0
     _landing_settle_done = False
     _land_active = True
+    _shape_grab_exclude = {}
     _loot_world_id = _current_world_id()
     if user_shape is not None:
         _land_user_shape = "none" if _is_none_shape(user_shape) else str(user_shape)
@@ -8036,6 +9532,10 @@ def catch_overhead_drops(
             continue
         key = _pickup_key(inv)
         if key in known:
+            continue
+        if _shape_grab_excluded_inv(inv):
+            known.add(key)
+            _drop_seen.add(key)
             continue
         if not _is_shape_gear_pickup(inv, pool_name=str(_land_slot_pools.get(int(_drop_next)) or "")):
             try:
@@ -8289,9 +9789,25 @@ def _remember_pin(
     addr = _uobject_addr(inv)
     if not addr:
         return
+    try:
+        if _pickup_skip_shape(inv):
+            return
+    except Exception:
+        return
+    # Cap held silhouette size — 500+ + ForceNet is the stringlight/house AV.
+    cap = _MAX_SHAPE_PINS_COOP if _want_coop_replicate() else _MAX_SHAPE_PINS_SOLO
+    if len(_pinned_slots) >= cap and not any(int(row.get("addr") or 0) == addr for row in _pinned_slots):
+        return
     _pickup_by_addr[addr] = inv
     now = time.monotonic()
-    expires = now + (600.0 if holding else 6.0)
+    # Co-op publish needs pins alive past the old 6s non-hold TTL — otherwise
+    # _tick_pins drops the house mid ForceNet and guests only see a partial shape.
+    coop = False
+    try:
+        coop = bool(_want_coop_replicate())
+    except Exception:
+        coop = False
+    expires = now + (600.0 if (holding or coop) else 6.0)
     retries = 2
     restamp_at = now + 0.9
     payload = {
@@ -8336,7 +9852,17 @@ def _remember_pin(
 
 def _clear_pins() -> None:
     global _pinned_slots
+    global _coop_pickup_safe_active, _coop_pickup_unlock_at, _coop_pickup_unlock_cursor
+    global _coop_keep_freeze, _channel_refresh_off, _channel_refresh_on
     _pinned_slots = []
+    _reissue_queue.clear()
+    _slot_reissued.clear()
+    _coop_pickup_safe_active = False
+    _coop_pickup_unlock_at = 0.0
+    _coop_pickup_unlock_cursor = 0
+    _coop_keep_freeze = False
+    _channel_refresh_off = []
+    _channel_refresh_on = []
 
 
 def _preserve_prior_held_shapes() -> None:
@@ -8373,6 +9899,9 @@ def _tick_pins() -> None:
     now = time.monotonic()
     if not _pinned_slots or _peel_started:
         return
+    # Pickup-safe publish owns net + unlock — pin heartbeat would expire/yank slots.
+    if _coop_pickup_safe_active:
+        return
     hold_rows = any(row.get("hold") for row in _pinned_slots)
     if _in_join_quiet() and not hold_rows:
         return
@@ -8385,6 +9914,8 @@ def _tick_pins() -> None:
     # Mid-dump: pins happen in after_dump_spawn. Restamping hundreds of slots AVs.
     if _land_active and not _landing_settle_done:
         return
+    # Settled co-op: still allow drift / Attract hand-off. Blocking this entire
+    # tick left guests frozen on Use-only while the host could grab normally.
     holding = _shape_hold_active()
     join_quiet = _in_join_quiet(now)
     if join_quiet and hold_rows:
@@ -8392,7 +9923,7 @@ def _tick_pins() -> None:
     # 2D / non-hold drains: skip pin maintenance while slots are still filling.
     if _land_active and not holding:
         return
-    tick_mod = 1 if (join_quiet and hold_rows) else (2 if (_float_jobs and holding) else (4 if (_land_active and holding) else 10))
+    tick_mod = 2 if (_float_jobs and holding) else (4 if (_land_active and holding) else 10)
     _pin_tick += 1
     if _pin_tick % tick_mod:
         return
@@ -8400,10 +9931,47 @@ def _tick_pins() -> None:
     live: list[dict[str, Any]] = []
     checked = 0
     pin_check_budget = 28 if (join_quiet and hold_rows) else (12 if (_land_active and holding) else 8)
-    coop_hold = bool(_want_coop_replicate() and hold_rows and not join_quiet)
-    for row in _pinned_slots:
+    if _landing_settle_done and hold_rows:
+        # Scan more slots so Attract/grab drift is caught before ForceNet restamp.
+        pin_check_budget = max(pin_check_budget, 18 if _want_coop_replicate() else 12)
+    coop_pins = bool(
+        _want_coop_replicate()
+        and _pinned_slots
+        and not join_quiet
+        and not _progression_network_busy()
+        and _landing_settle_done
+        and not _mid_shape_dump()
+    )
+    # Proximity hand-off so guests walking into the shape get Attract, not a fight.
+    party_xyz: list[tuple[float, float, float]] = []
+    near_budget = 0
+    if coop_pins:
+        try:
+            party_xyz = _party_pawn_xy()
+            near_budget = 6 if len(party_xyz) > 1 else 0
+        except Exception:
+            party_xyz = []
+            near_budget = 0
+    # Snapshot — release/drop mutate _pinned_slots mid-pass.
+    for row in list(_pinned_slots):
         expires = float(row.get("expires") or 0.0)
         if expires and now > expires and not row.get("hold"):
+            # Never drop mid guest-publish (partial shape + frozen unusable loot).
+            if _coop_pickup_safe_active:
+                try:
+                    row["expires"] = now + 600.0
+                except Exception:
+                    pass
+                live.append(row)
+                continue
+            # Solo/expired flat pin: restore world pickup before forgetting.
+            addr_e = int(row.get("addr") or 0)
+            inv_e = _live_pickup(addr_e) if addr_e else None
+            if inv_e is not None and _live(inv_e):
+                try:
+                    _restore_world_pickup_for_grab(inv_e)
+                except Exception:
+                    pass
             continue
         if checked >= pin_check_budget:
             live.append(row)
@@ -8415,10 +9983,8 @@ def _tick_pins() -> None:
         if addr in flying:
             live.append(row)
             continue
-        # Never use row["inv"] — that wrapper is what crashed the dump.
-        inv = _resolve_pin_inv(row, fresh=bool(_in_join_quiet() and row.get("hold")))
-        if inv is None and addr:
-            inv = _live_pickup(addr)
+        # Addr-map only — resolve/fresh-scan mid-grab AVd through pyunrealsdk.
+        inv = _live_pickup(addr) if addr else None
         if inv is None:
             # Addr map can lag one tick behind find_all. Held silhouettes must
             # not be dropped after a join (empty map used to flatten the house).
@@ -8428,40 +9994,101 @@ def _tick_pins() -> None:
                 row["misses"] = misses
                 live.append(row)
             continue
+        if not _live(inv):
+            _drop_dead_pin(row)
+            continue
         row["misses"] = 0
         checked += 1
-        try:
-            _set_physics(inv, False)
-        except Exception:
-            pass
+        if addr and _shape_grab_excluded_addr(addr):
+            # Already handed to a player — drop pin tracking.
+            continue
+        if _shape_grab_excluded_inv(inv):
+            continue
+        if party_xyz and near_budget > 0 and _party_near_pin(row, party_xyz):
+            near_budget -= 1
+            try:
+                if inv is not None and _live(inv):
+                    _unlock_pin_for_normal_grab(inv)
+                _release_pin_for_pickup(inv, row)
+            except Exception:
+                _drop_dead_pin(row)
+            continue
         drifted = False
+        dist2 = 0.0
+        loc = None
         try:
+            if not _live(inv):
+                _drop_dead_pin(row)
+                continue
             loc = inv.K2_GetActorLocation()
             dx = float(loc.X) - float(row["x"])
             dy = float(loc.Y) - float(row["y"])
             dz = float(loc.Z) - float(row["z"])
-            drifted = (dx * dx + dy * dy + dz * dz) > 3025.0  # ~55uu
+            dist2 = dx * dx + dy * dy + dz * dz
+            drifted = dist2 > 3025.0  # ~55uu
         except Exception:
-            drifted = True
-        if drifted:
-            try:
-                _teleport_pickup(
-                    inv,
-                    float(row["x"]),
-                    float(row["y"]),
-                    float(row["z"]),
-                    float(row.get("yaw") or 0.0),
-                    pitch=float(row.get("pitch") or 0.0),
-                    roll=float(row.get("roll") or 0.0),
-                    freeze=True,
-                    replicate=coop_hold,
-                    guest_push=coop_hold and row.get("hold"),
-                )
-                _set_physics(inv, False)
-                _zero_velocity(inv)
-            except Exception:
+            # Location read failed — usually destroyed mid-grab. Do not restore.
+            _drop_dead_pin(row)
+            continue
+        settled = bool(_landing_settle_done) and not _mid_shape_dump()
+        # Settled: drift / upward Attract = player grab. Hand off as world loot.
+        if settled:
+            dz_up = 0.0
+            if loc is not None:
+                try:
+                    dz_up = float(loc.Z) - float(row["z"])
+                except Exception:
+                    dz_up = 0.0
+            grabbing = bool(drifted) or dist2 > 1600.0 or dz_up > 28.0
+            if grabbing:
+                try:
+                    if _live(inv):
+                        _unlock_pin_for_normal_grab(inv)
+                        _release_pin_for_pickup(inv, row)
+                    else:
+                        _drop_dead_pin(row)
+                except Exception:
+                    _drop_dead_pin(row)
+                continue
+            # Already unlocked for Attract — do not restamp/freeze.
+            if row.get("attract_ready"):
                 live.append(row)
                 continue
+            live.append(row)
+            continue
+        if not drifted:
+            live.append(row)
+            continue
+        try:
+            # Keep QueryAndPhysics so lobby guests can actually grab shaped guns.
+            if not _live(inv):
+                _drop_dead_pin(row)
+                continue
+            _set_physics(inv, False, keep_grab_collision=True)
+        except Exception:
+            pass
+        try:
+            if not _live(inv):
+                _drop_dead_pin(row)
+                continue
+            _teleport_pickup(
+                inv,
+                float(row["x"]),
+                float(row["y"]),
+                float(row["z"]),
+                float(row.get("yaw") or 0.0),
+                pitch=float(row.get("pitch") or 0.0),
+                roll=float(row.get("roll") or 0.0),
+                freeze=True,
+                replicate=False,
+                guest_push=False,
+                keep_grab_collision=True,
+            )
+            _set_physics(inv, False, keep_grab_collision=True)
+            _zero_velocity(inv)
+        except Exception:
+            live.append(row)
+            continue
         live.append(row)
     _pinned_slots = live
 
@@ -8537,7 +10164,16 @@ def _queue_drop_job(
         return ok
     if str(_drop_shape) in SHAPE_2D_NAMES and _instant_land_mode() and not _is_nova_shape():
         ok = _teleport_pickup(
-            inv, x1, y1, z1, yaw_r, pitch=pitch, roll=roll, freeze=True, replicate=replicate
+            inv,
+            x1,
+            y1,
+            z1,
+            yaw_r,
+            pitch=pitch,
+            roll=roll,
+            freeze=True,
+            replicate=replicate,
+            keep_grab_collision=True,
         )
         if ok:
             _remember_pin(
@@ -8558,7 +10194,16 @@ def _queue_drop_job(
         float(cfg.get("height_mul") or 0.0) <= 0.0 and style not in ("drip",)
     ):
         ok = _teleport_pickup(
-            inv, x1, y1, z1, yaw_r, pitch=pitch, roll=roll, freeze=True, replicate=replicate
+            inv,
+            x1,
+            y1,
+            z1,
+            yaw_r,
+            pitch=pitch,
+            roll=roll,
+            freeze=True,
+            replicate=replicate,
+            keep_grab_collision=True,
         )
         if ok:
             _remember_pin(inv, x1, y1, z1, yaw_r, pitch=pitch, roll=roll, slot_index=index)
@@ -8571,13 +10216,27 @@ def _queue_drop_job(
     if not addr:
         return False
     ok = _teleport_pickup(
-        inv, x0, y0, z0, yaw_r, pitch=pitch, roll=roll, freeze=True, replicate=replicate
+        inv,
+        x0,
+        y0,
+        z0,
+        yaw_r,
+        pitch=pitch,
+        roll=roll,
+        freeze=True,
+        replicate=replicate,
+        keep_grab_collision=True,
     )
     if not ok:
         return False
     try:
-        _set_physics(inv, False)
+        _set_physics(inv, False, keep_grab_collision=True)
         _zero_velocity(inv)
+    except Exception:
+        pass
+    try:
+        if _want_coop_replicate():
+            _stamp_shape_net_live(inv, freq=8.0, flush=False)
     except Exception:
         pass
     now = time.monotonic()
@@ -8727,7 +10386,7 @@ def _tick_nova_explode(now: float) -> None:
             return
         _nova_explode_started = True
         _nova_explode_armed_at = 0.0
-        final_hold = _should_hold_in_air()
+        final_hold = bool(_should_hold_in_air())
         ox, oy, oz = _drop_origin
         pending: list[dict[str, Any]] = []
         for row in _pinned_slots:
@@ -8771,11 +10430,22 @@ def _tick_nova_explode(now: float) -> None:
         )
     if not _nova_explode_queue:
         return
-    room = max(0, 28 - len(_float_jobs))
-    take = min(10, room, len(_nova_explode_queue))
+    coop = False
+    try:
+        coop = bool(_want_coop_replicate())
+    except Exception:
+        coop = False
+    # Co-op: tiny batches — 10 teleports + find_all per tick lagged guests out of the lobby.
+    room = max(0, (12 if coop else 28) - len(_float_jobs))
+    take = min(3 if coop else 8, room, len(_nova_explode_queue))
     if take <= 0:
         return
-    _refresh_live_pickups()
+    # Only refresh when the addr map looks empty — never every pulse tick.
+    if not _pickup_by_addr or len(_pickup_by_addr) < max(8, take):
+        try:
+            _refresh_live_pickups()
+        except Exception:
+            pass
     batch = _nova_explode_queue[:take]
     _nova_explode_queue = _nova_explode_queue[take:]
     started = 0
@@ -8800,8 +10470,8 @@ def _tick_nova_explode(now: float) -> None:
                 "x1": float(row["x1"]),
                 "y1": float(row["y1"]),
                 "z1": float(row["z1"]),
-                "t0": now + 0.025 * started,
-                "dur": 1.25,
+                "t0": now + 0.04 * started,
+                "dur": 1.35 if coop else 1.25,
                 "yaw": float(row.get("yaw") or _drop_yaw),
                 "pitch": float(row.get("pitch") or 0.0),
                 "roll": float(row.get("roll") or 0.0),
@@ -8848,31 +10518,84 @@ def enqueue_placed_drops(
     return n
 
 
+def _arm_coop_vis_burst(addrs: list[int]) -> None:
+    """Sparse ForceNet so guests see the arranged pose — never re-freeze / pin."""
+    global _coop_vis_addrs, _coop_vis_cursor, _coop_vis_until, _coop_vis_ok
+    _coop_vis_addrs = [int(a) for a in addrs if int(a or 0)]
+    _coop_vis_cursor = 0
+    _coop_vis_ok = set()
+    # 120 slots @ ~4 ForceNet/tick needs headroom past the old 6s cut-off.
+    _coop_vis_until = time.monotonic() + 25.0
+    _log(f"Co-op shape visibility publish queued ({len(_coop_vis_addrs)} pickable slot(s)).")
+
+
+def _tick_coop_vis_burst(now: float) -> None:
+    global _coop_vis_addrs, _coop_vis_cursor, _coop_vis_until, _coop_vis_ok
+    if not _coop_vis_addrs:
+        return
+    if _progression_network_busy() or _in_join_quiet(now):
+        return
+    n = len(_coop_vis_addrs)
+    budget = 6
+    walked = 0
+    while walked < n and budget > 0:
+        idx = _coop_vis_cursor % n
+        _coop_vis_cursor = idx + 1
+        walked += 1
+        addr = int(_coop_vis_addrs[idx] or 0)
+        if not addr or addr in _coop_vis_ok:
+            continue
+        inv = _live_pickup(addr)
+        if inv is None or not _live(inv):
+            _coop_vis_ok.add(addr)
+            continue
+        try:
+            inv.bOnlyRelevantToOwner = False
+            inv.bNetUseOwnerRelevancy = False
+            inv.bAlwaysRelevant = True
+            inv.bReplicates = True
+            inv.bReplicateMovement = True
+            inv.NetUpdateFrequency = 40.0
+            try:
+                inv.RemoteRole = 1
+            except Exception:
+                pass
+            dorm = getattr(inv, "SetNetDormancy", None)
+            if callable(dorm):
+                dorm(_DORM_NEVER)
+        except Exception:
+            pass
+        # Re-stamp dump usable each publish so guests get pickable + posed actors.
+        try:
+            _apply_dump_usable_state(inv, gravity=False)
+        except Exception:
+            pass
+        if _force_net_update(inv, coop_pin=True, guest_push=True):
+            _coop_vis_ok.add(addr)
+            budget -= 1
+    done = len(_coop_vis_ok)
+    if done >= n or now > _coop_vis_until:
+        _log(
+            f"Co-op shape ready: {done}/{n} visible + pickable"
+            + (" (timeout)" if done < n else "")
+            + "."
+        )
+        _coop_vis_addrs = []
+        _coop_vis_ok = set()
+        _coop_vis_cursor = 0
+        _coop_vis_until = 0.0
+
+
 def _arm_coop_guest_sync_after_place(*, pin_count: int = 0) -> None:
-    """Drip ForceNetUpdate after host-local Place Fully — never blast hundreds at once."""
+    """Publish through normal replication, then permit client-local pickup Attract."""
     if not _want_coop_replicate() or not _pinned_slots:
         return
     try:
         _build_layout_entries_from_pins()
     except Exception:
         pass
-    try:
-        _repin_all_for_guests(limit=4, only_pending=True)
-    except Exception:
-        pass
-    try:
-        _begin_guest_sync(force=True, clear_ok=False)
-    except Exception:
-        pass
-    n = int(pin_count or held_pin_count() or len(_pinned_slots))
-    if n > 160:
-        gap, waves = 6.0, 3
-    elif n > 80:
-        gap, waves = 3.5, 3
-    else:
-        gap, waves = 2.0, 2
-    _schedule_coop_followup_sync(waves=waves, gap=gap)
-    _log("Co-op shape ready for party.")
+    _arm_coop_pickup_safe(delay=0.15)
+    _log(f"Co-op shape ready ({int(pin_count or len(_pinned_slots))} pickup-safe slots).")
 
 
 def apply_settle(
@@ -8883,6 +10606,7 @@ def apply_settle(
     yaw: float | None = None,
 ) -> int:
     """none = instant on slots. snap = fall from drop height onto slots. others = group drop."""
+    global _landing_settle_done, _pinned_slots, _pickup_by_addr
     mode_l = normalize_drop_mode(mode)
     if mode_l == "none":
         coop = False
@@ -8892,9 +10616,9 @@ def apply_settle(
             coop = False
         # Mass ForceNetUpdate on Place Fully house (~250+) is the co-op AV in CrashContext.
         mass = len(placed) > 40
+        # Co-op: freeze for silhouette publish, then unlock for normal Attract.
+        # Do NOT force hold=True on flat shapes — that left guests Use-only forever.
         replicate_now = not (coop or mass)
-        shape_n = _normalize_shape_name(_drop_shape or _last_layout.get("shape") or "")
-        hold_pins = bool(coop or shape_n in SHAPE_3D_NAMES)
         n = 0
         for i, (inv, x, y, z) in enumerate(placed):
             yaw_r, pitch, roll = _rot_for_xyz(i, x, y, z)
@@ -8921,7 +10645,7 @@ def apply_settle(
                     yaw_r,
                     pitch=pitch,
                     roll=roll,
-                    hold=hold_pins,
+                    hold=bool(_should_hold_in_air()),
                     slot_index=i,
                 )
                 n += 1
@@ -8985,16 +10709,26 @@ def _tick_float_jobs(now: float) -> None:
     # Large dumps need a fat budget or flights stall mid-air at dump height.
     budget = min(n_jobs, 64 if n_jobs > 80 else (40 if n_jobs > 24 else (20 if n_jobs > 10 else 10)))
     # Sparse mid-air guest samples so lobby sees rain/slow/medium — not shoot-high-then-snap.
-    coop_fly_shape = bool(_want_coop_replicate() and _shape_hold_active())
-    if coop_fly_shape:
-        if n_jobs > 180:
-            guest_fly_budget = [2]
-        elif n_jobs > 80:
-            guest_fly_budget = [3]
-        else:
-            guest_fly_budget = [5]
-    else:
-        guest_fly_budget = [0]
+    # Mid-dump ForceNet samples hitch the host on large ULM grids — wait until settle.
+    # Nova explode ForceNet was lagging guests out of the lobby — host-local only during pulse.
+    # Guests need DORM_Never early so rain/slow replicates without ForceNet storms.
+    # Keep ForceNet guest samples off — that path kicked lobbies on big houses.
+    coop_fly_shape = False
+    guest_fly_budget = [0]
+    coop_net = False
+    try:
+        coop_net = bool(_want_coop_replicate())
+    except Exception:
+        coop_net = False
+    fly_net_freq = 10.0 if n_jobs > 150 else (14.0 if n_jobs > 80 else (20.0 if n_jobs > 40 else 28.0))
+    net_live_budget = 8 if n_jobs > 150 else (12 if n_jobs > 80 else (16 if n_jobs > 60 else 24))
+    # Host hitch: smaller teleport budget while pulsing / large co-op shapes.
+    if _nova_explode_started or _nova_explode_queue:
+        budget = min(budget, 8 if _want_coop_replicate() else 16)
+    elif _want_coop_replicate() and n_jobs > 150:
+        budget = min(budget, 10)
+    elif _want_coop_replicate() and n_jobs > 80:
+        budget = min(budget, 16)
     for job in _float_jobs:
         inv = _job_inv_live(job)
         dur = max(0.35, float(job.get("dur") or 1.0))
@@ -9013,6 +10747,10 @@ def _tick_float_jobs(now: float) -> None:
         if now < t0:
             remaining.append(job)
             continue
+        if coop_net and not job.get("net_live") and net_live_budget > 0:
+            if _stamp_shape_net_live(inv, freq=fly_net_freq):
+                job["net_live"] = True
+                net_live_budget -= 1
         u = min(1.0, (now - t0) / dur)
         t = u * u * (3.0 - 2.0 * u)
         if u < 1.0:
@@ -9030,7 +10768,11 @@ def _tick_float_jobs(now: float) -> None:
                 if _teleport_pickup(inv, x, y, z, yaw, pitch=pitch, roll=roll, replicate=False):
                     job["last_move"] = now
             if coop_fly_shape and guest_fly_budget[0] > 0:
-                mid_gap = 0.55 if n_jobs > 120 else 0.28
+                mode_n = str(job.get("mode") or "")
+                if mode_n in ("rain", "fountain", "spiral", "stagger", "slow", "medium", "fast"):
+                    mid_gap = 0.22 if n_jobs > 120 else 0.14
+                else:
+                    mid_gap = 0.40 if n_jobs > 120 else 0.22
                 if not job.get("guest_start") and u > 0.02:
                     x0 = float(job.get("x0") or x)
                     y0 = float(job.get("y0") or y)
@@ -9057,8 +10799,8 @@ def _tick_float_jobs(now: float) -> None:
                 peel_land = mode_n == "drip" and _is_peel_drop()
                 if not peel_land:
                     if mode_n == "explode":
-                        # Nova pulse: honor the job's stay-in-air flag only.
-                        hold = bool(job.get("hold")) or _should_hold_in_air()
+                        # Nova pulse: honor the job's stay-in-air flag only (no mid-flight flip).
+                        hold = bool(job.get("hold"))
                     else:
                         hold = bool(job.get("hold")) or _shape_hold_active()
                         if _should_hold_in_air():
@@ -9082,6 +10824,25 @@ def _tick_float_jobs(now: float) -> None:
                                     except Exception:
                                         pass
                                     break
+                    elif mode_n == "explode":
+                        # Ground pulse end — freeze with grab, never SimulatePhysics
+                        # (live dump: bRepPhysics + simulate launches guns upward).
+                        try:
+                            _set_physics(inv, False, keep_grab_collision=True)
+                            _zero_velocity(inv)
+                        except Exception:
+                            pass
+                        _remember_pin(
+                            inv,
+                            x1,
+                            y1,
+                            z1,
+                            yaw,
+                            pitch=pitch,
+                            roll=roll,
+                            hold=False,
+                            slot_index=slot_i,
+                        )
                     else:
                         _remember_pin(
                             inv,
@@ -9098,6 +10859,16 @@ def _tick_float_jobs(now: float) -> None:
                 continue
         remaining.append(job)
     _float_jobs = remaining
+    # Never arm clean-respawn while the dump is still filling — empty float jobs
+    # mid-Spawn-All used to queue find_all replacements and AV before settle.
+    if (
+        not remaining
+        and _want_coop_replicate()
+        and _pinned_slots
+        and _landing_settle_done
+        and not _mid_shape_dump()
+    ):
+        _arm_coop_pickup_safe(delay=0.15)
 
 
 def finish_drop_jobs() -> str:
@@ -9135,6 +10906,37 @@ def _party_count() -> int:
             return len(get_party_player_states())
         except Exception:
             return 0
+
+
+def _party_in_world_count() -> int:
+    """Players with a live pawn — character select does not count."""
+    n = 0
+    try:
+        from .party_helpers import _gbc_session_world_and_gamestate
+
+        _world, gs = _gbc_session_world_and_gamestate()
+        pa = getattr(gs, "PlayerArray", None) if gs is not None else None
+        if pa is None:
+            return 0
+        for i in range(len(pa)):
+            try:
+                ps = pa[i]
+            except Exception:
+                continue
+            if ps is None:
+                continue
+            pawn = getattr(ps, "PawnPrivate", None) or getattr(ps, "Pawn", None)
+            if pawn is None:
+                continue
+            try:
+                if not _live(pawn):
+                    continue
+            except Exception:
+                continue
+            n += 1
+    except Exception:
+        return max(0, _party_count())
+    return n
 
 
 def _tick_deferred_dump_catch(now: float) -> None:
@@ -9204,6 +11006,12 @@ def _tick_deferred_dump_catch(now: float) -> None:
 def tick_drop_motion(now: float | None = None) -> None:
     """Fly rain/fountain/spiral/etc into shape slots. No find_all — HUD-tick safe."""
     global _float_tick_at, _pickup_by_addr
+    _check_use_followups()
+    try:
+        _tick_pending_grab_unlock()
+    except Exception:
+        pass
+    _tick_reissue_queue()
     try:
         from .session_guards import session_safe
 
@@ -9266,6 +11074,7 @@ def tick_drop_motion(now: float | None = None) -> None:
         or waiting_peel
         or waiting_nova
         or (_land_active and _deferred_catch_until > 0.0)
+        or _coop_vis_addrs
     ):
         return
     try:
@@ -9278,6 +11087,18 @@ def tick_drop_motion(now: float | None = None) -> None:
         pass
     try:
         _tick_float_jobs(now)
+    except Exception:
+        pass
+    try:
+        _tick_coop_pickup_safe(now)
+    except Exception:
+        pass
+    try:
+        _tick_coop_channel_refresh(now)
+    except Exception:
+        pass
+    try:
+        _tick_coop_vis_burst(now)
     except Exception:
         pass
     try:
@@ -9326,6 +11147,11 @@ def tick_loot_shapes(now: float | None = None) -> None:
         pass
     tick_drop_motion(now)
     try:
+        # Vis burst must run even when pins are empty (GLH-style place).
+        _tick_coop_vis_burst(now)
+    except Exception:
+        pass
+    try:
         _tick_coop_hold_sync(now)
     except Exception:
         pass
@@ -9353,22 +11179,416 @@ def tick_loot_shapes(now: float | None = None) -> None:
                 map_fog_hide.tick_fog_hide(now)
         except Exception:
             pass
-        try:
-            from . import hold_session
-
-            hold_session.tick_hold_session(now)
-        except Exception:
-            pass
         # Deferred dump catch runs from tick_drop_motion (HUD tick, even while
         # catch is paused). Nothing to do here unless motion is idle.
         if _deferred_catch_until > 0.0 and not (_float_jobs or _pinned_slots):
             _tick_deferred_dump_catch(now)
-        if _join_reapply_can_run(now):
+        if not _progression_network_busy() and _join_reapply_can_run(now):
             _join_reapply_pending = False
             if _pinned_slots:
                 _run_join_guest_shape_push()
     finally:
         _tick_busy = False
+
+
+def _pinned_row_for_hook_value(value: Any) -> tuple[dict[str, Any], Any] | None:
+    """Resolve a ServerUseObject parameter (actor/component/struct) to one pin."""
+    if value is None or not _pinned_slots:
+        return None
+    by_addr = {
+        int(row.get("addr") or 0): row
+        for row in _pinned_slots
+        if int(row.get("addr") or 0)
+    }
+    seen: set[int] = set()
+    queue: list[Any] = [value]
+    while queue and len(seen) < 24:
+        candidate = queue.pop(0)
+        if candidate is None:
+            continue
+        marker = id(candidate)
+        if marker in seen:
+            continue
+        seen.add(marker)
+        try:
+            addr = int(_uobject_addr(candidate) or 0)
+        except Exception:
+            addr = 0
+        row = by_addr.get(addr)
+        if row is not None:
+            inv = _live_pickup(addr)
+            if inv is None:
+                inv = candidate
+            return row, inv
+        # The RPC may pass a primitive/use component. Walk outward to its actor.
+        outer = candidate
+        for _ in range(4):
+            try:
+                outer = getattr(outer, "Outer", None)
+            except Exception:
+                outer = None
+            if outer is None:
+                break
+            try:
+                outer_addr = int(_uobject_addr(outer) or 0)
+            except Exception:
+                outer_addr = 0
+            row = by_addr.get(outer_addr)
+            if row is not None:
+                inv = _live_pickup(outer_addr)
+                if inv is None:
+                    inv = outer
+                return row, inv
+        # Native use RPCs sometimes wrap the target in a small interaction struct.
+        for attr in (
+            "Object",
+            "UseObject",
+            "UsableObject",
+            "TargetObject",
+            "Target",
+            "Actor",
+            "Interactable",
+            "Usable",
+            "Component",
+        ):
+            try:
+                inner = getattr(candidate, attr, None)
+            except Exception:
+                inner = None
+            if inner is not None and inner is not candidate:
+                queue.append(inner)
+        if isinstance(candidate, (tuple, list)):
+            queue.extend(list(candidate)[:8])
+    return None
+
+
+def _use_rpc_target_actor(value: Any) -> Any | None:
+    """Resolve the pickup actor behind a Use RPC argument, pinned or not.
+
+    Needed for the shaped-vs-plain A/B: guests can collect unshaped SQBT loot,
+    so we snapshot both and diff what shaping changed.
+    """
+    seen: set[int] = set()
+    queue: list[Any] = [value]
+    while queue and len(seen) < 24:
+        candidate = queue.pop(0)
+        if candidate is None:
+            continue
+        marker = id(candidate)
+        if marker in seen:
+            continue
+        seen.add(marker)
+        if _live(candidate):
+            try:
+                if getattr(candidate, "UsableActorState", None) is not None:
+                    return candidate
+            except Exception:
+                pass
+        outer = candidate
+        for _ in range(4):
+            try:
+                outer = getattr(outer, "Outer", None)
+            except Exception:
+                outer = None
+            if outer is None:
+                break
+            try:
+                if _live(outer) and getattr(outer, "UsableActorState", None) is not None:
+                    return outer
+            except Exception:
+                break
+        for attr in (
+            "Object",
+            "UseObject",
+            "UsableObject",
+            "TargetObject",
+            "Target",
+            "Actor",
+            "Interactable",
+            "Usable",
+            "Component",
+        ):
+            try:
+                inner = getattr(candidate, attr, None)
+            except Exception:
+                inner = None
+            if inner is not None and inner is not candidate:
+                queue.append(inner)
+        if isinstance(candidate, (tuple, list)):
+            queue.extend(list(candidate)[:8])
+    return None
+
+
+def _pickup_state_snapshot(inv: Any) -> str:
+    """Compact net/physics state of one pickup for the Use A/B diff."""
+    if not _live(inv):
+        return "dead"
+    out: list[str] = []
+
+    def grab(label: str, fn: Any) -> None:
+        try:
+            out.append(f"{label}={fn()}")
+        except Exception:
+            out.append(f"{label}=?")
+
+    grab("rep", lambda: int(bool(inv.bReplicates)))
+    grab("repmov", lambda: int(bool(inv.bReplicateMovement)))
+    grab("relevant", lambda: int(bool(inv.bAlwaysRelevant)))
+    grab("rrole", lambda: int(inv.RemoteRole))
+    grab("dorm", lambda: int(inv.NetDormancy))
+    grab("freq", lambda: int(float(inv.NetUpdateFrequency)))
+    grab("owner", lambda: 0 if getattr(inv, "owner", None) is None else 1)
+    try:
+        movement = getattr(inv, "ReplicatedMovement", None)
+        out.append(f"repphys={int(bool(getattr(movement, 'bRepPhysics', False)))}")
+        out.append(f"sleep={int(bool(getattr(movement, 'bSimulatedPhysicSleep', False)))}")
+    except Exception:
+        out.append("repphys=? sleep=?")
+    try:
+        state = getattr(inv, "UsableActorState", None)
+        locked = getattr(state, "bInteractabilityLockedReplicated", None)
+        out.append(f"lock={int(bool(locked))}")
+    except Exception:
+        out.append("lock=?")
+    for comp in _physics_components(inv):
+        # IsSimulatingPhysics is plain C++, not a UFUNCTION, so it read "?".
+        # BodyInstance is a reflected struct and gives the real values.
+        try:
+            body = getattr(comp, "BodyInstance", None)
+            out.append(f"sim={int(bool(getattr(body, 'bSimulatePhysics', False)))}")
+            out.append(f"profile={getattr(body, 'CollisionProfileName', '?')}")
+        except Exception:
+            out.append("sim=? profile=?")
+        try:
+            coll = getattr(comp, "GetCollisionEnabled", None)
+            out.append(f"coll={int(coll())}" if callable(coll) else "coll=?")
+        except Exception:
+            out.append("coll=?")
+        try:
+            grav = getattr(comp, "IsGravityEnabled", None)
+            out.append(f"grav={int(bool(grav()))}" if callable(grav) else "grav=?")
+        except Exception:
+            out.append("grav=?")
+        break
+    return " ".join(out)
+
+
+_AIM_MAX_RANGE = 900.0
+_AIM_CONE_TAN = 0.22  # ~12 degrees.
+
+
+def _controller_aim_ray(controller: Any) -> tuple[float, float, float, float, float, float] | None:
+    """Eye point + forward vector for a controller, host or guest.
+
+    Control rotation is replicated to the server for every client, so this works
+    for a lobby guest even though their camera lives on their own machine.
+    """
+    pawn = None
+    for attr in ("Pawn", "OakCharacter", "AcknowledgedPawn"):
+        try:
+            candidate = getattr(controller, attr, None)
+        except Exception:
+            candidate = None
+        if candidate is not None and _live(candidate):
+            pawn = candidate
+            break
+    if pawn is None:
+        return None
+    try:
+        pos = pawn.K2_GetActorLocation()
+        ex, ey, ez = float(pos.X), float(pos.Y), float(pos.Z)
+    except Exception:
+        return None
+    try:
+        ez += float(getattr(pawn, "BaseEyeHeight", 0.0) or 0.0)
+    except Exception:
+        pass
+    rot = None
+    for name in ("GetControlRotation", "K2_GetActorRotation"):
+        try:
+            fn = getattr(controller if name == "GetControlRotation" else pawn, name, None)
+            if callable(fn):
+                rot = fn()
+                break
+        except Exception:
+            rot = None
+    if rot is None:
+        return None
+    try:
+        pitch = math.radians(float(rot.Pitch))
+        yaw = math.radians(float(rot.Yaw))
+    except Exception:
+        return None
+    cos_p = math.cos(pitch)
+    return (ex, ey, ez, cos_p * math.cos(yaw), cos_p * math.sin(yaw), math.sin(pitch))
+
+
+def _pin_under_aim(controller: Any) -> tuple[dict[str, Any], Any] | None:
+    """Pin closest to what this controller is looking at, within a narrow cone."""
+    ray = _controller_aim_ray(controller)
+    if ray is None:
+        return None
+    ex, ey, ez, fx, fy, fz = ray
+    best: tuple[float, dict[str, Any], Any] | None = None
+    for row in list(_pinned_slots):
+        try:
+            vx = float(row["x"]) - ex
+            vy = float(row["y"]) - ey
+            vz = float(row["z"]) - ez
+        except Exception:
+            continue
+        along = vx * fx + vy * fy + vz * fz
+        if along <= 0.0 or along > _AIM_MAX_RANGE:
+            continue
+        px = vx - along * fx
+        py = vy - along * fy
+        pz = vz - along * fz
+        perp = math.sqrt(px * px + py * py + pz * pz)
+        if perp > along * _AIM_CONE_TAN:
+            continue
+        addr = int(row.get("addr") or 0)
+        inv = _live_pickup(addr) if addr else None
+        if inv is None or not _live(inv):
+            continue
+        # Tightest angle wins, not nearest — a gun behind another in the
+        # silhouette must not steal the one the player is actually looking at.
+        score = perp / max(along, 1.0)
+        if best is None or score < best[0]:
+            best = (score, row, inv)
+    return (best[1], best[2]) if best is not None else None
+
+
+def _server_use_pin_target(
+    controller: Any,
+    args: Any,
+    func: Any,
+) -> tuple[dict[str, Any], Any] | None:
+    """Resolve exact RPC target; nearest pin is fallback only after an actual Use RPC."""
+    if not _pinned_slots or not _landing_settle_done or _mid_shape_dump():
+        return None
+    param_names: list[str] = []
+    try:
+        prop = getattr(func, "ChildProperties", None)
+        for _ in range(32):
+            if prop is None:
+                break
+            name = str(getattr(prop, "Name", "") or "").strip()
+            flags = int(getattr(prop, "PropertyFlags", 0) or 0)
+            if name and name not in ("ReturnValue", "Return", "__Result") and not (flags & 0x400):
+                param_names.append(name)
+            nxt = getattr(prop, "Next", None)
+            if nxt is prop:
+                break
+            prop = nxt
+    except Exception:
+        param_names = []
+    # Known spellings first, then every reflected non-return parameter.
+    names = [
+        "Object",
+        "UseObject",
+        "UsableObject",
+        "TargetObject",
+        "Target",
+        "Actor",
+        "Interactable",
+        "Usable",
+        "Component",
+        *param_names,
+    ]
+    checked_names: set[str] = set()
+    for name in names:
+        if not name or name in checked_names:
+            continue
+        checked_names.add(name)
+        try:
+            value = getattr(args, name, None)
+        except Exception:
+            value = None
+        hit = _pinned_row_for_hook_value(value)
+        if hit is not None:
+            return hit
+    # RPC target opaque. Aim first: a guest standing back from the shape is
+    # further than the old 320uu pawn radius, so nearest-pawn released nothing
+    # for them while the host, stood inside their own shape, always matched.
+    aimed = _pin_under_aim(controller)
+    if aimed is not None:
+        return aimed
+    pawn = None
+    for attr in ("Pawn", "OakCharacter", "AcknowledgedPawn"):
+        try:
+            candidate = getattr(controller, attr, None)
+        except Exception:
+            candidate = None
+        if candidate is not None and _live(candidate):
+            pawn = candidate
+            break
+    if pawn is None:
+        return None
+    try:
+        pos = pawn.K2_GetActorLocation()
+        px, py, pz = float(pos.X), float(pos.Y), float(pos.Z)
+    except Exception:
+        return None
+    best: tuple[float, dict[str, Any], Any] | None = None
+    for row in list(_pinned_slots):
+        try:
+            dx = float(row["x"]) - px
+            dy = float(row["y"]) - py
+            dz = float(row["z"]) - pz
+            dist2 = dx * dx + dy * dy + dz * dz
+        except Exception:
+            continue
+        if dist2 > (320.0 * 320.0):
+            continue
+        addr = int(row.get("addr") or 0)
+        inv = _live_pickup(addr) if addr else None
+        if inv is None or not _live(inv):
+            continue
+        if best is None or dist2 < best[0]:
+            best = (dist2, row, inv)
+    return (best[1], best[2]) if best is not None else None
+
+
+def _on_server_use_release_pin(
+    obj: Any,
+    args: Any,
+    _ret: Any,
+    func: Any,
+) -> Any:
+    """PRE ServerUse*: drop pin tracking for host collects. Guests: no-op.
+
+    Addr match only — aim/pawn scans + wrapper property reads AVd while grabbing.
+    """
+    del func
+    try:
+        if not _pinned_slots or not _landing_settle_done or _mid_shape_dump():
+            return None
+        if _progression_network_busy() or _in_join_quiet():
+            return None
+        who = "host" if _is_local_player_controller(obj) else "guest"
+        try:
+            target = _use_rpc_target_actor(args)
+        except Exception:
+            target = None
+        hit_addr = int(_uobject_addr(target) or 0)
+        if not hit_addr:
+            return None
+        row = None
+        for candidate in _pinned_slots:
+            if int(candidate.get("addr") or 0) == hit_addr:
+                row = candidate
+                break
+        if row is None:
+            return None
+        # Host and guests: drop pin tracking so Attract/Use is not fought by restamps.
+        _release_pin_for_pickup(None, row)
+        _log_use_probe(
+            f"Shape Use ({who}): slot 0x{hit_addr:x} untracked for native pickup.",
+            hit_addr,
+        )
+    except Exception:
+        return None
+    return None
 
 
 def install_loot_shapes_hooks(*, force: bool = False) -> None:
@@ -9378,80 +11598,90 @@ def install_loot_shapes_hooks(*, force: bool = False) -> None:
         return
     try:
         from unrealsdk import hooks
+        from unrealsdk.hooks import Type
+    except Exception as exc:
+        _log(f"Could not import hooks for loot shapes: {exc!r}")
+        return
 
-        def _on_tick(
-            _obj: Any,
-            _args: Any,
-            _ret: Any,
-            _func: Any,
-        ) -> None:
-            try:
-                # World/session first — never touch pawn locations during teardown.
-                if not _world_alive():
-                    try:
-                        abandon_world_loot(schedule_orphan_absorb=False)
-                    except Exception:
-                        pass
-                    return
+    # BL4 unrealsdk has POST / PRE / POST_UNCONDITIONAL — not PRE_UNCONDITIONAL.
+    post_types = [Type.POST]
+    post_u = getattr(Type, "POST_UNCONDITIONAL", None)
+    if post_u is not None:
+        post_types.append(post_u)
+    pre_types = [Type.PRE]
+    pre_u = getattr(Type, "PRE_UNCONDITIONAL", None)
+    if pre_u is not None:
+        pre_types.append(pre_u)
+
+    def _on_tick(
+        _obj: Any,
+        _args: Any,
+        _ret: Any,
+        _func: Any,
+    ) -> None:
+        try:
+            # World/session first — never touch pawn locations during teardown.
+            if not _world_alive():
                 try:
-                    from .session_guards import session_safe
-
-                    if not session_safe():
-                        abandon_world_loot(schedule_orphan_absorb=False)
-                        return
+                    abandon_world_loot(schedule_orphan_absorb=False)
                 except Exception:
                     pass
-                if _player_left_drop_site():
-                    abandon_world_loot()
-                    return
-            except Exception:
                 return
             try:
-                from . import map_fog_hide
+                from .session_guards import session_safe
 
-                map_fog_hide.tick_fog_hide()
+                if not session_safe():
+                    abandon_world_loot(schedule_orphan_absorb=False)
+                    return
             except Exception:
                 pass
-            try:
-                from . import hold_session
+            if _player_left_drop_site():
+                abandon_world_loot()
+                return
+        except Exception:
+            return
+        try:
+            from . import map_fog_hide
 
-                hold_session.tick_hold_session()
-            except Exception:
-                pass
-            try:
-                from . import character_flags
+            map_fog_hide.tick_fog_hide()
+        except Exception:
+            pass
+        try:
+            from . import character_flags
 
-                character_flags.tick_character_flags()
-            except Exception:
-                pass
-            try:
-                from . import black_market as _bm
+            character_flags.tick_character_flags()
+        except Exception:
+            pass
+        try:
+            from . import black_market as _bm
 
-                _bm.tick_black_market()
-            except Exception:
-                pass
-            try:
-                tick_loot_shapes()
-            except Exception:
-                pass
+            _bm.tick_black_market()
+        except Exception:
+            pass
+        try:
+            tick_loot_shapes()
+        except Exception:
+            pass
 
-        def _on_world_teardown(
-            _obj: Any,
-            _args: Any,
-            _ret: Any,
-            _func: Any,
-        ) -> None:
-            try:
-                abandon_world_loot(schedule_orphan_absorb=False)
-            except Exception:
-                pass
-            try:
-                from .session_guards import notify_session_teardown
+    def _on_world_teardown(
+        _obj: Any,
+        _args: Any,
+        _ret: Any,
+        _func: Any,
+    ) -> None:
+        try:
+            abandon_world_loot(schedule_orphan_absorb=False)
+        except Exception:
+            pass
+        try:
+            from .session_guards import notify_session_teardown
 
-                notify_session_teardown("loot_shapes_hook")
-            except Exception:
-                pass
+            notify_session_teardown("loot_shapes_hook")
+        except Exception:
+            pass
 
+    tick_ok = False
+    try:
         for i, path in enumerate(
             (
                 "/Script/Oak2.OakPlayerController:PlayerTick",
@@ -9464,13 +11694,55 @@ def install_loot_shapes_hooks(*, force: bool = False) -> None:
                 f"sqbt_loot_shapes_tick_{i}",
             )
             for ident in ident_list:
-                try:
-                    hooks.add_hook(path, Type.POST, ident, _on_tick)
-                except Exception:
+                for typ in post_types:
                     try:
-                        hooks.add_hook(path, Type.POST_UNCONDITIONAL, ident, _on_tick)
+                        hooks.remove_hook(path, typ, ident)
                     except Exception:
                         pass
+                added = False
+                for typ in post_types:
+                    try:
+                        if hooks.add_hook(path, typ, ident, _on_tick):
+                            added = True
+                            tick_ok = True
+                            break
+                    except Exception:
+                        continue
+                if not added:
+                    try:
+                        hooks.add_hook(path, Type.POST, ident, _on_tick)
+                        tick_ok = True
+                    except Exception:
+                        pass
+    except Exception as exc:
+        _log(f"Loot shape tick hooks failed: {exc!r}")
+
+    # Co-op Use on held pins: backpack collect + Block native Attract.
+    try:
+        for i, path in enumerate(
+            (
+                "/Script/Oak2.OakPlayerController:ServerUseObject",
+                "/Script/OakGame.OakPlayerController:ServerUseObject",
+                "/Script/Oak2.OakPlayerController:ServerUseJunkObject",
+                "/Script/OakGame.OakPlayerController:ServerUseJunkObject",
+            )
+        ):
+            ident = f"Squ1ggsBoostingTools.loot_shapes.server_use.{i}"
+            for typ in (*pre_types, *post_types):
+                try:
+                    hooks.remove_hook(path, typ, ident)
+                except Exception:
+                    pass
+            for typ in pre_types:
+                try:
+                    if hooks.add_hook(path, typ, ident, _on_server_use_release_pin):
+                        break
+                except Exception:
+                    continue
+    except Exception as exc:
+        _log(f"Loot shape ServerUse hooks failed: {exc!r}")
+
+    try:
         for i, path in enumerate(
             (
                 "/Script/Engine.Engine:PreLoadMap",
@@ -9488,20 +11760,36 @@ def install_loot_shapes_hooks(*, force: bool = False) -> None:
                 f"sqbt_loot_shapes_teardown_{i}",
             )
             for ident in ident_list:
-                try:
-                    hooks.add_hook(path, Type.PRE, ident, _on_world_teardown)
-                except Exception:
+                for typ in (*pre_types, *post_types):
                     try:
-                        hooks.add_hook(path, Type.PRE_UNCONDITIONAL, ident, _on_world_teardown)
+                        hooks.remove_hook(path, typ, ident)
                     except Exception:
-                        try:
-                            hooks.add_hook(path, Type.POST, ident, _on_world_teardown)
-                        except Exception:
-                            pass
-        _hooks_installed = True
-        _last_layout["party_count"] = _party_count()
+                        pass
+                added = False
+                for typ in pre_types:
+                    try:
+                        if hooks.add_hook(path, typ, ident, _on_world_teardown):
+                            added = True
+                            break
+                    except Exception:
+                        continue
+                if not added:
+                    try:
+                        hooks.add_hook(path, Type.POST, ident, _on_world_teardown)
+                    except Exception:
+                        pass
     except Exception as exc:
-        _log(f"Could not install loot shape hooks: {exc!r}")
+        _log(f"Loot shape teardown hooks failed: {exc!r}")
+
+    # Mark installed once tick hooks landed — never leave False or reclaim stacks them.
+    if tick_ok:
+        _hooks_installed = True
+        try:
+            _last_layout["party_count"] = _party_count()
+        except Exception:
+            pass
+    else:
+        _log("Could not install loot shape PlayerTick hooks.")
 
 
 def _tuned_layout(shape: str, radius: float, spacing: float, per_ring: int) -> tuple[float, float, int]:
@@ -9594,7 +11882,8 @@ def arrange_from_payload(payload: dict[str, Any] | None, *, mode: str = "place_f
     # Nova Place Fully: pulse out of the center unless the user picked another motion.
     if shape == "nova" and settle in ("none", "snap", "drip"):
         settle = "explode"
-    _set_air_hold(payload.get("stay_in_air", "yes"), payload.get("peel_after", 0))
+    stay_raw = payload.get("stay_in_air", "no" if shape == "nova" else "yes")
+    _set_air_hold(stay_raw, payload.get("peel_after", 0), shape=shape)
     radius, spacing, per_ring = _tuned_layout(shape, radius, spacing, per_ring)
     raw_include = payload.get("include_consumables")
     if isinstance(raw_include, str):

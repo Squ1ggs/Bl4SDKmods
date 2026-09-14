@@ -26,6 +26,19 @@ _weapons_restricted_sticky: dict[str, bool] = {}  # player_key -> restricted val
 _ammo_regen_sticky: dict[str, float] = {}  # player_key -> rate (0 = disabled sticky)
 _last_sticky_apply: float = 0.0
 _STICKY_INTERVAL = 0.35
+_last_loot_perk_batch_at: float = 0.0
+_LOOT_PERK_COOLDOWN = 1.25  # Spawn Legendary/Epic — spam AVs pyunrealsdk
+
+
+def loot_perk_batch_allowed() -> bool:
+    """True when Spawn Legendary/Epic (perk 7) may run a new lobby batch."""
+    global _last_loot_perk_batch_at
+    now = time.monotonic()
+    if now - _last_loot_perk_batch_at < _LOOT_PERK_COOLDOWN:
+        return False
+    _last_loot_perk_batch_at = now
+    return True
+
 
 _DEVPERK_LABELS = {
     0: "Give Experience",
@@ -159,6 +172,40 @@ def _apply_ulm_god_mode(pc: Any, enabled: bool) -> int:
             except Exception:
                 continue
     return writes
+
+
+def set_god_mode(enabled: bool, player_index: int | None = None) -> str:
+    """Set God Mode to an explicit ON/OFF (EXE sticky toggles)."""
+    pc, err = _pc_for_party_index(player_index)
+    if pc is None:
+        raise RuntimeError(err or "No PlayerController found.")
+    want = bool(enabled)
+    writes = _apply_ulm_god_mode(pc, want)
+    if writes <= 0:
+        raise RuntimeError("God Mode: no godmode-style fields found on PC/pawn.")
+    states = _devperk_states_for_player(player_index, pc)
+    states[6] = want
+    _log(f"God Mode {'ON' if want else 'OFF'} ({writes} field writes).")
+    return f"God Mode {'ON' if want else 'OFF'}"
+
+
+def set_infinite_ammo(enabled: bool, player_index: int | None = None) -> str:
+    """Toggle infinite ammo perk toward an explicit ON/OFF using cached state."""
+    pc, err = _pc_for_party_index(player_index)
+    if pc is None:
+        raise RuntimeError(err or "No PlayerController found.")
+    states = _devperk_states_for_player(player_index, pc)
+    current = bool(states.get(5, False))
+    want = bool(enabled)
+    if current == want:
+        return f"Infinite Ammo already {'ON' if want else 'OFF'}"
+    fn = getattr(pc, "ServerActivateDevPerk", None)
+    if not callable(fn):
+        raise RuntimeError("Selected PlayerController does not expose ServerActivateDevPerk.")
+    fn(5)
+    states[5] = want
+    _log(f"Infinite Ammo {'ON' if want else 'OFF'}.")
+    return f"Infinite Ammo {'ON' if want else 'OFF'}"
 
 
 def activate_devperk(index: int, player_index: int | None = None) -> str:

@@ -666,15 +666,20 @@ def no_target_enabled() -> bool:
     return bool(_no_target)
 
 
-def toggle_no_target() -> None:
+def set_no_target_enabled(enabled: bool) -> str:
     global _no_target, status_message
-    requested = not bool(_no_target)
+    requested = bool(enabled)
     msg = set_no_target(requested)
     if "failed" not in str(msg).casefold() and "unavailable" not in str(msg).casefold():
         _no_target = requested
     status_message = msg
     _log(msg)
     _set_status_pill(msg, "purple")
+    return msg
+
+
+def toggle_no_target() -> None:
+    set_no_target_enabled(not bool(_no_target))
 
 
 def teleport_selected_to_party_slot(slot_idx: int, selected_idx: int | None) -> None:
@@ -925,7 +930,13 @@ def _restore_jump_limits_for_indices(indices: set[int] | None = None) -> int:
 def set_runtime_enabled(enabled: bool) -> None:
     """Called from mod on_enable / on_disable so menu toggle stops live effects."""
     global _runtime_enabled, status_message, _infinite_jump_context_cache, _infinite_jump_context_cache_time
-    _runtime_enabled = bool(enabled)
+    want = bool(enabled)
+    # EXE reclaim was calling enable every ~8s — spam + prune churn AVd pyunrealsdk.
+    if want and _runtime_enabled:
+        return
+    if (not want) and (not _runtime_enabled):
+        return
+    _runtime_enabled = want
     _infinite_jump_context_cache = []
     _infinite_jump_context_cache_time = 0.0
     if not _runtime_enabled:
@@ -3792,6 +3803,12 @@ def background_tick() -> None:
     except Exception:
         pass
     try:
+        from . import auto_lobby
+
+        auto_lobby.tick(now)
+    except Exception:
+        pass
+    try:
         from .golden_chest_keybinds import golden_chest_tick
 
         golden_chest_tick()
@@ -3841,35 +3858,52 @@ def background_tick() -> None:
             pass
 
 
+# Resolved once after package load — avoid string sys.modules lookups every UMG tick.
+_TICK_FN_REWARDS: Callable[..., Any] | None = None
+_TICK_FN_TRAVEL: Callable[..., Any] | None = None
+_TICK_FN_BRIDGE: Callable[..., Any] | None = None
+_TICK_FN_DEFERRED: Callable[..., Any] | None = None
+
+
+def _resolve_tick_fn(cache_name: str, module_suffix: str, attr: str) -> Callable[..., Any] | None:
+    current = globals().get(cache_name)
+    if callable(current):
+        return current
+    mod = sys.modules.get(f"{__package__}.{module_suffix}")
+    if mod is None:
+        return None
+    fn = getattr(mod, attr, None)
+    if not callable(fn):
+        return None
+    globals()[cache_name] = fn
+    return fn
+
+
 def _tick_cb(*_args: Any, **_kwargs: Any) -> None:
     # Reuse this already-installed, dump-proven live tick for the desktop
     # bridge and SQBT's deferred game-thread work. Look modules up without
-    # importing them to avoid package-startup cycles.
+    # importing them to avoid package-startup cycles; cache callables after first hit.
     try:
-        rewards = sys.modules.get(f"{__package__}.serial_rewards")
-        rewards_tick = getattr(rewards, "_tick_cb", None)
-        if callable(rewards_tick):
+        rewards_tick = _resolve_tick_fn("_TICK_FN_REWARDS", "serial_rewards", "_tick_cb")
+        if rewards_tick is not None:
             rewards_tick(*_args, **_kwargs)
     except Exception as exc:
         _log(f"Reward/progression tick failed: {exc!r}")
     try:
-        travel = sys.modules.get(f"{__package__}.travel")
-        travel_tick = getattr(travel, "_travel_queue_tick", None)
-        if callable(travel_tick):
+        travel_tick = _resolve_tick_fn("_TICK_FN_TRAVEL", "travel", "_travel_queue_tick")
+        if travel_tick is not None:
             travel_tick(*_args, **_kwargs)
     except Exception as exc:
         _log(f"Travel tick failed: {exc!r}")
     try:
-        bridge = sys.modules.get(f"{__package__}.external_bridge")
-        bridge_tick = getattr(bridge, "_process_queue", None)
-        if callable(bridge_tick):
+        bridge_tick = _resolve_tick_fn("_TICK_FN_BRIDGE", "external_bridge", "_process_queue")
+        if bridge_tick is not None:
             bridge_tick()
     except Exception as exc:
         _log(f"Bridge tick failed: {exc!r}")
     try:
-        deferred = sys.modules.get(f"{__package__}.spawn_deferred")
-        flush_tick = getattr(deferred, "flush_tick", None)
-        if callable(flush_tick):
+        flush_tick = _resolve_tick_fn("_TICK_FN_DEFERRED", "spawn_deferred", "flush_tick")
+        if flush_tick is not None:
             flush_tick(max_items=1, owner="Squ1ggsBoostingTools")
     except Exception as exc:
         _log(f"Deferred tick failed: {exc!r}")

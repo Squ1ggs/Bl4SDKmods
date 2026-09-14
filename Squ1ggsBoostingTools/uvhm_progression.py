@@ -26,8 +26,10 @@ from typing import Any, Callable, Iterable, Optional, Protocol, Sequence
 # and final token.  Larger catalog-scaled amounts are not equivalent here.
 OBJECTIVE_INCREMENT = 1
 PRE_FINAL_GRACE_POLLS = 8
-POST_FINAL_GRACE_POLLS = 12
+POST_FINAL_GRACE_POLLS = 16
 RANK_ACTIVATION_GRACE_POLLS = 20
+# Empty polls after finishing one lobby player before resolving the next PC.
+BETWEEN_TARGET_BREATHE_POLLS = 18
 TRAIT_CATALOG_ONLY = "Challenge_UVH_Rankup_1_Trait"
 
 
@@ -132,6 +134,7 @@ class Phase(str, Enum):
     INCREMENT_FINAL = "increment_final"
     WAIT_FINAL = "wait_final"
     VERIFY_RANK = "verify_rank"
+    BREATHE = "breathe"
     CANCELLED = "cancelled"
     COMPLETE = "complete"
     ERROR = "error"
@@ -245,14 +248,14 @@ class UVHMProgression:
             Phase.INCREMENT_FINAL,
             Phase.WAIT_FINAL,
             Phase.VERIFY_RANK,
+            Phase.BREATHE,
         }
 
     def cancel(self) -> bool:
+        # Do not wipe ERROR/COMPLETE/IDLE into a blank Idle — teardown listeners
+        # used to call cancel() and erase the EXE status line immediately.
         if self._phase in (Phase.ERROR, Phase.COMPLETE, Phase.IDLE):
-            self._phase = Phase.IDLE
-            self._message = "Idle."
-            self._cancel_resume_phase = None
-            return True
+            return False
         if not self.running:
             return False
         self._cancel_resume_phase = self._phase
@@ -288,6 +291,9 @@ class UVHMProgression:
     def tick(self) -> ProgressionStatus:
         """Perform at most one backend/native operation, then return."""
         if not self.running:
+            return self.status()
+        if self._phase == Phase.BREATHE:
+            self._poll_breathe()
             return self.status()
         target = self._current_target()
         if target is None:
@@ -335,6 +341,25 @@ class UVHMProgression:
             pc = None
         return self.status()
 
+    def _poll_breathe(self) -> None:
+        """Give the game a quiet stretch after finishing one player before the next."""
+        self._poll_count += 1
+        grace = max(1, min(BETWEEN_TARGET_BREATHE_POLLS, self._max_polls))
+        if self._poll_count < grace:
+            self._message = (
+                f"Letting challenge state settle before next player "
+                f"({self._poll_count}/{grace})."
+            )
+            return
+        self._poll_count = 0
+        self._phase = Phase.READY
+        nxt = self._current_target()
+        self._message = (
+            f"{nxt.display_name} is next."
+            if nxt is not None
+            else "Ready."
+        )
+
     def _increment(self, pc: Any, token: str, wait_phase: Phase) -> None:
         if not token:
             self._fail("Internal error: missing challenge token.")
@@ -347,7 +372,11 @@ class UVHMProgression:
         self._message = f"Sent proven +1 command for {token}; allowing game processing time."
 
     def _poll_complete(self, pc: Any, token: str, *, objective: bool) -> None:
-        complete = self._backend.is_complete(pc, token)
+        # Do NOT call IsChallengeCompleteForPlayer during settle — FinalChallenge
+        # rank-ups mutate challenge state and that native poll is an AV magnet
+        # (WER APPCRASH mid wait_final after multi-player AUVHM). Proven path is
+        # grace-poll delay only; completion is implied by the +1 + wait.
+        _ = pc  # tick already resolved; keep signature for callers/tests
         self._poll_count += 1
         stage = self._current_stage()
         assert stage is not None
@@ -362,7 +391,7 @@ class UVHMProgression:
             else POST_FINAL_GRACE_POLLS
         )
         grace = max(1, min(grace, self._max_polls))
-        if complete is True or self._poll_count >= grace:
+        if self._poll_count >= grace:
             self._poll_count = 0
             if objective:
                 self._objective_index += 1
@@ -372,11 +401,7 @@ class UVHMProgression:
                     self._phase = Phase.INCREMENT_FINAL
             else:
                 self._phase = Phase.VERIFY_RANK
-            self._message = (
-                f"Confirmed completion of {token}."
-                if complete is True
-                else f"Applied {token}; continuing after the proven command delay."
-            )
+            self._message = f"Applied {token}; continuing after the proven command delay."
             return
         self._message = f"Allowing {token} to settle ({self._poll_count}/{grace})."
 
@@ -434,7 +459,8 @@ class UVHMProgression:
             else "ranks 1-7"
         )
         if self._target_index < len(self._targets):
-            self._phase = Phase.READY
+            self._poll_count = 0
+            self._phase = Phase.BREATHE
             self._message = (
                 f"Completed {finished.display_name if finished else 'target'} up to {rank_label}; "
                 "advancing to the next snapshotted player."
@@ -595,6 +621,43 @@ def selected_lobby_identity(player_index: int) -> TargetIdentity:
         raise ValueError(f"Selected lobby player {player_index} is unavailable.") from exc
     name = _gbc_resolve_player_display_name(ps)
     return TargetIdentity(key=_player_state_key(ps, name), display_name=name)
+
+
+def _names_match(a: str, b: str) -> bool:
+    left = "".join(ch for ch in str(a or "").casefold() if ch.isalnum())
+    right = "".join(ch for ch in str(b or "").casefold() if ch.isalnum())
+    if not left or not right:
+        return False
+    return left == right or left in right or right in left
+
+
+def selected_lobby_identity_by_name(display_name: str) -> TargetIdentity:
+    """Resolve a lobby player by display name (Boost-target label), not index."""
+    wanted = str(display_name or "").strip()
+    if not wanted:
+        raise ValueError("No player name provided.")
+    from .party_helpers import (
+        _gbc_resolve_player_display_name,
+        _gbc_session_world_and_gamestate,
+    )
+
+    _world, gs = _gbc_session_world_and_gamestate()
+    players = getattr(gs, "PlayerArray", None) if gs is not None else None
+    if players is None:
+        raise ValueError(f"Lobby unavailable for {wanted!r}.")
+    matches: list[TargetIdentity] = []
+    for index in range(len(players)):
+        ps = players[index]
+        if ps is None:
+            continue
+        name = _gbc_resolve_player_display_name(ps)
+        if _names_match(wanted, name):
+            matches.append(TargetIdentity(key=_player_state_key(ps, name), display_name=name))
+    if len(matches) == 1:
+        return matches[0]
+    if len(matches) > 1:
+        raise ValueError(f"Multiple lobby players match {wanted!r}; pick them again.")
+    raise ValueError(f"No lobby player named {wanted!r}.")
 
 
 def resolve_lobby_pc(identity: TargetIdentity) -> Any:
