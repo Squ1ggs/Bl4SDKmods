@@ -291,6 +291,7 @@ def restore_overlapping_peers() -> None:
         _paused = []
         return
     by_folder = {str(row.get("folder") or "").lower(): row for row in _paused}
+    restored: set[str] = set()
     for mod in mods:
         folder = _mod_folder_name(mod).lower()
         if folder not in by_folder:
@@ -302,7 +303,11 @@ def restore_overlapping_peers() -> None:
             enable()
         except Exception as exc:
             _log(f"Could not restore {by_folder[folder].get('name')!r}: {exc!r}")
-    _paused = []
+        else:
+            restored.add(folder)
+    # Keep anything that failed to re-enable so the next restore attempt retries it,
+    # instead of silently forgetting we still owe it a re-enable.
+    _paused = [row for row in _paused if str(row.get("folder") or "").lower() not in restored]
 
 
 def status_fields() -> dict[str, Any]:

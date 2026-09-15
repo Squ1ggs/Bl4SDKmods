@@ -438,8 +438,9 @@ def _try_pawn(pc: Any) -> Any | None:
     return None
 
 
-def _get_local_pc() -> Any | None:
-    candidates = [p for p in _iter_pcs() if not _is_cdo(p)]
+def _get_local_pc(candidates: list[Any] | None = None) -> Any | None:
+    if candidates is None:
+        candidates = [p for p in _iter_pcs() if not _is_cdo(p)]
     if not candidates:
         return None
     local = [p for p in candidates if _is_local_pc(p)]
@@ -601,7 +602,7 @@ def _iter_pawns_for_bvm_scope() -> list[tuple[Any, str]]:
     pcs = [p for p in _iter_pcs() if not _is_cdo(p)]
     if not pcs:
         return []
-    local_pc = _get_local_pc()
+    local_pc = _get_local_pc(pcs)
     out: list[tuple[Any, str]] = []
     if BVM_APPLY_SCOPE == "local":
         pc = local_pc or pcs[0]
@@ -630,7 +631,7 @@ def _iter_pcs_for_bvm_scope() -> list[tuple[Any, str]]:
     pcs = [p for p in _iter_pcs() if not _is_cdo(p)]
     if not pcs:
         return []
-    local_pc = _get_local_pc()
+    local_pc = _get_local_pc(pcs)
     out: list[tuple[Any, str]] = []
     if BVM_APPLY_SCOPE == "local":
         pc = local_pc or pcs[0]
@@ -2371,6 +2372,7 @@ def _vehicle_jump_tick(_caller: Any, *args: Any, **kwargs: Any) -> None:
     BVM_REPEAT_JUMP_PRESS = bool(_repeat_jump_press_opt.value)
     now = time.monotonic()
     _maybe_auto_apply_on_vehicle_enter()
+    is_driving = _local_player_is_driving()
     tuning_active = any(
         abs(float(getattr(opt, "value", spec[4])) - float(spec[4])) > 1e-6
         for opt, spec in zip(
@@ -2379,14 +2381,14 @@ def _vehicle_jump_tick(_caller: Any, *args: Any, **kwargs: Any) -> None:
             strict=True,
         )
     )
-    if _local_player_is_driving() and (
+    if is_driving and (
         BVM_REPEAT_JUMP_PRESS
         or BVM_UNLIMITED_BOOST
         or tuning_active
         or BVM_VEHICLE_DAMAGE_TAKEN != 1.0
     ):
         _maintain_saved_vehicle_tuning()
-    if _local_player_is_driving() and BVM_REPEAT_JUMP_PRESS:
+    if is_driving and BVM_REPEAT_JUMP_PRESS:
         if now - _last_jump_cache_at >= _JUMP_CACHE_INTERVAL:
             _refresh_jump_runtime_cache()
     if BVM_UNLIMITED_BOOST:
@@ -2404,14 +2406,14 @@ def _vehicle_jump_tick(_caller: Any, *args: Any, **kwargs: Any) -> None:
         _maintain_vehicle_actions_lock()
         _last_vehicle_lock_maintenance_at = now
     if BVM_REPEAT_JUMP_PRESS:
-        _run_vehicle_jump_modes(now)
+        _run_vehicle_jump_modes(now, is_driving)
 
 
-def _run_vehicle_jump_modes(now: float) -> None:
+def _run_vehicle_jump_modes(now: float, is_driving: bool) -> None:
     global _last_custom_jump_at
     if not BVM_REPEAT_JUMP_PRESS:
         return
-    if not _local_player_is_driving():
+    if not is_driving:
         _reset_vehicle_jump_input_state()
         return
     hits = _iter_bvm_vehicle_hits()
@@ -3514,8 +3516,9 @@ def _movement_hits_or_warn(*, quiet: bool = False) -> list[tuple[str, Any]]:
     return hits
 
 
-def _apply_field(attr: str, value: float) -> None:
-    hits = _movement_hits_or_warn()
+def _apply_field(attr: str, value: float, hits: list[tuple[str, Any, Any]] | None = None) -> None:
+    if hits is None:
+        hits = _movement_hits_or_warn()
     if not hits:
         return
     wrote = 0
@@ -4840,13 +4843,14 @@ def _build_sliders_from(
         def _on_slider(_: Any, value: float, _attr: str = attr) -> None:
             if _suppress_option_apply:
                 return
-            if not _movement_hits_or_warn(quiet=True):
+            hits = _movement_hits_or_warn(quiet=True)
+            if not hits:
                 return
             if _attr in {spec[0] for spec in _JUMP_SPECS}:
                 global _cached_launch_vz, _cached_launch_vz_key
                 _cached_launch_vz = None
                 _cached_launch_vz_key = 0
-            _apply_field(_attr, float(value))
+            _apply_field(_attr, float(value), hits)
 
         opts.append(opt)
     return opts

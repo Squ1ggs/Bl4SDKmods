@@ -152,8 +152,9 @@ def _try_pawn(pc: Any) -> Any | None:
     return None
 
 
-def _get_local_pc() -> Any | None:
-    candidates = [p for p in _iter_pcs() if not _is_cdo(p)]
+def _get_local_pc(candidates: list[Any] | None = None) -> Any | None:
+    if candidates is None:
+        candidates = [p for p in _iter_pcs() if not _is_cdo(p)]
     if not candidates:
         return None
     with_pawn = [p for p in candidates if _try_pawn(p) is not None]
@@ -210,7 +211,7 @@ def _iter_pawns_for_bpm_scope() -> list[tuple[Any, str]]:
     pcs = [p for p in _iter_pcs() if not _is_cdo(p)]
     if not pcs:
         return []
-    local_pc = _get_local_pc()
+    local_pc = _get_local_pc(pcs)
     out: list[tuple[Any, str]] = []
     if BPM_APPLY_SCOPE == "local":
         pc = local_pc or pcs[0]

@@ -646,14 +646,16 @@ def _block_menu_hook(_obj: Any, _args: Any, _ret: Any, _func: Any) -> Any:
     if not _sticky or not _is_host():
         return None
     # Only intercept the HOST local PC. Blocking guest PCs breaks leave/save so
-    # dump loot they just picked vanishes after disconnect.
+    # dump loot they just picked vanishes after disconnect. If we can't resolve
+    # the local PC (or the hook's object) we can't confirm that, so don't block.
     local = _local_pc()
-    if local is not None and _obj is not None:
-        try:
-            if _obj is not local and _obj != local:
-                return None
-        except Exception:
+    if local is None or _obj is None:
+        return None
+    try:
+        if _obj is not local and _obj != local:
             return None
+    except Exception:
+        return None
     pc = local
     status = getattr(pc, "TravelStatus", None) if pc is not None else None
     if status is not None and _initiator_is_local(pc, status):

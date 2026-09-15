@@ -138,12 +138,16 @@ def install_session_teardown_hooks() -> None:
             f"Squ1ggsBoostingTools.session.teardown.{i}",
             f"sqbt_session_teardown_{i}",
         ):
+            installed = False
             for hook_type in (Type.PRE, Type.PRE_UNCONDITIONAL, Type.POST):
                 try:
-                    hooks.add_hook(path, hook_type, ident, _on_teardown_hook)
-                    break
+                    if hooks.add_hook(path, hook_type, ident, _on_teardown_hook):
+                        installed = True
+                        break
                 except Exception:
                     continue
+            if installed:
+                break
     _hooks_installed = True
     _log("Session teardown hooks installed.")
 

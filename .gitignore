@@ -5,3 +5,10 @@ Thumbs.db
 
 # Local Nexus paste notes — keep out of repo (copy lives in your game sdk_mods folder only).
 NEXUS.md
+
+# Editor: machine-specific paths (Steam install location, local Python interpreter).
+.vscode/settings.json
+
+# Editor: mods_base source extracted from the installed game's sdk_mods/mods_base.sdkmod,
+# used only so Pylance can resolve `import mods_base` — not redistributed.
+typings/

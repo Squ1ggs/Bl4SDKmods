@@ -156,9 +156,10 @@ def _process_queue(*_args: Any, **_kwargs: Any) -> None:
             if not _queue:
                 break
             item = _queue.popleft()
-        rid = str(item.get("id") or "")
-        if rid:
-            _abandoned.discard(rid)
+            rid = str(item.get("id") or "")
+            was_abandoned = bool(rid) and rid in _abandoned
+            if rid:
+                _abandoned.discard(rid)
         action = str(item.get("action") or "")
         payload = item.get("payload") or {}
         # Skip noisy status polls — those would fill the flight log for no crash value.
@@ -215,7 +216,10 @@ def _process_queue(*_args: Any, **_kwargs: Any) -> None:
                 except Exception:
                     pass
         with _lock:
-            _results[rid or uuid.uuid4().hex] = result
+            # The polling HTTP thread already gave up and returned 202 for this id —
+            # nothing will ever pop it back out, so don't let it sit in _results forever.
+            if not was_abandoned:
+                _results[rid or uuid.uuid4().hex] = result
     try:
         from . import runtime_log
 
