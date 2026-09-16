@@ -157,11 +157,15 @@ def _process_queue(*_args: Any, **_kwargs: Any) -> None:
                 break
             item = _queue.popleft()
         rid = str(item.get("id") or "")
-        if rid:
-            _abandoned.discard(rid)
+        with _lock:
+            was_abandoned = bool(rid) and rid in _abandoned
+            if was_abandoned:
+                _abandoned.discard(rid)
         action = str(item.get("action") or "")
         payload = item.get("payload") or {}
         # Skip noisy status polls — those would fill the flight log for no crash value.
+        # Also skip during Challenge/UVHM bulk: mark_action force-flushes and would hitch
+        # the game thread if thousands of per-apply lines were pending.
         _flight = action not in (
             "status",
             "party_roster",
@@ -170,6 +174,23 @@ def _process_queue(*_args: Any, **_kwargs: Any) -> None:
             "spawn_item_pool_status",
             "shiny_drop_status",
             "runtime_log",
+            "challenge_bulk_status",
+            "uvhm_status",
+            "serial_delivery_status",
+            "loot_shape_status",
+            "loot_vacuum_status",
+            "auto_lobby_get",
+            "auto_lobby_status",
+            "host_map_sweep_status",
+            "guest_map_assist_status",
+            "gzo_refresh_status",
+            "lootlemon_refresh_status",
+            "keybinds_status",
+            "tuning_status",
+            "backpack_scan_status",
+            "mobility_status",
+            "panel_manifest",
+            "catalog",
         )
         if _flight:
             try:
@@ -214,8 +235,11 @@ def _process_queue(*_args: Any, **_kwargs: Any) -> None:
                     runtime_log.mark_action(action, ok=True)
                 except Exception:
                     pass
+        # Timed-out HTTP waits already abandoned this id — do not leave a
+        # permanent unread entry in _results (that grew forever before).
         with _lock:
-            _results[rid or uuid.uuid4().hex] = result
+            if not was_abandoned:
+                _results[rid or uuid.uuid4().hex] = result
     try:
         from . import runtime_log
 

@@ -15,13 +15,18 @@ const { loadSettings, saveSettings, normalizeTheme, normalizeLocale, readHiddenS
 const { checkForUpdates, compareVersions, normalizeVersion } = require("./lib/update_check");
 const { applyGithubUpdate } = require("./lib/github_update");
 const { readSerialSource } = require("./lib/serial_sources");
+const { scanLatestSave, listCandidateSaves, saveGamesRoot } = require("./lib/bl4_save_bay");
 
 let mainWindow = null;
 let refreshTimer = null;
+let lastBridgeConnected = false;
+const STATUS_POLL_CONNECTED_MS = 5000;
+const STATUS_POLL_DISCONNECTED_MS = 1000;
 let storedGameRoot = null;
 let storedTheme = "default";
 let storedLocale = "en";
 let storedHiddenShapes = false;
+let storedGhostOpacity = 1;
 let settingsMode = "appdata";
 let settingsPath = null;
 let updateCache = null;
@@ -58,11 +63,19 @@ function runAutoModSync(options = {}) {
   }
 }
 
+function normalizeGhostOpacity(value, fallback = 1) {
+  const n = Number(value);
+  if (!Number.isFinite(n)) return fallback;
+  // Keep usable: too clear and clicks become confusing.
+  return Math.max(0.55, Math.min(1, n));
+}
+
 function applyStoredSettings(state) {
   storedGameRoot = state?.gameRoot || null;
   storedTheme = normalizeTheme(state?.theme);
   storedLocale = normalizeLocale(state?.locale);
   storedHiddenShapes = Boolean(state?.hiddenShapes) || readHiddenShapesUnlocked();
+  storedGhostOpacity = normalizeGhostOpacity(state?.ghostOpacity, 1);
   settingsMode = state?.settingsMode || "appdata";
   settingsPath = state?.settingsPath || null;
 }
@@ -77,6 +90,7 @@ function persistStoredSettings(extra = {}) {
     theme: storedTheme,
     locale: storedLocale,
     hiddenShapes: storedHiddenShapes,
+    ghostOpacity: storedGhostOpacity,
     ...extra,
   });
   settingsMode = saved.mode;
@@ -90,6 +104,21 @@ function persistStoredSettings(extra = {}) {
   if (extra.hiddenShapes !== undefined) {
     storedHiddenShapes = Boolean(extra.hiddenShapes);
   }
+  if (extra.ghostOpacity !== undefined) {
+    storedGhostOpacity = normalizeGhostOpacity(extra.ghostOpacity, storedGhostOpacity);
+  }
+}
+
+function applyWindowGhostOpacity(opacity) {
+  storedGhostOpacity = normalizeGhostOpacity(opacity, storedGhostOpacity);
+  if (mainWindow && !mainWindow.isDestroyed()) {
+    try {
+      mainWindow.setOpacity(storedGhostOpacity);
+    } catch {
+      /* Linux no-op */
+    }
+  }
+  return storedGhostOpacity;
 }
 
 function createWindow() {
@@ -120,6 +149,11 @@ function createWindow() {
   }
 
   mainWindow = new BrowserWindow(windowOptions);
+  try {
+    mainWindow.setOpacity(normalizeGhostOpacity(storedGhostOpacity, 1));
+  } catch {
+    /* optional */
+  }
 
   mainWindow.loadFile(path.join(__dirname, "renderer", "index.html"));
 }
@@ -132,6 +166,12 @@ function pushStatus(payload) {
 
 async function refreshStatus() {
   const status = await getBridgeStatus();
+  const connected = Boolean(status?.connected);
+  if (connected !== lastBridgeConnected) {
+    lastBridgeConnected = connected;
+    // Re-arm interval: probe every 1s until Online, then back off to 5s.
+    startAutoRefresh();
+  }
   pushStatus(status);
   return status;
 }
@@ -198,9 +238,10 @@ async function getUpdateStatus(force = false, currentModVersion = "") {
 
 function startAutoRefresh() {
   stopAutoRefresh();
+  const gap = lastBridgeConnected ? STATUS_POLL_CONNECTED_MS : STATUS_POLL_DISCONNECTED_MS;
   refreshTimer = setInterval(() => {
     refreshStatus().catch(() => {});
-  }, 5000);
+  }, gap);
 }
 
 function stopAutoRefresh() {
@@ -266,7 +307,8 @@ ipcMain.handle("sqbt:post-action", async (_event, action, payload, timeout) => {
     const skipStatusRefresh =
       name === "uvhm_status" ||
       name === "challenge_bulk_status" ||
-      name === "spawn_item_pool_status";
+      name === "spawn_item_pool_status" ||
+      name === "loot_vacuum_status";
     if (!skipStatusRefresh) {
       await refreshStatus().catch(() => {});
     }
@@ -316,6 +358,7 @@ ipcMain.handle("sqbt:get-setup", async () => {
     theme: storedTheme,
     locale: storedLocale,
     hiddenShapes: storedHiddenShapes,
+    ghostOpacity: storedGhostOpacity,
     settingsMode,
     settingsPath,
     isPackaged: app.isPackaged,
@@ -331,6 +374,35 @@ ipcMain.handle("sqbt:set-theme", async (_event, theme) => {
   storedTheme = normalizeTheme(theme);
   persistStoredSettings({ theme: storedTheme });
   return { ok: true, theme: storedTheme };
+});
+ipcMain.handle("sqbt:set-ghost-opacity", async (_event, opacity) => {
+  const next = applyWindowGhostOpacity(opacity);
+  persistStoredSettings({ ghostOpacity: next });
+  return { ok: true, ghostOpacity: next };
+});
+ipcMain.handle("sqbt:get-ghost-opacity", async () => ({
+  ok: true,
+  ghostOpacity: storedGhostOpacity,
+}));
+ipcMain.handle("sqbt:pack-bay-scan", async (_event, payload = {}) => {
+  try {
+    return scanLatestSave(payload || {});
+  } catch (error) {
+    return {
+      ok: false,
+      message: String(error?.message || error),
+      rows: [],
+      saveRoot: saveGamesRoot(),
+    };
+  }
+});
+ipcMain.handle("sqbt:pack-bay-list-saves", async () => {
+  try {
+    const rows = listCandidateSaves().slice(0, 24);
+    return { ok: true, rows, saveRoot: saveGamesRoot() };
+  } catch (error) {
+    return { ok: false, message: String(error?.message || error), rows: [], saveRoot: saveGamesRoot() };
+  }
 });
 ipcMain.handle("sqbt:set-locale", async (_event, locale) => {
   storedLocale = normalizeLocale(locale);

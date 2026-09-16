@@ -174,6 +174,48 @@ def _apply_ulm_god_mode(pc: Any, enabled: bool) -> int:
     return writes
 
 
+def read_ulm_god_mode(pc: Any | None) -> bool | None:
+    """Live god-mode read (ULM-style ``bGodMode`` / invincible). None if no readable fields."""
+    if pc is None:
+        return None
+    pawn = getattr(pc, "Pawn", None) or getattr(pc, "AcknowledgedPawn", None)
+    seen = False
+    for obj in (pc, pawn):
+        if obj is None:
+            continue
+        for field in ("bGodMode", "GodMode", "bInvincible"):
+            if not hasattr(obj, field):
+                continue
+            seen = True
+            try:
+                if bool(getattr(obj, field)):
+                    return True
+            except Exception:
+                continue
+    return False if seen else None
+
+
+def _remember_devperk_state(perk: int, want: bool, player_index: int | None, pc: Any | None) -> None:
+    """Cache toggle state under PC key and local/None key so All-target sticky stays aligned."""
+    states = _devperk_states_for_player(player_index, pc)
+    states[int(perk)] = bool(want)
+    try:
+        local_pc, _ = _pc_for_party_index(None)
+    except Exception:
+        local_pc = None
+    if local_pc is None or pc is None:
+        return
+    try:
+        same = local_pc is pc or str(getattr(local_pc, "Name", "")) == str(getattr(pc, "Name", ""))
+    except Exception:
+        same = False
+    if not same:
+        return
+    local_states = _devperk_states_for_player(None, local_pc)
+    if local_states is not states:
+        local_states[int(perk)] = bool(want)
+
+
 def set_god_mode(enabled: bool, player_index: int | None = None) -> str:
     """Set God Mode to an explicit ON/OFF (EXE sticky toggles)."""
     pc, err = _pc_for_party_index(player_index)
@@ -183,8 +225,7 @@ def set_god_mode(enabled: bool, player_index: int | None = None) -> str:
     writes = _apply_ulm_god_mode(pc, want)
     if writes <= 0:
         raise RuntimeError("God Mode: no godmode-style fields found on PC/pawn.")
-    states = _devperk_states_for_player(player_index, pc)
-    states[6] = want
+    _remember_devperk_state(6, want, player_index, pc)
     _log(f"God Mode {'ON' if want else 'OFF'} ({writes} field writes).")
     return f"God Mode {'ON' if want else 'OFF'}"
 
@@ -227,12 +268,14 @@ def activate_devperk_on_pc(index: int, pc: Any, *, player_index: int | None = No
         raise RuntimeError("No PlayerController.")
 
     if perk == 6:
-        states = _devperk_states_for_player(player_index, pc)
-        new_state = not bool(states.get(6, False))
+        live = read_ulm_god_mode(pc)
+        cached = bool(_devperk_states_for_player(player_index, pc).get(6, False))
+        current = bool(live) if live is not None else cached
+        new_state = not current
         writes = _apply_ulm_god_mode(pc, new_state)
         if writes <= 0:
             raise RuntimeError("God Mode: no godmode-style fields found on PC/pawn.")
-        states[6] = new_state
+        _remember_devperk_state(6, new_state, player_index, pc)
         _log(f"God Mode {'ON' if new_state else 'OFF'} ({writes} field writes).")
         return "God Mode"
 

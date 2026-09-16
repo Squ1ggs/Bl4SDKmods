@@ -19,18 +19,18 @@ Use the **desktop app** for the full interface. The SDK mod supplies the localho
 
 1. Run **Squ1ggs Boosting Tools** (desktop app) → browse to Borderlands 4 if needed → **Install SDK + Squ1ggs mod** (pulls official [oak2-mod-manager](https://github.com/bl-sdk/oak2-mod-manager/releases) when the base SDK is missing).
 2. **Fully restart Borderlands 4**.
-3. Refresh status in the app — mod version should match (**3.8.143**).
+3. Refresh status in the app — mod version should match (**3.9.2**).
 
 Same idea as Squ1ggs Boosting Tools: exe installs the mod, restart game, control from outside.
 
 **Thanks:** GZO catalog from save-editor.be. Thank you to **Tobgun** for feedback, ideas, testing, and bug reports.
 
 ### What's new (short)
-- Drop All Shinies + loot shapes (co-op grabs)
-- No main menu (guests can’t yank the host)
-- MAX ALL: optional cosmetics + UVHM 1–7
-- GZO / Lootlemon + My packs; Drop backpack on Most used
-- Auto Lobby (WIP) timed boosts
+- Auto Lobby guest mode skips the host for Challenges/UVHM and watches for new arrivals
+- Save Pack / Live Pack can copy, relevel or send autosave and one-shot live item snaps
+- Loot shapes, shinies and GZO drip make visible floor piles for the whole lobby
+- MAX ALL has a draggable progression HUD with safer challenge pacing
+- Complete ALL sends rewards without opening huge queues in multiplayer
 
 ---
 
@@ -73,6 +73,7 @@ Requires [Oak2 Mod Manager v0.3+](https://github.com/bl-sdk/oak2-mod-manager/rel
 ## Notes
 
 - Host-only actions (travel, BMS spawns, UVHM bulk) require session host in-world.
+- Console/cross-play players should open large Complete ALL reward queues in solo, sell junk, then rejoin multiplayer.
 - After any mod update, **fully restart BL4** — partial reload can leave an old bridge running.
 - The desktop app does not require the SDK console. If `~` loses focus in exclusive
   fullscreen, click back into the game and press it twice, or use borderless

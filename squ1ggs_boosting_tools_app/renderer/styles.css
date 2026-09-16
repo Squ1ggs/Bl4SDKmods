@@ -210,7 +210,7 @@ button:disabled {
 .action-grid-featured {
   grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
   gap: 8px;
-  align-items: stretch;
+  align-items: start;
 }
 
 /* Fields left, preset/actions stacked on the right (stable when snapped half-width). */
@@ -257,16 +257,29 @@ button:disabled {
 
 .action-grid > button,
 .action-grid-featured > button {
-  align-self: stretch;
+  align-self: start;
   width: 100%;
-  height: 100%;
-  min-height: 48px;
-  max-height: none;
+  height: auto;
+  min-height: 40px;
+  max-height: 52px;
   box-sizing: border-box;
   white-space: normal;
   text-align: center;
   line-height: 1.25;
   padding: 8px 12px;
+}
+
+/* Serials: Save/Delete/Export sat next to tall Deliver cards and stretched huge. */
+.tab-content[data-active-tab="serials"] .action-grid-featured > button,
+.tab-content[data-active-tab="serials"] .action-card > button {
+  min-height: 36px;
+  max-height: 44px;
+  height: auto;
+  padding: 6px 12px;
+  font-size: 0.92rem;
+  align-self: start;
+  width: 100%;
+  max-width: 100%;
 }
 
 .panel-section-most-used .action-grid-featured {
@@ -278,11 +291,13 @@ button:disabled {
   width: 100%;
   max-width: 100%;
   justify-self: stretch;
-  min-height: 40px;
-  max-height: 56px;
-  padding: 6px 10px;
-  font-size: 0.92rem;
-  line-height: 1.2;
+  min-height: 34px;
+  max-height: none;
+  height: auto;
+  padding: 5px 8px;
+  font-size: 0.78rem;
+  line-height: 1.15;
+  white-space: normal;
 }
 
 .roster-list {
@@ -1091,13 +1106,281 @@ button.small {
   padding: 6px 10px;
 }
 
-.global-progress-panel {
+.serials-segment-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 4px 0 14px;
+  padding: 8px;
+  border: 1px solid rgba(67, 215, 255, 0.28);
+  border-radius: 12px;
+  background: rgba(10, 14, 24, 0.92);
+  box-shadow: inset 0 0 0 1px rgba(67, 215, 255, 0.06);
   position: sticky;
-  top: 8px;
-  z-index: 20;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
-  backdrop-filter: blur(6px);
-  background: rgba(12, 14, 20, 0.92);
+  top: 0;
+  z-index: 6;
+}
+
+.serials-segment-btn {
+  appearance: none;
+  border: 1px solid rgba(104, 114, 150, 0.35);
+  background: rgba(20, 26, 40, 0.9);
+  color: var(--muted);
+  border-radius: 10px;
+  padding: 9px 15px;
+  font-size: 0.92rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.serials-segment-btn.serials-segment-emphasis {
+  border-color: rgba(67, 215, 255, 0.42);
+  color: var(--text);
+}
+
+.serials-segment-btn:hover {
+  color: var(--text);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.serials-segment-btn.active {
+  color: var(--text);
+  border-color: rgba(67, 215, 255, 0.35);
+  background: linear-gradient(145deg, rgba(32, 48, 78, 0.95), rgba(18, 24, 42, 0.98));
+  box-shadow: 0 0 0 1px rgba(67, 215, 255, 0.08);
+}
+
+.serials-segment-hint {
+  flex: 1 1 100%;
+  margin: 2px 2px 0;
+  line-height: 1.35;
+}
+
+.serial-empty-state {
+  padding: 18px 14px;
+  border: 1px dashed rgba(67, 215, 255, 0.22);
+  border-radius: 10px;
+  background: rgba(0, 0, 0, 0.16);
+  text-align: left;
+}
+
+.serial-empty-title {
+  margin: 0 0 6px;
+  font-size: 0.98rem;
+  font-weight: 600;
+}
+
+.multiselect-advanced-filters {
+  min-width: 140px;
+  padding: 4px 8px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  background: rgba(0, 0, 0, 0.18);
+}
+
+.multiselect-advanced-filters > summary {
+  cursor: pointer;
+  color: var(--muted);
+  font-size: 0.82rem;
+  list-style: none;
+}
+
+.multiselect-advanced-filters > summary::-webkit-details-marker {
+  display: none;
+}
+
+.multiselect-advanced-filters-body {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.serial-store-form {
+  margin-bottom: 8px;
+}
+
+.serial-store-pack-dest {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.serial-store-pack-dest select,
+.serial-store-pack-dest input {
+  width: 100%;
+}
+
+.tab-content[data-active-tab="serials"] .panel-section[data-serials-segment].hidden {
+  display: none;
+}
+
+/* Stay on-screen for the whole UVHM / challenge / spawn run (any tab, any scroll). */
+.global-progress-panel.is-floating {
+  position: fixed;
+  top: 12px;
+  right: 12px;
+  left: auto;
+  width: min(380px, calc(100vw - 24px));
+  margin: 0;
+  z-index: 120;
+  box-shadow:
+    0 0 0 1px rgba(67, 215, 255, 0.22),
+    0 12px 32px rgba(0, 0, 0, 0.45);
+  background: rgba(10, 12, 18, 0.96);
+  /* Only the panel chrome captures clicks — never a full-width ghost overlay. */
+  pointer-events: auto;
+  user-select: none;
+}
+
+.global-progress-panel.is-floating .progress-drag-handle {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: -4px 0 8px;
+  padding: 4px 2px 6px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  color: rgba(180, 210, 230, 0.85);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  cursor: grab;
+  touch-action: none;
+}
+
+.global-progress-panel.is-floating.is-dragging .progress-drag-handle {
+  cursor: grabbing;
+}
+
+.global-progress-panel.is-floating.has-custom-pos {
+  right: auto;
+}
+
+.global-progress-panel.is-floating .progress-done-tick {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: 6px;
+  width: 1.15em;
+  height: 1.15em;
+  border-radius: 999px;
+  background: rgba(34, 197, 94, 0.22);
+  color: #4ade80;
+  font-size: 0.95em;
+  font-weight: 800;
+  line-height: 1;
+  vertical-align: middle;
+}
+
+.global-progress-panel.is-floating .progress-danger-countdown {
+  margin: 7px 0 3px;
+  color: #ff5c68;
+  font-size: 0.83rem;
+  font-weight: 900;
+  letter-spacing: 0.035em;
+  text-transform: uppercase;
+  text-shadow: 0 0 12px rgba(255, 70, 85, 0.55);
+}
+
+/* Pack / Party Bay: tight single column; Send + Rewrite share one row. */
+.tab-content[data-active-tab="party_bay"] .action-grid,
+.tab-content[data-active-tab="pack_bay"] .action-grid {
+  grid-template-columns: 1fr;
+  gap: 2px;
+}
+
+.tab-content[data-active-tab="party_bay"] .bay-pair-row,
+.tab-content[data-active-tab="pack_bay"] .bay-pair-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2px;
+  align-items: stretch;
+  margin: 0;
+}
+
+.tab-content[data-active-tab="party_bay"] .action-card,
+.tab-content[data-active-tab="pack_bay"] .action-card,
+.tab-content[data-active-tab="party_bay"] .action-card.deliver-selected-card,
+.tab-content[data-active-tab="pack_bay"] .action-card.deliver-selected-card {
+  margin: 0;
+}
+
+.tab-content[data-active-tab="party_bay"] .action-card,
+.tab-content[data-active-tab="pack_bay"] .action-card {
+  padding: 8px 10px;
+  gap: 6px;
+  border-radius: 8px;
+}
+
+.tab-content[data-active-tab="party_bay"] .action-card > .muted.small,
+.tab-content[data-active-tab="pack_bay"] .action-card > .muted.small {
+  margin: 0;
+  color: rgba(180, 200, 220, 0.78);
+}
+
+@media (max-width: 720px) {
+  .tab-content[data-active-tab="party_bay"] .bay-pair-row,
+  .tab-content[data-active-tab="pack_bay"] .bay-pair-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+
+.global-progress-panel.is-floating .progress-stop-btn,
+.global-progress-panel.is-floating button {
+  pointer-events: auto;
+}
+
+/* Empty sticky chrome must not sit over tab fields and eat clicks. */
+.sticky-workbench {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  margin: 0 auto 14px;
+  overflow: visible;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  background: rgba(8, 10, 17, 0.94);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.22);
+  backdrop-filter: blur(18px);
+  /* Let clicks reach tab content that scrolls under empty sticky chrome. */
+  pointer-events: none;
+}
+
+.sticky-workbench > * {
+  pointer-events: auto;
+}
+
+.nav-drawer.hidden,
+.tool-search-results.hidden,
+.global-progress-panel.hidden {
+  pointer-events: none !important;
+}
+
+.global-progress-panel.is-floating h4 {
+  font-size: 0.86rem;
+}
+
+.global-progress-panel.is-floating .progress-meta {
+  margin-top: 6px;
+  font-size: 0.8rem;
+  line-height: 1.35;
+}
+
+.progress-stop-btn {
+  margin-top: 10px;
+  width: 100%;
+  min-height: 34px;
+  border-color: rgba(251, 113, 133, 0.55);
+  background: linear-gradient(180deg, rgba(72, 28, 36, 0.95), rgba(36, 18, 24, 0.98));
+  color: #fecdd3;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.progress-stop-btn:hover:not(:disabled) {
+  border-color: rgba(253, 164, 175, 0.9);
+  box-shadow: 0 0 18px rgba(251, 113, 133, 0.28);
 }
 
 .global-progress-panel.hidden {
@@ -1712,10 +1995,10 @@ a {
 
   .panel-section-most-used .action-card > button,
   .panel-section-most-used .action-grid-featured > button {
-    min-height: 36px;
-    max-height: 48px;
-    padding: 5px 8px;
-    font-size: 0.86rem;
+    min-height: 32px;
+    max-height: none;
+    padding: 4px 6px;
+    font-size: 0.74rem;
   }
 }
 
@@ -1737,11 +2020,11 @@ a {
   .panel-section-most-used .action-card > button,
   .panel-section-most-used .action-grid-featured > button,
   .action-grid-featured > button {
-    min-height: 34px;
-    max-height: 44px;
+    min-height: 32px;
+    max-height: none;
     height: auto;
     padding: 4px 8px;
-    font-size: 0.82rem;
+    font-size: 0.78rem;
   }
 }
 
@@ -1895,6 +2178,19 @@ body::before {
   color: var(--text);
 }
 
+.ghost-opacity-picker input[type="range"] {
+  width: 5.5rem;
+  accent-color: var(--accent, #5b8cff);
+}
+
+.ghost-opacity-label {
+  min-width: 2.6rem;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0;
+  text-transform: none;
+  font-size: 0.75rem;
+}
+
 .lang-picker select {
   min-width: 8.25rem;
 }
@@ -1966,6 +2262,7 @@ body::before {
 .vault-hunter-strip {
   display: flex;
   align-items: center;
+  flex-shrink: 0;
   padding: 5px 8px;
   border: 1px solid rgba(67, 215, 255, 0.2);
   border-radius: 999px;
@@ -2227,24 +2524,6 @@ body::before {
   transform: translateX(2px);
 }
 
-.sticky-workbench {
-  position: sticky;
-  top: 0;
-  z-index: 30;
-  margin: 0 auto 14px;
-  overflow: visible;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-  background: rgba(8, 10, 17, 0.94);
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.22);
-  backdrop-filter: blur(18px);
-  /* Let clicks reach tab content that scrolls under empty sticky chrome. */
-  pointer-events: none;
-}
-
-.sticky-workbench > * {
-  pointer-events: auto;
-}
-
 .tool-search-bar,
 .tool-search-bar * ,
 #tool-search-input {
@@ -2360,6 +2639,115 @@ body::before {
   padding: 0 20px 10px;
 }
 
+.sticky-ghost-picker {
+  margin-left: auto;
+  align-self: end;
+  flex-shrink: 0;
+}
+
+.sticky-ghost-picker input[type="range"] {
+  width: 6.5rem;
+}
+
+.serial-store-serial-tools {
+  display: flex;
+  gap: 8px;
+  margin-top: 6px;
+}
+
+.serial-store-share-bar {
+  margin: 0 0 10px;
+}
+
+.serial-store-pack {
+  border: 1px solid rgba(120, 140, 180, 0.28);
+  border-radius: 10px;
+  margin: 0 0 8px;
+  background: rgba(10, 14, 24, 0.55);
+}
+
+.serial-store-pack-summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 8px 10px;
+  cursor: pointer;
+  list-style: none;
+}
+
+.serial-store-pack-summary::-webkit-details-marker {
+  display: none;
+}
+
+.serial-store-pack-title {
+  font-weight: 650;
+}
+
+.serial-store-pack-actions {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  justify-content: flex-end;
+  max-width: min(420px, 70%);
+}
+
+.serial-store-pack-actions button {
+  font-size: 0.78rem;
+  padding: 3px 8px;
+  min-height: 28px;
+}
+
+.serial-store-pack-body {
+  display: grid;
+  gap: 4px;
+  padding: 0 8px 8px;
+}
+
+.serial-store-entry-link {
+  appearance: none;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  padding: 0;
+}
+
+.serial-store-entry-link:hover {
+  color: #9fdfff;
+  text-decoration: underline;
+}
+
+.player-context-menu {
+  position: fixed;
+  z-index: 10050;
+  min-width: 200px;
+  padding: 6px;
+  border-radius: 10px;
+  border: 1px solid rgba(120, 140, 180, 0.45);
+  background: rgba(12, 16, 28, 0.96);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.45);
+}
+
+.player-context-menu button {
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding: 8px 10px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: #f2d4d4;
+  cursor: pointer;
+  font: inherit;
+}
+
+.player-context-menu button:hover {
+  background: rgba(220, 80, 90, 0.22);
+}
+
 .tab-bar {
   position: static;
   z-index: auto;
@@ -2465,7 +2853,7 @@ body::before {
 
 .panel-section {
   position: relative;
-  overflow: hidden;
+  overflow: visible;
   padding: 15px 17px 16px;
 }
 
@@ -2478,6 +2866,7 @@ body::before {
   width: 3px;
   background: linear-gradient(var(--accent-2), var(--accent));
   opacity: 0.68;
+  pointer-events: none;
 }
 
 .panel-section h3 {
@@ -2637,6 +3026,162 @@ button[data-accent="violet"]:hover:not(:disabled) {
     inset 0 1px rgba(255, 255, 255, 0.09),
     0 0 20px rgba(201, 86, 255, 0.23),
     0 8px 17px rgba(0, 0, 0, 0.19);
+}
+
+button[data-accent="gold"] {
+  border-color: rgba(250, 204, 21, 0.38);
+  box-shadow:
+    inset 0 1px rgba(255, 255, 255, 0.07),
+    0 0 16px rgba(250, 204, 21, 0.12),
+    0 5px 13px rgba(0, 0, 0, 0.14);
+}
+
+button[data-accent="gold"]:hover:not(:disabled) {
+  border-color: rgba(253, 224, 71, 0.85);
+  box-shadow:
+    inset 0 1px rgba(255, 255, 255, 0.12),
+    0 0 24px rgba(250, 204, 21, 0.32),
+    0 8px 17px rgba(0, 0, 0, 0.2);
+}
+
+button[data-accent="mint"] {
+  border-color: rgba(52, 211, 153, 0.36);
+  box-shadow:
+    inset 0 1px rgba(255, 255, 255, 0.06),
+    0 0 15px rgba(52, 211, 153, 0.1),
+    0 5px 13px rgba(0, 0, 0, 0.14);
+}
+
+button[data-accent="mint"]:hover:not(:disabled) {
+  border-color: rgba(110, 231, 183, 0.85);
+  box-shadow:
+    inset 0 1px rgba(255, 255, 255, 0.1),
+    0 0 22px rgba(52, 211, 153, 0.3),
+    0 8px 17px rgba(0, 0, 0, 0.2);
+}
+
+button[data-accent="coral"] {
+  border-color: rgba(251, 113, 133, 0.36);
+  box-shadow:
+    inset 0 1px rgba(255, 255, 255, 0.06),
+    0 0 15px rgba(251, 113, 133, 0.1),
+    0 5px 13px rgba(0, 0, 0, 0.14);
+}
+
+button[data-accent="coral"]:hover:not(:disabled) {
+  border-color: rgba(253, 164, 175, 0.85);
+  box-shadow:
+    inset 0 1px rgba(255, 255, 255, 0.1),
+    0 0 22px rgba(251, 113, 133, 0.3),
+    0 8px 17px rgba(0, 0, 0, 0.2);
+}
+
+button[data-accent="amber"] {
+  border-color: rgba(251, 146, 60, 0.42);
+  box-shadow:
+    inset 0 1px rgba(255, 255, 255, 0.07),
+    0 0 18px rgba(251, 146, 60, 0.16),
+    0 5px 13px rgba(0, 0, 0, 0.14);
+}
+
+button[data-accent="amber"]:hover:not(:disabled) {
+  border-color: rgba(253, 186, 116, 0.9);
+  box-shadow:
+    inset 0 1px rgba(255, 255, 255, 0.12),
+    0 0 26px rgba(251, 146, 60, 0.36),
+    0 8px 17px rgba(0, 0, 0, 0.2);
+}
+
+button[data-accent="slate"] {
+  border-color: rgba(148, 163, 184, 0.34);
+  box-shadow:
+    inset 0 1px rgba(255, 255, 255, 0.05),
+    0 0 14px rgba(148, 163, 184, 0.08),
+    0 5px 13px rgba(0, 0, 0, 0.14);
+}
+
+button[data-accent="slate"]:hover:not(:disabled) {
+  border-color: rgba(203, 213, 225, 0.8);
+  box-shadow:
+    inset 0 1px rgba(255, 255, 255, 0.1),
+    0 0 20px rgba(148, 163, 184, 0.24),
+    0 8px 17px rgba(0, 0, 0, 0.2);
+}
+
+.control-emoji {
+  display: inline-block;
+  font-size: 1.05em;
+  line-height: 1;
+  margin-right: 0.35em;
+  vertical-align: -0.05em;
+}
+
+.panel-section-most-used button[data-accent] {
+  box-shadow:
+    inset 0 1px rgba(255, 255, 255, 0.07),
+    0 0 18px rgba(67, 215, 255, 0.08),
+    0 5px 14px rgba(0, 0, 0, 0.16);
+}
+
+.panel-section-most-used button[data-accent="gold"] {
+  box-shadow:
+    inset 0 1px rgba(255, 255, 255, 0.08),
+    0 0 20px rgba(250, 204, 21, 0.2),
+    0 5px 14px rgba(0, 0, 0, 0.16);
+}
+.panel-section-most-used button[data-accent="violet"] {
+  box-shadow:
+    inset 0 1px rgba(255, 255, 255, 0.08),
+    0 0 20px rgba(201, 86, 255, 0.22),
+    0 5px 14px rgba(0, 0, 0, 0.16);
+}
+.panel-section-most-used button[data-accent="coral"] {
+  box-shadow:
+    inset 0 1px rgba(255, 255, 255, 0.08),
+    0 0 20px rgba(251, 113, 133, 0.2),
+    0 5px 14px rgba(0, 0, 0, 0.16);
+}
+.panel-section-most-used button[data-accent="cyan"] {
+  box-shadow:
+    inset 0 1px rgba(255, 255, 255, 0.08),
+    0 0 20px rgba(67, 215, 255, 0.2),
+    0 5px 14px rgba(0, 0, 0, 0.16);
+}
+.panel-section-most-used button[data-accent="amber"] {
+  box-shadow:
+    inset 0 1px rgba(255, 255, 255, 0.08),
+    0 0 22px rgba(251, 146, 60, 0.28),
+    0 5px 14px rgba(0, 0, 0, 0.16);
+}
+.panel-section-most-used button[data-accent="slate"] {
+  box-shadow:
+    inset 0 1px rgba(255, 255, 255, 0.08),
+    0 0 18px rgba(148, 163, 184, 0.16),
+    0 5px 14px rgba(0, 0, 0, 0.16);
+}
+.panel-section-most-used button[data-accent="pink"] {
+  box-shadow:
+    inset 0 1px rgba(255, 255, 255, 0.08),
+    0 0 20px rgba(241, 92, 214, 0.2),
+    0 5px 14px rgba(0, 0, 0, 0.16);
+}
+.panel-section-most-used button[data-accent="mint"] {
+  box-shadow:
+    inset 0 1px rgba(255, 255, 255, 0.08),
+    0 0 20px rgba(52, 211, 153, 0.2),
+    0 5px 14px rgba(0, 0, 0, 0.16);
+}
+
+button.is-caution {
+  border-color: rgba(251, 146, 60, 0.75) !important;
+  box-shadow:
+    inset 0 1px rgba(255, 255, 255, 0.08),
+    0 0 18px rgba(251, 146, 60, 0.28) !important;
+}
+
+.sticky-target-bar .target-control-label > span {
+  font-weight: 700;
+  color: var(--accent-2, #7dd3fc);
 }
 
 button.is-toggle-on {
@@ -3001,6 +3546,16 @@ input[type="text"]:focus {
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
+  /* Keep the themed button gradient sweep looping — it is decorative, not motion sickness UI. */
+  html[data-theme] .action-grid button::before,
+  html[data-theme] .action-card button::before,
+  html[data-theme] button.primary::before,
+  html[data-theme] button[data-accent]::before,
+  html[data-theme] #theme-toggle-btn.is-toggle-on::before {
+    animation: scooters-btn-sweep 9s linear infinite !important;
+    animation-duration: 9s !important;
+    animation-iteration-count: infinite !important;
+  }
 }
 
 .serial-add-actions {
@@ -3191,6 +3746,11 @@ html[data-theme="scooters"] button.primary,
 html[data-theme="scooters"] button[data-accent="cyan"],
 html[data-theme="scooters"] button[data-accent="pink"],
 html[data-theme="scooters"] button[data-accent="violet"],
+html[data-theme="scooters"] button[data-accent="gold"],
+html[data-theme="scooters"] button[data-accent="mint"],
+html[data-theme="scooters"] button[data-accent="coral"],
+html[data-theme="scooters"] button[data-accent="amber"],
+html[data-theme="scooters"] button[data-accent="slate"],
 html[data-theme="scooters"] #theme-toggle-btn.is-toggle-on {
   position: relative;
   overflow: hidden;
@@ -3212,6 +3772,11 @@ html[data-theme="scooters"] button.primary::before,
 html[data-theme="scooters"] button[data-accent="cyan"]::before,
 html[data-theme="scooters"] button[data-accent="pink"]::before,
 html[data-theme="scooters"] button[data-accent="violet"]::before,
+html[data-theme="scooters"] button[data-accent="gold"]::before,
+html[data-theme="scooters"] button[data-accent="mint"]::before,
+html[data-theme="scooters"] button[data-accent="coral"]::before,
+html[data-theme="scooters"] button[data-accent="amber"]::before,
+html[data-theme="scooters"] button[data-accent="slate"]::before,
 html[data-theme="scooters"] #theme-toggle-btn.is-toggle-on::before {
   content: "";
   position: absolute;
@@ -3455,6 +4020,11 @@ html[data-theme="scooters-girly"] button.primary,
 html[data-theme="scooters-girly"] button[data-accent="cyan"],
 html[data-theme="scooters-girly"] button[data-accent="pink"],
 html[data-theme="scooters-girly"] button[data-accent="violet"],
+html[data-theme="scooters-girly"] button[data-accent="gold"],
+html[data-theme="scooters-girly"] button[data-accent="mint"],
+html[data-theme="scooters-girly"] button[data-accent="coral"],
+html[data-theme="scooters-girly"] button[data-accent="amber"],
+html[data-theme="scooters-girly"] button[data-accent="slate"],
 html[data-theme="scooters-girly"] #theme-toggle-btn.is-toggle-on {
   position: relative;
   overflow: hidden;
@@ -3476,6 +4046,11 @@ html[data-theme="scooters-girly"] button.primary::before,
 html[data-theme="scooters-girly"] button[data-accent="cyan"]::before,
 html[data-theme="scooters-girly"] button[data-accent="pink"]::before,
 html[data-theme="scooters-girly"] button[data-accent="violet"]::before,
+html[data-theme="scooters-girly"] button[data-accent="gold"]::before,
+html[data-theme="scooters-girly"] button[data-accent="mint"]::before,
+html[data-theme="scooters-girly"] button[data-accent="coral"]::before,
+html[data-theme="scooters-girly"] button[data-accent="amber"]::before,
+html[data-theme="scooters-girly"] button[data-accent="slate"]::before,
 html[data-theme="scooters-girly"] #theme-toggle-btn.is-toggle-on::before {
   content: "";
   position: absolute;
@@ -3884,6 +4459,11 @@ html[data-theme="default"] button.primary,
 html[data-theme="default"] button[data-accent="cyan"],
 html[data-theme="default"] button[data-accent="pink"],
 html[data-theme="default"] button[data-accent="violet"],
+html[data-theme="default"] button[data-accent="gold"],
+html[data-theme="default"] button[data-accent="mint"],
+html[data-theme="default"] button[data-accent="coral"],
+html[data-theme="default"] button[data-accent="amber"],
+html[data-theme="default"] button[data-accent="slate"],
 html[data-theme="default"] #theme-toggle-btn.is-toggle-on,
 html[data-theme="claptrap"] .action-grid button,
 html[data-theme="claptrap"] .action-card button,
@@ -3891,6 +4471,11 @@ html[data-theme="claptrap"] button.primary,
 html[data-theme="claptrap"] button[data-accent="cyan"],
 html[data-theme="claptrap"] button[data-accent="pink"],
 html[data-theme="claptrap"] button[data-accent="violet"],
+html[data-theme="claptrap"] button[data-accent="gold"],
+html[data-theme="claptrap"] button[data-accent="mint"],
+html[data-theme="claptrap"] button[data-accent="coral"],
+html[data-theme="claptrap"] button[data-accent="amber"],
+html[data-theme="claptrap"] button[data-accent="slate"],
 html[data-theme="claptrap"] #theme-toggle-btn.is-toggle-on,
 html[data-theme="moxxi"] .action-grid button,
 html[data-theme="moxxi"] .action-card button,
@@ -3898,6 +4483,11 @@ html[data-theme="moxxi"] button.primary,
 html[data-theme="moxxi"] button[data-accent="cyan"],
 html[data-theme="moxxi"] button[data-accent="pink"],
 html[data-theme="moxxi"] button[data-accent="violet"],
+html[data-theme="moxxi"] button[data-accent="gold"],
+html[data-theme="moxxi"] button[data-accent="mint"],
+html[data-theme="moxxi"] button[data-accent="coral"],
+html[data-theme="moxxi"] button[data-accent="amber"],
+html[data-theme="moxxi"] button[data-accent="slate"],
 html[data-theme="moxxi"] #theme-toggle-btn.is-toggle-on,
 html[data-theme="crimson"] .action-grid button,
 html[data-theme="crimson"] .action-card button,
@@ -3905,6 +4495,11 @@ html[data-theme="crimson"] button.primary,
 html[data-theme="crimson"] button[data-accent="cyan"],
 html[data-theme="crimson"] button[data-accent="pink"],
 html[data-theme="crimson"] button[data-accent="violet"],
+html[data-theme="crimson"] button[data-accent="gold"],
+html[data-theme="crimson"] button[data-accent="mint"],
+html[data-theme="crimson"] button[data-accent="coral"],
+html[data-theme="crimson"] button[data-accent="amber"],
+html[data-theme="crimson"] button[data-accent="slate"],
 html[data-theme="crimson"] #theme-toggle-btn.is-toggle-on,
 html[data-theme="psycho"] .action-grid button,
 html[data-theme="psycho"] .action-card button,
@@ -3912,6 +4507,11 @@ html[data-theme="psycho"] button.primary,
 html[data-theme="psycho"] button[data-accent="cyan"],
 html[data-theme="psycho"] button[data-accent="pink"],
 html[data-theme="psycho"] button[data-accent="violet"],
+html[data-theme="psycho"] button[data-accent="gold"],
+html[data-theme="psycho"] button[data-accent="mint"],
+html[data-theme="psycho"] button[data-accent="coral"],
+html[data-theme="psycho"] button[data-accent="amber"],
+html[data-theme="psycho"] button[data-accent="slate"],
 html[data-theme="psycho"] #theme-toggle-btn.is-toggle-on,
 html[data-theme="maliwan"] .action-grid button,
 html[data-theme="maliwan"] .action-card button,
@@ -3919,6 +4519,11 @@ html[data-theme="maliwan"] button.primary,
 html[data-theme="maliwan"] button[data-accent="cyan"],
 html[data-theme="maliwan"] button[data-accent="pink"],
 html[data-theme="maliwan"] button[data-accent="violet"],
+html[data-theme="maliwan"] button[data-accent="gold"],
+html[data-theme="maliwan"] button[data-accent="mint"],
+html[data-theme="maliwan"] button[data-accent="coral"],
+html[data-theme="maliwan"] button[data-accent="amber"],
+html[data-theme="maliwan"] button[data-accent="slate"],
 html[data-theme="maliwan"] #theme-toggle-btn.is-toggle-on {
   position: relative;
   overflow: hidden;
@@ -3940,6 +4545,11 @@ html[data-theme="default"] button.primary::before,
 html[data-theme="default"] button[data-accent="cyan"]::before,
 html[data-theme="default"] button[data-accent="pink"]::before,
 html[data-theme="default"] button[data-accent="violet"]::before,
+html[data-theme="default"] button[data-accent="gold"]::before,
+html[data-theme="default"] button[data-accent="mint"]::before,
+html[data-theme="default"] button[data-accent="coral"]::before,
+html[data-theme="default"] button[data-accent="amber"]::before,
+html[data-theme="default"] button[data-accent="slate"]::before,
 html[data-theme="default"] #theme-toggle-btn.is-toggle-on::before,
 html[data-theme="claptrap"] .action-grid button::before,
 html[data-theme="claptrap"] .action-card button::before,
@@ -3947,6 +4557,11 @@ html[data-theme="claptrap"] button.primary::before,
 html[data-theme="claptrap"] button[data-accent="cyan"]::before,
 html[data-theme="claptrap"] button[data-accent="pink"]::before,
 html[data-theme="claptrap"] button[data-accent="violet"]::before,
+html[data-theme="claptrap"] button[data-accent="gold"]::before,
+html[data-theme="claptrap"] button[data-accent="mint"]::before,
+html[data-theme="claptrap"] button[data-accent="coral"]::before,
+html[data-theme="claptrap"] button[data-accent="amber"]::before,
+html[data-theme="claptrap"] button[data-accent="slate"]::before,
 html[data-theme="claptrap"] #theme-toggle-btn.is-toggle-on::before,
 html[data-theme="moxxi"] .action-grid button::before,
 html[data-theme="moxxi"] .action-card button::before,
@@ -3954,6 +4569,11 @@ html[data-theme="moxxi"] button.primary::before,
 html[data-theme="moxxi"] button[data-accent="cyan"]::before,
 html[data-theme="moxxi"] button[data-accent="pink"]::before,
 html[data-theme="moxxi"] button[data-accent="violet"]::before,
+html[data-theme="moxxi"] button[data-accent="gold"]::before,
+html[data-theme="moxxi"] button[data-accent="mint"]::before,
+html[data-theme="moxxi"] button[data-accent="coral"]::before,
+html[data-theme="moxxi"] button[data-accent="amber"]::before,
+html[data-theme="moxxi"] button[data-accent="slate"]::before,
 html[data-theme="moxxi"] #theme-toggle-btn.is-toggle-on::before,
 html[data-theme="crimson"] .action-grid button::before,
 html[data-theme="crimson"] .action-card button::before,
@@ -3961,6 +4581,11 @@ html[data-theme="crimson"] button.primary::before,
 html[data-theme="crimson"] button[data-accent="cyan"]::before,
 html[data-theme="crimson"] button[data-accent="pink"]::before,
 html[data-theme="crimson"] button[data-accent="violet"]::before,
+html[data-theme="crimson"] button[data-accent="gold"]::before,
+html[data-theme="crimson"] button[data-accent="mint"]::before,
+html[data-theme="crimson"] button[data-accent="coral"]::before,
+html[data-theme="crimson"] button[data-accent="amber"]::before,
+html[data-theme="crimson"] button[data-accent="slate"]::before,
 html[data-theme="crimson"] #theme-toggle-btn.is-toggle-on::before,
 html[data-theme="psycho"] .action-grid button::before,
 html[data-theme="psycho"] .action-card button::before,
@@ -3968,6 +4593,11 @@ html[data-theme="psycho"] button.primary::before,
 html[data-theme="psycho"] button[data-accent="cyan"]::before,
 html[data-theme="psycho"] button[data-accent="pink"]::before,
 html[data-theme="psycho"] button[data-accent="violet"]::before,
+html[data-theme="psycho"] button[data-accent="gold"]::before,
+html[data-theme="psycho"] button[data-accent="mint"]::before,
+html[data-theme="psycho"] button[data-accent="coral"]::before,
+html[data-theme="psycho"] button[data-accent="amber"]::before,
+html[data-theme="psycho"] button[data-accent="slate"]::before,
 html[data-theme="psycho"] #theme-toggle-btn.is-toggle-on::before,
 html[data-theme="maliwan"] .action-grid button::before,
 html[data-theme="maliwan"] .action-card button::before,
@@ -3975,6 +4605,11 @@ html[data-theme="maliwan"] button.primary::before,
 html[data-theme="maliwan"] button[data-accent="cyan"]::before,
 html[data-theme="maliwan"] button[data-accent="pink"]::before,
 html[data-theme="maliwan"] button[data-accent="violet"]::before,
+html[data-theme="maliwan"] button[data-accent="gold"]::before,
+html[data-theme="maliwan"] button[data-accent="mint"]::before,
+html[data-theme="maliwan"] button[data-accent="coral"]::before,
+html[data-theme="maliwan"] button[data-accent="amber"]::before,
+html[data-theme="maliwan"] button[data-accent="slate"]::before,
 html[data-theme="maliwan"] #theme-toggle-btn.is-toggle-on::before {
   content: "";
   position: absolute;
@@ -4158,3 +4793,228 @@ body.is-resizing #theme-toggle-btn.is-toggle-on::before {
   animation: none !important;
 }
 
+
+
+/* Tabs vs hamburger layout */
+.nav-chrome {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0;
+  width: 100%;
+  min-width: 0;
+  padding: 0;
+}
+
+.nav-mode-row {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 10px;
+  padding: 6px 20px 8px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.nav-mode-switch {
+  display: inline-flex;
+  flex: 0 0 auto;
+  gap: 0;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.nav-mode-btn {
+  margin: 0;
+  padding: 6px 10px;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: #aeb5ca;
+  font-size: 0.72rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.nav-mode-btn:hover {
+  color: #fff;
+  background: rgba(67, 215, 255, 0.08);
+}
+
+.nav-mode-btn.active {
+  color: #fff;
+  background: rgba(201, 86, 255, 0.22);
+}
+
+.nav-tabs-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  min-width: 0;
+  padding: 0 12px 0 20px;
+}
+
+.nav-burger-btn {
+  flex: 0 0 auto;
+  min-width: 42px;
+  min-height: 42px;
+  padding: 0 12px;
+  border: 1px solid rgba(201, 86, 255, 0.35);
+  border-radius: 9px;
+  background: rgba(201, 86, 255, 0.12);
+  color: #fff;
+  font-size: 1.15rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.nav-burger-btn:hover,
+.nav-burger-btn[aria-expanded="true"] {
+  background: rgba(201, 86, 255, 0.28);
+}
+
+.nav-tabs-row .tab-bar {
+  flex: 1 1 auto;
+  min-width: 0;
+  padding-left: 0;
+  padding-right: 8px;
+}
+
+body.nav-mode-menu .nav-tabs-row .tab-bar,
+body.nav-mode-menu #tab-bar,
+#tab-bar.nav-tabs-hidden {
+  display: none !important;
+}
+
+body.nav-mode-tabs .nav-burger-btn,
+.nav-burger-btn.hidden {
+  display: none !important;
+}
+
+body.nav-mode-menu .nav-tabs-row {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+.nav-drawer {
+  display: grid;
+  gap: 4px;
+  margin: 0 20px 8px;
+  padding: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 10px;
+  background: rgba(12, 18, 36, 0.96);
+  max-height: min(60vh, 420px);
+  overflow: auto;
+}
+
+.nav-drawer.hidden {
+  display: none !important;
+}
+
+.nav-drawer button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  text-align: left;
+  min-height: 40px;
+  padding: 8px 12px;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  background: transparent;
+  color: #d7dceb;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.nav-drawer button:hover {
+  background: rgba(67, 215, 255, 0.08);
+}
+
+.nav-drawer button.active {
+  border-color: rgba(201, 86, 255, 0.4);
+  background: linear-gradient(135deg, rgba(201, 86, 255, 0.18), rgba(67, 215, 255, 0.09));
+  color: #fff;
+}
+
+
+/* Keep infinite sweep on colour-aura accents (Most used gold/coral/amber/slate/mint). */
+html[data-theme="scooters"] button[data-accent="gold"],
+html[data-theme="scooters"] button[data-accent="mint"],
+html[data-theme="scooters"] button[data-accent="coral"],
+html[data-theme="scooters"] button[data-accent="amber"],
+html[data-theme="scooters"] button[data-accent="slate"],
+html[data-theme="scooters-girly"] button[data-accent="gold"],
+html[data-theme="scooters-girly"] button[data-accent="mint"],
+html[data-theme="scooters-girly"] button[data-accent="coral"],
+html[data-theme="scooters-girly"] button[data-accent="amber"],
+html[data-theme="scooters-girly"] button[data-accent="slate"],
+html[data-theme="default"] button[data-accent="gold"],
+html[data-theme="default"] button[data-accent="mint"],
+html[data-theme="default"] button[data-accent="coral"],
+html[data-theme="default"] button[data-accent="amber"],
+html[data-theme="default"] button[data-accent="slate"],
+html[data-theme="claptrap"] button[data-accent="gold"],
+html[data-theme="claptrap"] button[data-accent="mint"],
+html[data-theme="claptrap"] button[data-accent="coral"],
+html[data-theme="claptrap"] button[data-accent="amber"],
+html[data-theme="claptrap"] button[data-accent="slate"],
+html[data-theme="moxxi"] button[data-accent="gold"],
+html[data-theme="moxxi"] button[data-accent="mint"],
+html[data-theme="moxxi"] button[data-accent="coral"],
+html[data-theme="moxxi"] button[data-accent="amber"],
+html[data-theme="moxxi"] button[data-accent="slate"],
+html[data-theme="crimson"] button[data-accent="gold"],
+html[data-theme="crimson"] button[data-accent="mint"],
+html[data-theme="crimson"] button[data-accent="coral"],
+html[data-theme="crimson"] button[data-accent="amber"],
+html[data-theme="crimson"] button[data-accent="slate"],
+html[data-theme="psycho"] button[data-accent="gold"],
+html[data-theme="psycho"] button[data-accent="mint"],
+html[data-theme="psycho"] button[data-accent="coral"],
+html[data-theme="psycho"] button[data-accent="amber"],
+html[data-theme="psycho"] button[data-accent="slate"],
+html[data-theme="maliwan"] button[data-accent="gold"],
+html[data-theme="maliwan"] button[data-accent="mint"],
+html[data-theme="maliwan"] button[data-accent="coral"],
+html[data-theme="maliwan"] button[data-accent="amber"],
+html[data-theme="maliwan"] button[data-accent="slate"] {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+/* Seamless infinite sweep for colour-aura accents (same 10-stop loop as cyan). */
+html[data-theme] button[data-accent="gold"]::before,
+html[data-theme] button[data-accent="mint"]::before,
+html[data-theme] button[data-accent="coral"]::before,
+html[data-theme] button[data-accent="amber"]::before,
+html[data-theme] button[data-accent="slate"]::before {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 300%;
+  height: 100%;
+  background-image: var(
+    --btn-sweep,
+    linear-gradient(
+      90deg,
+      #00e5ff 0%,
+      #3c8cff 11.11%,
+      #ff4ec8 22.22%,
+      #00e5ff 33.33%,
+      #3c8cff 44.44%,
+      #ff4ec8 55.55%,
+      #00e5ff 66.66%,
+      #3c8cff 77.77%,
+      #ff4ec8 88.88%,
+      #00e5ff 100%
+    )
+  );
+  animation: scooters-btn-sweep 9s linear infinite !important;
+  animation-iteration-count: infinite !important;
+  pointer-events: none;
+  z-index: -1;
+}

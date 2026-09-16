@@ -1,43 +1,38 @@
 [
   {
-    "display_name": "1st Shield",
-    "itempool": "itempool_1st_shield",
-    "category": "Shield"
-  },
-  {
     "display_name": "Ammo",
     "itempool": "itempool_ammo",
+    "category": "Ammo"
+  },
+  {
+    "display_name": "Enemydrop Currencyorammo",
+    "itempool": "ItemPool_EnemyDrop_CurrencyOrAmmo",
+    "category": "Ammo"
+  },
+  {
+    "display_name": "Enemydrop Currencyorammo Intro",
+    "itempool": "ItemPool_EnemyDrop_CurrencyOrAmmo_Intro",
+    "category": "Ammo"
+  },
+  {
+    "display_name": "Lootabledrop Ammo Geyser",
+    "itempool": "ItemPool_LootableDrop_Ammo_Geyser",
+    "category": "Ammo"
+  },
+  {
+    "display_name": "Lootabledrop Ammo Sixpieces",
+    "itempool": "ItemPool_LootableDrop_Ammo_SixPieces",
+    "category": "Ammo"
+  },
+  {
+    "display_name": "Lootabledrop Ammo Twopieces",
+    "itempool": "ItemPool_LootableDrop_Ammo_TwoPieces",
     "category": "Ammo"
   },
   {
     "display_name": "Ammo Assaultrifle",
     "itempool": "itempool_ammo_assaultrifle",
     "category": "Assault Rifle"
-  },
-  {
-    "display_name": "Ammo Heavy",
-    "itempool": "itempool_ammo_heavy",
-    "category": "Heavy"
-  },
-  {
-    "display_name": "Ammo Pistol",
-    "itempool": "itempool_ammo_pistol",
-    "category": "Pistol"
-  },
-  {
-    "display_name": "Ammo Shotgun",
-    "itempool": "itempool_ammo_shotgun",
-    "category": "Shotgun"
-  },
-  {
-    "display_name": "Ammo Smg",
-    "itempool": "itempool_ammo_smg",
-    "category": "SMG"
-  },
-  {
-    "display_name": "Ammo Sniperrifle",
-    "itempool": "itempool_ammo_sniperrifle",
-    "category": "Sniper"
   },
   {
     "display_name": "AR 01 Common",
@@ -65,141 +60,289 @@
     "category": "Assault Rifle"
   },
   {
-    "display_name": "AR Pearl Pool",
-    "itempool": "itempool_ar_06_pearl",
-    "category": "Pearl"
-  },
-  {
     "display_name": "Assaultrifle All",
     "itempool": "itempool_assaultrifle_all",
     "category": "Assault Rifle"
   },
   {
-    "display_name": "Disc Jockey",
-    "itempool": "ItemPool_BlackMarket_Comp_BOR_HW_DiscJockey",
-    "category": "Heavy",
-    "catalog_key": "bor_hw_comp_05_legendary_discjockey"
+    "display_name": "Avarice Shiny",
+    "itempool": "itempool_ord_ar_05_legendary_Avarice_shiny",
+    "category": "Assault Rifle"
   },
   {
-    "display_name": "Blackmarket Comp Bor Hw Streamer",
-    "itempool": "ItemPool_BlackMarket_Comp_BOR_HW_Streamer",
-    "category": "Heavy"
+    "display_name": "Dad AR",
+    "itempool": "itempool_dad_ar",
+    "category": "Assault Rifle"
   },
   {
-    "display_name": "Blackmarket Comp Bor Rk Augmenter",
-    "itempool": "ItemPool_BlackMarket_Comp_BOR_RK_Augmenter",
-    "category": "Other"
+    "display_name": "Dad Ar 05 Legendary Cormano Shiny",
+    "itempool": "itempool_dad_ar_05_legendary_Cormano_shiny",
+    "category": "Assault Rifle"
   },
   {
-    "display_name": "Bor HW",
-    "itempool": "itempool_bor_hw",
-    "category": "Heavy"
+    "display_name": "Dad Ar 05 Legendary Darkhard Shiny",
+    "itempool": "itempool_dad_ar_05_legendary_DarkHard_shiny",
+    "category": "Assault Rifle"
   },
   {
-    "display_name": "Bor SG",
-    "itempool": "itempool_bor_sg",
-    "category": "Shotgun"
+    "display_name": "Dad Ar 05 Legendary Discybusiness Shiny",
+    "itempool": "itempool_dad_ar_05_legendary_DiscyBusiness_shiny",
+    "category": "Assault Rifle"
   },
   {
-    "display_name": "Bor SG 05 Legendary Convergence Shiny",
-    "itempool": "itempool_bor_sg_05_legendary_convergence_shiny",
-    "category": "Shotgun"
+    "display_name": "Dad Ar 05 Legendary Lightgun Shiny",
+    "itempool": "itempool_dad_ar_05_legendary_LightGun_shiny",
+    "category": "Assault Rifle"
   },
   {
-    "display_name": "Bor Sg 05 Legendary Crazedearl Pearl",
-    "itempool": "itempool_bor_sg_05_legendary_CrazedEarl_pearl",
-    "category": "Shotgun",
-    "catalog_key": "bor_sg_comp_05_legendary_crazedearl"
+    "display_name": "Dad AR 05 Legendary Lumberjack Shiny",
+    "itempool": "itempool_dad_ar_05_legendary_Lumberjack_shiny",
+    "category": "Assault Rifle"
   },
   {
-    "display_name": "Bor SG 05 Legendary Goldengod Shiny",
-    "itempool": "itempool_bor_sg_05_legendary_GoldenGod_shiny",
-    "category": "Shotgun"
+    "display_name": "Dad AR 05 Legendary Mercredi Shiny",
+    "itempool": "itempool_dad_ar_05_legendary_mercredi_shiny",
+    "category": "Assault Rifle"
   },
   {
-    "display_name": "Bor SG 05 Legendary Goremaster Shiny",
-    "itempool": "itempool_bor_sg_05_legendary_GoreMaster_shiny",
-    "category": "Shotgun"
+    "display_name": "Dad AR 05 Legendary Om Shiny",
+    "itempool": "itempool_dad_ar_05_legendary_om_shiny",
+    "category": "Assault Rifle"
   },
   {
-    "display_name": "Bor SG 05 Legendary PlumbBob Shiny",
-    "itempool": "itempool_bor_sg_05_legendary_PlumbBob_shiny",
-    "category": "Shotgun"
+    "display_name": "Dad AR 05 Legendary Star Helix Shiny",
+    "itempool": "itempool_dad_ar_05_legendary_star_helix_shiny",
+    "category": "Assault Rifle"
   },
   {
-    "display_name": "Bor SM",
-    "itempool": "itempool_bor_sm",
-    "category": "SMG"
+    "display_name": "Enemies Guns AR",
+    "itempool": "itempool_enemies_guns_ar",
+    "category": "Assault Rifle"
   },
   {
-    "display_name": "Bor SM 05 Legendary Falke Shiny",
-    "itempool": "itempool_bor_sm_05_legendary_falke_shiny",
-    "category": "SMG"
+    "display_name": "Flash Fuel Shiny",
+    "itempool": "itempool_jak_ar_05_legendary_FlashFuel_shiny",
+    "category": "Assault Rifle"
   },
   {
-    "display_name": "Bor SM 05 Legendary Hellfire Shiny",
-    "itempool": "itempool_bor_sm_05_legendary_hellfire_shiny",
-    "category": "SMG"
+    "display_name": "Hot Mod Shiny",
+    "itempool": "itempool_ted_ar_05_legendary_HotMod_shiny",
+    "category": "Assault Rifle"
   },
   {
-    "display_name": "Bor SM 05 Legendary Prince Shiny",
-    "itempool": "itempool_bor_sm_05_legendary_Prince_shiny",
-    "category": "SMG"
+    "display_name": "Jak AR",
+    "itempool": "itempool_jak_ar",
+    "category": "Assault Rifle"
   },
   {
-    "display_name": "Bor SR",
-    "itempool": "itempool_bor_sr",
-    "category": "Sniper"
+    "display_name": "Jak AR 05 Legendary Bonnieclyde Shiny",
+    "itempool": "itempool_jak_ar_05_legendary_BonnieClyde_shiny",
+    "category": "Assault Rifle"
   },
   {
-    "display_name": "Bor SR 05 Legendary Stray Shiny",
-    "itempool": "itempool_bor_sr_05_legendary_Stray_shiny",
-    "category": "Sniper"
+    "display_name": "Jak Ar 05 Legendary Fishward Shiny",
+    "itempool": "itempool_jak_ar_05_legendary_fishward_shiny",
+    "category": "Assault Rifle"
   },
   {
-    "display_name": "Bor SR 05 Legendary Tankbuster Shiny",
-    "itempool": "itempool_bor_sr_05_legendary_tankbuster_shiny",
-    "category": "Sniper"
+    "display_name": "Jak AR 05 Legendary Rowan Shiny",
+    "itempool": "itempool_jak_ar_05_legendary_Rowan_shiny",
+    "category": "Assault Rifle"
   },
   {
-    "display_name": "Bor SR 05 Legendary Vamoose Shiny",
-    "itempool": "itempool_bor_sr_05_legendary_Vamoose_shiny",
-    "category": "Sniper"
+    "display_name": "Jak AR 05 Legendary Rowdy Shiny",
+    "itempool": "itempool_jak_ar_05_legendary_rowdy_shiny",
+    "category": "Assault Rifle"
   },
   {
-    "display_name": "Brenda Weapon",
-    "itempool": "itempool_Brenda_weapon",
-    "category": "Other"
+    "display_name": "Ord AR",
+    "itempool": "itempool_ord_ar",
+    "category": "Assault Rifle"
   },
   {
-    "display_name": "Bronze Weapon Tuba",
-    "itempool": "itempool_Bronze_Weapon_Tuba",
-    "category": "Other"
+    "display_name": "Ord AR 05 Legendary Gmr Shiny",
+    "itempool": "itempool_ord_ar_05_legendary_GMR_shiny",
+    "category": "Assault Rifle"
   },
   {
-    "display_name": "Brute Facelaser",
-    "itempool": "ItemPool_Brute_FaceLaser",
-    "category": "Other"
+    "display_name": "Ord AR 05 Legendary Goalkeeper Shiny",
+    "itempool": "itempool_ord_ar_05_legendary_Goalkeeper_shiny",
+    "category": "Assault Rifle"
   },
   {
-    "display_name": "Circleofslaughter Currency",
-    "itempool": "itempool_circleofslaughter_currency",
-    "category": "Currency"
+    "display_name": "Ord Ar 05 Legendary Pchonk Shiny",
+    "itempool": "itempool_ord_ar_05_legendary_Pchonk_shiny",
+    "category": "Assault Rifle"
   },
   {
-    "display_name": "Circleofslaughter Legendaries",
-    "itempool": "itempool_circleofslaughter_legendaries",
-    "category": "Other"
+    "display_name": "Ripple Shiny",
+    "itempool": "itempool_tor_ar_05_legendary_Ripple_shiny",
+    "category": "Assault Rifle"
   },
   {
-    "display_name": "Circleofslaughter Standard",
-    "itempool": "itempool_circleofslaughter_standard",
-    "category": "Other"
+    "display_name": "Schadenfreude Shiny",
+    "itempool": "itempool_dad_ar_05_legendary_Shardenfreude_shiny",
+    "category": "Assault Rifle"
   },
   {
-    "display_name": "Circleofslaughter Standard Fivepieces",
-    "itempool": "itempool_circleofslaughter_standard_fivepieces",
-    "category": "Other"
+    "display_name": "Shield Armor",
+    "itempool": "itempool_shield_armor",
+    "category": "Assault Rifle"
+  },
+  {
+    "display_name": "Ted AR",
+    "itempool": "itempool_ted_ar",
+    "category": "Assault Rifle"
+  },
+  {
+    "display_name": "Ted AR 05 Legendary Chuck Shiny",
+    "itempool": "itempool_ted_ar_05_legendary_Chuck_shiny",
+    "category": "Assault Rifle"
+  },
+  {
+    "display_name": "Ted AR 05 Legendary Dividedfocus Shiny",
+    "itempool": "itempool_ted_ar_05_legendary_DividedFocus_shiny",
+    "category": "Assault Rifle"
+  },
+  {
+    "display_name": "Ted AR 05 Legendary Laserdisc Shiny",
+    "itempool": "itempool_ted_ar_05_legendary_laserdisc_shiny",
+    "category": "Assault Rifle"
+  },
+  {
+    "display_name": "Ted AR 05 Legendary Murder Shiny",
+    "itempool": "itempool_ted_ar_05_legendary_murder_shiny",
+    "category": "Assault Rifle"
+  },
+  {
+    "display_name": "Tor AR",
+    "itempool": "itempool_tor_ar",
+    "category": "Assault Rifle"
+  },
+  {
+    "display_name": "Tor AR 05 Legendary Bugbear Shiny",
+    "itempool": "itempool_tor_ar_05_legendary_Bugbear_shiny",
+    "category": "Assault Rifle"
+  },
+  {
+    "display_name": "Tor AR 05 Legendary Coldshoulder Shiny",
+    "itempool": "itempool_tor_ar_05_legendary_ColdShoulder_shiny",
+    "category": "Assault Rifle"
+  },
+  {
+    "display_name": "Tor AR 05 Legendary Fleabag Shiny",
+    "itempool": "itempool_tor_ar_05_legendary_Fleabag_shiny",
+    "category": "Assault Rifle"
+  },
+  {
+    "display_name": "Tor AR 05 Legendary Lockjaw Shiny",
+    "itempool": "itempool_tor_ar_05_legendary_lockjaw_shiny",
+    "category": "Assault Rifle"
+  },
+  {
+    "display_name": "Tor AR 05 Legendary Potatothrower Shiny",
+    "itempool": "itempool_tor_ar_05_legendary_PotatoThrower_shiny",
+    "category": "Assault Rifle"
+  },
+  {
+    "display_name": "Vla AR",
+    "itempool": "itempool_vla_ar",
+    "category": "Assault Rifle"
+  },
+  {
+    "display_name": "Vla AR 05 Legendary Bubbles Shiny",
+    "itempool": "itempool_vla_ar_05_legendary_bubbles_shiny",
+    "category": "Assault Rifle"
+  },
+  {
+    "display_name": "Vla AR 05 Legendary Dualdamage Shiny",
+    "itempool": "itempool_vla_ar_05_legendary_DualDamage_shiny",
+    "category": "Assault Rifle"
+  },
+  {
+    "display_name": "Vla AR 05 Legendary Lasercutter Shiny",
+    "itempool": "itempool_vla_ar_05_legendary_lasercutter_shiny",
+    "category": "Assault Rifle"
+  },
+  {
+    "display_name": "Vla AR 05 Legendary Lucian Shiny",
+    "itempool": "itempool_vla_ar_05_legendary_Lucian_shiny",
+    "category": "Assault Rifle"
+  },
+  {
+    "display_name": "Vla AR 05 Legendary Wf Shiny",
+    "itempool": "itempool_vla_ar_05_legendary_WF_shiny",
+    "category": "Assault Rifle"
+  },
+  {
+    "display_name": "Vla AR 05 Legendary Wombocombo Shiny",
+    "itempool": "itempool_vla_ar_05_legendary_WomboCombo_shiny",
+    "category": "Assault Rifle"
+  },
+  {
+    "display_name": "> [L5] Robo Dealer DLC1",
+    "itempool": "itempool_classmod_robodealer_05_legendary_dlc1",
+    "category": "Class Mod",
+    "catalog_key": "classmod_robodealer_comp_05_legendary_dlc1"
+  },
+  {
+    "display_name": "> [L5] Robo Dealer Legendary 01",
+    "itempool": "itempool_classmod_robodealer_05_legendary_01",
+    "category": "Class Mod",
+    "catalog_key": "classmod_robodealer_comp_05_legendary_01"
+  },
+  {
+    "display_name": "> [L5] Robo Dealer Legendary 02",
+    "itempool": "itempool_classmod_robodealer_05_legendary_02",
+    "category": "Class Mod",
+    "catalog_key": "classmod_robodealer_comp_05_legendary_02"
+  },
+  {
+    "display_name": "> [L5] Robo Dealer Legendary 03",
+    "itempool": "itempool_classmod_robodealer_05_legendary_03",
+    "category": "Class Mod",
+    "catalog_key": "classmod_robodealer_comp_05_legendary_03"
+  },
+  {
+    "display_name": "> [L5] Robo Dealer Legendary 04",
+    "itempool": "itempool_classmod_robodealer_05_legendary_04",
+    "category": "Class Mod",
+    "catalog_key": "classmod_robodealer_comp_05_legendary_04"
+  },
+  {
+    "display_name": "> [L5] Robo Dealer Legendary 05",
+    "itempool": "itempool_classmod_robodealer_05_legendary_05",
+    "category": "Class Mod",
+    "catalog_key": "classmod_robodealer_comp_05_legendary_05"
+  },
+  {
+    "display_name": "> [L5] Robo Dealer Legendary 06",
+    "itempool": "itempool_classmod_robodealer_05_legendary_06",
+    "category": "Class Mod",
+    "catalog_key": "classmod_robodealer_comp_05_legendary_06"
+  },
+  {
+    "display_name": "> [L5] Robo Dealer Raid 1",
+    "itempool": "itempool_classmod_robodealer_05_legendary_raid1",
+    "category": "Class Mod",
+    "catalog_key": "classmod_robodealer_comp_05_legendary_raid1"
+  },
+  {
+    "display_name": "> [L5] Robo Dealer Raid 2",
+    "itempool": "itempool_classmod_robodealer_05_legendary_raid2",
+    "category": "Class Mod",
+    "catalog_key": "classmod_robodealer_comp_05_legendary_raid2"
+  },
+  {
+    "display_name": "> [L5] Robo Dealer Tuba",
+    "itempool": "itempool_classmod_robodealer_05_legendary_tuba",
+    "category": "Class Mod",
+    "catalog_key": "classmod_robodealer_comp_05_legendary_tuba"
+  },
+  {
+    "display_name": "> Loveless (dedicated merge — safe)",
+    "itempool": "itempool_classmod_corpohacker_05_legendary_raid2",
+    "category": "Class Mod"
   },
   {
     "display_name": "Class Mods 01 Common",
@@ -282,71 +425,6 @@
     "category": "Class Mod"
   },
   {
-    "display_name": "> [L5] Robo Dealer Legendary 01",
-    "itempool": "itempool_classmod_robodealer_05_legendary_01",
-    "category": "Class Mod",
-    "catalog_key": "classmod_robodealer_comp_05_legendary_01"
-  },
-  {
-    "display_name": "> [L5] Robo Dealer Legendary 02",
-    "itempool": "itempool_classmod_robodealer_05_legendary_02",
-    "category": "Class Mod",
-    "catalog_key": "classmod_robodealer_comp_05_legendary_02"
-  },
-  {
-    "display_name": "> [L5] Robo Dealer Legendary 03",
-    "itempool": "itempool_classmod_robodealer_05_legendary_03",
-    "category": "Class Mod",
-    "catalog_key": "classmod_robodealer_comp_05_legendary_03"
-  },
-  {
-    "display_name": "> [L5] Robo Dealer Legendary 04",
-    "itempool": "itempool_classmod_robodealer_05_legendary_04",
-    "category": "Class Mod",
-    "catalog_key": "classmod_robodealer_comp_05_legendary_04"
-  },
-  {
-    "display_name": "> [L5] Robo Dealer Legendary 05",
-    "itempool": "itempool_classmod_robodealer_05_legendary_05",
-    "category": "Class Mod",
-    "catalog_key": "classmod_robodealer_comp_05_legendary_05"
-  },
-  {
-    "display_name": "> [L5] Robo Dealer Legendary 06",
-    "itempool": "itempool_classmod_robodealer_05_legendary_06",
-    "category": "Class Mod",
-    "catalog_key": "classmod_robodealer_comp_05_legendary_06"
-  },
-  {
-    "display_name": "> [L5] Robo Dealer DLC1",
-    "itempool": "itempool_classmod_robodealer_05_legendary_dlc1",
-    "category": "Class Mod",
-    "catalog_key": "classmod_robodealer_comp_05_legendary_dlc1"
-  },
-  {
-    "display_name": "> [L5] Robo Dealer Raid 1",
-    "itempool": "itempool_classmod_robodealer_05_legendary_raid1",
-    "category": "Class Mod",
-    "catalog_key": "classmod_robodealer_comp_05_legendary_raid1"
-  },
-  {
-    "display_name": "> [L5] Robo Dealer Raid 2",
-    "itempool": "itempool_classmod_robodealer_05_legendary_raid2",
-    "category": "Class Mod",
-    "catalog_key": "classmod_robodealer_comp_05_legendary_raid2"
-  },
-  {
-    "display_name": "> [L5] Robo Dealer Tuba",
-    "itempool": "itempool_classmod_robodealer_05_legendary_tuba",
-    "category": "Class Mod",
-    "catalog_key": "classmod_robodealer_comp_05_legendary_tuba"
-  },
-  {
-    "display_name": "> Loveless (dedicated merge — safe)",
-    "itempool": "itempool_classmod_corpohacker_05_legendary_raid2",
-    "category": "Class Mod"
-  },
-  {
     "display_name": "Classmods Cowbell",
     "itempool": "itempool_ClassMods_Cowbell",
     "category": "Class Mod"
@@ -362,132 +440,370 @@
     "category": "Class Mod"
   },
   {
-    "display_name": "Dad AR",
-    "itempool": "itempool_dad_ar",
-    "category": "Assault Rifle"
+    "display_name": "FL4K / Providence Class Mods (All Vault Hunters)",
+    "itempool": "itempool_ClassMods_Harmonica",
+    "category": "Class Mod"
   },
   {
-    "display_name": "Dad Ar 05 Legendary Cormano Shiny",
-    "itempool": "itempool_dad_ar_05_legendary_Cormano_shiny",
-    "category": "Assault Rifle"
+    "display_name": "Goldsilver Classmods Raid1",
+    "itempool": "itempool_GoldSilver_ClassMods_Raid1",
+    "category": "Class Mod"
   },
   {
-    "display_name": "Dad Ar 05 Legendary Darkhard Shiny",
-    "itempool": "itempool_dad_ar_05_legendary_DarkHard_shiny",
-    "category": "Assault Rifle"
+    "display_name": "Goldsilver Classmods Raid2 (all VH dedicated)",
+    "itempool": "itempool_GoldSilver_ClassMods_Raid2",
+    "category": "Class Mod"
   },
   {
-    "display_name": "Dad Ar 05 Legendary Discybusiness Shiny",
-    "itempool": "itempool_dad_ar_05_legendary_DiscyBusiness_shiny",
-    "category": "Assault Rifle"
+    "display_name": "Grasslands Commander Classmods",
+    "itempool": "itempool_grasslands_commander_classmods",
+    "category": "Class Mod"
   },
   {
-    "display_name": "Dad Ar 05 Legendary Lightgun Shiny",
-    "itempool": "itempool_dad_ar_05_legendary_LightGun_shiny",
-    "category": "Assault Rifle"
+    "display_name": "Grasslands Guardian Classmods",
+    "itempool": "itempool_grasslands_guardian_classmods",
+    "category": "Class Mod"
   },
   {
-    "display_name": "Dad AR 05 Legendary Lumberjack Shiny",
-    "itempool": "itempool_dad_ar_05_legendary_Lumberjack_shiny",
-    "category": "Assault Rifle"
+    "display_name": "Loveless Class Mods (All Rarities)",
+    "itempool": "itempool_class_mods_corpohacker",
+    "category": "Class Mod"
   },
   {
-    "display_name": "Dad AR 05 Legendary Mercredi Shiny",
-    "itempool": "itempool_dad_ar_05_legendary_mercredi_shiny",
-    "category": "Assault Rifle"
+    "display_name": "Loveless Class Mods (Legendary)",
+    "itempool": "itempool_class_mods_05_legendary_corpohacker",
+    "category": "Class Mod"
   },
   {
-    "display_name": "Dad AR 05 Legendary Om Shiny",
-    "itempool": "itempool_dad_ar_05_legendary_om_shiny",
-    "category": "Assault Rifle"
+    "display_name": "Mountains Commander Classmods",
+    "itempool": "itempool_mountains_commander_classmods",
+    "category": "Class Mod"
   },
   {
-    "display_name": "Dad AR 05 Legendary Star Helix Shiny",
-    "itempool": "itempool_dad_ar_05_legendary_star_helix_shiny",
-    "category": "Assault Rifle"
+    "display_name": "Mountains Guardian Classmods",
+    "itempool": "itempool_mountains_guardian_classmods",
+    "category": "Class Mod"
   },
   {
-    "display_name": "Dad PS",
-    "itempool": "itempool_dad_ps",
-    "category": "Pistol"
+    "display_name": "Shatterlands Commander Classmods",
+    "itempool": "itempool_shatterlands_commander_classmods",
+    "category": "Class Mod"
   },
   {
-    "display_name": "Dad PS 05 Legendary Rangefinder Shiny",
-    "itempool": "itempool_dad_ps_05_legendary_Rangefinder_shiny",
-    "category": "Pistol"
+    "display_name": "Shatterlands Guardian Classmods",
+    "itempool": "itempool_shatterlands_guardian_classmods",
+    "category": "Class Mod"
   },
   {
-    "display_name": "Dad PS 05 Legendary Silversliver Shiny",
-    "itempool": "itempool_dad_ps_05_legendary_silversliver_shiny",
-    "category": "Pistol"
+    "display_name": "Circleofslaughter Currency",
+    "itempool": "itempool_circleofslaughter_currency",
+    "category": "Currency"
   },
   {
-    "display_name": "Dad Ps 05 Legendary Soulsurvivor Pearl",
-    "itempool": "itempool_dad_ps_05_legendary_soulsurvivor_pearl",
-    "category": "Pistol",
-    "catalog_key": "dad_ps_comp_05_legendary_soulsurvivor"
+    "display_name": "Event Colosseum Cash",
+    "itempool": "ItemPool_Event_Colosseum_Cash",
+    "category": "Currency"
   },
   {
-    "display_name": "Dad PS 05 Legendary Soulsurvivor Shiny",
-    "itempool": "itempool_dad_ps_05_legendary_soulsurvivor_shiny",
-    "category": "Pistol",
-    "catalog_key": "dad_ps_comp_05_legendary_soulsurvivor"
+    "display_name": "Guntoter Gift Cash",
+    "itempool": "itempool_guntoter_gift_cash",
+    "category": "Currency"
   },
   {
-    "display_name": "Dad PS 05 Legendary Zipgun Shiny",
-    "itempool": "itempool_dad_ps_05_legendary_Zipgun_shiny",
-    "category": "Pistol"
+    "display_name": "Lootbat Cash",
+    "itempool": "ItemPool_LootBat_Cash",
+    "category": "Currency"
   },
   {
-    "display_name": "Dad SG",
-    "itempool": "itempool_dad_sg",
-    "category": "Shotgun"
+    "display_name": "Lootbat Cashsmall",
+    "itempool": "ItemPool_LootBat_CashSmall",
+    "category": "Currency"
   },
   {
-    "display_name": "Dad SG 05 Legendary Bod Shiny",
-    "itempool": "itempool_dad_sg_05_legendary_Bod_shiny",
-    "category": "Shotgun"
+    "display_name": "Money",
+    "itempool": "itempool_money",
+    "category": "Currency"
   },
   {
-    "display_name": "Dad Sg 05 Legendary Cannonbrawl Shiny",
-    "itempool": "itempool_dad_sg_05_legendary_Cannonbrawl_shiny",
-    "category": "Shotgun"
+    "display_name": "Money Normal",
+    "itempool": "itempool_money_normal",
+    "category": "Currency"
   },
   {
-    "display_name": "Dad SG 05 Legendary Heartgun Shiny",
-    "itempool": "itempool_dad_sg_05_legendary_HeartGun_shiny",
-    "category": "Shotgun"
+    "display_name": "Money Rich",
+    "itempool": "itempool_money_rich",
+    "category": "Currency"
   },
   {
-    "display_name": "Dad SG 05 Legendary Misslaser Shiny",
-    "itempool": "itempool_dad_sg_05_legendary_misslaser_shiny",
-    "category": "Shotgun"
+    "display_name": "Money Shower",
+    "itempool": "ItemPool_Money_Shower",
+    "category": "Currency"
   },
   {
-    "display_name": "Dad SM",
-    "itempool": "itempool_dad_sm",
-    "category": "SMG"
+    "display_name": "Powercoredrop Bigmoney",
+    "itempool": "ItemPool_PowercoreDrop_BIgMoney",
+    "category": "Currency"
   },
   {
-    "display_name": "Dad SM 05 Legendary Bloodstarved Shiny",
-    "itempool": "itempool_dad_sm_05_legendary_bloodstarved_shiny",
-    "category": "SMG"
+    "display_name": "Powercoredrop Nomoney",
+    "itempool": "ItemPool_PowercoreDrop_NoMoney",
+    "category": "Currency"
   },
   {
-    "display_name": "Dad SM 05 Legendary Follower Shiny",
-    "itempool": "itempool_dad_sm_05_legendary_follower_shiny",
-    "category": "SMG"
+    "display_name": "Trait Loot Cash",
+    "itempool": "ItemPool_Trait_Loot_Cash",
+    "category": "Currency"
   },
   {
-    "display_name": "Dad SM 05 Legendary Luty Shiny",
-    "itempool": "itempool_dad_sm_05_legendary_Luty_shiny",
-    "category": "SMG"
+    "display_name": "Enhancements 01 Common",
+    "itempool": "itempool_enhancements_01_common",
+    "category": "Enhancement"
   },
   {
-    "display_name": "Dad SM 06 Pearl Screwed",
-    "itempool": "itempool_dad_sm_06_pearl_screwed",
-    "category": "Pearl",
-    "catalog_key": "dad_sm_comp_06_pearl_screwed"
+    "display_name": "Enhancements 02 Uncommon",
+    "itempool": "itempool_enhancements_02_uncommon",
+    "category": "Enhancement"
+  },
+  {
+    "display_name": "Enhancements 03 Rare",
+    "itempool": "itempool_enhancements_03_rare",
+    "category": "Enhancement"
+  },
+  {
+    "display_name": "Enhancements 04 Epic",
+    "itempool": "itempool_enhancements_04_epic",
+    "category": "Enhancement"
+  },
+  {
+    "display_name": "Enhancements 05 Legendary",
+    "itempool": "itempool_enhancements_05_legendary",
+    "category": "Enhancement"
+  },
+  {
+    "display_name": "Enhancements All",
+    "itempool": "itempool_enhancements_all",
+    "category": "Enhancement"
+  },
+  {
+    "display_name": "Ammo Heavy",
+    "itempool": "itempool_ammo_heavy",
+    "category": "Heavy"
+  },
+  {
+    "display_name": "Blackmarket Comp Bor Hw Streamer",
+    "itempool": "ItemPool_BlackMarket_Comp_BOR_HW_Streamer",
+    "category": "Heavy"
+  },
+  {
+    "display_name": "Bor HW",
+    "itempool": "itempool_bor_hw",
+    "category": "Heavy"
+  },
+  {
+    "display_name": "Disc Jockey",
+    "itempool": "ItemPool_BlackMarket_Comp_BOR_HW_DiscJockey",
+    "category": "Heavy",
+    "catalog_key": "bor_hw_comp_05_legendary_discjockey"
+  },
+  {
+    "display_name": "Enemies Heavy Weapons All",
+    "itempool": "itempool_enemies_heavy_weapons_all",
+    "category": "Heavy"
+  },
+  {
+    "display_name": "Heavy Weapons All",
+    "itempool": "itempool_heavy_weapons_all",
+    "category": "Heavy"
+  },
+  {
+    "display_name": "HW 01 Common",
+    "itempool": "itempool_hw_01_common",
+    "category": "Heavy"
+  },
+  {
+    "display_name": "HW 02 Uncommon",
+    "itempool": "itempool_hw_02_uncommon",
+    "category": "Heavy"
+  },
+  {
+    "display_name": "HW 03 Rare",
+    "itempool": "itempool_hw_03_rare",
+    "category": "Heavy"
+  },
+  {
+    "display_name": "HW 04 Epic",
+    "itempool": "itempool_hw_04_epic",
+    "category": "Heavy"
+  },
+  {
+    "display_name": "HW 05 Legendary",
+    "itempool": "itempool_hw_05_legendary",
+    "category": "Heavy"
+  },
+  {
+    "display_name": "Loiter",
+    "itempool": "itempool_patch_inline_tor_hw_loiter",
+    "category": "Heavy"
+  },
+  {
+    "display_name": "Mal HW",
+    "itempool": "itempool_mal_hw",
+    "category": "Heavy"
+  },
+  {
+    "display_name": "Tor HW",
+    "itempool": "itempool_tor_hw",
+    "category": "Heavy"
+  },
+  {
+    "display_name": "Vla HW",
+    "itempool": "itempool_vla_hw",
+    "category": "Heavy"
+  },
+  {
+    "display_name": "Dahlmech Grenadelauncher",
+    "itempool": "ItemPool_DahlMech_GrenadeLauncher",
+    "category": "Ordnance"
+  },
+  {
+    "display_name": "Fishgrenade Slippy",
+    "itempool": "ItemPool_FishGrenade_Slippy",
+    "category": "Ordnance"
+  },
+  {
+    "display_name": "Grenade Bor",
+    "itempool": "itempool_grenade_bor",
+    "category": "Ordnance"
+  },
+  {
+    "display_name": "Grenade Dad",
+    "itempool": "itempool_grenade_dad",
+    "category": "Ordnance"
+  },
+  {
+    "display_name": "Grenade Gadgets 01 Common",
+    "itempool": "itempool_grenade_gadgets_01_common",
+    "category": "Ordnance"
+  },
+  {
+    "display_name": "Grenade Gadgets 02 Uncommon",
+    "itempool": "itempool_grenade_gadgets_02_uncommon",
+    "category": "Ordnance"
+  },
+  {
+    "display_name": "Grenade Gadgets 03 Rare",
+    "itempool": "itempool_grenade_gadgets_03_rare",
+    "category": "Ordnance"
+  },
+  {
+    "display_name": "Grenade Gadgets 04 Epic",
+    "itempool": "itempool_grenade_gadgets_04_epic",
+    "category": "Ordnance"
+  },
+  {
+    "display_name": "Grenade Gadgets 05 Legendary",
+    "itempool": "itempool_grenade_gadgets_05_legendary",
+    "category": "Ordnance"
+  },
+  {
+    "display_name": "Grenade Gadgets All",
+    "itempool": "itempool_grenade_gadgets_all",
+    "category": "Ordnance"
+  },
+  {
+    "display_name": "Grenade Jak",
+    "itempool": "itempool_grenade_jak",
+    "category": "Ordnance"
+  },
+  {
+    "display_name": "Grenade Mal",
+    "itempool": "itempool_grenade_mal",
+    "category": "Ordnance"
+  },
+  {
+    "display_name": "Grenade Ord",
+    "itempool": "itempool_grenade_ord",
+    "category": "Ordnance"
+  },
+  {
+    "display_name": "Grenade Ted",
+    "itempool": "itempool_grenade_ted",
+    "category": "Ordnance"
+  },
+  {
+    "display_name": "Grenade Tor",
+    "itempool": "itempool_grenade_tor",
+    "category": "Ordnance"
+  },
+  {
+    "display_name": "Grenade Vla",
+    "itempool": "itempool_grenade_vla",
+    "category": "Ordnance"
+  },
+  {
+    "display_name": "Turret Gadgets 01 Common",
+    "itempool": "itempool_turret_gadgets_01_common",
+    "category": "Ordnance"
+  },
+  {
+    "display_name": "Turret Gadgets 02 Uncommon",
+    "itempool": "itempool_turret_gadgets_02_uncommon",
+    "category": "Ordnance"
+  },
+  {
+    "display_name": "Turret Gadgets 03 Rare",
+    "itempool": "itempool_turret_gadgets_03_rare",
+    "category": "Ordnance"
+  },
+  {
+    "display_name": "Turret Gadgets 04 Epic",
+    "itempool": "itempool_turret_gadgets_04_epic",
+    "category": "Ordnance"
+  },
+  {
+    "display_name": "Turret Gadgets 05 Legendary",
+    "itempool": "itempool_turret_gadgets_05_legendary",
+    "category": "Ordnance"
+  },
+  {
+    "display_name": "Turret Gadgets All",
+    "itempool": "itempool_turret_gadgets_all",
+    "category": "Ordnance"
+  },
+  {
+    "display_name": "Blackmarket Comp Bor Rk Augmenter",
+    "itempool": "ItemPool_BlackMarket_Comp_BOR_RK_Augmenter",
+    "category": "Other"
+  },
+  {
+    "display_name": "Brenda Weapon",
+    "itempool": "itempool_Brenda_weapon",
+    "category": "Other"
+  },
+  {
+    "display_name": "Bronze Weapon Tuba",
+    "itempool": "itempool_Bronze_Weapon_Tuba",
+    "category": "Other"
+  },
+  {
+    "display_name": "Brute Facelaser",
+    "itempool": "ItemPool_Brute_FaceLaser",
+    "category": "Other"
+  },
+  {
+    "display_name": "Circleofslaughter Legendaries",
+    "itempool": "itempool_circleofslaughter_legendaries",
+    "category": "Other"
+  },
+  {
+    "display_name": "Circleofslaughter Standard",
+    "itempool": "itempool_circleofslaughter_standard",
+    "category": "Other"
+  },
+  {
+    "display_name": "Circleofslaughter Standard Fivepieces",
+    "itempool": "itempool_circleofslaughter_standard_fivepieces",
+    "category": "Other"
   },
   {
     "display_name": "Dahlgrunt Crashflamer",
@@ -535,9 +851,9 @@
     "category": "Other"
   },
   {
-    "display_name": "Dahlmech Grenadelauncher",
-    "itempool": "ItemPool_DahlMech_GrenadeLauncher",
-    "category": "Ordnance"
+    "display_name": "Dahlturret Chaingun",
+    "itempool": "ItemPool_DahlTurret_Chaingun",
+    "category": "Other"
   },
   {
     "display_name": "Dynamicevent Helpnpc",
@@ -555,76 +871,6 @@
     "category": "Other"
   },
   {
-    "display_name": "Enemies Guns AR",
-    "itempool": "itempool_enemies_guns_ar",
-    "category": "Assault Rifle"
-  },
-  {
-    "display_name": "Enemies Guns PS",
-    "itempool": "itempool_enemies_guns_ps",
-    "category": "Pistol"
-  },
-  {
-    "display_name": "Enemies Guns SG",
-    "itempool": "itempool_enemies_guns_sg",
-    "category": "Shotgun"
-  },
-  {
-    "display_name": "Enemies Guns SM",
-    "itempool": "itempool_enemies_guns_sm",
-    "category": "SMG"
-  },
-  {
-    "display_name": "Enemies Guns SR",
-    "itempool": "itempool_enemies_guns_sr",
-    "category": "Sniper"
-  },
-  {
-    "display_name": "Enemies Heavy Weapons All",
-    "itempool": "itempool_enemies_heavy_weapons_all",
-    "category": "Heavy"
-  },
-  {
-    "display_name": "Enemydrop Currencyorammo",
-    "itempool": "ItemPool_EnemyDrop_CurrencyOrAmmo",
-    "category": "Ammo"
-  },
-  {
-    "display_name": "Enemydrop Currencyorammo Intro",
-    "itempool": "ItemPool_EnemyDrop_CurrencyOrAmmo_Intro",
-    "category": "Ammo"
-  },
-  {
-    "display_name": "Enhancements 01 Common",
-    "itempool": "itempool_enhancements_01_common",
-    "category": "Enhancement"
-  },
-  {
-    "display_name": "Enhancements 02 Uncommon",
-    "itempool": "itempool_enhancements_02_uncommon",
-    "category": "Enhancement"
-  },
-  {
-    "display_name": "Enhancements 03 Rare",
-    "itempool": "itempool_enhancements_03_rare",
-    "category": "Enhancement"
-  },
-  {
-    "display_name": "Enhancements 04 Epic",
-    "itempool": "itempool_enhancements_04_epic",
-    "category": "Enhancement"
-  },
-  {
-    "display_name": "Enhancements 05 Legendary",
-    "itempool": "itempool_enhancements_05_legendary",
-    "category": "Enhancement"
-  },
-  {
-    "display_name": "Enhancements All",
-    "itempool": "itempool_enhancements_all",
-    "category": "Enhancement"
-  },
-  {
     "display_name": "Eridium Normal",
     "itempool": "itempool_eridium_normal",
     "category": "Other"
@@ -633,11 +879,6 @@
     "display_name": "Eridium Rich",
     "itempool": "itempool_eridium_rich",
     "category": "Other"
-  },
-  {
-    "display_name": "Event Colosseum Cash",
-    "itempool": "ItemPool_Event_Colosseum_Cash",
-    "category": "Currency"
   },
   {
     "display_name": "Event Colosseum Eridium",
@@ -705,9 +946,19 @@
     "category": "Other"
   },
   {
-    "display_name": "Event Loot Small",
-    "itempool": "ItemPool_Event_Loot_Small",
-    "category": "SMG"
+    "display_name": "Exosoldier Turret Base",
+    "itempool": "itempool_exosoldier_turret_base",
+    "category": "Other"
+  },
+  {
+    "display_name": "Exosoldier Turret Rocket",
+    "itempool": "itempool_exosoldier_turret_rocket",
+    "category": "Other"
+  },
+  {
+    "display_name": "Exosoldier Turret Shotgun",
+    "itempool": "itempool_exosoldier_turret_shotgun",
+    "category": "Other"
   },
   {
     "display_name": "Fishcollector Reward Common",
@@ -733,11 +984,6 @@
     "display_name": "Fishcollector Reward Uncommon",
     "itempool": "ItemPool_FishCollector_Reward_Uncommon",
     "category": "Other"
-  },
-  {
-    "display_name": "Fishgrenade Slippy",
-    "itempool": "ItemPool_FishGrenade_Slippy",
-    "category": "Ordnance"
   },
   {
     "display_name": "Fishing Uniquedrop",
@@ -815,99 +1061,9 @@
     "category": "Other"
   },
   {
-    "display_name": "Goldsilver Classmods Raid1",
-    "itempool": "itempool_GoldSilver_ClassMods_Raid1",
-    "category": "Class Mod"
-  },
-  {
-    "display_name": "Goldsilver Classmods Raid2 (all VH dedicated)",
-    "itempool": "itempool_GoldSilver_ClassMods_Raid2",
-    "category": "Class Mod"
-  },
-  {
     "display_name": "Grassboss",
     "itempool": "itempool_GrassBoss",
     "category": "Other"
-  },
-  {
-    "display_name": "Grasslands Commander Classmods",
-    "itempool": "itempool_grasslands_commander_classmods",
-    "category": "Class Mod"
-  },
-  {
-    "display_name": "Grasslands Guardian Classmods",
-    "itempool": "itempool_grasslands_guardian_classmods",
-    "category": "Class Mod"
-  },
-  {
-    "display_name": "Grenade Bor",
-    "itempool": "itempool_grenade_bor",
-    "category": "Ordnance"
-  },
-  {
-    "display_name": "Grenade Dad",
-    "itempool": "itempool_grenade_dad",
-    "category": "Ordnance"
-  },
-  {
-    "display_name": "Grenade Gadgets 01 Common",
-    "itempool": "itempool_grenade_gadgets_01_common",
-    "category": "Ordnance"
-  },
-  {
-    "display_name": "Grenade Gadgets 02 Uncommon",
-    "itempool": "itempool_grenade_gadgets_02_uncommon",
-    "category": "Ordnance"
-  },
-  {
-    "display_name": "Grenade Gadgets 03 Rare",
-    "itempool": "itempool_grenade_gadgets_03_rare",
-    "category": "Ordnance"
-  },
-  {
-    "display_name": "Grenade Gadgets 04 Epic",
-    "itempool": "itempool_grenade_gadgets_04_epic",
-    "category": "Ordnance"
-  },
-  {
-    "display_name": "Grenade Gadgets 05 Legendary",
-    "itempool": "itempool_grenade_gadgets_05_legendary",
-    "category": "Ordnance"
-  },
-  {
-    "display_name": "Grenade Gadgets All",
-    "itempool": "itempool_grenade_gadgets_all",
-    "category": "Ordnance"
-  },
-  {
-    "display_name": "Grenade Jak",
-    "itempool": "itempool_grenade_jak",
-    "category": "Ordnance"
-  },
-  {
-    "display_name": "Grenade Mal",
-    "itempool": "itempool_grenade_mal",
-    "category": "Ordnance"
-  },
-  {
-    "display_name": "Grenade Ord",
-    "itempool": "itempool_grenade_ord",
-    "category": "Ordnance"
-  },
-  {
-    "display_name": "Grenade Ted",
-    "itempool": "itempool_grenade_ted",
-    "category": "Ordnance"
-  },
-  {
-    "display_name": "Grenade Tor",
-    "itempool": "itempool_grenade_tor",
-    "category": "Ordnance"
-  },
-  {
-    "display_name": "Grenade Vla",
-    "itempool": "itempool_grenade_vla",
-    "category": "Ordnance"
   },
   {
     "display_name": "Guns 01 Common",
@@ -990,206 +1146,14 @@
     "category": "Other"
   },
   {
-    "display_name": "Guntoter Gift Cash",
-    "itempool": "itempool_guntoter_gift_cash",
-    "category": "Currency"
-  },
-  {
     "display_name": "Health",
     "itempool": "itempool_health",
     "category": "Other"
   },
   {
-    "display_name": "Heavy Weapons All",
-    "itempool": "itempool_heavy_weapons_all",
-    "category": "Heavy"
-  },
-  {
-    "display_name": "HW 01 Common",
-    "itempool": "itempool_hw_01_common",
-    "category": "Heavy"
-  },
-  {
-    "display_name": "HW 02 Uncommon",
-    "itempool": "itempool_hw_02_uncommon",
-    "category": "Heavy"
-  },
-  {
-    "display_name": "HW 03 Rare",
-    "itempool": "itempool_hw_03_rare",
-    "category": "Heavy"
-  },
-  {
-    "display_name": "HW 04 Epic",
-    "itempool": "itempool_hw_04_epic",
-    "category": "Heavy"
-  },
-  {
-    "display_name": "HW 05 Legendary",
-    "itempool": "itempool_hw_05_legendary",
-    "category": "Heavy"
-  },
-  {
-    "display_name": "Jak AR",
-    "itempool": "itempool_jak_ar",
-    "category": "Assault Rifle"
-  },
-  {
-    "display_name": "Jak AR 05 Legendary Bonnieclyde Shiny",
-    "itempool": "itempool_jak_ar_05_legendary_BonnieClyde_shiny",
-    "category": "Assault Rifle"
-  },
-  {
-    "display_name": "Jak Ar 05 Legendary Fishward Shiny",
-    "itempool": "itempool_jak_ar_05_legendary_fishward_shiny",
-    "category": "Assault Rifle"
-  },
-  {
-    "display_name": "Jak AR 05 Legendary Rowan Shiny",
-    "itempool": "itempool_jak_ar_05_legendary_Rowan_shiny",
-    "category": "Assault Rifle"
-  },
-  {
-    "display_name": "Jak AR 05 Legendary Rowdy Shiny",
-    "itempool": "itempool_jak_ar_05_legendary_rowdy_shiny",
-    "category": "Assault Rifle"
-  },
-  {
-    "display_name": "Jak PS",
-    "itempool": "itempool_jak_ps",
-    "category": "Pistol"
-  },
-  {
-    "display_name": "Jak PS 05 Legendary Kingsgambit Shiny",
-    "itempool": "itempool_jak_ps_05_legendary_KingsGambit_shiny",
-    "category": "Pistol"
-  },
-  {
-    "display_name": "Jak Ps 05 Legendary Manifest Shiny",
-    "itempool": "itempool_jak_ps_05_legendary_manifest_shiny",
-    "category": "Pistol"
-  },
-  {
-    "display_name": "Jak PS 05 Legendary Phantom Flame Shiny",
-    "itempool": "itempool_jak_ps_05_legendary_Phantom_Flame_shiny",
-    "category": "Pistol"
-  },
-  {
-    "display_name": "Jak PS 05 Legendary Quickdraw Shiny",
-    "itempool": "itempool_jak_ps_05_legendary_QuickDraw_shiny",
-    "category": "Pistol"
-  },
-  {
-    "display_name": "Jak PS 05 Legendary Seventh Sense Shiny",
-    "itempool": "itempool_jak_ps_05_legendary_seventh_sense_shiny",
-    "category": "Pistol"
-  },
-  {
-    "display_name": "Jak PS 05 Legendary Shalashaska Shiny",
-    "itempool": "itempool_jak_ps_05_legendary_Shalashaska_shiny",
-    "category": "Pistol"
-  },
-  {
-    "display_name": "Jak Ps 05 Legendary Shoals Shiny",
-    "itempool": "itempool_jak_ps_05_legendary_shoals_shiny",
-    "category": "Pistol"
-  },
-  {
-    "display_name": "Jak SG",
-    "itempool": "itempool_jak_sg",
-    "category": "Shotgun"
-  },
-  {
-    "display_name": "Jak SG 05 Legendary Hellwalker Shiny",
-    "itempool": "itempool_jak_sg_05_legendary_Hellwalker_shiny",
-    "category": "Shotgun"
-  },
-  {
-    "display_name": "Jak SG 05 Legendary Rainbowvomit Shiny",
-    "itempool": "itempool_jak_sg_05_legendary_RainbowVomit_shiny",
-    "category": "Shotgun"
-  },
-  {
-    "display_name": "Jak SG 05 Legendary Slugger Shiny",
-    "itempool": "itempool_jak_sg_05_legendary_Slugger_shiny",
-    "category": "Shotgun"
-  },
-  {
-    "display_name": "Jak SG 05 Legendary Tkswave Shiny",
-    "itempool": "itempool_jak_sg_05_legendary_TKsWave_shiny",
-    "category": "Shotgun"
-  },
-  {
-    "display_name": "Jak Sg 05 Legendary Verce Shiny",
-    "itempool": "itempool_JAK_sg_05_legendary_Verce_shiny",
-    "category": "Shotgun"
-  },
-  {
-    "display_name": "Jak SG 06 Pearl Constable",
-    "itempool": "itempool_jak_sg_06_pearl_constable",
-    "category": "Pearl",
-    "catalog_key": "jak_sg_comp_06_pearl_constable"
-  },
-  {
-    "display_name": "Jak SR",
-    "itempool": "itempool_jak_sr",
-    "category": "Sniper"
-  },
-  {
-    "display_name": "Jak SR 05 Legendary Ballista Shiny",
-    "itempool": "itempool_jak_sr_05_legendary_Ballista_shiny",
-    "category": "Sniper"
-  },
-  {
-    "display_name": "Jak SR 05 Legendary Boomslang Shiny",
-    "itempool": "itempool_jak_sr_05_legendary_Boomslang_shiny",
-    "category": "Sniper"
-  },
-  {
-    "display_name": "Jak SR 05 Legendary Truck Shiny",
-    "itempool": "itempool_jak_sr_05_legendary_Truck_shiny",
-    "category": "Sniper"
-  },
-  {
-    "display_name": "Jak Sr Legendary Burrow Shiny",
-    "itempool": "itempool_jak_sr_legendary_Burrow_shiny",
-    "category": "Sniper",
-    "catalog_key": "jak_sr_comp_05_legendary_burrow"
-  },
-  {
-    "display_name": "Jak Sr Legendary Extinction Shiny",
-    "itempool": "itempool_jak_sr_legendary_Extinction_shiny",
-    "category": "Sniper"
-  },
-  {
-    "display_name": "Lootabledrop Ammo Geyser",
-    "itempool": "ItemPool_LootableDrop_Ammo_Geyser",
-    "category": "Ammo"
-  },
-  {
-    "display_name": "Lootabledrop Ammo Sixpieces",
-    "itempool": "ItemPool_LootableDrop_Ammo_SixPieces",
-    "category": "Ammo"
-  },
-  {
-    "display_name": "Lootabledrop Ammo Twopieces",
-    "itempool": "ItemPool_LootableDrop_Ammo_TwoPieces",
-    "category": "Ammo"
-  },
-  {
     "display_name": "Lootabledrop Lootsplosion",
     "itempool": "ItemPool_LootableDrop_Lootsplosion",
     "category": "Other"
-  },
-  {
-    "display_name": "Lootbat Cash",
-    "itempool": "ItemPool_LootBat_Cash",
-    "category": "Currency"
-  },
-  {
-    "display_name": "Lootbat Cashsmall",
-    "itempool": "ItemPool_LootBat_CashSmall",
-    "category": "Currency"
   },
   {
     "display_name": "Lootbat Gear",
@@ -1237,6 +1201,11 @@
     "category": "Other"
   },
   {
+    "display_name": "Mainmission Grasslands Beach",
+    "itempool": "ItemPool_MainMission_Grasslands_Beach",
+    "category": "Other"
+  },
+  {
     "display_name": "Mainmission Grasslands1",
     "itempool": "ItemPool_MainMission_Grasslands1",
     "category": "Other"
@@ -1254,11 +1223,6 @@
   {
     "display_name": "Mainmission Grasslands3",
     "itempool": "ItemPool_MainMission_Grasslands3",
-    "category": "Other"
-  },
-  {
-    "display_name": "Mainmission Grasslands Beach",
-    "itempool": "ItemPool_MainMission_Grasslands_Beach",
     "category": "Other"
   },
   {
@@ -1310,157 +1274,6 @@
     "display_name": "Mainmission Shatteredlands3",
     "itempool": "ItemPool_MainMission_Shatteredlands3",
     "category": "Other"
-  },
-  {
-    "display_name": "Mal HW",
-    "itempool": "itempool_mal_hw",
-    "category": "Heavy"
-  },
-  {
-    "display_name": "Mal SG",
-    "itempool": "itempool_mal_sg",
-    "category": "Shotgun"
-  },
-  {
-    "display_name": "Mal SG 05 Legendary Crazedearl Shiny",
-    "itempool": "itempool_mal_sg_05_legendary_CrazedEarl_shiny",
-    "category": "Shotgun",
-    "catalog_key": "bor_sg_comp_05_legendary_crazedearl"
-  },
-  {
-    "display_name": "Mal SG 05 Legendary Fearstalker Shiny",
-    "itempool": "itempool_mal_sg_05_legendary_fearstalker_shiny",
-    "category": "Shotgun"
-  },
-  {
-    "display_name": "Mal SG 05 Legendary Hemorrhage Shiny",
-    "itempool": "itempool_mal_sg_05_legendary_hemorrhage_shiny",
-    "category": "Shotgun"
-  },
-  {
-    "display_name": "Mal SG 05 Legendary Jailbroken Shiny",
-    "itempool": "itempool_mal_sg_05_legendary_Jailbroken_shiny",
-    "category": "Shotgun"
-  },
-  {
-    "display_name": "Mal SG 05 Legendary Kaleidosplode Shiny",
-    "itempool": "itempool_mal_sg_05_legendary_Kaleidosplode_shiny",
-    "category": "Shotgun"
-  },
-  {
-    "display_name": "Mal SG 05 Legendary Kickballer Shiny",
-    "itempool": "itempool_mal_sg_05_legendary_kickballer_shiny",
-    "category": "Shotgun"
-  },
-  {
-    "display_name": "Mal SG 05 Legendary Mantra Shiny",
-    "itempool": "itempool_mal_sg_05_legendary_mantra_shiny",
-    "category": "Shotgun"
-  },
-  {
-    "display_name": "Rainmaker",
-    "itempool": "itempool_mal_sg_05_legendary_rainmaker_shiny",
-    "category": "Sniper",
-    "catalog_key": "bor_sr_comp_05_legendary_rainmaker"
-  },
-  {
-    "display_name": "Mal SG 05 Legendary Reminisce Shiny",
-    "itempool": "itempool_mal_sg_05_legendary_reminisce_shiny",
-    "category": "Shotgun"
-  },
-  {
-    "display_name": "Roil",
-    "itempool": "itempool_mal_sg_05_legendary_roil_shiny",
-    "category": "SMG",
-    "catalog_key": "bor_sm_comp_05_legendary_roil"
-  },
-  {
-    "display_name": "Mal SG 05 Legendary Scootshoot Shiny",
-    "itempool": "itempool_mal_sg_05_legendary_scootshoot_shiny",
-    "category": "Shotgun"
-  },
-  {
-    "display_name": "Mal SG 05 Legendary Sweet Embrace Shiny",
-    "itempool": "itempool_mal_sg_05_legendary_Sweet_Embrace_shiny",
-    "category": "Shotgun"
-  },
-  {
-    "display_name": "Mal SG 05 Legendary Unstable Shiny",
-    "itempool": "itempool_mal_sg_05_legendary_Unstable_shiny",
-    "category": "Shotgun"
-  },
-  {
-    "display_name": "Mal SM",
-    "itempool": "itempool_mal_sm",
-    "category": "SMG"
-  },
-  {
-    "display_name": "Mal Sm 05 Legendary Brickhouse Shiny",
-    "itempool": "itempool_mal_sm_05_legendary_brickhouse_shiny",
-    "category": "SMG"
-  },
-  {
-    "display_name": "Mal SM 05 Legendary Flashcyclone Shiny",
-    "itempool": "itempool_mal_sm_05_legendary_flashcyclone_shiny",
-    "category": "SMG"
-  },
-  {
-    "display_name": "Mal SM 05 Legendary Mercury Shiny",
-    "itempool": "itempool_mal_sm_05_legendary_mercury_shiny",
-    "category": "SMG",
-    "catalog_key": "vla_sm_comp_05_legendary_mercury"
-  },
-  {
-    "display_name": "Mal SM 05 Legendary Ohmigot Shiny",
-    "itempool": "itempool_mal_sm_05_legendary_OhmIGot_shiny",
-    "category": "SMG"
-  },
-  {
-    "display_name": "Mal SM 05 Legendary Plasmacoil Shiny",
-    "itempool": "itempool_mal_sm_05_legendary_PlasmaCoil_shiny",
-    "category": "SMG"
-  },
-  {
-    "display_name": "Mal SM 05 Legendary Songbird Shiny",
-    "itempool": "itempool_mal_sm_05_legendary_songbird_shiny",
-    "category": "SMG"
-  },
-  {
-    "display_name": "Mal SM 06 Pearl Juliet",
-    "itempool": "itempool_mal_sm_06_pearl_juliet",
-    "category": "Pearl",
-    "catalog_key": "mal_sm_comp_06_pearl_juliet"
-  },
-  {
-    "display_name": "Mal SR",
-    "itempool": "itempool_mal_sr",
-    "category": "Sniper"
-  },
-  {
-    "display_name": "Mal SR 05 Legendary Asher Shiny",
-    "itempool": "itempool_mal_sr_05_legendary_Asher_shiny",
-    "category": "Sniper"
-  },
-  {
-    "display_name": "Mal SR 05 Legendary Complex Root Shiny",
-    "itempool": "itempool_mal_sr_05_legendary_complex_root_shiny",
-    "category": "Sniper"
-  },
-  {
-    "display_name": "Conflux",
-    "itempool": "itempool_mal_sr_05_legendary_conflux_pearl",
-    "category": "Pearl",
-    "catalog_key": "mal_sr_comp_05_legendary_conflux"
-  },
-  {
-    "display_name": "Mal SR 05 Legendary Katagawa Shiny",
-    "itempool": "itempool_mal_sr_05_legendary_katagawa_shiny",
-    "category": "Sniper"
-  },
-  {
-    "display_name": "Mal Sr 05 Legendary Stealth Shiny",
-    "itempool": "itempool_mal_sr_05_legendary_Stealth_shiny",
-    "category": "Sniper"
   },
   {
     "display_name": "Mandolin All",
@@ -1543,34 +1356,9 @@
     "category": "Other"
   },
   {
-    "display_name": "Money",
-    "itempool": "itempool_money",
-    "category": "Currency"
-  },
-  {
-    "display_name": "Money Normal",
-    "itempool": "itempool_money_normal",
-    "category": "Currency"
-  },
-  {
-    "display_name": "Money Rich",
-    "itempool": "itempool_money_rich",
-    "category": "Currency"
-  },
-  {
-    "display_name": "Money Shower",
-    "itempool": "ItemPool_Money_Shower",
-    "category": "Currency"
-  },
-  {
-    "display_name": "Mountains Commander Classmods",
-    "itempool": "itempool_mountains_commander_classmods",
-    "category": "Class Mod"
-  },
-  {
-    "display_name": "Mountains Guardian Classmods",
-    "itempool": "itempool_mountains_guardian_classmods",
-    "category": "Class Mod"
+    "display_name": "Missionturret Chaingun",
+    "itempool": "ItemPool_MissionTurret_Chaingun",
+    "category": "Other"
   },
   {
     "display_name": "Mountboss",
@@ -1583,122 +1371,9 @@
     "category": "Other"
   },
   {
-    "display_name": "Ord AR",
-    "itempool": "itempool_ord_ar",
-    "category": "Assault Rifle"
-  },
-  {
-    "display_name": "Crow-Sourced Pearl",
-    "itempool": "itempool_ord_ar_05_legendary_crowsourced_pearl",
-    "category": "Pearl",
-    "catalog_key": "ord_ar_comp_05_legendary_crowsourced"
-  },
-  {
-    "display_name": "Ord AR 05 Legendary Gmr Shiny",
-    "itempool": "itempool_ord_ar_05_legendary_GMR_shiny",
-    "category": "Assault Rifle"
-  },
-  {
-    "display_name": "Ord AR 05 Legendary Goalkeeper Shiny",
-    "itempool": "itempool_ord_ar_05_legendary_Goalkeeper_shiny",
-    "category": "Assault Rifle"
-  },
-  {
-    "display_name": "Pachonk",
-    "itempool": "itempool_ord_ar_05_legendary_Pchonk",
-    "category": "Pearl",
-    "catalog_key": "ord_ar_comp_05_legendary_pchonk"
-  },
-  {
-    "display_name": "Ord Ar 05 Legendary Pchonk Shiny",
-    "itempool": "itempool_ord_ar_05_legendary_Pchonk_shiny",
-    "category": "Assault Rifle"
-  },
-  {
-    "display_name": "Ord PS",
-    "itempool": "itempool_ord_ps",
-    "category": "Pistol"
-  },
-  {
-    "display_name": "Ord PS 05 Legendary Bully Shiny",
-    "itempool": "itempool_ord_ps_05_legendary_Bully_shiny",
-    "category": "Pistol"
-  },
-  {
-    "display_name": "Ord PS 05 Legendary Noisycricket Shiny",
-    "itempool": "itempool_ord_ps_05_legendary_NoisyCricket_shiny",
-    "category": "Pistol"
-  },
-  {
-    "display_name": "Ord Ps 05 Legendary Rhythm Shiny",
-    "itempool": "itempool_ord_ps_05_legendary_Rhythm_shiny",
-    "category": "Pistol"
-  },
-  {
-    "display_name": "Ord PS 05 Legendary Rocketreload Shiny",
-    "itempool": "itempool_ord_ps_05_legendary_RocketReload_shiny",
-    "category": "Pistol"
-  },
-  {
-    "display_name": "Ord PS 05 Legendary Roulette Shiny",
-    "itempool": "itempool_ord_ps_05_legendary_Roulette_shiny",
-    "category": "Pistol"
-  },
-  {
-    "display_name": "Ord PS 05 Legendary Sunspot Shiny",
-    "itempool": "itempool_ord_ps_05_legendary_sunspot_shiny",
-    "category": "Pistol"
-  },
-  {
-    "display_name": "Ord SR",
-    "itempool": "itempool_ord_sr",
-    "category": "Sniper"
-  },
-  {
-    "display_name": "Ord SR 05 Legendary Fisheye Shiny",
-    "itempool": "itempool_ord_sr_05_legendary_Fisheye_shiny",
-    "category": "Sniper"
-  },
-  {
-    "display_name": "Ord Sr 05 Legendary Ishmael Shiny",
-    "itempool": "itempool_ord_sr_05_legendary_Ishmael_shiny",
-    "category": "Sniper"
-  },
-  {
-    "display_name": "Ord SR 05 Legendary Seamstress Shiny",
-    "itempool": "itempool_ord_sr_05_legendary_seamstress_shiny",
-    "category": "Sniper"
-  },
-  {
-    "display_name": "Ord SR 05 Legendary Symmetry Shiny",
-    "itempool": "itempool_ord_sr_05_legendary_Symmetry_shiny",
-    "category": "Sniper"
-  },
-  {
-    "display_name": "Verce",
-    "itempool": "itempool_patch_inline_jak_sg_verce",
-    "category": "Shotgun"
-  },
-  {
-    "display_name": "PRISM",
-    "itempool": "itempool_patch_inline_jak_sr_burrow",
-    "category": "Pearl",
-    "catalog_key": "jak_sr_comp_05_legendary_burrow"
-  },
-  {
-    "display_name": "Loiter",
-    "itempool": "itempool_patch_inline_tor_hw_loiter",
-    "category": "Heavy"
-  },
-  {
-    "display_name": "Hydrowerks",
-    "itempool": "itempool_patch_inline_tor_shield_hydrowerks",
-    "category": "Shield"
-  },
-  {
-    "display_name": "BloodIron",
-    "itempool": "itempool_patch_inline_vla_repair_kit_bloodiron",
-    "category": "Repair Kit"
+    "display_name": "Oak Guns All",
+    "itempool": "oak_guns_all",
+    "category": "Other"
   },
   {
     "display_name": "Piles",
@@ -1716,11 +1391,6 @@
     "category": "Other"
   },
   {
-    "display_name": "Pistol All",
-    "itempool": "itempool_pistol_all",
-    "category": "Pistol"
-  },
-  {
     "display_name": "Platinum Weapon Raid1",
     "itempool": "itempool_Platinum_Weapon_Raid1",
     "category": "Other"
@@ -1736,244 +1406,19 @@
     "category": "Other"
   },
   {
-    "display_name": "Powercoredrop Bigmoney",
-    "itempool": "ItemPool_PowercoreDrop_BIgMoney",
-    "category": "Currency"
+    "display_name": "Ripperturret Flamethrower",
+    "itempool": "ItemPool_RipperTurret_Flamethrower",
+    "category": "Other"
   },
   {
-    "display_name": "Powercoredrop Nomoney",
-    "itempool": "ItemPool_PowercoreDrop_NoMoney",
-    "category": "Currency"
-  },
-  {
-    "display_name": "Powercoredrop Smallmoney",
-    "itempool": "ItemPool_PowercoreDrop_SmallMoney",
-    "category": "SMG"
-  },
-  {
-    "display_name": "PS 01 Common",
-    "itempool": "itempool_ps_01_common",
-    "category": "Pistol"
-  },
-  {
-    "display_name": "PS 02 Uncommon",
-    "itempool": "itempool_ps_02_uncommon",
-    "category": "Pistol"
-  },
-  {
-    "display_name": "PS 03 Rare",
-    "itempool": "itempool_ps_03_rare",
-    "category": "Pistol"
-  },
-  {
-    "display_name": "PS 04 Epic",
-    "itempool": "itempool_ps_04_epic",
-    "category": "Pistol"
-  },
-  {
-    "display_name": "PS 05 Legendary",
-    "itempool": "itempool_ps_05_legendary",
-    "category": "Pistol"
-  },
-  {
-    "display_name": "PS 06 Pearl",
-    "itempool": "itempool_ps_06_pearl",
-    "category": "Pistol"
-  },
-  {
-    "display_name": "Repkit 01 Common",
-    "itempool": "itempool_repkit_01_common",
-    "category": "Repkit"
-  },
-  {
-    "display_name": "Repkit 02 Uncommon",
-    "itempool": "itempool_repkit_02_uncommon",
-    "category": "Repkit"
-  },
-  {
-    "display_name": "Repkit 03 Rare",
-    "itempool": "itempool_repkit_03_rare",
-    "category": "Repkit"
-  },
-  {
-    "display_name": "Repkit 04 Epic",
-    "itempool": "itempool_repkit_04_epic",
-    "category": "Repkit"
-  },
-  {
-    "display_name": "Repkit 05 Legendary",
-    "itempool": "itempool_repkit_05_legendary",
-    "category": "Repkit"
-  },
-  {
-    "display_name": "Repkit All",
-    "itempool": "itempool_repkit_all",
-    "category": "Repkit"
-  },
-  {
-    "display_name": "Repkit Bor",
-    "itempool": "itempool_repkit_bor",
-    "category": "Repkit"
-  },
-  {
-    "display_name": "Repkit Dad",
-    "itempool": "itempool_repkit_dad",
-    "category": "Repkit"
-  },
-  {
-    "display_name": "Repkit Jak",
-    "itempool": "itempool_repkit_jak",
-    "category": "Repkit"
-  },
-  {
-    "display_name": "Repkit Mal",
-    "itempool": "itempool_repkit_mal",
-    "category": "Repkit"
-  },
-  {
-    "display_name": "Repkit Ord",
-    "itempool": "itempool_repkit_ord",
-    "category": "Repkit"
-  },
-  {
-    "display_name": "Repkit Ted",
-    "itempool": "itempool_repkit_ted",
-    "category": "Repkit"
-  },
-  {
-    "display_name": "Repkit Tor",
-    "itempool": "itempool_repkit_tor",
-    "category": "Repkit"
-  },
-  {
-    "display_name": "Repkit Vla",
-    "itempool": "itempool_repkit_vla",
-    "category": "Repkit"
-  },
-  {
-    "display_name": "SG 01 Common",
-    "itempool": "itempool_sg_01_common",
-    "category": "Shotgun"
-  },
-  {
-    "display_name": "SG 02 Uncommon",
-    "itempool": "itempool_sg_02_uncommon",
-    "category": "Shotgun"
-  },
-  {
-    "display_name": "SG 03 Rare",
-    "itempool": "itempool_sg_03_rare",
-    "category": "Shotgun"
-  },
-  {
-    "display_name": "SG 04 Epic",
-    "itempool": "itempool_sg_04_epic",
-    "category": "Shotgun"
-  },
-  {
-    "display_name": "SG 05 Legendary",
-    "itempool": "itempool_sg_05_legendary",
-    "category": "Shotgun"
-  },
-  {
-    "display_name": "SG 06 Pearl",
-    "itempool": "itempool_sg_06_pearl",
-    "category": "Shotgun"
+    "display_name": "Ripperturret Rocket",
+    "itempool": "ItemPool_RipperTurret_Rocket",
+    "category": "Other"
   },
   {
     "display_name": "Shatterboss",
     "itempool": "itempool_ShatterBoss",
     "category": "Other"
-  },
-  {
-    "display_name": "Shatterlands Commander Classmods",
-    "itempool": "itempool_shatterlands_commander_classmods",
-    "category": "Class Mod"
-  },
-  {
-    "display_name": "Shatterlands Guardian Classmods",
-    "itempool": "itempool_shatterlands_guardian_classmods",
-    "category": "Class Mod"
-  },
-  {
-    "display_name": "Shield Armor",
-    "itempool": "itempool_shield_armor",
-    "category": "Assault Rifle"
-  },
-  {
-    "display_name": "Shields 01 Common",
-    "itempool": "itempool_shields_01_common",
-    "category": "Shield"
-  },
-  {
-    "display_name": "Shields 02 Uncommon",
-    "itempool": "itempool_shields_02_uncommon",
-    "category": "Shield"
-  },
-  {
-    "display_name": "Shields 03 Rare",
-    "itempool": "itempool_shields_03_rare",
-    "category": "Shield"
-  },
-  {
-    "display_name": "Shields 04 Epic",
-    "itempool": "itempool_shields_04_epic",
-    "category": "Shield"
-  },
-  {
-    "display_name": "Shields 05 Legendary",
-    "itempool": "itempool_shields_05_legendary",
-    "category": "Shield"
-  },
-  {
-    "display_name": "Shields All",
-    "itempool": "itempool_shields_all",
-    "category": "Shield"
-  },
-  {
-    "display_name": "Shields Bor",
-    "itempool": "itempool_shields_bor",
-    "category": "Shield"
-  },
-  {
-    "display_name": "Shields Dad",
-    "itempool": "itempool_shields_dad",
-    "category": "Shield"
-  },
-  {
-    "display_name": "Shields Jak",
-    "itempool": "itempool_shields_jak",
-    "category": "Shield"
-  },
-  {
-    "display_name": "Shields Mal",
-    "itempool": "itempool_shields_mal",
-    "category": "Shield"
-  },
-  {
-    "display_name": "Shields Ord",
-    "itempool": "itempool_shields_ord",
-    "category": "Shield"
-  },
-  {
-    "display_name": "Shields Ted",
-    "itempool": "itempool_shields_ted",
-    "category": "Shield"
-  },
-  {
-    "display_name": "Shields Tor",
-    "itempool": "itempool_shields_tor",
-    "category": "Shield"
-  },
-  {
-    "display_name": "Shields Vla",
-    "itempool": "itempool_shields_vla",
-    "category": "Shield"
-  },
-  {
-    "display_name": "Shotgun All",
-    "itempool": "itempool_shotgun_all",
-    "category": "Shotgun"
   },
   {
     "display_name": "Sidemission",
@@ -2236,46 +1681,6 @@
     "category": "Other"
   },
   {
-    "display_name": "SM 01 Common",
-    "itempool": "itempool_sm_01_common",
-    "category": "SMG"
-  },
-  {
-    "display_name": "SM 02 Uncommon",
-    "itempool": "itempool_sm_02_uncommon",
-    "category": "SMG"
-  },
-  {
-    "display_name": "SM 03 Rare",
-    "itempool": "itempool_sm_03_rare",
-    "category": "SMG"
-  },
-  {
-    "display_name": "SM 04 Epic",
-    "itempool": "itempool_sm_04_epic",
-    "category": "SMG"
-  },
-  {
-    "display_name": "SM 05 Legendary",
-    "itempool": "itempool_sm_05_legendary",
-    "category": "SMG"
-  },
-  {
-    "display_name": "SM 06 Pearl",
-    "itempool": "itempool_sm_06_pearl",
-    "category": "SMG"
-  },
-  {
-    "display_name": "Smg All",
-    "itempool": "itempool_smg_all",
-    "category": "SMG"
-  },
-  {
-    "display_name": "Sniper All",
-    "itempool": "itempool_sniper_all",
-    "category": "Sniper"
-  },
-  {
     "display_name": "Soldier Sprayer",
     "itempool": "ItemPool_Soldier_Sprayer",
     "category": "Other"
@@ -2296,59 +1701,481 @@
     "category": "Other"
   },
   {
-    "display_name": "SR 01 Common",
-    "itempool": "itempool_sr_01_common",
-    "category": "Sniper"
+    "display_name": "Tediorearmy Sprayer",
+    "itempool": "ItemPool_TedioreArmy_Sprayer",
+    "category": "Other"
   },
   {
-    "display_name": "SR 02 Uncommon",
-    "itempool": "itempool_sr_02_uncommon",
-    "category": "Sniper"
+    "display_name": "Tedioreglider Flamethrower",
+    "itempool": "ItemPool_TedioreGlider_Flamethrower",
+    "category": "Other"
   },
   {
-    "display_name": "SR 03 Rare",
-    "itempool": "itempool_sr_03_rare",
-    "category": "Sniper"
+    "display_name": "Tedioreglider Rapidlaser",
+    "itempool": "ItemPool_TedioreGlider_RapidLaser",
+    "category": "Other"
   },
   {
-    "display_name": "SR 04 Epic",
-    "itempool": "itempool_sr_04_epic",
-    "category": "Sniper"
+    "display_name": "Tedioreglider Rocketlauncher",
+    "itempool": "ItemPool_TedioreGlider_RocketLauncher",
+    "category": "Other"
   },
   {
-    "display_name": "SR 05 Legendary",
-    "itempool": "itempool_sr_05_legendary",
-    "category": "Sniper"
+    "display_name": "Tedioregliderarm Rocketlauncher",
+    "itempool": "ItemPool_TedioreGliderArm_RocketLauncher",
+    "category": "Other"
   },
   {
-    "display_name": "SR 06 Pearl",
-    "itempool": "itempool_sr_06_pearl",
-    "category": "Sniper"
+    "display_name": "Tedioreturret Gatemission4",
+    "itempool": "ItemPool_TedioreTurret_GateMission4",
+    "category": "Other"
   },
   {
-    "display_name": "Ted AR",
-    "itempool": "itempool_ted_ar",
-    "category": "Assault Rifle"
+    "display_name": "Tedioreturret Mg",
+    "itempool": "ItemPool_TedioreTurret_MG",
+    "category": "Other"
   },
   {
-    "display_name": "Ted AR 05 Legendary Chuck Shiny",
-    "itempool": "itempool_ted_ar_05_legendary_Chuck_shiny",
-    "category": "Assault Rifle"
+    "display_name": "Tedioreturret Microplasticsmg",
+    "itempool": "ItemPool_TedioreTurret_MicroplasticsMG",
+    "category": "Other"
   },
   {
-    "display_name": "Ted AR 05 Legendary Dividedfocus Shiny",
-    "itempool": "itempool_ted_ar_05_legendary_DividedFocus_shiny",
-    "category": "Assault Rifle"
+    "display_name": "Tedioreturret Rapidlaser",
+    "itempool": "ItemPool_TedioreTurret_RapidLaser",
+    "category": "Other"
   },
   {
-    "display_name": "Ted AR 05 Legendary Laserdisc Shiny",
-    "itempool": "itempool_ted_ar_05_legendary_laserdisc_shiny",
-    "category": "Assault Rifle"
+    "display_name": "Tedioreturret Rocketlauncher",
+    "itempool": "ItemPool_TedioreTurret_RocketLauncher",
+    "category": "Other"
   },
   {
-    "display_name": "Ted AR 05 Legendary Murder Shiny",
-    "itempool": "itempool_ted_ar_05_legendary_murder_shiny",
-    "category": "Assault Rifle"
+    "display_name": "Terminal 01 Common",
+    "itempool": "itempool_terminal_01_common",
+    "category": "Other"
+  },
+  {
+    "display_name": "Terminal 02 Uncommon",
+    "itempool": "itempool_terminal_02_uncommon",
+    "category": "Other"
+  },
+  {
+    "display_name": "Terminal 03 Rare",
+    "itempool": "itempool_terminal_03_rare",
+    "category": "Other"
+  },
+  {
+    "display_name": "Terminal 04 Epic",
+    "itempool": "itempool_terminal_04_epic",
+    "category": "Other"
+  },
+  {
+    "display_name": "Terminal 05 Legendary",
+    "itempool": "itempool_terminal_05_legendary",
+    "category": "Other"
+  },
+  {
+    "display_name": "Terminal All",
+    "itempool": "itempool_terminal_all",
+    "category": "Other"
+  },
+  {
+    "display_name": "Terminal Bor",
+    "itempool": "itempool_terminal_bor",
+    "category": "Other"
+  },
+  {
+    "display_name": "Terminal Dad",
+    "itempool": "itempool_terminal_dad",
+    "category": "Other"
+  },
+  {
+    "display_name": "Terminal Jak",
+    "itempool": "itempool_terminal_jak",
+    "category": "Other"
+  },
+  {
+    "display_name": "Terminal Mal",
+    "itempool": "itempool_terminal_mal",
+    "category": "Other"
+  },
+  {
+    "display_name": "Terminal Ord",
+    "itempool": "itempool_terminal_ord",
+    "category": "Other"
+  },
+  {
+    "display_name": "Terminal Ted",
+    "itempool": "itempool_terminal_ted",
+    "category": "Other"
+  },
+  {
+    "display_name": "Terminal Tor",
+    "itempool": "itempool_terminal_tor",
+    "category": "Other"
+  },
+  {
+    "display_name": "Terminal Vla",
+    "itempool": "itempool_terminal_vla",
+    "category": "Other"
+  },
+  {
+    "display_name": "Tipjar",
+    "itempool": "itempool_tipjar",
+    "category": "Other"
+  },
+  {
+    "display_name": "Tkboss",
+    "itempool": "itempool_TKBoss",
+    "category": "Other"
+  },
+  {
+    "display_name": "Tkhuman Weapon",
+    "itempool": "itempool_TkHuman_weapon",
+    "category": "Other"
+  },
+  {
+    "display_name": "Trait Loot Eridium",
+    "itempool": "ItemPool_Trait_Loot_Eridium",
+    "category": "Other"
+  },
+  {
+    "display_name": "Trait Loot Gear",
+    "itempool": "ItemPool_Trait_Loot_Gear",
+    "category": "Other"
+  },
+  {
+    "display_name": "Trait Loot Guns",
+    "itempool": "ItemPool_Trait_Loot_Guns",
+    "category": "Other"
+  },
+  {
+    "display_name": "Turret Bor",
+    "itempool": "itempool_turret_bor",
+    "category": "Other"
+  },
+  {
+    "display_name": "Turret Chaingun",
+    "itempool": "ItemPool_Turret_Chaingun",
+    "category": "Other"
+  },
+  {
+    "display_name": "Turret Dad",
+    "itempool": "itempool_turret_dad",
+    "category": "Other"
+  },
+  {
+    "display_name": "Turret Jak",
+    "itempool": "itempool_turret_jak",
+    "category": "Other"
+  },
+  {
+    "display_name": "Turret Mal",
+    "itempool": "itempool_turret_mal",
+    "category": "Other"
+  },
+  {
+    "display_name": "Turret Ord",
+    "itempool": "itempool_turret_ord",
+    "category": "Other"
+  },
+  {
+    "display_name": "Turret Ted",
+    "itempool": "itempool_turret_ted",
+    "category": "Other"
+  },
+  {
+    "display_name": "Turret Tor",
+    "itempool": "itempool_turret_tor",
+    "category": "Other"
+  },
+  {
+    "display_name": "Turret Vla",
+    "itempool": "itempool_turret_vla",
+    "category": "Other"
+  },
+  {
+    "display_name": "Turret Weapon Basic",
+    "itempool": "itempool_turret_weapon_basic",
+    "category": "Other"
+  },
+  {
+    "display_name": "Turret Weapon Beam",
+    "itempool": "itempool_turret_weapon_beam",
+    "category": "Other"
+  },
+  {
+    "display_name": "Turret Weapon Beam Anchor",
+    "itempool": "itempool_turret_weapon_beam_Anchor",
+    "category": "Other"
+  },
+  {
+    "display_name": "Turret Weapon Chaingun",
+    "itempool": "itempool_turret_weapon_chaingun",
+    "category": "Other"
+  },
+  {
+    "display_name": "Turret Weapon Longrifle",
+    "itempool": "itempool_turret_weapon_longrifle",
+    "category": "Other"
+  },
+  {
+    "display_name": "Turret Weapon Rocketlauncher",
+    "itempool": "itempool_turret_weapon_rocketlauncher",
+    "category": "Other"
+  },
+  {
+    "display_name": "Turret Weapon Shotgun",
+    "itempool": "itempool_turret_weapon_shotgun",
+    "category": "Other"
+  },
+  {
+    "display_name": "Wolrdboss October",
+    "itempool": "ItemPool_WolrdBoss_October",
+    "category": "Other"
+  },
+  {
+    "display_name": "Zadra Weapon",
+    "itempool": "itempool_Zadra_weapon",
+    "category": "Other"
+  },
+  {
+    "display_name": "Zane Weapon",
+    "itempool": "itempool_Zane_weapon",
+    "category": "Other"
+  },
+  {
+    "display_name": "AR Pearl Pool",
+    "itempool": "itempool_ar_06_pearl",
+    "category": "Pearl"
+  },
+  {
+    "display_name": "Conflux",
+    "itempool": "itempool_mal_sr_05_legendary_conflux_pearl",
+    "category": "Pearl",
+    "catalog_key": "mal_sr_comp_05_legendary_conflux"
+  },
+  {
+    "display_name": "Crow-Sourced Pearl",
+    "itempool": "itempool_ord_ar_05_legendary_crowsourced_pearl",
+    "category": "Pearl",
+    "catalog_key": "ord_ar_comp_05_legendary_crowsourced"
+  },
+  {
+    "display_name": "Dad SM 06 Pearl Screwed",
+    "itempool": "itempool_dad_sm_06_pearl_screwed",
+    "category": "Pearl",
+    "catalog_key": "dad_sm_comp_06_pearl_screwed"
+  },
+  {
+    "display_name": "Jak SG 06 Pearl Constable",
+    "itempool": "itempool_jak_sg_06_pearl_constable",
+    "category": "Pearl",
+    "catalog_key": "jak_sg_comp_06_pearl_constable"
+  },
+  {
+    "display_name": "Mal SM 06 Pearl Juliet",
+    "itempool": "itempool_mal_sm_06_pearl_juliet",
+    "category": "Pearl",
+    "catalog_key": "mal_sm_comp_06_pearl_juliet"
+  },
+  {
+    "display_name": "Pachonk",
+    "itempool": "itempool_ord_ar_05_legendary_Pchonk",
+    "category": "Pearl",
+    "catalog_key": "ord_ar_comp_05_legendary_pchonk"
+  },
+  {
+    "display_name": "PRISM",
+    "itempool": "itempool_patch_inline_jak_sr_burrow",
+    "category": "Pearl",
+    "catalog_key": "jak_sr_comp_05_legendary_burrow"
+  },
+  {
+    "display_name": "Ted SG 06 Pearl Sharkbait",
+    "itempool": "itempool_ted_sg_06_pearl_sharkbait",
+    "category": "Pearl",
+    "catalog_key": "ted_sg_comp_06_pearl_sharkbait"
+  },
+  {
+    "display_name": "Tor PS 06 Pearl Herald",
+    "itempool": "itempool_tor_ps_06_pearl_herald",
+    "category": "Pearl",
+    "catalog_key": "tor_ps_comp_06_pearl_herald"
+  },
+  {
+    "display_name": "Vla SM 06 Pearl Locust",
+    "itempool": "itempool_vla_sm_06_pearl_Locust",
+    "category": "Pearl",
+    "catalog_key": "vla_sm_comp_06_pearl_locust"
+  },
+  {
+    "display_name": "Ammo Pistol",
+    "itempool": "itempool_ammo_pistol",
+    "category": "Pistol"
+  },
+  {
+    "display_name": "Blackout Shiny",
+    "itempool": "itempool_dad_ps_05_legendary_blackout_shiny",
+    "category": "Pistol"
+  },
+  {
+    "display_name": "Dad PS",
+    "itempool": "itempool_dad_ps",
+    "category": "Pistol"
+  },
+  {
+    "display_name": "Dad PS 05 Legendary Rangefinder Shiny",
+    "itempool": "itempool_dad_ps_05_legendary_Rangefinder_shiny",
+    "category": "Pistol"
+  },
+  {
+    "display_name": "Dad PS 05 Legendary Silversliver Shiny",
+    "itempool": "itempool_dad_ps_05_legendary_silversliver_shiny",
+    "category": "Pistol"
+  },
+  {
+    "display_name": "Dad Ps 05 Legendary Soulsurvivor Pearl",
+    "itempool": "itempool_dad_ps_05_legendary_soulsurvivor_pearl",
+    "category": "Pistol",
+    "catalog_key": "dad_ps_comp_05_legendary_soulsurvivor"
+  },
+  {
+    "display_name": "Dad PS 05 Legendary Soulsurvivor Shiny",
+    "itempool": "itempool_dad_ps_05_legendary_soulsurvivor_shiny",
+    "category": "Pistol",
+    "catalog_key": "dad_ps_comp_05_legendary_soulsurvivor"
+  },
+  {
+    "display_name": "Dad PS 05 Legendary Zipgun Shiny",
+    "itempool": "itempool_dad_ps_05_legendary_Zipgun_shiny",
+    "category": "Pistol"
+  },
+  {
+    "display_name": "Enemies Guns PS",
+    "itempool": "itempool_enemies_guns_ps",
+    "category": "Pistol"
+  },
+  {
+    "display_name": "Infection Shiny",
+    "itempool": "itempool_jak_ps_05_legendary_Infection_shiny",
+    "category": "Pistol"
+  },
+  {
+    "display_name": "Jak PS",
+    "itempool": "itempool_jak_ps",
+    "category": "Pistol"
+  },
+  {
+    "display_name": "Jak PS 05 Legendary Kingsgambit Shiny",
+    "itempool": "itempool_jak_ps_05_legendary_KingsGambit_shiny",
+    "category": "Pistol"
+  },
+  {
+    "display_name": "Jak Ps 05 Legendary Manifest Shiny",
+    "itempool": "itempool_jak_ps_05_legendary_manifest_shiny",
+    "category": "Pistol"
+  },
+  {
+    "display_name": "Jak PS 05 Legendary Phantom Flame Shiny",
+    "itempool": "itempool_jak_ps_05_legendary_Phantom_Flame_shiny",
+    "category": "Pistol"
+  },
+  {
+    "display_name": "Jak PS 05 Legendary Quickdraw Shiny",
+    "itempool": "itempool_jak_ps_05_legendary_QuickDraw_shiny",
+    "category": "Pistol"
+  },
+  {
+    "display_name": "Jak PS 05 Legendary Seventh Sense Shiny",
+    "itempool": "itempool_jak_ps_05_legendary_seventh_sense_shiny",
+    "category": "Pistol"
+  },
+  {
+    "display_name": "Jak PS 05 Legendary Shalashaska Shiny",
+    "itempool": "itempool_jak_ps_05_legendary_Shalashaska_shiny",
+    "category": "Pistol"
+  },
+  {
+    "display_name": "Jak Ps 05 Legendary Shoals Shiny",
+    "itempool": "itempool_jak_ps_05_legendary_shoals_shiny",
+    "category": "Pistol"
+  },
+  {
+    "display_name": "Ord PS",
+    "itempool": "itempool_ord_ps",
+    "category": "Pistol"
+  },
+  {
+    "display_name": "Ord PS 05 Legendary Bully Shiny",
+    "itempool": "itempool_ord_ps_05_legendary_Bully_shiny",
+    "category": "Pistol"
+  },
+  {
+    "display_name": "Ord PS 05 Legendary Noisycricket Shiny",
+    "itempool": "itempool_ord_ps_05_legendary_NoisyCricket_shiny",
+    "category": "Pistol"
+  },
+  {
+    "display_name": "Ord Ps 05 Legendary Rhythm Shiny",
+    "itempool": "itempool_ord_ps_05_legendary_Rhythm_shiny",
+    "category": "Pistol"
+  },
+  {
+    "display_name": "Ord PS 05 Legendary Rocketreload Shiny",
+    "itempool": "itempool_ord_ps_05_legendary_RocketReload_shiny",
+    "category": "Pistol"
+  },
+  {
+    "display_name": "Ord PS 05 Legendary Roulette Shiny",
+    "itempool": "itempool_ord_ps_05_legendary_Roulette_shiny",
+    "category": "Pistol"
+  },
+  {
+    "display_name": "Ord PS 05 Legendary Sunspot Shiny",
+    "itempool": "itempool_ord_ps_05_legendary_sunspot_shiny",
+    "category": "Pistol"
+  },
+  {
+    "display_name": "Pistol All",
+    "itempool": "itempool_pistol_all",
+    "category": "Pistol"
+  },
+  {
+    "display_name": "PS 01 Common",
+    "itempool": "itempool_ps_01_common",
+    "category": "Pistol"
+  },
+  {
+    "display_name": "PS 02 Uncommon",
+    "itempool": "itempool_ps_02_uncommon",
+    "category": "Pistol"
+  },
+  {
+    "display_name": "PS 03 Rare",
+    "itempool": "itempool_ps_03_rare",
+    "category": "Pistol"
+  },
+  {
+    "display_name": "PS 04 Epic",
+    "itempool": "itempool_ps_04_epic",
+    "category": "Pistol"
+  },
+  {
+    "display_name": "PS 05 Legendary",
+    "itempool": "itempool_ps_05_legendary",
+    "category": "Pistol"
+  },
+  {
+    "display_name": "PS 06 Pearl",
+    "itempool": "itempool_ps_06_pearl",
+    "category": "Pistol"
+  },
+  {
+    "display_name": "Sledge Shiny",
+    "itempool": "itempool_tor_PS_05_legendary_Sledge_shiny",
+    "category": "Pistol"
   },
   {
     "display_name": "Ted PS",
@@ -2386,88 +2213,6 @@
     "category": "Pistol"
   },
   {
-    "display_name": "Ted SG",
-    "itempool": "itempool_ted_sg",
-    "category": "Shotgun"
-  },
-  {
-    "display_name": "Ted SG 05 Legendary Anarchy Shiny",
-    "itempool": "itempool_ted_sg_05_legendary_anarchy_shiny",
-    "category": "Shotgun"
-  },
-  {
-    "display_name": "Ted SG 05 Legendary Commbd Shiny",
-    "itempool": "itempool_ted_sg_05_legendary_CommBD_shiny",
-    "category": "Shotgun"
-  },
-  {
-    "display_name": "Ted Sg 05 Legendary Eigenburst Pearl",
-    "itempool": "itempool_ted_sg_05_legendary_eigenburst_pearl",
-    "category": "Shotgun",
-    "catalog_key": "ted_sg_comp_05_legendary_eigenburst"
-  },
-  {
-    "display_name": "Ted Sg 05 Legendary Heavyturret Shiny",
-    "itempool": "itempool_ted_sg_05_legendary_heavyturret_shiny",
-    "category": "Shotgun"
-  },
-  {
-    "display_name": "Ted SG 06 Pearl Sharkbait",
-    "itempool": "itempool_ted_sg_06_pearl_sharkbait",
-    "category": "Pearl",
-    "catalog_key": "ted_sg_comp_06_pearl_sharkbait"
-  },
-  {
-    "display_name": "Tipjar",
-    "itempool": "itempool_tipjar",
-    "category": "Other"
-  },
-  {
-    "display_name": "Tkboss",
-    "itempool": "itempool_TKBoss",
-    "category": "Other"
-  },
-  {
-    "display_name": "Tkhuman Weapon",
-    "itempool": "itempool_TkHuman_weapon",
-    "category": "Other"
-  },
-  {
-    "display_name": "Tor AR",
-    "itempool": "itempool_tor_ar",
-    "category": "Assault Rifle"
-  },
-  {
-    "display_name": "Tor AR 05 Legendary Bugbear Shiny",
-    "itempool": "itempool_tor_ar_05_legendary_Bugbear_shiny",
-    "category": "Assault Rifle"
-  },
-  {
-    "display_name": "Tor AR 05 Legendary Coldshoulder Shiny",
-    "itempool": "itempool_tor_ar_05_legendary_ColdShoulder_shiny",
-    "category": "Assault Rifle"
-  },
-  {
-    "display_name": "Tor AR 05 Legendary Fleabag Shiny",
-    "itempool": "itempool_tor_ar_05_legendary_Fleabag_shiny",
-    "category": "Assault Rifle"
-  },
-  {
-    "display_name": "Tor AR 05 Legendary Lockjaw Shiny",
-    "itempool": "itempool_tor_ar_05_legendary_lockjaw_shiny",
-    "category": "Assault Rifle"
-  },
-  {
-    "display_name": "Tor AR 05 Legendary Potatothrower Shiny",
-    "itempool": "itempool_tor_ar_05_legendary_PotatoThrower_shiny",
-    "category": "Assault Rifle"
-  },
-  {
-    "display_name": "Tor HW",
-    "itempool": "itempool_tor_hw",
-    "category": "Heavy"
-  },
-  {
     "display_name": "Tor PS",
     "itempool": "itempool_tor_ps",
     "category": "Pistol"
@@ -2494,10 +2239,606 @@
     "category": "Pistol"
   },
   {
-    "display_name": "Tor PS 06 Pearl Herald",
-    "itempool": "itempool_tor_ps_06_pearl_herald",
-    "category": "Pearl",
-    "catalog_key": "tor_ps_comp_06_pearl_herald"
+    "display_name": "BloodIron",
+    "itempool": "itempool_patch_inline_vla_repair_kit_bloodiron",
+    "category": "Repair Kit"
+  },
+  {
+    "display_name": "Repkit 01 Common",
+    "itempool": "itempool_repkit_01_common",
+    "category": "Repkit"
+  },
+  {
+    "display_name": "Repkit 02 Uncommon",
+    "itempool": "itempool_repkit_02_uncommon",
+    "category": "Repkit"
+  },
+  {
+    "display_name": "Repkit 03 Rare",
+    "itempool": "itempool_repkit_03_rare",
+    "category": "Repkit"
+  },
+  {
+    "display_name": "Repkit 04 Epic",
+    "itempool": "itempool_repkit_04_epic",
+    "category": "Repkit"
+  },
+  {
+    "display_name": "Repkit 05 Legendary",
+    "itempool": "itempool_repkit_05_legendary",
+    "category": "Repkit"
+  },
+  {
+    "display_name": "Repkit All",
+    "itempool": "itempool_repkit_all",
+    "category": "Repkit"
+  },
+  {
+    "display_name": "Repkit Bor",
+    "itempool": "itempool_repkit_bor",
+    "category": "Repkit"
+  },
+  {
+    "display_name": "Repkit Dad",
+    "itempool": "itempool_repkit_dad",
+    "category": "Repkit"
+  },
+  {
+    "display_name": "Repkit Jak",
+    "itempool": "itempool_repkit_jak",
+    "category": "Repkit"
+  },
+  {
+    "display_name": "Repkit Mal",
+    "itempool": "itempool_repkit_mal",
+    "category": "Repkit"
+  },
+  {
+    "display_name": "Repkit Ord",
+    "itempool": "itempool_repkit_ord",
+    "category": "Repkit"
+  },
+  {
+    "display_name": "Repkit Ted",
+    "itempool": "itempool_repkit_ted",
+    "category": "Repkit"
+  },
+  {
+    "display_name": "Repkit Tor",
+    "itempool": "itempool_repkit_tor",
+    "category": "Repkit"
+  },
+  {
+    "display_name": "Repkit Vla",
+    "itempool": "itempool_repkit_vla",
+    "category": "Repkit"
+  },
+  {
+    "display_name": "Accretion Shiny",
+    "itempool": "itempool_mal_sm_05_legendary_accretion_shiny",
+    "category": "SMG"
+  },
+  {
+    "display_name": "Ammo Smg",
+    "itempool": "itempool_ammo_smg",
+    "category": "SMG"
+  },
+  {
+    "display_name": "Aura Shiny",
+    "itempool": "itempool_vla_sm_05_legendary_aura_shiny",
+    "category": "SMG"
+  },
+  {
+    "display_name": "Bor SM",
+    "itempool": "itempool_bor_sm",
+    "category": "SMG"
+  },
+  {
+    "display_name": "Bor SM 05 Legendary Falke Shiny",
+    "itempool": "itempool_bor_sm_05_legendary_falke_shiny",
+    "category": "SMG"
+  },
+  {
+    "display_name": "Bor SM 05 Legendary Hellfire Shiny",
+    "itempool": "itempool_bor_sm_05_legendary_hellfire_shiny",
+    "category": "SMG"
+  },
+  {
+    "display_name": "Bor SM 05 Legendary Prince Shiny",
+    "itempool": "itempool_bor_sm_05_legendary_Prince_shiny",
+    "category": "SMG"
+  },
+  {
+    "display_name": "Dad SM",
+    "itempool": "itempool_dad_sm",
+    "category": "SMG"
+  },
+  {
+    "display_name": "Dad SM 05 Legendary Bloodstarved Shiny",
+    "itempool": "itempool_dad_sm_05_legendary_bloodstarved_shiny",
+    "category": "SMG"
+  },
+  {
+    "display_name": "Dad SM 05 Legendary Follower Shiny",
+    "itempool": "itempool_dad_sm_05_legendary_follower_shiny",
+    "category": "SMG"
+  },
+  {
+    "display_name": "Dad SM 05 Legendary Luty Shiny",
+    "itempool": "itempool_dad_sm_05_legendary_Luty_shiny",
+    "category": "SMG"
+  },
+  {
+    "display_name": "Enemies Guns SM",
+    "itempool": "itempool_enemies_guns_sm",
+    "category": "SMG"
+  },
+  {
+    "display_name": "Enumeration Shiny",
+    "itempool": "itempool_bor_sm_05_legendary_enumeration_shiny",
+    "category": "SMG"
+  },
+  {
+    "display_name": "Event Loot Small",
+    "itempool": "ItemPool_Event_Loot_Small",
+    "category": "SMG"
+  },
+  {
+    "display_name": "Handfrag Shiny",
+    "itempool": "itempool_dad_sm_05_legendary_handfrag_shiny",
+    "category": "SMG"
+  },
+  {
+    "display_name": "Kaoson",
+    "itempool": "itempool_vla_sm_05_legendary_KaoSon_shiny",
+    "category": "SMG",
+    "catalog_key": "vla_sm_comp_05_legendary_kaoson"
+  },
+  {
+    "display_name": "Mal SM",
+    "itempool": "itempool_mal_sm",
+    "category": "SMG"
+  },
+  {
+    "display_name": "Mal Sm 05 Legendary Brickhouse Shiny",
+    "itempool": "itempool_mal_sm_05_legendary_brickhouse_shiny",
+    "category": "SMG"
+  },
+  {
+    "display_name": "Mal SM 05 Legendary Flashcyclone Shiny",
+    "itempool": "itempool_mal_sm_05_legendary_flashcyclone_shiny",
+    "category": "SMG"
+  },
+  {
+    "display_name": "Mal SM 05 Legendary Mercury Shiny",
+    "itempool": "itempool_mal_sm_05_legendary_mercury_shiny",
+    "category": "SMG",
+    "catalog_key": "vla_sm_comp_05_legendary_mercury"
+  },
+  {
+    "display_name": "Mal SM 05 Legendary Ohmigot Shiny",
+    "itempool": "itempool_mal_sm_05_legendary_OhmIGot_shiny",
+    "category": "SMG"
+  },
+  {
+    "display_name": "Mal SM 05 Legendary Plasmacoil Shiny",
+    "itempool": "itempool_mal_sm_05_legendary_PlasmaCoil_shiny",
+    "category": "SMG"
+  },
+  {
+    "display_name": "Mal SM 05 Legendary Songbird Shiny",
+    "itempool": "itempool_mal_sm_05_legendary_songbird_shiny",
+    "category": "SMG"
+  },
+  {
+    "display_name": "Powercoredrop Smallmoney",
+    "itempool": "ItemPool_PowercoreDrop_SmallMoney",
+    "category": "SMG"
+  },
+  {
+    "display_name": "Roil",
+    "itempool": "itempool_mal_sg_05_legendary_roil_shiny",
+    "category": "SMG",
+    "catalog_key": "bor_sm_comp_05_legendary_roil"
+  },
+  {
+    "display_name": "SM 01 Common",
+    "itempool": "itempool_sm_01_common",
+    "category": "SMG"
+  },
+  {
+    "display_name": "SM 02 Uncommon",
+    "itempool": "itempool_sm_02_uncommon",
+    "category": "SMG"
+  },
+  {
+    "display_name": "SM 03 Rare",
+    "itempool": "itempool_sm_03_rare",
+    "category": "SMG"
+  },
+  {
+    "display_name": "SM 04 Epic",
+    "itempool": "itempool_sm_04_epic",
+    "category": "SMG"
+  },
+  {
+    "display_name": "SM 05 Legendary",
+    "itempool": "itempool_sm_05_legendary",
+    "category": "SMG"
+  },
+  {
+    "display_name": "SM 06 Pearl",
+    "itempool": "itempool_sm_06_pearl",
+    "category": "SMG"
+  },
+  {
+    "display_name": "Smg All",
+    "itempool": "itempool_smg_all",
+    "category": "SMG"
+  },
+  {
+    "display_name": "Vla SM",
+    "itempool": "itempool_vla_sm",
+    "category": "SMG"
+  },
+  {
+    "display_name": "Vla SM 05 Legendary Beegun Shiny",
+    "itempool": "itempool_vla_sm_05_legendary_BeeGun_shiny",
+    "category": "SMG"
+  },
+  {
+    "display_name": "Vla SM 05 Legendary Onslaught Shiny",
+    "itempool": "itempool_vla_sm_05_legendary_Onslaught_shiny",
+    "category": "SMG"
+  },
+  {
+    "display_name": "Vla SM 06 Pearl Locust Shiny",
+    "itempool": "itempool_vla_sm_06_pearl_Locust_shiny",
+    "category": "SMG",
+    "catalog_key": "vla_sm_comp_06_pearl_locust"
+  },
+  {
+    "display_name": "1st Shield",
+    "itempool": "itempool_1st_shield",
+    "category": "Shield"
+  },
+  {
+    "display_name": "Hydrowerks",
+    "itempool": "itempool_patch_inline_tor_shield_hydrowerks",
+    "category": "Shield"
+  },
+  {
+    "display_name": "Shields 01 Common",
+    "itempool": "itempool_shields_01_common",
+    "category": "Shield"
+  },
+  {
+    "display_name": "Shields 02 Uncommon",
+    "itempool": "itempool_shields_02_uncommon",
+    "category": "Shield"
+  },
+  {
+    "display_name": "Shields 03 Rare",
+    "itempool": "itempool_shields_03_rare",
+    "category": "Shield"
+  },
+  {
+    "display_name": "Shields 04 Epic",
+    "itempool": "itempool_shields_04_epic",
+    "category": "Shield"
+  },
+  {
+    "display_name": "Shields 05 Legendary",
+    "itempool": "itempool_shields_05_legendary",
+    "category": "Shield"
+  },
+  {
+    "display_name": "Shields All",
+    "itempool": "itempool_shields_all",
+    "category": "Shield"
+  },
+  {
+    "display_name": "Shields Bor",
+    "itempool": "itempool_shields_bor",
+    "category": "Shield"
+  },
+  {
+    "display_name": "Shields Dad",
+    "itempool": "itempool_shields_dad",
+    "category": "Shield"
+  },
+  {
+    "display_name": "Shields Jak",
+    "itempool": "itempool_shields_jak",
+    "category": "Shield"
+  },
+  {
+    "display_name": "Shields Mal",
+    "itempool": "itempool_shields_mal",
+    "category": "Shield"
+  },
+  {
+    "display_name": "Shields Ord",
+    "itempool": "itempool_shields_ord",
+    "category": "Shield"
+  },
+  {
+    "display_name": "Shields Ted",
+    "itempool": "itempool_shields_ted",
+    "category": "Shield"
+  },
+  {
+    "display_name": "Shields Tor",
+    "itempool": "itempool_shields_tor",
+    "category": "Shield"
+  },
+  {
+    "display_name": "Shields Vla",
+    "itempool": "itempool_shields_vla",
+    "category": "Shield"
+  },
+  {
+    "display_name": "Ted Sg 05 Legendary HeavyTurret Shiny",
+    "itempool": "itempool_ted_sg_05_legendary_HeavyTurret_shiny",
+    "category": "Shiny"
+  },
+  {
+    "display_name": "Aero Dramatic Shiny",
+    "itempool": "itempool_mal_sg_05_legendary_AeroDramatic_shiny",
+    "category": "Shotgun"
+  },
+  {
+    "display_name": "Ammo Shotgun",
+    "itempool": "itempool_ammo_shotgun",
+    "category": "Shotgun"
+  },
+  {
+    "display_name": "Assembler Shiny",
+    "itempool": "itempool_mal_sg_05_legendary_assembler_shiny",
+    "category": "Shotgun"
+  },
+  {
+    "display_name": "Bor SG",
+    "itempool": "itempool_bor_sg",
+    "category": "Shotgun"
+  },
+  {
+    "display_name": "Bor SG 05 Legendary Convergence Shiny",
+    "itempool": "itempool_bor_sg_05_legendary_convergence_shiny",
+    "category": "Shotgun"
+  },
+  {
+    "display_name": "Bor Sg 05 Legendary Crazedearl Pearl",
+    "itempool": "itempool_bor_sg_05_legendary_CrazedEarl_pearl",
+    "category": "Shotgun",
+    "catalog_key": "bor_sg_comp_05_legendary_crazedearl"
+  },
+  {
+    "display_name": "Bor SG 05 Legendary Goldengod Shiny",
+    "itempool": "itempool_bor_sg_05_legendary_GoldenGod_shiny",
+    "category": "Shotgun"
+  },
+  {
+    "display_name": "Bor SG 05 Legendary Goremaster Shiny",
+    "itempool": "itempool_bor_sg_05_legendary_GoreMaster_shiny",
+    "category": "Shotgun"
+  },
+  {
+    "display_name": "Bor SG 05 Legendary PlumbBob Shiny",
+    "itempool": "itempool_bor_sg_05_legendary_PlumbBob_shiny",
+    "category": "Shotgun"
+  },
+  {
+    "display_name": "Dad SG",
+    "itempool": "itempool_dad_sg",
+    "category": "Shotgun"
+  },
+  {
+    "display_name": "Dad SG 05 Legendary Bod Shiny",
+    "itempool": "itempool_dad_sg_05_legendary_Bod_shiny",
+    "category": "Shotgun"
+  },
+  {
+    "display_name": "Dad Sg 05 Legendary Cannonbrawl Shiny",
+    "itempool": "itempool_dad_sg_05_legendary_Cannonbrawl_shiny",
+    "category": "Shotgun"
+  },
+  {
+    "display_name": "Dad SG 05 Legendary Heartgun Shiny",
+    "itempool": "itempool_dad_sg_05_legendary_HeartGun_shiny",
+    "category": "Shotgun"
+  },
+  {
+    "display_name": "Dad SG 05 Legendary Misslaser Shiny",
+    "itempool": "itempool_dad_sg_05_legendary_misslaser_shiny",
+    "category": "Shotgun"
+  },
+  {
+    "display_name": "Devourer Shiny",
+    "itempool": "itempool_mal_sg_05_legendary_devourer_shiny",
+    "category": "Shotgun"
+  },
+  {
+    "display_name": "Enemies Guns SG",
+    "itempool": "itempool_enemies_guns_sg",
+    "category": "Shotgun"
+  },
+  {
+    "display_name": "Fourier Shiny",
+    "itempool": "itempool_tor_sg_05_legendary_Fourier_shiny",
+    "category": "Shotgun"
+  },
+  {
+    "display_name": "Hippogun Shiny",
+    "itempool": "itempool_tor_sg_05_legendary_Hippogun_shiny",
+    "category": "Shotgun"
+  },
+  {
+    "display_name": "Jak SG",
+    "itempool": "itempool_jak_sg",
+    "category": "Shotgun"
+  },
+  {
+    "display_name": "Jak SG 05 Legendary Hellwalker Shiny",
+    "itempool": "itempool_jak_sg_05_legendary_Hellwalker_shiny",
+    "category": "Shotgun"
+  },
+  {
+    "display_name": "Jak SG 05 Legendary Rainbowvomit Shiny",
+    "itempool": "itempool_jak_sg_05_legendary_RainbowVomit_shiny",
+    "category": "Shotgun"
+  },
+  {
+    "display_name": "Jak SG 05 Legendary Slugger Shiny",
+    "itempool": "itempool_jak_sg_05_legendary_Slugger_shiny",
+    "category": "Shotgun"
+  },
+  {
+    "display_name": "Jak SG 05 Legendary Tkswave Shiny",
+    "itempool": "itempool_jak_sg_05_legendary_TKsWave_shiny",
+    "category": "Shotgun"
+  },
+  {
+    "display_name": "Jak Sg 05 Legendary Verce Shiny",
+    "itempool": "itempool_JAK_sg_05_legendary_Verce_shiny",
+    "category": "Shotgun"
+  },
+  {
+    "display_name": "Mal SG",
+    "itempool": "itempool_mal_sg",
+    "category": "Shotgun"
+  },
+  {
+    "display_name": "Mal SG 05 Legendary Crazedearl Shiny",
+    "itempool": "itempool_mal_sg_05_legendary_CrazedEarl_shiny",
+    "category": "Shotgun",
+    "catalog_key": "bor_sg_comp_05_legendary_crazedearl"
+  },
+  {
+    "display_name": "Mal SG 05 Legendary Fearstalker Shiny",
+    "itempool": "itempool_mal_sg_05_legendary_fearstalker_shiny",
+    "category": "Shotgun"
+  },
+  {
+    "display_name": "Mal SG 05 Legendary Hemorrhage Shiny",
+    "itempool": "itempool_mal_sg_05_legendary_hemorrhage_shiny",
+    "category": "Shotgun"
+  },
+  {
+    "display_name": "Mal SG 05 Legendary Jailbroken Shiny",
+    "itempool": "itempool_mal_sg_05_legendary_Jailbroken_shiny",
+    "category": "Shotgun"
+  },
+  {
+    "display_name": "Mal SG 05 Legendary Kaleidosplode Shiny",
+    "itempool": "itempool_mal_sg_05_legendary_Kaleidosplode_shiny",
+    "category": "Shotgun"
+  },
+  {
+    "display_name": "Mal SG 05 Legendary Kickballer Shiny",
+    "itempool": "itempool_mal_sg_05_legendary_kickballer_shiny",
+    "category": "Shotgun"
+  },
+  {
+    "display_name": "Mal SG 05 Legendary Mantra Shiny",
+    "itempool": "itempool_mal_sg_05_legendary_mantra_shiny",
+    "category": "Shotgun"
+  },
+  {
+    "display_name": "Mal SG 05 Legendary Reminisce Shiny",
+    "itempool": "itempool_mal_sg_05_legendary_reminisce_shiny",
+    "category": "Shotgun"
+  },
+  {
+    "display_name": "Mal SG 05 Legendary Scootshoot Shiny",
+    "itempool": "itempool_mal_sg_05_legendary_scootshoot_shiny",
+    "category": "Shotgun"
+  },
+  {
+    "display_name": "Mal SG 05 Legendary Sweet Embrace Shiny",
+    "itempool": "itempool_mal_sg_05_legendary_Sweet_Embrace_shiny",
+    "category": "Shotgun"
+  },
+  {
+    "display_name": "Mal SG 05 Legendary Unstable Shiny",
+    "itempool": "itempool_mal_sg_05_legendary_Unstable_shiny",
+    "category": "Shotgun"
+  },
+  {
+    "display_name": "Outback Shiny",
+    "itempool": "itempool_mal_sg_05_legendary_outback_shiny",
+    "category": "Shotgun"
+  },
+  {
+    "display_name": "Pragmate Shiny",
+    "itempool": "itempool_dad_sg_05_legendary_pragmate_shiny",
+    "category": "Shotgun"
+  },
+  {
+    "display_name": "Relay Shiny",
+    "itempool": "itempool_bor_sg_05_legendary_relay_shiny",
+    "category": "Shotgun"
+  },
+  {
+    "display_name": "SG 01 Common",
+    "itempool": "itempool_sg_01_common",
+    "category": "Shotgun"
+  },
+  {
+    "display_name": "SG 02 Uncommon",
+    "itempool": "itempool_sg_02_uncommon",
+    "category": "Shotgun"
+  },
+  {
+    "display_name": "SG 03 Rare",
+    "itempool": "itempool_sg_03_rare",
+    "category": "Shotgun"
+  },
+  {
+    "display_name": "SG 04 Epic",
+    "itempool": "itempool_sg_04_epic",
+    "category": "Shotgun"
+  },
+  {
+    "display_name": "SG 05 Legendary",
+    "itempool": "itempool_sg_05_legendary",
+    "category": "Shotgun"
+  },
+  {
+    "display_name": "SG 06 Pearl",
+    "itempool": "itempool_sg_06_pearl",
+    "category": "Shotgun"
+  },
+  {
+    "display_name": "Shotgun All",
+    "itempool": "itempool_shotgun_all",
+    "category": "Shotgun"
+  },
+  {
+    "display_name": "Ted SG",
+    "itempool": "itempool_ted_sg",
+    "category": "Shotgun"
+  },
+  {
+    "display_name": "Ted SG 05 Legendary Anarchy Shiny",
+    "itempool": "itempool_ted_sg_05_legendary_anarchy_shiny",
+    "category": "Shotgun"
+  },
+  {
+    "display_name": "Ted SG 05 Legendary Commbd Shiny",
+    "itempool": "itempool_ted_sg_05_legendary_CommBD_shiny",
+    "category": "Shotgun"
+  },
+  {
+    "display_name": "Ted Sg 05 Legendary Eigenburst Pearl",
+    "itempool": "itempool_ted_sg_05_legendary_eigenburst_pearl",
+    "category": "Shotgun",
+    "catalog_key": "ted_sg_comp_05_legendary_eigenburst"
+  },
+  {
+    "display_name": "Ted Sg Heavyturret",
+    "itempool": "itempool_TED_SG_HeavyTurret",
+    "category": "Shotgun"
   },
   {
     "display_name": "Tor SG",
@@ -2530,101 +2871,104 @@
     "category": "Shotgun"
   },
   {
-    "display_name": "Trait Loot Cash",
-    "itempool": "ItemPool_Trait_Loot_Cash",
-    "category": "Currency"
+    "display_name": "Verce",
+    "itempool": "itempool_patch_inline_jak_sg_verce",
+    "category": "Shotgun"
   },
   {
-    "display_name": "Trait Loot Eridium",
-    "itempool": "ItemPool_Trait_Loot_Eridium",
-    "category": "Other"
+    "display_name": "Ammo Sniperrifle",
+    "itempool": "itempool_ammo_sniperrifle",
+    "category": "Sniper"
   },
   {
-    "display_name": "Trait Loot Gear",
-    "itempool": "ItemPool_Trait_Loot_Gear",
-    "category": "Other"
+    "display_name": "Bor SR",
+    "itempool": "itempool_bor_sr",
+    "category": "Sniper"
   },
   {
-    "display_name": "Trait Loot Guns",
-    "itempool": "ItemPool_Trait_Loot_Guns",
-    "category": "Other"
+    "display_name": "Bor SR 05 Legendary Stray Shiny",
+    "itempool": "itempool_bor_sr_05_legendary_Stray_shiny",
+    "category": "Sniper"
   },
   {
-    "display_name": "Vla AR",
-    "itempool": "itempool_vla_ar",
-    "category": "Assault Rifle"
+    "display_name": "Bor SR 05 Legendary Tankbuster Shiny",
+    "itempool": "itempool_bor_sr_05_legendary_tankbuster_shiny",
+    "category": "Sniper"
   },
   {
-    "display_name": "Vla AR 05 Legendary Bubbles Shiny",
-    "itempool": "itempool_vla_ar_05_legendary_bubbles_shiny",
-    "category": "Assault Rifle"
+    "display_name": "Bor SR 05 Legendary Vamoose Shiny",
+    "itempool": "itempool_bor_sr_05_legendary_Vamoose_shiny",
+    "category": "Sniper"
   },
   {
-    "display_name": "Vla AR 05 Legendary Dualdamage Shiny",
-    "itempool": "itempool_vla_ar_05_legendary_DualDamage_shiny",
-    "category": "Assault Rifle"
+    "display_name": "Clarity Shiny",
+    "itempool": "itempool_mal_sr_05_legendary_Clarity_shiny",
+    "category": "Sniper"
   },
   {
-    "display_name": "Vla AR 05 Legendary Lasercutter Shiny",
-    "itempool": "itempool_vla_ar_05_legendary_lasercutter_shiny",
-    "category": "Assault Rifle"
+    "display_name": "Enemies Guns SR",
+    "itempool": "itempool_enemies_guns_sr",
+    "category": "Sniper"
   },
   {
-    "display_name": "Vla AR 05 Legendary Lucian Shiny",
-    "itempool": "itempool_vla_ar_05_legendary_Lucian_shiny",
-    "category": "Assault Rifle"
+    "display_name": "Exhibition Shiny",
+    "itempool": "itempool_vla_sr_05_legendary_exhibition_shiny",
+    "category": "Sniper"
   },
   {
-    "display_name": "Vla AR 05 Legendary Wf Shiny",
-    "itempool": "itempool_vla_ar_05_legendary_WF_shiny",
-    "category": "Assault Rifle"
+    "display_name": "Jak SR",
+    "itempool": "itempool_jak_sr",
+    "category": "Sniper"
   },
   {
-    "display_name": "Vla AR 05 Legendary Wombocombo Shiny",
-    "itempool": "itempool_vla_ar_05_legendary_WomboCombo_shiny",
-    "category": "Assault Rifle"
+    "display_name": "Jak SR 05 Legendary Ballista Shiny",
+    "itempool": "itempool_jak_sr_05_legendary_Ballista_shiny",
+    "category": "Sniper"
   },
   {
-    "display_name": "Vla HW",
-    "itempool": "itempool_vla_hw",
-    "category": "Heavy"
+    "display_name": "Jak SR 05 Legendary Boomslang Shiny",
+    "itempool": "itempool_jak_sr_05_legendary_Boomslang_shiny",
+    "category": "Sniper"
   },
   {
-    "display_name": "Vla SM",
-    "itempool": "itempool_vla_sm",
-    "category": "SMG"
+    "display_name": "Jak SR 05 Legendary Truck Shiny",
+    "itempool": "itempool_jak_sr_05_legendary_Truck_shiny",
+    "category": "Sniper"
   },
   {
-    "display_name": "Vla SM 05 Legendary Beegun Shiny",
-    "itempool": "itempool_vla_sm_05_legendary_BeeGun_shiny",
-    "category": "SMG"
+    "display_name": "Jak Sr Legendary Burrow Shiny",
+    "itempool": "itempool_jak_sr_legendary_Burrow_shiny",
+    "category": "Sniper",
+    "catalog_key": "jak_sr_comp_05_legendary_burrow"
   },
   {
-    "display_name": "Kaoson",
-    "itempool": "itempool_vla_sm_05_legendary_KaoSon_shiny",
-    "category": "SMG",
-    "catalog_key": "vla_sm_comp_05_legendary_kaoson"
+    "display_name": "Jak Sr Legendary Extinction Shiny",
+    "itempool": "itempool_jak_sr_legendary_Extinction_shiny",
+    "category": "Sniper"
   },
   {
-    "display_name": "Vla SM 05 Legendary Onslaught Shiny",
-    "itempool": "itempool_vla_sm_05_legendary_Onslaught_shiny",
-    "category": "SMG"
+    "display_name": "Mal SR",
+    "itempool": "itempool_mal_sr",
+    "category": "Sniper"
   },
   {
-    "display_name": "Vla SM 06 Pearl Locust",
-    "itempool": "itempool_vla_sm_06_pearl_Locust",
-    "category": "Pearl",
-    "catalog_key": "vla_sm_comp_06_pearl_locust"
+    "display_name": "Mal SR 05 Legendary Asher Shiny",
+    "itempool": "itempool_mal_sr_05_legendary_Asher_shiny",
+    "category": "Sniper"
   },
   {
-    "display_name": "Vla SM 06 Pearl Locust Shiny",
-    "itempool": "itempool_vla_sm_06_pearl_Locust_shiny",
-    "category": "SMG",
-    "catalog_key": "vla_sm_comp_06_pearl_locust"
+    "display_name": "Mal SR 05 Legendary Complex Root Shiny",
+    "itempool": "itempool_mal_sr_05_legendary_complex_root_shiny",
+    "category": "Sniper"
   },
   {
-    "display_name": "Vla SR",
-    "itempool": "itempool_vla_sr",
+    "display_name": "Mal SR 05 Legendary Katagawa Shiny",
+    "itempool": "itempool_mal_sr_05_legendary_katagawa_shiny",
+    "category": "Sniper"
+  },
+  {
+    "display_name": "Mal Sr 05 Legendary Stealth Shiny",
+    "itempool": "itempool_mal_sr_05_legendary_Stealth_shiny",
     "category": "Sniper"
   },
   {
@@ -2632,6 +2976,87 @@
     "itempool": "itempool_vla_sr_05_legendary_CrowdSourced_shiny",
     "category": "Sniper",
     "catalog_key": "vla_sr_comp_05_legendary_crowdsourced"
+  },
+  {
+    "display_name": "Ord SR",
+    "itempool": "itempool_ord_sr",
+    "category": "Sniper"
+  },
+  {
+    "display_name": "Ord SR 05 Legendary Fisheye Shiny",
+    "itempool": "itempool_ord_sr_05_legendary_Fisheye_shiny",
+    "category": "Sniper"
+  },
+  {
+    "display_name": "Ord Sr 05 Legendary Ishmael Shiny",
+    "itempool": "itempool_ord_sr_05_legendary_Ishmael_shiny",
+    "category": "Sniper"
+  },
+  {
+    "display_name": "Ord SR 05 Legendary Seamstress Shiny",
+    "itempool": "itempool_ord_sr_05_legendary_seamstress_shiny",
+    "category": "Sniper"
+  },
+  {
+    "display_name": "Ord SR 05 Legendary Symmetry Shiny",
+    "itempool": "itempool_ord_sr_05_legendary_Symmetry_shiny",
+    "category": "Sniper"
+  },
+  {
+    "display_name": "Petanque Shiny",
+    "itempool": "itempool_ord_sr_05_legendary_petanque_shiny",
+    "category": "Sniper"
+  },
+  {
+    "display_name": "Rainmaker",
+    "itempool": "itempool_mal_sg_05_legendary_rainmaker_shiny",
+    "category": "Sniper",
+    "catalog_key": "bor_sr_comp_05_legendary_rainmaker"
+  },
+  {
+    "display_name": "Sniper All",
+    "itempool": "itempool_sniper_all",
+    "category": "Sniper"
+  },
+  {
+    "display_name": "SR 01 Common",
+    "itempool": "itempool_sr_01_common",
+    "category": "Sniper"
+  },
+  {
+    "display_name": "SR 02 Uncommon",
+    "itempool": "itempool_sr_02_uncommon",
+    "category": "Sniper"
+  },
+  {
+    "display_name": "SR 03 Rare",
+    "itempool": "itempool_sr_03_rare",
+    "category": "Sniper"
+  },
+  {
+    "display_name": "SR 04 Epic",
+    "itempool": "itempool_sr_04_epic",
+    "category": "Sniper"
+  },
+  {
+    "display_name": "SR 05 Legendary",
+    "itempool": "itempool_sr_05_legendary",
+    "category": "Sniper"
+  },
+  {
+    "display_name": "SR 06 Pearl",
+    "itempool": "itempool_sr_06_pearl",
+    "category": "Sniper"
+  },
+  {
+    "display_name": "Triplicate Shiny",
+    "itempool": "itempool_jak_sr_legendary_Triplicate_shiny",
+    "category": "Sniper"
+  },
+  {
+    "display_name": "Vla SR",
+    "itempool": "itempool_vla_sr",
+    "category": "Sniper"
   },
   {
     "display_name": "Vla SR 05 Legendary Finnty Shiny",
@@ -2642,160 +3067,5 @@
     "display_name": "Vla SR 05 Legendary Stopgap Shiny",
     "itempool": "itempool_vla_sr_05_legendary_StopGap_shiny",
     "category": "Sniper"
-  },
-  {
-    "display_name": "Wolrdboss October",
-    "itempool": "ItemPool_WolrdBoss_October",
-    "category": "Other"
-  },
-  {
-    "display_name": "Zadra Weapon",
-    "itempool": "itempool_Zadra_weapon",
-    "category": "Other"
-  },
-  {
-    "display_name": "Zane Weapon",
-    "itempool": "itempool_Zane_weapon",
-    "category": "Other"
-  },
-  {
-    "display_name": "Loveless Class Mods (All Rarities)",
-    "itempool": "itempool_class_mods_corpohacker",
-    "category": "Class Mod"
-  },
-  {
-    "display_name": "Loveless Class Mods (Legendary)",
-    "itempool": "itempool_class_mods_05_legendary_corpohacker",
-    "category": "Class Mod"
-  },
-  {
-    "display_name": "FL4K / Providence Class Mods (All Vault Hunters)",
-    "itempool": "itempool_ClassMods_Harmonica",
-    "category": "Class Mod"
-  },
-  {
-    "display_name": "Schadenfreude Shiny",
-    "itempool": "itempool_dad_ar_05_legendary_Shardenfreude_shiny",
-    "category": "Assault Rifle"
-  },
-  {
-    "display_name": "Handfrag Shiny",
-    "itempool": "itempool_dad_sm_05_legendary_handfrag_shiny",
-    "category": "SMG"
-  },
-  {
-    "display_name": "Infection Shiny",
-    "itempool": "itempool_jak_ps_05_legendary_Infection_shiny",
-    "category": "Pistol"
-  },
-  {
-    "display_name": "Assembler Shiny",
-    "itempool": "itempool_mal_sg_05_legendary_assembler_shiny",
-    "category": "Shotgun"
-  },
-  {
-    "display_name": "Devourer Shiny",
-    "itempool": "itempool_mal_sg_05_legendary_devourer_shiny",
-    "category": "Shotgun"
-  },
-  {
-    "display_name": "Accretion Shiny",
-    "itempool": "itempool_mal_sm_05_legendary_accretion_shiny",
-    "category": "SMG"
-  },
-  {
-    "display_name": "Avarice Shiny",
-    "itempool": "itempool_ord_ar_05_legendary_Avarice_shiny",
-    "category": "Assault Rifle"
-  },
-  {
-    "display_name": "Petanque Shiny",
-    "itempool": "itempool_ord_sr_05_legendary_petanque_shiny",
-    "category": "Sniper"
-  },
-  {
-    "display_name": "Hot Mod Shiny",
-    "itempool": "itempool_ted_ar_05_legendary_HotMod_shiny",
-    "category": "Assault Rifle"
-  },
-  {
-    "display_name": "Ripple Shiny",
-    "itempool": "itempool_tor_ar_05_legendary_Ripple_shiny",
-    "category": "Assault Rifle"
-  },
-  {
-    "display_name": "Sledge Shiny",
-    "itempool": "itempool_tor_PS_05_legendary_Sledge_shiny",
-    "category": "Pistol"
-  },
-  {
-    "display_name": "Fourier Shiny",
-    "itempool": "itempool_tor_sg_05_legendary_Fourier_shiny",
-    "category": "Shotgun"
-  },
-  {
-    "display_name": "Hippogun Shiny",
-    "itempool": "itempool_tor_sg_05_legendary_Hippogun_shiny",
-    "category": "Shotgun"
-  },
-  {
-    "display_name": "Exhibition Shiny",
-    "itempool": "itempool_vla_sr_05_legendary_exhibition_shiny",
-    "category": "Sniper"
-  },
-  {
-    "display_name": "Enumeration Shiny",
-    "itempool": "itempool_bor_sm_05_legendary_enumeration_shiny",
-    "category": "SMG"
-  },
-  {
-    "display_name": "Pragmate Shiny",
-    "itempool": "itempool_dad_sg_05_legendary_pragmate_shiny",
-    "category": "Shotgun"
-  },
-  {
-    "display_name": "Triplicate Shiny",
-    "itempool": "itempool_jak_sr_legendary_Triplicate_shiny",
-    "category": "Sniper"
-  },
-  {
-    "display_name": "Outback Shiny",
-    "itempool": "itempool_mal_sg_05_legendary_outback_shiny",
-    "category": "Shotgun"
-  },
-  {
-    "display_name": "Clarity Shiny",
-    "itempool": "itempool_mal_sr_05_legendary_Clarity_shiny",
-    "category": "Sniper"
-  },
-  {
-    "display_name": "Relay Shiny",
-    "itempool": "itempool_bor_sg_05_legendary_relay_shiny",
-    "category": "Shotgun"
-  },
-  {
-    "display_name": "Blackout Shiny",
-    "itempool": "itempool_dad_ps_05_legendary_blackout_shiny",
-    "category": "Pistol"
-  },
-  {
-    "display_name": "Flash Fuel Shiny",
-    "itempool": "itempool_jak_ar_05_legendary_FlashFuel_shiny",
-    "category": "Assault Rifle"
-  },
-  {
-    "display_name": "Aero Dramatic Shiny",
-    "itempool": "itempool_mal_sg_05_legendary_AeroDramatic_shiny",
-    "category": "Shotgun"
-  },
-  {
-    "display_name": "Aura Shiny",
-    "itempool": "itempool_vla_sm_05_legendary_aura_shiny",
-    "category": "SMG"
-  },
-  {
-    "display_name": "Oak Guns All",
-    "itempool": "oak_guns_all",
-    "category": "Other"
   }
 ]

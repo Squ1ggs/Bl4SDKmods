@@ -1129,11 +1129,27 @@ def max_all_for_target(
         try:
             from .vault_card_boost import max_all_vault_cards_for_pc  # noqa: PLC0415
 
-            # Skip the slow second wallet/XP pass — it freezes the host multi-second.
-            vc_ok, vc_msg = max_all_vault_cards_for_pc(pc, log=_log, allow_fallback=False)
+            vc_ok, vc_msg = max_all_vault_cards_for_pc(pc, log=_log)
             bits.append(f"vault cards={'OK' if vc_ok else 'partial'}: {vc_msg[:120]}")
         except Exception as ex:  # noqa: BLE001
-            bits.append(f"vault FAIL: {type(ex).__name__}")
+            for vc_kind in ("vaultcard1", "vaultcard2", "vaultcard3", "vaultcard4", "vaultcard5"):
+                _do_set_currency_absolute(
+                    vc_kind,
+                    _MAX_WALLET_AMOUNT,
+                    apply_name,
+                    pc=pc,
+                    player_index=pidx,
+                )
+            if apply_name:
+                for vc_xp in (
+                    "vaultcard_xp_1",
+                    "vaultcard_xp_2",
+                    "vaultcard_xp_3",
+                    "vaultcard_xp_4",
+                    "vaultcard_xp_5",
+                ):
+                    _do_give_experience(vc_xp, 9_999, apply_name)
+            bits.append(f"vault fallback ({type(ex).__name__})")
     else:
         bits.append("vault=skipped")
 
@@ -1142,48 +1158,34 @@ def max_all_for_target(
     ok_s = False
     if ps is not None:
         if _want("max_player_level"):
+            ok_p = _ensure_experience_level_via_bp(ps, 0, _MAX_PLAYER_LEVEL_ENGINE)
             got_p = _get_experience_level_via_bp(ps, 0)
             if (got_p or 0) >= _MAX_PLAYER_LEVEL_ENGINE:
                 ok_p = True
-                bits.append(f"player already {got_p}")
-            else:
-                ok_p = _ensure_experience_level_via_bp(
-                    ps, 0, _MAX_PLAYER_LEVEL_ENGINE, attempts=2
-                )
-                got_p = _get_experience_level_via_bp(ps, 0)
-                if (got_p or 0) >= _MAX_PLAYER_LEVEL_ENGINE:
-                    ok_p = True
-                bits.append(f"player BP={'OK' if ok_p else 'FAIL'} (now={got_p})")
-                if (not ok_p) and apply_name:
-                    try:
-                        _do_give_experience("player", _MAX_PLAYER_LEVEL_ENGINE, apply_name)
-                        ok_p = (
-                            _get_experience_level_via_bp(ps, 0) or 0
-                        ) >= _MAX_PLAYER_LEVEL_ENGINE
-                        bits.append(f"player level {_MAX_PLAYER_LEVEL_ENGINE} (name fallback)")
-                    except Exception as ex:  # noqa: BLE001
-                        bits.append(f"player level FAIL: {ex}")
+            bits.append(f"player BP={'OK' if ok_p else 'FAIL'} (now={got_p})")
+            if (not ok_p) and apply_name:
+                try:
+                    _do_give_experience("player", _MAX_PLAYER_LEVEL_ENGINE, apply_name)
+                    ok_p = (_get_experience_level_via_bp(ps, 0) or 0) >= _MAX_PLAYER_LEVEL_ENGINE
+                    bits.append(f"player level {_MAX_PLAYER_LEVEL_ENGINE} (name fallback)")
+                except Exception as ex:  # noqa: BLE001
+                    bits.append(f"player level FAIL: {ex}")
         else:
             ok_p = True
             bits.append("player=skipped")
         if _want("max_spec_level"):
+            ok_s = _ensure_experience_level_via_bp(ps, 1, 701)
             got_s = _get_experience_level_via_bp(ps, 1)
             if (got_s or 0) >= 701:
                 ok_s = True
-                bits.append(f"spec already {got_s}")
-            else:
-                ok_s = _ensure_experience_level_via_bp(ps, 1, 701, attempts=2)
-                got_s = _get_experience_level_via_bp(ps, 1)
-                if (got_s or 0) >= 701:
-                    ok_s = True
-                bits.append(f"spec BP={'OK' if ok_s else 'FAIL'} (now={got_s})")
-                if (not ok_s) and apply_name:
-                    try:
-                        _do_give_experience("specialization", 701, apply_name)
-                        ok_s = (_get_experience_level_via_bp(ps, 1) or 0) >= 701
-                        bits.append("spec 701 (name fallback)")
-                    except Exception as ex:  # noqa: BLE001
-                        bits.append(f"spec FAIL: {ex}")
+            bits.append(f"spec BP={'OK' if ok_s else 'FAIL'} (now={got_s})")
+            if (not ok_s) and apply_name:
+                try:
+                    _do_give_experience("specialization", 701, apply_name)
+                    ok_s = (_get_experience_level_via_bp(ps, 1) or 0) >= 701
+                    bits.append("spec 701 (name fallback)")
+                except Exception as ex:  # noqa: BLE001
+                    bits.append(f"spec FAIL: {ex}")
         else:
             ok_s = True
             bits.append("spec=skipped")

@@ -104,6 +104,22 @@
       </form>
     </dialog>
 
+    <dialog id="sqbt-prompt-dialog" class="report-issue-dialog">
+      <form method="dialog" class="report-issue-panel" id="sqbt-prompt-form">
+        <p class="report-issue-kicker" id="sqbt-prompt-kicker">Library</p>
+        <h2 id="sqbt-prompt-title">Name this pack</h2>
+        <p class="muted small" id="sqbt-prompt-detail"></p>
+        <label class="field field-wide">
+          <span id="sqbt-prompt-label">Name</span>
+          <input id="sqbt-prompt-input" type="text" autocomplete="off" />
+        </label>
+        <div class="report-issue-actions">
+          <button id="sqbt-prompt-ok" type="submit" value="ok" class="primary">Save</button>
+          <button type="submit" value="cancel" class="ghost small">Cancel</button>
+        </div>
+      </form>
+    </dialog>
+
     <aside id="update-card" class="update-card hidden" role="status" aria-live="polite">
       <img class="update-card-icon" src="assets/bl4/tab-home.png" alt="" aria-hidden="true" />
       <div class="update-card-copy">
@@ -132,10 +148,10 @@
       <p class="start-guide-kicker" data-i18n="guide.kicker">Start here</p>
       <h2 id="start-guide-title" data-i18n="guide.getOnline">What to do first</h2>
       <ol id="start-guide-steps" class="start-guide-steps">
-        <li><strong>Set your Borderlands 4 install folder</strong> — open <strong>Setup</strong> and press <strong>Set install folder</strong>. Pick the folder that contains <code>Borderlands4.exe</code> / <code>OakGame</code> (Steam on another drive is fine, e.g. <code>D:\SteamLibrary\steamapps\common\Borderlands 4</code>).</li>
-        <li><strong>Install SDK once</strong> if prompted — then fully restart Borderlands 4.</li>
+        <li><strong>Set your Borderlands 4 install folder</strong> — open <strong>Setup</strong> and press <strong>Set install folder</strong>. Pick the folder that contains <code>Borderlands4.exe</code> / <code>OakGame</code> (Steam on another drive is fine).</li>
+        <li><strong>Install SDK once</strong> if prompted — then fully quit Borderlands 4 to desktop and launch again.</li>
         <li><strong>Load a character</strong> — get in-world. The main menu will not unlock the buttons.</li>
-        <li><strong>Wait for Online</strong> — this window should say <strong>Connected</strong>. Then use the tabs.</li>
+        <li><strong>Wait until buttons unlock</strong> — this window should say <strong>Connected</strong> and Most used should light up.</li>
       </ol>
       <p class="start-guide-foot" id="start-guide-foot">
         Stuck Offline? Set the correct install folder → fully restart the game → load a character → Refresh status.
@@ -266,7 +282,19 @@
         </label>
         <div id="tool-search-results" class="tool-search-results hidden" role="listbox" aria-label="Tool search results"></div>
       </div>
-      <nav id="tab-bar" class="tab-bar"></nav>
+      <div class="nav-chrome">
+        <div class="nav-mode-row">
+          <div id="nav-mode-switch" class="nav-mode-switch" role="group" aria-label="Navigation layout">
+            <button type="button" id="nav-mode-tabs" class="nav-mode-btn" data-nav-mode="tabs" title="Top tabs">Tabs</button>
+            <button type="button" id="nav-mode-menu" class="nav-mode-btn" data-nav-mode="menu" title="Hamburger menu">Menu</button>
+          </div>
+        </div>
+        <div class="nav-tabs-row">
+          <button type="button" id="nav-burger-btn" class="nav-burger-btn hidden" aria-label="Open section menu" aria-expanded="false">&#9776;</button>
+          <nav id="tab-bar" class="tab-bar"></nav>
+        </div>
+      </div>
+      <div id="nav-drawer" class="nav-drawer hidden" role="navigation" aria-label="Sections"></div>
       <div id="safety-banner" class="safety-banner hidden" role="note" aria-live="polite">
         <p id="safety-banner-text" class="safety-banner-text"></p>
         <button id="safety-banner-dismiss" type="button" class="safety-banner-dismiss" title="Dismiss this reminder">Got it</button>
@@ -286,6 +314,22 @@
             <option value="npc_nearest" data-i18n="spawn.npc">Near nearest NPC</option>
             <option value="freecam" data-i18n="spawn.freecam">At debug cam</option>
           </select>
+        </label>
+        <label
+          class="theme-picker ghost-opacity-picker sticky-ghost-picker"
+          title="See the game through this window (Windows). Lower = more see-through."
+        >
+          <span>Ghost</span>
+          <input
+            id="ghost-opacity-range"
+            type="range"
+            min="55"
+            max="100"
+            step="1"
+            value="100"
+            aria-label="Window see-through amount"
+          />
+          <span id="ghost-opacity-label" class="ghost-opacity-label">100%</span>
         </label>
       </div>
     </div>

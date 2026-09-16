@@ -30,6 +30,7 @@ from .player_economy import (
     _EXPERIENCE_TRACK_ALIASES,
     _MAX_WALLET_AMOUNT,
     _do_set_currency_absolute,
+    _get_experience_level_via_bp,
     _give_currency_on_pc_detailed,
     _normalize_track_key,
     _resolve_target_pc_for_index,
@@ -73,6 +74,14 @@ def _auto_lobby_status() -> dict[str, Any]:
         return {"enabled": False, "error": repr(exc), "last": ""}
 
 
+def _ok_status(message: str, st: dict[str, Any] | None = None) -> dict[str, Any]:
+    """Merge status dict into _ok without double-passing message/ok."""
+    extra = dict(st or {})
+    extra.pop("message", None)
+    extra.pop("ok", None)
+    return _ok(message, **extra)
+
+
 def auto_lobby_get(payload: dict[str, Any] | None = None, **_kwargs: Any) -> dict[str, Any]:
     del payload, _kwargs
     from . import auto_lobby
@@ -104,14 +113,6 @@ def auto_lobby_stop(payload: dict[str, Any] | None = None, **_kwargs: Any) -> di
 
     st = auto_lobby.stop()
     return _ok_status(str(st.get("last") or st.get("message") or "Auto lobby off."), st)
-
-
-def _ok_status(message: str, st: dict[str, Any] | None = None) -> dict[str, Any]:
-    """Merge status dict into _ok without double-passing message/ok."""
-    extra = dict(st or {})
-    extra.pop("message", None)
-    extra.pop("ok", None)
-    return _ok(message, **extra)
 
 
 def runtime_log_action(payload: dict[str, Any] | None = None) -> dict[str, Any]:
@@ -168,6 +169,38 @@ def _session_label() -> str:
     return "Joined client"
 
 
+def _player_level_for_index(index: int) -> int | None:
+    """Best-effort character level for roster / Boost target labels (track 0)."""
+    try:
+        pc, _err = _resolve_target_pc_for_index(int(index))
+    except Exception:
+        return None
+    if pc is None:
+        return None
+    fn = getattr(pc, "GetPlayerLevel", None)
+    if callable(fn):
+        try:
+            level = int(fn() or 0)
+            if level > 0:
+                return level
+        except Exception:
+            pass
+    ps = getattr(pc, "PlayerState", None)
+    if ps is None:
+        return None
+    try:
+        level = _get_experience_level_via_bp(ps, 0)
+    except Exception:
+        return None
+    if level is None:
+        return None
+    try:
+        level_i = int(level)
+    except Exception:
+        return None
+    return level_i if level_i > 0 else None
+
+
 def _player_rows() -> list[dict[str, Any]]:
     rows: list[dict[str, Any]] = []
     try:
@@ -185,7 +218,11 @@ def _player_rows() -> list[dict[str, Any]]:
                 is_host = False
         if not is_host and local_ps is None and int(index) == 0:
             is_host = True
-        rows.append({"index": int(index), "name": str(name), "is_host": bool(is_host)})
+        row: dict[str, Any] = {"index": int(index), "name": str(name), "is_host": bool(is_host)}
+        level = _player_level_for_index(int(index))
+        if level is not None:
+            row["level"] = int(level)
+        rows.append(row)
     return rows
 
 
@@ -206,26 +243,12 @@ def set_target_player(player_index: int) -> dict[str, Any]:
     if idx < 0:
         _target_player_index = -1
         name = "All players"
-        try:
-            from . import runtime_log
-
-            runtime_log.note("set_target_player -> All players (-1)")
-        except Exception:
-            pass
         return _ok("Target set to All players.", player_index=_target_player_index, name=name)
     _target_player_index = idx
     rows = _player_rows()
     name = next((r["name"] for r in rows if r["index"] == _target_player_index), "")
     if spawn_targets.mode() == "party":
         spawn_targets.set_target("party", _target_player_index)
-    try:
-        from . import runtime_log
-
-        runtime_log.note(
-            f"set_target_player -> index {_target_player_index} name={name or '?'}"
-        )
-    except Exception:
-        pass
     return _ok(f"Target set to index {_target_player_index}.", player_index=_target_player_index, name=name)
 
 
@@ -393,9 +416,15 @@ def _sticky_toggle_status() -> dict[str, Any]:
         from . import dev_tools as dt
 
         idx = int(_target_player_index)
-        out["god_mode"] = bool(dt.devperk_toggle_state(6, idx if idx >= 0 else None))
-        out["infinite_ammo"] = bool(dt.devperk_toggle_state(5, idx if idx >= 0 else None))
         pc, _ = dt._pc_for_party_index(idx if idx >= 0 else None)
+        live_god = dt.read_ulm_god_mode(pc)
+        # Prefer live ULM fields so sticky UI matches the game (avoids ON/OFF thrash).
+        out["god_mode"] = (
+            bool(live_god)
+            if live_god is not None
+            else bool(dt.devperk_toggle_state(6, idx if idx >= 0 else None))
+        )
+        out["infinite_ammo"] = bool(dt.devperk_toggle_state(5, idx if idx >= 0 else None))
         key = dt._devperk_player_key_from_pc(pc, idx if idx >= 0 else None)
         out["weapons_restricted"] = bool(dt._weapons_restricted_sticky.get(key, False))
         out["ammo_regen"] = float(dt._ammo_regen_sticky.get(key, 0.0) or 0.0) > 0.0
@@ -628,9 +657,9 @@ def give_experience(payload: dict[str, Any]) -> dict[str, Any]:
 def max_all(payload: dict[str, Any] | None = None) -> dict[str, Any]:
     payload = payload or {}
 
-    def _flag(key: str, default: bool = True) -> bool:
+    def _flag(key: str, default: bool) -> bool:
         if key not in payload:
-            return bool(default)
+            return default
         val = payload.get(key)
         if isinstance(val, bool):
             return val
@@ -644,6 +673,8 @@ def max_all(payload: dict[str, Any] | None = None) -> dict[str, Any]:
     fails: list[str] = []
     extras: list[str] = []
     uvhm_queued = False
+    challenges_queued = False
+    challenge_meta: dict[str, Any] = {}
     for idx in indices:
         ok, detail = max_all_for_target(
             player_index=idx,
@@ -678,50 +709,81 @@ def max_all(payload: dict[str, Any] | None = None) -> dict[str, Any]:
         except Exception as exc:
             extras.append(f"cosmetics failed: {exc}")
 
-    if _flag("max_uvhm_challenges", False):
+    def _progression_busy_label() -> str:
+        try:
+            from . import uvhm_runtime
+
+            st = uvhm_runtime.status()
+            if st.get("running") or st.get("queued"):
+                return "UVHM"
+        except Exception:
+            pass
         try:
             from . import challenge_bulk_runtime
-            from . import uvhm_runtime
-            from .bridge_actions_extended import uvhm_start, uvhm_start_all
 
-            busy = ""
+            st = challenge_bulk_runtime.status()
+            if st.get("active") or st.get("queued"):
+                return "challenges"
+        except Exception:
+            pass
+        return ""
+
+    # Challenges before UVHM — UVHM waits if challenges arm; never stack both starts.
+    if _flag("max_challenges", False):
+        busy = _progression_busy_label()
+        if busy:
+            extras.append(f"challenges skipped — {busy} already running")
+        else:
             try:
-                st = uvhm_runtime.status()
-                if st.get("running") or st.get("queued"):
-                    busy = "UVHM"
-            except Exception:
-                pass
-            if not busy:
-                try:
-                    st = challenge_bulk_runtime.status()
-                    if st.get("active") or st.get("queued"):
-                        busy = "challenges"
-                except Exception:
-                    pass
-            if busy:
-                extras.append(f"UVHM skipped — {busy} already running")
-            elif len(indices) > 1:
-                result = uvhm_start_all({"confirmed": True, "max_rank": 7})
-                if result.get("ok", True):
-                    uvhm_queued = True
-                    extras.append(str(result.get("message") or "UVHM 1–7 queued for lobby"))
-                else:
-                    extras.append(str(result.get("message") or "UVHM lobby queue failed"))
-            else:
-                result = uvhm_start(
+                from .bridge_actions_extended import challenge_bulk_start
+
+                # All players when Boost target is All / multi-index; else single target.
+                player_index = -1 if len(indices) > 1 else int(indices[0])
+                result = challenge_bulk_start(
                     {
+                        "category": "All non-UVHM",
                         "confirmed": True,
-                        "max_rank": 7,
-                        "player_index": int(indices[0]),
+                        "player_index": player_index,
                     }
                 )
                 if result.get("ok", True):
-                    uvhm_queued = True
-                    extras.append(str(result.get("message") or "UVHM 1–7 queued for target"))
+                    challenges_queued = True
+                    extras.append(str(result.get("message") or "Challenges queued"))
+                    for key in ("queued_count", "progress_total", "challenge", "count"):
+                        if key in result:
+                            challenge_meta[key] = result.get(key)
                 else:
-                    extras.append(str(result.get("message") or "UVHM target queue failed"))
-        except Exception as exc:
-            extras.append(f"UVHM failed: {exc}")
+                    extras.append(str(result.get("message") or "Challenge queue failed"))
+            except Exception as exc:
+                extras.append(f"challenges failed: {exc}")
+
+    if _flag("max_uvhm_challenges", False):
+        busy = _progression_busy_label()
+        if challenges_queued:
+            extras.append("UVHM not stacked with challenges — run UVHM after, or use Auto Lobby")
+        elif busy:
+            extras.append(f"UVHM skipped — {busy} already running")
+        else:
+            try:
+                from .bridge_actions_extended import uvhm_start, uvhm_start_all
+
+                if len(indices) > 1:
+                    result = uvhm_start_all({"confirmed": True, "max_rank": 7})
+                else:
+                    result = uvhm_start(
+                        {
+                            "confirmed": True,
+                            "max_rank": 7,
+                            "player_index": int(indices[0]),
+                        }
+                    )
+                if result.get("ok", True):
+                    uvhm_queued = True
+                    extras.append(str(result.get("message") or "UVHM 1–7 queued"))
+                else:
+                    extras.append(str(result.get("message") or "UVHM queue failed"))
+            except Exception as exc:
+                extras.append(f"UVHM failed: {exc}")
 
     if ok_n == 0 and not extras:
         return _fail("; ".join(details) or "max_all failed.")
@@ -735,8 +797,12 @@ def max_all(payload: dict[str, Any] | None = None) -> dict[str, Any]:
         )
     else:
         msg = f"MAX ALL applied to {ok_n}/{len(indices)} player(s).{extra_txt}"
-    return _ok(msg, uvhm_queued=uvhm_queued)
-
+    return _ok(
+        msg,
+        uvhm_queued=uvhm_queued,
+        challenges_queued=challenges_queued,
+        **challenge_meta,
+    )
 
 def _max_currency_kind(kind: str, payload: dict[str, Any] | None = None) -> dict[str, Any]:
     """Same absolute max path as MAX ALL / blimgui Max Cash|Eridium buttons."""
@@ -1058,6 +1124,13 @@ def desktop_session_end(_payload: dict[str, Any] | None = None) -> dict[str, Any
     except Exception:
         pass
     try:
+        from . import auto_lobby
+
+        auto_lobby.abandon()
+        stopped.append("auto lobby")
+    except Exception:
+        pass
+    try:
         from . import hold_session
 
         hold_session.stop_hold(force=True)
@@ -1193,23 +1266,19 @@ def run_action(action: str, payload: dict[str, Any] | None = None) -> dict[str, 
             result = handler(data)
         else:
             result = handler(data)
-    except TypeError as exc:
-        text = repr(exc)
-        # Only the classic kwargs mismatch means EXE/mod API drift.
-        if "unexpected keyword" in text.lower() or "positional arguments" in text.lower():
-            return _fail(
-                "The desktop app is out of date with the loaded SDK. "
-                "Press Refresh status. If you just installed an SDK update, fully restart "
-                f"Borderlands 4 first, load a character, then wait for Online. ({text})"
-            )
-        return _fail(text)
+    except TypeError:
+        return _fail(
+            "The desktop app is out of date with the loaded SDK. "
+            "Press Refresh status. If you just installed an SDK update, fully restart "
+            "Borderlands 4 first, load a character, then wait for Online."
+        )
     except Exception as exc:
         text = repr(exc)
-        if "unexpected keyword" in text.lower():
+        if "TypeError" in text or "unexpected keyword" in text.lower():
             return _fail(
                 "The desktop app is out of date with the loaded SDK. "
                 "Press Refresh status. If you just installed an SDK update, fully restart "
-                f"Borderlands 4 first, load a character, then wait for Online. ({text})"
+                "Borderlands 4 first, load a character, then wait for Online."
             )
         return _fail(text)
     if isinstance(result, dict):

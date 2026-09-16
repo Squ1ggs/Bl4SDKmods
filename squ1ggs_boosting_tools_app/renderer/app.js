@@ -1,9 +1,13 @@
 "use strict";
 
 const OPEN_REWARDS_LARGE_WARNING =
-  "WARNING: Open rewards opens one mail package every 3–5 seconds (never bulk). Opening hundreds still takes time and can lag BL4; on console / cross-play, ~250–300+ carried items can make the backpack look empty until the save is under that in solo. Prefer solo for big opens, then bank / mule before rejoining multiplayer.";
+  "WARNING: Open rewards on send opens only packages from that delivery (one every 3–5s). All non-UVHM never auto-opens its Reward Center packages. Console / cross-play users may receive 600+ items: leave multiplayer, open in solo, sell junk, and reduce carried items before rejoining.";
+
+const OPEN_ALL_AFTER_CHALLENGE_WARNING =
+  "Complete ALL non-UVHM only sends Reward Center packages; opening is blocked in multiplayer. Leave the lobby, open them in solo, sell junk, and reduce carried items before rejoining. Console / cross-play users can otherwise lose backpack visibility online while carrying hundreds of items.";
 
 const SERIAL_RISK_ACK_KEY = "sqbt.serialRiskAcknowledged";
+let suppressOpenAllAfterChallenge = false;
 
 function serialRiskAcknowledged() {
   try {
@@ -25,6 +29,18 @@ function setSerialRiskAcknowledged(on) {
 function confirmSerialRisk(message) {
   if (serialRiskAcknowledged()) return true;
   return window.confirm(message);
+}
+
+function forceOpenRewardsFieldsOff() {
+  for (const key of Object.keys(fieldValues)) {
+    if (String(key).endsWith(":open_rewards")) {
+      fieldValues[key] = "no";
+    }
+  }
+  for (const wrap of document.querySelectorAll('[data-field-key$=":open_rewards"]')) {
+    const select = wrap.querySelector("select");
+    if (select) select.value = "no";
+  }
 }
 
 const i18n = window.SqbtI18n;
@@ -105,6 +121,8 @@ const toolSearchInput = document.getElementById("tool-search-input");
 const toolSearchResults = document.getElementById("tool-search-results");
 const snapRightBtn = document.getElementById("snap-right-btn");
 const themeSelect = document.getElementById("theme-select");
+const ghostOpacityRange = document.getElementById("ghost-opacity-range");
+const ghostOpacityLabel = document.getElementById("ghost-opacity-label");
 const langSelect = document.getElementById("lang-select");
 const browseGameBtn = document.getElementById("browse-game-btn");
 const installModBtn = document.getElementById("install-mod-btn");
@@ -150,11 +168,26 @@ let latestStatus = null;
 let actionBusy = false;
 let manifest = null;
 let activeTabId = "home";
+const NAV_MODE_KEY = "sqbt-nav-mode";
+const PROGRESS_POS_KEY = "sqbt-progress-panel-pos";
+let navMode = localStorage.getItem(NAV_MODE_KEY) === "menu" ? "menu" : "tabs";
+let navDrawerOpen = false;
 let fieldValues = {};
 let progressPollTimer = null;
+let progressPollInFlight = false;
+let progressPollMs = 0;
+let challengePaintTimer = null;
+const autoLobbyTouchedKeys = new Set();
+let autoLobbyPrefillGen = 0;
 let lastCatalogRosterSig = "";
 let uvhmBusyGraceUntil = 0;
 let uvhmErrorShownUntil = 0;
+let challengeBusyGraceUntil = 0;
+let challengeCompleteShownUntil = 0;
+let challengeOptimisticUntil = 0;
+let challengeProgressStartedAt = 0;
+let challengeProgressTotalHint = 0;
+let challengeDisplayMilestone = 0;
 let setupDismissed = false;
 let setupPinned = false;
 let lastSeenConnected = false;
@@ -173,8 +206,23 @@ const multiselectState = new Map();
 const multiselectRows = new Map();
 const multiselectSerialById = new Map();
 const serialStoreEdit = new Map();
+const serialStoreExpanded = new Map();
 const itemPoolSelection = new Map();
 const itemPoolRows = new Map();
+const SERIALS_SEGMENTS = [
+  { id: "send", label: "Send" },
+  { id: "library", label: "My packs" },
+  { id: "codes", label: "GZO / Lootlemon" },
+  { id: "mail", label: "Mail" },
+];
+const SERIALS_SEGMENT_KEY = "sqbt.serialsSegment";
+let serialsActiveSegment = "send";
+try {
+  const savedSeg = String(localStorage.getItem(SERIALS_SEGMENT_KEY) || "").trim();
+  if (SERIALS_SEGMENTS.some((row) => row.id === savedSeg)) serialsActiveSegment = savedSeg;
+} catch {
+  /* ignore */
+}
 let lastRosterSignature = "";
 let lastGlobalPlayersSignature = "";
 let lastTabPlayerSelectsSignature = "";
@@ -198,6 +246,10 @@ let lastProgressHtml = "";
 let lastChallengeStatus = null;
 let lastUvhmStatus = null;
 let lastSpawnAllStatus = null;
+let lastSerialDeliveryStatus = null;
+let lastAutoLobbyStatus = null;
+let lastShapeStatus = null;
+let lastVacuumStatus = null;
 let pendingUpdateUrl = "";
 const STATUS_CATALOG_TABS = new Set(["serials", "world", "vehicle", "progression"]);
 const poolBrowserSignatures = new Map();
@@ -310,6 +362,8 @@ const TAB_ICONS = Object.freeze({
   loot: "assets/bl4/tab-loot.png",
   serials: "assets/bl4/tab-serials.png",
   backpack: "assets/icons/tab-player.svg",
+  pack_bay: "assets/icons/tab-save-pack.svg",
+  party_bay: "assets/icons/tab-live-pack.svg",
   debug_cam: "assets/icons/tab-mobility.svg",
   mobility: "assets/icons/tab-mobility.svg",
   vehicle: "assets/icons/tab-vehicle.svg",
@@ -324,6 +378,7 @@ const TAB_ICONS = Object.freeze({
 });
 
 const ACTION_ICON_RULES = Object.freeze([
+  [/hold.?session|no.?main.?menu/i, "emoji:🚫"],
   [/force.?fly|infinite.?jump|noclip|no.?target|glide|dash|\bfly\b|jump|walkable|time.?dilation|mobility_/i, "assets/icons/tab-mobility.svg"],
   [/\bfreecam\b|debug.?cam/i, "assets/icons/tab-mobility.svg"],
   [/teleport|me_to_|_to_me|party.?slot/i, "assets/bl4/tab-world.png"],
@@ -369,8 +424,17 @@ function actionIcon(actionDef) {
 }
 
 function actionAccent(actionDef) {
+  const explicit = String(actionDef?.accent || "").trim().toLowerCase();
+  if (explicit) return explicit;
   const searchable = `${actionDef?.action || ""} ${actionDef?.label || ""}`;
-  if (/spawn|loot|drop|serial|deliver|mail|cosmetic|rarity|reward/i.test(searchable)) return "pink";
+  if (/hold.?session|no.?main.?menu/i.test(searchable)) return "amber";
+  if (/god.?mode|kill.?all|damage/i.test(searchable)) return "coral";
+  if (/challenge|uvhm|progress/i.test(searchable)) return "violet";
+  if (/max_all|cosmetic|golden.?chest|black.?market/i.test(searchable)) return "gold";
+  if (/reward|mail|serial|deliver/i.test(searchable)) return "mint";
+  if (/fog|freecam|teleport|world/i.test(searchable)) return "slate";
+  if (/spawn|loot|drop|shiny|rarity/i.test(searchable)) return "pink";
+  if (/fly|jump|sprint|mobility|noclip/i.test(searchable)) return "cyan";
   return "cyan";
 }
 
@@ -440,6 +504,10 @@ function refreshTeleportPartyLabels() {
 
 function friendlyActionError(text) {
   const raw = String(text || "");
+  // Handler bugs (e.g. double kwargs) are not EXE/SDK drift — show the real error.
+  if (/got multiple values for argument/i.test(raw)) {
+    return raw.replace(/^TypeError\((['"`])(.*)\1\)$/i, "$2") || raw;
+  }
   if (/TypeError|unexpected keyword|got an unexpected/i.test(raw)) {
     return (
       "The tools list in this window is out of date with the game. " +
@@ -638,6 +706,15 @@ function applyTargetMeta(targetIdx, targetName) {
   } else {
     metaTarget.textContent = "—";
   }
+
+  const stickyLabel = document.querySelector(".sticky-target-bar .target-control-label > span");
+  if (stickyLabel) {
+    const who =
+      Number(targetIdx) === -1
+        ? "All players"
+        : String(targetName || "").trim() || (targetIdx != null && targetIdx !== "" ? `#${targetIdx}` : "—");
+    stickyLabel.textContent = `Editing: ${who}`;
+  }
 }
 
 function persistStickyTarget(idx) {
@@ -689,7 +766,9 @@ function maybeResyncStickyTarget(raw) {
 }
 
 function refreshBackpackIfActive() {
-  if (activeTabId !== "backpack") return;
+  if (activeTabId !== "backpack" && activeTabId !== "pack_bay" && activeTabId !== "party_bay") {
+    return;
+  }
   for (const box of tabContent.querySelectorAll("[data-multiselect-section]")) {
     const sectionId = box.dataset.multiselectSection;
     const configJson = box.dataset.multiselectConfig;
@@ -918,6 +997,15 @@ function setStatusUi(payload) {
   if (payload?.connected) {
     syncStickyTogglesFromStatus(raw);
   }
+  if (raw.auto_lobby) {
+    const st = normalizeAutoLobbyStatus(raw.auto_lobby);
+    if (st) {
+      lastAutoLobbyStatus = st;
+      // Waiting cycles ride the normal status poll — only start the heavy poller while jobs run.
+      if (isAutoLobbyBusy(st) && !progressPollTimer) startProgressPoll();
+      else renderProgressPanel(null, null, null);
+    }
+  }
   if (
     payload?.connected &&
     Array.isArray(raw.players) &&
@@ -952,8 +1040,23 @@ function setStatusUi(payload) {
   if (!setupPinned && payload?.connected && !lastSeenConnected) {
     hideSetupAfterConfigured(gameRootInput?.value || "");
   }
-  // Drop Home "Start here" once connected (manifest section + top card).
-  if (payload?.connected && !lastSeenConnected && activeTabId === "home" && manifest?.tabs?.length) {
+  // Drop Home "Start here" once buttons unlock — only re-render Home when that
+  // checklist should appear/disappear (not on every status poll).
+  const nowActions = Boolean(
+    payload?.connected &&
+      (payload.actionsAvailable === true ||
+        payload?.raw?.actions_available ||
+        payload?.raw?.has_local_pc ||
+        (payload?.raw?.players && payload.raw.players.length))
+  );
+  const crossedActionsUnlock = nowActions && !window.__sqbtHadActions;
+  const crossedFirstConnect = Boolean(payload?.connected && !lastSeenConnected);
+  window.__sqbtHadActions = nowActions;
+  if (
+    activeTabId === "home" &&
+    manifest?.tabs?.length &&
+    (crossedActionsUnlock || crossedFirstConnect)
+  ) {
     window.setTimeout(() => {
       const current = manifest.tabs.find((row) => row.id === activeTabId);
       if (current) renderTab(current);
@@ -1005,21 +1108,111 @@ function renderRoster(players, targetIndex) {
     const li = document.createElement("li");
     if (row.index === targetIndex) li.classList.add("active");
     const name = document.createElement("span");
-    name.textContent = row.name || (row.is_host ? "Host" : `Player ${row.index}`);
+    const rawName = String(row.name || "").trim();
+    const base = rawName || (row.is_host ? "Host" : `Player ${row.index}`);
+    const lvl = row.level != null && row.level !== "" ? Number(row.level) : NaN;
+    name.textContent = Number.isFinite(lvl) && lvl > 0 ? `${base} · L${lvl}` : base;
     const idx = document.createElement("span");
     idx.className = "muted";
     idx.textContent = `#${row.index}`;
     li.append(name, idx);
+    li.dataset.playerIndex = String(row.index);
+    li.dataset.playerName = name.textContent || "";
     li.addEventListener("click", () => selectTarget(row.index));
+    li.addEventListener("contextmenu", (event) => {
+      event.preventDefault();
+      showPlayerKickMenu(event.clientX, event.clientY, row.index, name.textContent || `Player ${row.index}`);
+    });
     rosterList.appendChild(li);
   }
   refreshPlayerSelects();
 }
 
+let playerKickMenuEl = null;
+
+function hidePlayerKickMenu() {
+  if (playerKickMenuEl) {
+    playerKickMenuEl.remove();
+    playerKickMenuEl = null;
+  }
+}
+
+function showPlayerKickMenu(x, y, playerIndex, playerName) {
+  hidePlayerKickMenu();
+  const idx = Number(playerIndex);
+  if (!Number.isFinite(idx) || idx < 0) {
+    actionMessage.className = "action-message error";
+    actionMessage.textContent = "Pick a single Boost target player before kicking.";
+    return;
+  }
+  const players = latestStatus?.raw?.players || [];
+  const row = players.find((p) => Number(p?.index) === idx);
+  if (row?.is_host) {
+    actionMessage.className = "action-message error";
+    actionMessage.textContent = "You can't kick yourself (host).";
+    return;
+  }
+  const menu = document.createElement("div");
+  menu.className = "player-context-menu";
+  menu.style.left = `${Math.max(8, x)}px`;
+  menu.style.top = `${Math.max(8, y)}px`;
+  const kickBtn = document.createElement("button");
+  kickBtn.type = "button";
+  kickBtn.textContent = `Kick ${playerName} from lobby`;
+  kickBtn.addEventListener("click", async () => {
+    hidePlayerKickMenu();
+    const ok = window.confirm(`Kick ${playerName} (#${idx}) from the lobby?`);
+    if (!ok) return;
+    actionMessage.className = "action-message muted";
+    actionMessage.textContent = "Kicking…";
+    try {
+      const { data } = await window.sqbt.postAction("party_kick", {
+        player_index: idx,
+        reason: "Squ1ggs Boosting Tools",
+      });
+      const failed = data?.ok === false;
+      actionMessage.className = failed ? "action-message error" : "action-message ok";
+      actionMessage.textContent =
+        data?.message || (failed ? "Kick failed (host only)." : "Kick requested.");
+    } catch (error) {
+      actionMessage.className = "action-message error";
+      actionMessage.textContent = String(error?.message || error || "Kick failed.");
+    }
+  });
+  menu.appendChild(kickBtn);
+  document.body.appendChild(menu);
+  playerKickMenuEl = menu;
+}
+
+document.addEventListener(
+  "click",
+  () => {
+    hidePlayerKickMenu();
+  },
+  true
+);
+document.addEventListener(
+  "keydown",
+  (event) => {
+    if (event.key === "Escape") hidePlayerKickMenu();
+  },
+  true
+);
+
 function refreshActionButtons() {
   const enabled = actionsEnabled() && !actionBusy;
   tabContent.querySelectorAll("[data-run-action]").forEach((button) => {
-    button.disabled = !enabled;
+    const action = String(button.getAttribute("data-run-action") || "");
+    let allow = enabled;
+    if (allow && action === "rewards_open_everyone" && suppressOpenAllAfterChallenge) {
+      // Soft gate — still clickable after confirm, but make the risk obvious.
+      button.title =
+        "Complete ALL just ran — bank / mule before opening every pending package (Serials tab).";
+      button.classList.add("is-caution");
+    } else if (action === "rewards_open_everyone") {
+      button.classList.remove("is-caution");
+    }
+    button.disabled = !allow;
   });
   if (globalTargetSelect && latestStatus?.raw?.players?.length) {
     globalTargetSelect.disabled = !actionsEnabled();
@@ -1048,6 +1241,18 @@ async function selectTarget(index) {
   applyTargetMeta(idx, playerNameForIndex(latestStatus?.raw?.players, idx));
   refreshTeleportPartyLabels();
   refreshGlobalTargetSelect();
+  // Force the dropdown to the clicked index even if rebuild skipped an update.
+  if (globalTargetSelect) {
+    const want = String(idx);
+    if (![...globalTargetSelect.options].some((opt) => opt.value === want)) {
+      const opt = document.createElement("option");
+      opt.value = want;
+      opt.textContent =
+        playerNameForIndex(latestStatus?.raw?.players || [], idx) || `Player ${idx}`;
+      globalTargetSelect.appendChild(opt);
+    }
+    globalTargetSelect.value = want;
+  }
   renderRoster(latestStatus?.raw?.players || [], idx);
   // Keep catalog "Send to" dropdowns aligned with Boost target so GZO/Lootlemon
   // deliveries match what users just clicked in the roster.
@@ -1252,29 +1457,94 @@ function syncMobilityToggleButtons(syncKey, on) {
     }
     setIconLabel(button, `${label} — ${state ? "ON" : "OFF"}`, actionIcon({ action: button.dataset.runAction, label }));
   });
+  if (latestStatus) {
+    if (!latestStatus.sticky_toggles || typeof latestStatus.sticky_toggles !== "object") {
+      latestStatus.sticky_toggles = {};
+    }
+    latestStatus.sticky_toggles[syncKey] = state;
+    if (latestStatus.raw) {
+      if (!latestStatus.raw.sticky_toggles || typeof latestStatus.raw.sticky_toggles !== "object") {
+        latestStatus.raw.sticky_toggles = {};
+      }
+      latestStatus.raw.sticky_toggles[syncKey] = state;
+    }
+  }
+  if (typeof fillTogglesBoard === "function") {
+    try {
+      fillTogglesBoard();
+    } catch {
+      /* board may not be on-screen */
+    }
+  }
 }
 
 function startSerialDeliveryPoll(initialMessage, options = {}) {
   const started = Date.now();
   const maxMs = Math.max(60000, Number(options.maxMs || 0) || 120000);
+  const totalHint = Math.max(1, Number(options.total || options.packages || 1));
+  lastSerialDeliveryStatus = {
+    active: true,
+    queued: true,
+    index: 0,
+    total: totalHint,
+    percent: 0,
+    message: initialMessage || "Queuing mail…",
+    label: `0/${totalHint}`,
+    scope: options.scope || "",
+  };
+  renderProgressPanel(null, null, null, lastSerialDeliveryStatus);
+  // Keep the bottom line quiet — live detail lives in the floating HUD.
+  actionMessage.className = "action-message muted";
+  actionMessage.textContent = initialMessage || "Serial delivery running (see progress window)…";
   const pollDeliver = async () => {
     try {
       const { data: statusData } = await window.sqbt.postAction("serial_delivery_status", {}, 8);
       const prog = statusData?.status || statusData?.progress || null;
       const active = Boolean(prog?.active);
       const msg = String(prog?.message || statusData?.message || "").trim();
-      if (msg) {
-        actionMessage.textContent = active ? msg : `${initialMessage} · ${msg}`;
-        actionMessage.className = active ? "action-message muted" : "action-message ok";
+      if (prog && typeof prog === "object") {
+        lastSerialDeliveryStatus = { ...prog, active };
+        renderProgressPanel(null, null, null, lastSerialDeliveryStatus);
       }
       if (active && Date.now() - started < maxMs) {
         window.setTimeout(pollDeliver, 900);
+        return;
+      }
+      if (!active) {
+        lastSerialDeliveryStatus = {
+          active: false,
+          finishing: true,
+          finishing_until: Date.now() + 2800,
+          percent: 100,
+          index: Number(prog?.total || prog?.index || 1),
+          total: Number(prog?.total || 1),
+          label: prog?.label || "done",
+          scope: prog?.scope || "",
+          stage: prog?.stage || "done",
+          message: msg || "Delivery complete.",
+        };
+        renderProgressPanel(null, null, null, lastSerialDeliveryStatus);
+        actionMessage.className = "action-message ok";
+        actionMessage.textContent = msg
+          ? `${initialMessage || "Serial delivery"} · ${msg}`
+          : initialMessage || "Serial delivery complete.";
+        window.setTimeout(() => {
+          lastSerialDeliveryStatus = null;
+          renderProgressPanel(null, null, null, null);
+        }, 2800);
+      } else if (Date.now() - started >= maxMs) {
+        // Timed out while mod still reported active — drop the stuck bar.
+        lastSerialDeliveryStatus = null;
+        renderProgressPanel(null, null, null, null);
+        actionMessage.className = "action-message attention";
+        actionMessage.textContent =
+          msg || "Serial delivery status timed out — check Reward Center / mail.";
       }
     } catch {
       /* ignore status poll errors */
     }
   };
-  window.setTimeout(pollDeliver, 600);
+  window.setTimeout(pollDeliver, 400);
 }
 function paintToggleButton(button, actionDef, on) {
   const state = Boolean(on);
@@ -1339,6 +1609,12 @@ function mergeSectionFieldsIntoPayload(sectionId, payload) {
   for (const field of section?.fields || []) {
     const key = sectionFieldKey(sectionId, field);
     let value = fieldValues[key];
+    if (field.type === "checkbox") {
+      // Unchecked must send false — never fall back to a True default and re-arm jobs.
+      if (value === undefined) value = field.default ?? false;
+      payload[field.key] = value === true || String(value).toLowerCase() === "true";
+      continue;
+    }
     if (value === undefined || value === "") {
       value = field.default ?? "";
     }
@@ -1348,13 +1624,28 @@ function mergeSectionFieldsIntoPayload(sectionId, payload) {
       }
       value = Number(value);
     }
-    if (field.type === "checkbox") {
-      payload[field.key] = value === true || String(value).toLowerCase() === "true";
-      continue;
-    }
     payload[field.key] = value;
   }
   return payload;
+}
+
+function syncSectionFieldsFromDom(sectionId) {
+  if (!tabContent || !sectionId) return;
+  const root =
+    tabContent.querySelector(`[data-section-id="${CSS.escape(sectionId)}"]`) || tabContent;
+  for (const wrap of root.querySelectorAll("[data-field-key]")) {
+    const key = wrap.dataset.fieldKey || "";
+    if (!key.startsWith(`${sectionId}:`)) continue;
+    const input = wrap.querySelector("input, select, textarea");
+    if (!input) continue;
+    if (input.type === "checkbox") fieldValues[key] = Boolean(input.checked);
+    else fieldValues[key] = input.value;
+  }
+}
+
+function markAutoLobbyFieldTouched(fieldKey) {
+  if (!fieldKey || !String(fieldKey).includes("auto_lobby:")) return;
+  autoLobbyTouchedKeys.add(fieldKey);
 }
 
 function fieldKey(sectionId, field) {
@@ -1369,25 +1660,197 @@ function formatCatalogError(catalogName, error) {
   const text = String(error?.message || error || "Catalog unavailable.");
   const lower = text.toLowerCase();
   if (catalogName === "gzo" || lower.includes("gzo")) {
-    return "No GZO cache — open the GZO tab in-game once to refresh, then Retry.";
+    return "No GZO codes cached yet — press Refresh GZO, then Reload list.";
   }
   if (catalogName === "lootlemon" || lower.includes("lootlemon")) {
-    return "No Lootlemon cache — open the Lootlemon tab in-game once to refresh, then Retry.";
+    return "No Lootlemon codes cached yet — press Refresh Lootlemon, then Reload list.";
   }
   if (catalogName === "serial_store") {
-    return "No saved serials yet — save entries in My Library below.";
+    return "No saved packs yet — paste codes, type a pack name, then Save. Import a file also works (it only adds).";
   }
   if (lower.includes("abort") || lower.includes("timed out")) {
     return actionsEnabled()
-      ? "Catalog timed out — stay in-game unpaused, then click Retry or refocus the dropdown."
-      : "Connect in-game first, then click Retry or refocus the dropdown.";
+      ? "Catalog timed out — stay in-game unpaused, then Reload list."
+      : "Connect in-game first, then Reload list.";
   }
   if (lower.includes("fetch") || lower.includes("unreachable")) {
     return actionsEnabled()
-      ? "Could not load catalog — click Retry or refresh status."
-      : "Connect in-game first, then click Retry or refocus the dropdown.";
+      ? "Could not load catalog — Reload list or refresh status."
+      : "Connect in-game first, then Reload list.";
   }
   return text;
+}
+
+function catalogEmptyHtml(catalogName, config = null) {
+  if (catalogName === "serial_store") {
+    return `<div class="serial-empty-state">
+      <p class="serial-empty-title">No saved items yet</p>
+      <p class="muted small">Paste codes, type a pack name, then Save. Import a file only adds — it never replaces your packs.</p>
+    </div>`;
+  }
+  if (catalogName === "gzo") {
+    return `<div class="serial-empty-state">
+      <p class="serial-empty-title">GZO codes not loaded</p>
+      <p class="muted small">Press Refresh GZO (needs network), then Reload list.</p>
+    </div>`;
+  }
+  if (catalogName === "lootlemon") {
+    return `<div class="serial-empty-state">
+      <p class="serial-empty-title">Lootlemon codes not loaded</p>
+      <p class="muted small">Press Refresh Lootlemon — first sync can take a few minutes.</p>
+    </div>`;
+  }
+  if (catalogName === "backpack") {
+    if (config?.params?.party_bay) {
+      return `<div class="serial-empty-state">
+      <p class="serial-empty-title">No Party Bay rows</p>
+      <p class="muted small">Pick one Boost target (not All players), then Snap once. If status says 0 occupied, that player’s pack is empty on the host — not a UI glitch.</p>
+    </div>`;
+    }
+    if (config?.params?.pack_bay || config?.source === "save_yaml") {
+      return `<div class="serial-empty-state">
+      <p class="serial-empty-title">No Pack Bay rows</p>
+      <p class="muted small">Press Rescan from autosave after you loot. Needs a readable character .sav on disk.</p>
+    </div>`;
+    }
+  }
+  return `<p class="muted">Nothing matches these filters.</p>`;
+}
+
+function promptTextDialog({
+  title = "Name",
+  kicker = "Library",
+  detail = "",
+  label = "Name",
+  defaultValue = "",
+  okLabel = "Save",
+} = {}) {
+  return new Promise((resolve) => {
+    const dialog = document.getElementById("sqbt-prompt-dialog");
+    const form = document.getElementById("sqbt-prompt-form");
+    const titleEl = document.getElementById("sqbt-prompt-title");
+    const kickerEl = document.getElementById("sqbt-prompt-kicker");
+    const detailEl = document.getElementById("sqbt-prompt-detail");
+    const labelEl = document.getElementById("sqbt-prompt-label");
+    const input = document.getElementById("sqbt-prompt-input");
+    const okBtn = document.getElementById("sqbt-prompt-ok");
+    if (!dialog || !form || !input) {
+      const fallback = window.prompt(title, defaultValue);
+      resolve(fallback == null ? null : String(fallback));
+      return;
+    }
+    if (titleEl) titleEl.textContent = title;
+    if (kickerEl) kickerEl.textContent = kicker;
+    if (detailEl) {
+      detailEl.textContent = detail || "";
+      detailEl.classList.toggle("hidden", !detail);
+    }
+    if (labelEl) labelEl.textContent = label;
+    if (okBtn) okBtn.textContent = okLabel;
+    input.value = String(defaultValue || "");
+    const onClose = () => {
+      dialog.removeEventListener("close", onClose);
+      const value = dialog.returnValue === "ok" ? String(input.value || "") : null;
+      resolve(value);
+    };
+    dialog.addEventListener("close", onClose);
+    if (typeof dialog.showModal === "function") dialog.showModal();
+    else dialog.setAttribute("open", "open");
+    window.setTimeout(() => {
+      input.focus();
+      input.select();
+    }, 30);
+  });
+}
+
+function readSerialsSegment() {
+  try {
+    const saved = String(localStorage.getItem(SERIALS_SEGMENT_KEY) || "").trim();
+    if (SERIALS_SEGMENTS.some((row) => row.id === saved)) return saved;
+  } catch {
+    /* ignore */
+  }
+  return serialsActiveSegment || "send";
+}
+
+function writeSerialsSegment(segmentId) {
+  serialsActiveSegment = segmentId;
+  try {
+    localStorage.setItem(SERIALS_SEGMENT_KEY, segmentId);
+  } catch {
+    /* ignore */
+  }
+}
+
+function serialsSegmentForSection(section) {
+  const title = String(section.title || "").toLowerCase();
+  if (section.serialStore || title.includes("library") || title.includes("my packs")) return "library";
+  if (section.serialSendList || title === "send") return "send";
+  if (
+    section.catalog === "gzo" ||
+    section.catalog === "lootlemon" ||
+    title.includes("gzo") ||
+    title.includes("lootlemon") ||
+    title.includes("browse")
+  ) {
+    return "codes";
+  }
+  if (title.includes("mail") || title.includes("reward") || title.includes("pending")) return "mail";
+  return "send";
+}
+
+function serialsSegmentHint(active) {
+  if (active === "library") return "My packs — save / import / export @U packs here.";
+  if (active === "codes") return "GZO + Lootlemon community codes — Refresh if the list is empty.";
+  if (active === "mail") return "Mailbox / Reward Center — open pending rewards here.";
+  return "Send serials. Tabs above: My packs (library) · GZO / Lootlemon · Mail.";
+}
+
+function applySerialsSegment(segmentId) {
+  const active = SERIALS_SEGMENTS.some((row) => row.id === segmentId) ? segmentId : "send";
+  writeSerialsSegment(active);
+  tabContent.querySelectorAll("[data-serials-segment]").forEach((el) => {
+    el.classList.toggle("hidden", el.dataset.serialsSegment !== active);
+  });
+  tabContent.querySelectorAll(".serials-segment-btn").forEach((btn) => {
+    const on = btn.dataset.segment === active;
+    btn.classList.toggle("active", on);
+    btn.setAttribute("aria-selected", on ? "true" : "false");
+  });
+  const hint = tabContent.querySelector(".serials-segment-hint");
+  if (hint) hint.textContent = serialsSegmentHint(active);
+}
+
+function renderSerialsSegmentNav() {
+  const nav = document.createElement("nav");
+  nav.className = "serials-segment-nav";
+  nav.setAttribute("role", "tablist");
+  nav.setAttribute("aria-label", "Serials sections");
+  const active = readSerialsSegment();
+  for (const row of SERIALS_SEGMENTS) {
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "serials-segment-btn";
+    btn.dataset.segment = row.id;
+    btn.textContent = row.label;
+    btn.setAttribute("role", "tab");
+    btn.setAttribute("aria-selected", row.id === active ? "true" : "false");
+    if (row.id === active) btn.classList.add("active");
+    if (row.id === "library") {
+      btn.title = "Saved serial packs (My packs / library)";
+      btn.classList.add("serials-segment-emphasis");
+    } else if (row.id === "codes") {
+      btn.title = "Browse GZO and Lootlemon codes";
+      btn.classList.add("serials-segment-emphasis");
+    }
+    btn.addEventListener("click", () => applySerialsSegment(row.id));
+    nav.appendChild(btn);
+  }
+  const hint = document.createElement("p");
+  hint.className = "serials-segment-hint muted small";
+  hint.textContent = serialsSegmentHint(active);
+  nav.appendChild(hint);
+  return nav;
 }
 
 async function loadCatalog(name, params = {}) {
@@ -1449,8 +1912,11 @@ function multiselectParams(sectionId, config) {
     const param = filter.catalogParam || filter.key;
     params[param] = fieldValues[`${sectionId}:${filter.key}`] ?? filter.default ?? "";
   }
-  if ((config.kind || "") === "backpack") {
+  if ((config.kind || "") === "backpack" || config.catalog === "backpack") {
     params.player_index = preferredDeliveryPlayerIndex(latestStatus?.raw?.players || []);
+  }
+  if (config.params && typeof config.params === "object") {
+    Object.assign(params, config.params);
   }
   return params;
 }
@@ -1566,20 +2032,45 @@ function getMultiselectConfig(sectionId) {
   }
 }
 
+function hostPlayerIndex(players) {
+  const list = Array.isArray(players) ? players : [];
+  const host = list.find((row) => row.is_host || row.host);
+  if (host && host.index != null && host.index !== "") return Number(host.index);
+  return 0;
+}
+
+function playerOptionLabel(row) {
+  const rawName = String(row?.name || "").trim();
+  const base = rawName || (row?.is_host ? "Host" : `Player ${row?.index}`);
+  const lvl = row?.level != null && row?.level !== "" ? Number(row.level) : NaN;
+  const levelBit = Number.isFinite(lvl) && lvl > 0 ? ` · L${lvl}` : "";
+  return `${base}${levelBit} (#${row?.index})`;
+}
+
 function preferredDeliveryPlayerIndex(players) {
   const list = Array.isArray(players) ? players : [];
-  // Prefer the Boost target dropdown the user is looking at over a stale status index.
-  if (globalTargetSelect && !globalTargetSelect.disabled && globalTargetSelect.value !== "") {
-    const fromUi = Number(globalTargetSelect.value);
-    if (!Number.isNaN(fromUi)) {
-      if (fromUi === -1) return -1;
-      if (list.some((row) => Number(row.index) === fromUi)) return fromUi;
+  // Roster / dropdown click sets pendingTargetIndex immediately. The <select>
+  // value can lag (or stay on host 0) — that made UVHM hit Squ1ggs while the
+  // roster highlight showed a guest. Pending wins while fresh.
+  if (pendingTargetIndex != null && Date.now() < pendingTargetUntil) {
+    const pending = Number(pendingTargetIndex);
+    if (!Number.isNaN(pending)) {
+      if (pending === -1) return -1;
+      if (list.some((row) => Number(row.index) === pending)) return pending;
     }
   }
   const target = effectiveTargetIndex(latestStatus?.raw || {});
   if (target != null && Number(target) === -1) return -1;
   if (target != null && list.some((row) => Number(row.index) === Number(target))) {
     return Number(target);
+  }
+  // Dropdown last — only when it agrees with a live roster row.
+  if (globalTargetSelect && !globalTargetSelect.disabled && globalTargetSelect.value !== "") {
+    const fromUi = Number(globalTargetSelect.value);
+    if (!Number.isNaN(fromUi)) {
+      if (fromUi === -1) return -1;
+      if (list.some((row) => Number(row.index) === fromUi)) return fromUi;
+    }
   }
   const host = list.find((row) => row.is_host || row.host);
   if (host) return Number(host.index);
@@ -1617,6 +2108,7 @@ function enrichPayload(action, payload) {
     "mobility_infinite_jump",
     "backpack_scan_status",
     "backpack_relevel_selected",
+    "backpack_export_txt",
     "faafo_drop_backpack",
   ]);
   // These actions need a single concrete player — never stamp "All players" (-1).
@@ -1626,6 +2118,7 @@ function enrichPayload(action, payload) {
     "teleport_party",
     "backpack_scan_status",
     "backpack_relevel_selected",
+    "backpack_export_txt",
   ]);
   const existing = next.player_index;
   const hasExplicit =
@@ -1637,6 +2130,20 @@ function enrichPayload(action, payload) {
         next.player_index = Number(idx);
       }
     }
+  }
+  if (action === "uvhm_start") {
+    const players = latestStatus?.raw?.players || [];
+    const idx = Number(
+      next.player_index != null && next.player_index !== ""
+        ? next.player_index
+        : preferredDeliveryPlayerIndex(players)
+    );
+    if (!Number.isNaN(idx)) next.player_index = idx;
+    const name =
+      playerNameForIndex(players, idx) ||
+      latestStatus?.raw?.target_player_name ||
+      boostTargetDisplayName();
+    if (name && name !== "selected") next.target_name = String(name).trim();
   }
   return next;
 }
@@ -1656,7 +2163,7 @@ function applyDeliveryRecipient(payload, sectionId) {
   } else if (openRaw === "no" || openRaw === false) {
     payload.open_rewards = false;
   } else if (openRaw === undefined || openRaw === "") {
-    payload.open_rewards = false;
+    payload.open_rewards = true;
   } else {
     payload.open_rewards = Boolean(openRaw);
   }
@@ -1718,7 +2225,25 @@ function applyItemPoolPayload(sectionId, payload) {
 
 function collectPayload(sectionId, actionDef) {
   const payload = { ...(actionDef.payload || {}) };
+  // Stop must not re-merge lobby checkboxes / accidentally re-arm.
+  if (actionDef.action === "auto_lobby_stop") {
+    return { enabled: false };
+  }
+  // Auto Lobby: trust what is on screen right now (off stays off, typed amounts win).
+  if (
+    actionDef.action === "auto_lobby_start" ||
+    actionDef.action === "auto_lobby_set"
+  ) {
+    syncSectionFieldsFromDom(sectionId);
+  }
   mergeSectionFieldsIntoPayload(sectionId, payload);
+  if (actionDef.action === "auto_lobby_start") {
+    payload.enabled = true;
+    autoLobbyTouchedKeys.clear();
+  }
+  if (actionDef.action === "auto_lobby_set") {
+    autoLobbyTouchedKeys.clear();
+  }
 
   if (actionDef.action === "spawn_item_pool" || actionDef.action === "spawn_item_pool_all" || actionDef.action === "spawn_item_pool_singular_test") {
     applyItemPoolPayload(sectionId, payload);
@@ -1798,6 +2323,22 @@ function collectPayload(sectionId, actionDef) {
       .filter((n) => !Number.isNaN(n));
   }
 
+  if (actionDef.packBayCopy || actionDef.action === "pack_bay_open_toolbox") {
+    const config = getMultiselectConfig(sectionId);
+    const picked = collectSelectedSerials(sectionId, config);
+    payload.serials = picked.serials;
+  }
+
+  if (actionDef.action === "backpack_scan_status") {
+    const config = getMultiselectConfig(sectionId);
+    if (config?.params && typeof config.params === "object") {
+      Object.assign(payload, config.params);
+    }
+    if (config?.source === "save_yaml") {
+      payload.pack_bay = true;
+    }
+  }
+
   if (actionDef.deliverStore) {
     const config = getMultiselectConfig(sectionId);
     const picked = collectSelectedSerials(sectionId, config);
@@ -1818,7 +2359,9 @@ function collectPayload(sectionId, actionDef) {
     payload.titles = picked.rows.map((row) => row.title || row.name || "");
     if (!payload.group) {
       const cat = String(config?.catalog || "").toLowerCase();
-      payload.group = cat === "lootlemon" ? "Lootlemon" : cat === "gzo" ? "GZO" : "Imported";
+      if (config?.params?.party_bay) payload.group = "Live Pack";
+      else if (config?.params?.pack_bay || config?.source === "save_yaml") payload.group = "Save Pack";
+      else payload.group = cat === "lootlemon" ? "Lootlemon" : cat === "gzo" ? "GZO" : "Imported";
     }
     payload._selected_count = picked.selectedCount;
     return payload;
@@ -1848,8 +2391,8 @@ function collectPayload(sectionId, actionDef) {
     const edit = serialStoreEdit.get(sectionId) || {};
     let serial = String(edit.serial || "").trim();
     if (!serial) {
-      const pasteEl = document.querySelector(
-        `[data-section-id="${sectionId}"] textarea[data-serial-paste-area]`
+      const pasteEl = serialStoreSectionEl(sectionId)?.querySelector(
+        "textarea[data-serial-paste-area]"
       );
       serial = String(pasteEl?.value || "").trim();
     }
@@ -1858,12 +2401,15 @@ function collectPayload(sectionId, actionDef) {
       name = serial.replace(/\s+/g, " ").slice(0, 40);
       if (serial.length > 40) name += "…";
     }
+    let group = String(edit.group || "").trim();
+    // Never treat the Pack filter value "All" as a destination pack.
+    if (!group || group.toLowerCase() === "all") group = "Default";
     payload.id = edit.id || "";
     payload.name = name;
-    payload.group = String(edit.group || "Default").trim() || "Default";
+    payload.group = group;
     payload.serial = serial;
     if (!payload.serial) {
-      throw new Error("Paste a serial into the Serial box (My Library form) before Save entry.");
+      throw new Error("Paste codes into the box, then Save.");
     }
     return payload;
   }
@@ -1876,6 +2422,24 @@ function collectPayload(sectionId, actionDef) {
   if (actionDef.action === "serial_store_duplicate") {
     const edit = serialStoreEdit.get(sectionId) || {};
     payload.id = edit.id || [...(multiselectState.get(sectionId) || [])][0] || "";
+    return payload;
+  }
+
+  if (actionDef.action === "serial_store_create_group") {
+    return payload;
+  }
+
+  if (actionDef.action === "serial_store_delete_group") {
+    syncSerialStoreEditFromForm(sectionId);
+    const edit = serialStoreEdit.get(sectionId) || {};
+    let group = String(edit.group || "").trim();
+    if (!group || group.toLowerCase() === "all") {
+      group = String(fieldValues[`${sectionId}:group`] || "").trim();
+    }
+    payload.group = group;
+    if (!payload.group || payload.group.toLowerCase() === "all") {
+      throw new Error("Set a Pack name (or filter to one pack) before Delete pack.");
+    }
     return payload;
   }
 
@@ -1966,9 +2530,13 @@ function collectPayload(sectionId, actionDef) {
       payload.level = Number(payload.level);
     }
     if (payload.open_rewards === undefined) {
-      payload.open_rewards = false;
+      payload.open_rewards = true;
     }
-    if (payload.player_index === undefined || payload.player_index === "") {
+    if (payload.mail_to_self || actionDef.mailToSelf) {
+      payload.player_index = hostPlayerIndex(latestStatus?.raw?.players || []);
+      payload.mode = "player";
+      delete payload.mail_to_self;
+    } else if (payload.player_index === undefined || payload.player_index === "") {
       payload.player_index = preferredDeliveryPlayerIndex(latestStatus?.raw?.players || []);
       payload.mode = Number(payload.player_index) === -1 ? "all" : "player";
     }
@@ -2015,6 +2583,25 @@ async function runAction(action, payload, confirmText, context = {}) {
   if (action === "faafo_drop_backpack") {
     prompt = buildDropBackpackConfirm(prompt);
   }
+  if (action === "uvhm_start") {
+    const who = boostTargetConfirmLabel();
+    const allLobby = who.startsWith("ALL PLAYERS") || Number(payload?.player_index) === -1;
+    if (allLobby) {
+      prompt =
+        "Run UVHM for the entire lobby (safe all-lobby path — missing remotes are skipped)?\n\n" +
+        "This is the same as Progression → Start UVHM (all lobby).";
+    } else {
+      prompt =
+        `Start UVHM 1–7 for ${who}?\n\n` +
+        "Look at that name carefully — if it says YOU / the host, cancel and click the guest in Boost target first.\n" +
+        "Set Boost target to All players (or use Start UVHM all lobby) for everyone.";
+    }
+  }
+  if (action === "uvhm_start_all") {
+    prompt =
+      prompt ||
+      "Run UVHM for the entire lobby (safe all-lobby path — missing remotes are skipped)?";
+  }
   if (prompt && !window.confirm(prompt)) {
     return;
   }
@@ -2023,12 +2610,73 @@ async function runAction(action, payload, confirmText, context = {}) {
     actionMessage.textContent = t("action.pickPlayer");
     return;
   }
+  if (action === "serial_store_export_text" || action === "serial_store_export_json") {
+    const sectionId = context.sectionId || "";
+    const groupKey = `${sectionId}:group`;
+    if (payload.group == null || payload.group === "") {
+      payload.group = fieldValues[groupKey] || "All";
+    }
+  }
+  if (action === "serial_store_create_group") {
+    const next = await promptTextDialog({
+      kicker: "My packs",
+      title: "New pack",
+      detail: "Name the pack, paste codes, then Save. Import adds — it never wipes.",
+      label: "Pack name",
+      defaultValue: "New pack",
+      okLabel: "Create",
+    });
+    if (next == null) return;
+    const cleaned = String(next).trim();
+    if (!cleaned) {
+      actionMessage.className = "action-message error";
+      actionMessage.textContent = "Pack name is required.";
+      return;
+    }
+    payload.group = cleaned;
+    payload.name = cleaned;
+  }
+  if (action === "serial_store_delete_group") {
+    const sectionId = context.sectionId || "";
+    if (!payload.group) {
+      syncSerialStoreEditFromForm(sectionId);
+      const edit = serialStoreEdit.get(sectionId) || {};
+      payload.group = String(edit.group || fieldValues[`${sectionId}:group`] || "").trim();
+    }
+    const pack = String(payload.group || "").trim();
+    if (!pack || pack.toLowerCase() === "all") {
+      actionMessage.className = "action-message error";
+      actionMessage.textContent = "Pick a pack name first (not All).";
+      return;
+    }
+    if (!window.confirm(`Delete entire pack "${pack}" and all of its serials?`)) {
+      return;
+    }
+    payload.group = pack;
+  }
+  if (action === "serial_store_import_merge") {
+    try {
+      const text = await pickLibraryImportText();
+      if (text == null) return;
+      payload.text = text;
+    } catch (error) {
+      actionMessage.className = "action-message error";
+      actionMessage.textContent = String(error?.message || error || "Import cancelled.");
+      return;
+    }
+  }
   actionBusy = true;
   refreshActionButtons();
   actionMessage.className = "action-message muted";
   actionMessage.textContent = "Running…";
+  let resolvedAction = action;
   const finalPayload = enrichPayload(action, payload);
-  if (action === "deliver_serials") {
+  // Boost target All → safe all-lobby UVHM (same machine as uvhm_start_all).
+  if (resolvedAction === "uvhm_start" && Number(finalPayload.player_index) === -1) {
+    resolvedAction = "uvhm_start_all";
+    finalPayload.confirmed = true;
+  }
+  if (resolvedAction === "deliver_serials") {
     const raw =
       finalPayload.__serials_raw != null
         ? String(finalPayload.__serials_raw)
@@ -2088,16 +2736,22 @@ async function runAction(action, payload, confirmText, context = {}) {
     finalPayload.player_index = Number(deliverIdx);
     finalPayload.mode = Number(finalPayload.player_index) === -1 ? "all" : "player";
     if (finalPayload.open_rewards === undefined) {
-      finalPayload.open_rewards = false;
+      finalPayload.open_rewards = true;
     }
     // Queue returns quickly; scale wait so large GZO batches don't false-timeout.
     const nSerials = finalPayload.serials.length;
-    const packages = Math.max(1, Math.ceil(nSerials / 25));
+    // Match in-game chunking: large packs use fewer serials per mail package.
+    const perPkg = nSerials >= 500 ? 6 : nSerials >= 200 ? 10 : 12;
+    const packages = Math.max(1, Math.ceil(nSerials / perPkg));
     const selectedHintCount = selectedHint || nSerials;
     if (nSerials >= 25) {
-      let confirmText = `Deliver ${nSerials} unique serial(s) in ${packages} mail package(s)?`;
+      let confirmText = `Deliver ${nSerials} unique serial(s) in ~${packages} mail package(s)?`;
+      if (nSerials >= 400) {
+        confirmText =
+          `${confirmText}\n\nLarge pack: paced mail (~1s+ between packages). Stay in-world until delivery finishes.`;
+      }
       if (selectedHintCount > nSerials) {
-        confirmText = `Deliver ${nSerials} unique serial(s) (${selectedHintCount} row(s) selected) in ${packages} mail package(s)?`;
+        confirmText = `Deliver ${nSerials} unique serial(s) (${selectedHintCount} row(s) selected) in ~${packages} mail package(s)?`;
       }
       if (finalPayload.open_rewards) {
         confirmText = `${OPEN_REWARDS_LARGE_WARNING}\n\n${confirmText}`;
@@ -2122,7 +2776,7 @@ async function runAction(action, payload, confirmText, context = {}) {
         return;
       }
     }
-    timeout = Math.min(240, Math.max(45, 20 + packages * 5));
+    timeout = Math.min(480, Math.max(45, 20 + packages * 8));
   }
   if (
     (action === "spawn_mobs" && !(finalPayload.codes || []).length) ||
@@ -2167,14 +2821,119 @@ async function runAction(action, payload, confirmText, context = {}) {
       return;
     }
   }
+  if (action === "backpack_export_txt") {
+    if (Number(finalPayload.player_index) === -1) {
+      actionMessage.className = "action-message error";
+      actionMessage.textContent =
+        "Pick one player in Boost target (not All players) before exporting backpack @U.";
+      actionBusy = false;
+      refreshActionButtons();
+      return;
+    }
+  }
+  if (action === "rewards_open_everyone") {
+    if (lastChallengeStatus?.active) {
+      actionBusy = false;
+      refreshActionButtons();
+      actionMessage.className = "action-message error";
+      actionMessage.textContent =
+        "Complete ALL / challenge bulk is still running — leave Open pending rewards off (often hundreds of packages).";
+      return;
+    }
+    if (suppressOpenAllAfterChallenge) {
+      const players = latestStatus?.raw?.players || [];
+      if (Array.isArray(players) && players.length > 1) {
+        actionBusy = false;
+        refreshActionButtons();
+        actionMessage.className = "action-message error";
+        actionMessage.textContent = OPEN_ALL_AFTER_CHALLENGE_WARNING;
+        return;
+      }
+      if (
+        !window.confirm(
+          `${OPEN_ALL_AFTER_CHALLENGE_WARNING}\n\nYou appear to be solo. Open every pending package now (paced)?`
+        )
+      ) {
+        actionBusy = false;
+        refreshActionButtons();
+        actionMessage.className = "action-message muted";
+        actionMessage.textContent = "Cancelled — leave Open pending rewards off after Complete ALL.";
+        return;
+      }
+      finalPayload.force = true;
+      finalPayload.confirmed_large = true;
+    }
+  }
   try {
-    const { httpStatus, data } = await window.sqbt.postAction(action, finalPayload, timeout);
+    if (resolvedAction === "deliver_serials" || resolvedAction === "rewards_open_everyone") {
+      // Show the floating bar immediately — first mail/pack send can sit on the
+      // bridge while codes convert / queue (second click feels instant).
+      const nSerials = Array.isArray(finalPayload.serials) ? finalPayload.serials.length : 0;
+      const perPkg = nSerials >= 500 ? 6 : nSerials >= 200 ? 10 : 12;
+      const packagesGuess = Math.max(
+        1,
+        resolvedAction === "rewards_open_everyone"
+          ? 1
+          : Math.ceil(Math.max(1, nSerials) / perPkg)
+      );
+      lastSerialDeliveryStatus = {
+        active: true,
+        queued: true,
+        index: 0,
+        total: packagesGuess,
+        percent: 0,
+        message:
+          resolvedAction === "rewards_open_everyone"
+            ? "Opening pending rewards…"
+            : "Queuing mail / packs…",
+        label: `0/${packagesGuess}`,
+        scope: resolvedAction === "rewards_open_everyone" ? "everyone" : "",
+      };
+      lastProgressHtml = "";
+      renderProgressPanel(null, null, null, lastSerialDeliveryStatus);
+      startProgressPoll();
+    }
+    let { httpStatus, data } = await window.sqbt.postAction(resolvedAction, finalPayload, timeout);
+    if (data?.ok === false && resolvedAction === "rewards_open_everyone" && data?.needs_force && !finalPayload.force) {
+      const pendingN = Number(data?.packages || 0);
+      const detail = pendingN > 0 ? ` (${pendingN} pending)` : "";
+      if (
+        window.confirm(
+          `${data.message || OPEN_ALL_AFTER_CHALLENGE_WARNING}${detail}\n\nOpen all pending packages anyway?`
+        )
+      ) {
+        finalPayload.force = true;
+        finalPayload.confirmed_large = true;
+        const retry = await window.sqbt.postAction(resolvedAction, finalPayload, timeout);
+        httpStatus = retry.httpStatus;
+        data = retry.data || data;
+        if (data?.ok) suppressOpenAllAfterChallenge = false;
+      } else {
+        actionMessage.className = "action-message muted";
+        actionMessage.textContent = "Cancelled — bank / mule before opening mass challenge mail.";
+        actionBusy = false;
+        refreshActionButtons();
+        return;
+      }
+    }
     if (data?.ok === false || httpStatus === 202) {
       actionMessage.className = "action-message error";
       actionMessage.textContent = friendlyActionError(data?.message || JSON.stringify(data));
+      if (
+        (resolvedAction === "deliver_serials" || resolvedAction === "rewards_open_everyone") &&
+        lastSerialDeliveryStatus?.queued &&
+        !lastSerialDeliveryStatus?.finishing
+      ) {
+        lastSerialDeliveryStatus = null;
+        lastProgressHtml = "";
+        renderProgressPanel(null, null, null, null);
+      }
     } else {
       actionMessage.className = "action-message ok";
       actionMessage.textContent = data?.message || "Done.";
+      if (action === "rewards_open_everyone" && data?.ok) {
+        suppressOpenAllAfterChallenge = false;
+      }
     }
     if (data?.warning && String(data.warning).trim()) {
       const base = String(actionMessage.textContent || "").trim();
@@ -2235,6 +2994,27 @@ async function runAction(action, payload, confirmText, context = {}) {
     if (action === "hold_session" && data?.ok !== false) {
       syncMobilityToggleButtons("hold_session", Boolean(data?.enabled));
     }
+    if (action === "god_mode") {
+      if (data?.ok !== false && httpStatus !== 202) {
+        const on = Object.prototype.hasOwnProperty.call(data || {}, "god_mode")
+          ? Boolean(data.god_mode)
+          : Boolean(finalPayload.enabled);
+        syncMobilityToggleButtons("god_mode", on);
+      } else {
+        // Revert optimistic paint when the bridge rejected the toggle.
+        syncMobilityToggleButtons("god_mode", !Boolean(finalPayload.enabled));
+      }
+    }
+    if (action === "infinite_ammo") {
+      if (data?.ok !== false && httpStatus !== 202) {
+        const on = Object.prototype.hasOwnProperty.call(data || {}, "infinite_ammo")
+          ? Boolean(data.infinite_ammo)
+          : Boolean(finalPayload.enabled);
+        syncMobilityToggleButtons("infinite_ammo", on);
+      } else {
+        syncMobilityToggleButtons("infinite_ammo", !Boolean(finalPayload.enabled));
+      }
+    }
     if (action === "rarity_weights_set" && data?.ok && data?.weights) {
       applyFieldValues(data.weights);
     }
@@ -2255,50 +3035,220 @@ async function runAction(action, payload, confirmText, context = {}) {
       applyFieldValues(data.values);
     }
     if (
-      action === "challenge_bulk_start" ||
-      action === "uvhm_start" ||
-      action === "uvhm_start_all" ||
-      action === "spawn_item_pool_all" ||
-      action === "spawn_item_pool_singular_test"
+      action === "shiny_drop_all" ||
+      action === "loot_shape_place" ||
+      action === "loot_shape_arrange" ||
+      action === "loot_shape_clear" ||
+      action === "loot_cleanup" ||
+      String(action || "").startsWith("loot_shape")
     ) {
-      const panel = document.getElementById("sqbt-progress-panel");
-      if (panel) {
-        panel.classList.remove("hidden");
-        if (action === "challenge_bulk_start") {
-          lastChallengeStatus = {
+      lastProgressHtml = "";
+      startProgressPoll();
+    }
+    if (action === "auto_lobby_start" || action === "auto_lobby_set" || action === "auto_lobby_stop") {
+      if (action === "auto_lobby_stop") {
+        lastAutoLobbyStatus = {
+          enabled: false,
+          active: false,
+          message: "Off.",
+          detail: "Off",
+          queued: [],
+          queued_labels: [],
+          current_job: "",
+          current_label: "",
+          next_cycle_in: 0,
+          cycle_total: 0,
+          cycle_done: 0,
+          phase: "idle",
+        };
+      } else {
+        const st = normalizeAutoLobbyStatus(data?.auto_lobby || data);
+        if (st) lastAutoLobbyStatus = st;
+        else if (action === "auto_lobby_start") {
+          lastAutoLobbyStatus = {
+            enabled: true,
             active: true,
-            queued: true,
-            index: 0,
-            total: 1,
-            message: "Starting…",
+            message: "Armed — first cycle in a couple of seconds.",
+            detail: "Armed",
+            next_cycle_in: 2,
+            interval_sec: 60,
+            queued_labels: [],
+            cycle_total: 0,
+            cycle_done: 0,
           };
-        } else if (action === "spawn_item_pool_all" || action === "spawn_item_pool_singular_test") {
-          lastSpawnAllStatus = {
+        }
+      }
+      lastProgressHtml = "";
+      if (action === "auto_lobby_stop") {
+        renderProgressPanel(null, null, null);
+        const stillBusy =
+          isChallengeBusy(lastChallengeStatus) ||
+          isUvhmBusy(lastUvhmStatus) ||
+          isSpawnAllBusy(lastSpawnAllStatus) ||
+          isSerialDeliveryBusy(lastSerialDeliveryStatus) ||
+          isShapeBusy(lastShapeStatus);
+        if (!stillBusy) stopProgressPoll();
+        else startProgressPoll();
+      } else {
+        startProgressPoll();
+      }
+    }
+    if (
+      resolvedAction === "challenge_bulk_start" ||
+      resolvedAction === "challenge_complete_selected" ||
+      resolvedAction === "uvhm_start" ||
+      resolvedAction === "uvhm_start_all" ||
+      resolvedAction === "spawn_item_pool_all" ||
+      resolvedAction === "spawn_item_pool_singular_test" ||
+      resolvedAction === "loot_vacuum_nearby"
+    ) {
+      // Only slam the progress HUD when the bridge accepted the job — failed starts
+      // used to leave active:true forever if a later poll was skipped.
+      if (data?.ok !== false && httpStatus !== 202) {
+        const panel = document.getElementById("sqbt-progress-panel");
+        if (panel) {
+          panel.classList.remove("hidden");
+          if (resolvedAction === "challenge_bulk_start" || resolvedAction === "challenge_complete_selected") {
+            const fromMod = data?.challenge && typeof data.challenge === "object" ? data.challenge : null;
+            const queuedN = Math.max(
+              0,
+              Number(
+                fromMod?.progress_total ||
+                  fromMod?.total ||
+                  data?.queued_count ||
+                  data?.progress_total ||
+                  data?.count ||
+                  0
+              )
+            );
+            const shortMsg =
+              fromMod?.message ||
+              (queuedN > 0 ? `Queued ${queuedN} challenges — starting…` : "Queued — starting…");
+            lastChallengeStatus = normalizeChallengeStatus({
+              active: true,
+              queued: Boolean(fromMod?.queued ?? true),
+              running: Boolean(fromMod?.running ?? true),
+              phase: fromMod?.phase || "queued",
+              index: Number(fromMod?.index || fromMod?.progress_index || 0),
+              total: queuedN,
+              progress_index: Number(fromMod?.progress_index || fromMod?.index || 0),
+              progress_total: queuedN,
+              ok: Number(fromMod?.ok || 0),
+              failed: Number(fromMod?.failed || 0),
+              skipped: Number(fromMod?.skipped || 0),
+              message: shortMsg,
+              // Always optimistic until a status poll confirms live progress —
+              // otherwise a missed poll freezes the bar at 0/N · queued forever.
+              _optimistic: true,
+            });
+            challengeOptimisticUntil = Date.now() + 45000;
+            challengeCompleteShownUntil = 0;
+            challengeProgressStartedAt = Date.now();
+            challengeProgressTotalHint = queuedN;
+            challengeDisplayMilestone = 0;
+            if (data?.advisory) {
+              try {
+                actionMessage.textContent = String(data.advisory);
+              } catch {
+                /* ignore */
+              }
+            }
+            if (
+              data?.ok &&
+              (data?.suppress_open_all || String(finalPayload.category || "") === "All non-UVHM")
+            ) {
+              suppressOpenAllAfterChallenge = true;
+              forceOpenRewardsFieldsOff();
+            }
+          } else if (resolvedAction === "spawn_item_pool_all" || resolvedAction === "spawn_item_pool_singular_test") {
+            lastSpawnAllStatus = {
+              active: true,
+              queued: true,
+              index: 0,
+              total: Math.max(1, Number(data?.queued || 1)),
+              ok: 0,
+              failed: 0,
+              message: data?.message || (resolvedAction === "spawn_item_pool_singular_test" ? "Singular test…" : "Queuing filtered pools…"),
+            };
+          } else if (resolvedAction === "loot_vacuum_nearby") {
+            const fromMod = data?.vacuum && typeof data.vacuum === "object" ? data.vacuum : null;
+            lastVacuumStatus = {
+              active: true,
+              queued: Number(fromMod?.queued || fromMod?.total || data?.vacuum?.total || 1),
+              index: Number(fromMod?.index || 0),
+              total: Math.max(1, Number(fromMod?.total || 1)),
+              ok: Number(fromMod?.ok || 0),
+              failed: Number(fromMod?.failed || 0),
+              piled: Number(fromMod?.piled || 0),
+              message: fromMod?.message || data?.message || "Loot vacuum armed…",
+            };
+          } else {
+            lastUvhmStatus = {
+              active: true,
+              queued: true,
+              running: true,
+              progress_index: 0,
+              progress_total: 7,
+              message: "Starting…",
+            };
+          }
+          lastProgressHtml = "";
+          renderProgressPanel(null, null, null);
+        }
+        startProgressPoll();
+      }
+    }
+    if (action === "max_all" || action === "shiny_drop_all" || action === "deliver_serials" || action === "rewards_open_everyone") {
+      actionMessage.textContent = data?.message || actionMessage.textContent;
+      if (action === "max_all" && data?.ok) {
+        // Challenges and UVHM are never stacked from MAX ALL — arm whichever queued.
+        if (data?.challenges_queued) {
+          const queuedN = Math.max(
+            0,
+            Number(data?.queued_count || data?.progress_total || data?.challenge?.progress_total || 0)
+          );
+          lastChallengeStatus = normalizeChallengeStatus({
             active: true,
             queued: true,
+            running: true,
+            phase: "queued",
             index: 0,
-            total: Math.max(1, Number(data?.queued || 1)),
+            total: queuedN,
+            progress_index: 0,
+            progress_total: queuedN,
             ok: 0,
             failed: 0,
-            message: data?.message || (action === "spawn_item_pool_singular_test" ? "Singular test…" : "Queuing filtered pools…"),
-          };
-        } else {
+            skipped: 0,
+            message:
+              queuedN > 0
+                ? `MAX ALL · queued ${queuedN} challenges — starting…`
+                : "MAX ALL · challenges queued — starting…",
+            _optimistic: true,
+          });
+          challengeOptimisticUntil = Date.now() + 45000;
+          challengeCompleteShownUntil = 0;
+          challengeProgressStartedAt = Date.now();
+          challengeProgressTotalHint = queuedN;
+          challengeDisplayMilestone = 0;
+          suppressOpenAllAfterChallenge = true;
+          forceOpenRewardsFieldsOff();
+          lastProgressHtml = "";
+          renderProgressPanel(null, null, null);
+          startProgressPoll();
+        } else if (data?.uvhm_queued) {
           lastUvhmStatus = {
             active: true,
             queued: true,
             running: true,
             progress_index: 0,
             progress_total: 7,
-            message: "Starting…",
+            message: "UVHM queued from MAX ALL…",
           };
+          lastProgressHtml = "";
+          renderProgressPanel(null, null, null);
+          startProgressPoll();
         }
-        lastProgressHtml = "";
-        renderProgressPanel(null, null, null);
       }
-      startProgressPoll();
-    }
-    if (action === "max_all" || action === "shiny_drop_all" || action === "deliver_serials" || action === "rewards_open_everyone") {
-      actionMessage.textContent = data?.message || actionMessage.textContent;
       if (action === "shiny_drop_all" && data?.ok) {
         window.setTimeout(async () => {
           try {
@@ -2317,26 +3267,86 @@ async function runAction(action, payload, confirmText, context = {}) {
           if (String(area.value || "").trim()) area.value = "";
         }
         const nSerials = Array.isArray(finalPayload.serials) ? finalPayload.serials.length : 0;
-        const packages = Math.max(1, Math.ceil(nSerials / 25));
+        const perPkg = nSerials >= 500 ? 6 : nSerials >= 200 ? 10 : 12;
+        const packages = Math.max(
+          1,
+          Number(data?.packages || 0) || Math.ceil(nSerials / perPkg)
+        );
         const openPollMs = finalPayload.open_rewards
-          ? Math.min(900000, Math.max(180000, packages * 1400 + 90000))
-          : Math.min(300000, Math.max(120000, packages * 800 + 30000));
-        startSerialDeliveryPoll(data.message || actionMessage.textContent, { maxMs: openPollMs });
+          ? Math.min(1200000, Math.max(180000, packages * 1800 + 120000))
+          : Math.min(600000, Math.max(120000, packages * 1200 + 45000));
+        startSerialDeliveryPoll(data.message || actionMessage.textContent, {
+          maxMs: openPollMs,
+          total: packages,
+          packages,
+        });
+        startProgressPoll();
       }
       if (action === "rewards_open_everyone" && data?.ok) {
         const packages = Math.max(1, Number(data?.packages || data?.opened || 1));
         const etaMs = Math.max(60000, Number(data?.eta_sec || 0) * 1000 + 45000);
         startSerialDeliveryPoll(data.message || actionMessage.textContent, {
           maxMs: Math.min(900000, Math.max(120000, etaMs)),
+          total: packages,
+          packages,
+          scope: "everyone",
         });
+        startProgressPoll();
       }
     }
-    if (action === "serial_store_save" && data?.entry && context.sectionId) {
-      serialStoreEdit.set(context.sectionId, { ...data.entry });
+    if (action === "serial_store_save" && data?.ok !== false && context.sectionId) {
+      const savedGroup = String(
+        data?.entry?.group || data?.group || serialStoreEdit.get(context.sectionId)?.group || "Default"
+      ).trim() || "Default";
+      // Keep destination pack selected; clear codes so the next paste stays in the same pack.
+      serialStoreEdit.set(context.sectionId, {
+        id: "",
+        name: "",
+        group: savedGroup,
+        serial: "",
+      });
+      rememberSerialStorePackNames(context.sectionId, [
+        ...serialStoreKnownPackNames(context.sectionId),
+        savedGroup,
+      ]);
+      fieldValues[`${context.sectionId}:group`] = savedGroup;
+      renderSerialStoreForm(context.sectionId);
       refreshMultiselectSection(context.sectionId, context.config || { catalog: "serial_store" });
     }
+    if (action === "serial_store_export_text" && data?.ok && data?.text) {
+      downloadTextFile(
+        `sqbt-library-${String(data.group || "all").replace(/[^\w.-]+/g, "_")}.txt`,
+        String(data.text)
+      );
+    }
+    if (action === "backpack_export_txt" && data?.ok && data?.text) {
+      downloadTextFile(
+        `sqbt-party-bay-p${String(data.player_index ?? "x")}-${Number(data.count || 0)}serials.txt`,
+        String(data.text)
+      );
+    }
+    if (action === "serial_store_export_json" && data?.ok && data?.text) {
+      downloadTextFile(
+        `sqbt-library-${String(data.group || "all").replace(/[^\w.-]+/g, "_")}.json`,
+        String(data.text)
+      );
+    }
+    if (action === "serial_store_create_group" && data?.ok && context.sectionId) {
+      const group = String(data.group || "New pack");
+      serialStoreEdit.set(context.sectionId, {
+        id: "",
+        name: "",
+        group,
+        serial: "",
+      });
+      renderSerialStoreForm(context.sectionId);
+      refreshAllSerialStoreSections();
+    }
     if (
-      (action === "serial_store_delete" || action === "serial_store_duplicate") &&
+      (action === "serial_store_delete" ||
+        action === "serial_store_duplicate" ||
+        action === "serial_store_rename_group" ||
+        action === "serial_store_delete_group") &&
       context.sectionId
     ) {
       if (data?.entry && context.sectionId) {
@@ -2347,12 +3357,39 @@ async function runAction(action, payload, confirmText, context = {}) {
     if (
       (action === "serial_store_add_selected" ||
         action === "serial_store_import_text" ||
-        action === "serial_store_import_serials") &&
+        action === "serial_store_import_serials" ||
+        action === "serial_store_import_merge") &&
       data?.ok
     ) {
       refreshAllSerialStoreSections();
     }
-    if (action === "backpack_scan_status" && context.sectionId) {
+    if (
+      (action === "warp_mark_save" ||
+        action === "warp_mark_delete" ||
+        action === "warp_mark_list") &&
+      data?.ok
+    ) {
+      for (const key of [...catalogCache.keys()]) {
+        if (String(key).startsWith("warp_marks")) catalogCache.delete(key);
+      }
+      window.setTimeout(() => {
+        for (const node of tabContent.querySelectorAll("[data-role='catalog-select']")) {
+          const select = node.tagName === "SELECT" ? node : node.querySelector("select");
+          const fieldJson = node.dataset.catalogField;
+          const sectionId = node.dataset.sectionId;
+          if (!select || !fieldJson || !sectionId) continue;
+          try {
+            const field = JSON.parse(fieldJson);
+            if (field?.catalog !== "warp_marks") continue;
+            const actionDef = { action: node.dataset.actionName || "catalog" };
+            populateCatalogSelect(select, field, sectionId, actionDef, node);
+          } catch {
+            /* ignore */
+          }
+        }
+      }, 0);
+    }
+    if (action === "backpack_scan_status" && context.sectionId && data?.ok !== false) {
       const config = getMultiselectConfig(context.sectionId);
       if (config?.catalog === "backpack") {
         catalogCache.delete(
@@ -2369,6 +3406,19 @@ async function runAction(action, payload, confirmText, context = {}) {
         );
         refreshMultiselectSection(context.sectionId, config);
       }
+    }
+    if (action === "pack_bay_open_toolbox" && data?.ok) {
+      const url = String(data.open_url || "https://scooterstoolbox.com").trim();
+      if (url && typeof window.sqbt?.openExternal === "function") {
+        try {
+          await window.sqbt.openExternal(url);
+        } catch {
+          /* message already shows copy status */
+        }
+      }
+    }
+    if (action === "pack_bay_disable" && data?.ok) {
+      await loadManifest();
     }
     if (action === "challenge_bulk_status") {
       renderProgressPanel(data?.challenge, null, null);
@@ -2426,10 +3476,208 @@ function stopProgressPoll() {
     clearInterval(progressPollTimer);
     progressPollTimer = null;
   }
+  progressPollMs = 0;
+  if (challengePaintTimer) {
+    clearInterval(challengePaintTimer);
+    challengePaintTimer = null;
+  }
+}
+
+function ensureChallengePaintTimer(challengeBusy) {
+  if (!challengeBusy) {
+    if (challengePaintTimer) {
+      clearInterval(challengePaintTimer);
+      challengePaintTimer = null;
+    }
+    return;
+  }
+  if (challengePaintTimer) return;
+  // Repaint milestone estimate between status polls (large bulks finish too fast for 1-by-1).
+  challengePaintTimer = setInterval(() => {
+    if (!isChallengeBusy(lastChallengeStatus)) {
+      clearInterval(challengePaintTimer);
+      challengePaintTimer = null;
+      return;
+    }
+    lastProgressHtml = "";
+    renderProgressPanel(null, null, null);
+  }, 200);
+}
+
+function loadProgressPanelPos() {
+  try {
+    const raw = localStorage.getItem(PROGRESS_POS_KEY);
+    if (!raw) return null;
+    const pos = JSON.parse(raw);
+    if (Number.isFinite(pos?.left) && Number.isFinite(pos?.top)) return pos;
+  } catch {
+    /* ignore */
+  }
+  return null;
+}
+
+function saveProgressPanelPos(left, top) {
+  try {
+    localStorage.setItem(PROGRESS_POS_KEY, JSON.stringify({ left, top }));
+  } catch {
+    /* ignore */
+  }
+}
+
+let progressPanelDragging = false;
+
+function clampProgressPanelPos(panel, left, top) {
+  const width = Math.max(120, panel.offsetWidth || panel.getBoundingClientRect().width || 320);
+  const height = Math.max(48, panel.offsetHeight || panel.getBoundingClientRect().height || 80);
+  const maxL = Math.max(8, window.innerWidth - width - 8);
+  const maxT = Math.max(8, window.innerHeight - height - 8);
+  return {
+    left: Math.min(maxL, Math.max(8, Number(left) || 8)),
+    top: Math.min(maxT, Math.max(8, Number(top) || 8)),
+  };
+}
+
+function applyProgressPanelPosition(panel) {
+  if (!panel || progressPanelDragging) return;
+  if (!panel.classList.contains("is-floating") || panel.classList.contains("hidden")) {
+    panel.style.left = "";
+    panel.style.top = "";
+    panel.style.right = "";
+    panel.classList.remove("has-custom-pos");
+    return;
+  }
+  const pos = loadProgressPanelPos();
+  if (!pos) {
+    panel.style.left = "";
+    panel.style.top = "";
+    panel.style.right = "";
+    panel.classList.remove("has-custom-pos");
+    return;
+  }
+  const clamped = clampProgressPanelPos(panel, pos.left, pos.top);
+  panel.classList.add("has-custom-pos");
+  panel.style.right = "auto";
+  panel.style.left = `${clamped.left}px`;
+  panel.style.top = `${clamped.top}px`;
+}
+
+function ensureProgressPanelDrag(panel) {
+  if (!panel || panel.dataset.dragBound === "1") return;
+  panel.dataset.dragBound = "1";
+  let dragging = false;
+  let startX = 0;
+  let startY = 0;
+  let origL = 0;
+  let origT = 0;
+  panel.addEventListener("pointerdown", (ev) => {
+    if (!panel.classList.contains("is-floating") || panel.classList.contains("hidden")) return;
+    if (ev.target?.closest?.("button, a, input, select, textarea")) return;
+    const handle = ev.target?.closest?.("[data-progress-drag]");
+    if (!handle) return;
+    dragging = true;
+    progressPanelDragging = true;
+    try {
+      panel.setPointerCapture(ev.pointerId);
+    } catch {
+      /* ignore */
+    }
+    const rect = panel.getBoundingClientRect();
+    startX = ev.clientX;
+    startY = ev.clientY;
+    origL = rect.left;
+    origT = rect.top;
+    panel.classList.add("is-dragging", "has-custom-pos");
+    panel.style.right = "auto";
+    panel.style.left = `${origL}px`;
+    panel.style.top = `${origT}px`;
+    ev.preventDefault();
+  });
+  panel.addEventListener("pointermove", (ev) => {
+    if (!dragging) return;
+    const clamped = clampProgressPanelPos(
+      panel,
+      origL + (ev.clientX - startX),
+      origT + (ev.clientY - startY)
+    );
+    panel.style.right = "auto";
+    panel.style.left = `${clamped.left}px`;
+    panel.style.top = `${clamped.top}px`;
+  });
+  const endDrag = (ev) => {
+    if (!dragging) return;
+    dragging = false;
+    panel.classList.remove("is-dragging");
+    try {
+      panel.releasePointerCapture(ev.pointerId);
+    } catch {
+      /* ignore */
+    }
+    // Prefer live rect so we save where the panel actually sits after the drag.
+    const rect = panel.getBoundingClientRect();
+    const clamped = clampProgressPanelPos(panel, rect.left, rect.top);
+    panel.classList.add("has-custom-pos");
+    panel.style.right = "auto";
+    panel.style.left = `${clamped.left}px`;
+    panel.style.top = `${clamped.top}px`;
+    saveProgressPanelPos(clamped.left, clamped.top);
+    // Clear after save so a mid-drag poll cannot re-apply the old position.
+    progressPanelDragging = false;
+  };
+  panel.addEventListener("pointerup", endDrag);
+  panel.addEventListener("pointercancel", endDrag);
 }
 
 function isChallengeBusy(challenge) {
-  return Boolean(challenge && (challenge.active || challenge.queued));
+  if (!challenge) {
+    challengeCompleteShownUntil = 0;
+    challengeBusyGraceUntil = 0;
+    return false;
+  }
+  const phase = String(challenge.phase || "").toLowerCase();
+  const msg = String(challenge.message || "");
+  // Optimistic placeholder past grace with no poll confirm — never stick forever.
+  if (challenge._optimistic) {
+    if (!challengeOptimisticUntil || Date.now() >= challengeOptimisticUntil) {
+      challengeCompleteShownUntil = 0;
+      challengeBusyGraceUntil = 0;
+      challengeOptimisticUntil = 0;
+      return false;
+    }
+    return true;
+  }
+  const live = Boolean(challenge.active || challenge.queued || challenge.running);
+  const looksComplete =
+    phase === "complete" ||
+    phase === "cancelled" ||
+    /^complete:/i.test(msg) ||
+    /^cancelled/i.test(msg);
+
+  // Sticky complete/cancel from the mod (or Complete: message) — brief flash then hide.
+  if (looksComplete && !(challenge.queued || challenge.running)) {
+    // Mod may keep active=true only during sticky; treat as finishing UI.
+    if (!challenge.queued && !challenge.running && (phase === "complete" || phase === "cancelled" || /^complete:/i.test(msg))) {
+      if (!challengeCompleteShownUntil) challengeCompleteShownUntil = Date.now() + 2800;
+      challengeBusyGraceUntil = 0;
+      challengeOptimisticUntil = 0;
+      return Date.now() < challengeCompleteShownUntil;
+    }
+  }
+  if (!live && looksComplete) {
+    if (!challengeCompleteShownUntil) challengeCompleteShownUntil = Date.now() + 2800;
+    challengeBusyGraceUntil = 0;
+    challengeOptimisticUntil = 0;
+    return Date.now() < challengeCompleteShownUntil;
+  }
+  if (!live) {
+    challengeCompleteShownUntil = 0;
+    challengeBusyGraceUntil = 0;
+    challengeOptimisticUntil = 0;
+    return false;
+  }
+  challengeCompleteShownUntil = 0;
+  challengeBusyGraceUntil = Date.now() + 3500;
+  challengeOptimisticUntil = 0;
+  return true;
 }
 
 function isUvhmBusy(uvhm) {
@@ -2438,6 +3686,18 @@ function isUvhmBusy(uvhm) {
     if (!uvhmErrorShownUntil) uvhmErrorShownUntil = Date.now() + 4500;
     uvhmBusyGraceUntil = 0;
     return Date.now() < uvhmErrorShownUntil;
+  }
+  // Sticky complete — keep bar + green ✓ visible briefly (with or without active flag).
+  if (phase === "complete" && uvhm && !uvhm.queued && !uvhm.running) {
+    if (!uvhmErrorShownUntil) uvhmErrorShownUntil = Date.now() + 2800;
+    uvhmBusyGraceUntil = 0;
+    return Date.now() < uvhmErrorShownUntil;
+  }
+  // Idle — hide.
+  if (!uvhm || phase === "idle") {
+    uvhmErrorShownUntil = 0;
+    uvhmBusyGraceUntil = 0;
+    return false;
   }
   uvhmErrorShownUntil = 0;
   const live = Boolean(
@@ -2452,7 +3712,7 @@ function isUvhmBusy(uvhm) {
   }
   // Brief gaps between ranks / ticks used to hide the bar for a flash.
   if (Date.now() < uvhmBusyGraceUntil) {
-    if (phase === "complete" || phase === "idle") {
+    if (phase === "complete" || phase === "idle" || !phase) {
       uvhmBusyGraceUntil = 0;
       return false;
     }
@@ -2462,25 +3722,222 @@ function isUvhmBusy(uvhm) {
 }
 
 function isSpawnAllBusy(spawnAll) {
-  if (!spawnAll) return false;
-  if (spawnAll.active || spawnAll.queued) return true;
-  const total = Number(spawnAll.total || 0);
-  const index = Number(spawnAll.index || 0);
-  return total > 0 && index < total;
+  // Trust live active/queued only — index<total after cancel/idle left the bar stuck forever.
+  return Boolean(spawnAll && (spawnAll.active || spawnAll.queued));
+}
+function isVacuumBusy(vacuum) {
+  return Boolean(vacuum && (vacuum.active || Number(vacuum.queued || 0) > 0));
+}
+function isSerialDeliveryBusy(prog) {
+  if (!prog) return false;
+  if (prog.finishing) {
+    const until = Number(prog.finishing_until || 0);
+    if (until > 0 && Date.now() >= until) return false;
+    return true;
+  }
+  return Boolean(prog.active || prog.queued);
 }
 
-function renderProgressPanel(challenge, uvhm, spawnAll) {
+function isAutoLobbyArmed(st) {
+  return Boolean(st && (st.enabled || st.active));
+}
+
+function isAutoLobbyBusy(st) {
+  // Only "working" phases should slam the bridge. Waiting between cycles uses status polls.
+  if (!isAutoLobbyArmed(st)) return false;
+  const phase = String(st.phase || "").toLowerCase();
+  if (phase === "running" || phase === "queued" || phase === "kicking") return true;
+  if (st.current_job) return true;
+  if (Array.isArray(st.queued) && st.queued.length) return true;
+  if (Array.isArray(st.queued_labels) && st.queued_labels.length) return true;
+  return false;
+}
+
+let shapeHoldUiUntil = 0;
+
+function isShapeBusy(st) {
+  if (!st) return false;
+  const phase = String(st.phase || "").toLowerCase();
+  if (!phase || phase === "idle") {
+    shapeHoldUiUntil = 0;
+    return false;
+  }
+  // Actively placing / publishing — always show.
+  if (st.active || phase === "dumping" || phase === "publishing" || phase === "active") {
+    shapeHoldUiUntil = 0;
+    return true;
+  }
+  // ready/held are sustained states — show briefly, then hide so the bar cannot stick.
+  if (phase === "ready" || phase === "held") {
+    if (!shapeHoldUiUntil) shapeHoldUiUntil = Date.now() + 5000;
+    return Date.now() < shapeHoldUiUntil;
+  }
+  return false;
+}
+
+function challengeMilestoneStep(total) {
+  const totalI = Math.max(0, Number(total) || 0);
+  if (totalI <= 0) return 1;
+  if (totalI <= 40) return 1;
+  return Math.max(50, Math.ceil(totalI / 10));
+}
+
+function snapChallengeMilestone(rawIndex, total) {
+  const totalI = Math.max(0, Number(total) || 0);
+  const raw = Math.max(0, Number(rawIndex) || 0);
+  if (totalI <= 0) return 0;
+  if (raw >= totalI) return totalI;
+  const step = challengeMilestoneStep(totalI);
+  return Math.min(totalI, Math.floor(raw / step) * step);
+}
+
+/** Milestone bar for large bulks — fallback estimate only until live status advances. */
+function challengeDisplayIndex(challengeState) {
+  const total = Math.max(
+    0,
+    Number(challengeState?.total || challengeState?.progress_total || challengeProgressTotalHint || 0)
+  );
+  const serverRaw = Math.max(
+    0,
+    Number(challengeState?.progress_index ?? challengeState?.index ?? 0),
+    Number(challengeState?.raw_index || 0),
+    Number(challengeState?.ok || 0) +
+      Number(challengeState?.failed || 0) +
+      Number(challengeState?.skipped || 0)
+  );
+  const phase = String(challengeState?.phase || "").toLowerCase();
+  if (phase === "complete") {
+    challengeDisplayMilestone = total;
+    return total;
+  }
+  const serverSnap = snapChallengeMilestone(serverRaw, total);
+  let estSnap = 0;
+  if (
+    challengeProgressStartedAt > 0 &&
+    total > 0 &&
+    (challengeState?.running || challengeState?.active || challengeState?._optimistic)
+  ) {
+    // ULM-safe solo pacing is 1/tick (~50ms) plus game overhead: roughly 65–75s
+    // for 1209. Once the bridge reports progress, trust it instead of estimating.
+    const elapsedMs = Date.now() - challengeProgressStartedAt;
+    const estRaw =
+      serverRaw > 0 ? serverRaw : Math.min(total * 0.08, (elapsedMs / 1000) * (total / 75));
+    estSnap = snapChallengeMilestone(estRaw, total);
+    if (serverRaw > 0 && estSnap <= 0) estSnap = challengeMilestoneStep(total);
+  }
+  const next = Math.max(challengeDisplayMilestone, serverSnap, estSnap);
+  challengeDisplayMilestone = next;
+  return next;
+}
+
+function normalizeChallengeStatus(raw) {
+  if (!raw || typeof raw !== "object") return null;
+  const total = Math.max(0, Number(raw.total || raw.progress_total || 0));
+  const rawIndex = Math.max(
+    0,
+    Number(raw.progress_index ?? raw.index ?? 0),
+    Number(raw.ok || 0) + Number(raw.failed || 0) + Number(raw.skipped || 0)
+  );
+  const index = total > 0 ? Math.min(rawIndex, total) : rawIndex;
+  const msg = String(raw.message || "");
+  const live = Boolean(raw.active || raw.queued || raw.running);
+  return {
+    ...raw,
+    active: live,
+    queued: Boolean(raw.queued),
+    running: Boolean(raw.running || (raw.active && !raw.queued)),
+    phase: String(raw.phase || (raw.queued ? "queued" : raw.active ? "running" : "idle")),
+    total,
+    progress_total: total,
+    index,
+    progress_index: index,
+    ok: Number(raw.ok || 0),
+    failed: Number(raw.failed || 0),
+    skipped: Number(raw.skipped || 0),
+    token: String(raw.token || ""),
+    message: msg,
+    _optimistic: Boolean(raw._optimistic),
+  };
+}
+
+function challengeProgressDetail(message) {
+  const text = String(message || "").trim();
+  if (!text) return "";
+  const withoutAdvisory = text
+    .replace(/Leave Open pending rewards[\s\S]*/i, "")
+    .replace(/Bank \/ mule first[\s\S]*/i, "")
+    .trim();
+  const line = (withoutAdvisory || text).split(/\n/)[0].trim();
+  return line.length > 140 ? `${line.slice(0, 137)}…` : line;
+}
+
+function normalizeShapeStatus(raw) {
+  if (!raw || typeof raw !== "object") return null;
+  const prog = raw.shape_progress && typeof raw.shape_progress === "object" ? raw.shape_progress : raw;
+  return {
+    active: Boolean(prog.active),
+    phase: String(prog.phase || ""),
+    shape: String(prog.shape || ""),
+    pins: Number(prog.pins || 0),
+    synced: Number(prog.synced || 0),
+    hold: Boolean(prog.hold),
+    coop: Boolean(prog.coop),
+    message: String(prog.message || raw.message || ""),
+    detail: String(prog.detail || ""),
+    hint: String(prog.hint || ""),
+    progress_index: Number(prog.progress_index || 0),
+    progress_total: Number(prog.progress_total || 0),
+  };
+}
+
+
+function normalizeAutoLobbyStatus(raw) {
+  if (!raw || typeof raw !== "object") return null;
+  const cfg = raw.config && typeof raw.config === "object" ? raw.config : null;
+  const enabledFlag =
+    raw.enabled != null ? Boolean(raw.enabled) : cfg && cfg.enabled != null ? Boolean(cfg.enabled) : Boolean(raw.active);
+  return {
+    enabled: enabledFlag,
+    active: enabledFlag,
+    queued: Array.isArray(raw.queued) ? raw.queued : [],
+    queued_labels: Array.isArray(raw.queued_labels) ? raw.queued_labels : [],
+    current_job: String(raw.current_job || ""),
+    current_label: String(raw.current_label || ""),
+    next_cycle_in: Number(raw.next_cycle_in || 0),
+    drip_phase: String(raw.drip_phase || ""),
+    drip_drop_in: Number(raw.drip_drop_in || 0),
+    drip_count: Number(raw.drip_count || 0),
+    drip_drop_round: Number(raw.drip_drop_round || 0),
+    interval_sec: Number(raw.interval_sec || (cfg && cfg.interval_sec) || 0),
+    cycle_total: Number(raw.cycle_total || raw.progress_total || 0),
+    cycle_done: Number(raw.cycle_done || raw.progress_index || 0),
+    phase: String(raw.phase || ""),
+    message: String(raw.message || raw.last || ""),
+    detail: String(raw.detail || ""),
+    last: String(raw.last || raw.message || ""),
+  };
+}
+
+
+
+
+function renderProgressPanel(challenge, uvhm, spawnAll, serial = undefined) {
   const panel = document.getElementById("sqbt-progress-panel");
   if (!panel) return;
 
   // null means keep cached value (manual status for one job must not wipe the other).
+  // undefined for serial also keeps cache; explicit null clears serial job.
   if (challenge !== null) lastChallengeStatus = challenge;
   if (uvhm !== null) lastUvhmStatus = uvhm;
   if (spawnAll !== null) lastSpawnAllStatus = spawnAll;
+  if (serial !== undefined) lastSerialDeliveryStatus = serial;
 
   const challengeState = lastChallengeStatus;
   const uvhmState = lastUvhmStatus;
   const spawnState = lastSpawnAllStatus;
+  const serialState = lastSerialDeliveryStatus;
+  const autoLobbyState = lastAutoLobbyStatus;
+  const vacuumState = lastVacuumStatus;
 
   const clampPct = (value, total) => {
     const safeTotal = Math.max(1, Number(total || 0));
@@ -2491,19 +3948,130 @@ function renderProgressPanel(challenge, uvhm, spawnAll) {
   const challengeBusy = isChallengeBusy(challengeState);
   const uvhmBusy = isUvhmBusy(uvhmState);
   const spawnBusy = isSpawnAllBusy(spawnState);
-  const busy = challengeBusy || uvhmBusy || spawnBusy;
+  const serialBusy = isSerialDeliveryBusy(serialState);
+  const autoLobbyArmed = isAutoLobbyArmed(autoLobbyState);
+  const autoLobbyBusy = isAutoLobbyBusy(autoLobbyState);
+  const shapeState = lastShapeStatus;
+  const shapeBusy = isShapeBusy(shapeState);
+  const vacuumBusy = isVacuumBusy(vacuumState);
+  // Floating bar: live jobs only. Auto Lobby "armed / waiting" still paints when armed,
+  // but idle armed must not keep the panel stuck after other jobs finish without status.
+  const busy =
+    challengeBusy ||
+    uvhmBusy ||
+    spawnBusy ||
+    serialBusy ||
+    autoLobbyBusy ||
+    autoLobbyArmed ||
+    shapeBusy ||
+    vacuumBusy;
 
   let html = "";
-  if (challengeBusy) {
-    const total = Math.max(1, Number(challengeState.total || challengeState.progress_total || 0));
-    const index = Math.max(0, Number(challengeState.index || challengeState.progress_index || 0));
-    const pct = clampPct(index, total);
-    const detail = challengeState.message || `Queued · ${index}/${total}`;
-    const token = challengeState.token ? ` · ${challengeState.token}` : "";
-    html += `<h4>Challenge bulk</h4>
+  if (shapeBusy) {
+    const total = Math.max(1, Number(shapeState.progress_total || shapeState.pins || 1));
+    const index = Math.max(0, Number(shapeState.progress_index || shapeState.synced || 0));
+    const phase = String(shapeState.phase || "");
+    const pct =
+      phase === "ready" || phase === "held"
+        ? 100
+        : phase === "dumping"
+          ? Math.max(12, clampPct(index, total))
+          : clampPct(index, total);
+    const title =
+      phase === "publishing"
+        ? "Co-op shape publish"
+        : phase === "ready"
+          ? "Co-op shape ready"
+          : phase === "dumping"
+            ? "Placing shape"
+            : "Loot shape";
+    const countLine = shapeState.detail || `${shapeState.shape || "shape"} · ${index}/${total}`;
+    const hint = shapeState.hint || shapeState.message || "";
+    html += `<div data-progress-job="shape"><h4>${title}</h4>
       <div class="progress-bar"><span style="width:${pct}%"></span></div>
-      <p class="progress-meta muted">${index}/${total} · OK ${challengeState.ok || 0} · fail ${challengeState.failed || 0}${token}</p>
-      <p class="progress-meta muted">${detail}</p>`;
+      <p class="progress-meta muted">${countLine}</p>
+      <p class="progress-meta muted">${hint}</p></div>`;
+  }
+  if (autoLobbyArmed && !challengeBusy && !uvhmBusy) {
+    const total = Math.max(0, Number(autoLobbyState.cycle_total || 0));
+    const done = Math.max(0, Number(autoLobbyState.cycle_done || 0));
+    const phase = String(autoLobbyState.phase || "").toLowerCase();
+    const current =
+      autoLobbyState.current_label ||
+      (autoLobbyState.queued_labels && autoLobbyState.queued_labels[0]) ||
+      "";
+    const waiting = phase === "waiting" || (!current && Number(autoLobbyState.next_cycle_in || 0) > 0);
+    const interval = Math.max(1, Number(autoLobbyState.interval_sec || 90));
+    let pct = 10;
+    if (total > 0) pct = clampPct(done, total);
+    else if (waiting)
+      pct = Math.max(
+        6,
+        Math.min(94, Math.round(100 - (Number(autoLobbyState.next_cycle_in) / interval) * 100))
+      );
+    const queueBit =
+      autoLobbyState.queued_labels && autoLobbyState.queued_labels.length
+        ? ` · next: ${autoLobbyState.queued_labels.slice(0, 2).join(", ")}`
+        : "";
+    const countLine = current
+      ? `Now: ${current}${queueBit}`
+      : waiting
+        ? `Next cycle in ${Math.max(0, Math.round(Number(autoLobbyState.next_cycle_in) || 0))}s`
+        : autoLobbyState.detail || "Armed";
+    const detail = challengeProgressDetail(
+      autoLobbyState.detail || autoLobbyState.message || autoLobbyState.last || ""
+    );
+    const dripCountdown =
+      autoLobbyState.drip_phase === "wait_mail" && autoLobbyState.drip_drop_in > 0
+        ? `BACKPACK SPILL STARTS IN ${Math.ceil(autoLobbyState.drip_drop_in)}s — stand clear`
+        : "";
+    html += `<div data-progress-job="auto-lobby"><h4>Auto Lobby</h4>
+      <div class="progress-bar"><span style="width:${pct}%"></span></div>
+      <p class="progress-meta muted">${countLine}</p>
+      ${dripCountdown ? `<p class="progress-danger-countdown">${dripCountdown}</p>` : ""}
+      ${detail ? `<p class="progress-meta muted">${detail}</p>` : ""}
+      <button type="button" class="progress-stop-btn" data-auto-lobby-stop="1">Stop Auto Lobby</button></div>`;
+  } else if (autoLobbyArmed && (challengeBusy || uvhmBusy)) {
+    const watch =
+      autoLobbyState.current_label ||
+      (challengeBusy ? "Challenges" : "UVHM") ||
+      "progression";
+    html += `<div data-progress-job="auto-lobby-watch"><p class="progress-meta muted">Auto Lobby · waiting on ${watch}</p>
+      <button type="button" class="progress-stop-btn" data-auto-lobby-stop="1">Stop Auto Lobby</button></div>`;
+  }
+  if (challengeBusy) {
+    const rawTotal = Number(
+      challengeState.total || challengeState.progress_total || challengeProgressTotalHint || 0
+    );
+    const index = challengeDisplayIndex(challengeState);
+    const waitingTick =
+      (rawTotal <= 0 && Boolean(challengeState.queued || challengeState._optimistic)) ||
+      (Boolean(challengeState._optimistic) && index <= 0 && Boolean(challengeState.queued));
+    const total = rawTotal > 0 ? rawTotal : 1;
+    const pct = waitingTick ? 8 : clampPct(Math.min(index, total), total);
+    const detail =
+      challengeProgressDetail(challengeState.message) ||
+      (waitingTick ? "Queued — waiting for world tick…" : `Working · ${index}/${total}`);
+    const tokenRaw = String(challengeState.token || "");
+    const token =
+      tokenRaw.length > 28 ? ` · ${tokenRaw.slice(0, 25)}…` : tokenRaw ? ` · ${tokenRaw}` : "";
+    const skipBit =
+      Number(challengeState.skipped || 0) > 0 ? ` · skip ${challengeState.skipped}` : "";
+    const countLine = waitingTick
+      ? rawTotal > 0
+        ? `Starting ${rawTotal}…`
+        : "Starting…"
+      : `${Math.min(index, total)}/${total} · OK ${challengeState.ok || 0} · fail ${challengeState.failed || 0}${skipBit}${token}`;
+    html += `<div data-progress-job="challenge"><h4>Challenge bulk${
+      String(challengeState.phase || "").toLowerCase() === "complete" ||
+      /^complete:/i.test(String(challengeState.message || ""))
+        ? ' <span class="progress-done-tick" title="Finished">✓</span>'
+        : ""
+    }</h4>
+      <div class="progress-bar"><span style="width:${pct}%"></span></div>
+      <p class="progress-meta muted">${countLine}</p>
+      <p class="progress-meta muted">${detail}</p>
+      <button type="button" class="progress-stop-btn" data-challenge-stop="1">Stop challenges</button></div>`;
   }
   if (uvhmBusy) {
     const total = Math.max(1, Number(uvhmState.progress_total || uvhmState.total || uvhmState.steps_total || 7));
@@ -2512,12 +4080,16 @@ function renderProgressPanel(challenge, uvhm, spawnAll) {
     const pct = clampPct(index, total);
     let detail = String(uvhmState.message || `Step ${index}/${total}`);
     detail = detail.replace(/Allowing .+ to settle \(\d+\/\d+\)\.?/i, "Waiting for challenge settle…");
+    if (detail.length > 120) detail = `${detail.slice(0, 117)}…`;
     const target = uvhmState.target_name ? `${uvhmState.target_name} · ` : "";
     const rankBit =
       uvhmState.rank != null && uvhmState.rank !== ""
         ? `rank ${uvhmState.rank}${uvhmState.max_rank ? `/${uvhmState.max_rank}` : ""} · `
         : "";
-    html += `<div data-progress-job="uvhm"><h4>UVHM progression</h4>
+    const uvhmDone = String(uvhmState.phase || "").toLowerCase() === "complete";
+    html += `<div data-progress-job="uvhm"><h4>UVHM progression${
+      uvhmDone ? ' <span class="progress-done-tick" title="Finished">✓</span>' : ""
+    }</h4>
       <div class="progress-bar"><span style="width:${pct}%"></span></div>
       <p class="progress-meta muted">${target}${rankBit}${detail}</p></div>`;
   }
@@ -2531,76 +4103,296 @@ function renderProgressPanel(challenge, uvhm, spawnAll) {
       <p class="progress-meta muted">${index}/${total} · OK ${spawnState.ok || 0} · fail ${spawnState.failed || 0}</p>
       <p class="progress-meta muted">${detail}</p>`;
   }
+  if (vacuumBusy) {
+    const total = Math.max(1, Number(vacuumState.total || vacuumState.progress_total || 1));
+    const index = Math.max(0, Number(vacuumState.progress_index ?? vacuumState.index ?? 0));
+    const pct = clampPct(index, total);
+    const detail = vacuumState.message || `Vacuum · ${index}/${total}`;
+    html += `<div data-progress-job="vacuum"><h4>Loot vacuum</h4>
+      <div class="progress-bar"><span style="width:${pct}%"></span></div>
+      <p class="progress-meta muted">${index}/${total} · bag ${vacuumState.ok || 0} · piles ${vacuumState.piled || 0} · fail ${vacuumState.failed || 0}</p>
+      <p class="progress-meta muted">${detail}</p>
+      <button type="button" class="progress-stop-btn" data-vacuum-stop="1">Stop vacuum</button></div>`;
+  }
+  if (serialBusy) {
+    const total = Math.max(1, Number(serialState.total || 1));
+    const index = Math.max(0, Number(serialState.index || 0));
+    const pctRaw = Number(serialState.percent);
+    const pct = Number.isFinite(pctRaw)
+      ? Math.min(100, Math.max(0, Math.round(pctRaw)))
+      : clampPct(index, total);
+    const stage = String(serialState.stage || serialState.phase || "");
+    const title =
+      stage === "reward_open" || /open/i.test(stage)
+        ? "Opening rewards"
+        : "Serial delivery";
+    const detail = serialState.message || `Package ${index}/${total}`;
+    const scope = serialState.scope ? ` · ${serialState.scope}` : "";
+    html += `<div data-progress-job="serial"><h4>${title}</h4>
+      <div class="progress-bar"><span style="width:${pct}%"></span></div>
+      <p class="progress-meta muted">${serialState.label || `${index}/${total}`}${scope}</p>
+      <p class="progress-meta muted">${detail}</p></div>`;
+  }
 
   let nextHtml = html;
+  if (busy && nextHtml) {
+    nextHtml =
+      `<div class="progress-drag-handle" data-progress-drag="1" title="Drag to move">Move</div>` +
+      nextHtml;
+  }
+  panel.classList.toggle("is-floating", busy);
   if (busy) {
     panel.classList.remove("hidden");
-  } else if (activeTabId === "progression") {
-    panel.classList.remove("hidden");
-    nextHtml = `<p class="muted">No active challenge or UVHM job. Start one below.</p>`;
-  } else if (activeTabId === "loot") {
-    panel.classList.remove("hidden");
-    nextHtml = `<p class="muted">No Spawn All Filtered job running.</p>`;
   } else {
+    // Hide as soon as jobs finish — no idle placeholder stuck on Progression.
     panel.classList.add("hidden");
     nextHtml = "";
   }
 
+  ensureProgressPanelDrag(panel);
+
   // Prefer in-place UVHM bar/text updates to avoid sticky-panel flicker.
+  // Skip when Auto Lobby / other jobs share the panel so siblings stay fresh.
   const existingUvhm = panel.querySelector('[data-progress-job="uvhm"]');
   const nextHasUvhm = nextHtml.includes('data-progress-job="uvhm"');
-  if (busy && existingUvhm && nextHasUvhm && !challengeBusy && !spawnBusy) {
+  const existingChallenge = panel.querySelector('[data-progress-job="challenge"]');
+  const nextHasChallenge = nextHtml.includes('data-progress-job="challenge"');
+  const soloChallenge =
+    busy &&
+    existingChallenge &&
+    nextHasChallenge &&
+    !uvhmBusy &&
+    !spawnBusy &&
+    !autoLobbyArmed &&
+    !shapeBusy &&
+    !vacuumBusy &&
+    !serialBusy;
+  if (soloChallenge) {
+    const tmp = document.createElement("div");
+    tmp.innerHTML = nextHtml;
+    const fresh = tmp.querySelector('[data-progress-job="challenge"]');
+    if (fresh) {
+      const h4 = existingChallenge.querySelector("h4");
+      const freshH4 = fresh.querySelector("h4");
+      const span = existingChallenge.querySelector(".progress-bar > span");
+      const metas = existingChallenge.querySelectorAll(".progress-meta");
+      const freshSpan = fresh.querySelector(".progress-bar > span");
+      const freshMetas = fresh.querySelectorAll(".progress-meta");
+      if (h4 && freshH4) h4.innerHTML = freshH4.innerHTML;
+      if (span && freshSpan) span.style.width = freshSpan.style.width;
+      freshMetas.forEach((node, i) => {
+        if (metas[i]) metas[i].textContent = node.textContent;
+      });
+      lastProgressHtml = nextHtml;
+      applyProgressPanelPosition(panel);
+      return;
+    }
+  }
+  const soloUvhm =
+    busy &&
+    existingUvhm &&
+    nextHasUvhm &&
+    !challengeBusy &&
+    !spawnBusy &&
+    !autoLobbyArmed &&
+    !shapeBusy &&
+    !vacuumBusy &&
+    !serialBusy;
+  if (soloUvhm) {
     const tmp = document.createElement("div");
     tmp.innerHTML = nextHtml;
     const fresh = tmp.querySelector('[data-progress-job="uvhm"]');
     if (fresh) {
+      const h4 = existingUvhm.querySelector("h4");
+      const freshH4 = fresh.querySelector("h4");
       const span = existingUvhm.querySelector(".progress-bar > span");
       const meta = existingUvhm.querySelector(".progress-meta");
       const freshSpan = fresh.querySelector(".progress-bar > span");
       const freshMeta = fresh.querySelector(".progress-meta");
+      if (h4 && freshH4) h4.innerHTML = freshH4.innerHTML;
       if (span && freshSpan) span.style.width = freshSpan.style.width;
       if (meta && freshMeta) meta.textContent = freshMeta.textContent;
       lastProgressHtml = nextHtml;
+      applyProgressPanelPosition(panel);
       return;
     }
   }
   if (nextHtml === lastProgressHtml) {
+    applyProgressPanelPosition(panel);
+    return;
+  }
+  // Never wipe the panel DOM mid-drag — that jumps the bar off the pointer.
+  if (progressPanelDragging) {
+    lastProgressHtml = nextHtml;
     return;
   }
   lastProgressHtml = nextHtml;
   panel.innerHTML = nextHtml;
+  applyProgressPanelPosition(panel);
 }
 
 async function pollProgressOnce() {
   if (!actionsEnabled()) return;
+  if (progressPollInFlight) return;
+  progressPollInFlight = true;
   try {
-    const [challengeRes, uvhmRes, spawnRes] = await Promise.all([
+    const challengeBusy = isChallengeBusy(lastChallengeStatus);
+    const uvhmBusy = isUvhmBusy(lastUvhmStatus);
+    const shapeBusy = isShapeBusy(lastShapeStatus);
+    const spawnBusy = isSpawnAllBusy(lastSpawnAllStatus);
+    const serialBusy = isSerialDeliveryBusy(lastSerialDeliveryStatus);
+    const autoBusy = isAutoLobbyBusy(lastAutoLobbyStatus);
+    const vacuumBusy = isVacuumBusy(lastVacuumStatus);
+    const heavyProgress = challengeBusy || uvhmBusy;
+
+    // During UVHM / challenges, skip unrelated status actions so the bridge
+    // is not slammed with 6 parallel posts every half-second (disconnect risk).
+    const jobs = [
       window.sqbt.postAction("challenge_bulk_status", {}),
-      window.sqbt.postAction("uvhm_status", {}),
-      window.sqbt.postAction("spawn_item_pool_status", {}),
-    ]);
-    const challenge = challengeRes.data?.challenge ?? null;
+      // While challenges own the game thread, skip UVHM status so polls stay light.
+      challengeBusy && !uvhmBusy
+        ? Promise.resolve({ data: lastUvhmStatus ? { uvhm: lastUvhmStatus } : null })
+        : window.sqbt.postAction("uvhm_status", {}),
+      heavyProgress
+        ? Promise.resolve({ data: null })
+        : window.sqbt.postAction("spawn_item_pool_status", {}),
+      heavyProgress || serialBusy
+        ? Promise.resolve({ data: lastSerialDeliveryStatus ? { status: lastSerialDeliveryStatus } : null })
+        : window.sqbt.postAction("serial_delivery_status", {}, 8),
+      // Only poll Auto Lobby while a cycle step is actually running — waiting
+      // between cycles uses the normal 5s status payload (was flooding disconnects).
+      autoBusy && !heavyProgress
+        ? window.sqbt.postAction("auto_lobby_get", {})
+        : Promise.resolve({ data: null }),
+      shapeBusy
+        ? window.sqbt.postAction("loot_shape_status", {})
+        : Promise.resolve({ data: null }),
+      vacuumBusy && !heavyProgress
+        ? window.sqbt.postAction("loot_vacuum_status", {})
+        : Promise.resolve({ data: null }),
+    ];
+    const [challengeRes, uvhmRes, spawnRes, serialRes, autoLobbyRes, shapeRes, vacuumRes] = await Promise.all(jobs);
+    const challengeRaw = challengeRes.data?.challenge;
+    // Prefer nested challenge object; fall back to top-level fields. Never wipe a
+    // live "Starting…" cache with null when a poll returns a thin/error payload.
+    const challenge = normalizeChallengeStatus(
+      challengeRaw && typeof challengeRaw === "object"
+        ? challengeRaw
+        : challengeRes.data?.active != null ||
+            challengeRes.data?.queued != null ||
+            challengeRes.data?.running != null ||
+            challengeRes.data?.progress_index != null ||
+            challengeRes.data?.index != null
+          ? {
+              active: Boolean(challengeRes.data.active),
+              queued: Boolean(challengeRes.data.queued),
+              running: Boolean(challengeRes.data.running),
+              phase: challengeRes.data.phase || "",
+              index: challengeRes.data.progress_index ?? challengeRes.data.index ?? 0,
+              progress_index: challengeRes.data.progress_index ?? challengeRes.data.index ?? 0,
+              total: challengeRes.data.progress_total ?? challengeRes.data.total ?? 0,
+              progress_total: challengeRes.data.progress_total ?? challengeRes.data.total ?? 0,
+              ok: challengeRes.data.accepted ?? challengeRes.data.ok ?? 0,
+              failed: challengeRes.data.failed || 0,
+              skipped: challengeRes.data.skipped || 0,
+              token: challengeRes.data.token || "",
+              message: challengeRes.data.message || "",
+            }
+          : null
+    );
     const uvhm = uvhmRes.data?.uvhm ?? null;
     const spawnAll = spawnRes.data?.spawn_all ?? null;
-    lastChallengeStatus = challenge;
-    lastUvhmStatus = uvhm;
-    lastSpawnAllStatus = spawnAll;
+    const serial =
+      serialRes.data?.status || serialRes.data?.progress || null;
+    if (challenge) {
+      // Confirmed live status replaces optimistic start snapshot.
+      lastChallengeStatus = challenge;
+      if (!challenge._optimistic) challengeOptimisticUntil = 0;
+    }
+    if (uvhm) lastUvhmStatus = uvhm;
+    if (spawnAll) lastSpawnAllStatus = spawnAll;
+    if (challengeRes.data?.suppress_open_all) {
+      suppressOpenAllAfterChallenge = true;
+    }
+    if (serial && typeof serial === "object") {
+      lastSerialDeliveryStatus = serial;
+    } else if (!isSerialDeliveryBusy(lastSerialDeliveryStatus)) {
+      lastSerialDeliveryStatus = null;
+    }
+    // Drop idle caches so a finished job cannot keep the floating bar up.
+    if (lastChallengeStatus && !isChallengeBusy(lastChallengeStatus)) {
+      lastChallengeStatus = null;
+      challengeOptimisticUntil = 0;
+      challengeProgressStartedAt = 0;
+      challengeProgressTotalHint = 0;
+      challengeDisplayMilestone = 0;
+    }
+    if (lastSpawnAllStatus && !isSpawnAllBusy(lastSpawnAllStatus)) {
+      lastSpawnAllStatus = null;
+    }
+    if (lastUvhmStatus && !isUvhmBusy(lastUvhmStatus)) {
+      const phase = String(lastUvhmStatus.phase || "").toLowerCase();
+      if (phase === "idle" || phase === "" || phase === "complete" || phase === "error" || phase === "cancelled") {
+        lastUvhmStatus = null;
+      }
+    }
+    if (lastSerialDeliveryStatus && !isSerialDeliveryBusy(lastSerialDeliveryStatus)) {
+      lastSerialDeliveryStatus = null;
+    }
+    if (lastShapeStatus && !isShapeBusy(lastShapeStatus)) {
+      lastShapeStatus = null;
+    }
+    const autoLobbyRaw =
+      autoLobbyRes.data?.auto_lobby ||
+      (autoLobbyRes.data?.enabled != null || autoLobbyRes.data?.config
+        ? autoLobbyRes.data
+        : null);
+    const autoLobby = normalizeAutoLobbyStatus(autoLobbyRaw);
+    if (autoLobby) lastAutoLobbyStatus = autoLobby;
+    if (shapeRes.data) {
+      const shape = normalizeShapeStatus(shapeRes.data);
+      if (shape) lastShapeStatus = shape;
+    }
+    if (vacuumRes.data?.vacuum && typeof vacuumRes.data.vacuum === "object") {
+      lastVacuumStatus = vacuumRes.data.vacuum;
+    }
+    if (lastVacuumStatus && !isVacuumBusy(lastVacuumStatus)) {
+      lastVacuumStatus = null;
+    }
     renderProgressPanel(null, null, null);
-    const busy = isChallengeBusy(challenge) || isUvhmBusy(uvhm) || isSpawnAllBusy(spawnAll);
+    const busy =
+      isChallengeBusy(lastChallengeStatus) ||
+      isUvhmBusy(lastUvhmStatus) ||
+      isSpawnAllBusy(lastSpawnAllStatus) ||
+      isSerialDeliveryBusy(lastSerialDeliveryStatus) ||
+      isAutoLobbyBusy(lastAutoLobbyStatus) ||
+      isShapeBusy(lastShapeStatus) ||
+      isVacuumBusy(lastVacuumStatus);
     if (busy) {
-      const pollMs = isSpawnAllBusy(spawnAll) && !isChallengeBusy(challenge) && !isUvhmBusy(uvhm)
-        ? 1200
-        : 800;
-      if (!progressPollTimer) {
+      // Challenges finish in seconds — poll fast or the bar stays on 0/N queued.
+      const pollMs = challengeBusy ? 350 : uvhmBusy ? 500 : heavyProgress ? 800 : 1000;
+      ensureChallengePaintTimer(challengeBusy);
+      if (!progressPollTimer || progressPollMs !== pollMs) {
+        if (progressPollTimer) {
+          clearInterval(progressPollTimer);
+          progressPollTimer = null;
+        }
+        progressPollMs = pollMs;
         progressPollTimer = setInterval(() => {
           pollProgressOnce();
         }, pollMs);
       }
     } else {
       stopProgressPoll();
+      // Keep the Auto Lobby waiting panel alive via status (armed but idle).
+      if (isAutoLobbyArmed(lastAutoLobbyStatus)) {
+        renderProgressPanel(null, null, null);
+      }
     }
   } catch {
     /* bridge may be busy */
+  } finally {
+    progressPollInFlight = false;
   }
 }
 
@@ -2642,8 +4434,7 @@ function refreshGlobalTargetSelect() {
         if (isPlaceholderPlayerRow(row)) continue;
         const opt = document.createElement("option");
         opt.value = String(row.index);
-        const rawName = String(row.name || "").trim();
-        opt.textContent = `${rawName || (row.is_host ? "Host" : `Player ${row.index}`)} (#${row.index})`;
+        opt.textContent = playerOptionLabel(row);
         globalTargetSelect.appendChild(opt);
       }
     }
@@ -2708,10 +4499,9 @@ function refreshPlayerSelects() {
         }
         for (const row of players) {
           if (isPlaceholderPlayerRow(row)) continue;
-          const rawName = String(row.name || "").trim();
           const opt = document.createElement("option");
           opt.value = String(row.index);
-          opt.textContent = `${rawName || (row.is_host ? "Host" : `Player ${row.index}`)} (#${row.index})`;
+          opt.textContent = playerOptionLabel(row);
           select.appendChild(opt);
         }
         if (!players.length) {
@@ -2787,22 +4577,58 @@ function bindExternalLinks(root) {
   }
 }
 
+async function prefillAutoLobbyFields() {
+  const gen = ++autoLobbyPrefillGen;
+  try {
+    const { data } = await window.sqbt.postAction("auto_lobby_get", {});
+    if (gen !== autoLobbyPrefillGen) return;
+    const cfg = data?.config || data?.auto_lobby?.config || {};
+    if (!cfg || typeof cfg !== "object") return;
+    const focused = document.activeElement;
+    const editing =
+      focused &&
+      tabContent?.contains(focused) &&
+      (focused.matches("input, textarea, select") || focused.isContentEditable);
+    const sectionId = "auto_lobby:Auto Lobby";
+    for (const [key, value] of Object.entries(cfg)) {
+      const fk = `${sectionId}:__section__:${key}`;
+      if (autoLobbyTouchedKeys.has(fk)) continue;
+      if (typeof value === "boolean") fieldValues[fk] = value;
+      else if (value != null) fieldValues[fk] = value;
+    }
+    if (editing) return;
+    // Refresh visible inputs if the tab is open — never clobber an active edit.
+    for (const wrap of document.querySelectorAll(`[data-section-id="${sectionId}"] [data-field-key]`)) {
+      const key = wrap.getAttribute("data-field-key");
+      if (!key || fieldValues[key] === undefined) continue;
+      if (autoLobbyTouchedKeys.has(key)) continue;
+      const input = wrap.querySelector("input, select, textarea");
+      if (!input || document.activeElement === input) continue;
+      if (input.type === "checkbox") input.checked = Boolean(fieldValues[key]);
+      else input.value = String(fieldValues[key]);
+    }
+  } catch {
+    /* bridge may be busy */
+  }
+}
+
 function updateStartGuide() {
   if (!startGuide) return;
+  const ready = actionsEnabled();
+  // Keep Start here until buttons unlock (main menu "connected" is not enough).
+  startGuide.hidden = ready;
+  startGuide.setAttribute("aria-hidden", ready ? "true" : "false");
+  startGuide.classList.toggle("hidden", ready);
+  startGuide.classList.toggle("is-hidden", ready);
+  startGuide.classList.toggle("is-ready", ready);
+  startGuide.style.display = ready ? "none" : "";
+  if (startGuideSteps) startGuideSteps.classList.toggle("hidden", ready);
+  if (ready) return;
+
   const connected = Boolean(
     latestStatus?.connected ||
       ["ready", "connected", "in_menu_or_loading"].includes(String(latestStatus?.state || ""))
   );
-  // Hide the whole Start here card as soon as the bridge is Online.
-  startGuide.hidden = connected;
-  startGuide.setAttribute("aria-hidden", connected ? "true" : "false");
-  startGuide.classList.toggle("hidden", connected);
-  startGuide.classList.toggle("is-hidden", connected);
-  startGuide.classList.toggle("is-ready", connected);
-  startGuide.style.display = connected ? "none" : "";
-  if (startGuideSteps) startGuideSteps.classList.toggle("hidden", connected);
-  if (connected) return;
-
   const hasPath = Boolean((gameRootInput?.value || "").trim() || lastModSync?.gameRoot);
   const baseOk = Boolean(lastBaseSdk?.installed);
   const needsSetup = !hasPath || !baseOk;
@@ -2812,14 +4638,25 @@ function updateStartGuide() {
       ? hasPath
         ? t("guide.oneTime")
         : t("guide.setFolder")
-      : t("guide.getOnline");
+      : connected
+        ? t("guide.loadCharacter")
+        : t("guide.getOnline");
   }
   const setupLink = `<a href="#setup" class="js-open-setup">${t("chrome.setup")}</a>`;
   if (startGuideSteps) {
-    startGuideSteps.innerHTML = `<li><strong>${t("guide.step1")}</strong></li>
+    startGuideSteps.innerHTML = needsSetup
+      ? `<li><strong>${t("guide.step1")}</strong></li>
          <li><strong>${t("guide.step2")}</strong></li>
          <li>${t("guide.step3", { setup: setupLink })}</li>
-         <li><strong>${t("guide.step4")}</strong></li>`;
+         <li><strong>${t("guide.step4")}</strong></li>`
+      : connected
+        ? `<li><strong>${t("guide.stepLoadChar")}</strong></li>
+           <li><strong>${t("guide.stepWaitButtons")}</strong></li>
+           <li>${t("guide.stepWrongDrive", { setup: setupLink })}</li>`
+        : `<li><strong>${t("guide.step1")}</strong></li>
+           <li><strong>${t("guide.step2")}</strong></li>
+           <li>${t("guide.step3", { setup: setupLink })}</li>
+           <li><strong>${t("guide.step4")}</strong></li>`;
   }
   if (startGuideSteps) bindExternalLinks(startGuideSteps);
   if (startGuideFoot) {
@@ -2827,7 +4664,9 @@ function updateStartGuide() {
       ? t("guide.footNoPath", { setup: setupLink })
       : needsSetup
         ? t("guide.footNeedSdk", { setup: setupLink })
-        : t("guide.footInGame", { setup: setupLink });
+        : connected
+          ? t("guide.footEnterSave", { setup: setupLink })
+          : t("guide.footInGame", { setup: setupLink });
     bindExternalLinks(startGuideFoot);
   }
 }
@@ -3356,12 +5195,12 @@ function renderSerialSendList(section, sectionId, sectionEl) {
   const addWrap = document.createElement("label");
   addWrap.className = "field field-wide";
   addWrap.innerHTML =
-    "<span>Paste @Ug serials or a .txt / .docx / .yaml path — leave a <strong>full blank line</strong> between each code. <strong>Browse</strong> loads into this box (not the queue / My Library). Then press <strong>Send items</strong>, or <strong>Add to library</strong> to save with a name.</span>";
+    "<span>Paste @U serials — one per line, or space-separated on one line. Browse a .txt / .yaml / .docx also works.</span>";
   const addArea = document.createElement("textarea");
   addArea.rows = 4;
   addArea.dataset.serialPasteArea = sectionId;
   addArea.placeholder =
-    '@U… (blank line between each)\n\n@U…\n\nor human: 300, 0, 1, 60| …\n\nor "C:\\Users\\…\\gear.txt" / .yaml';
+    "@U…\n@U…\nor @U… @U… (space between)\nor Browse a gear list / STBX yaml";
   addWrap.appendChild(addArea);
 
   const btnRow = document.createElement("div");
@@ -3371,19 +5210,19 @@ function renderSerialSendList(section, sectionId, sectionEl) {
   browseBtn.type = "button";
   browseBtn.className = "ghost";
   browseBtn.textContent = "Browse file…";
-  browseBtn.title = "Load a .txt / .yaml / .docx into the paste box above — then Send items or Add to library.";
+  browseBtn.title = "Load a file into the paste box — then Send items or Add to library.";
 
   const addBtn = document.createElement("button");
   addBtn.type = "button";
   addBtn.className = "ghost";
-  addBtn.textContent = "Add to queue (optional)";
-  addBtn.title = "Build a list when you want to mix serials before sending. Paste + Send items is enough for most boosts.";
+  addBtn.textContent = "Add to queue";
+  addBtn.title = "Optional: build a mixed queue. Most people just paste and Send items.";
 
   const clearPasteBtn = document.createElement("button");
   clearPasteBtn.type = "button";
   clearPasteBtn.className = "ghost serial-clear-paste-btn";
   clearPasteBtn.textContent = "Clear";
-  clearPasteBtn.title = "Clear the paste box (handy after Send items).";
+  clearPasteBtn.title = "Clear the paste box.";
   clearPasteBtn.addEventListener("click", () => {
     addArea.value = "";
     addArea.focus();
@@ -3403,8 +5242,7 @@ function renderSerialSendList(section, sectionId, sectionEl) {
     addArea.focus();
     actionMessage.className = "action-message ok";
     actionMessage.textContent =
-      note ||
-      `Loaded ${lines.length} serial(s) into the paste box — press Send items, or Add to library…`;
+      note || `Loaded ${lines.length} serial(s) — press Send items, or Add to library.`;
   };
 
   const appendSerials = (lines, note) => {
@@ -3483,13 +5321,12 @@ function renderSerialSendList(section, sectionId, sectionEl) {
   const libraryBtn = document.createElement("button");
   libraryBtn.type = "button";
   libraryBtn.className = "ghost serial-save-library-btn";
-  libraryBtn.textContent = "Add to library…";
-  libraryBtn.title =
-    "Save whatever is in the paste box into My Library under a name you choose (reuse later).";
+  libraryBtn.textContent = "Save to My packs";
+  libraryBtn.title = "Save the paste box into a named pack.";
   libraryBtn.addEventListener("click", async () => {
     if (!actionsEnabled()) {
       actionMessage.className = "action-message error";
-      actionMessage.textContent = "Connect in-game first before saving to My Library.";
+      actionMessage.textContent = "Connect in-game first before saving a pack.";
       return;
     }
     libraryBtn.disabled = true;
@@ -3504,12 +5341,17 @@ function renderSerialSendList(section, sectionId, sectionEl) {
           resolved.message || "Paste or Browse serials into the box first.";
         return;
       }
-      const name = window.prompt(
-        serials.length === 1
-          ? "Name for this My Library entry:"
-          : `Name for this My Library set (${serials.length} serials):`,
-        ""
-      );
+      const name = await promptTextDialog({
+        kicker: "My packs",
+        title: serials.length === 1 ? "Name this entry" : "Name this pack",
+        detail:
+          serials.length === 1
+            ? "Saved under My packs → that pack name."
+            : `${serials.length} serials will share this pack name.`,
+        label: "Pack name",
+        defaultValue: "",
+        okLabel: "Save pack",
+      });
       if (name == null) {
         actionMessage.className = "action-message muted";
         actionMessage.textContent = "Library save cancelled.";
@@ -3518,7 +5360,7 @@ function renderSerialSendList(section, sectionId, sectionEl) {
       const cleanName = String(name).trim();
       if (!cleanName) {
         actionMessage.className = "action-message error";
-        actionMessage.textContent = "Enter a name to save into My Library.";
+        actionMessage.textContent = "Enter a pack name.";
         return;
       }
       await runAction(
@@ -3531,6 +5373,12 @@ function renderSerialSendList(section, sectionId, sectionEl) {
         "",
         { sectionId, config: { catalog: "serial_store" } }
       );
+      if (activeTabId === "serials") {
+        const lib =
+          tabContent.querySelector('[data-section-title="My packs"]') ||
+          tabContent.querySelector('[data-section-title="My Library"]');
+        if (lib) lib.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
     } catch (error) {
       actionMessage.className = "action-message error";
       actionMessage.textContent = String(error?.message || error || "Could not save to library.");
@@ -3539,7 +5387,7 @@ function renderSerialSendList(section, sectionId, sectionEl) {
     }
   });
 
-  btnRow.append(browseBtn, addBtn, clearPasteBtn);
+  btnRow.append(browseBtn, clearPasteBtn, addBtn);
 
   // Send items + Add to library land here when the action card renders.
   const sendBtnSlot = document.createElement("div");
@@ -3573,11 +5421,11 @@ function renderSerialSendList(section, sectionId, sectionEl) {
   const queueDetails = document.createElement("details");
   queueDetails.className = "serial-queue-fold";
   const queueSummary = document.createElement("summary");
-  queueSummary.textContent = "Optional queue";
+  queueSummary.textContent = "Optional queue list";
   const queueHint = document.createElement("p");
   queueHint.className = "muted small";
   queueHint.textContent =
-    "Use Add to queue only when mixing sets. Deliver queued serials lives in this same fold.";
+    "Rarely needed. Add to queue to mix sets, then use Send queued under Optional queue below.";
   queueDetails.append(queueSummary, queueHint, meta, listEl);
 
   box.append(addWrap, btnRow, primarySlot, queueDetails);
@@ -3596,7 +5444,7 @@ function renderSerialSendListRows(sectionId, box) {
   const selected = multiselectState.get(sectionId) || new Set();
   listEl.innerHTML = "";
   if (!rows.length) {
-    listEl.innerHTML = `<p class="muted">Queue empty — most people just paste above and press Send items. Use Add to queue only to mix sets.</p>`;
+    listEl.innerHTML = `<p class="muted">Queue empty — paste above and press Send items. Add to queue only to mix sets.</p>`;
   } else {
     for (const row of rows) {
       const label = document.createElement("label");
@@ -3741,8 +5589,10 @@ function renderField(sectionId, actionDef, field, sectionEl, allFields) {
     input.checked = fieldValues[key] === true || String(fieldValues[key]).toLowerCase() === "true";
     input.addEventListener("change", () => {
       fieldValues[key] = input.checked;
+      markAutoLobbyFieldTouched(key);
     });
     wrap.appendChild(input);
+    wrap.dataset.fieldKey = key;
     return wrap;
   }
 
@@ -3861,6 +5711,7 @@ function renderField(sectionId, actionDef, field, sectionEl, allFields) {
         }
       }
       fieldValues[key] = input.value;
+      markAutoLobbyFieldTouched(key);
       if (field.key === "shape" && field.land_profile) {
         applyShapeLayoutDefaults(sectionId, actionDef, field, input.value, allFields, sectionEl);
       }
@@ -3929,6 +5780,7 @@ function renderField(sectionId, actionDef, field, sectionEl, allFields) {
   };
   input.addEventListener("input", () => {
     fieldValues[key] = input.value;
+    markAutoLobbyFieldTouched(key);
     refreshCatalogSiblings();
   });
   input.addEventListener("change", () => {
@@ -3944,6 +5796,7 @@ function renderField(sectionId, actionDef, field, sectionEl, allFields) {
       }
     }
     fieldValues[key] = input.value;
+    markAutoLobbyFieldTouched(key);
     refreshCatalogSiblings();
   });
   wrap.appendChild(input);
@@ -4185,6 +6038,280 @@ function renderPoolBrowser(section, sectionId, sectionEl) {
   window.setTimeout(() => refreshPoolBrowser(sectionId, config), 0);
 }
 
+function renderSerialStorePackList(sectionId, config, listEl, rows, selected, countEl, bucket) {
+  if (!serialStoreExpanded.has(sectionId)) {
+    serialStoreExpanded.set(sectionId, new Set());
+  }
+  const expanded = serialStoreExpanded.get(sectionId);
+  const byGroup = new Map();
+  for (const row of rows) {
+    const g = String(row.group || "Default").trim() || "Default";
+    if (!byGroup.has(g)) byGroup.set(g, []);
+    byGroup.get(g).push(row);
+  }
+  const packNames = [...byGroup.keys()].sort((a, b) => a.localeCompare(b));
+  // Auto-expand when filtering a single pack, or when only one pack exists.
+  if (packNames.length === 1) expanded.add(packNames[0]);
+  const filterGroup = String(fieldValues[`${sectionId}:group`] || "All");
+  if (filterGroup && filterGroup !== "All") expanded.add(filterGroup);
+
+  for (const packName of packNames) {
+    const members = byGroup.get(packName) || [];
+    const details = document.createElement("details");
+    details.className = "serial-store-pack";
+    details.open = expanded.has(packName);
+    details.addEventListener("toggle", () => {
+      if (details.open) expanded.add(packName);
+      else expanded.delete(packName);
+    });
+    const summary = document.createElement("summary");
+    summary.className = "serial-store-pack-summary";
+    const title = document.createElement("span");
+    title.className = "serial-store-pack-title";
+    title.textContent = `${packName} (${members.length})`;
+    const actions = document.createElement("span");
+    actions.className = "serial-store-pack-actions";
+    const renameBtn = document.createElement("button");
+    renameBtn.type = "button";
+    renameBtn.textContent = "Rename";
+    renameBtn.addEventListener("click", async (event) => {
+      event.preventDefault();
+      event.stopPropagation();
+      const next = await promptTextDialog({
+        kicker: "My packs",
+        title: "Rename pack",
+        detail: `Current name: ${packName}`,
+        label: "New pack name",
+        defaultValue: packName,
+        okLabel: "Rename",
+      });
+      if (next == null) return;
+      const cleaned = String(next).trim();
+      if (!cleaned || cleaned === packName) return;
+      try {
+        const { data } = await window.sqbt.postAction("serial_store_rename_group", {
+          old_group: packName,
+          new_group: cleaned,
+        });
+        actionMessage.className = data?.ok === false ? "action-message error" : "action-message ok";
+        actionMessage.textContent = data?.message || "Renamed.";
+        if (data?.ok !== false) {
+          expanded.delete(packName);
+          expanded.add(cleaned);
+          refreshAllSerialStoreSections();
+        }
+      } catch (error) {
+        actionMessage.className = "action-message error";
+        actionMessage.textContent = String(error?.message || error);
+      }
+    });
+    const selectPackBtn = document.createElement("button");
+    selectPackBtn.type = "button";
+    selectPackBtn.textContent = "Select";
+    selectPackBtn.title = "Tick only this pack’s rows (clears other packs first)";
+    selectPackBtn.addEventListener("click", (event) => {
+      event.preventDefault();
+      event.stopPropagation();
+      const next = new Set();
+      for (const row of members) {
+        const rowId = multiselectRowId(row, config);
+        next.add(rowId);
+        const serial = rowSerialValue(row, config);
+        if (serial) rememberMultiselectSerial(sectionId, rowId, serial);
+      }
+      multiselectState.set(sectionId, next);
+      expanded.add(packName);
+      if (countEl) countEl.textContent = formatMultiselectSelectedLabel(sectionId, config);
+      refreshMultiselectSection(sectionId, config);
+      actionMessage.className = "action-message muted";
+      actionMessage.textContent = `Selected ${next.size} row(s) in pack “${packName}”.`;
+    });
+    const collectPackSerials = () => {
+      const next = new Set();
+      const serials = [];
+      const seen = new Set();
+      for (const row of members) {
+        const rowId = multiselectRowId(row, config);
+        next.add(rowId);
+        const serial = rowSerialValue(row, config);
+        if (serial) rememberMultiselectSerial(sectionId, rowId, serial);
+        if (isDeliverableSerial(serial) && !seen.has(serial)) {
+          seen.add(serial);
+          serials.push(serial);
+        }
+      }
+      multiselectState.set(sectionId, next);
+      return serials;
+    };
+    const sendPackBtn = document.createElement("button");
+    sendPackBtn.type = "button";
+    sendPackBtn.textContent = "Send pack";
+    sendPackBtn.title =
+      "Mail every @U in this pack (uses Override level above when set to yes)";
+    sendPackBtn.addEventListener("click", async (event) => {
+      event.preventDefault();
+      event.stopPropagation();
+      const serials = collectPackSerials();
+      if (!serials.length) {
+        actionMessage.className = "action-message error";
+        actionMessage.textContent = `Pack “${packName}” has no deliverable @U serials.`;
+        return;
+      }
+      const levelFields = packDeliveryLevelFields(sectionId);
+      const levelNote = levelFields.level_override
+        ? ` releveled to ${levelFields.level}`
+        : "";
+      await runAction(
+        "deliver_serials",
+        {
+          serials,
+          mode: "player",
+          open_rewards: true,
+          _selected_count: serials.length,
+          ...levelFields,
+        },
+        `Mail all ${serials.length} serial(s) from pack “${packName}”${levelNote}?`,
+        { sectionId, config, deliverStore: true }
+      );
+    });
+    const sendPackLvlBtn = document.createElement("button");
+    sendPackLvlBtn.type = "button";
+    sendPackLvlBtn.textContent = "Send @lvl";
+    sendPackLvlBtn.title = "Mail this pack releveled to the level box above (Override level)";
+    sendPackLvlBtn.addEventListener("click", async (event) => {
+      event.preventDefault();
+      event.stopPropagation();
+      const serials = collectPackSerials();
+      if (!serials.length) {
+        actionMessage.className = "action-message error";
+        actionMessage.textContent = `Pack “${packName}” has no deliverable @U serials.`;
+        return;
+      }
+      const levelFields = packDeliveryLevelFields(sectionId, { force: true });
+      await runAction(
+        "deliver_serials",
+        {
+          serials,
+          mode: "player",
+          open_rewards: true,
+          _selected_count: serials.length,
+          ...levelFields,
+        },
+        `Mail all ${serials.length} serial(s) from pack “${packName}” releveled to ${levelFields.level}?`,
+        { sectionId, config, deliverStore: true }
+      );
+    });
+    const addPackBtn = document.createElement("button");
+    addPackBtn.type = "button";
+    addPackBtn.textContent = "Add";
+    addPackBtn.title = "Select this pack in Add to pack, then paste codes and Save entry";
+    addPackBtn.addEventListener("click", (event) => {
+      event.preventDefault();
+      event.stopPropagation();
+      focusSerialStoreAddToPack(sectionId, packName);
+    });
+    const exportBtn = document.createElement("button");
+    exportBtn.type = "button";
+    exportBtn.textContent = "Export .txt";
+    exportBtn.addEventListener("click", async (event) => {
+      event.preventDefault();
+      event.stopPropagation();
+      await runAction("serial_store_export_text", { group: packName }, "", {
+        sectionId,
+        config,
+      });
+    });
+    const exportJsonBtn = document.createElement("button");
+    exportJsonBtn.type = "button";
+    exportJsonBtn.textContent = "Export .json";
+    exportJsonBtn.addEventListener("click", async (event) => {
+      event.preventDefault();
+      event.stopPropagation();
+      await runAction("serial_store_export_json", { group: packName }, "", {
+        sectionId,
+        config,
+      });
+    });
+    const deletePackBtn = document.createElement("button");
+    deletePackBtn.type = "button";
+    deletePackBtn.textContent = "Delete";
+    deletePackBtn.title = "Delete this entire named pack";
+    deletePackBtn.addEventListener("click", async (event) => {
+      event.preventDefault();
+      event.stopPropagation();
+      await runAction("serial_store_delete_group", { group: packName }, "", {
+        sectionId,
+        config,
+      });
+    });
+    actions.append(
+      selectPackBtn,
+      sendPackBtn,
+      sendPackLvlBtn,
+      addPackBtn,
+      renameBtn,
+      exportBtn,
+      exportJsonBtn,
+      deletePackBtn
+    );
+    summary.append(title, actions);
+    details.appendChild(summary);
+
+    const body = document.createElement("div");
+    body.className = "serial-store-pack-body";
+    for (const row of members) {
+      const rowId = multiselectRowId(row, config);
+      const wrap = document.createElement("div");
+      wrap.className = "list-row-with-fav";
+      if (bucket) {
+        wrap.appendChild(
+          makeFavoriteButton(bucket, rowId, () => refreshMultiselectSection(sectionId, config))
+        );
+      }
+      const label = document.createElement("label");
+      label.className = "multiselect-row";
+      if (isListFavorite(bucket, rowId)) label.classList.add("is-favorite");
+      const cb = document.createElement("input");
+      cb.type = "checkbox";
+      cb.checked = selected.has(rowId);
+      cb.addEventListener("change", () => {
+        if (cb.checked) selected.add(rowId);
+        else selected.delete(rowId);
+        if (cb.checked) {
+          const serial = rowSerialValue(row, config);
+          if (serial) rememberMultiselectSerial(sectionId, rowId, serial);
+        }
+        if (countEl) countEl.textContent = formatMultiselectSelectedLabel(sectionId, config);
+      });
+      const text = document.createElement("button");
+      text.type = "button";
+      text.className = "serial-store-entry-link";
+      const titleText = String(row[config.labelKey || "title"] || row.name || rowId);
+      const serial = String(row.serial || "");
+      const snip = serial.length > 36 ? `${serial.slice(0, 32)}…` : serial;
+      text.textContent = snip ? `${titleText} · ${snip}` : titleText;
+      text.title = "Click to edit in the form above";
+      text.addEventListener("click", (event) => {
+        event.preventDefault();
+        serialStoreEdit.set(sectionId, {
+          id: row.id,
+          name: row.name || row.title,
+          group: row.group || "Default",
+          serial: row.serial || "",
+        });
+        renderSerialStoreForm(sectionId);
+        actionMessage.className = "action-message muted";
+        actionMessage.textContent = `Editing “${titleText}” — Save to update.`;
+      });
+      label.append(cb, text);
+      wrap.appendChild(label);
+      body.appendChild(wrap);
+    }
+    details.appendChild(body);
+    listEl.appendChild(details);
+  }
+}
+
 async function refreshMultiselectSection(sectionId, config) {
   const box = tabContent.querySelector(`[data-multiselect-section="${sectionId}"]`);
   if (!box) return;
@@ -4207,8 +6334,56 @@ async function refreshMultiselectSection(sectionId, config) {
 
   listEl.innerHTML = `<p class="muted">Loading…</p>`;
   try {
-    const params = multiselectParams(sectionId, config);
-    const data = await loadCatalog(config.catalog, params);
+  const params = multiselectParams(sectionId, config);
+  let data;
+  if (config.catalog === "backpack" && (config.params?.pack_bay || config.source === "save_yaml")) {
+    // Pack Bay: decrypt latest character autosave in the EXE — no game-thread scan.
+    if (typeof window.sqbt?.packBayScan === "function") {
+      data = await window.sqbt.packBayScan({
+        limit: Number(params.limit) || 200,
+        path: params.save_path || "",
+        steamid: params.steamid || "",
+      });
+    } else {
+      data = { ok: false, message: "Pack Bay save reader unavailable in this build.", rows: [] };
+    }
+    // Name + level via the same GZO decode Party Bay uses (bridge / in-game mod).
+    if (data?.ok && Array.isArray(data.rows) && data.rows.length && typeof window.sqbt?.postAction === "function") {
+      try {
+        const serials = data.rows.map((row) => String(row?.serial || "").trim()).filter((s) => s.startsWith("@U"));
+        if (serials.length) {
+          const labeled = await window.sqbt.postAction("bay_label_serials", { serials }, 60);
+          const labeledRows = labeled?.data?.rows;
+          if (labeled?.data?.ok && Array.isArray(labeledRows) && labeledRows.length) {
+            const bySerial = new Map(labeledRows.map((row) => [String(row.serial || ""), row]));
+            data.rows = data.rows.map((row, index) => {
+              const hit = bySerial.get(String(row.serial || ""));
+              if (!hit) return row;
+              return {
+                ...row,
+                id: row.id != null ? row.id : String(index),
+                slot: row.slot != null ? row.slot : index,
+                title: hit.title || row.title,
+                display_name: hit.display_name || row.display_name,
+                rarity: hit.rarity || row.rarity,
+                manufacturer: hit.manufacturer || row.manufacturer,
+                item_type: hit.item_type || row.item_type,
+                level: hit.level != null ? hit.level : row.level,
+              };
+            });
+            const named = Number(labeled.data.named || 0);
+            const leveled = Number(labeled.data.leveled || 0);
+            const baseMsg = String(data.message || "").trim();
+            data.message = `${baseMsg} Named ${named}/${serials.length}, leveled ${leveled}/${serials.length}.`.trim();
+          }
+        }
+      } catch {
+        /* keep raw serial titles if label pass fails */
+      }
+    }
+  } else {
+    data = await loadCatalog(config.catalog, params);
+  }
     const bucket = favoriteBucketForCatalog(config.catalog);
     const rows = sortRowsFavoritesFirst(
       data.rows || [],
@@ -4223,7 +6398,10 @@ async function refreshMultiselectSection(sectionId, config) {
     const selected = multiselectState.get(sectionId);
     listEl.innerHTML = "";
     if (!rows.length) {
-      listEl.innerHTML = `<p class="muted">${data.message || "No entries."}</p>`;
+      listEl.innerHTML = catalogEmptyHtml(config.catalog, config);
+      if (data.message && statusEl) statusEl.textContent = data.message;
+    } else if (config.catalog === "serial_store") {
+      renderSerialStorePackList(sectionId, config, listEl, rows, selected, countEl, bucket);
     } else {
       for (const row of rows) {
         const rowId = multiselectRowId(row, config);
@@ -4248,15 +6426,6 @@ async function refreshMultiselectSection(sectionId, config) {
             if (serial) rememberMultiselectSerial(sectionId, rowId, serial);
           }
           if (countEl) countEl.textContent = formatMultiselectSelectedLabel(sectionId, config);
-          if (config.catalog === "serial_store" && cb.checked) {
-            serialStoreEdit.set(sectionId, {
-              id: row.id,
-              name: row.name || row.title,
-              group: row.group || "Default",
-              serial: row.serial || "",
-            });
-            renderSerialStoreForm(sectionId);
-          }
         });
         const text = document.createElement("span");
         const title = String(row[config.labelKey || "title"] || row.name || rowId);
@@ -4295,6 +6464,10 @@ async function refreshMultiselectSection(sectionId, config) {
       manufacturer: data.manufacturers,
       creator: data.creators,
     };
+    if (config.catalog === "serial_store" && Array.isArray(data.groups)) {
+      rememberSerialStorePackNames(sectionId, data.groups);
+      fillSerialStorePackSelect(sectionId);
+    }
     for (const filterSelect of box.querySelectorAll("select[data-filter-key]")) {
       const key = filterSelect.dataset.filterKey || "";
       const listKey = filterSelect.dataset.filterList || key;
@@ -4313,8 +6486,14 @@ async function refreshMultiselectSection(sectionId, config) {
     }
     box.dataset.catalogError = "";
   } catch (error) {
-    listEl.innerHTML = `<p class="muted">${formatCatalogError(config.catalog, error)}</p>`;
-    if (statusEl) statusEl.textContent = "";
+    listEl.innerHTML = catalogEmptyHtml(config.catalog) || `<p class="muted">${formatCatalogError(config.catalog, error)}</p>`;
+    if (config.catalog !== "serial_store" && config.catalog !== "gzo" && config.catalog !== "lootlemon") {
+      listEl.innerHTML = `<p class="muted">${formatCatalogError(config.catalog, error)}</p>`;
+    } else if (String(error?.message || "").trim()) {
+      // Prefer curated empty-state copy; keep status line for the raw reason.
+      if (statusEl) statusEl.textContent = formatCatalogError(config.catalog, error);
+    }
+    if (statusEl && !statusEl.textContent) statusEl.textContent = "";
     box.dataset.catalogError = "1";
   }
 }
@@ -4380,30 +6559,160 @@ async function runCatalogRefresh(sectionId, config, button) {
   }
 }
 
+const SERIAL_STORE_NEW_PACK = "__new__";
+/** @type {Map<string, string[]>} */
+const serialStorePackNames = new Map();
+
+function serialStoreSectionEl(sectionId) {
+  if (!tabContent || !sectionId) return null;
+  return (
+    tabContent.querySelector(`[data-section-id="${CSS.escape(sectionId)}"]`) ||
+    tabContent.querySelector(`[data-section-id="${sectionId}"]`)
+  );
+}
+
+function rememberSerialStorePackNames(sectionId, groups) {
+  const names = new Set(["Default"]);
+  for (const raw of groups || []) {
+    const g = String(raw || "").trim();
+    if (!g || g.toLowerCase() === "all") continue;
+    names.add(g);
+  }
+  const edit = serialStoreEdit.get(sectionId);
+  const editGroup = String(edit?.group || "").trim();
+  if (editGroup && editGroup.toLowerCase() !== "all") names.add(editGroup);
+  const sorted = [...names].sort((a, b) => a.localeCompare(b));
+  serialStorePackNames.set(sectionId, sorted);
+  return sorted;
+}
+
+function serialStoreKnownPackNames(sectionId) {
+  const cached = serialStorePackNames.get(sectionId);
+  if (cached?.length) return cached;
+  const fromRows = [];
+  for (const row of multiselectRows.get(sectionId) || []) {
+    fromRows.push(String(row.group || "Default").trim() || "Default");
+  }
+  return rememberSerialStorePackNames(sectionId, fromRows);
+}
+
+function fillSerialStorePackSelect(sectionId) {
+  const sectionEl = serialStoreSectionEl(sectionId);
+  const form = sectionEl?.querySelector(".serial-store-form");
+  if (!form) return;
+  const packSelect = form.querySelector("[data-store-pack-select]");
+  const groupInput = form.querySelector("[data-store-group]");
+  if (!packSelect) return;
+  const edit = serialStoreEdit.get(sectionId) || { group: "Default" };
+  const wanted = String(edit.group || "Default").trim() || "Default";
+  const packs = serialStoreKnownPackNames(sectionId);
+  if (wanted.toLowerCase() !== "all" && !packs.includes(wanted)) {
+    packs.push(wanted);
+    packs.sort((a, b) => a.localeCompare(b));
+    serialStorePackNames.set(sectionId, packs);
+  }
+  const prev = packSelect.value;
+  packSelect.innerHTML = "";
+  for (const pack of packs) {
+    const opt = document.createElement("option");
+    opt.value = pack;
+    opt.textContent = pack;
+    packSelect.appendChild(opt);
+  }
+  const newOpt = document.createElement("option");
+  newOpt.value = SERIAL_STORE_NEW_PACK;
+  newOpt.textContent = "＋ New pack…";
+  packSelect.appendChild(newOpt);
+  if (wanted && packs.includes(wanted)) {
+    packSelect.value = wanted;
+    if (groupInput) {
+      groupInput.value = "";
+      groupInput.hidden = true;
+    }
+  } else if (prev === SERIAL_STORE_NEW_PACK || (wanted && !packs.includes(wanted))) {
+    packSelect.value = SERIAL_STORE_NEW_PACK;
+    if (groupInput) {
+      groupInput.hidden = false;
+      groupInput.value = wanted === "Default" ? "" : wanted;
+    }
+  } else {
+    packSelect.value = packs[0] || "Default";
+    if (groupInput) {
+      groupInput.value = "";
+      groupInput.hidden = true;
+    }
+  }
+}
+
 function syncSerialStoreEditFromForm(sectionId) {
-  const sectionEl = tabContent.querySelector(`[data-section-id="${sectionId}"]`);
+  const sectionEl = serialStoreSectionEl(sectionId);
   if (!sectionEl) return;
   const edit = serialStoreEdit.get(sectionId) || { id: "", name: "", group: "Default", serial: "" };
   const nameInput = sectionEl.querySelector("[data-store-name]");
+  const packSelect = sectionEl.querySelector("[data-store-pack-select]");
   const groupInput = sectionEl.querySelector("[data-store-group]");
   const serialInput = sectionEl.querySelector("[data-store-serial]");
   if (nameInput) edit.name = nameInput.value;
-  if (groupInput) edit.group = groupInput.value;
+  if (packSelect) {
+    if (packSelect.value === SERIAL_STORE_NEW_PACK) {
+      edit.group = String(groupInput?.value || "").trim() || "Default";
+    } else {
+      edit.group = String(packSelect.value || "").trim() || "Default";
+    }
+  } else if (groupInput) {
+    edit.group = groupInput.value;
+  }
   if (serialInput) edit.serial = serialInput.value;
+  if (!edit.group || String(edit.group).toLowerCase() === "all") edit.group = "Default";
   serialStoreEdit.set(sectionId, edit);
 }
 
 function renderSerialStoreForm(sectionId) {
-  const sectionEl = tabContent.querySelector(`[data-section-id="${sectionId}"]`);
+  const sectionEl = serialStoreSectionEl(sectionId);
   const form = sectionEl?.querySelector(".serial-store-form");
   if (!form) return;
   const edit = serialStoreEdit.get(sectionId) || { id: "", name: "", group: "Default", serial: "" };
+  if (!edit.group || String(edit.group).toLowerCase() === "all") edit.group = "Default";
+  serialStoreEdit.set(sectionId, edit);
   const nameInput = form.querySelector("[data-store-name]");
-  const groupInput = form.querySelector("[data-store-group]");
   const serialInput = form.querySelector("[data-store-serial]");
   if (nameInput) nameInput.value = edit.name || "";
-  if (groupInput) groupInput.value = edit.group || "Default";
   if (serialInput) serialInput.value = edit.serial || "";
+  fillSerialStorePackSelect(sectionId);
+}
+
+function focusSerialStoreAddToPack(sectionId, packName) {
+  const cleaned = String(packName || "").trim() || "Default";
+  const edit = serialStoreEdit.get(sectionId) || {};
+  edit.group = cleaned;
+  edit.id = "";
+  edit.name = "";
+  serialStoreEdit.set(sectionId, edit);
+  rememberSerialStorePackNames(sectionId, [...serialStoreKnownPackNames(sectionId), cleaned]);
+  // Show that pack in the list after save — filter is separate from destination select.
+  fieldValues[`${sectionId}:group`] = cleaned;
+  renderSerialStoreForm(sectionId);
+  const sectionEl = serialStoreSectionEl(sectionId);
+  const form = sectionEl?.querySelector(".serial-store-form");
+  const serialField = sectionEl?.querySelector("textarea[data-store-serial]");
+  form?.scrollIntoView({ block: "nearest", behavior: "smooth" });
+  if (serialField) serialField.focus();
+  const config = getMultiselectConfig(sectionId);
+  if (config) {
+    catalogCache.delete(catalogCacheKey("serial_store", multiselectParams(sectionId, config)));
+    refreshMultiselectSection(sectionId, config);
+  }
+  actionMessage.className = "action-message muted";
+  actionMessage.textContent = `Pack “${cleaned}” selected — paste codes, then Save entry.`;
+}
+
+function packDeliveryLevelFields(sectionId, { force = false } = {}) {
+  const overrideOn = force || fieldValues[`${sectionId}:level_override`] === "yes";
+  if (!overrideOn) return {};
+  return {
+    level_override: true,
+    level: Number(fieldValues[`${sectionId}:level`] || 70) || 70,
+  };
 }
 
 function renderMultiselectControls(section, sectionId, sectionEl) {
@@ -4420,7 +6729,12 @@ function renderMultiselectControls(section, sectionId, sectionEl) {
   if (fieldValues[searchKey] === undefined) fieldValues[searchKey] = "";
   const search = document.createElement("input");
   search.type = "search";
-  search.placeholder = "Search catalog…";
+  search.placeholder =
+    config.catalog === "serial_store"
+      ? "Search library…"
+      : config.catalog === "gzo" || config.catalog === "lootlemon"
+        ? "Search codes…"
+        : "Search…";
   search.value = fieldValues[searchKey];
   let searchDebounce = 0;
   search.addEventListener("input", () => {
@@ -4451,7 +6765,14 @@ function renderMultiselectControls(section, sectionId, sectionEl) {
   });
   toolbar.appendChild(search);
 
+  const primaryFilters = [];
+  const advancedFilters = [];
   for (const filter of config.filters || []) {
+    if (filter.advanced) advancedFilters.push(filter);
+    else primaryFilters.push(filter);
+  }
+
+  const appendFilterControl = (filter, host) => {
     const filterKey = `${sectionId}:${filter.key}`;
     if (fieldValues[filterKey] === undefined) {
       fieldValues[filterKey] = filter.default ?? "";
@@ -4494,7 +6815,20 @@ function renderMultiselectControls(section, sectionId, sectionEl) {
       refreshMultiselectSection(sectionId, config);
     });
     filterWrap.append(filterLabel, filterSelect);
-    toolbar.appendChild(filterWrap);
+    host.appendChild(filterWrap);
+  };
+
+  for (const filter of primaryFilters) appendFilterControl(filter, toolbar);
+  if (advancedFilters.length) {
+    const adv = document.createElement("details");
+    adv.className = "multiselect-advanced-filters";
+    const summary = document.createElement("summary");
+    summary.textContent = "More filters";
+    const advBody = document.createElement("div");
+    advBody.className = "multiselect-advanced-filters-body";
+    for (const filter of advancedFilters) appendFilterControl(filter, advBody);
+    adv.append(summary, advBody);
+    toolbar.appendChild(adv);
   }
 
   const deliverPlayerKey = `${sectionId}:deliver_player_index`;
@@ -4509,7 +6843,7 @@ function renderMultiselectControls(section, sectionId, sectionEl) {
     if (fieldValues[openRewardsKey] === undefined) fieldValues[openRewardsKey] = "yes";
     const deliverWrap = document.createElement("label");
     deliverWrap.className = "multiselect-filter deliver-to-filter";
-    deliverWrap.innerHTML = "<span>Send to (required)</span>";
+    deliverWrap.innerHTML = "<span>Send to</span>";
     const deliverPlayer = document.createElement("select");
     deliverPlayer.dataset.role = "player-select";
     deliverPlayer.dataset.deliverPlayerKey = deliverPlayerKey;
@@ -4523,7 +6857,7 @@ function renderMultiselectControls(section, sectionId, sectionEl) {
 
     const openWrap = document.createElement("label");
     openWrap.className = "multiselect-filter";
-    openWrap.innerHTML = "<span>Open rewards on send</span>";
+    openWrap.innerHTML = "<span>Open rewards</span>";
     const openToggle = document.createElement("select");
     for (const [value, label] of [
       ["yes", "Yes"],
@@ -4534,11 +6868,11 @@ function renderMultiselectControls(section, sectionId, sectionEl) {
       opt.textContent = label;
       openToggle.appendChild(opt);
     }
+    if (fieldValues[openRewardsKey] === undefined || fieldValues[openRewardsKey] === "") {
+      fieldValues[openRewardsKey] = "yes";
+    }
     openToggle.value =
       fieldValues[openRewardsKey] === "yes" || fieldValues[openRewardsKey] === true ? "yes" : "no";
-    if (fieldValues[openRewardsKey] === undefined || fieldValues[openRewardsKey] === "") {
-      fieldValues[openRewardsKey] = "no";
-    }
     openToggle.addEventListener("change", () => {
       if (openToggle.value === "yes") {
         if (
@@ -4562,7 +6896,7 @@ function renderMultiselectControls(section, sectionId, sectionEl) {
     ackBox.type = "checkbox";
     ackBox.checked = serialRiskAcknowledged();
     const ackText = document.createElement("span");
-    ackText.textContent = "Don't warn again (amounts / console)";
+    ackText.textContent = "Don't warn again";
     ackBox.addEventListener("change", () => {
       setSerialRiskAcknowledged(ackBox.checked);
     });
@@ -4603,6 +6937,7 @@ function renderMultiselectControls(section, sectionId, sectionEl) {
   if (config.refreshAction) {
     const refreshBtn = document.createElement("button");
     refreshBtn.type = "button";
+    refreshBtn.className = "primary";
     refreshBtn.textContent = config.refreshLabel || "Refresh catalog";
     refreshBtn.addEventListener("click", () => {
       runCatalogRefresh(sectionId, config, refreshBtn);
@@ -4639,11 +6974,36 @@ function renderMultiselectControls(section, sectionId, sectionEl) {
     try {
       const params = { ...multiselectParams(sectionId, config), limit: 10000 };
       const data = await loadCatalog(config.catalog, params);
-      const rows = sortRowsFavoritesFirst(
+      let rows = sortRowsFavoritesFirst(
         data.rows || [],
         (row) => multiselectRowId(row, config),
         favoriteBucketForCatalog(config.catalog)
       );
+      // My Library: Pack=All must not select every pack — only expanded packs
+      // (or the specific pack filter when set).
+      if (config.catalog === "serial_store" || config?.serialStore) {
+        const filterGroup = String(fieldValues[`${sectionId}:group`] || params.group || "All");
+        if (filterGroup && filterGroup !== "All") {
+          rows = rows.filter(
+            (row) => String(row.group || "Default").trim() === filterGroup
+          );
+        } else {
+          const expanded = serialStoreExpanded.get(sectionId) || new Set();
+          if (expanded.size) {
+            rows = rows.filter((row) =>
+              expanded.has(String(row.group || "Default").trim() || "Default")
+            );
+          } else if (rows.length) {
+            if (statusEl) {
+              statusEl.textContent =
+                "Expand a pack (or set Pack filter), then Select all filtered — or use Select on a pack header.";
+            }
+            selectAllBtn.disabled = false;
+            return;
+          }
+        }
+      }
+      selected.clear();
       cacheMultiselectRows(sectionId, rows, config);
       for (const row of rows) {
         selected.add(multiselectRowId(row, config));
@@ -4654,11 +7014,12 @@ function renderMultiselectControls(section, sectionId, sectionEl) {
       if (statusEl) {
         statusEl.textContent =
           total > rows.length
-            ? `Selected ${selected.size} — loaded ${rows.length} of ${total} (raise limit if needed)`
+            ? `Selected ${selected.size} — loaded ${rows.length} of ${total}`
             : `Selected ${selected.size} filtered row(s)`;
       }
     } catch (error) {
       const rows = multiselectRows.get(sectionId) || [];
+      selected.clear();
       for (const row of rows) {
         selected.add(multiselectRowId(row, config));
       }
@@ -4693,19 +7054,56 @@ function renderMultiselectControls(section, sectionId, sectionEl) {
   refreshPlayerSelects();
 }
 
+function downloadTextFile(filename, text) {
+  const blob = new Blob([text], { type: "text/plain;charset=utf-8" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = filename || "sqbt-library.txt";
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  window.setTimeout(() => URL.revokeObjectURL(url), 1500);
+}
+
+function pickLibraryImportText() {
+  return new Promise((resolve, reject) => {
+    const input = document.createElement("input");
+    input.type = "file";
+    input.accept = ".txt,.json,text/plain,application/json";
+    input.addEventListener("change", () => {
+      const file = input.files && input.files[0];
+      if (!file) {
+        resolve(null);
+        return;
+      }
+      const reader = new FileReader();
+      reader.onload = () => resolve(String(reader.result || ""));
+      reader.onerror = () => reject(new Error("Could not read that file."));
+      reader.readAsText(file);
+    });
+    input.addEventListener("cancel", () => resolve(null));
+    input.click();
+  });
+}
+
 function renderSerialStoreSection(section, sectionId, sectionEl) {
   if (!serialStoreEdit.has(sectionId)) {
     serialStoreEdit.set(sectionId, { id: "", name: "", group: "Default", serial: "" });
+  }
+  if (!serialStoreExpanded.has(sectionId)) {
+    serialStoreExpanded.set(sectionId, new Set());
   }
 
   const form = document.createElement("div");
   form.className = "serial-store-form fields-grid";
   const nameWrap = document.createElement("label");
   nameWrap.className = "field";
-  nameWrap.innerHTML = "<span>Name</span>";
+  nameWrap.innerHTML = "<span>Item name <span class='muted'>(optional)</span></span>";
   const nameInput = document.createElement("input");
   nameInput.type = "text";
   nameInput.dataset.storeName = "1";
+  nameInput.placeholder = "Auto from serial if empty";
   nameInput.addEventListener("input", () => {
     const edit = serialStoreEdit.get(sectionId) || {};
     edit.name = nameInput.value;
@@ -4714,35 +7112,118 @@ function renderSerialStoreSection(section, sectionId, sectionEl) {
   nameWrap.appendChild(nameInput);
 
   const groupWrap = document.createElement("label");
-  groupWrap.className = "field";
-  groupWrap.innerHTML = "<span>Group</span>";
+  groupWrap.className = "field serial-store-pack-dest";
+  groupWrap.innerHTML = "<span>Add to pack</span>";
+  const packSelect = document.createElement("select");
+  packSelect.dataset.storePackSelect = "1";
+  packSelect.title = "Pick an existing pack, or New pack…";
   const groupInput = document.createElement("input");
   groupInput.type = "text";
   groupInput.dataset.storeGroup = "1";
+  groupInput.placeholder = "New pack name…";
+  groupInput.hidden = true;
+  const syncPackDest = () => {
+    const edit = serialStoreEdit.get(sectionId) || {};
+    if (packSelect.value === SERIAL_STORE_NEW_PACK) {
+      groupInput.hidden = false;
+      edit.group = String(groupInput.value || "").trim() || "Default";
+    } else {
+      groupInput.hidden = true;
+      groupInput.value = "";
+      edit.group = String(packSelect.value || "").trim() || "Default";
+    }
+    if (!edit.group || String(edit.group).toLowerCase() === "all") edit.group = "Default";
+    serialStoreEdit.set(sectionId, edit);
+  };
+  packSelect.addEventListener("change", syncPackDest);
   groupInput.addEventListener("input", () => {
+    if (packSelect.value !== SERIAL_STORE_NEW_PACK) return;
     const edit = serialStoreEdit.get(sectionId) || {};
     edit.group = groupInput.value;
     serialStoreEdit.set(sectionId, edit);
   });
-  groupWrap.appendChild(groupInput);
+  groupWrap.append(packSelect, groupInput);
 
   const serialWrap = document.createElement("label");
   serialWrap.className = "field field-wide";
-  serialWrap.innerHTML = "<span>Serial</span>";
+  serialWrap.innerHTML = "<span>Codes</span>";
   const serialInput = document.createElement("textarea");
   serialInput.rows = 4;
   serialInput.dataset.storeSerial = "1";
-  serialInput.placeholder = "@U or human serial text";
+  serialInput.placeholder = "Paste @U codes here — one per line is fine";
   serialInput.addEventListener("input", () => {
     const edit = serialStoreEdit.get(sectionId) || {};
     edit.serial = serialInput.value;
     serialStoreEdit.set(sectionId, edit);
   });
-  serialWrap.appendChild(serialInput);
+  const serialTools = document.createElement("div");
+  serialTools.className = "serial-store-serial-tools";
+  const newBtn = document.createElement("button");
+  newBtn.type = "button";
+  newBtn.className = "secondary";
+  newBtn.textContent = "New";
+  newBtn.title = "Clear the box to add another code";
+  newBtn.addEventListener("click", () => {
+    serialStoreEdit.set(sectionId, { id: "", name: "", group: "Default", serial: "" });
+    renderSerialStoreForm(sectionId);
+    actionMessage.className = "action-message muted";
+    actionMessage.textContent = "New — pick Add to pack (or New pack…), paste codes, then Save.";
+  });
+  const convertBtn = document.createElement("button");
+  convertBtn.type = "button";
+  convertBtn.className = "secondary";
+  convertBtn.textContent = "Convert";
+  convertBtn.title = "Convert human ↔ @U in this box (same as the old Convert serials tool)";
+  convertBtn.addEventListener("click", async () => {
+    const raw = String(serialInput.value || "").trim();
+    if (!raw) {
+      actionMessage.className = "action-message error";
+      actionMessage.textContent = "Paste a serial into the Serial box first.";
+      return;
+    }
+    actionMessage.className = "action-message muted";
+    actionMessage.textContent = "Converting…";
+    try {
+      const { data } = await window.sqbt.postAction("serial_convert", { input: raw });
+      if (data?.ok === false) {
+        actionMessage.className = "action-message error";
+        actionMessage.textContent = data?.message || "Convert failed.";
+        return;
+      }
+      const results = Array.isArray(data?.results) ? data.results : [];
+      let next = "";
+      if (results.length > 1) {
+        next = results.map((row) => row.serial || row.human || "").filter(Boolean).join("\n");
+      } else if (data?.serial) {
+        next = String(data.serial);
+      } else if (data?.human && raw.startsWith("@U")) {
+        next = String(data.human);
+      } else {
+        next = String(data?.message || raw);
+      }
+      serialInput.value = next;
+      const edit = serialStoreEdit.get(sectionId) || {};
+      edit.serial = next;
+      serialStoreEdit.set(sectionId, edit);
+      actionMessage.className = "action-message ok";
+      actionMessage.textContent = data?.message || "Converted.";
+    } catch (error) {
+      actionMessage.className = "action-message error";
+      actionMessage.textContent = String(error?.message || error);
+    }
+  });
+  serialTools.append(newBtn, convertBtn);
+  serialWrap.append(serialInput, serialTools);
 
   form.append(nameWrap, groupWrap, serialWrap);
   sectionEl.appendChild(form);
   renderSerialStoreForm(sectionId);
+
+  const shareBar = document.createElement("div");
+  shareBar.className = "serial-store-share-bar";
+  shareBar.innerHTML =
+    "<span class='muted small'>Pick Add to pack → paste codes → Save. Pack Add selects that pack. Send @lvl mails releveled. Import merges; Export shares.</span>";
+  sectionEl.appendChild(shareBar);
 
   const config = {
     catalog: "serial_store",
@@ -4754,7 +7235,7 @@ function renderSerialStoreSection(section, sectionId, sectionEl) {
     filters: [
       {
         key: "group",
-        label: "Group",
+        label: "Pack",
         type: "select",
         options: ["All"],
         default: "All",
@@ -4864,6 +7345,9 @@ function renderActionCard(sectionId, actionDef, sectionEl, featured) {
           : { catalog: "serial_store" },
       };
       paintToggleButton(button, actionDef, nextOn);
+      if (actionDef.syncKey) {
+        syncMobilityToggleButtons(actionDef.syncKey, nextOn);
+      }
       if (actionDef.sticky) writeStickyToggle(toggleStickyKey(sectionId, actionDef), nextOn);
       runAction(actionDef.action, payload, actionDef.confirm || "", context);
     });
@@ -5115,6 +7599,11 @@ async function refreshKeybindsEditor(host) {
 }
 
 const TOGGLE_BOARD_ROWS = Object.freeze([
+  ["god_mode", "God mode"],
+  ["infinite_ammo", "Infinite ammo"],
+  ["no_target", "No target"],
+  ["ammo_regen", "Ammo regen x5"],
+  ["weapons_restricted", "Weapons restricted"],
   ["force_fly", "Force fly (host)"],
   ["force_fly_all", "Force fly (all)"],
   ["infinite_jump", "Infinite jump"],
@@ -5128,17 +7617,46 @@ const TOGGLE_BOARD_ROWS = Object.freeze([
   ["zoom_injured", "Zoom while downed"],
   ["auto_revive", "Auto revive"],
   ["map_fog", "Hide map fog"],
-  ["hold_session", "Hold session (no menu kick)"],
+  ["hold_session", "No main menu"],
 ]);
 
 /** How Toggles-tab rows map to bridge actions. null = not clickable. */
 const TOGGLE_BOARD_ACTIONS = Object.freeze({
+  god_mode: {
+    action: "god_mode",
+    payloadOn: { enabled: true },
+    payloadOff: { enabled: false },
+  },
+  infinite_ammo: {
+    action: "infinite_ammo",
+    payloadOn: { enabled: true },
+    payloadOff: { enabled: false },
+  },
+  no_target: {
+    action: "pawn_no_target",
+    payloadOn: { enabled: true },
+    payloadOff: { enabled: false },
+  },
+  ammo_regen: {
+    action: "ammo_regen",
+    payloadOn: { rate: 5.0 },
+    payloadOff: { rate: 0.0 },
+  },
+  weapons_restricted: {
+    action: "weapons_restricted",
+    payloadOn: { restricted: true },
+    payloadOff: { restricted: false },
+  },
   force_fly: {
     action: "mobility_force_fly",
     payloadOn: { enabled: true, scope: "target" },
     payloadOff: { enabled: false, scope: "target" },
   },
-  force_fly_all: null,
+  force_fly_all: {
+    action: "mobility_force_fly",
+    payloadOn: { enabled: true, scope: "all" },
+    payloadOff: { enabled: false, scope: "all" },
+  },
   infinite_jump: {
     action: "mobility_infinite_jump",
     payloadOn: { enabled: true, scope: "target" },
@@ -5371,6 +7889,9 @@ function renderSection(section, tabId) {
   const heading = document.createElement("h3");
   heading.textContent = section.title;
   sectionEl.appendChild(heading);
+  if (tabId === "serials") {
+    sectionEl.dataset.serialsSegment = serialsSegmentForSection(section);
+  }
 
   if (Array.isArray(section.whats_new) && section.whats_new.length) {
     const whatsNew = document.createElement("div");
@@ -5439,6 +7960,9 @@ function renderSection(section, tabId) {
       button.title = `Open ${tabId} tab`;
       button.addEventListener("click", () => {
         activeTabId = tabId;
+        if (tabId === "serials" && row.segment) {
+          writeSerialsSegment(String(row.segment));
+        }
         renderTabs();
         const current = manifest.tabs.find((item) => item.id === activeTabId);
         if (current) renderTab(current);
@@ -5650,6 +8174,7 @@ function renderSection(section, tabId) {
     }
     host.appendChild(card);
   };
+  let partyBaySendRow = null;
 
   for (const actionDef of section.actions || []) {
     const actionHost = hostFor(actionDef);
@@ -5789,6 +8314,8 @@ function renderSection(section, tabId) {
         actionDef.deliverStore ||
         actionDef.spawnMultiselect ||
         actionDef.backpackMultiselect ||
+        actionDef.packBayCopy ||
+        actionDef.addSelectedToLibrary ||
         (actionDef.fields || []).length
       ) {
         const card = document.createElement("div");
@@ -5799,14 +8326,46 @@ function renderSection(section, tabId) {
           const tip = document.createElement("p");
           tip.className = "muted small";
           tip.textContent =
-            "Tick rows above, choose Send to (yourself / friend / All players). Open rewards defaults to No — turn Yes only if you want mail opened automatically (large opens can blank the backpack).";
+            "Tick rows above, choose Send to. Open rewards defaults to Yes so mail appears; set No if you want it to stay pending.";
           card.appendChild(tip);
         }
-        if (actionDef.backpackMultiselect) {
+        if (actionDef.backpackMultiselect && actionDef.action === "backpack_relevel_selected") {
+          const tip = document.createElement("p");
+          tip.className = "muted small";
+          tip.textContent = "Tick rows above, set New item level, then try rewrite.";
+          card.appendChild(tip);
+        } else if (actionDef.backpackMultiselect && actionDef.action === "backpack_export_txt") {
+          const tip = document.createElement("p");
+          tip.className = "muted small";
+          tip.textContent = "Tick rows to export, or leave none ticked for the full last Snap.";
+          card.appendChild(tip);
+        }
+        if (actionDef.addSelectedToLibrary) {
+          const tip = document.createElement("p");
+          tip.className = "muted small";
+          const bayName =
+            activeTabId === "pack_bay" ? "Save Pack" : activeTabId === "party_bay" ? "Live Pack" : "bay";
+          tip.textContent = `Tick ${bayName} rows above, then add their @U codes into My packs.`;
+          card.appendChild(tip);
+        }
+        if (actionDef.packBayCopy && actionDef.action === "deliver_serials") {
+          const tip = document.createElement("p");
+          tip.className = "muted small";
+          const mailSelf = Boolean(actionDef.payload?.mail_to_self) || activeTabId === "pack_bay";
+          tip.textContent = mailSelf
+            ? "Tick Save Pack rows above, then mail those @U codes to yourself."
+            : "Tick Live Pack rows above, choose Send to, then mail.";
+          card.appendChild(tip);
+        } else if (actionDef.packBayCopy && actionDef.action === "pack_bay_open_toolbox") {
           const tip = document.createElement("p");
           tip.className = "muted small";
           tip.textContent =
-            "Tick backpack rows above, set New item level, then relevel. Works on the Boost target only — best in solo.";
+            "Tick rows to copy @U first, then Scooter's Toolbox opens in your browser — paste there to deep-edit.";
+          card.appendChild(tip);
+        } else if (actionDef.packBayCopy) {
+          const tip = document.createElement("p");
+          tip.className = "muted small";
+          tip.textContent = "Tick bay rows above, then copy their @U codes to the clipboard.";
           card.appendChild(tip);
         }
         if ((actionDef.fields || []).length) {
@@ -5819,7 +8378,26 @@ function renderSection(section, tabId) {
           card.appendChild(fieldsWrap);
         }
         card.appendChild(button);
-        actionHost.appendChild(card);
+        // Party Bay: keep Rewrite beside Send-to (same row).
+        if (
+          activeTabId === "party_bay" &&
+          actionDef.packBayCopy &&
+          actionDef.action === "deliver_serials"
+        ) {
+          partyBaySendRow = document.createElement("div");
+          partyBaySendRow.className = "bay-pair-row";
+          partyBaySendRow.appendChild(card);
+          actionHost.appendChild(partyBaySendRow);
+        } else if (
+          activeTabId === "party_bay" &&
+          actionDef.action === "backpack_relevel_selected" &&
+          partyBaySendRow
+        ) {
+          partyBaySendRow.appendChild(card);
+          partyBaySendRow = null;
+        } else {
+          actionHost.appendChild(card);
+        }
       } else {
         actionHost.appendChild(button);
       }
@@ -5843,6 +8421,9 @@ function renderSection(section, tabId) {
           ? { ...(actionDef.payloadOn || { enabled: true }) }
           : { ...(actionDef.payloadOff || { enabled: false }) };
         paintToggleButton(button, actionDef, nextOn);
+        if (actionDef.syncKey) {
+          syncMobilityToggleButtons(actionDef.syncKey, nextOn);
+        }
         if (actionDef.sticky) writeStickyToggle(toggleStickyKey(sectionId, actionDef), nextOn);
         runAction(actionDef.action, { ...base, ...flip }, actionDef.confirm || "", { sectionId });
       });
@@ -5893,22 +8474,41 @@ function renderTab(tab) {
   catalogCache.clear();
   lastRosterSignature = "";
   for (const section of tab.sections || []) {
-    // Hide Home "Start here" as soon as the game bridge is up (not only when actions unlock).
-    if (
-      String(section.title || "") === "Start here" &&
-      (actionsEnabled() ||
-        latestStatus?.connected ||
-        ["ready", "connected", "in_menu_or_loading"].includes(String(latestStatus?.state || "")))
-    ) {
+    // Hide Home "Start here" only when actions unlock (main menu Online is not enough).
+    if (String(section.title || "") === "Start here" && actionsEnabled()) {
       continue;
     }
     const sectionEl = renderSection(section, tab.id);
     if (sectionEl) tabContent.appendChild(sectionEl);
   }
-  // Keep the sticky global #sqbt-progress-panel; refresh visibility from cache.
+  if (tab.id === "serials") {
+    const nav = renderSerialsSegmentNav();
+    tabContent.prepend(nav);
+    applySerialsSegment(readSerialsSegment());
+  }
+  // Keep the global #sqbt-progress-panel; refresh visibility from cache.
   renderProgressPanel(null, null, null);
-  if ((tab.id === "progression" || tab.id === "loot") && actionsEnabled()) {
-    pollProgressOnce();
+  if (actionsEnabled()) {
+    const progressBusy =
+      isChallengeBusy(lastChallengeStatus) ||
+      isUvhmBusy(lastUvhmStatus) ||
+      isSpawnAllBusy(lastSpawnAllStatus) ||
+      isSerialDeliveryBusy(lastSerialDeliveryStatus) ||
+      isAutoLobbyBusy(lastAutoLobbyStatus) ||
+      isShapeBusy(lastShapeStatus) ||
+      isVacuumBusy(lastVacuumStatus);
+    if (
+      progressBusy ||
+      tab.id === "progression" ||
+      tab.id === "loot" ||
+      tab.id === "serials" ||
+      tab.id === "auto_lobby"
+    ) {
+      pollProgressOnce();
+    }
+    if (tab.id === "auto_lobby" && actionsEnabled()) {
+      prefillAutoLobbyFields();
+    }
   }
   if (tab.id === "vehicle" && actionsEnabled()) {
     window.sqbt.postAction("vehicle_spawn_catalog_reload", { deep: false }).catch(() => {});
@@ -5983,8 +8583,75 @@ function dismissSafetyBanner() {
   }
 }
 
+function initNavModeControls() {
+  const tabsBtn = document.getElementById("nav-mode-tabs");
+  const menuBtn = document.getElementById("nav-mode-menu");
+  const burger = document.getElementById("nav-burger-btn");
+  if (tabsBtn && !tabsBtn.dataset.bound) {
+    tabsBtn.dataset.bound = "1";
+    tabsBtn.addEventListener("click", () => setNavMode("tabs"));
+  }
+  if (menuBtn && !menuBtn.dataset.bound) {
+    menuBtn.dataset.bound = "1";
+    menuBtn.addEventListener("click", () => setNavMode("menu"));
+  }
+  if (burger && !burger.dataset.bound) {
+    burger.dataset.bound = "1";
+    burger.addEventListener("click", () => {
+      navDrawerOpen = !navDrawerOpen;
+      applyNavMode();
+    });
+  }
+  applyNavMode();
+}
+
+function applyNavMode() {
+  document.body.classList.toggle("nav-mode-menu", navMode === "menu");
+  document.body.classList.toggle("nav-mode-tabs", navMode !== "menu");
+  const chrome = document.querySelector(".nav-chrome");
+  if (chrome) {
+    chrome.classList.toggle("nav-mode-menu", navMode === "menu");
+    chrome.classList.toggle("nav-mode-tabs", navMode !== "menu");
+  }
+  const tabsBtn = document.getElementById("nav-mode-tabs");
+  const menuBtn = document.getElementById("nav-mode-menu");
+  const burger = document.getElementById("nav-burger-btn");
+  const drawer = document.getElementById("nav-drawer");
+  if (tabsBtn) tabsBtn.classList.toggle("active", navMode !== "menu");
+  if (menuBtn) menuBtn.classList.toggle("active", navMode === "menu");
+  if (tabBar) {
+    const hideTabs = navMode === "menu";
+    tabBar.classList.toggle("nav-tabs-hidden", hideTabs);
+    tabBar.style.display = hideTabs ? "none" : "";
+  }
+  if (burger) {
+    burger.classList.toggle("hidden", navMode !== "menu");
+    burger.setAttribute("aria-expanded", navDrawerOpen && navMode === "menu" ? "true" : "false");
+  }
+  if (drawer) {
+    const show = navMode === "menu" && navDrawerOpen;
+    drawer.classList.toggle("hidden", !show);
+  }
+}
+
+function setNavMode(mode) {
+  navMode = mode === "menu" ? "menu" : "tabs";
+  try {
+    localStorage.setItem(NAV_MODE_KEY, navMode);
+  } catch (_) {
+    /* ignore */
+  }
+  // Menu mode: hide tabs and open the drawer immediately.
+  navDrawerOpen = navMode === "menu";
+  applyNavMode();
+  renderTabs();
+}
+
 function renderTabs() {
+  initNavModeControls();
   tabBar.innerHTML = "";
+  const drawer = document.getElementById("nav-drawer");
+  if (drawer) drawer.innerHTML = "";
   if (!manifest?.tabs?.length) {
     const needsSetup = setupNeedsUserAction();
     tabContent.innerHTML = needsSetup
@@ -6022,18 +8689,77 @@ function renderTabs() {
       if (current) renderTab(current);
     });
     tabBar.appendChild(button);
+    if (drawer) {
+      const item = document.createElement("button");
+      item.type = "button";
+      item.dataset.navDrawerItem = "1";
+      item.dataset.tabId = tab.id;
+      setIconLabel(item, i18n.tabLabel(tab), TAB_ICONS[tab.id] || "");
+      item.className = tab.id === activeTabId ? "active" : "";
+      item.addEventListener("click", () => {
+        activeTabId = tab.id;
+        navDrawerOpen = false;
+        renderTabs();
+        const current = manifest.tabs.find((row) => row.id === activeTabId);
+        if (current) renderTab(current);
+      });
+      drawer.appendChild(item);
+    }
   }
+  applyNavMode();
   const visibleTabs = (manifest?.tabs || []).filter((tab) => !tab.hidden);
   let current = visibleTabs.find((row) => row.id === activeTabId) || visibleTabs[0];
   if (current) {
     activeTabId = current.id;
-  } else if (activeTabId === "backpack") {
+  } else if (activeTabId === "backpack" || activeTabId === "pack_bay" || activeTabId === "party_bay") {
     activeTabId = "serials";
     current = visibleTabs.find((row) => row.id === "serials") || visibleTabs[0];
   }
   renderSafetyBanner();
   if (current) renderTab(current);
   injectHiddenShapeOptions();
+}
+
+/** Refresh tab / drawer labels without wiping the open tab (preserves input focus). */
+function renderTabBarOnly() {
+  if (!manifest?.tabs?.length || !tabBar) return;
+  initNavModeControls();
+  tabBar.innerHTML = "";
+  const drawer = document.getElementById("nav-drawer");
+  if (drawer) drawer.innerHTML = "";
+  for (const tab of manifest.tabs) {
+    if (tab.hidden) continue;
+    const button = document.createElement("button");
+    button.type = "button";
+    button.dataset.tabId = tab.id;
+    setIconLabel(button, i18n.tabLabel(tab), TAB_ICONS[tab.id] || "");
+    button.className = tab.id === activeTabId ? "active" : "";
+    button.addEventListener("click", () => {
+      activeTabId = tab.id;
+      renderTabs();
+      const current = manifest.tabs.find((row) => row.id === activeTabId);
+      if (current) renderTab(current);
+    });
+    tabBar.appendChild(button);
+    if (drawer) {
+      const item = document.createElement("button");
+      item.type = "button";
+      item.dataset.navDrawerItem = "1";
+      item.dataset.tabId = tab.id;
+      setIconLabel(item, i18n.tabLabel(tab), TAB_ICONS[tab.id] || "");
+      item.className = tab.id === activeTabId ? "active" : "";
+      item.addEventListener("click", () => {
+        activeTabId = tab.id;
+        navDrawerOpen = false;
+        renderTabs();
+        const current = manifest.tabs.find((row) => row.id === activeTabId);
+        if (current) renderTab(current);
+      });
+      drawer.appendChild(item);
+    }
+  }
+  applyNavMode();
+  renderSafetyBanner();
 }
 
 function buildToolSearchIndex() {
@@ -6112,6 +8838,14 @@ function jumpToTool(row) {
   hideToolSearchResults();
   if (toolSearchInput) toolSearchInput.value = "";
   activeTabId = row.tabId;
+  if (row.tabId === "serials") {
+    const needle = `${row.sectionTitle || ""} ${row.label || ""}`.toLowerCase();
+    if (row.segment && SERIALS_SEGMENTS.some((s) => s.id === String(row.segment))) {
+      writeSerialsSegment(String(row.segment));
+    } else if (/gzo|lootlemon|browse/.test(needle)) writeSerialsSegment("codes");
+    else if (/library|my packs/.test(needle)) writeSerialsSegment("library");
+    else if (/mail|pending|reward|shiny mail/.test(needle)) writeSerialsSegment("mail");
+  }
   renderTabs();
   window.setTimeout(() => {
     const sectionEl = [...tabContent.querySelectorAll("[data-section-title]")].find(
@@ -6163,7 +8897,17 @@ async function loadManifest() {
     clearToolsToWaiting(t("waiting.manifestUnavailable"));
     return;
   }
+  const focused = document.activeElement;
+  const editing =
+    focused &&
+    tabContent?.contains(focused) &&
+    (focused.matches?.("input, textarea, select") || focused.isContentEditable);
   manifest = result.manifest;
+  // Never wipe the open tab mid-keystroke — that is the “can't edit fields” bug.
+  if (editing) {
+    renderTabBarOnly();
+    return;
+  }
   renderTabs();
   if (toolSearchInput?.value) renderToolSearchResults(toolSearchInput.value);
 }
@@ -6492,6 +9236,7 @@ async function loadSetup() {
   gameRootInput.value = resolved;
   applyTheme(setup.theme || "default");
   applyLocale(setup.locale || i18n.detectBrowserLocale(), { refresh: false });
+  applyGhostOpacityUi(setup.ghostOpacity != null ? setup.ghostOpacity : 1);
   hiddenShapesUnlocked = Boolean(setup.hiddenShapes);
   injectHiddenShapeOptions();
   applyInstallLocationUi(setup);
@@ -6567,6 +9312,29 @@ if (themeSelect) {
       actionMessage.className = "action-message error";
       actionMessage.textContent = String(error?.message || error || t("theme.fail"));
     }
+  });
+}
+
+function applyGhostOpacityUi(opacity) {
+  const pct = Math.round(Math.max(0.55, Math.min(1, Number(opacity) || 1)) * 100);
+  if (ghostOpacityRange) ghostOpacityRange.value = String(pct);
+  if (ghostOpacityLabel) ghostOpacityLabel.textContent = `${pct}%`;
+}
+
+let ghostOpacitySaveTimer = null;
+if (ghostOpacityRange) {
+  ghostOpacityRange.addEventListener("input", () => {
+    const pct = Number(ghostOpacityRange.value) || 100;
+    applyGhostOpacityUi(pct / 100);
+    if (ghostOpacitySaveTimer) window.clearTimeout(ghostOpacitySaveTimer);
+    ghostOpacitySaveTimer = window.setTimeout(async () => {
+      try {
+        const result = await window.sqbt.setGhostOpacity(pct / 100);
+        applyGhostOpacityUi(result?.ghostOpacity ?? pct / 100);
+      } catch {
+        /* keep local label */
+      }
+    }, 120);
   });
 }
 
@@ -6778,6 +9546,18 @@ if (globalTargetSelect) {
     if (value === "") return;
     selectTarget(Number(value));
   });
+  globalTargetSelect.addEventListener("contextmenu", (event) => {
+    event.preventDefault();
+    const value = globalTargetSelect.value;
+    const idx = Number(value);
+    if (!Number.isFinite(idx) || idx < 0) {
+      actionMessage.textContent = "Pick a single Boost target player before kicking.";
+      return;
+    }
+    const label =
+      globalTargetSelect.selectedOptions?.[0]?.textContent?.trim() || `Player ${idx}`;
+    showPlayerKickMenu(event.clientX, event.clientY, idx, label);
+  });
 }
 
 browseGameBtn.addEventListener("click", async () => {
@@ -6988,6 +9768,40 @@ if (toolSearchInput) {
   });
 }
 document.addEventListener("click", (event) => {
+  const challengeStop = event.target?.closest?.("[data-challenge-stop]");
+  if (challengeStop) {
+    event.preventDefault();
+    event.stopPropagation();
+    if (!actionsEnabled() || actionBusy) return;
+    runAction("challenge_bulk_cancel", {}, "", {
+      sectionId: "progression:challenges",
+      actionDef: { action: "challenge_bulk_cancel", label: "Stop challenges" },
+    });
+    return;
+  }
+  const vacuumStop = event.target?.closest?.("[data-vacuum-stop]");
+  if (vacuumStop) {
+    event.preventDefault();
+    event.stopPropagation();
+    if (!actionsEnabled() || actionBusy) return;
+    lastVacuumStatus = null;
+    runAction("loot_vacuum_cancel", {}, "", {
+      sectionId: "world:Loot gather",
+      actionDef: { action: "loot_vacuum_cancel", label: "Stop vacuum" },
+    });
+    return;
+  }
+  const stopBtn = event.target?.closest?.("[data-auto-lobby-stop]");
+  if (stopBtn) {
+    event.preventDefault();
+    event.stopPropagation();
+    if (!actionsEnabled() || actionBusy) return;
+    runAction("auto_lobby_stop", { enabled: false }, "", {
+      sectionId: "auto_lobby:Auto Lobby",
+      actionDef: { action: "auto_lobby_stop", label: "Stop Auto Lobby" },
+    });
+    return;
+  }
   if (!toolSearchResults || toolSearchResults.classList.contains("hidden")) return;
   // Results live in .tool-search-bar; also ignore hit buttons explicitly so a
   // bubble order quirk cannot dismiss before jumpToTool runs.
@@ -7007,5 +9821,6 @@ window.addEventListener("resize", () => {
   clearTimeout(resizeUiTimer);
   resizeUiTimer = window.setTimeout(() => {
     document.body.classList.remove("is-resizing");
+    applyProgressPanelPosition(document.getElementById("sqbt-progress-panel"));
   }, 150);
 });

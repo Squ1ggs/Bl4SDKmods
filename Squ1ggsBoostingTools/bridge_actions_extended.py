@@ -30,9 +30,9 @@ from . import spawn_targets
 from .movement_adjustments import set_no_target
 
 _OPEN_REWARDS_LARGE_WARNING = (
-    "Open rewards on send auto-opens mail for delivery targets (host + guests), paced. "
-    "Only packages with SerialNumbers are opened. "
-    "Do not use Open pending after Complete ALL non-UVHM — bank / mule first."
+    "Open rewards runs one mail package at a time with a 3–5s wait between opens "
+    "(never bulk-open — that can crash or blank backpacks in multiplayer). "
+    "Large sends (250+) still take a while; prefer solo for big opens, then bank/mule before rejoining MP."
 )
 from .panel_manifest import get_panel_manifest
 from .party_helpers import _kick_party_player_by_index, _list_party_players
@@ -209,11 +209,18 @@ def _apply_level_override(serials: list[str], enabled: bool, level: int) -> tupl
     out: list[str] = []
     warnings: list[str] = []
     level_re = re.compile(r"^(\s*\d+\s*,\s*\d+\s*,\s*\d+\s*,\s*)\d+")
+    try:
+        from .serial_converter import rewrite_item_level
+    except Exception:
+        rewrite_item_level = None  # type: ignore[assignment]
     for index, serial in enumerate(serials):
         raw = str(serial or "").strip()
         if not raw:
             continue
         try:
+            if raw.startswith("@U") and rewrite_item_level is not None:
+                out.append(str(rewrite_item_level(raw, level_i)))
+                continue
             human = serial_to_human(raw) if raw.startswith("@U") else raw
             new_human, count = level_re.subn(rf"\g<1>{level_i}", human, count=1)
             if count <= 0:
@@ -326,9 +333,16 @@ def deliver_serials(payload: dict[str, Any]) -> dict[str, Any]:
     if count > 1:
         serials = [serial for serial in serials for _ in range(count)]
     override_warning = None
-    if _coerce_bool(payload.get("level_override"), default=False):
+    level_override = _coerce_bool(payload.get("level_override"), default=False)
+    try:
+        level_i = int(payload.get("level") or DEFAULT_ITEM_LEVEL)
+    except Exception:
+        level_i = int(DEFAULT_ITEM_LEVEL)
+    # Rewriting 500+ @U codes on the click/frame AVs — defer to per-package tick work.
+    defer_level = level_override and len(serials) >= 80
+    if level_override and not defer_level:
         serials, override_warning = _apply_level_override(
-            serials, True, int(payload.get("level") or DEFAULT_ITEM_LEVEL)
+            serials, True, level_i
         )
     mode = str(payload.get("mode") or "player").strip().lower()
     player_raw = payload.get("player_index")
@@ -377,6 +391,8 @@ def deliver_serials(payload: dict[str, Any]) -> dict[str, Any]:
         indices,
         scope_label=scope,
         open_rewards=open_rewards,
+        level_override=bool(defer_level),
+        level=level_i,
     )
     try:
         queued_n = int(queued or 0)
@@ -409,10 +425,20 @@ def deliver_serials(payload: dict[str, Any]) -> dict[str, Any]:
             "(Reward Center often has hundreds of packages)."
         )
     elif open_rewards:
+        if len(serials) >= 200:
+            message = (
+                f"{message} Large send: mail packages first, then rewards open one-by-one "
+                "(~4s between opens — stay in-world until status says Rewards opened)."
+            )
+        else:
+            message = (
+                f"{message} Rewards will open one-by-one in the background "
+                "(~4s between packages — stay in-world until status says Rewards opened)."
+            )
+    if defer_level:
         message = (
-            f"{message} Rewards will open one-by-one for delivery targets "
-            "(~4s between packages; guests get a longer first delay). "
-            "Empty loyalty shells stay closed."
+            f"{message} Level override to {level_i} runs per mail package "
+            "(safer for large packs)."
         )
     open_warning = ""
     if open_rewards and len(serials) >= 250:
@@ -429,22 +455,58 @@ def deliver_serials(payload: dict[str, Any]) -> dict[str, Any]:
         selected_count=selected_n,
         skipped=skipped,
         open_rewards_suppressed=bool(open_rewards_suppressed),
+        packages=max(1, (len(serials) + 5) // 6) if len(serials) >= 500 else max(1, (len(serials) + 11) // 12),
     )
 
 
 def serial_store_save(payload: dict[str, Any]) -> dict[str, Any]:
     from . import serial_store
 
+    group = str(payload.get("group") or "Default").strip() or "Default"
+    if group.lower() == "all":
+        group = "Default"
+    name = str(payload.get("name") or "").strip()
+    entry_id = str(payload.get("id") or payload.get("entry_id") or "")
+    raw_serial = str(payload.get("serial") or payload.get("text") or "")
+    # Multi-line / multi-@U paste → one library row per serial in the same pack.
+    serials = _serials_from_text(raw_serial)
+    if not serials:
+        single = raw_serial.strip()
+        if single:
+            serials = [single]
+    if not serials:
+        return _fail("Serial is required before saving.")
     try:
-        entry = serial_store.save_entry(
-            entry_id=str(payload.get("id") or payload.get("entry_id") or ""),
-            name=str(payload.get("name") or ""),
-            group=str(payload.get("group") or "Default"),
-            serial=str(payload.get("serial") or ""),
-        )
+        if entry_id and len(serials) == 1:
+            entry = serial_store.save_entry(
+                entry_id=entry_id,
+                name=name,
+                group=group,
+                serial=serials[0],
+            )
+            return _ok(f"Saved {entry.get('name') or 'entry'}.", entry=entry, group=group)
+        added: list[dict[str, str]] = []
+        for index, serial in enumerate(serials, start=1):
+            entry_name = name
+            if not entry_name:
+                snippet = serial.replace("\n", " ").strip()
+                entry_name = (snippet[:37] + "…") if len(snippet) > 40 else (snippet or "Saved serial")
+            elif len(serials) > 1:
+                entry_name = f"{name} #{index}"
+            added.append(
+                serial_store.save_entry(name=entry_name, group=group, serial=serial)
+            )
     except ValueError as exc:
         return _fail(str(exc))
-    return _ok(f"Saved {entry.get('name') or 'entry'}.", entry=entry)
+    if len(added) == 1:
+        return _ok(f"Saved {added[0].get('name') or 'entry'}.", entry=added[0], group=group)
+    return _ok(
+        f"Saved {len(added)} serial(s) to pack “{group}”.",
+        entry=added[-1],
+        entries=added,
+        added=len(added),
+        group=group,
+    )
 
 
 def serial_store_import_serials(payload: dict[str, Any]) -> dict[str, Any]:
@@ -774,87 +836,31 @@ def uvhm_start(payload: dict[str, Any] | None = None) -> dict[str, Any]:
     payload = payload or {}
     idx = _player_index_from_payload(payload)
     max_rank = _uvhm_max_rank_from_payload(payload)
-    want_name = str(payload.get("target_name") or payload.get("name") or "").strip()
     if idx < 0:
         return _fail(
             "Start UVHM (target) needs one Boost target player — "
             "set the player bar under the tabs (not All players), or use Start UVHM (all lobby)."
         )
     try:
-        from .uvhm_progression import (
-            _names_match,
-            selected_lobby_identity,
-            selected_lobby_identity_by_name,
-        )
+        from .uvhm_progression import selected_lobby_identity
 
         identity = selected_lobby_identity(int(idx))
-        # EXE sends the Boost-target label. If the index drifted to host (0) while
-        # the UI still showed a guest, prefer the named player.
-        if want_name and not _names_match(want_name, identity.display_name):
-            by_name = selected_lobby_identity_by_name(want_name)
-            try:
-                from . import runtime_log
-
-                runtime_log.note(
-                    f"uvhm_start: index {idx} was {identity.display_name!r} but UI "
-                    f"asked for {want_name!r} — using named player."
-                )
-            except Exception:
-                pass
-            identity = by_name
     except Exception as exc:
         return _fail(
-            f"Could not resolve Boost target "
-            f"{(want_name or f'index {idx}')!r} in the lobby: {exc}. "
+            f"Could not resolve Boost target index {idx} in the lobby: {exc}. "
             "Refresh status / pick the player again, then retry."
         )
-    # Queue by the resolved identity's current lobby index so the tick path
-    # still uses the proven index consume, but name already matched.
-    try:
-        from .party_helpers import (
-            _gbc_resolve_player_display_name,
-            _gbc_session_world_and_gamestate,
-        )
-        from .uvhm_progression import _player_state_key
-
-        _world, gs = _gbc_session_world_and_gamestate()
-        players = getattr(gs, "PlayerArray", None) if gs is not None else None
-        resolved_idx = int(idx)
-        if players is not None:
-            for i in range(len(players)):
-                ps = players[i]
-                if ps is None:
-                    continue
-                nm = _gbc_resolve_player_display_name(ps)
-                if _player_state_key(ps, nm) == identity.key:
-                    resolved_idx = int(i)
-                    break
-    except Exception:
-        resolved_idx = int(idx)
-    if uvhm_runtime.request_selected(resolved_idx, max_rank=max_rank):
-        who = getattr(identity, "display_name", None) or f"index {resolved_idx}"
+    if uvhm_runtime.request_selected(idx, max_rank=max_rank):
+        who = getattr(identity, "display_name", None) or f"index {idx}"
         try:
             from . import hold_session
 
             hold_session.arm_for_job("uvhm")
         except Exception:
             pass
-        try:
-            from . import runtime_log
-
-            runtime_log.note(
-                f"uvhm_start ok for {who} (index {resolved_idx}, want_name={want_name or '-'})"
-            )
-        except Exception:
-            pass
         return _ok(f"UVHM workflow queued for {who} (up to rank {max_rank}).")
     st = uvhm_runtime.status()
-    return _fail(
-        st.get("last_request_error")
-        or st.get("detail_message")
-        or st.get("message")
-        or "UVHM request failed."
-    )
+    return _fail(st.get("message") or st.get("detail_message") or "UVHM request failed.")
 
 
 def uvhm_start_all(payload: dict[str, Any] | None = None) -> dict[str, Any]:
@@ -868,13 +874,7 @@ def uvhm_start_all(payload: dict[str, Any] | None = None) -> dict[str, Any]:
         except Exception:
             pass
         return _ok(f"All-lobby UVHM workflow queued (up to rank {max_rank}).")
-    st = uvhm_runtime.status()
-    return _fail(
-        st.get("last_request_error")
-        or st.get("detail_message")
-        or st.get("message")
-        or "UVHM all-lobby request failed."
-    )
+    return _fail(uvhm_runtime.status().get("message") or "UVHM all-lobby request failed.")
 
 
 def uvhm_cancel(_payload: dict[str, Any] | None = None) -> dict[str, Any]:
@@ -913,6 +913,9 @@ def challenge_bulk_start(payload: dict[str, Any]) -> dict[str, Any]:
     idx = _player_index_from_payload(payload)
     if not bool(payload.get("confirmed", True)):
         return _fail("Confirmation required for challenge bulk.")
+    # Complete ALL may only queue rewards. It must never auto-open its hundreds
+    # of packages in a multiplayer session (especially unsafe for console peers).
+    payload["open_rewards"] = False
     tokens_raw = payload.get("tokens") or payload.get("token")
     tokens: list[str] = []
     if isinstance(tokens_raw, str) and tokens_raw.strip():
@@ -921,8 +924,6 @@ def challenge_bulk_start(payload: dict[str, Any]) -> dict[str, Any]:
         tokens = [str(t).strip() for t in tokens_raw if str(t).strip()]
     if challenge_request(idx, category, confirmed=True, tokens=tokens or None):
         who = "All players" if int(idx) < 0 else f"player index {idx}"
-        st = challenge_status()
-        queued_n = int(st.get("queued_count") or st.get("progress_total") or st.get("total") or 0)
         try:
             from . import hold_session
 
@@ -938,30 +939,28 @@ def challenge_bulk_start(payload: dict[str, Any]) -> dict[str, Any]:
                 block_open_all_after_challenge_bulk(reason="Complete ALL non-UVHM")
             except Exception:
                 pass
-        live_msg = str(st.get("message") or "").strip()
+        st = challenge_status()
+        total = int(st.get("total") or st.get("progress_total") or 0)
         if tokens:
-            return _ok(
-                live_msg or f"Queued {len(tokens)} selected challenge(s) for {who}.",
-                queued_count=queued_n or len(tokens),
-                progress_total=queued_n or len(tokens),
-                challenge=st,
-            )
-        note = live_msg or f"Challenge bulk queued: {category} for {who}."
-        if queued_n and "Queued" not in note and "Starting" not in note:
-            note = f"Challenge bulk queued: {category} ({queued_n}) for {who}."
-        if mass_all:
-            note = (
-                f"{note} Leave Open pending rewards OFF — this run often dumps hundreds of "
-                "mail packages. Bank / mule first; Serials Open rewards on send stays Yes for "
-                "normal GZO/Lootlemon only."
+            note = f"Queued {len(tokens)} selected challenge(s) for {who}."
+            advisory = ""
+        else:
+            note = f"Queued {total} · {category} for {who}."
+            advisory = (
+                "All non-UVHM only sends Reward Center packages; it never opens them. "
+                "Console/cross-play users can receive 600+ items: leave multiplayer, open "
+                "the rewards in solo, sell junk and reduce carried items before rejoining."
+                if mass_all
+                else ""
             )
         return _ok(
             note,
             suppress_open_all=bool(mass_all),
             category=category,
-            queued_count=queued_n,
-            progress_total=queued_n,
             challenge=st,
+            queued_count=total,
+            progress_total=total,
+            advisory=advisory,
         )
     return _fail(challenge_status().get("message") or "Challenge bulk failed.")
 
@@ -981,19 +980,19 @@ def challenge_complete_selected(payload: dict[str, Any]) -> dict[str, Any]:
         return _fail("Confirmation required.")
     if challenge_request(idx, "All non-UVHM", confirmed=True, tokens=tokens):
         who = "All players" if int(idx) < 0 else f"player index {idx}"
-        st = challenge_status()
-        queued_n = int(st.get("queued_count") or st.get("progress_total") or len(tokens))
         try:
             from . import hold_session
 
             hold_session.arm_for_job("challenges")
         except Exception:
             pass
+        st = challenge_status()
         return _ok(
             f"Queued {len(tokens)} selected challenge(s) for {who}.",
             count=len(tokens),
-            queued_count=queued_n,
-            progress_total=queued_n,
+            challenge=st,
+            queued_count=int(st.get("total") or len(tokens)),
+            progress_total=int(st.get("total") or len(tokens)),
         )
     return _fail(challenge_status().get("message") or "Could not queue selected challenges.")
 
@@ -1030,11 +1029,16 @@ def challenge_bulk_status(_payload: dict[str, Any] | None = None) -> dict[str, A
         suppress_open_all=suppress,
         active=st.get("active"),
         queued=st.get("queued"),
+        running=st.get("running"),
+        phase=st.get("phase"),
         message=st.get("message"),
         index=st.get("index"),
+        progress_index=st.get("progress_index"),
         total=st.get("total"),
+        progress_total=st.get("progress_total"),
         accepted=st.get("ok"),
         failed=st.get("failed"),
+        skipped=st.get("skipped"),
         token=st.get("token"),
     )
 
@@ -1092,7 +1096,7 @@ def _loot_landing_kwargs(payload: dict[str, Any]) -> dict[str, Any]:
     layout = clamp_layout_params(
         radius=payload.get("radius", 200),
         spacing=payload.get("spacing", 72),
-        line_length=payload.get("line_length", 1100),
+        line_length=payload.get("line_length", 520),
         drop_height=payload.get("drop_height", 440),
         z_bias=payload.get("z_bias", 18),
     )
@@ -2044,7 +2048,7 @@ def shiny_drop_all(payload: dict[str, Any] | None = None) -> dict[str, Any]:
     layout = clamp_layout_params(
         radius=payload.get("radius", 300),
         spacing=payload.get("spacing", 90),
-        line_length=payload.get("line_length", 1100),
+        line_length=payload.get("line_length", 520),
         drop_height=payload.get("drop_height", 440),
     )
     drop_height = float(layout["drop_height"])
@@ -2059,7 +2063,7 @@ def shiny_drop_all(payload: dict[str, Any] | None = None) -> dict[str, Any]:
             shape=str(land.get("shape") or "none"),
             settle=str(land.get("settle") or "none"),
             drop_height=float(land.get("drop_height") or 440),
-            line_length=float(land.get("line_length") or 900),
+            line_length=float(land.get("line_length") or 520),
             radius=float(land.get("radius") or 300),
             spacing=float(land.get("spacing") or 90),
             spawn_then_shape=bool(land.get("spawn_then_shape")),
@@ -2118,7 +2122,7 @@ def spawn_text_shape(payload: dict[str, Any] | None = None) -> dict[str, Any]:
         "radius": payload.get("radius", fit_r),
         "spacing": payload.get("spacing", layout["spacing"]),
         "drop_height": payload.get("drop_height", 200),
-        "line_length": payload.get("line_length", 1100),
+        "line_length": payload.get("line_length", 520),
         "z_bias": payload.get("z_bias", 12),
         "stay_in_air": payload.get("stay_in_air", "yes"),
         "float_on_grab": payload.get("float_on_grab", "no"),
@@ -2912,6 +2916,225 @@ def loot_cleanup(_payload: dict[str, Any] | None = None) -> dict[str, Any]:
     return _ok(loot_shapes.cleanup_world_loot())
 
 
+def loot_gather_nearby(payload: dict[str, Any] | None = None) -> dict[str, Any]:
+    from . import loot_coil
+
+    payload = payload or {}
+    try:
+        max_items = int(payload.get("max_items") or payload.get("count") or 400)
+    except Exception:
+        max_items = 400
+    scope = str(payload.get("scope") or payload.get("reel_scope") or "me")
+    try:
+        radius_m = float(payload.get("radius_m") or payload.get("radius") or 0)
+    except Exception:
+        radius_m = 0.0
+    idx = _payload_player_index(payload)
+    return _ok(
+        loot_coil.reel_ground_loot(
+            max_items=max_items,
+            scope=scope,
+            radius_m=radius_m,
+            player_index=idx,
+        )
+    )
+
+
+def loot_vacuum_nearby(payload: dict[str, Any] | None = None) -> dict[str, Any]:
+    """Fast snap nearby ground loot to feet (not backpack / not mail)."""
+    from . import loot_coil
+
+    payload = payload or {}
+    try:
+        max_items = int(payload.get("max_items") or payload.get("count") or 200)
+    except Exception:
+        max_items = 200
+    scope = str(payload.get("scope") or payload.get("reel_scope") or "me")
+    try:
+        if payload.get("radius_m") is not None:
+            radius_m = float(payload.get("radius_m"))
+        elif payload.get("radius") is not None:
+            radius_m = float(payload.get("radius"))
+        else:
+            radius_m = 40.0
+    except Exception:
+        radius_m = 40.0
+    idx = _payload_player_index(payload)
+    msg = loot_coil.start_vacuum(
+        max_items=max_items,
+        scope=scope,
+        radius_m=radius_m,
+        player_index=idx,
+    )
+    st = loot_coil.vacuum_status()
+    low = str(msg).lower()
+    if any(
+        bit in low
+        for bit in (
+            "needs the listen host",
+            "wait until",
+            "no ground loot",
+            "no live pawn",
+            "could not read",
+        )
+    ):
+        return _fail(msg, vacuum=st)
+    return _ok(msg, vacuum=st)
+
+
+def loot_vacuum_cancel(_payload: dict[str, Any] | None = None) -> dict[str, Any]:
+    from . import loot_coil
+
+    del _payload
+    return _ok(loot_coil.cancel_vacuum(), vacuum=loot_coil.vacuum_status())
+
+
+def loot_vacuum_status(_payload: dict[str, Any] | None = None) -> dict[str, Any]:
+    from . import loot_coil
+
+    del _payload
+    st = loot_coil.vacuum_status()
+    return _ok(str(st.get("message") or "Loot vacuum idle."), vacuum=st)
+
+
+def guest_map_assist_start(payload: dict[str, Any] | None = None) -> dict[str, Any]:
+    from . import map_party_escort
+
+    payload = payload or {}
+    try:
+        hops = int(payload.get("hops") or 6)
+    except Exception:
+        hops = 6
+    try:
+        radius = float(payload.get("radius") or 12000)
+    except Exception:
+        radius = 12000.0
+    all_guests = bool(payload.get("all_guests") or payload.get("all") or payload.get("party"))
+    if all_guests and not bool(payload.get("confirmed", False)):
+        return _fail("Confirmation required to escort all guests.")
+    idx = _single_target_index(payload) if not all_guests else None
+    msg = map_party_escort.start(
+        player_index=idx,
+        all_guests=all_guests,
+        hops=hops,
+        radius=radius,
+    )
+    st = map_party_escort.status()
+    if not st.get("active"):
+        return _fail(msg, escort=st)
+    return _ok(msg, escort=st)
+
+
+def guest_map_assist_cancel(_payload: dict[str, Any] | None = None) -> dict[str, Any]:
+    from . import map_party_escort
+
+    del _payload
+    return _ok(map_party_escort.cancel(), escort=map_party_escort.status())
+
+
+def guest_map_assist_status(_payload: dict[str, Any] | None = None) -> dict[str, Any]:
+    from . import map_party_escort
+
+    del _payload
+    st = map_party_escort.status()
+    return _ok(str(st.get("message") or "Guest map assist status."), escort=st)
+
+
+def warp_mark_save(payload: dict[str, Any] | None = None) -> dict[str, Any]:
+    from . import warp_marks
+
+    payload = payload or {}
+    name = str(payload.get("name") or payload.get("label") or "Mark").strip()
+    try:
+        return _ok(warp_marks.save_mark(name), marks=warp_marks.list_marks())
+    except Exception as exc:
+        return _fail(str(exc))
+
+
+def warp_mark_go(payload: dict[str, Any] | None = None) -> dict[str, Any]:
+    from . import warp_marks
+
+    payload = payload or {}
+    name = str(payload.get("name") or payload.get("label") or "").strip()
+    if not name:
+        rows = warp_marks.list_marks()
+        if not rows:
+            return _fail("No warp marks saved yet.")
+        name = str(rows[0].get("name") or "")
+    try:
+        return _ok(warp_marks.go_mark(name))
+    except Exception as exc:
+        return _fail(str(exc))
+
+
+def warp_mark_delete(payload: dict[str, Any] | None = None) -> dict[str, Any]:
+    from . import warp_marks
+
+    payload = payload or {}
+    name = str(payload.get("name") or payload.get("label") or "").strip()
+    if not name:
+        return _fail("Pick a warp mark name to delete.")
+    try:
+        return _ok(warp_marks.delete_mark(name), marks=warp_marks.list_marks())
+    except Exception as exc:
+        return _fail(str(exc))
+
+
+def warp_mark_list(_payload: dict[str, Any] | None = None) -> dict[str, Any]:
+    from . import warp_marks
+
+    del _payload
+    rows = warp_marks.list_marks()
+    return _ok(f"{len(rows)} warp mark(s).", marks=rows)
+
+
+def host_map_sweep_start(payload: dict[str, Any] | None = None) -> dict[str, Any]:
+    from . import map_scout
+
+    payload = payload or {}
+    try:
+        # Keep 0 as "all main POIs" — do not use `or 8` (0 is valid).
+        raw_hops = payload.get("hops")
+        hops = int(raw_hops) if raw_hops is not None else 0
+    except Exception:
+        hops = 0
+    try:
+        radius = float(payload.get("radius") if payload.get("radius") is not None else 0)
+    except Exception:
+        radius = 0.0
+    mode = str(payload.get("mode") or payload.get("sweep_mode") or "poi").strip().lower()
+    msg = map_scout.start(hops=hops, radius=radius, mode=mode)
+    st = map_scout.status()
+    if not st.get("active") and "armed" not in msg.lower():
+        return _fail(msg, scout=st)
+    return _ok(msg, scout=st)
+
+
+def host_map_sweep_cancel(_payload: dict[str, Any] | None = None) -> dict[str, Any]:
+    from . import map_scout
+
+    del _payload
+    return _ok(map_scout.cancel(), scout=map_scout.status())
+
+
+def host_map_sweep_status(_payload: dict[str, Any] | None = None) -> dict[str, Any]:
+    from . import map_scout
+
+    del _payload
+    st = map_scout.status()
+    return _ok(str(st.get("message") or "Host map sweep status."), scout=st)
+
+
+# Legacy bridge action IDs (EXE macros, old keybind saves).
+loot_coil_reel = loot_gather_nearby
+map_party_escort_start = guest_map_assist_start
+map_party_escort_cancel = guest_map_assist_cancel
+map_party_escort_status = guest_map_assist_status
+map_scout_start = host_map_sweep_start
+map_scout_cancel = host_map_sweep_cancel
+map_scout_status = host_map_sweep_status
+
+
 def loot_shape_reapply(_payload: dict[str, Any] | None = None) -> dict[str, Any]:
     del _payload
     return _ok(loot_shapes.reapply_last_layout(), summary=loot_shapes.get_last_layout_summary())
@@ -2919,15 +3142,10 @@ def loot_shape_reapply(_payload: dict[str, Any] | None = None) -> dict[str, Any]
 
 def loot_shape_status(_payload: dict[str, Any] | None = None) -> dict[str, Any]:
     del _payload
-    prog = loot_shapes.get_progress_status()
-    # progress blob includes message/ok — do not double-pass into _ok()
-    prog_extra = {k: v for k, v in prog.items() if k not in ("message", "ok")}
     return _ok(
         loot_shapes.get_status(),
         summary=loot_shapes.get_last_layout_summary(),
         shapes=list(loot_shapes.SHAPE_NAMES),
-        shape_progress=prog,
-        **prog_extra,
     )
 
 
@@ -2966,11 +3184,18 @@ def hold_session(payload: dict[str, Any] | None = None) -> dict[str, Any]:
     return _ok(msg, enabled=after)
 
 
-def map_fog_unlock(_payload: dict[str, Any] | None = None) -> dict[str, Any]:
+def map_fog_unlock(payload: dict[str, Any] | None = None) -> dict[str, Any]:
     from . import map_fog_unlock as fog
 
-    del _payload
-    msg = fog.expand_unfog_radius()
+    payload = payload or {}
+    radius = payload.get("radius")
+    if radius is None:
+        radius = payload.get("unfog_radius")
+    try:
+        radius_f = float(radius) if radius is not None and str(radius).strip() != "" else None
+    except Exception:
+        radius_f = None
+    msg = fog.expand_unfog_radius(radius=radius_f)
     return _ok(msg)
 
 
@@ -3373,7 +3598,7 @@ def activity_log(payload: dict[str, Any] | None = None) -> dict[str, Any]:
 
 
 def rewards_open_everyone(payload: dict[str, Any] | None = None) -> dict[str, Any]:
-    """Queue paced open for pending packages on live party mailboxes (host + guests)."""
+    """Queue paced open for every pending reward package (never bulk-open in one frame)."""
     payload = payload or {}
     force = _coerce_bool(payload.get("force") or payload.get("confirmed_large"), default=False)
     try:
@@ -3401,15 +3626,23 @@ def rewards_open_everyone(payload: dict[str, Any] | None = None) -> dict[str, An
 
         pending = int(count_pending_reward_packages() or 0)
         blocked = bool(open_all_blocked_after_challenge_bulk())
-        if blocked and not force:
+        party_count = len(list(_player_rows() or []))
+        large_multiplayer_open = (
+            party_count > 1
+            and (blocked or pending >= int(_OPEN_ALL_CHALLENGE_WARN_PACKAGES))
+        )
+        if large_multiplayer_open:
             return _fail(
-                f"Open pending rewards is blocked after Complete ALL non-UVHM "
-                f"({pending} package(s) pending in the lobby). Users often have hundreds — "
-                "bank / mule first. Confirm again only if you mean to open them now.",
+                f"Large pending-reward opening is blocked in multiplayer "
+                f"({pending} package(s) pending). Complete ALL only "
+                "sends these rewards. Leave the lobby, open them in solo, sell junk and reduce "
+                "carried items before rejoining; console/cross-play backpacks can disappear online "
+                "when holding hundreds of items.",
                 opened=0,
-                needs_force=True,
+                needs_force=False,
                 packages=pending,
                 suppress_open_all=True,
+                solo_required=True,
             )
         if (
             not blocked
@@ -3417,8 +3650,8 @@ def rewards_open_everyone(payload: dict[str, Any] | None = None) -> dict[str, An
             and pending >= int(_OPEN_ALL_CHALLENGE_WARN_PACKAGES)
         ):
             return _fail(
-                f"{pending} pending mail package(s) in the lobby — that is a long paced open. "
-                "Confirm again to open packages that already have SerialNumbers.",
+                f"{pending} pending mail package(s) — that is a long paced open. "
+                "Confirm again to open all of them, or bank / mule first.",
                 opened=0,
                 needs_force=True,
                 packages=pending,
@@ -3433,18 +3666,12 @@ def rewards_open_everyone(payload: dict[str, Any] | None = None) -> dict[str, An
         gap = float(gap_fn(max(1, int(packages))))
         eta = max(2, int(round(packages * gap)))
         return _ok(
-            f"Opening {packages} mail package(s) paced (~{eta}s) for the lobby. "
-            "Empty loyalty shells stay closed; guests get a longer first delay.",
-            opened=packages,
-            managers=managers,
+            f"Opening {packages} mail package(s) paced (~{eta}s). Stay in-world until done.",
+            opened=managers,
             packages=packages,
             eta_sec=eta,
         )
-    return _ok(
-        "No pending mail packages with openable SerialNumbers found in the lobby.",
-        opened=0,
-        managers=0,
-    )
+    return _fail("No pending rewards could be queued for opening.", opened=0)
 
 
 _ll_refresh_lock = threading.Lock()
@@ -3624,7 +3851,7 @@ def faafo_drop_backpack(payload: dict[str, Any] | None = None) -> dict[str, Any]
             shape=shape_l,
             settle=settle_l,
             drop_height=float(land.get("drop_height") or 440),
-            line_length=float(land.get("line_length") or 900),
+            line_length=float(land.get("line_length") or 520),
             radius=float(land.get("radius") or 200),
             spacing=float(land.get("spacing") or 72),
             z_bias=float(land.get("z_bias") or 18),
@@ -3747,14 +3974,22 @@ def keybinds_clear(payload: dict[str, Any] | None = None) -> dict[str, Any]:
 
 
 def backpack_scan_status(payload: dict[str, Any] | None = None) -> dict[str, Any]:
-    from .backpack_tools import scan_backpack_rows
+    """UI trigger only — sheet reload happens in the EXE / catalog refresh.
 
+    Avoids a double backpack walk (action + catalog) which hitchs fat packs.
+    """
     payload = payload or {}
+    if bool(payload.get("pack_bay")) or str(payload.get("sheet") or "").strip().lower() == "bay":
+        return _ok("Refreshing Pack Bay from autosave…", count=0, save_yaml=True)
     idx = _single_target_index(payload)
     if idx < 0:
-        return _fail("Pick one boost target (not All players) to scan their backpack.")
-    rows, message = scan_backpack_rows(idx)
-    return _ok(message, count=len(rows))
+        return _fail("Pick one boost target (not All players) to snap their backpack.")
+    return _ok(
+        f"Snapping backpack for player index {int(idx)}…",
+        count=0,
+        player_index=int(idx),
+        party_bay=True,
+    )
 
 
 def backpack_relevel_selected(payload: dict[str, Any] | None = None) -> dict[str, Any]:
@@ -3791,6 +4026,203 @@ def backpack_relevel_selected(payload: dict[str, Any] | None = None) -> dict[str
     )
 
 
+def backpack_export_txt(payload: dict[str, Any] | None = None) -> dict[str, Any]:
+    """Download Party Bay @U dump as .txt (ticked rows, or full snap if none ticked)."""
+    from .backpack_tools import export_backpack_txt
+
+    payload = payload or {}
+    idx = _single_target_index(payload)
+    if idx < 0:
+        return _fail("Pick one boost target (not All players) to export backpack @U.")
+    slots_raw = payload.get("slots") or payload.get("slot_indices") or []
+    if isinstance(slots_raw, (str, int)):
+        slots_raw = [slots_raw]
+    slots: list[int] = []
+    for item in slots_raw if isinstance(slots_raw, (list, tuple, set)) else []:
+        try:
+            slots.append(int(item))
+        except (TypeError, ValueError):
+            continue
+    result = export_backpack_txt(
+        idx,
+        slot_indices=slots or None,
+        include_equipped=True,
+    )
+    if not result.get("ok"):
+        return _fail(str(result.get("message") or "Export failed."))
+    return _ok(
+        str(result.get("message") or "Exported."),
+        text=str(result.get("text") or ""),
+        count=int(result.get("count") or 0),
+        player_index=int(idx),
+    )
+
+
+def pack_bay_enable(_payload: dict[str, Any] | None = None) -> dict[str, Any]:
+    from . import pack_bay
+
+    del _payload
+    return _ok(pack_bay.enable_for_local_test(), enabled=True)
+
+
+def pack_bay_disable(_payload: dict[str, Any] | None = None) -> dict[str, Any]:
+    from . import pack_bay
+
+    del _payload
+    return _ok(pack_bay.disable_for_local_test(), enabled=False)
+
+
+def pack_bay_copy_selected(payload: dict[str, Any] | None = None) -> dict[str, Any]:
+    """Copy ticked bay @U serials to the Windows clipboard (local test helper)."""
+    payload = payload or {}
+    serials_raw = payload.get("serials") or []
+    if isinstance(serials_raw, str):
+        serials_raw = [serials_raw]
+    serials: list[str] = []
+    for item in serials_raw if isinstance(serials_raw, (list, tuple, set)) else []:
+        text = str(item or "").strip()
+        if text.startswith("@U"):
+            serials.append(text)
+    if not serials:
+        return _fail("Tick at least one bay row with an @U serial first.")
+    copied, err = _copy_text_to_windows_clipboard("\n".join(serials))
+    if not copied:
+        return _fail(err or "Clipboard copy failed.")
+    return _ok(f"Copied {len(serials)} @U serial(s) to clipboard.", count=len(serials))
+
+
+def pack_bay_open_toolbox(payload: dict[str, Any] | None = None) -> dict[str, Any]:
+    """Copy ticked @U (if any) and tell the EXE to open scooterstoolbox.com."""
+    from .pack_bay import TOOLBOX_URL
+
+    payload = payload or {}
+    serials_raw = payload.get("serials") or []
+    if isinstance(serials_raw, str):
+        serials_raw = [serials_raw]
+    serials: list[str] = []
+    for item in serials_raw if isinstance(serials_raw, (list, tuple, set)) else []:
+        text = str(item or "").strip()
+        if text.startswith("@U"):
+            serials.append(text)
+    copied = 0
+    if serials:
+        ok, err = _copy_text_to_windows_clipboard("\n".join(serials))
+        if not ok:
+            return _fail(err or "Clipboard copy failed.")
+        copied = len(serials)
+        msg = f"Copied {copied} @U — opening Scooter's Toolbox. Paste there to edit."
+    else:
+        msg = "Opening Scooter's Toolbox (nothing ticked — copy serials first if you need them)."
+    return _ok(msg, count=copied, open_url=TOOLBOX_URL)
+
+
+def bay_label_serials(payload: dict[str, Any] | None = None) -> dict[str, Any]:
+    """Name + level Pack Bay / pasted @U rows via the same GZO decode Party Bay uses."""
+    from . import item_labels
+
+    payload = payload or {}
+    raw_rows = payload.get("rows")
+    serials: list[str] = []
+    if isinstance(raw_rows, list) and raw_rows:
+        for row in raw_rows:
+            if isinstance(row, dict):
+                serials.append(str(row.get("serial") or "").strip())
+            else:
+                serials.append(str(row or "").strip())
+    else:
+        for key in ("serials", "items", "codes"):
+            blob = payload.get(key)
+            if isinstance(blob, list):
+                serials.extend(str(x or "").strip() for x in blob)
+                break
+            if isinstance(blob, str) and blob.strip():
+                serials.extend(line.strip() for line in blob.splitlines() if line.strip())
+                break
+    out: list[dict[str, Any]] = []
+    named = 0
+    leveled = 0
+    for index, serial in enumerate(serials):
+        if not serial.startswith("@U"):
+            continue
+        bits = item_labels.title_bits_from_serial(serial)
+        pretty = str(bits.get("display_name") or "").strip()
+        rarity = str(bits.get("rarity") or "").strip()
+        manufacturer = str(bits.get("manufacturer") or "").strip()
+        item_type = str(bits.get("item_type") or "").strip()
+        level = bits.get("level")
+        if pretty:
+            named += 1
+        else:
+            snip = serial if len(serial) <= 40 else f"{serial[:36]}…"
+            pretty = snip
+        bits_list: list[str] = []
+        if rarity:
+            bits_list.append(rarity)
+        if manufacturer and manufacturer.casefold() not in pretty.casefold():
+            bits_list.append(manufacturer)
+        if item_type and item_type.casefold() not in pretty.casefold():
+            bits_list.append(item_type)
+        suffix = f" · {' / '.join(bits_list)}" if bits_list else ""
+        label = f"{pretty}{suffix}"
+        if isinstance(level, int):
+            label = f"{label} L{level}"
+            leveled += 1
+        row: dict[str, Any] = {
+            "id": str(index),
+            "slot": int(index),
+            "serial": serial,
+            "title": f"#{index} — {label}",
+            "display_name": pretty,
+        }
+        if rarity:
+            row["rarity"] = rarity
+        if manufacturer:
+            row["manufacturer"] = manufacturer
+        if item_type:
+            row["item_type"] = item_type
+        if isinstance(level, int):
+            row["level"] = level
+        out.append(row)
+    return _ok(
+        f"Named {named}/{len(out)} · leveled {leveled}/{len(out)}.",
+        rows=out,
+        named=named,
+        leveled=leveled,
+    )
+
+
+def _copy_text_to_windows_clipboard(blob: str) -> tuple[bool, str]:
+    try:
+        import ctypes
+
+        CF_UNICODETEXT = 13
+        GMEM_MOVEABLE = 0x0002
+        user32 = ctypes.windll.user32
+        kernel32 = ctypes.windll.kernel32
+        if not user32.OpenClipboard(None):
+            return False, "Could not open clipboard."
+        try:
+            user32.EmptyClipboard()
+            size = (len(blob) + 1) * 2
+            handle = kernel32.GlobalAlloc(GMEM_MOVEABLE, size)
+            if not handle:
+                return False, "Clipboard alloc failed."
+            locked = kernel32.GlobalLock(handle)
+            if not locked:
+                kernel32.GlobalFree(handle)
+                return False, "Clipboard lock failed."
+            try:
+                ctypes.memmove(locked, blob.encode("utf-16-le") + b"\x00\x00", size)
+            finally:
+                kernel32.GlobalUnlock(handle)
+            user32.SetClipboardData(CF_UNICODETEXT, handle)
+        finally:
+            user32.CloseClipboard()
+    except Exception as exc:
+        return False, f"Clipboard copy failed: {exc}"
+    return True, ""
+
+
 _EXTENDED_ALIASES: dict[str, str] = {
     "serial_delivery_status": "serial_delivery_status_action",
     "spawn_item_pool": "spawn_item_pool_action",
@@ -3798,6 +4230,13 @@ _EXTENDED_ALIASES: dict[str, str] = {
     "spawn_item_pool_singular_test": "spawn_item_pool_singular_test_action",
     "catalog": "catalog_action",
     "shiny_drop_status": "shiny_drop_status_action",
+    "loot_coil_reel": "loot_gather_nearby",
+    "map_scout_start": "host_map_sweep_start",
+    "map_scout_cancel": "host_map_sweep_cancel",
+    "map_scout_status": "host_map_sweep_status",
+    "map_party_escort_start": "guest_map_assist_start",
+    "map_party_escort_cancel": "guest_map_assist_cancel",
+    "map_party_escort_status": "guest_map_assist_status",
 }
 
 _EXTENDED_ACTION_NAMES: tuple[str, ...] = (
@@ -3911,6 +4350,27 @@ _EXTENDED_ACTION_NAMES: tuple[str, ...] = (
     "loot_shape_arrange",
     "loot_shape_clear",
     "loot_cleanup",
+    "loot_gather_nearby",
+    "loot_coil_reel",
+    "loot_vacuum_nearby",
+    "loot_vacuum_cancel",
+    "loot_vacuum_status",
+    "guest_map_assist_start",
+    "guest_map_assist_cancel",
+    "guest_map_assist_status",
+    "map_party_escort_start",
+    "map_party_escort_cancel",
+    "map_party_escort_status",
+    "warp_mark_save",
+    "warp_mark_go",
+    "warp_mark_delete",
+    "warp_mark_list",
+    "host_map_sweep_start",
+    "host_map_sweep_cancel",
+    "host_map_sweep_status",
+    "map_scout_start",
+    "map_scout_cancel",
+    "map_scout_status",
     "loot_shape_reapply",
     "loot_shape_status",
     "loot_shape_stop_drop",
@@ -3941,6 +4401,12 @@ _EXTENDED_ACTION_NAMES: tuple[str, ...] = (
     "activity_log",
     "backpack_scan_status",
     "backpack_relevel_selected",
+    "backpack_export_txt",
+    "pack_bay_enable",
+    "pack_bay_disable",
+    "pack_bay_copy_selected",
+    "pack_bay_open_toolbox",
+    "bay_label_serials",
     "panel_manifest",
     "catalog",
     "lab_pc_rpc",

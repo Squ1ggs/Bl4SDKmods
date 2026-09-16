@@ -35,24 +35,16 @@ _last_scrub_hit_at = 0.0
 _last_fail_log = 0.0
 _scrub_count = 0
 _interrupt_ok_once = False
-_hold_off_after = 0.0
-# Companion to LocalTravel PRE-block: pin map FT flag while sticky; clear on OFF.
-_hold_pinned_local_ft = False
 _STEADY_GAP = 0.10
 _ACTIVE_GAP = 0.05
 _INTERRUPT_GAP = 0.08
 _PIN_LOG_GAP = 2.0
 _BLOCK_LOG_GAP = 3.0
 _FAIL_LOG_GAP = 5.0
-# Keep No main menu armed across challenge→UVHM handoffs (Auto Lobby step gap).
-_RELEASE_GRACE_SEC = 3.0
 _IDLE_COUNTDOWN = 5.0
 _PIN_COUNTDOWN = 4.0
-# Runtime-tracked jobs only — sticky keys like auto_lobby stay until release_job().
-_RUNTIME_JOBS: frozenset[str] = frozenset({"uvhm", "challenges"})
 
 # session_guards: skip teardown if these fire while we intentionally Block them.
-# Do not include ClientEndOnlineSession / ClientWasKicked — guests must leave+save.
 _HOLD_SUPPRESS_TEARDOWN_NAMES: frozenset[str] = frozenset(
     {
         "ClientTravel",
@@ -63,6 +55,8 @@ _HOLD_SUPPRESS_TEARDOWN_NAMES: frozenset[str] = frozenset(
         "ReturnToMainMenu",
         "ReturnToMainMenuHost",
         "ClientForceCharacterSelectionAfterCountdown",
+        "ClientEndOnlineSession",
+        "ClientWasKicked",
         "LocalTravel",
         "OnRep_TravelStatus",
         "ClientSetTravelStatus",
@@ -71,8 +65,6 @@ _HOLD_SUPPRESS_TEARDOWN_NAMES: frozenset[str] = frozenset(
 )
 
 # PRE-Block only — no world scans. Paths cover Engine / OakGame / Oak2 names.
-# Never block ClientEndOnlineSession / ClientWasKicked: those run on guest leave
-# and must finish or backpack loot never saves after they disconnect.
 _MENU_BLOCK_PATHS: tuple[str, ...] = (
     "/Script/Engine.PlayerController:ClientReturnToMainMenuWithTextReason",
     "/Script/OakGame.OakPlayerController:ClientReturnToMainMenu",
@@ -95,6 +87,11 @@ _MENU_BLOCK_PATHS: tuple[str, ...] = (
     "/Script/Oak2.OakPlayerController:ServerTravel",
     "/Script/OakGame.OakPlayerController:LocalTravel",
     "/Script/Oak2.OakPlayerController:LocalTravel",
+    "/Script/Engine.PlayerController:ClientEndOnlineSession",
+    "/Script/OakGame.OakPlayerController:ClientEndOnlineSession",
+    "/Script/Oak2.OakPlayerController:ClientEndOnlineSession",
+    "/Script/OakGame.OakPlayerController:ClientWasKicked",
+    "/Script/Oak2.OakPlayerController:ClientWasKicked",
 )
 
 _TRAVEL_STATUS_HOOK_PATHS: tuple[str, ...] = (
@@ -306,10 +303,11 @@ def _countdown_time(status: Any) -> float:
 
 
 def _countdown_active(status: Any) -> bool:
-    """True for dump-proven leave-to-main-menu.
+    """True only for leave-to-main-menu — not ordinary online/map travel.
 
-    Live dump kept CountdownTime at 5.0 while active — do not require ct < 5.
-    status=1 + bIsTravelingToMainMenu were the leave markers.
+    Live dump markers were ``bIsTravelingToMainMenu`` (with status=1). Treating
+    bare ``status==1`` as leave also matched going-online / map travel and
+    No-main-menu scrub cancelled those joins while the EXE kept hold armed.
     """
     if status is None:
         return False
@@ -318,12 +316,19 @@ def _countdown_active(status: Any) -> bool:
             return True
     except Exception:
         pass
-    try:
-        if _status_code(status) == 1:
-            return True
-    except Exception:
-        pass
     return False
+
+
+def _hook_is_travel_path(name: str) -> bool:
+    short = str(name or "").rsplit(":", 1)[-1].strip().lower()
+    return short in {
+        "clienttravel",
+        "clienttravelinternal",
+        "servertravel",
+        "localtravel",
+        "clientendonlinesession",
+        "clientwaskicked",
+    }
 
 
 def _cancel_pending_map(pc: Any) -> None:
@@ -404,40 +409,15 @@ def suppress_teardown_for_hook(hook_name: str) -> bool:
     return short in _HOLD_SUPPRESS_TEARDOWN_NAMES or name in _HOLD_SUPPRESS_TEARDOWN_NAMES
 
 
-def _initiator_is_local(pc: Any, status: Any) -> bool:
-    """True when the leave countdown was started by the host (not a guest pull)."""
-    if pc is None or status is None:
-        return False
-    try:
-        init = getattr(status, "Initiator", None)
-        local_ps = getattr(pc, "PlayerState", None)
-        if init is None or local_ps is None:
-            return False
-        if init is local_ps:
-            return True
-        try:
-            return bool(init == local_ps)
-        except Exception:
-            return False
-    except Exception:
-        return False
-
-
 def _scrub_pc(pc: Any, *, force: bool = False) -> bool:
-    """View-button equivalent: interrupt + cancel pending whenever sticky."""
+    """Interrupt leave-to-menu only — never cancel unrelated online/map travel."""
     if pc is None:
         return False
     status = getattr(pc, "TravelStatus", None)
     active = _countdown_active(status) if status is not None else False
-    # Host intentionally leaving — fighting Esc/menu while Auto Lobby holds caused crashes.
-    if active and not force and _initiator_is_local(pc, status):
-        _log("Host self-leave detected — releasing No main menu so you can quit.")
-        try:
-            stop_hold(force=True)
-        except Exception:
-            pass
-        return False
-    if not active and not force and not _sticky:
+    # Sticky alone must not force-cancel travel; that blocked getting online
+    # whenever No main menu stayed armed after a disconnect.
+    if not active and not force:
         return False
 
     ct_before = _countdown_time(status) if status is not None else 0.0
@@ -471,58 +451,15 @@ def _scrub_pc(pc: Any, *, force: bool = False) -> bool:
     return bool(active or interrupted)
 
 
-def _set_local_ft_disallowed(want: bool) -> bool:
-    """Pin/clear bDisallowLocalTravel on the host PC (map fast travel)."""
-    global _hold_pinned_local_ft
-    pc = _local_pc()
-    if pc is None:
-        return False
-    wrote = False
-    status = getattr(pc, "TravelStatus", None)
-    if status is not None:
-        try:
-            setattr(status, "bDisallowLocalTravel", bool(want))
-            wrote = True
-            try:
-                setattr(pc, "TravelStatus", status)
-            except Exception:
-                pass
-        except Exception:
-            pass
-    try:
-        setattr(pc, "bDisallowLocalTravel", bool(want))
-        wrote = True
-    except Exception:
-        pass
-    if wrote:
-        _hold_pinned_local_ft = bool(want)
-    return wrote
-
-
-def _clear_local_ft_pin_if_ours() -> None:
-    """Release the map-FT pin when No main menu turns OFF (does not touch menu scrub)."""
-    global _hold_pinned_local_ft
-    if not _hold_pinned_local_ft:
-        return
-    try:
-        _set_local_ft_disallowed(False)
-    except Exception:
-        _hold_pinned_local_ft = False
-
-
 def scrub_now(*, force_scan: bool = False) -> int:
     del force_scan
     global _scrub_count, _last_scrub_hit_at
     if not _is_host():
         return 0
-    if _sticky:
-        try:
-            _set_local_ft_disallowed(True)
-        except Exception:
-            pass
     n = 0
     try:
-        if _scrub_pc(_local_pc(), force=bool(_sticky)):
+        # Never force=True here — sticky poll must not yank online joins.
+        if _scrub_pc(_local_pc(), force=False):
             n = 1
     except Exception:
         n = 0
@@ -534,6 +471,13 @@ def scrub_now(*, force_scan: bool = False) -> int:
 
 def _job_still_running(job: str) -> bool:
     key = str(job or "").strip().lower()
+    if key == "auto_lobby":
+        try:
+            from . import auto_lobby
+
+            return bool(auto_lobby.status().get("enabled"))
+        except Exception:
+            return False
     if key == "uvhm":
         try:
             from . import uvhm_runtime
@@ -550,19 +494,14 @@ def _job_still_running(job: str) -> bool:
             from . import challenge_bulk_runtime
 
             st = challenge_bulk_runtime.status()
+            phase = str(st.get("phase") or "").lower()
+            if phase in ("complete", "completed", "idle", "cancelled", "error"):
+                return False
             msg = str(st.get("message") or "").lower()
             if msg.startswith("complete:") or "complete:" in msg[:20]:
                 return False
-            if not bool(st.get("active") or st.get("queued")):
-                return False
-            try:
-                total = int(st.get("total") or 0)
-                index = int(st.get("index") or 0)
-                if total > 0 and index >= total and not st.get("queued"):
-                    return False
-            except Exception:
-                pass
-            return bool(st.get("active") or st.get("queued"))
+            # Ignore EXE progress-bar sticky ``active`` — only real work holds the session.
+            return bool(st.get("running") or st.get("queued"))
         except Exception:
             return False
     return False
@@ -570,39 +509,23 @@ def _job_still_running(job: str) -> bool:
 
 def _refresh_job_holds_from_runtime() -> None:
     for job in list(_job_holds):
-        if job not in _RUNTIME_JOBS:
-            continue
         if not _job_still_running(job):
             _job_holds.discard(job)
 
 
-def _sync_sticky_from_jobs(now: float | None = None) -> None:
-    global _sticky, _hold_off_after
+def _sync_sticky_from_jobs() -> None:
+    global _sticky
     want = bool(_user_sticky or _job_holds)
-    clock = time.monotonic() if now is None else float(now)
-    if want:
-        _hold_off_after = 0.0
-        if not _sticky:
-            if not _is_host():
-                return
-            _sticky = True
-            _install_hooks()
-            scrub_now()
-            _log(f"No main menu ON (jobs={sorted(_job_holds)} user={_user_sticky}).")
-        return
-    if not _sticky:
-        _hold_off_after = 0.0
-        return
-    # Grace so challenge→UVHM (or Auto Lobby next step) can re-arm without an OFF gap.
-    if _hold_off_after <= 0.0:
-        _hold_off_after = clock + _RELEASE_GRACE_SEC
-        return
-    if clock < _hold_off_after:
-        return
-    _sticky = False
-    _hold_off_after = 0.0
-    _clear_local_ft_pin_if_ours()
-    _log("No main menu OFF (no jobs / user toggle).")
+    if want and not _sticky:
+        if not _is_host():
+            return
+        _sticky = True
+        _install_hooks()
+        scrub_now()
+        _log(f"No main menu ON (jobs={sorted(_job_holds)} user={_user_sticky}).")
+    elif not want and _sticky:
+        _sticky = False
+        _log("No main menu OFF (no jobs / user toggle).")
 
 
 def arm_for_job(job: str) -> None:
@@ -622,11 +545,11 @@ def release_job(job: str) -> None:
 
 def tick_hold_session(now: float | None = None) -> None:
     global _last_scrub
-    now = time.monotonic() if now is None else float(now)
     _refresh_job_holds_from_runtime()
-    _sync_sticky_from_jobs(now)
+    _sync_sticky_from_jobs()
     if not _sticky:
         return
+    now = time.monotonic() if now is None else float(now)
     pull_active = (now - _last_scrub_hit_at) < 2.5
     gap = _ACTIVE_GAP if pull_active else _STEADY_GAP
     if now - _last_scrub < gap:
@@ -642,33 +565,54 @@ def runtime_tick(*_args: Any, **_kwargs: Any) -> None:
     tick_hold_session()
 
 
+def _obj_is_player_controller(obj: Any) -> bool:
+    if obj is None:
+        return False
+    try:
+        cls = getattr(obj, "Class", None)
+        name = str(getattr(cls, "Name", "") or getattr(cls, "_name", "") or "")
+        if "PlayerController" in name:
+            return True
+    except Exception:
+        pass
+    try:
+        return getattr(obj, "PlayerState", None) is not None and hasattr(obj, "TravelStatus")
+    except Exception:
+        return False
+
+
 def _block_menu_hook(_obj: Any, _args: Any, _ret: Any, _func: Any) -> Any:
     if not _sticky or not _is_host():
         return None
     # Only intercept the HOST local PC. Blocking guest PCs breaks leave/save so
-    # dump loot they just picked vanishes after disconnect.
+    # dump loot they just picked vanishes after disconnect. If we cannot confirm
+    # the local PC (travel/teardown flicker), do not Block — better a brief miss
+    # than trapping a guest leave. GameInstance / GameMode hooks still Block.
     local = _local_pc()
-    if local is not None and _obj is not None:
+    if local is None:
+        return None
+    if _obj_is_player_controller(_obj):
         try:
             if _obj is not local and _obj != local:
                 return None
         except Exception:
             return None
-    pc = local
-    status = getattr(pc, "TravelStatus", None) if pc is not None else None
-    if status is not None and _initiator_is_local(pc, status):
-        _log("Host menu/travel — releasing No main menu (self leave).")
-        try:
-            stop_hold(force=True)
-        except Exception:
-            pass
-        return None
-    global _last_block_log
-    now = time.monotonic()
     try:
         name = str(getattr(_func, "Name", "") or getattr(_func, "__name__", "") or "menu")
     except Exception:
         name = "menu"
+    # Travel / end-session hooks fire for going online and map changes too.
+    # Only Block those while leave-to-main-menu is actually active; always Block
+    # ReturnToMainMenu* / ForceCharacterSelection pulls.
+    if _hook_is_travel_path(name):
+        try:
+            status = getattr(local, "TravelStatus", None)
+        except Exception:
+            status = None
+        if not _countdown_active(status):
+            return None
+    global _last_block_log
+    now = time.monotonic()
     if now - _last_block_log >= _BLOCK_LOG_GAP:
         _last_block_log = now
         _log(f"Blocked {name}.")
@@ -751,7 +695,7 @@ def _install_hooks() -> None:
 
 
 def start_hold() -> str:
-    global _sticky, _user_sticky, _last_scrub, _hold_off_after
+    global _sticky, _user_sticky, _last_scrub
     if not _is_host():
         return (
             "No main menu needs the listen-server host (you hosting with SQBT). "
@@ -759,43 +703,31 @@ def start_hold() -> str:
         )
     _user_sticky = True
     _sticky = True
-    _hold_off_after = 0.0
     _last_scrub = 0.0
     _install_hooks()
     scrubbed = scrub_now()
     _log(f"No main menu ON (user toggle, scrubbed={scrubbed}).")
     return (
-        "No main menu ON — guests can’t pull you to the title screen, "
-        "and your map fast travel is blocked while this stays ON. "
+        "No main menu ON — guests can’t pull you to the title screen. "
         "Turn OFF before you quit to the menu yourself."
     )
 
 
 def stop_hold(*, force: bool = True) -> str:
-    global _sticky, _user_sticky, _hold_off_after
+    global _sticky, _user_sticky
     _user_sticky = False
     _refresh_job_holds_from_runtime()
     leftover = sorted(_job_holds)
     if leftover and force:
         _log(f"No main menu force-OFF clearing stale jobs={leftover}.")
         _job_holds.clear()
-    if force:
-        # Desktop/user quit path — skip challenge→UVHM grace so leave works immediately.
-        _hold_off_after = 0.0
-        was_on = bool(_sticky)
-        _sticky = False
-        _clear_local_ft_pin_if_ours()
-        if was_on or leftover:
-            _log("No main menu OFF (force).")
-        return "No main menu OFF — normal leave countdown behavior is back."
     _sync_sticky_from_jobs()
     if _sticky:
         _log(f"No main menu stays ON (jobs still live: {sorted(_job_holds)}).")
         return (
-            "No main menu stays ON — UVHM / Complete ALL challenges / Auto Lobby still holding. "
+            "No main menu stays ON — UVHM / Complete ALL challenges still look active in-game. "
             "Wait a moment and try OFF again, or cancel those jobs first."
         )
-    _clear_local_ft_pin_if_ours()
     _log("No main menu OFF.")
     return "No main menu OFF — normal leave countdown behavior is back."
 

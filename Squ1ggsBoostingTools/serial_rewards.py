@@ -55,19 +55,26 @@ _PATCH_RETRY_DELAY_SEC = 0.08
 _CHUNK_DELIVERY_MAX_RETRIES = 16
 _TICK_PATCH_MAX_ATTEMPTS = 180
 _TICK_PATCH_LOG_EVERY = 30
-# Keep reward SerialNumbers payloads under the observed client-delivery failure boundary,
-# but prefer larger packages so big GZO/Lootlemon dumps finish in fewer tick grants.
+# Keep reward SerialNumbers payloads under the observed client-delivery failure boundary.
+# Large packs (~500) AV'd with 25/pkg + short gaps (same class as GZO package 18/23 crash).
 _MAX_SERIAL_DELIVERY_CHARS = 32000
-_SERIAL_DELIVERY_SAFE_CHARS = 32000
+_SERIAL_DELIVERY_SAFE_CHARS = 24000
 _SERIAL_DELIVERY_PER_SERIAL_OVERHEAD_CHARS = 16
-_SERIAL_DELIVERY_MAX_ITEMS_PER_PACKAGE = 25
+_SERIAL_DELIVERY_MAX_ITEMS_PER_PACKAGE = 12
 # Gap between targeted packages on the tick hook (no game-thread sleeps).
 # create_and_override already writes SerialNumbers — no AllPlayers/patch/open pipeline.
 _SERIAL_DELIVERY_PRE_OPEN_DELAY_SEC = 0.0
-# Slightly longer gap reduces hitch stacking on ~500-code GZO delivers (still mail).
-_SERIAL_DELIVERY_POST_OPEN_DELAY_SEC = 0.12
+# Base gap; _delivery_chunk_gap raises this for 200+/400+/500+ dumps.
+_SERIAL_DELIVERY_POST_OPEN_DELAY_SEC = 0.28
 _SERIAL_DELIVERY_PATCH_MAX_ATTEMPTS = 1
 _SERIAL_DELIVERY_PATCH_LOG_EVERY = 30
+# Defer open-rewards until the whole send finishes once this many serials queue.
+_SERIAL_DELIVERY_DEFER_OPEN_SERIALS = 200
+# Extra cool-down after every N packages on huge sends.
+_SERIAL_DELIVERY_COOLDOWN_EVERY = 6
+_SERIAL_DELIVERY_COOLDOWN_SEC = 2.2
+# Level rewrite of 500 @U codes on the click frame AVs — defer past this size.
+_SERIAL_DELIVERY_DEFER_LEVEL_SERIALS = 80
 # Exact Pearl fallbacks create and patch a reward package synchronously, but the
 # package is not ready for Server_OpenPackage in that same game frame.  Opening
 # immediately can return without an exception while doing nothing.  Claims are
@@ -80,10 +87,6 @@ _pending_exact_package_claims: List[dict[str, Any]] = []
 # (ACCESS_VIOLATION via pyunrealsdk) and can blank backpack visibility in MP.
 # Auto-open: one mail package per tick, newest-first (re-query live index), 3–5s gap.
 _REWARD_OPEN_FIRST_DELAY_SEC = 2.0
-# Guests need extra settle time so SerialNumbers replicate before Server_OpenPackage.
-_REWARD_OPEN_REMOTE_EXTRA_DELAY_SEC = 4.0
-_REWARD_OPEN_SERIAL_WAIT_SEC = 1.5
-_REWARD_OPEN_SERIAL_WAIT_MAX = 10
 _REWARD_OPEN_GAP_SEC = 4.0
 _REWARD_OPEN_GAP_LARGE_SEC = 5.0
 _REWARD_OPEN_LARGE_QUEUE_PACKAGES = 12
@@ -91,7 +94,7 @@ _REWARD_OPEN_RESUME_DELAY_SEC = 3.0
 _pending_reward_open_jobs: List[dict[str, Any]] = []
 _reward_open_paused = False
 # After Complete ALL non-UVHM, Reward Center often has hundreds of packages.
-# Block "Open pending rewards" until the user force-confirms after challenge bulk.
+# Block "Open pending rewards (everyone)" until the user force-confirms.
 _open_all_blocked_after_challenge_bulk: bool = False
 _OPEN_ALL_CHALLENGE_WARN_PACKAGES: int = 40
 # GiveReward + SerialNumbers patch during a lobby join is a common host AV.
@@ -651,62 +654,6 @@ def _manager_for_player_index(player_index: int) -> Optional[Any]:
     return mgr
 
 
-def _is_local_party_index(player_index: int) -> bool:
-    """True when this party index is the host's local PlayerController."""
-    try:
-        local_pc = get_pc()
-    except Exception:
-        local_pc = None
-    if local_pc is None:
-        return False
-    try:
-        target = _pc_for_player_index(int(player_index))
-    except Exception:
-        return False
-    if target is None:
-        return False
-    if target is local_pc:
-        return True
-    try:
-        return getattr(target, "PlayerState", None) is getattr(local_pc, "PlayerState", None)
-    except Exception:
-        return False
-
-
-def _package_has_serials(mgr: Any, package_index: int) -> bool:
-    """Refuse to open empty / unpatched packages (loyalty shells → ghost backpack items)."""
-    try:
-        pkgs = getattr(mgr, "packages", None)
-        if pkgs is None:
-            return False
-        package = pkgs[int(package_index)]
-    except Exception:
-        return False
-    serials = _read_package_serials(package)
-    return bool(serials)
-
-
-def _newest_openable_package_index(mgr: Any, before_count: int) -> int | None:
-    """Newest package at/after ``before_count`` that already has SerialNumbers.
-
-    Prefer this over blindly opening ``n-1`` — empty loyalty shells blank backpacks
-    (especially for guests when the host opens their mailbox too early).
-    """
-    if mgr is None:
-        return None
-    try:
-        n = int(_package_count(mgr) or 0)
-    except Exception:
-        return None
-    start = max(0, int(before_count))
-    if n <= start:
-        return None
-    for idx in range(n - 1, start - 1, -1):
-        if _package_has_serials(mgr, idx):
-            return int(idx)
-    return None
-
-
 def _package_count(mgr: Any) -> int:
     try:
         pkgs = getattr(mgr, "packages", None)
@@ -946,14 +893,14 @@ def _open_all_live_reward_packages() -> int:
 
 
 def open_all_party_reward_packages() -> int:
-    """Queue paced open for pending packages on live party mailboxes (host + guests)."""
+    """Queue every pending reward package for paced opening (never one-frame bulk open)."""
     packages, managers = _queue_open_all_pending_packages()
     if packages > 0:
         _log_info(
-            f"Queued paced open for {packages} package(s) on {managers} manager(s)."
+            f"Queued paced open for {packages} pending package(s) on {managers} manager(s)."
         )
         return managers
-    _log_warning("SQBT found no reward packages to open.")
+    _log_warning("SQBT found no pending reward packages to queue for opening.")
     return 0
 
 
@@ -992,13 +939,6 @@ def _package_indices_since(mgr: Any, before_count: int) -> List[int]:
 def _open_manager_package_index(mgr: Any, package_index: int) -> bool:
     open_one = getattr(mgr, "Server_OpenPackage", None)
     if not callable(open_one):
-        return False
-    # Empty loyalty shells (no SerialNumbers) must never be opened — that blanks backpacks.
-    if not _package_has_serials(mgr, int(package_index)):
-        _log_warning(
-            f"Skipped Server_OpenPackage({package_index}): package has no SerialNumbers "
-            "(empty loyalty shells blank backpacks)."
-        )
         return False
     try:
         open_one(int(package_index))
@@ -1142,48 +1082,23 @@ def _queue_reward_open_jobs(
     specs: List[tuple[Any, int, int, int]],
     *,
     label: str,
-    allow_remote: bool = True,
 ) -> tuple[int, str]:
-    """Queue paced Server_OpenPackage work (one newest openable package every 3–5s).
+    """Queue paced Server_OpenPackage work (one newest package every 3–5s).
 
     Each spec is ``(identity, player_index, before_count, package_count)``.
-    Opens prefer the newest package that already has SerialNumbers so empty
-    loyalty shells are never opened (that blanks backpacks for guests).
-
-    ``allow_remote=True`` (default) opens host + guest mail for delivery targets.
-    Pass ``False`` only for rare host-only diagnostics.
+    Opens always target the live newest index so prior opens cannot stale-index crash.
     """
     global _pending_reward_open_jobs, _reward_open_paused
-    local_specs: List[tuple[Any, int, int, int]] = []
-    skipped_remote = 0
-    for identity, player_index, before_count, pkg_count in specs:
-        try:
-            idx = int(player_index)
-            count = max(0, int(pkg_count))
-        except Exception:
-            continue
-        if count <= 0:
-            continue
-        if not allow_remote and not _is_local_party_index(idx):
-            skipped_remote += 1
-            continue
-        local_specs.append((identity, idx, before_count, count))
-
     total = 0
-    for _identity, _idx, _before, count in local_specs:
+    for _identity, _idx, _before, count in specs:
         try:
             total += max(0, int(count))
         except Exception:
             pass
     if total <= 0:
-        if skipped_remote > 0:
-            return (
-                0,
-                " Guest mail skipped (host-only open mode).",
-            )
         return 0, " No new reward packages to open."
     now = time.time()
-    for i, (identity, player_index, before_count, pkg_count) in enumerate(local_specs):
+    for i, (identity, player_index, before_count, pkg_count) in enumerate(specs):
         try:
             count = max(0, int(pkg_count))
             before = max(0, int(before_count))
@@ -1191,19 +1106,13 @@ def _queue_reward_open_jobs(
             continue
         if count <= 0:
             continue
-        remote = not _is_local_party_index(int(player_index))
-        first_delay = float(_REWARD_OPEN_FIRST_DELAY_SEC)
-        if remote:
-            first_delay += float(_REWARD_OPEN_REMOTE_EXTRA_DELAY_SEC)
         _pending_reward_open_jobs.append({
             "identity": identity,
             "player_index": int(player_index),
             "before_count": before,
             "opens_left": count,
-            "wait_until": now + first_delay + (i * 0.15),
+            "wait_until": now + _REWARD_OPEN_FIRST_DELAY_SEC + (i * 0.15),
             "label": str(label or "rewards"),
-            "remote": bool(remote),
-            "serial_wait_retries": 0,
         })
     _reward_open_paused = False
     gap = _reward_open_gap_sec(total)
@@ -1212,11 +1121,6 @@ def _queue_reward_open_jobs(
         f" Opening rewards one-by-one (~{gap:.0f}s between packages, ~{eta}s total). "
         "Stay in-world until the status says Rewards opened."
     )
-    if any(not _is_local_party_index(int(idx)) for _id, idx, _b, _c in local_specs):
-        note += (
-            " Guest mail uses a longer first delay and only opens packages that "
-            "already have SerialNumbers (empty shells are skipped)."
-        )
     _set_serial_delivery_status(
         f"Opening rewards ({total} mail package(s), ~{gap:.0f}s apart)…",
         hold_sec=max(45.0, float(eta) + 30.0),
@@ -1252,14 +1156,14 @@ def _queue_reward_open_since_for_identities(
         count = max(0, n - before)
         if count > 0:
             specs.append((identity, int(tidx), before, count))
-    total, note = _queue_reward_open_jobs(specs, label=label, allow_remote=True)
+    total, note = _queue_reward_open_jobs(specs, label=label)
     if total > 0:
         _log_info(f"Queued batched open for {total} new mail package(s) ({label}).")
     return total, note
 
 
 def _pending_reward_package_specs() -> List[tuple[Any, int, int, int]]:
-    """Collect pending packages on live party reward managers (host + guests)."""
+    """Collect (identity, player_index, before_count, package_count) for every live manager."""
     specs: List[tuple[Any, int, int, int]] = []
     seen: set[int] = set()
 
@@ -1280,31 +1184,18 @@ def _pending_reward_package_specs() -> List[tuple[Any, int, int, int]]:
     local_pc = get_pc()
     if local_pc is not None:
         local_mgr, _ = _find_rewards_manager_on_pc(local_pc)
-        local_idx = 0
-        _world, game_state = _gbc_session_world_and_gamestate()
-        player_array = getattr(game_state, "PlayerArray", None) if game_state is not None else None
-        try:
-            party_count = len(player_array) if player_array is not None else 0
-        except Exception:
-            party_count = 0
-        for player_index in range(party_count):
-            if _is_local_party_index(int(player_index)):
-                local_idx = int(player_index)
-                break
-        _add(local_idx, local_mgr)
-        for player_index in range(party_count):
-            if int(player_index) == int(local_idx):
-                continue
-            _add(int(player_index), _manager_for_player_index(int(player_index)))
-    else:
-        _world, game_state = _gbc_session_world_and_gamestate()
-        player_array = getattr(game_state, "PlayerArray", None) if game_state is not None else None
-        try:
-            party_count = len(player_array) if player_array is not None else 0
-        except Exception:
-            party_count = 0
-        for player_index in range(party_count):
-            _add(int(player_index), _manager_for_player_index(int(player_index)))
+        _add(0, local_mgr)
+    _world, game_state = _gbc_session_world_and_gamestate()
+    player_array = getattr(game_state, "PlayerArray", None) if game_state is not None else None
+    try:
+        party_count = len(player_array) if player_array is not None else 0
+    except Exception:
+        party_count = 0
+    for player_index in range(party_count):
+        mgr = _manager_for_player_index(player_index)
+        _add(player_index, mgr)
+    for mgr in _live_gbx_rewards_managers():
+        _add(0, mgr)
     return specs
 
 
@@ -1313,9 +1204,9 @@ def count_pending_reward_packages() -> int:
 
 
 def _queue_open_all_pending_packages() -> tuple[int, int]:
-    """Queue pending packages on live party managers (paced). Returns (packages, managers)."""
+    """Queue every pending package on live party managers (paced). Returns (packages, managers)."""
     specs = _pending_reward_package_specs()
-    total, _note = _queue_reward_open_jobs(specs, label="pending rewards", allow_remote=True)
+    total, _note = _queue_reward_open_jobs(specs, label="pending rewards")
     return total, len(specs)
 
 
@@ -1364,42 +1255,22 @@ def _process_pending_reward_open_jobs() -> None:
         if n <= before or opens_left <= 0:
             _pending_reward_open_jobs.pop(0)
         else:
-            open_idx = _newest_openable_package_index(mgr, before)
-            if open_idx is None:
-                retries = int(job.get("serial_wait_retries") or 0)
-                if retries < int(_REWARD_OPEN_SERIAL_WAIT_MAX):
-                    job["serial_wait_retries"] = retries + 1
-                    job["wait_until"] = now + float(_REWARD_OPEN_SERIAL_WAIT_SEC)
-                    if retries == 0 or retries % 3 == 0:
-                        _log_info(
-                            f"Open rewards waiting for SerialNumbers on player {tidx} "
-                            f"packages (retry {retries + 1}/{_REWARD_OPEN_SERIAL_WAIT_MAX})."
-                        )
-                    return
-                # Nothing openable in this window — leave empty shells alone.
-                _log_warning(
-                    f"Open rewards: no packages with SerialNumbers for player {tidx} "
-                    f"after waits; leaving empty shells closed."
-                )
+            opened = _open_manager_package_index(mgr, n - 1)
+            job["opens_left"] = opens_left - 1
+            try:
+                n_after = int(_package_count(mgr) or 0)
+            except Exception:
+                n_after = max(0, n - 1)
+            if n_after <= before or int(job["opens_left"]) <= 0:
                 _pending_reward_open_jobs.pop(0)
             else:
-                opened = _open_manager_package_index(mgr, int(open_idx))
-                job["opens_left"] = opens_left - 1
-                job["serial_wait_retries"] = 0
-                try:
-                    n_after = int(_package_count(mgr) or 0)
-                except Exception:
-                    n_after = max(0, n - 1)
-                if n_after <= before or int(job["opens_left"]) <= 0:
-                    _pending_reward_open_jobs.pop(0)
-                else:
-                    remaining = max(0, n_after - before)
-                    job["wait_until"] = now + _reward_open_gap_sec(remaining)
-                if not opened:
-                    _log_warning(
-                        f"Server_OpenPackage({open_idx}) returned false (player {tidx}); "
-                        "continuing paced queue."
-                    )
+                remaining = max(0, n_after - before)
+                job["wait_until"] = now + _reward_open_gap_sec(remaining)
+            if not opened:
+                _log_warning(
+                    f"Server_OpenPackage({n - 1}) returned false (player {tidx}); "
+                    "continuing paced queue."
+                )
     else:
         # Legacy index-list jobs (should be rare after this build).
         indices = list(job.get("indices") or [])
@@ -1414,17 +1285,13 @@ def _process_pending_reward_open_jobs() -> None:
             if n <= 0:
                 _pending_reward_open_jobs.pop(0)
             else:
-                open_idx = _newest_openable_package_index(mgr, 0)
-                if open_idx is None:
+                _open_manager_package_index(mgr, n - 1)
+                job["cursor"] = cursor + 1
+                if int(job["cursor"]) >= len(indices):
                     _pending_reward_open_jobs.pop(0)
                 else:
-                    _open_manager_package_index(mgr, int(open_idx))
-                    job["cursor"] = cursor + 1
-                    if int(job["cursor"]) >= len(indices):
-                        _pending_reward_open_jobs.pop(0)
-                    else:
-                        remaining = _reward_open_packages_remaining()
-                        job["wait_until"] = now + _reward_open_gap_sec(remaining)
+                    remaining = _reward_open_packages_remaining()
+                    job["wait_until"] = now + _reward_open_gap_sec(remaining)
 
     remaining = _reward_open_packages_remaining()
     if _pending_reward_open_jobs and not _reward_open_paused:
@@ -1628,12 +1495,8 @@ def _ensure_backpack_capacity_for_indices(player_indices: List[int], serial_coun
                 # kept auto-changing backpacks on every code delivery.
                 continue
             used = _read_backpack_used(ps)
-            # Never rewrite a guest MaxSize — that desyncs their inventory (ghost items).
-            if not _is_local_party_index(int(idx)):
-                continue
             # Need room for current items + new serials + small padding (not +100 always).
-            want = max(cur, used + need_items + 8)
-            target_size = clamp_container_size(want)
+            target_size = clamp_container_size(max(cur, used + need_items + 8))
             if cur >= target_size:
                 continue
             set_backpack_size_for_player_state(ps, target_size)
@@ -1661,45 +1524,69 @@ def _serial_delivery_estimated_payload_chars(serials: List[str]) -> int:
     return total
 
 
-def _delivery_chunk_gap(chunk_len: int, total_serials: int) -> float:
-    """Pace mail grants so huge GZO dumps do not hitch or lose packages."""
+def _max_items_per_delivery_package(total_serials: int) -> int:
+    """Fewer serials per loyalty package as dumps grow — 25/pkg AVd near ~500."""
+    n = max(0, int(total_serials or 0))
+    if n >= 500:
+        return 6
+    if n >= 400:
+        return 8
+    if n >= 200:
+        return 10
+    if n >= 80:
+        return 12
+    return max(1, int(_SERIAL_DELIVERY_MAX_ITEMS_PER_PACKAGE or 12))
+
+
+def _delivery_chunk_gap(
+    chunk_len: int,
+    total_serials: int,
+    *,
+    package_index: int = 0,
+) -> float:
+    """Pace mail grants so ~500-code packs do not hitch or AV mid-send."""
     gap = float(_SERIAL_DELIVERY_POST_OPEN_DELAY_SEC or 0.0)
-    if total_serials >= 400:
-        gap = max(gap, 0.42)
+    if total_serials >= 500:
+        gap = max(gap, 1.25)
+    elif total_serials >= 400:
+        gap = max(gap, 1.00)
     elif total_serials >= 200:
-        gap = max(gap, 0.32)
+        gap = max(gap, 0.70)
     elif total_serials >= 80:
-        gap = max(gap, 0.22)
-    if chunk_len >= 20:
-        gap = max(gap, 0.24)
-    elif chunk_len >= 10:
-        gap = max(gap, 0.18)
+        gap = max(gap, 0.45)
+    if chunk_len >= 10:
+        gap = max(gap, 0.55)
+    elif chunk_len >= 6:
+        gap = max(gap, 0.40)
+    every = max(1, int(_SERIAL_DELIVERY_COOLDOWN_EVERY or 6))
+    if package_index > 0 and package_index % every == 0:
+        gap = max(gap, float(_SERIAL_DELIVERY_COOLDOWN_SEC or 2.0))
     return max(0.0, gap)
 
 
-def _chunk_serials_for_delivery(serials: List[str], max_chars: int = _SERIAL_DELIVERY_SAFE_CHARS) -> List[List[str]]:
+def _chunk_serials_for_delivery(
+    serials: List[str],
+    max_chars: int = _SERIAL_DELIVERY_SAFE_CHARS,
+    *,
+    max_items: int | None = None,
+) -> List[List[str]]:
     """Split serials into reward-package sized chunks.
 
-    Cap by estimated payload chars **and** item count so dumps finish in fewer
-    GiveReward cycles without overdue single packages.
+    Cap by estimated payload chars **and** item count. Large dumps use fewer
+    items per package so GiveReward + SerialNumbers writes stay under the AV line.
     """
+    cleaned = [str(s or "").strip() for s in (serials or []) if str(s or "").strip()]
     chunks: List[List[str]] = []
     current: List[str] = []
     current_chars = 0
     limit = max(1, int(max_chars or _SERIAL_DELIVERY_SAFE_CHARS))
-    max_items = max(1, int(_SERIAL_DELIVERY_MAX_ITEMS_PER_PACKAGE or 40))
-    for raw in serials:
-        text = str(raw or "").strip()
-        if not text:
-            continue
+    item_cap = max(1, int(max_items if max_items is not None else _max_items_per_delivery_package(len(cleaned))))
+    for text in cleaned:
         n = len(text) + _SERIAL_DELIVERY_PER_SERIAL_OVERHEAD_CHARS
-        if current and (current_chars + n > limit or len(current) >= max_items):
+        if current and (current_chars + n > limit or len(current) >= item_cap):
             chunks.append(current)
             current = []
             current_chars = 0
-        # If one serial alone exceeds the budget, keep it alone.  We cannot
-        # split an individual Base85 serial without corrupting it, but logging
-        # makes the impossible case visible instead of silently dropping it.
         raw_n = len(text)
         if raw_n > _MAX_SERIAL_DELIVERY_CHARS:
             _log_warning(
@@ -1737,6 +1624,45 @@ def _serial_delivery_chunks_desc(chunks: List[List[str]]) -> str:
     sizes = [f"{_serial_delivery_char_count(c)} raw/{_serial_delivery_estimated_payload_chars(c)} est" for c in chunks]
     return f"{len(chunks)} packages, char payloads: " + ", ".join(sizes[:8]) + (", ..." if len(sizes) > 8 else "")
 
+
+def _apply_level_override_to_serials(serials: List[str], level: int) -> tuple[List[str], str | None]:
+    """Rewrite leading item level on @U / human serials. Safe to call per chunk on tick."""
+    try:
+        from .serial_converter import human_to_serial, rewrite_item_level, serial_to_human
+    except Exception as exc:
+        return list(serials), f"Level override unavailable ({exc})"
+    try:
+        level_i = max(1, min(int(level or 70), 100))
+    except Exception:
+        level_i = 70
+    level_re = re.compile(r"^(\s*\d+\s*,\s*\d+\s*,\s*\d+\s*,\s*)\d+")
+    out: List[str] = []
+    warnings: List[str] = []
+    for index, serial in enumerate(serials):
+        raw = str(serial or "").strip()
+        if not raw:
+            continue
+        try:
+            if raw.startswith("@U"):
+                # Header-only rewrite (MSBT) — survives codes that fail full part parse.
+                out.append(str(rewrite_item_level(raw, level_i)))
+                continue
+            human = raw
+            new_human, count = level_re.subn(rf"\g<1>{level_i}", human, count=1)
+            if count <= 0:
+                raise ValueError("could not find leading item level")
+            converted = human_to_serial(new_human)
+            if not converted or not str(converted).startswith("@U"):
+                raise ValueError("human→@U re-encode failed after level rewrite")
+            out.append(str(converted))
+        except Exception as exc:
+            out.append(raw)
+            warnings.append(f"#{index + 1}:{exc}")
+    warning = None
+    if warnings:
+        warning = f"Level override skipped for {len(warnings)} serial(s) ({warnings[0]})."
+    return out, warning
+
 def _read_package_serials(package: Any) -> List[str]:
     out: List[str] = []
     contents = getattr(package, "contents", None)
@@ -1767,28 +1693,6 @@ def _verify_package_serials(package: Any, serials: List[str]) -> Tuple[bool, int
     want = set(expected)
     missing = want - got
     return (not missing and len(got) >= len(want), len(got), len(missing))
-
-
-def _newest_empty_loyalty_package(mgr: Any, expected_reward: str) -> Any:
-    """Return the newest package when it is an unpatched loyalty shell (retry leftover)."""
-    if mgr is None:
-        return None
-    pkgs = getattr(mgr, "packages", None)
-    try:
-        n_pkg = len(pkgs) if pkgs is not None else 0
-    except Exception:
-        return None
-    if n_pkg <= 0:
-        return None
-    try:
-        newest = pkgs[n_pkg - 1]
-    except Exception:
-        return None
-    if expected_reward and not _package_matches_expected_reward(newest, expected_reward):
-        return None
-    if _read_package_serials(newest):
-        return None
-    return newest
 
 
 def _apply_serials_to_package(package: Any, serials: List[str]) -> int:
@@ -2285,41 +2189,40 @@ def cancel_deferred_reward_work(reason: str = "session teardown") -> None:
 
 
 def _tick_cb(*_args: Any, **_kwargs: Any) -> None:
-    session_ok = True
     try:
         from .session_guards import session_safe
 
-        session_ok = bool(session_safe())
-        if not session_ok:
+        if not session_safe():
             if _pending_serial_delivery_sequences or _pending_exact_package_claims:
                 cancel_deferred_reward_work("left session")
             elif _pending_reward_open_jobs:
                 pause_pending_reward_opens("left session")
-            # Do NOT return here — UVHM / challenge bulk still need to consume
-            # queues and publish honest "paused" status while inventory/menu is open.
-        elif _reward_open_paused and _pending_reward_open_jobs:
+            return
+        if _reward_open_paused and _pending_reward_open_jobs:
             resume_pending_reward_opens()
     except Exception:
         pass
-    if session_ok:
-        try:
-            _process_pending_reward_open_jobs()
-        except Exception as exc:
-            _log_warning(f"Reward open tick failed: {exc!r}")
-        try:
-            _process_pending_serial_delivery_sequences()
-        except Exception as exc:
-            _log_warning(f"Serial delivery tick failed: {exc!r}")
-        try:
-            _process_pending_exact_package_claims()
-        except Exception as exc:
-            _log_warning(f"Exact package claim tick failed: {exc!r}")
+    try:
+        _process_pending_reward_open_jobs()
+    except Exception as exc:
+        _log_warning(f"Reward open tick failed: {exc!r}")
+    try:
+        _process_pending_serial_delivery_sequences()
+    except Exception as exc:
+        _log_warning(f"Serial delivery tick failed: {exc!r}")
+    try:
+        _process_pending_exact_package_claims()
+    except Exception as exc:
+        _log_warning(f"Exact package claim tick failed: {exc!r}")
+    uvhm_busy = False
     try:
         # This UMG tick is proven live in BL4. Share it with the UVHM state
         # machine so queued progression cannot depend solely on PlayerTick.
         from . import uvhm_runtime
 
         uvhm_runtime.runtime_tick(*_args, **_kwargs)
+        uvhm_status = uvhm_runtime.status()
+        uvhm_busy = bool(uvhm_status.get("running") or uvhm_status.get("queued"))
     except Exception as exc:
         _log_warning(f"UVHM shared tick failed: {exc!r}")
     try:
@@ -2331,24 +2234,40 @@ def _tick_cb(*_args: Any, **_kwargs: Any) -> None:
     try:
         from . import challenge_bulk_runtime
 
-        # Always pump challenges. runtime_tick itself pauses applies while UVHM
-        # is live; skipping the whole pump left jobs stuck on "waiting for tick".
-        challenge_bulk_runtime.runtime_tick(*_args, **_kwargs)
+        if not uvhm_busy:
+            challenge_bulk_runtime.runtime_tick(*_args, **_kwargs)
     except Exception as exc:
         _log_warning(f"Bulk challenge shared tick failed: {exc!r}")
-    if session_ok:
-        try:
-            from . import shinies
+    try:
+        from . import map_scout
 
-            shinies.shiny_drop_runtime_tick(*_args, **_kwargs)
-        except Exception as exc:
-            _log_warning(f"Shiny drop shared tick failed: {exc!r}")
-        try:
-            from . import loot_shapes
+        map_scout.runtime_tick(*_args, **_kwargs)
+    except Exception:
+        pass
+    try:
+        from . import map_party_escort
 
-            loot_shapes.tick_drop_motion()
-        except Exception:
-            pass
+        map_party_escort.runtime_tick(*_args, **_kwargs)
+    except Exception:
+        pass
+    try:
+        from . import shinies
+
+        shinies.shiny_drop_runtime_tick(*_args, **_kwargs)
+    except Exception as exc:
+        _log_warning(f"Shiny drop shared tick failed: {exc!r}")
+    try:
+        from . import loot_shapes
+
+        loot_shapes.tick_drop_motion()
+    except Exception:
+        pass
+    try:
+        from . import loot_coil
+
+        loot_coil.runtime_tick(*_args, **_kwargs)
+    except Exception:
+        pass
 
 # mobility_runtime owns SQBT's single proven BP_TickWidget hook and invokes
 # _tick_cb. Keeping a second hook here caused duplicate Python dispatch every
@@ -2579,6 +2498,8 @@ def _queue_serial_delivery_sequence(
     *,
     scope_label: str,
     open_rewards: bool = False,
+    level_override: bool = False,
+    level: int = 70,
 ) -> int:
     """
     Tick-paced targeted delivery — one player index at a time, never lobby-wide mail.
@@ -2597,7 +2518,11 @@ def _queue_serial_delivery_sequence(
             return 0
     except Exception:
         pass
-    chunks = _chunk_serials_for_delivery(serials)
+    cleaned = [str(s).strip() for s in (serials or []) if str(s).strip()]
+    chunks = _chunk_serials_for_delivery(
+        cleaned,
+        max_items=_max_items_per_delivery_package(len(cleaned)),
+    )
     if not chunks:
         _log_error("No serial strings after delivery chunking.")
         return 0
@@ -2626,19 +2551,21 @@ def _queue_serial_delivery_sequence(
         _log_error("Give_Serial: no target player indices.")
         return 0
 
-    _ensure_backpack_capacity_for_indices(targets, len(serials))
+    _ensure_backpack_capacity_for_indices(targets, len(cleaned))
     _gbc_run_session_timer_from_give_serial()
     # Baseline party size so a mid-send join can arm the quiet pause.
     global _serial_party_count_seen
     _serial_party_count_seen = _live_party_count_for_serial()
+    defer_open = bool(open_rewards) and len(cleaned) >= int(_SERIAL_DELIVERY_DEFER_OPEN_SERIALS)
     if len(chunks) > 1 or len(targets) > 1:
         _log_info(
-            f"Targeted serial delivery for {scope_label}: {len(serials)} serial(s), "
-            f"{len(targets)} player(s), {_serial_delivery_chunks_desc(chunks)}."
+            f"Targeted serial delivery for {scope_label}: {len(cleaned)} serial(s), "
+            f"{len(targets)} player(s), {_serial_delivery_chunks_desc(chunks)}"
+            f"{' (open rewards after all packages)' if defer_open else ''}."
         )
     else:
         _log_info(
-            f"Targeted serial delivery for {scope_label}: 1 package, {len(serials)} serial(s) → index {targets[0]}."
+            f"Targeted serial delivery for {scope_label}: 1 package, {len(cleaned)} serial(s) → index {targets[0]}."
         )
     _set_serial_delivery_status(
         f"Serial delivery queued: {len(chunks)} package(s) × {len(targets)} player(s) ({scope_label})",
@@ -2650,6 +2577,10 @@ def _queue_serial_delivery_sequence(
         before_counts_by_key[str(getattr(identity, "key", "") or "")] = (
             _package_count(mgr) if mgr else 0
         )
+    try:
+        level_i = max(1, min(int(level or 70), 100))
+    except Exception:
+        level_i = 70
     _pending_serial_delivery_sequences.append({
         "chunks": chunks,
         "targets": target_identities,
@@ -2659,10 +2590,13 @@ def _queue_serial_delivery_sequence(
         "stage": "deliver",
         "wait_until": 0.0,
         "open_rewards": bool(open_rewards),
+        "defer_open_until_end": bool(defer_open),
+        "level_override": bool(level_override),
+        "level": level_i,
         "before_counts_by_key": before_counts_by_key,
         "chunk_before_counts_by_key": dict(before_counts_by_key),
         "opened_per_chunk": False,
-        "total_serials": len(serials),
+        "total_serials": len(cleaned),
         "delivered_serials": 0,
         "chunk_retries": 0,
     })
@@ -2806,7 +2740,12 @@ def _process_pending_serial_delivery_sequences() -> None:
                     seq["target_i"] = target_i + 1
                     seq["stage"] = "deliver"
                 else:
-                    if bool(seq.get("open_rewards")):
+                    # Large sends: never open mid-stream — grant all packages first,
+                    # then one paced open pass at the end (avoids grant+open AV stacking).
+                    open_now = bool(seq.get("open_rewards")) and not bool(
+                        seq.get("defer_open_until_end")
+                    )
+                    if open_now:
                         chunk_before = dict(seq.get("chunk_before_counts_by_key") or {})
                         opened, _open_note = _queue_reward_open_since_for_identities(
                             targets,
@@ -2837,7 +2776,16 @@ def _process_pending_serial_delivery_sequences() -> None:
                 )
                 continue
 
-            chunk = chunks[idx]
+            # Never grant on the same tick as a live reward-open (large-send AV class).
+            if _reward_open_packages_remaining() > 0:
+                remaining.append(seq)
+                continue
+
+            chunk = list(chunks[idx])
+            if bool(seq.get("level_override")):
+                chunk, _lvl_warn = _apply_level_override_to_serials(
+                    chunk, int(seq.get("level") or 70)
+                )
             identity = targets[target_i]
             tidx = _resolve_serial_target_index(identity)
             if tidx is None:
@@ -2873,7 +2821,7 @@ def _process_pending_serial_delivery_sequences() -> None:
                         log=True,
                     )
                     continue
-                backoff = min(0.55, 0.08 * retries)
+                backoff = min(1.15, 0.12 * retries)
                 _set_serial_delivery_status(
                     f"Serial delivery retry {retries}/{_CHUNK_DELIVERY_MAX_RETRIES} for package "
                     f"{idx + 1}/{len(chunks)} ({len(chunk)} serial(s))…",
@@ -2890,6 +2838,7 @@ def _process_pending_serial_delivery_sequences() -> None:
             gap = _delivery_chunk_gap(
                 len(chunk) if isinstance(chunk, (list, tuple)) else 1,
                 total_serials,
+                package_index=idx + 1,
             )
             seq["stage"] = "post_wait"
             seq["wait_until"] = time.time() + max(0.0, gap)
@@ -2909,6 +2858,8 @@ def _do_give_serial_to_player_indices(
     *,
     scope_label: str = "selected players",
     open_rewards: bool = False,
+    level_override: bool = False,
+    level: int = 70,
 ) -> int:
     """
     Targeted serial delivery to the given player indices only.
@@ -2918,8 +2869,11 @@ def _do_give_serial_to_player_indices(
     Returns how many players were queued/targeted.
     """
     if _serial_delivery_sync_preferred():
+        work = list(serials)
+        if level_override:
+            work, _warn = _apply_level_override_to_serials(work, level)
         _do_give_serial_to_player_indices_sync(
-            serials,
+            work,
             player_indices,
             scope_label=scope_label,
             open_rewards=open_rewards,
@@ -2934,6 +2888,8 @@ def _do_give_serial_to_player_indices(
             player_indices,
             scope_label=scope_label,
             open_rewards=open_rewards,
+            level_override=level_override,
+            level=level,
         )
         or 0
     )
@@ -3140,30 +3096,19 @@ def _do_give_serial_chunk(
     local_mgr, _local_mgr_attr = _find_rewards_manager_on_pc(get_pc())
     local_before_count = _package_count(local_mgr) if local_mgr is not None else 0
 
-    reuse_empty = bool(captured_managers) and all(
-        _newest_empty_loyalty_package(manager, reward_name) is not None
-        for manager, _before in captured_managers
-    )
-    if reuse_empty:
-        _log_info(
-            "Reusing empty loyalty shell from a prior failed serial patch "
-            "(not creating another package)."
-        )
-    elif not _give_reward_def(
+    if not _give_reward_def(
         reward_name,
         bool(all_players and serial_only_player_index is None),
         target_pc=target_pc,
     ):
         return False
 
+    if n:
+        _loyalty_rotation_index = (_loyalty_rotation_index + 1) % n
+
     def _patch_captured_managers() -> Tuple[int, int]:
         patched = 0
         for manager, before_count in captured_managers:
-            empty = _newest_empty_loyalty_package(manager, reward_name)
-            if empty is not None:
-                if _apply_serials_to_package(empty, serials) > 0:
-                    patched += 1
-                continue
             if _patch_manager_package_since(
                 manager,
                 serials,
@@ -3187,9 +3132,6 @@ def _do_give_serial_chunk(
                 return _patch_captured_managers()
             if local_mgr is None:
                 return (0, 0)
-            empty = _newest_empty_loyalty_package(local_mgr, reward_name)
-            if empty is not None:
-                return ((1, 1) if _apply_serials_to_package(empty, serials) > 0 else (0, 1))
             return (
                 (1, 1)
                 if _patch_manager_package_since(
@@ -3201,24 +3143,21 @@ def _do_give_serial_chunk(
                 else (0, 1)
             )
 
-    for attempt in range(_PATCH_RETRY_ATTEMPTS):
-        patched, total = patch_fn()
-        if total > 0 and patched == total:
-            if n:
-                _loyalty_rotation_index = (_loyalty_rotation_index + 1) % n
-            if serial_only_player_index is not None:
-                _log_info(
-                    f"Serials applied to last package for player index {serial_only_player_index} "
-                    f"({scope}, attempt {attempt + 1})."
-                )
-            else:
-                _log_info(
-                    f"Serials applied to last package on {patched} / {total} GbxRewardsManager instance(s) "
-                    f"({scope}, attempt {attempt + 1})."
-                )
-            return True
-        if attempt + 1 < _PATCH_RETRY_ATTEMPTS:
-            time.sleep(_PATCH_RETRY_DELAY_SEC)
+    # Never sleep on the game thread — a failed patch returns False and the tick
+    # queue retries with backoff (sleep here was hitching / AV'ing ~500 sends).
+    patched, total = patch_fn()
+    if total > 0 and patched == total:
+        if serial_only_player_index is not None:
+            _log_info(
+                f"Serials applied to last package for player index {serial_only_player_index} "
+                f"({scope})."
+            )
+        else:
+            _log_info(
+                f"Serials applied to last package on {patched} / {total} GbxRewardsManager instance(s) "
+                f"({scope})."
+            )
+        return True
 
     _log_error(
         "Serial override failed: no newly created target package could be verified. "

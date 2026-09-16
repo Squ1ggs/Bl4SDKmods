@@ -16,8 +16,6 @@ _GZO_CACHE_NAMES = (
     "MattsSDKBoostingTools_gzo_codes.json",
 )
 _BMS_DATA = Path(__file__).resolve().parent / "embedded_bms" / "data"
-# path resolve key -> (payload, mtime_ns). Same memoize pattern as data_files.read_data_json.
-_PATH_JSON_CACHE: dict[str, tuple[Any, int]] = {}
 
 
 def _ok(message: str = "OK", **extra: Any) -> dict[str, Any]:
@@ -38,30 +36,10 @@ def _mod_dir() -> Path:
     return Path(__file__).resolve().parent
 
 
-def clear_path_json_cache() -> None:
-    """Drop memoized ``_load_json_path`` payloads (tests / hot reload)."""
-    _PATH_JSON_CACHE.clear()
-
-
 def _load_json_path(path: Path) -> Any:
-    try:
-        resolved = path.resolve()
-    except Exception:
-        resolved = path
-    if not resolved.is_file():
+    if not path.is_file():
         return None
-    key = str(resolved)
-    try:
-        mtime_ns = int(resolved.stat().st_mtime_ns)
-    except Exception:
-        mtime_ns = -1
-    cached = _PATH_JSON_CACHE.get(key)
-    if cached is not None and cached[1] == mtime_ns:
-        return cached[0]
-    payload = json.loads(resolved.read_text(encoding="utf-8"))
-    if mtime_ns >= 0:
-        _PATH_JSON_CACHE[key] = (payload, mtime_ns)
-    return payload
+    return json.loads(path.read_text(encoding="utf-8"))
 
 
 def _gzo_cache_paths() -> list[Path]:
@@ -705,8 +683,41 @@ def catalog_backpack(payload: dict[str, Any] | None = None) -> dict[str, Any]:
             "Pick one boost target (not All players) to scan their backpack.",
             rows=[],
         )
-    rows, message = scan_backpack_rows(idx)
-    return _ok(message, rows=rows)
+    limit = None
+    raw_limit = payload.get("limit")
+    if raw_limit is not None and str(raw_limit).strip() != "":
+        try:
+            limit = int(raw_limit)
+        except Exception:
+            limit = None
+    sheet = str(payload.get("sheet") or "").strip().lower()
+    # Pack Bay save sheet caps via EXE; Party Bay live snaps always hard-cap.
+    if bool(payload.get("party_bay")) or sheet == "party":
+        try:
+            from .pack_bay import party_row_cap
+
+            cap = party_row_cap()
+            limit = cap if limit is None else min(int(limit), cap)
+        except Exception:
+            limit = 160 if limit is None else min(int(limit), 160)
+    elif bool(payload.get("pack_bay")) or sheet == "bay":
+        try:
+            from .pack_bay import row_cap
+
+            cap = row_cap()
+            limit = cap if limit is None else min(int(limit), cap)
+        except Exception:
+            limit = 160 if limit is None else limit
+    rows, message = scan_backpack_rows(idx, limit=limit)
+    return _ok(message, rows=rows, capped=bool(limit), limit=limit)
+
+
+def catalog_warp_marks(payload: dict[str, Any] | None = None) -> dict[str, Any]:
+    from . import warp_marks
+
+    _ = payload
+    rows = warp_marks.list_marks()
+    return _ok(f"{len(rows)} warp mark(s).", rows=rows)
 
 
 def catalog_bms_groups(payload: dict[str, Any] | None = None) -> dict[str, Any]:
@@ -745,6 +756,7 @@ _CATALOGS = {
     "bms_groups": catalog_bms_groups,
     "challenges": catalog_challenges,
     "backpack": catalog_backpack,
+    "warp_marks": catalog_warp_marks,
     "legit_types": catalog_legit_types,
     "legit_manufacturers": catalog_legit_manufacturers,
     "legit_roots": catalog_legit_roots,

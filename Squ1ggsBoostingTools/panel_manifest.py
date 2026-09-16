@@ -26,15 +26,15 @@ TAB_LABELS: tuple[str, ...] = (
     "F.A.A.F.O.",
     "Keybinds",
     "Toggles",
-    "Auto Lobby (WIP)",
+    "Auto Lobby",
     "Support",
 )
 
 _OPEN_REWARDS_LARGE_WARNING = (
-    "Open rewards on send auto-opens mail for delivery targets (host + guests), "
-    "one package every 3-5s (guests get a longer first delay). "
-    "Only packages that already have SerialNumbers are opened - empty loyalty shells stay closed. "
-    "Do not use Open pending after Complete ALL non-UVHM (often hundreds); bank / mule first."
+    "Open rewards on send opens only packages from that delivery (one every 3–5s). "
+    "All non-UVHM never auto-opens its Reward Center packages. Console / cross-play "
+    "users may receive 600+ items: leave multiplayer, open in solo, sell junk, and "
+    "reduce carried items before rejoining."
 )
 
 _BOOST_SAFETY_DANGER = (
@@ -45,11 +45,10 @@ _BOOST_SAFETY_DANGER = (
 )
 
 _REWARDS_AND_INVENTORY_WARNING = (
-    "Mail: Open rewards on send defaults to Yes - opens packages for whoever received the codes "
-    "(host + guests), paced, and only when SerialNumbers are present. "
-    "Exception: after Complete ALL non-UVHM, leave Open pending rewards OFF - users often have "
-    "hundreds of packages. Bank / mule first. Console / cross-play: ~250-300+ carried items can "
-    "blank the backpack online - fix in solo, then rejoin."
+    "Mail: Open rewards on send defaults to Yes for Serials (opens each new package from that send). "
+    "Exception: All non-UVHM only sends rewards and never opens them in multiplayer. Console / "
+    "cross-play users may receive 600+ items: leave the lobby, open in solo, sell junk, and reduce "
+    "carried items before rejoining or the backpack may disappear online."
 )
 
 _SHAPE_2D_OPTIONS: list[str] = [
@@ -75,7 +74,7 @@ _SHAPE_2D_OPTIONS: list[str] = [
     "lightning",
     "vault",
     "psycho",
-    "triangle",
+    "pyramid",
     "hexagon",
     "honeycomb",
     "scatter",
@@ -111,7 +110,6 @@ _SHAPE_SELECT_OPTIONS: list[str] = [*_SHAPE_3D_OPTIONS, *_SHAPE_2D_OPTIONS]
 _SHAPE_OPTION_LABELS: dict[str, str] = {
     "dna_helix": "DNA helix",
     "pyramid_3d": "pyramid",
-    "triangle": "triangle",
     "psycho": "psycho",
     "claptrap": "Claptrap",
     "x_mark": "X mark",
@@ -198,17 +196,18 @@ TAB_SHORT_LABELS: tuple[str, ...] = (
     "FAAFO",
     "Keybinds",
     "Toggles",
-    "Auto WIP",
+    "Auto",
     "Support",
 )
 
 # Recent release highlights on Home (collapsible — not the dev changelog).
 HOME_WHATS_NEW: tuple[str, ...] = (
-    "Drop All Shinies + loot shapes (house/boat) for co-op grabs.",
-    "No main menu — guests can’t yank the host; map FT blocked while ON.",
-    "MAX ALL options: cosmetics + hover and All UVHM 1–7 (both default off).",
-    "Serials: GZO / Lootlemon + My packs; Drop backpack on Most used.",
-    "Auto Lobby is marked WIP — useful, but still being hardened for long lobbies.",
+    "Backpack tab removed again (scan/relevel was too heavy).",
+    "Party teleport shows Boost target names; Dev map travel queue no longer cancels on blips.",
+    "UVHM — fast progression restored; left players still skipped in all-lobby.",
+    "Home Send serials — paste/Browse/@U deliver is back on the main page.",
+    "Loveless (Corpo Hacker) — Raid 2 classmod pool spawn + searchable labels.",
+    "Character cap 70 — MAX ALL / Player level / keybinds boost to 70 (gear defaults follow).",
 )
 
 _AGGRO_MODES = ["attack_me", "attack_party", "free_for_all", "nearest_other", "passive"]
@@ -223,11 +222,6 @@ _SHINY_NOTE_BEFORE = (
 )
 _SHINY_NOTE_AFTER = (
     " to give all unlocks, load that save, then Drop All Shinies again."
-)
-_COOP_SHAPE_GRAB_NOTE = (
-    "Co-op: shape the loot first, then let friends join. "
-    "If you shape while they are already in the lobby, have them rejoin once so they can grab. "
-    "Host can grab either way."
 )
 _MAYHEM_NOTE = (
     "Bypasses the first normal clear. Sets Mayhem Rank: 1+ unlocks Mayhem mode, "
@@ -272,11 +266,7 @@ def _delivery_recipient_fields() -> list[dict[str, Any]]:
             "type": "select",
             "options": ["yes", "no"],
             "default": "yes",
-            "tooltip": (
-                "Yes: auto-open mail for everyone who received this send (paced). "
-                "Guests get a longer first delay; empty loyalty shells are never opened. "
-                "No: leave all mail closed."
-            ),
+            "tooltip": _OPEN_REWARDS_LARGE_WARNING,
         },
     ]
 
@@ -327,7 +317,6 @@ def _item_pool_browser_section(pool_categories: list[str]) -> dict[str, Any]:
             "If a named row is missing or Spawn this one item fails, use Spawn all filtered "
             "on that tab, or spawn the type pool (AR / SG / SM / PS / SR 05 Legendary, "
             "or Pearl type pools). "
-            f"{_COOP_SHAPE_GRAB_NOTE} "
             "Use the coloured toggles to hide cash / oversized AI guns. "
             "Land / shape options sit with Spawn all filtered on this page."
         ),
@@ -678,8 +667,22 @@ def _air_hold_fields(*, field_fold: str = "", default: str = "yes") -> list[dict
     }
     if field_fold:
         stay["field_fold"] = field_fold
+    float_grab: dict[str, Any] = {
+        "key": "float_on_grab",
+        "label": "Float up on grab",
+        "type": "select",
+        "options": ["no", "yes"],
+        "default": "no",
+        "tooltip": (
+            "Funny gag: when someone picks a gun from the silhouette, nearby shaped guns "
+            "briefly float up then settle. Guests see it too."
+        ),
+    }
+    if field_fold:
+        float_grab["field_fold"] = field_fold
     return [
         stay,
+        float_grab,
         _num_field(
             "peel_after",
             "Peel delay (sec)",
@@ -695,15 +698,15 @@ def _air_hold_fields(*, field_fold: str = "", default: str = "yes") -> list[dict
 
 def _shiny_land_fields() -> list[dict[str, Any]]:
     return [
-        _shape_select_field(include_none=True, default="house", label="Shape", land_profile="shiny"),
+        _shape_select_field(include_none=True, default="none", label="Shape", land_profile="shiny"),
         _settle_select_field(),
-        *_air_hold_fields(default="yes"),
+        *_air_hold_fields(default="no"),
         {
             "key": "fill_until_complete",
             "label": "Continue until shape complete — pads drops until silhouette is full (house ≈ 420, smiley ≈ 140)",
             "type": "select",
             "options": ["no", "yes"],
-            "default": "yes",
+            "default": "no",
         },
         {
             "key": "spawn_then_shape",
@@ -719,9 +722,9 @@ def _shiny_land_fields() -> list[dict[str, Any]]:
         _num_field(
             "line_length",
             "Line length",
-            1100,
+            520,
             min_v=200,
-            max_v=2000,
+            max_v=720,
             step=10,
         ),
     ]
@@ -754,9 +757,9 @@ def _bulk_land_fields() -> list[dict[str, Any]]:
         _num_field(
             "line_length",
             "Line length",
-            1400,
+            560,
             min_v=200,
-            max_v=2000,
+            max_v=720,
             step=10,
         ),
     ]
@@ -777,12 +780,12 @@ def _loot_layout_fields() -> list[dict[str, Any]]:
         _num_field(
             "line_length",
             "Line length",
-            900,
+            520,
             min_v=200,
-            max_v=2000,
+            max_v=720,
             step=10,
             field_fold=layout_fold,
-            tooltip="Line, S, lightning, and wave shapes.",
+            tooltip="Line, S, lightning, and wave — capped so strokes stay near you.",
         ),
         _num_field(
             "drop_height",
@@ -815,7 +818,7 @@ def _loot_layout_fields() -> list[dict[str, Any]]:
 
 
 def _max_all_option_fields() -> list[dict[str, Any]]:
-    """Toggle what MAX ALL applies — economy on by default; UVHM / cosmetics opt-in."""
+    """Toggle what MAX ALL applies — economy on by default; UVHM / cosmetics / challenges opt-in."""
     return [
         {"key": "max_cash", "label": "Cash", "type": "checkbox", "default": True, "compact": True},
         {"key": "max_eridium", "label": "Eridium", "type": "checkbox", "default": True, "compact": True},
@@ -832,6 +835,17 @@ def _max_all_option_fields() -> list[dict[str, Any]]:
             "tooltip": "Same as Unlock all cosmetics (dev perk 4). Off by default.",
         },
         {
+            "key": "max_challenges",
+            "label": "All non-UVHM challenges",
+            "type": "checkbox",
+            "default": False,
+            "compact": True,
+            "tooltip": (
+                "Queues Complete ALL non-UVHM for the Boost target (or whole lobby if All players). "
+                "Long job — off by default. Sends rewards only; large opens require solo."
+            ),
+        },
+        {
             "key": "max_uvhm_challenges",
             "label": "All UVHM 1–7",
             "type": "checkbox",
@@ -843,6 +857,7 @@ def _max_all_option_fields() -> list[dict[str, Any]]:
             ),
         },
     ]
+
 
 
 def _auto_lobby_fields() -> list[dict[str, Any]]:
@@ -864,6 +879,17 @@ def _auto_lobby_fields() -> list[dict[str, Any]]:
             "default": True,
             "tooltip": "Arms No main menu while Auto Lobby runs. Your own Esc/menu still releases so the game does not crash.",
         },
+        {
+            "key": "progression_guests_only",
+            "label": "Challenges / UVHM: guests only (skip host)",
+            "type": "checkbox",
+            "default": False,
+            "tooltip": (
+                "Auto Lobby only: skips the host for Challenges and UVHM, waits safely when "
+                "no guests are present, then processes each newly seen guest once. Uses normal "
+                "roster polling — no join/leave hooks."
+            ),
+        },
         {"key": "max_all", "label": "MAX ALL", "type": "checkbox", "default": True},
         {
             "key": "cosmetics",
@@ -876,14 +902,17 @@ def _auto_lobby_fields() -> list[dict[str, Any]]:
             "label": "Complete ALL non-UVHM challenges",
             "type": "checkbox",
             "default": False,
-            "tooltip": "Long job. Runs once per Start unless Repeat heavy jobs is on. Leave Open pending rewards OFF afterward.",
+            "tooltip": "Long job. Runs once per Start unless Repeat heavy jobs is on. Sends rewards only; large opens require solo.",
         },
         {
             "key": "uvhm",
-            "label": "UVHM 1–7 (entire lobby)",
+            "label": "UVHM 1–7",
             "type": "checkbox",
             "default": False,
-            "tooltip": "Runs after challenges when both are checked. Once per Start unless Repeat heavy jobs is on.",
+            "tooltip": (
+                "Runs for the entire lobby by default, or one newly seen guest at a time when "
+                "Guests only is checked. Runs after challenges when both are checked."
+            ),
         },
         {
             "key": "bank_space",
@@ -918,10 +947,15 @@ def _auto_lobby_fields() -> list[dict[str, Any]]:
         },
         {
             "key": "item_drip",
-            "label": "Mail GZO / pack codes at intervals",
+            "label": "GZO drip → mail to host → open → drop backpack (lobby ground loot)",
             "type": "checkbox",
             "default": False,
-            "tooltip": "Mailbox drip on a separate timer (not world spawn). Refresh GZO once first. Off means no mail drip.",
+            "tooltip": (
+                "Works with Boost target All players (or anyone): codes go to the HOST only, open into "
+                "their backpack, then spill onto the ground so the whole lobby can grab and leave. "
+                "Default pile ~150 Modded GZO (~100 guns + classmods/repkits/enhancements/shields). "
+                "Refresh GZO once first. Not guest mail and not Drop All Shinies."
+            ),
         },
         {
             "key": "item_drip_mode",
@@ -936,7 +970,7 @@ def _auto_lobby_fields() -> list[dict[str, Any]]:
             "label": "GZO listing",
             "type": "select",
             "options": ["Legit", "Modded", "All"],
-            "default": "Legit",
+            "default": "Modded",
         },
         {
             "key": "item_drip_pack",
@@ -947,12 +981,16 @@ def _auto_lobby_fields() -> list[dict[str, Any]]:
         },
         {
             "key": "item_drip_count",
-            "label": "Items per drip",
+            "label": "Items in lobby pile (default 150)",
             "type": "number",
-            "default": 3,
+            "default": 150,
             "min": 1,
-            "max": 10,
-            "tooltip": "Keep small (1–10). Large drips lag mail and can crash the host.",
+            "max": 200,
+            "tooltip": (
+                "How many codes are mailed to the host each drip before the backpack is spilled. "
+                "Default 150 ≈ 100 guns + classmods/repkits/enhancements/shields from Modded GZO. "
+                "Needs backpack space (use Set backpack + bank size)."
+            ),
         },
         {
             "key": "item_drip_level",
@@ -969,7 +1007,8 @@ def _auto_lobby_fields() -> list[dict[str, Any]]:
             "default": 120,
             "min": 60,
             "max": 3600,
-            "step": 5,
+            "step": 10,
+            "tooltip": "Minimum gap between drip piles. First drip also fires during the post-heavy rest.",
         },
         {
             "key": "auto_kick",
@@ -1027,12 +1066,11 @@ def _action(
     spawn_multiselect: bool = False,
     challenge_multiselect: bool = False,
     backpack_multiselect: bool = False,
+    pack_bay_copy: bool = False,
     showResult: bool = False,
     fold: str = "",
     fold_hint: str = "",
     full_width: bool = False,
-    accent: str = "",
-    icon: str = "",
 ) -> dict[str, Any]:
     row: dict[str, Any] = {"label": label, "action": action}
     if payload:
@@ -1064,6 +1102,8 @@ def _action(
         row["challengeMultiselect"] = True
     if backpack_multiselect:
         row["backpackMultiselect"] = True
+    if pack_bay_copy:
+        row["packBayCopy"] = True
     if showResult:
         row["showResult"] = True
     if fold:
@@ -1072,10 +1112,6 @@ def _action(
         row["foldHint"] = fold_hint
     if full_width:
         row["fullWidth"] = True
-    if accent:
-        row["accent"] = str(accent).strip().lower()
-    if icon:
-        row["icon"] = str(icon)
     return row
 
 
@@ -1134,8 +1170,6 @@ def _toggle(
     default_on: bool = False,
     sticky: bool = False,
     sync_key: str = "",
-    accent: str = "",
-    icon: str = "",
 ) -> dict[str, Any]:
     """Single on/off control — EXE flips color/label instead of two buttons."""
     row: dict[str, Any] = {
@@ -1154,10 +1188,6 @@ def _toggle(
         row["sticky"] = True
     if sync_key:
         row["syncKey"] = str(sync_key)
-    if accent:
-        row["accent"] = str(accent).strip().lower()
-    if icon:
-        row["icon"] = str(icon)
     return row
 
 
@@ -1310,25 +1340,25 @@ def _lootlemon_multiselect_section(lootlemon_categories: list[str]) -> dict[str,
 
 def _serial_store_section() -> dict[str, Any]:
     return {
-        "title": "My packs",
+        "title": "My Library",
         "featured": True,
         "catalog": "serial_store",
         "serialStore": True,
         "hint": (
-            "1) Type a pack name. 2) Paste @U codes. 3) Save. "
-            "Import adds to what you already have — it never replaces your packs. "
-            "Export shares the current pack (or All)."
+            "Named packs of serials. Add to pack (dropdown) → paste → Save entry. "
+            "On each pack: Select / Send pack / Send @lvl / Add. Select all filtered with Pack=All only "
+            "ticks expanded packs (not every pack). Import merges; Export shares."
         ),
         "actions": [
             _action(
-                "Save",
+                "Save entry",
                 "serial_store_save",
-                tooltip="Save the codes in the box into that pack name.",
+                tooltip="Save or update item Name + Pack name + Serial.",
             ),
             _action(
                 "New pack",
                 "serial_store_create_group",
-                tooltip="Name a pack, then paste codes and Save.",
+                tooltip="Name a pack, then add serials with Save entry.",
             ),
             _action(
                 "Send selected",
@@ -1338,19 +1368,19 @@ def _serial_store_section() -> dict[str, Any]:
                 tooltip="Tick saved rows, pick Send to, then mail them.",
             ),
             _action(
-                "Import file",
+                "Import .txt / .json",
                 "serial_store_import_merge",
-                tooltip="Pick a .txt or .json. Adds new codes; duplicates are skipped.",
+                tooltip="Pick a .txt or .json file. Merges into your library; duplicates skipped.",
             ),
             _action(
                 "Export .txt",
                 "serial_store_export_text",
-                tooltip="Download the current pack (or All) as .txt.",
+                tooltip="Download the current Pack filter (or All) as shareable .txt.",
             ),
             _action(
                 "Export .json",
                 "serial_store_export_json",
-                tooltip="Download the current pack (or All) as .json.",
+                tooltip="Download the current Pack filter (or All) as shareable .json.",
             ),
             _action(
                 "Duplicate entry",
@@ -1367,7 +1397,7 @@ def _serial_store_section() -> dict[str, Any]:
                 "Delete pack",
                 "serial_store_delete_group",
                 fold="Manage",
-                tooltip="Deletes every serial in that pack name.",
+                tooltip="Deletes every serial in the Pack name field (or current Pack filter).",
             ),
         ],
     }
@@ -1491,7 +1521,7 @@ def get_panel_manifest() -> dict[str, Any]:
     ]
     spawn_mix_categories = ["All", *world_spawn.categories()]
     io_categories = _io_categories()
-    return {
+    manifest = {
         "name": "Squ1ggs Boosting Tools",
         "author": "RDPSqu1ggs",
         "version": __version__,
@@ -1520,63 +1550,96 @@ def get_panel_manifest() -> dict[str, Any]:
                         "featured": True,
                         "warning": (
                             "First use: set your Borderlands 4 install folder in Setup if needed, install oak2 once, "
-                            "fully restart the game, load a character (not the main menu), then wait until buttons unlock. "
+                            "fully restart the game, load a character, then wait for Online. "
                             "Later EXE launches auto-copy the Squ1ggs mod. "
                             "Other tools: github.com/Squ1ggs/Bl4SDKmods · save editor scooterstoolbox.com"
                         ),
                         "guide": [
                             "If the game is on another drive, Setup → Set install folder (folder with Borderlands4.exe / OakGame).",
-                            "Install SDK + Squ1ggs mod once if oak2 is missing, then fully quit Borderlands 4 to desktop.",
-                            "Load a character in-world — the main menu will not unlock Most used.",
-                            "Wait until this window says Connected and the buttons light up (this card hides then).",
+                            "Install SDK + Squ1ggs mod once if oak2 is missing.",
+                            "Fully restart Borderlands 4 — quit to desktop, then launch again.",
+                            "Load a character, then wait for Online (this card hides once connected).",
                         ],
                     },
                     {
                         "title": "Most used",
                         "featured": True,
                         "hint": (
-                            "Daily one-taps for the Boost target — similar tools sit together with matching "
-                            "colour auras. Full sticky combat board is on the Toggles tab."
+                            "Daily one-taps for the boost target. Buttons stay compact; "
+                            "full sticky combat board is on the Toggles tab."
                         ),
                         "actions": [
                             _action(
                                 "MAX ALL",
                                 "max_all",
                                 fields=_max_all_option_fields(),
-                                accent="gold",
                                 tooltip=(
                                     "Apply checked options for the boost target: cash, eridium, "
-                                    "SDU, vault cards, level/spec, plus optional cosmetics/hover "
-                                    "and All UVHM 1–7 (those two default off)."
+                                    "SDU, vault cards, level/spec. Optional: cosmetics, challenges, UVHM 1–7."
                                 ),
                             ),
                             _action(
                                 "Unlock all cosmetics",
                                 "devperk_activate",
                                 payload={"perk_index": 4},
-                                accent="gold",
                             ),
                             _action(
                                 "Complete ALL challenges",
                                 "challenge_bulk_start",
                                 payload={"category": "All non-UVHM"},
-                                accent="violet",
                                 confirm=(
                                     "Complete every non-UVHM challenge for the boost target? "
-                                    "Leave Open pending rewards OFF afterward — this often dumps hundreds of packages. "
-                                    "Prefer Serials → Open pending after you bank / mule."
+                                    "This only sends rewards; it never opens them. Console/cross-play: leave "
+                                    "multiplayer, open in solo, sell junk, then reduce carried items before rejoining."
                                 ),
                                 tooltip=(
                                     "Same as Progression → Complete ALL non-UVHM. "
-                                    "Does not auto-open mail."
+                                    "Never auto-opens mail; large opens are blocked in multiplayer."
                                 ),
                             ),
                             _action(
-                                "All UVHM (target)",
+                                "UVHM (Boost target)",
                                 "uvhm_start",
-                                accent="violet",
-                                confirm="Start UVHM 1–7 for the Boost target (one player, not All)?",
-                                tooltip="Progression → Start UVHM (target).",
+                                confirm="Start UVHM 1–7 for the Boost target? If Boost target is All players, runs safe all-lobby UVHM.",
+                                tooltip="One player from Boost target, or whole lobby when All is selected.",
+                            ),
+                            _action(
+                                "UVHM all lobby",
+                                "uvhm_start_all",
+                                confirm="Run UVHM for the entire lobby?",
+                                tooltip="Safe all-lobby UVHM — missing remotes are skipped.",
+                            ),
+                            _action(
+                                "Soft clear (hide loot)",
+                                "loot_shape_clear",
+                                confirm="Hide ground loot?",
+                                tooltip="Hide ground pile clutter.",
+                            ),
+                            _action(
+                                "Cleanup loot",
+                                "loot_cleanup",
+                                confirm="Stop floats/pins and soft-clear ground loot?",
+                                tooltip="Stronger tidy than Soft clear.",
+                            ),
+                            _action(
+                                "Pull loot to feet",
+                                "loot_vacuum_nearby",
+                                payload={"scope": "me", "radius_m": 40, "max_items": 200},
+                                tooltip="Fast snap nearby ground loot to your feet. Attract yourself — not mail.",
+                                showResult=True,
+                            ),
+                            _action(
+                                "Open pending rewards (everyone)",
+                                "rewards_open_everyone",
+                                confirm=(
+                                    "Open pending Reward Center mail for the whole party? "
+                                    "Large/Complete ALL reward opens are blocked in multiplayer. "
+                                    "Open in solo, sell junk, and reduce carried items before rejoining."
+                                ),
+                                tooltip=(
+                                    "Opens every pending package for the party (paced). "
+                                    "Large queues require solo."
+                                ),
                             ),
                             _toggle(
                                 "God mode",
@@ -1585,10 +1648,14 @@ def get_panel_manifest() -> dict[str, Any]:
                                 payload_off={"enabled": False},
                                 sticky=True,
                                 sync_key="god_mode",
-                                accent="coral",
                                 tooltip="Sticky — full board on Toggles tab.",
                             ),
-                            _action("Kill all enemies", "kill_all_enemies", accent="coral"),
+                            _action("Kill all enemies", "kill_all_enemies"),
+                            _action(
+                                "Spawn legendary/epic loot",
+                                "devperk_activate",
+                                payload={"perk_index": 7},
+                            ),
                             _toggle(
                                 "Infinite jump",
                                 "mobility_infinite_jump",
@@ -1596,7 +1663,6 @@ def get_panel_manifest() -> dict[str, Any]:
                                 payload_off={"enabled": False},
                                 sticky=True,
                                 sync_key="infinite_jump",
-                                accent="cyan",
                             ),
                             _toggle(
                                 "Force fly",
@@ -1605,7 +1671,6 @@ def get_panel_manifest() -> dict[str, Any]:
                                 payload_off={"enabled": False, "scope": "target"},
                                 sticky=True,
                                 sync_key="force_fly",
-                                accent="cyan",
                                 tooltip="Force fly for boost target. Speed under Mobility.",
                             ),
                             _toggle(
@@ -1615,7 +1680,6 @@ def get_panel_manifest() -> dict[str, Any]:
                                 payload_off={"flag": "shoot_sprint", "enabled": False},
                                 sticky=True,
                                 sync_key="shoot_sprint",
-                                accent="cyan",
                             ),
                             _toggle(
                                 "Zoom while sprinting",
@@ -1624,7 +1688,6 @@ def get_panel_manifest() -> dict[str, Any]:
                                 payload_off={"flag": "zoom_sprint", "enabled": False},
                                 sticky=True,
                                 sync_key="zoom_sprint",
-                                accent="cyan",
                             ),
                             _toggle(
                                 "Zoom while downed",
@@ -1633,22 +1696,6 @@ def get_panel_manifest() -> dict[str, Any]:
                                 payload_off={"flag": "zoom_injured", "enabled": False},
                                 sticky=True,
                                 sync_key="zoom_injured",
-                                accent="cyan",
-                            ),
-                            _toggle(
-                                "No main menu",
-                                "hold_session",
-                                payload_on={"enabled": True},
-                                payload_off={"enabled": False},
-                                sticky=True,
-                                sync_key="hold_session",
-                                accent="amber",
-                                icon="emoji:🚫",
-                                tooltip=(
-                                    "Host only — stops guests from pulling you to the main menu, "
-                                    "and blocks your map fast travel while ON. "
-                                    "Turn OFF before you quit to the menu yourself."
-                                ),
                             ),
                             _toggle(
                                 "Hide map fog (this session)",
@@ -1657,36 +1704,66 @@ def get_panel_manifest() -> dict[str, Any]:
                                 payload_off={"enabled": False},
                                 sticky=True,
                                 sync_key="map_fog",
-                                accent="slate",
                             ),
-                            _action("Freecam", "freecam_toggle", accent="slate"),
-                            _action("Freecam off", "freecam_disable", accent="slate"),
+                            _toggle(
+                                "No main menu",
+                                "hold_session",
+                                payload_on={"enabled": True},
+                                payload_off={"enabled": False},
+                                sticky=True,
+                                sync_key="hold_session",
+                                tooltip=(
+                                    "Host only — stops guests from pulling you to the main menu. "
+                                    "Turn OFF before you quit to the menu yourself."
+                                ),
+                            ),
+                            _action("Freecam", "freecam_toggle"),
+                            _action("Freecam off", "freecam_disable"),
                             _action(
-                                "Soft clear (hide loot)",
-                                "loot_shape_clear",
-                                accent="pink",
-                                confirm="Hide ground loot?",
-                                tooltip="Hide ground pile clutter.",
+                                "Spawn golden chest",
+                                "spawn_ios",
+                                payload={
+                                    "cmds": ["oak_spawnai Lootable_GoldenChest"],
+                                    "count": 1,
+                                    "activate": "yes",
+                                },
                             ),
                             _action(
-                                "Cleanup loot",
-                                "loot_cleanup",
-                                accent="pink",
-                                confirm="Stop floats/pins and soft-clear ground loot?",
-                                tooltip="Stronger tidy than Soft clear.",
+                                "Open golden chest",
+                                "golden_chest",
+                                payload={"action": "open"},
                             ),
                             _action(
-                                "Spawn legendary/epic loot",
-                                "devperk_activate",
-                                payload={"perk_index": 7},
-                                accent="pink",
+                                "Close golden chest",
+                                "golden_chest",
+                                payload={"action": "close"},
+                            ),
+                            _action(
+                                "Spawn black market machine",
+                                "black_market",
+                                payload={"action": "spawn"},
+                            ),
+                            _action(
+                                "Shinies → mail (target)",
+                                "shiny_mail_all",
+                                payload={"mode": "selected"},
+                            ),
+                            _action(
+                                "Shinies → mail (lobby)",
+                                "shiny_mail_all",
+                                payload={"mode": "all"},
+                            ),
+                            _action(
+                                "Drop backpack",
+                                "faafo_drop_backpack",
+                                confirm="Spill the target's whole backpack onto the ground?",
+                                tooltip="Quick spill at feet. Pick a shape on Loot → Drop backpack → shape.",
                             ),
                             _action(
                                 "Drop all shinies (world loot)",
                                 "shiny_drop_all",
-                                accent="pink",
                                 tooltip=_SHINY_DROP_TOOLTIP,
-                                note_before=_COOP_SHAPE_GRAB_NOTE + " " + _SHINY_NOTE_BEFORE,
+                                note_before=_SHINY_NOTE_BEFORE,
                                 note_link_label="Scooter's Toolbox",
                                 note_link_url="https://scooterstoolbox.com",
                                 note_after=_SHINY_NOTE_AFTER,
@@ -1701,67 +1778,6 @@ def get_panel_manifest() -> dict[str, Any]:
                                     *_shiny_land_fields(),
                                 ],
                             ),
-                            _action(
-                                "Drop backpack",
-                                "faafo_drop_backpack",
-                                accent="pink",
-                                confirm="Spill the target's whole backpack onto the ground?",
-                                tooltip="Quick spill at feet. Pick a shape on Loot → Drop backpack → shape.",
-                            ),
-                            _action(
-                                "Open pending rewards",
-                                "rewards_open_everyone",
-                                accent="mint",
-                                confirm=(
-                                    "Open pending Reward Center packages for everyone in the lobby (paced)? "
-                                    "Only packages with SerialNumbers are opened; empty shells stay closed. "
-                                    "Skip after Complete ALL non-UVHM until you bank / mule."
-                                ),
-                                tooltip=(
-                                    "Opens pending packages for the whole lobby (paced). "
-                                    "Only opens packages that already have SerialNumbers."
-                                ),
-                            ),
-                            _action(
-                                "Shinies → mail (target)",
-                                "shiny_mail_all",
-                                payload={"mode": "selected"},
-                                accent="mint",
-                            ),
-                            _action(
-                                "Shinies → mail (lobby)",
-                                "shiny_mail_all",
-                                payload={"mode": "all"},
-                                accent="mint",
-                            ),
-                            _action(
-                                "Spawn golden chest",
-                                "spawn_ios",
-                                accent="gold",
-                                payload={
-                                    "cmds": ["oak_spawnai Lootable_GoldenChest"],
-                                    "count": 1,
-                                    "activate": "yes",
-                                },
-                            ),
-                            _action(
-                                "Open golden chest",
-                                "golden_chest",
-                                payload={"action": "open"},
-                                accent="gold",
-                            ),
-                            _action(
-                                "Close golden chest",
-                                "golden_chest",
-                                payload={"action": "close"},
-                                accent="gold",
-                            ),
-                            _action(
-                                "Spawn black market machine",
-                                "black_market",
-                                payload={"action": "spawn"},
-                                accent="gold",
-                            ),
                         ],
                     },
                     {
@@ -1769,8 +1785,7 @@ def get_panel_manifest() -> dict[str, Any]:
                         "featured": True,
                         "hint": (
                             "Paste @U serials — one per line or space-separated — then Send items. "
-                            "Full library and code browsers live on the Serials tab. "
-                            "Open pending rewards is on Serials only (not after Complete ALL until banked)."
+                            "Full library and code browsers live on the Serials tab."
                         ),
                         "warning": _REWARDS_AND_INVENTORY_WARNING,
                         "serialSendList": True,
@@ -1799,16 +1814,15 @@ def get_panel_manifest() -> dict[str, Any]:
                                 ],
                             ),
                             _action(
-                                "Open pending rewards",
+                                "Open pending rewards (everyone)",
                                 "rewards_open_everyone",
                                 confirm=(
-                                    "Open pending Reward Center packages for everyone in the lobby (paced)? "
-                                    "Only packages with SerialNumbers are opened; empty shells stay closed. "
-                                    "Skip after Complete ALL non-UVHM until you bank / mule."
+                                    "Open every pending Reward Center package for all live party members? "
+                                    "Large/Complete ALL queues are blocked in multiplayer."
                                 ),
                                 tooltip=(
-                                    "Opens pending packages for the whole lobby (paced). "
-                                    "Only opens packages that already have SerialNumbers."
+                                    "Opens every pending package for the party (paced). "
+                                    "Large queues require solo."
                                 ),
                             ),
                         ],
@@ -1818,16 +1832,15 @@ def get_panel_manifest() -> dict[str, Any]:
                         "featured": True,
                         "hint": "Shortcuts into the tabs that hold the rest of the toolkit.",
                         "quickLinks": [
-                            {"label": "Auto Lobby (WIP) — timed boosts", "tab": "auto_lobby"},
-                            {"label": "Loot / shapes / Drop shinies", "tab": "loot"},
-                            {"label": "Serials — Browse codes (GZO / Lootlemon)", "tab": "serials", "segment": "codes"},
-                            {"label": "Serials — Send / paste", "tab": "serials", "segment": "send"},
-                            {"label": "Serials — My packs", "tab": "serials", "segment": "library"},
+                            {"label": "Auto Lobby — timed boosts", "tab": "auto_lobby"},
+                            {"label": "Serials — Send / Library / Codes", "tab": "serials"},
                             {"label": "Progress / UVHM / challenges", "tab": "progression"},
                             {"label": "Mobility / fly / sprint", "tab": "mobility"},
+                            {"label": "Loot pools / drop backpack shape", "tab": "loot"},
                             {"label": "World / fog / golden chest", "tab": "world"},
-                            {"label": "Toggles — sticky combat board", "tab": "toggles"},
                             {"label": "F.A.A.F.O. / drop backpack", "tab": "faafo"},
+                            {"label": "Player / freecam / teleports", "tab": "player"},
+                            {"label": "Mob & IO spawner", "tab": "mob_io"},
                         ],
                     },
                     {
@@ -2095,8 +2108,9 @@ def get_panel_manifest() -> dict[str, Any]:
                     {
                         "title": "UVHM progression",
                         "hint": (
-                            "Uses Boost target (player bar under the tabs). Start UVHM (target) needs one player — "
-                            "not All players. UVHM and bulk challenges are serialized: finish/cancel one before the other."
+                            "Uses Boost target (player bar under the tabs). Start UVHM (target) with All players "
+                            "runs the safe all-lobby path. UVHM and bulk challenges are serialized: "
+                            "finish/cancel one before the other."
                         ),
                         "fields": [_uvhm_max_rank_field()],
                         "actions": [
@@ -2124,7 +2138,9 @@ def get_panel_manifest() -> dict[str, Any]:
                             "Robo Dealer/Loveless and FL4K/Providence have dedicated DLC filters. "
                             "Other catches leftovers. Safe pacing applies one challenge/player pair at a time "
                             "(solo ~3–5 min for Complete ALL; co-op stays slower). Use Boost target = All players "
-                            "only when you are prepared to wait for every player."
+                            "only when you are prepared to wait for every player. Grassroots Campaigner can remain "
+                            "96/98 when BL4 has not created its mission-backed save state; accept or complete one "
+                            "side mission, then use Retry Grassroots below."
                         ),
                         "warning": _CONSOLE_REWARDS_WARNING,
                         "actions": [
@@ -2148,8 +2164,21 @@ def get_panel_manifest() -> dict[str, Any]:
                                 payload={"category": "All non-UVHM"},
                                 confirm=(
                                     "Complete every non-UVHM challenge (including Vault of the Damned) "
-                                    "for the target player? Leave Open pending rewards OFF afterward — "
-                                    "this often dumps hundreds of mail packages."
+                                    "for the target player? Rewards are sent only and never auto-opened. "
+                                    "Console/cross-play users must open in solo, sell junk, and reduce carried items."
+                                ),
+                            ),
+                            _action(
+                                "Retry Grassroots Campaigner (after one side mission)",
+                                "challenge_complete_selected",
+                                payload={"token": "Challenges_Achievements_24_missions_side"},
+                                confirm=(
+                                    "Retry Grassroots Campaigner for the Boost target? Use this only after "
+                                    "accepting or completing one side mission so BL4 has created its save state."
+                                ),
+                                tooltip=(
+                                    "Best-effort 96/98 retry for the mission-backed achievement. It cannot "
+                                    "safely create a missing side-mission save state."
                                 ),
                             ),
                             _action("Cancel challenge bulk", "challenge_bulk_cancel"),
@@ -2200,16 +2229,13 @@ def get_panel_manifest() -> dict[str, Any]:
                     _item_pool_browser_section(pool_categories),
                     {
                         "title": "Shiny drops",
-                        "hint": (
-                            f"{_COOP_SHAPE_GRAB_NOTE} "
-                            "World loot only — same Drop All Shinies as Home. Mail lives under Serials."
-                        ),
+                        "hint": "World loot only — same Drop All Shinies as Home. Mail lives under Serials.",
                         "actions": [
                             _action(
                                 "Drop all shinies (world loot)",
                                 "shiny_drop_all",
                                 tooltip=_SHINY_DROP_TOOLTIP,
-                                note_before=_COOP_SHAPE_GRAB_NOTE + " " + _SHINY_NOTE_BEFORE,
+                                note_before=_SHINY_NOTE_BEFORE,
                                 note_link_label="Scooter's Toolbox",
                                 note_link_url="https://scooterstoolbox.com",
                                 note_after=_SHINY_NOTE_AFTER,
@@ -2286,9 +2312,7 @@ def get_panel_manifest() -> dict[str, Any]:
                         "featured": True,
                         "hint": (
                             "Paste @U serials — one per line or space-separated — then Send items (mail). "
-                            "Save packs under My packs. "
-                            "GZO + Lootlemon live under the Browse codes tab at the top of Serials "
-                            "(Send | My packs | Browse codes | Mail)."
+                            "My Library / GZO / Lootlemon are further down this tab. Open rewards defaults to Yes."
                         ),
                         "warning": _REWARDS_AND_INVENTORY_WARNING,
                         "serialSendList": True,
@@ -2338,22 +2362,21 @@ def get_panel_manifest() -> dict[str, Any]:
                     {
                         "title": "Open pending rewards",
                         "hint": (
-                            "Opens pending Reward Center mail for the lobby (paced). "
-                            "Only packages with SerialNumbers are opened. "
-                            "Leave alone after Complete ALL non-UVHM until you bank / mule."
+                            "Open Reward Center packages already waiting in mail. "
+                            "Not for world spawns. Complete ALL and other large queues cannot be opened "
+                            "in multiplayer; leave the lobby, open in solo, sell junk, and reduce carried items."
                         ),
                         "actions": [
                             _action(
-                                "Open pending rewards",
+                                "Open pending rewards (everyone)",
                                 "rewards_open_everyone",
                                 confirm=(
-                                    "Open pending Reward Center packages for everyone in the lobby (paced)? "
-                                    "Only packages with SerialNumbers are opened; empty shells stay closed. "
-                                    "Skip after Complete ALL non-UVHM until you bank / mule."
+                                    "Open every pending Reward Center package for all live party members? "
+                                    "Large/Complete ALL queues are blocked in multiplayer."
                                 ),
                                 tooltip=(
-                                    "Opens pending packages for the whole lobby (paced). "
-                                    "Only opens packages that already have SerialNumbers."
+                                    "Opens every pending package for the party (paced). "
+                                    "Large queues require solo."
                                 ),
                             ),
                         ],
@@ -2738,9 +2761,11 @@ def get_panel_manifest() -> dict[str, Any]:
                     {
                         "title": "Map fog",
                         "hint": (
-                            "Hide map fog (this session) is the working overlay hide. "
-                            "Open the map after turning it on. Fog comes back after reload. "
-                            "It does not unlock safehouses or mark the world visited."
+                            "Hide map fog = overlay only. "
+                            "Unlock map + widen FoD range = MSBT-style location unlocks + fixed walk-unfog widen "
+                            "(safehouses/FT from travelstations + live FoD manager). No radius knob — same as MSBT. "
+                            "Host map sweep Range only limits POI hop distance — it does not unfog. "
+                            "Guest map assist = move Boost target through a short ring, then home."
                         ),
                         "actions": [
                             _toggle(
@@ -2752,8 +2777,231 @@ def get_panel_manifest() -> dict[str, Any]:
                                 sync_key="map_fog",
                                 tooltip=(
                                     "Hides the map fog overlay while you play. Open the map after turning it on. "
-                                    "Fog comes back after you reload."
+                                    "Fog comes back after you reload. Does not unlock exploration."
                                 ),
+                            ),
+                            _action(
+                                "Unlock map + widen FoD range",
+                                "map_fog_unlock",
+                                tooltip=(
+                                    "Unlocks safehouse / silo / FT locations from the travelstations catalog "
+                                    "plus live stations, then applies MSBT's fixed UnfogRadius / FOD manager widen. "
+                                    "Reopen the map after. No radius field — MSBT does not expose one either."
+                                ),
+                                showResult=True,
+                            ),
+                            _action(
+                                "Host map sweep",
+                                "host_map_sweep_start",
+                                fields=[
+                                    {
+                                        "key": "mode",
+                                        "label": "Route",
+                                        "type": "select",
+                                        "options": ["poi", "ring"],
+                                        "default": "poi",
+                                    },
+                                    {"key": "hops", "label": "Max stops (0 = all main)", "type": "number", "default": 0, "min": 0, "max": 250},
+                                    {
+                                        "key": "radius",
+                                        "label": "POI range from start (cm, 0 = whole map)",
+                                        "type": "number",
+                                        "default": 0,
+                                        "min": 0,
+                                        "max": 500000,
+                                    },
+                                ],
+                                tooltip=(
+                                    "Host only — POI mode visits catalog fast-travel / level / zone coords on your "
+                                    "current map (nearest path), then returns you home. Max stops 0 = every main "
+                                    "FT/level/zone stop (deduped). Ring mode = old circle around you. "
+                                    "Range only filters hop distance — use Unlock map + widen FoD range to unfog."
+                                ),
+                                showResult=True,
+                            ),
+                            _action(
+                                "Stop host map sweep",
+                                "host_map_sweep_cancel",
+                                tooltip="Stop the host map sweep and return home.",
+                                showResult=True,
+                            ),
+                            _action(
+                                "Guest map assist (Boost target)",
+                                "guest_map_assist_start",
+                                fields=[
+                                    {"key": "hops", "label": "Hops", "type": "number", "default": 6, "min": 4, "max": 12},
+                                    {
+                                        "key": "radius",
+                                        "label": "Ring radius (cm)",
+                                        "type": "number",
+                                        "default": 12000,
+                                        "min": 3000,
+                                        "max": 35000,
+                                    },
+                                ],
+                                tooltip=(
+                                    "Listen host only. Moves the Boost target guest through a short ring "
+                                    "centered on you, then returns them to where they stood. One guest at a time."
+                                ),
+                                showResult=True,
+                            ),
+                            _action(
+                                "Guest map assist (all guests)",
+                                "guest_map_assist_start",
+                                payload={"all_guests": True, "confirmed": True},
+                                confirm="Run guest map assist for every remote guest (one at a time)? They will be returned home after.",
+                                fields=[
+                                    {"key": "hops", "label": "Hops", "type": "number", "default": 6, "min": 4, "max": 12},
+                                    {
+                                        "key": "radius",
+                                        "label": "Ring radius (cm)",
+                                        "type": "number",
+                                        "default": 12000,
+                                        "min": 3000,
+                                        "max": 35000,
+                                    },
+                                ],
+                                showResult=True,
+                            ),
+                            _action(
+                                "Stop guest map assist",
+                                "guest_map_assist_cancel",
+                                tooltip="Stop guest map assist and send guests home.",
+                                showResult=True,
+                            ),
+                        ],
+                    },
+                    {
+                        "title": "Warp marks",
+                        "hint": (
+                            "Save your current XYZ and warp back later. Stored in SQBT settings. "
+                            "Pick a saved mark from the dropdown for Warp / Delete."
+                        ),
+                        "actions": [
+                            _action(
+                                "Save warp mark here",
+                                "warp_mark_save",
+                                fields=[
+                                    {
+                                        "key": "name",
+                                        "label": "New mark name",
+                                        "type": "text",
+                                        "default": "Quick",
+                                    }
+                                ],
+                                tooltip="Save the local pawn position under this name.",
+                                showResult=True,
+                            ),
+                            _action(
+                                "Warp to mark",
+                                "warp_mark_go",
+                                fields=[
+                                    {
+                                        "key": "name",
+                                        "label": "Saved mark",
+                                        "type": "catalog_select",
+                                        "catalog": "warp_marks",
+                                        "valueKey": "name",
+                                        "labelKey": "title",
+                                        "search": True,
+                                    }
+                                ],
+                                tooltip="Teleport to a saved warp mark.",
+                                showResult=True,
+                            ),
+                            _action(
+                                "Delete warp mark",
+                                "warp_mark_delete",
+                                fields=[
+                                    {
+                                        "key": "name",
+                                        "label": "Saved mark",
+                                        "type": "catalog_select",
+                                        "catalog": "warp_marks",
+                                        "valueKey": "name",
+                                        "labelKey": "title",
+                                        "search": True,
+                                    }
+                                ],
+                                showResult=True,
+                            ),
+                            _action("Refresh mark list", "warp_mark_list", showResult=True),
+                        ],
+                    },
+                    {
+                        "title": "Loot gather",
+                        "hint": (
+                            "Gather = spaced lanes on the ground. "
+                            "Pull to feet = instant snap under you (Attract yourself). Not mail."
+                        ),
+                        "actions": [
+                            _action(
+                                "Gather loot nearby",
+                                "loot_gather_nearby",
+                                fields=[
+                                    {
+                                        "key": "scope",
+                                        "label": "Toward",
+                                        "type": "select",
+                                        "options": ["me", "target", "party"],
+                                        "default": "me",
+                                    },
+                                    {
+                                        "key": "radius_m",
+                                        "label": "Radius (m, 0 = all)",
+                                        "type": "number",
+                                        "default": 0,
+                                        "min": 0,
+                                        "max": 500,
+                                    },
+                                    {
+                                        "key": "max_items",
+                                        "label": "Max",
+                                        "type": "number",
+                                        "default": 400,
+                                        "min": 1,
+                                        "max": 400,
+                                    },
+                                ],
+                                tooltip="Spaced pickup lanes near you / Boost target / party.",
+                                showResult=True,
+                            ),
+                            _action(
+                                "Pull loot to feet",
+                                "loot_vacuum_nearby",
+                                fields=[
+                                    {
+                                        "key": "scope",
+                                        "label": "Toward",
+                                        "type": "select",
+                                        "options": ["me", "target", "party"],
+                                        "default": "me",
+                                    },
+                                    {
+                                        "key": "radius_m",
+                                        "label": "Radius (m, 0 = all)",
+                                        "type": "number",
+                                        "default": 40,
+                                        "min": 0,
+                                        "max": 500,
+                                    },
+                                    {
+                                        "key": "max_items",
+                                        "label": "Max",
+                                        "type": "number",
+                                        "default": 200,
+                                        "min": 1,
+                                        "max": 400,
+                                    },
+                                ],
+                                tooltip="Fast snap to feet. Attract yourself — not backpack / not mail.",
+                                showResult=True,
+                            ),
+                            _action(
+                                "Cleanup loot",
+                                "loot_cleanup",
+                                tooltip="Clear leftover world loot after a session.",
+                                showResult=True,
                             ),
                         ],
                     },
@@ -2791,11 +3039,8 @@ def get_panel_manifest() -> dict[str, Any]:
                                 payload_off={"enabled": False},
                                 sticky=True,
                                 sync_key="hold_session",
-                                accent="amber",
-                                icon="emoji:🚫",
                                 tooltip=(
-                                    "Host only — stops guests from pulling you to the main menu, "
-                                    "and blocks your map fast travel while ON (same as Block local fast travel). "
+                                    "Host only — stops guests from pulling you to the main menu. "
                                     "Auto-arms during UVHM / Complete ALL. "
                                     "Turn OFF before you quit to the menu yourself."
                                 ),
@@ -3096,7 +3341,6 @@ def get_panel_manifest() -> dict[str, Any]:
                         "title": "Place shape",
                         "featured": True,
                         "hint": (
-                            f"{_COOP_SHAPE_GRAB_NOTE} "
                             "Shape + settle, then Place Fully. New shapes keep prior house/globe frozen. "
                             "Expand Layout tuning / More options for every size knob."
                         ),
@@ -3305,30 +3549,30 @@ def get_panel_manifest() -> dict[str, Any]:
                         "title": "Auto Lobby",
                         "featured": True,
                         "warning": (
-                            "WORK IN PROGRESS (WIP) — host only. Useful for timed boosts, but long lobbies "
+                            "Host only. Useful for timed boosts, but long lobbies "
                             "(UVHM + challenges + drip + shinies) can still crash. Prefer one heavy job "
                             "at a time. Uses the Boost target in the bar under the tabs. "
-                            "Leave Open pending rewards OFF after challenges."
+                            "All non-UVHM only sends rewards; large opens require solo."
                         ),
                         "hint": (
-                            "WIP: tick what should run (off stays off), set timers, Save or Start. "
+                            "Tick what should run (off stays off), set timers, Save or Start. "
                             "Default cycle is 90s+. Drop All Shinies runs first when enabled. "
-                            "Mail GZO drip is separate and only runs when that checkbox is ON. "
-                            "Heavy jobs run once after Start unless Repeat heavy jobs is on. "
-                            "Live status is in the floating progress box."
+                            "GZO drip (when ON) builds a ground pile for the whole lobby: mail ~150 Modded codes "
+                            "to the host, open them, spill backpack — guests loot the floor and leave. "
+                            "Boost target All players is fine. Heavy jobs run once after Start unless Repeat heavy is on."
                         ),
                         "fields": _auto_lobby_fields(),
                         "actions": [
                             _action(
-                                "Start Auto Lobby (WIP)",
+                                "Start Auto Lobby",
                                 "auto_lobby_start",
                                 full_width=True,
                                 note_before=(
-                                    "WIP — confirm Boost target. Avoid stacking UVHM + Complete ALL + drip "
-                                    "on a full lobby until this tab is out of WIP. Shape drops are not in this loop."
+                                    "Confirm Boost target. Avoid stacking UVHM + Complete ALL + drip "
+                                    "on a full lobby. Shape drops are not in this loop."
                                 ),
                                 confirm=(
-                                    "Start Auto Lobby (WIP) for the Boost target? "
+                                    "Start Auto Lobby for the Boost target? "
                                     "Long UVHM / challenge runs can still crash some lobbies — "
                                     "prefer one heavy job at a time."
                                 ),
@@ -3362,6 +3606,203 @@ def get_panel_manifest() -> dict[str, Any]:
                         "hint": "Join the community for updates, help, testing and new releases.",
                     },
                 ],
-            }
+            },
         ],
     }
+    try:
+        from .pack_bay import is_enabled as _pack_bay_on
+
+        if _pack_bay_on():
+            # Insert before Support (last tab).
+            support = manifest["tabs"].pop() if manifest["tabs"] else None
+            manifest["tabs"].append(
+                {
+                    "id": "pack_bay",
+                    "label": "Save Pack",
+                    "short": "Save",
+                    "sections": [
+                        {
+                            "title": "Your autosave sheet",
+                            "hint": (
+                                "Latest character autosave on disk (.sav → YAML) — no live backpack scan. "
+                                "Titles use GZO name + level from @U. Rescan after you loot. "
+                                "Use Live Pack for a live guest/self snap."
+                            ),
+                            "danger": (
+                                "Reads Steam SaveGames on disk only — no .sav write-back. "
+                                "Ghost slider (top bar) sees through this window."
+                            ),
+                            "multiselect": {
+                                "kind": "backpack",
+                                "catalog": "backpack",
+                                "source": "save_yaml",
+                                "idKey": "id",
+                                "valueKey": "slot",
+                                "labelKey": "title",
+                                "searchable": True,
+                                "params": {"pack_bay": True},
+                            },
+                            "actions": [
+                                _action(
+                                    "Rescan from autosave",
+                                    "backpack_scan_status",
+                                    tooltip="Decrypt the newest character .sav and rebuild this sheet.",
+                                    showResult=True,
+                                ),
+                                _action(
+                                    "Copy ticked @U",
+                                    "pack_bay_copy_selected",
+                                    pack_bay_copy=True,
+                                    tooltip="Copy selected bay serials to the clipboard.",
+                                    showResult=True,
+                                ),
+                                _action(
+                                    "Add to My packs",
+                                    "serial_store_add_selected",
+                                    add_selected_to_library=True,
+                                    payload={"group": "Save Pack"},
+                                    tooltip="Save ticked @U codes into My Library under Save Pack.",
+                                    showResult=True,
+                                ),
+                                _action(
+                                    "Mail ticked to me",
+                                    "deliver_serials",
+                                    pack_bay_copy=True,
+                                    payload={"mode": "player", "mail_to_self": True, "open_rewards": True},
+                                    tooltip=(
+                                        "Mail selected Save Pack @U codes to yourself (host) via Reward Center."
+                                    ),
+                                    showResult=True,
+                                ),
+                                _action(
+                                    "Open Scooter's Toolbox",
+                                    "pack_bay_open_toolbox",
+                                    pack_bay_copy=True,
+                                    tooltip=(
+                                        "Copy ticked @U (or open empty if none) then open scooterstoolbox.com. "
+                                        "Paste there for deep edit — not embedded here."
+                                    ),
+                                    showResult=True,
+                                ),
+                            ],
+                        }
+                    ],
+                }
+            )
+            manifest["tabs"].append(
+                {
+                    "id": "party_bay",
+                    "label": "Live Pack",
+                    "short": "Live",
+                    "sections": [
+                        {
+                            "title": "Boost target snap",
+                            "hint": (
+                                "One-shot backpack + worn gear for the Boost target (guests or you) — never auto-polls. "
+                                "★ = equipped. Pick one player (not All), then Snap once. Hard row cap. "
+                                "Use Save Pack if live @U dig fails."
+                            ),
+                            "danger": (
+                                "Pick one Boost target (not All players). "
+                                "Huge packs are capped so the game stays responsive."
+                            ),
+                            "multiselect": {
+                                "kind": "backpack",
+                                "catalog": "backpack",
+                                "idKey": "id",
+                                "valueKey": "slot",
+                                "labelKey": "title",
+                                "searchable": True,
+                                "params": {"party_bay": True},
+                            },
+                            "actions": [
+                                _action(
+                                    "Snap once",
+                                    "backpack_scan_status",
+                                    tooltip="Scan the Boost target's live backpack + worn gear once (capped).",
+                                    showResult=True,
+                                ),
+                                _action(
+                                    "Copy ticked @U",
+                                    "pack_bay_copy_selected",
+                                    pack_bay_copy=True,
+                                    tooltip="Copy selected party bay serials to the clipboard.",
+                                    showResult=True,
+                                ),
+                                _action(
+                                    "Add to My packs",
+                                    "serial_store_add_selected",
+                                    add_selected_to_library=True,
+                                    payload={"group": "Live Pack"},
+                                    tooltip="Save ticked @U codes into My Library under Live Pack.",
+                                    showResult=True,
+                                ),
+                                _action(
+                                    "Send selected",
+                                    "deliver_serials",
+                                    pack_bay_copy=True,
+                                    payload={"mode": "player"},
+                                    fields=[
+                                        {
+                                            "key": "count",
+                                            "label": "Copies each",
+                                            "type": "number",
+                                            "default": 1,
+                                            "min": 1,
+                                            "max": 20,
+                                        },
+                                        *_delivery_recipient_fields(),
+                                    ],
+                                    tooltip=(
+                                        "Mail ticked Live Pack @U codes to the chosen player "
+                                        "(Reward Center). Pick Send to."
+                                    ),
+                                    showResult=True,
+                                ),
+                                _action(
+                                    "Rewrite levels (live)",
+                                    "backpack_relevel_selected",
+                                    backpack_multiselect=True,
+                                    fields=[
+                                        {
+                                            "key": "level",
+                                            "label": "New item level",
+                                            "type": "number",
+                                            "default": 70,
+                                            "min": 1,
+                                            "max": 100,
+                                        }
+                                    ],
+                                    tooltip=(
+                                        "Tick rows, set level, try live slot rewrite. "
+                                        "To copy gear to someone else, use Send selected."
+                                    ),
+                                    showResult=True,
+                                ),
+                                _action(
+                                    "Open Scooter's Toolbox",
+                                    "pack_bay_open_toolbox",
+                                    pack_bay_copy=True,
+                                    tooltip="Copy ticked @U then open scooterstoolbox.com for deep edit.",
+                                    showResult=True,
+                                ),
+                                _action(
+                                    "Download backpack .txt",
+                                    "backpack_export_txt",
+                                    backpack_multiselect=True,
+                                    tooltip=(
+                                        "Download @U codes as a .txt file. Ticked rows only if any are ticked; "
+                                        "otherwise the full last Snap."
+                                    ),
+                                    showResult=True,
+                                ),
+                            ],
+                        }
+                    ],
+                }
+            )
+            if support is not None:
+                manifest["tabs"].append(support)
+    except Exception:
+        pass
+    return manifest

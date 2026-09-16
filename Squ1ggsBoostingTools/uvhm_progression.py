@@ -118,6 +118,101 @@ def _catalog_validation_error() -> Optional[str]:
 CATALOG_VALIDATION_ERROR = _catalog_validation_error()
 
 
+def nudge_uvhm_client_ui(pc: Any) -> None:
+    """Push UVHM / challenge state to a player's client so the pause menu refreshes.
+
+    Remotes often keep a stale UVHM screen until they toggle menu/game/menu.
+    Host listen-server: ForceNet + OnRep poke + progression UI collectors.
+    Safe no-op if APIs are missing.
+    """
+    if pc is None:
+        return
+    ps = getattr(pc, "PlayerState", None)
+    # Re-touch VaultHunterLevel so OnRep can fire for connected clients.
+    if ps is not None:
+        try:
+            cur = getattr(ps, "VaultHunterLevel", None)
+            if cur is not None:
+                setattr(ps, "VaultHunterLevel", int(cur))
+        except Exception:  # noqa: BLE001
+            pass
+    for obj in (ps, pc, getattr(pc, "OakChallengeManager", None)):
+        if obj is None:
+            continue
+        for name in (
+            "FlushNetDormancy",
+            "ForceNetUpdate",
+            "MarkDirtyForReplication",
+        ):
+            fn = getattr(obj, name, None)
+            if callable(fn):
+                try:
+                    fn()
+                except Exception:  # noqa: BLE001
+                    continue
+        for name in (
+            "OnRep_VaultHunterLevel",
+            "OnRep_ChallengeObjectiveStates",
+            "OnRep_GbxProgression",
+            "OnRep_ReplicatedPlayerStats",
+        ):
+            fn = getattr(obj, name, None)
+            if callable(fn):
+                try:
+                    fn()
+                except Exception:  # noqa: BLE001
+                    continue
+    # Best-effort Client* mirrors on that player's PC (remote UI path).
+    for name in (
+        "ClientIncrementChallengeForPlayer",
+        "ClientCompleteChallenge",
+        "ClientUpdateChallengeProgress",
+        "ClientRefreshChallengeUI",
+        "ClientNotifyChallengeUpdated",
+    ):
+        fn = getattr(pc, name, None)
+        if not callable(fn):
+            continue
+        try:
+            fn()
+        except TypeError:
+            continue
+        except Exception:  # noqa: BLE001
+            continue
+    # Progression collectors owned by this PC (same idea as Mayhem UI nudge).
+    try:
+        import unrealsdk
+
+        pc_name = str(getattr(pc, "Name", "") or "").lower()
+        for cls in (
+            "OakUIDataCollector_Progression",
+            "OakUIDataCollector_PlayerStats",
+            "OakUIDataCollector_Challenges",
+        ):
+            try:
+                items = list(unrealsdk.find_all(cls, False) or [])
+            except Exception:  # noqa: BLE001
+                items = []
+            for coll in items[:80]:
+                if coll is None:
+                    continue
+                outer = getattr(coll, "Outer", None)
+                path = str(getattr(coll, "PathName", None) or getattr(coll, "Name", "") or "").lower()
+                if outer is not pc and not (pc_name and pc_name in path):
+                    continue
+                for meth in ("Refresh", "RefreshData", "UpdateData", "RequestRefresh", "Collect"):
+                    fn = getattr(coll, meth, None)
+                    if not callable(fn):
+                        continue
+                    try:
+                        fn()
+                        break
+                    except Exception:  # noqa: BLE001
+                        continue
+    except Exception:  # noqa: BLE001
+        pass
+
+
 @dataclass(frozen=True)
 class TargetIdentity:
     """Stable, serializable player identity; never contains a UObject."""
@@ -426,6 +521,11 @@ class UVHMProgression:
             f"{target.display_name if target else 'target'}: UVHM rank {stage.rank} "
             + ("verified" if verified else "commands applied")
         )
+        # Guests often keep a stale UVHM menu until they toggle pause — push net + collectors.
+        try:
+            nudge_uvhm_client_ui(pc)
+        except Exception:  # noqa: BLE001
+            pass
         if stage.rank >= self._max_rank:
             self._advance_target(completed_max_rank=stage.rank)
             return
@@ -450,6 +550,13 @@ class UVHMProgression:
 
     def _advance_target(self, *, completed_max_rank: int | None = None) -> None:
         finished = self._current_target()
+        # One more UI nudge when leaving this player (esp. remotes / all-lobby).
+        try:
+            pc = resolve_lobby_pc(finished) if finished is not None else None
+            if pc is not None:
+                nudge_uvhm_client_ui(pc)
+        except Exception:  # noqa: BLE001
+            pass
         self._target_index += 1
         self._stage_index = 0
         self._objective_index = 0
@@ -621,43 +728,6 @@ def selected_lobby_identity(player_index: int) -> TargetIdentity:
         raise ValueError(f"Selected lobby player {player_index} is unavailable.") from exc
     name = _gbc_resolve_player_display_name(ps)
     return TargetIdentity(key=_player_state_key(ps, name), display_name=name)
-
-
-def _names_match(a: str, b: str) -> bool:
-    left = "".join(ch for ch in str(a or "").casefold() if ch.isalnum())
-    right = "".join(ch for ch in str(b or "").casefold() if ch.isalnum())
-    if not left or not right:
-        return False
-    return left == right or left in right or right in left
-
-
-def selected_lobby_identity_by_name(display_name: str) -> TargetIdentity:
-    """Resolve a lobby player by display name (Boost-target label), not index."""
-    wanted = str(display_name or "").strip()
-    if not wanted:
-        raise ValueError("No player name provided.")
-    from .party_helpers import (
-        _gbc_resolve_player_display_name,
-        _gbc_session_world_and_gamestate,
-    )
-
-    _world, gs = _gbc_session_world_and_gamestate()
-    players = getattr(gs, "PlayerArray", None) if gs is not None else None
-    if players is None:
-        raise ValueError(f"Lobby unavailable for {wanted!r}.")
-    matches: list[TargetIdentity] = []
-    for index in range(len(players)):
-        ps = players[index]
-        if ps is None:
-            continue
-        name = _gbc_resolve_player_display_name(ps)
-        if _names_match(wanted, name):
-            matches.append(TargetIdentity(key=_player_state_key(ps, name), display_name=name))
-    if len(matches) == 1:
-        return matches[0]
-    if len(matches) > 1:
-        raise ValueError(f"Multiple lobby players match {wanted!r}; pick them again.")
-    raise ValueError(f"No lobby player named {wanted!r}.")
 
 
 def resolve_lobby_pc(identity: TargetIdentity) -> Any:

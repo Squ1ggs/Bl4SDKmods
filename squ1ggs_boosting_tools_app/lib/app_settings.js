@@ -155,6 +155,7 @@ function loadSettings(app) {
         theme: normalizeTheme(best.theme),
         locale: best.locale ? normalizeLocale(best.locale) : detectSystemLocale(),
         hiddenShapes: Boolean(best.hiddenShapes) || readHiddenShapesUnlocked(),
+        ghostOpacity: best.ghostOpacity != null ? best.ghostOpacity : 1,
       });
     } catch {
       /* keep loaded values even if migration fails */
@@ -167,6 +168,10 @@ function loadSettings(app) {
     theme: normalizeTheme(best?.theme),
     locale: best?.locale ? normalizeLocale(best.locale) : detectSystemLocale(),
     hiddenShapes: Boolean(best?.hiddenShapes) || readHiddenShapesUnlocked(),
+    ghostOpacity:
+      best?.ghostOpacity != null && Number.isFinite(Number(best.ghostOpacity))
+        ? Math.max(0.55, Math.min(1, Number(best.ghostOpacity)))
+        : 1,
     settingsPath: writeTarget.path,
     settingsMode: writeTarget.mode,
   };
@@ -197,6 +202,13 @@ function saveSettings(app, data) {
       data?.hiddenShapes !== undefined
         ? Boolean(data.hiddenShapes)
         : Boolean(existing.hiddenShapes) || readHiddenShapesUnlocked(),
+    ghostOpacity: (() => {
+      const raw =
+        data?.ghostOpacity !== undefined ? data.ghostOpacity : existing.ghostOpacity;
+      const n = Number(raw);
+      if (!Number.isFinite(n)) return 1;
+      return Math.max(0.55, Math.min(1, n));
+    })(),
   };
   fs.mkdirSync(path.dirname(target.path), { recursive: true });
   fs.writeFileSync(target.path, JSON.stringify(payload, null, 2) + "\n", "utf8");

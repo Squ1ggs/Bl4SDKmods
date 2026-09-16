@@ -526,7 +526,11 @@ def install_travel_queue() -> bool:
 def load_travel_stations() -> list[dict[str, str]]:
     global _STATION_CACHE
     if _STATION_CACHE is not None:
-        return list(_STATION_CACHE)
+        sample = _STATION_CACHE[0] if _STATION_CACHE else {}
+        if "x" not in sample:
+            _STATION_CACHE = None
+        else:
+            return list(_STATION_CACHE)
     blob = pkgutil.get_data(__package__ or __name__.rpartition('.')[0], 'travelstations.json')
     if blob is None:
         raise RuntimeError('Could not load travelstations.json from package data.')
@@ -546,6 +550,15 @@ def load_travel_stations() -> list[dict[str, str]]:
             world = station.split('.', 1)[0]
         display = str(row.get('display_name') or (station.split('.', 1)[1] if '.' in station else station)).strip()
         category = str(row.get('category') or 'Standard').strip()
+        xyz: dict[str, float] = {}
+        for key in ("x", "y", "z", "yaw"):
+            raw = row.get(key)
+            if raw is None or str(raw).strip() == "":
+                continue
+            try:
+                xyz[key] = float(raw)
+            except Exception:
+                continue
         out.append({
             'station': station,
             'world': world,
@@ -553,6 +566,7 @@ def load_travel_stations() -> list[dict[str, str]]:
             'category': category,
             'typedef': str(row.get('typedef', '')).strip(),
             'dest': str(row.get('dest', '')).strip(),
+            **xyz,
         })
     _STATION_CACHE = out
     return list(out)
@@ -640,6 +654,31 @@ def filter_travel_maps(search: str = '', limit: int = 80) -> list[dict[str, str]
         if limit > 0 and len(results) >= limit:
             break
     return results
+
+
+def current_world_map_name() -> str:
+    """Public wrapper for the active cooked map name (e.g. World_P)."""
+    return str(_current_world_map_name() or "").strip()
+
+
+def stations_on_current_map(*, map_name: str = "") -> list[dict[str, Any]]:
+    """Travel catalog rows for one map that include X/Y/Z coordinates."""
+    want = _norm_map_name(map_name or _current_world_map_name())
+    if not want:
+        return []
+    out: list[dict[str, Any]] = []
+    for row in load_travel_stations():
+        world = _norm_map_name(str(row.get("world", "")))
+        if world != want:
+            continue
+        try:
+            x = float(row["x"])
+            y = float(row["y"])
+            z = float(row["z"])
+        except Exception:
+            continue
+        out.append({**row, "x": x, "y": y, "z": z})
+    return out
 
 
 def filter_travel_stations(map_name: str = '', search: str = '', limit: int = 125) -> list[dict[str, str]]:

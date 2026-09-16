@@ -91,11 +91,32 @@ BINDABLE_ACTIONS: tuple[dict[str, Any], ...] = (
         },
     },
     {"id": "world_text_clear", "label": "Clear world text", "action": "barrel_logo_clear", "payload": {}},
-    {"id": "rewards_open_everyone", "label": "Open pending rewards (you)", "action": "rewards_open_everyone", "payload": {}},
+    {"id": "rewards_open_everyone", "label": "Open pending rewards (everyone)", "action": "rewards_open_everyone", "payload": {}},
     {"id": "kill_all_enemies", "label": "Kill all enemies", "action": "kill_all_enemies", "payload": {}},
     {"id": "no_target_toggle", "label": "Toggle no-target", "action": "mobility_toggle_no_target", "payload": {}},
     {"id": "force_fly_toggle", "label": "Toggle force fly", "action": "mobility_force_fly", "payload": {}},
     {"id": "infinite_jump_toggle", "label": "Toggle infinite jump", "action": "mobility_infinite_jump", "payload": {}},
+    {"id": "loot_gather_nearby", "label": "Loot gather (around me)", "action": "loot_gather_nearby", "payload": {}},
+    {
+        "id": "loot_vacuum_nearby",
+        "label": "Loot vacuum (into backpack)",
+        "action": "loot_vacuum_nearby",
+        "payload": {"scope": "me", "radius_m": 0, "max_items": 120},
+    },
+    {
+        "id": "warp_mark_save_quick",
+        "label": "Save warp mark (Quick)",
+        "action": "warp_mark_save",
+        "payload": {"name": "Quick"},
+    },
+    {
+        "id": "warp_mark_go_quick",
+        "label": "Warp to Quick",
+        "action": "warp_mark_go",
+        "payload": {"name": "Quick"},
+    },
+    {"id": "host_map_sweep_start", "label": "Host map sweep", "action": "host_map_sweep_start", "payload": {}},
+    {"id": "map_fog_hide_toggle", "label": "Hide map fog (toggle)", "action": "map_fog_hide", "payload": {}},
 )
 
 SUGGESTED_KEYS: tuple[str, ...] = (
@@ -189,6 +210,8 @@ def _config_path_for_write() -> Path:
 
 
 _ACTION_ID_ALIASES = {
+    "loot_coil_reel": "loot_gather_nearby",
+    "map_scout_start": "host_map_sweep_start",
     "no_target_on": "no_target_toggle",
     "no_target_off": "no_target_toggle",
     "force_fly_on": "force_fly_toggle",

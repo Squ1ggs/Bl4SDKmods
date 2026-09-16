@@ -11,19 +11,18 @@ SERIAL_STORE_FILE_NAME = "Squ1ggsBoostingTools_saved_serials.json"
 _entries: list[dict[str, str]] = []
 _loaded = False
 _last_generated_id = 0
-_write_path: Path | None = None
 
 
 def _candidate_paths() -> list[Path]:
     paths: list[Path] = []
     try:
-        paths.append(Path.home() / "Documents" / "My Games" / "Borderlands 4" / "Saved" / SERIAL_STORE_FILE_NAME)
-    except Exception:
-        pass
-    try:
         cwd = Path.cwd()
         paths.append(cwd / "sdk_mods" / SERIAL_STORE_FILE_NAME)
         paths.append(cwd / SERIAL_STORE_FILE_NAME)
+    except Exception:
+        pass
+    try:
+        paths.append(Path.home() / "Documents" / "My Games" / "Borderlands 4" / "Saved" / SERIAL_STORE_FILE_NAME)
     except Exception:
         pass
     try:
@@ -40,72 +39,24 @@ def _candidate_paths() -> list[Path]:
     return out
 
 
-def _stable_user_path() -> Path:
-    """Always-writable user folder — survives EXE rebuilds and sdk_mods wipes."""
-    try:
-        path = Path.home() / "Documents" / "My Games" / "Borderlands 4" / "Saved" / SERIAL_STORE_FILE_NAME
-        path.parent.mkdir(parents=True, exist_ok=True)
-        return path
-    except Exception:
-        return Path(SERIAL_STORE_FILE_NAME)
-
-
-def _normalize_row(row: dict[str, Any], index: int) -> dict[str, str] | None:
-    serial = str(row.get("serial", "")).strip()
-    if not serial:
-        return None
-    return {
-        "id": str(row.get("id") or f"loaded_{index}_{abs(hash(serial))}"),
-        "name": str(row.get("name") or f"Serial {index + 1}").strip(),
-        "group": str(row.get("group") or "Default").strip() or "Default",
-        "serial": serial,
-    }
-
-
-def _load_rows_from_path(path: Path) -> list[dict[str, str]]:
-    try:
-        with open(path, "r", encoding="utf-8") as fh:
-            data = json.load(fh)
-    except Exception:
-        return []
-    entries = data.get("entries", data) if isinstance(data, dict) else data
-    if not isinstance(entries, list):
-        return []
-    out: list[dict[str, str]] = []
-    for index, row in enumerate(entries):
-        if not isinstance(row, dict):
-            continue
-        clean = _normalize_row(row, index)
-        if clean:
-            out.append(clean)
-    return out
-
-
 def path_for_read() -> Path | None:
-    best: Path | None = None
-    best_n = -1
     for path in _candidate_paths():
         try:
-            if not path.exists():
-                continue
+            if path.exists():
+                return path
         except Exception:
             continue
-        n = len(_load_rows_from_path(path))
-        if n > best_n:
-            best = path
-            best_n = n
-    return best
+    return None
 
 
 def path_for_write() -> Path:
-    global _write_path
-    if _write_path is not None:
+    for path in _candidate_paths():
         try:
-            _write_path.parent.mkdir(parents=True, exist_ok=True)
-            return _write_path
+            path.parent.mkdir(parents=True, exist_ok=True)
+            return path
         except Exception:
-            pass
-    return _stable_user_path()
+            continue
+    return Path(SERIAL_STORE_FILE_NAME)
 
 
 def new_id() -> str:
@@ -120,70 +71,54 @@ def new_id() -> str:
 
 
 def reload_entries(*, force: bool = False) -> list[dict[str, str]]:
-    """Load every known save file and merge by serial so updates never drop packs."""
-    global _entries, _loaded, _write_path
+    global _entries, _loaded
     if _loaded and not force:
         return list(_entries)
-    merged: list[dict[str, str]] = []
-    seen_serial: set[str] = set()
-    seen_id: set[str] = set()
-    richest: Path | None = None
-    richest_n = -1
-    for path in _candidate_paths():
-        try:
-            if not path.exists():
-                continue
-        except Exception:
-            continue
-        rows = _load_rows_from_path(path)
-        if len(rows) > richest_n:
-            richest = path
-            richest_n = len(rows)
-        for row in rows:
-            serial = row["serial"]
-            if serial in seen_serial:
-                continue
-            entry_id = row["id"]
-            if entry_id in seen_id:
-                entry_id = f"merged_{len(merged)}_{abs(hash(serial)) & 0xFFFFFFFF:x}"
-                row = dict(row)
-                row["id"] = entry_id
-            seen_serial.add(serial)
-            seen_id.add(entry_id)
-            merged.append(row)
-    _entries = merged
+    _entries = []
     _loaded = True
-    _write_path = richest if richest is not None else _stable_user_path()
+    try:
+        read_path = path_for_read()
+        if read_path is None:
+            return []
+        with open(read_path, "r", encoding="utf-8") as fh:
+            data = json.load(fh)
+        entries = data.get("entries", data) if isinstance(data, dict) else data
+        if not isinstance(entries, list):
+            return []
+        out: list[dict[str, str]] = []
+        for index, row in enumerate(entries):
+            if not isinstance(row, dict):
+                continue
+            serial = str(row.get("serial", "")).strip()
+            if not serial:
+                continue
+            out.append(
+                {
+                    "id": str(row.get("id") or f"loaded_{index}_{abs(hash(serial))}"),
+                    "name": str(row.get("name") or f"Serial {index + 1}").strip(),
+                    "group": str(row.get("group") or "Default").strip() or "Default",
+                    "serial": serial,
+                }
+            )
+        _entries = out
+    except Exception:
+        _entries = []
     return list(_entries)
 
 
 def sync_entries(entries: list[dict[str, str]]) -> Path:
     """Replace in-memory entries and persist (for BLImGui sync)."""
     global _entries, _loaded
-    incoming = [dict(row) for row in entries if isinstance(row, dict)]
-    # Never persist an empty overwrite if disk still has serials.
-    if not incoming:
-        disk = []
-        for path in _candidate_paths():
-            disk.extend(_load_rows_from_path(path))
-        if disk:
-            return path_for_write()
-    _entries = incoming
+    _entries = [dict(row) for row in entries if isinstance(row, dict)]
     _loaded = True
     return save_entries()
 
 
 def save_entries() -> Path:
-    global _entries, _write_path
+    global _entries
     write_path = path_for_write()
-    if not _entries:
-        existing = _load_rows_from_path(write_path) if write_path.exists() else []
-        if existing:
-            # Refuse to blank a populated library.
-            return write_path
     with open(write_path, "w", encoding="utf-8") as fh:
         json.dump({"entries": _entries}, fh, indent=2, sort_keys=True)
-    _write_path = write_path
     return write_path
 
 

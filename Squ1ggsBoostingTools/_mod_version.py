@@ -1,4 +1,4 @@
-"""Package version only - safe to import during package init (no package deps)."""
+"""Single source of truth for the Squ1ggsBoostingTools package version."""
 
-__version__: str = "3.8.143"
-__version_info__: tuple[int, int, int] = (3, 8, 143)
+__version__: str = "3.9.2"
+__version_info__: tuple[int, int, int] = (3, 9, 2)

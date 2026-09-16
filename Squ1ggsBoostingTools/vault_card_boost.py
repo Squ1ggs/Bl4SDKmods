@@ -60,7 +60,6 @@ def max_all_vault_cards_for_pc(
     target_pc: Any,
     *,
     log: Callable[[str], None] | None = None,
-    allow_fallback: bool = True,
 ) -> tuple[bool, str]:
     """Max all vault cards (tokens + XP) on one PlayerController."""
     log_fn = log or (lambda _m: None)
@@ -77,9 +76,6 @@ def max_all_vault_cards_for_pc(
         log_fn(f"Vault cards max (Boosting Tools): {summary}")
         return True, summary
     log_fn(f"Vault cards max partial (Boosting Tools): {summary}")
-    # Double wallet/XP writes hitch the host ~3–5s and can kick lobby guests.
-    if not allow_fallback:
-        return False, summary
 
     ok, summary = _economy_max_vault_cards(target_pc, log=log_fn)
     log_fn(f"Vault cards max (direct fallback): {summary}")

@@ -1,18 +1,22 @@
-# Squ1ggs Boosting Tools — v1.1.137 / mod 3.8.143
+# Squ1ggs Boosting Tools — v1.2.2 / mod 3.9.2
 
-## Highlights (the fun stuff)
+This update is mostly about making long boosting lobbies easier to run without babysitting every button.
 
-- **Drop All Shinies** — world phosphene dumps (needs shiny cosmetics unlocked on the save)
-- **Loot shapes** — house / boat / vault silhouettes; co-op friends can Use / grab slots
-- **No main menu** — guests can’t yank the host to title; map FT blocked while ON
-- **MAX ALL** — cash / eridium / SDU / vault / level, plus optional **cosmetics + hover** and **UVHM 1–7**
-- **Serials** — GZO / Lootlemon browse + My packs library; mail codes to the lobby
-- **Drop backpack** — spill the Boost target’s pack onto the ground (Most used)
-- **Auto Lobby (WIP)** — timed host boosts; treat as work-in-progress for long lobbies
+## The good stuff
 
-## Install
+- **Auto Lobby guest mode** — skip the host for Challenges/UVHM, wait for guests, then boost each new arrival once.
+- **Save Pack / Live Pack** — pull item codes from your autosave or a one-shot live guest scan, then copy, relevel or send.
+- **Loot shapes + shinies** — floor drops, shaped piles and quick pull-to-feet tools for the whole lobby.
+- **GZO drip** — build a host backpack pile for guests, with a visible red countdown before it spills.
+- **MAX ALL + progression HUD** — proper Challenge/UVHM progress, draggable window and cleaner completion handling.
 
-1. Download the portable zip and run **Squ1ggsBoostingTools.exe**.
-2. Point it at Borderlands 4 if asked — it installs the SDK + mod.
-3. **Fully restart Borderlands 4**, then confirm mod **3.8.143** in Refresh status.
-4. Turn **No main menu** OFF before you quit to the title screen yourself.
+## Important reward note
+
+Complete ALL non-UVHM **sends rewards but never opens them in multiplayer**. Console/cross-play players can end up with 600+ items. Leave the lobby, open rewards in solo, sell junk and get the backpack down before joining multiplayer again.
+
+## Install/update
+
+1. Close the old EXE and unzip the new portable build.
+2. Run `Squ1ggsBoostingTools.exe`.
+3. Fully restart Borderlands 4.
+4. Refresh status and check for EXE **1.2.2** / mod **3.9.2**.

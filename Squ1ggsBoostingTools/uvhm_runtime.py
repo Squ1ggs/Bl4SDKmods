@@ -22,7 +22,6 @@ from .uvhm_progression import (
 
 _PREFIX = "[Squ1ggs Boosting Tools | UVHM]"
 _machine = UVHMProgression(resolve_lobby_pc, UnrealChallengeBackend(), max_polls=300)
-# Proven shape: (mode, player_index|None, confirmed, max_rank)
 _pending_request: tuple[str, int | None, bool, int] | None = None
 _last_tick_at = 0.0
 _last_status_line = ""
@@ -36,37 +35,6 @@ _hook_error = ""
 _tick_count = 0
 _last_tick_seen_at = 0.0
 _STICKY_SEC = 12.0
-# Last explicit failure reason from request_* (prefer over stale COMPLETE text).
-_last_request_error = ""
-
-
-def _clear_stale_challenge_block() -> str:
-    """Cancel leftover challenge bulk so UVHM is never bricked behind it.
-
-    Challenge Ticker / UVHM is the job the host asked for now — an idle or
-    stuck Complete ALL queue must not refuse the start.
-    """
-    try:
-        from . import challenge_bulk_runtime
-
-        bulk = challenge_bulk_runtime.status()
-        if not bool(bulk.get("active") or bulk.get("queued")):
-            return ""
-        idx = int(bulk.get("index") or bulk.get("progress_index") or 0)
-        ok_n = int(bulk.get("ok") or 0)
-        if challenge_bulk_runtime.cancel():
-            _log(
-                f"Cancelled challenge bulk (at {idx}, ok={ok_n}) so UVHM can start."
-            )
-            try:
-                from . import hold_session
-
-                hold_session.release_job("challenges")
-            except Exception:
-                pass
-        return ""
-    except Exception:
-        return ""
 
 
 def _log(message: str) -> None:
@@ -119,76 +87,79 @@ def _arm_sticky(phase: str, message: str) -> None:
 
 
 def request_selected(player_index: int, *, max_rank: int = 7) -> bool:
-    global _pending_request, _runtime_message, _last_request_error
+    global _pending_request, _runtime_message
     install()
-    block = _clear_stale_challenge_block()
-    if block:
-        _last_request_error = block
-        _runtime_message = block
-        _arm_sticky("error", _runtime_message)
-        return False
+    try:
+        from . import challenge_bulk_runtime
+
+        bulk = challenge_bulk_runtime.status()
+        if bool(bulk.get("active") or bulk.get("queued")):
+            _runtime_message = (
+                "UVHM cannot start while Complete ALL / bulk challenges are running. "
+                "Wait for that job to finish or cancel it first."
+            )
+            _arm_sticky("error", _runtime_message)
+            return False
+    except Exception:
+        pass
     # Challenges already prove BP_TickWidget/serial shared ticks work even when
     # unrealsdk PlayerTick add_hook returns false — never block UVHM on that.
     if _machine.running or _pending_request is not None:
-        _last_request_error = "Another UVHM workflow or request is already active."
-        _runtime_message = _last_request_error
+        _runtime_message = "Another UVHM workflow or request is already active."
         return False
     world, _gs = _gbc_session_world_and_gamestate()
     if not _gbc_is_listen_host_world(world):
-        _last_request_error = "UVHM needs the listen host (you must be hosting the lobby)."
-        _runtime_message = _last_request_error
+        _runtime_message = "UVHM needs the listen host (you must be hosting the lobby)."
         _arm_sticky("error", _runtime_message)
         return False
     try:
         identity = selected_lobby_identity(int(player_index))
     except Exception as exc:
-        _last_request_error = (
+        _runtime_message = (
             f"Could not target lobby index {player_index}: {exc}. "
             "Refresh party / pick the player again in Boost target."
         )
-        _runtime_message = _last_request_error
         _arm_sticky("error", _runtime_message)
         return False
     rank = max(1, min(7, int(max_rank)))
     _clear_sticky()
-    _last_request_error = ""
-    # Keep the proven index queue — resolve identity again on the game tick.
     _pending_request = ("selected", int(player_index), False, rank)
     who = getattr(identity, "display_name", None) or f"index {player_index}"
     _runtime_message = f"UVHM queued for {who} (up to rank {rank})."
-    _log(f"Queued selected UVHM for {who} (index {player_index}, rank 1-{rank}).")
     return True
 
 
 def request_all(*, confirmed: bool, max_rank: int = 7) -> bool:
-    global _pending_request, _runtime_message, _last_request_error
+    global _pending_request, _runtime_message
     install()
     if not confirmed:
-        _last_request_error = "All-lobby confirmation was not completed."
-        _runtime_message = _last_request_error
+        _runtime_message = "All-lobby confirmation was not completed."
         return False
-    block = _clear_stale_challenge_block()
-    if block:
-        _last_request_error = block
-        _runtime_message = block
-        _arm_sticky("error", _runtime_message)
-        return False
+    try:
+        from . import challenge_bulk_runtime
+
+        bulk = challenge_bulk_runtime.status()
+        if bool(bulk.get("active") or bulk.get("queued")):
+            _runtime_message = (
+                "UVHM cannot start while Complete ALL / bulk challenges are running. "
+                "Wait for that job to finish or cancel it first."
+            )
+            _arm_sticky("error", _runtime_message)
+            return False
+    except Exception:
+        pass
     if _machine.running or _pending_request is not None:
-        _last_request_error = "Another UVHM workflow or request is already active."
-        _runtime_message = _last_request_error
+        _runtime_message = "Another UVHM workflow or request is already active."
         return False
     world, _gs = _gbc_session_world_and_gamestate()
     if not _gbc_is_listen_host_world(world):
-        _last_request_error = "UVHM needs the listen host (you must be hosting the lobby)."
-        _runtime_message = _last_request_error
+        _runtime_message = "UVHM needs the listen host (you must be hosting the lobby)."
         _arm_sticky("error", _runtime_message)
         return False
     rank = max(1, min(7, int(max_rank)))
     _clear_sticky()
-    _last_request_error = ""
     _pending_request = ("all", None, True, rank)
     _runtime_message = f"Confirmed all-lobby workflow queued (up to rank {rank})."
-    _log(f"Queued all-lobby UVHM (rank 1-{rank}).")
     return True
 
 
@@ -236,10 +207,6 @@ def status() -> dict[str, Any]:
         message = _runtime_message or "Queued for the host game tick."
     elif current.running:
         pass
-    elif _last_request_error and sticky_live and _sticky_phase == "error":
-        # Prefer the real block reason over a stale COMPLETE banner.
-        phase = "error"
-        message = _last_request_error
     elif current.phase == Phase.ERROR:
         phase = "error"
         message = current.message or _runtime_message or "UVHM failed."
@@ -304,12 +271,11 @@ def status() -> dict[str, Any]:
             if _last_tick_seen_at > 0.0
             else None
         ),
-        "last_request_error": _last_request_error,
     }
 
 
 def _consume_request() -> None:
-    global _pending_request, _runtime_message, _last_request_error
+    global _pending_request, _runtime_message
     request = _pending_request
     if request is None:
         return
@@ -323,21 +289,10 @@ def _consume_request() -> None:
         return
     mode, player_index, confirmed, max_rank = request
     try:
-        # Clear terminal COMPLETE/ERROR so a fresh run is not blocked by leftover phase.
-        if not _machine.running and _machine.status().phase in (
-            Phase.COMPLETE,
-            Phase.ERROR,
-            Phase.CANCELLED,
-        ):
-            try:
-                _machine._phase = Phase.IDLE  # noqa: SLF001 — intentional soft reset
-                _machine._message = "Idle."
-            except Exception:
-                pass
         if mode == "selected":
             if player_index is None:
                 raise ValueError("No selected player index.")
-            identity = selected_lobby_identity(int(player_index))
+            identity = selected_lobby_identity(player_index)
             _machine.start_selected(identity, max_rank=max_rank)
             who = getattr(identity, "display_name", None) or f"index {player_index}"
             _runtime_message = f"Running UVHM for {who} (up to rank {max_rank})."
@@ -348,7 +303,6 @@ def _consume_request() -> None:
             _machine.start_all(roster, confirmed=confirmed, max_rank=max_rank)
             _runtime_message = f"Running UVHM for {len(roster)} lobby player(s) (up to rank {max_rank})."
         _pending_request = None
-        _last_request_error = ""
         _clear_sticky()
         if max_rank >= 7:
             _log(f"Started {mode} UVHM ranks 1-7 workflow.")
@@ -357,7 +311,6 @@ def _consume_request() -> None:
     except Exception as exc:
         _pending_request = None
         _runtime_message = f"Could not start UVHM: {exc}"
-        _last_request_error = _runtime_message
         _arm_sticky("error", _runtime_message)
         _log(f"UVHM {_runtime_message}")
         try:

@@ -125,25 +125,30 @@ def install_session_teardown_hooks() -> None:
     if _hooks_installed:
         return
     try:
-        from unrealsdk import HookManager, RegisterHook
+        from unrealsdk import hooks
 
-        Type = HookManager.EHookType
-        hooks = RegisterHook
+        Type = hooks.Type
     except Exception as exc:
         _log(f"Could not import hook API: {exc!r}")
         return
 
     for i, path in enumerate(_TEARDOWN_HOOK_PATHS):
+        # One successful register per path — same pattern as hold_session.
+        # Without this, both idents can stick and teardown listeners double-fire.
         for ident in (
             f"Squ1ggsBoostingTools.session.teardown.{i}",
             f"sqbt_session_teardown_{i}",
         ):
+            installed = False
             for hook_type in (Type.PRE, Type.PRE_UNCONDITIONAL, Type.POST):
                 try:
                     hooks.add_hook(path, hook_type, ident, _on_teardown_hook)
+                    installed = True
                     break
                 except Exception:
                     continue
+            if installed:
+                break
     _hooks_installed = True
     _log("Session teardown hooks installed.")
 
@@ -209,6 +214,26 @@ def _register_builtin_listeners() -> None:
         except Exception:
             pass
 
+    def _map_scout(reason: str) -> None:
+        try:
+            from . import map_scout
+
+            if map_scout.status().get("active"):
+                map_scout.cancel()
+                _log(f"Host map sweep cancelled ({reason}).")
+        except Exception:
+            pass
+
+    def _map_escort(reason: str) -> None:
+        try:
+            from . import map_party_escort
+
+            if map_party_escort.status().get("active"):
+                map_party_escort.cancel()
+                _log(f"Guest map assist cancelled ({reason}).")
+        except Exception:
+            pass
+
     def _auto_lobby(reason: str) -> None:
         del reason
         try:
@@ -226,6 +251,8 @@ def _register_builtin_listeners() -> None:
         _spawn_deferred,
         _travel,
         _loot_shapes,
+        _map_scout,
+        _map_escort,
         _auto_lobby,
     ):
         register_teardown_listener(fn)
