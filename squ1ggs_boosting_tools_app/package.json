@@ -75,7 +75,9 @@
       {
         "from": "resources/LegitItems",
         "to": "LegitItems"
-      },
+      }
+    ],
+    "extraFiles": [
       {
         "from": "resources/Squ1ggsBoostingTools/README.md",
         "to": "README.md"
