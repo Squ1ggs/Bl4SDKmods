@@ -1,0 +1,24 @@
+{
+  "id": "gun_bor_sm",
+  "note": "Legendary Borg SMG L70",
+  "input": {
+    "itemType": "SMG",
+    "set": "bor_sm",
+    "part_names": [
+      "bor_sm.comp_05_legendary",
+      "bor_sm.part_body",
+      "bor_sm.part_barrel_01",
+      "bor_sm.part_mag_01"
+    ],
+    "level": 70
+  },
+  "expect": {
+    "item_type": "SMG",
+    "damage": 4251,
+    "dps": 18310
+  },
+  "tolerance": {
+    "damage": { "mode": "pct", "value": 0.03 },
+    "dps": { "mode": "pct", "value": 0.05 }
+  }
+}

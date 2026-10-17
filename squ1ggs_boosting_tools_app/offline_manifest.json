@@ -1,0 +1,270 @@
+{
+  "name": "Squ1ggs Boosting Tools",
+  "version": "3.10.41",
+  "tabs": [
+    {
+      "id": "home",
+      "label": "Home",
+      "short": "Home",
+      "sections": [
+        {
+          "title": "Offline browse",
+          "hint": "Connect Borderlands with the SDK mod for live actions.",
+          "actions": []
+        }
+      ]
+    },
+    {
+      "id": "compact",
+      "label": "Compact",
+      "short": "Compact",
+      "sections": [
+        {
+          "title": "Offline browse",
+          "hint": "Connect Borderlands with the SDK mod for live actions.",
+          "actions": []
+        }
+      ]
+    },
+    {
+      "id": "player",
+      "label": "Player",
+      "short": "Player",
+      "sections": [
+        {
+          "title": "Offline browse",
+          "hint": "Connect Borderlands with the SDK mod for live actions.",
+          "actions": []
+        }
+      ]
+    },
+    {
+      "id": "progression",
+      "label": "Progress",
+      "short": "Progress",
+      "sections": [
+        {
+          "title": "Offline browse",
+          "hint": "Connect Borderlands with the SDK mod for live actions.",
+          "actions": []
+        }
+      ]
+    },
+    {
+      "id": "loot",
+      "label": "Loot",
+      "short": "Loot",
+      "sections": [
+        {
+          "title": "Offline browse",
+          "hint": "Connect Borderlands with the SDK mod for live actions.",
+          "actions": []
+        }
+      ]
+    },
+    {
+      "id": "serials",
+      "label": "Serials",
+      "short": "Serials",
+      "sections": [
+        {
+          "title": "Offline browse",
+          "hint": "Connect Borderlands with the SDK mod for live actions.",
+          "actions": []
+        }
+      ]
+    },
+    {
+      "id": "editor",
+      "label": "Editor",
+      "short": "Editor",
+      "sections": [
+        {
+          "title": "Build & deliver",
+          "hint": "Craft an item, then Spawn to the ground or Mail to Boost target. Spawn never uses mail; Mail never falls back to spawn.",
+          "editorEmbed": true
+        }
+      ]
+    },
+    {
+      "id": "mobility",
+      "label": "Mobility",
+      "short": "Mobility",
+      "sections": [
+        {
+          "title": "Offline browse",
+          "hint": "Connect Borderlands with the SDK mod for live actions.",
+          "actions": []
+        }
+      ]
+    },
+    {
+      "id": "vehicle",
+      "label": "Vehicle",
+      "short": "Vehicle",
+      "sections": [
+        {
+          "title": "Offline browse",
+          "hint": "Connect Borderlands with the SDK mod for live actions.",
+          "actions": []
+        }
+      ]
+    },
+    {
+      "id": "damage",
+      "label": "Damage & More",
+      "short": "Damage",
+      "sections": [
+        {
+          "title": "Offline browse",
+          "hint": "Connect Borderlands with the SDK mod for live actions.",
+          "actions": []
+        }
+      ]
+    },
+    {
+      "id": "resources",
+      "label": "Kits & Shields",
+      "short": "Kits",
+      "sections": [
+        {
+          "title": "Offline browse",
+          "hint": "Connect Borderlands with the SDK mod for live actions.",
+          "actions": []
+        }
+      ]
+    },
+    {
+      "id": "world",
+      "label": "World",
+      "short": "World",
+      "sections": [
+        {
+          "title": "Offline browse",
+          "hint": "Connect Borderlands with the SDK mod for live actions.",
+          "actions": []
+        }
+      ]
+    },
+    {
+      "id": "mob_io",
+      "label": "Mob and IO Spawner",
+      "short": "Mob / IO",
+      "sections": [
+        {
+          "title": "Offline browse",
+          "hint": "Connect Borderlands with the SDK mod for live actions.",
+          "actions": []
+        }
+      ]
+    },
+    {
+      "id": "loot_shapes",
+      "label": "Loot Shapes",
+      "short": "Shapes",
+      "sections": [
+        {
+          "title": "Offline browse",
+          "hint": "Connect Borderlands with the SDK mod for live actions.",
+          "actions": []
+        }
+      ]
+    },
+    {
+      "id": "faafo",
+      "label": "F.A.A.F.O.",
+      "short": "FAAFO",
+      "sections": [
+        {
+          "title": "Offline browse",
+          "hint": "Connect Borderlands with the SDK mod for live actions.",
+          "actions": []
+        }
+      ]
+    },
+    {
+      "id": "keybinds",
+      "label": "Keybinds",
+      "short": "Keybinds",
+      "sections": [
+        {
+          "title": "Offline browse",
+          "hint": "Connect Borderlands with the SDK mod for live actions.",
+          "actions": []
+        }
+      ]
+    },
+    {
+      "id": "toggles",
+      "label": "Toggles",
+      "short": "Toggles",
+      "sections": [
+        {
+          "title": "Offline browse",
+          "hint": "Connect Borderlands with the SDK mod for live actions.",
+          "actions": []
+        }
+      ]
+    },
+    {
+      "id": "auto_lobby",
+      "label": "Auto Lobby",
+      "short": "Auto",
+      "sections": [
+        {
+          "title": "Offline browse",
+          "hint": "Connect Borderlands with the SDK mod for live actions.",
+          "actions": []
+        }
+      ]
+    },
+    {
+      "id": "log",
+      "label": "Log",
+      "short": "Log",
+      "sections": [
+        {
+          "title": "Offline browse",
+          "hint": "Connect Borderlands with the SDK mod for live actions.",
+          "actions": []
+        }
+      ]
+    },
+    {
+      "id": "support",
+      "label": "Support",
+      "short": "Help",
+      "sections": [
+        {
+          "title": "Offline browse",
+          "hint": "Connect Borderlands with the SDK mod for live actions.",
+          "actions": []
+        }
+      ]
+    },
+    {
+      "id": "pack_bay",
+      "label": "Save Pack",
+      "short": "Save Pack",
+      "sections": [
+        {
+          "title": "Offline browse",
+          "hint": "Connect Borderlands with the SDK mod for live actions.",
+          "actions": []
+        }
+      ]
+    },
+    {
+      "id": "party_bay",
+      "label": "Live Pack",
+      "short": "Live Pack",
+      "sections": [
+        {
+          "title": "Offline browse",
+          "hint": "Connect Borderlands with the SDK mod for live actions.",
+          "actions": []
+        }
+      ]
+    }
+  ]
+}

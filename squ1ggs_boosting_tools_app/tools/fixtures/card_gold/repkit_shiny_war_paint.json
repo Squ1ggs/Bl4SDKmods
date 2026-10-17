@@ -1,0 +1,24 @@
+{
+  "id": "repkit_shiny_war_paint",
+  "note": "Shiny War Paint L70 — Torgue×Legendary×unique Healing_Scale ScaleAdd 1 (×2). MentalMars L50 Instant 3093 matches this path.",
+  "input": {
+    "itemType": "Repkit",
+    "set": "tor_repair_kit",
+    "part_names": [
+      "tor_repair_kit.comp_05_legendary_shinywarpaint",
+      "tor_repair_kit.part_augment_unique_shinywarpaint",
+      "tor_repair_kit.part_tor",
+      "repair_kit.part_firmware_high_caliber"
+    ],
+    "level": 70
+  },
+  "expect": {
+    "item_type": "Repkit",
+    "headline": 34672,
+    "primary_min_count": 2,
+    "firmware_min": 1
+  },
+  "tolerance": {
+    "headline": { "mode": "abs", "value": 2 }
+  }
+}

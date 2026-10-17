@@ -1,0 +1,1886 @@
+{
+  "challenge_list": {
+    "records": [
+      {
+        "entries": [
+          {
+            "challengelist_achievements": {
+              "challenge_list": "ChallengeList_Achievements",
+              "displayname": "ChallengeList_Achievements, 322B3EF743E687D45382338C1F114AAF,  {0}|platform(default=Achievements,xbox=Achievements,playstation=Trophies,sage=Achievements)",
+              "challenges": [
+                "challenge'Challenges_Achievements_00_level_10'",
+                "challenge'Challenges_Achievements_01_level_30'",
+                "challenge'Challenges_Achievements_02_level_50'",
+                "challenge'Challenges_Achievements_04_cosmetics_collect'",
+                "challenge'Challenges_Achievements_05_vehicles_collect'",
+                "challenge'Challenges_Achievements_06_legendaries_equip'",
+                "challenge'Challenges_Achievements_07_challenges_gear'",
+                "challenge'Challenges_Achievements_08_challenges_manufacturer'",
+                "challenge'Challenges_Achievements_09_activities_complete'",
+                "challenge'Challenges_Achievements_10_worldevents_colosseum'",
+                "challenge'Challenges_Achievements_11_worldevents_airship'",
+                "challenge'Challenges_Achievements_12_worldevents_meteor'",
+                "challenge'Challenges_Achievements_13_contracts_complete'",
+                "challenge'Challenges_Achievements_14_discovery_grasslands'",
+                "challenge'Challenges_Achievements_15_discovery_mountains'",
+                "challenge'Challenges_Achievements_16_discovery_shatteredlands'",
+                "challenge'Challenges_Achievements_17_discovery_city'",
+                "challenge'Challenges_Achievements_18_worldboss_defeat'",
+                "challenge'Challenges_Achievements_19_vaultguardian_shatteredlands'",
+                "challenge'Challenges_Achievements_19_vaultguardian_mountains'",
+                "challenge'Challenges_Achievements_19_vaultguardian_grasslands'",
+                "challenge'Challenges_Achievements_19_vaultguardian_defeat'",
+                "challenge'Challenges_Achievements_20_missions_survivalist'",
+                "challenge'Challenges_Achievements_21_missions_auger'",
+                "challenge'Challenges_Achievements_22_missions_electi'",
+                "challenge'Challenges_Achievements_23_missions_claptrap'",
+                "challenge'Challenges_Achievements_24_missions_side'",
+                "challenge'Challenges_Achievements_25_missions_grasslands'",
+                "challenge'Challenges_Achievements_26_missions_mountains'",
+                "challenge'Challenges_Achievements_27_missions_shatteredlands'",
+                "challenge'Challenges_Achievements_28_missions_elpis'",
+                "challenge'Challenges_Achievements_29_missions_main'",
+                "challenge'Challenges_Achievements_30_moxxi_hidden'",
+                "challenge'Challenges_Achievements_31_tannis_hidden'",
+                "challenge'Challenges_Achievements_32_zane_hidden'",
+                "challenge'Challenges_Achievements_33_oddman_hidden'",
+                "challenge'Challenges_Achievements_34_dave_hidden'"
+              ]
+            }
+          },
+          {
+            "challengelist_loyalty": {
+              "challenge_list": "ChallengeList_Loyalty",
+              "challenges": [
+                "challenge'LoyaltyChallenge_Jakobs'",
+                "challenge'LoyaltyChallenge_Borg'",
+                "challenge'LoyaltyChallenge_Daedalus'",
+                "challenge'LoyaltyChallenge_Maliwan'",
+                "challenge'LoyaltyChallenge_Order'",
+                "challenge'LoyaltyChallenge_Tediore'",
+                "challenge'LoyaltyChallenge_Torgue'",
+                "challenge'LoyaltyChallenge_Vladof'"
+              ]
+            }
+          },
+          {
+            "challengelist_tutorials_misc": {
+              "challenge_list": "ChallengeList_Tutorials_Misc",
+              "displayname": "ChallengeList_Tutorials_Misc, DDD855F842C5DF1DEE3D96BB0F6F7340, Miscellaneous",
+              "challenges": [
+                "challenge'Challenge_Tutorial_Misc_BlackMarket'",
+                "challenge'Challenge_Tutorial_Misc_VaultTracking'",
+                "challenge'Challenge_Tutorial_Misc_RespecMachine'",
+                "challenge'Challenge_Tutorial_Misc_CombatChest'",
+                "challenge'Challenge_Tutorial_Misc_ZoneTransitions_Locked'"
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "entries": [
+          {
+            "challengelist_achievements_cowbell": {
+              "challenge_list": "ChallengeList_Achievements_Cowbell",
+              "displayname": "ChallengeList_Achievements, 60477B9D4AEDEBDC2C44EE9E38E97E0D, {0}|platform(default=Achievements,xbox=Achievements,playstation=Trophies,sage=Achievements)",
+              "challenges": [
+                "challenge'Challenges_Achievements_38_Cowbell_complete_all_activities'",
+                "challenge'Challenges_Achievements_39_Cowbell_complete_all_side_missions'",
+                "challenge'Challenges_Achievements_40_Cowbell_Defeat_Rift_boss'",
+                "challenge'Challenges_Achievements_41_Cowbell_mission_01_PolarWastes'",
+                "challenge'Challenges_Achievements_42_Cowbell_mission_02_FindEllie'",
+                "challenge'Challenges_Achievements_43_Cowbell_mission_03_BloodstainedHollows'",
+                "challenge'Challenges_Achievements_44_Cowbell_mission_04_ColonyShip'",
+                "challenge'Challenges_Achievements_45_Cowbell_Main_mission'"
+              ]
+            }
+          },
+          {
+            "challengelist_achievements_harmonica": {
+              "challenge_list": "ChallengeList_Achievements_Harmonica",
+              "displayname": "ChallengeList_Achievements, DFD9158E4BB91B4E39B486896B573CCC, {0}|platform(default=Achievements,xbox=Achievements,playstation=Trophies,sage=Achievements)",
+              "challenges": [
+                "challenge'Challenges_Achievements_55_Harmonica_Activities'",
+                "challenge'Challenges_Achievements_56_Harmonica_SideMissions'",
+                "challenge'Challenges_Achievements_57_Harmonica_RiftBoss'",
+                "challenge'Challenges_Achievements_58_Harmonica_TreasureHunt'",
+                "challenge'Challenges_Achievements_59_Harmonica_Mission01'",
+                "challenge'Challenges_Achievements_60_Harmonica_Mission02B'",
+                "challenge'Challenges_Achievements_61_Harmonica_UnlockVolcanoFortress'",
+                "challenge'Challenges_Achievements_62_Harmonica_Mission04'"
+              ]
+            }
+          },
+          {
+            "challengelist_characters_corpohacker": {
+              "challenge_list": "ChallengeList_Characters_CorpoHacker",
+              "displayname": "ChallengeList_Achievements, 0640BB0F403A5F6B1E8EF6B0F7F13B6D, CorpoHacker",
+              "challenges": [
+                "challenge'Cowbell_Challenges_Characters_CorpoHacker_LevelUp'",
+                "challenge'Harmonica_Challenges_Characters_CorpoHacker_Contagion_Single'",
+                "challenge'Harmonica_Challenges_Characters_CorpoHacker_Contagion_Tiered'",
+                "challenge'Harmonica_Challenges_Characters_CorpoHacker_Manifestation_Single'",
+                "challenge'Harmonica_Challenges_Characters_CorpoHacker_Manifestation_Tiered'",
+                "challenge'Harmonica_Challenges_Characters_CorpoHacker_VPN_Single'",
+                "challenge'Harmonica_Challenges_Characters_CorpoHacker_VPN_Tiered'"
+              ]
+            }
+          },
+          {
+            "challengelist_collect_dlc2_echologs": {
+              "challenge_list": "ChallengeList_Collect_DLC2_EchoLogs",
+              "displayname": "Harmonica_ChallengeLists, 96DEDAF242B4F1BFDB2FCF9A5087F0C7, DLC2 Echo Logs",
+              "challenges": [
+                "challenge'Challenge_Collect_DLC2_EchoLog_Parent'",
+                "challenge'Challenge_Collect_DLC2_EchoLog_1'",
+                "challenge'Challenge_Collect_DLC2_EchoLog_2'",
+                "challenge'Challenge_Collect_DLC2_EchoLog_3'",
+                "challenge'Challenge_Collect_DLC2_EchoLog_4'",
+                "challenge'Challenge_Collect_DLC2_EchoLog_5'",
+                "challenge'Challenge_Collect_DLC2_EchoLog_6'",
+                "challenge'Challenge_Collect_DLC2_EchoLog_7'",
+                "challenge'Challenge_Collect_DLC2_EchoLog_8'",
+                "challenge'Challenge_Collect_DLC2_EchoLog_9'",
+                "challenge'Challenge_Collect_DLC2_EchoLog_10'",
+                "challenge'Challenge_Collect_DLC2_EchoLog_11'",
+                "challenge'Challenge_Collect_DLC2_EchoLog_12'",
+                "challenge'Challenge_Collect_DLC2_EchoLog_13'",
+                "challenge'Challenge_Collect_DLC2_EchoLog_14'",
+                "challenge'Challenge_Collect_DLC2_EchoLog_15'",
+                "challenge'Challenge_Collect_DLC2_EchoLog_16'",
+                "challenge'Challenge_Collect_DLC2_EchoLog_17'",
+                "challenge'Challenge_Collect_DLC2_EchoLog_18'",
+                "challenge'Challenge_Collect_DLC2_EchoLog_19'",
+                "challenge'Challenge_Collect_DLC2_EchoLog_20'",
+                "challenge'Challenge_Collect_DLC2_EchoLog_21'",
+                "challenge'Challenge_Collect_DLC2_EchoLog_22'",
+                "challenge'Challenge_Collect_DLC2_EchoLog_23'",
+                "challenge'Challenge_Collect_DLC2_EchoLog_24'",
+                "challenge'Challenge_Collect_DLC2_EchoLog_25'",
+                "challenge'Challenge_Collect_DLC2_EchoLog_26'",
+                "challenge'Challenge_Collect_DLC2_EchoLog_27'",
+                "challenge'Challenge_Collect_DLC2_EchoLog_28'",
+                "challenge'Challenge_Collect_DLC2_EchoLog_29'",
+                "challenge'Challenge_Collect_DLC2_EchoLog_30'",
+                "challenge'Challenge_Collect_DLC2_EchoLog_31'",
+                "challenge'Challenge_Collect_DLC2_EchoLog_32'",
+                "challenge'Challenge_Collect_DLC2_EchoLog_33'",
+                "challenge'Challenge_Collect_DLC2_EchoLog_34'",
+                "challenge'Challenge_Collect_DLC2_EchoLog_35'",
+                "challenge'Challenge_Collect_DLC2_EchoLog_36'",
+                "challenge'Challenge_Collect_DLC2_EchoLog_37'",
+                "challenge'Challenge_Collect_DLC2_EchoLog_38'",
+                "challenge'Challenge_Collect_DLC2_EchoLog_39'",
+                "challenge'Challenge_Collect_DLC2_EchoLog_40'",
+                "challenge'Challenge_Collect_DLC2_EchoLog_41'",
+                "challenge'Challenge_Collect_DLC2_EchoLog_42'"
+              ]
+            }
+          },
+          {
+            "challengelist_collect_dlc2_islandsafes": {
+              "challenge_list": "ChallengeList_Collect_DLC2_IslandSafes",
+              "displayname": "Harmonica_ChallengeLists, 8418A0BA4F38AFE969F89AA3012B531A, Island Safe Collectibles",
+              "challenges": [
+                "challenge'Challenge_Collect_DLC2_IslandSafe_Parent'",
+                "challenge'Challenge_Collect_DLC2_IslandSafe_1'",
+                "challenge'Challenge_Collect_DLC2_IslandSafe_2'",
+                "challenge'Challenge_Collect_DLC2_IslandSafe_3'",
+                "challenge'Challenge_Collect_DLC2_IslandSafe_4'",
+                "challenge'Challenge_Collect_DLC2_IslandSafe_5'"
+              ]
+            }
+          },
+          {
+            "challengelist_collect_dlc2_tediore": {
+              "challenge_list": "ChallengeList_Collect_DLC2_Tediore",
+              "displayname": "ChallengeLists_Cowbell, FBCF8B0A4B5AA9524FA249B517A7FA8A, Tediore",
+              "challenges": [
+                "challenge'Challenge_Collect_DLC2_Tediore_Parent'",
+                "challenge'Challenge_Collect_DLC2_Tediore_1'",
+                "challenge'Challenge_Collect_DLC2_Tediore_2'",
+                "challenge'Challenge_Collect_DLC2_Tediore_3'",
+                "challenge'Challenge_Collect_DLC2_Tediore_4'",
+                "challenge'Challenge_Collect_DLC2_Tediore_5'",
+                "challenge'Challenge_Collect_DLC2_Tediore_6'",
+                "challenge'Challenge_Collect_DLC2_Tediore_7'",
+                "challenge'Challenge_Collect_DLC2_Tediore_8'",
+                "challenge'Challenge_Collect_DLC2_Tediore_9'",
+                "challenge'Challenge_Collect_DLC2_Tediore_10'"
+              ]
+            }
+          },
+          {
+            "challengelist_cowbell_challenges": {
+              "challenge_list": "ChallengeList_Cowbell_Challenges",
+              "displayname": "ChallengeList_Achievements, A021E0554EE24E5FA8EA01BAD89D3773, Cowbell",
+              "challenges": [
+                "challenge'Cowbell_Challenges_Combat_kraggon_secondwind'",
+                "challenge'Cowbell_Challenges_Combat_dahl_nightmare_split'",
+                "challenge'Cowbell_Challenges_Enemies_kill_scav_psychos'",
+                "challenge'Cowbell_Challenges_Enemies_kill_scav_guntoters'",
+                "challenge'Cowbell_Challenges_Enemies_kill_scav_outlaws'",
+                "challenge'Cowbell_Challenges_Enemies_kill_scav_splices'",
+                "challenge'Cowbell_Challenges_Enemies_kill_dahl_grunts'",
+                "challenge'Cowbell_Challenges_Enemies_kill_dahl_mechs'",
+                "challenge'Cowbell_Challenges_Enemies_kill_kraggons'",
+                "challenge'Challenge_Collect_DLC1_EchoLog_Parent'",
+                "challenge'Challenge_Collect_DLC1_VaultSymbols_Parent'",
+                "challenge'Challenge_Collect_RecordPlayer_Parent'",
+                "challenge'Challenge_Collect_DahlCaches_Parent'",
+                "challenge'Cowbell_Challenges_World_SpookyStories'",
+                "challenge'Cowbell_Challenges_World_Rift_Bosses'",
+                "challenge'Challenge_SpeakeasyPortal_Parent'",
+                "challenge'Cowbell_Challenges_World_SpookyStory_BuyerRemorse'",
+                "challenge'Cowbell_Challenges_World_SpookyStory_LaLlorona1'",
+                "challenge'Cowbell_Challenges_World_SpookyStory_LaLlorona2'",
+                "challenge'Cowbell_Challenges_World_SpookyStory_LaLlorona3'",
+                "challenge'Cowbell_Challenges_World_SpookyStory_Lucine1'",
+                "challenge'Cowbell_Challenges_World_SpookyStory_Lucine2'",
+                "challenge'Cowbell_Challenges_World_SpookyStory_Lucine3'",
+                "challenge'Cowbell_Challenges_World_SpookyStory_Lucine4'",
+                "challenge'Cowbell_Challenges_World_SpookyStory_Lucine5'",
+                "challenge'Cowbell_Challenges_World_SpookyStory_LucineIntro'",
+                "challenge'Cowbell_Challenges_World_SpookyStory_PrettierSmile'",
+                "challenge'Cowbell_Challenges_World_SpookyStory_Voodoo'"
+              ]
+            }
+          },
+          {
+            "challengelist_cowbell_clots": {
+              "challenge_list": "ChallengeList_Cowbell_Clots",
+              "displayname": "ChallengeLists_Cowbell, AAA742BD42193A311EFB948A936D4416, Clots",
+              "challenges": [
+                "challenge'Challenge_Clot_01'",
+                "challenge'Challenge_Clot_02'",
+                "challenge'Challenge_Clot_03'",
+                "challenge'Challenge_Clot_04'",
+                "challenge'Challenge_Clot_05'",
+                "challenge'Challenge_Clot_06'",
+                "challenge'Challenge_Clot_07'",
+                "challenge'Challenge_Clot_08'",
+                "challenge'Challenge_Clot_09'",
+                "challenge'challenge_clot_10'",
+                "challenge'challenge_clot_11'",
+                "challenge'challenge_clot_12'",
+                "challenge'challenge_clot_13'",
+                "challenge'challenge_clot_14'",
+                "challenge'challenge_clot_15'",
+                "challenge'challenge_clot_16'",
+                "challenge'challenge_clot_17'",
+                "challenge'challenge_clot_18'",
+                "challenge'challenge_clot_19'",
+                "challenge'challenge_clot_20'",
+                "challenge'challenge_clot_21'",
+                "challenge'challenge_clot_22'",
+                "challenge'challenge_clot_23'",
+                "challenge'challenge_clot_24'",
+                "challenge'challenge_clot_25'",
+                "challenge'challenge_clot_26'"
+              ]
+            }
+          },
+          {
+            "challengelist_cowbell_dahlbunkers": {
+              "challenge_list": "ChallengeList_Cowbell_DahlBunkers",
+              "displayname": "ChallengeLists_Cowbell, AD5BC407476DCE20753952BA62140D90, DAHL Bunkers",
+              "challenges": [
+                "challenge'Challenge_Activity_DahlBunker_1'"
+              ]
+            }
+          },
+          {
+            "challengelist_cowbell_dahlcaches": {
+              "challenge_list": "ChallengeList_Cowbell_DahlCaches",
+              "displayname": "ChallengeLists_Cowbell, 8472E41E4F0A9723B6F786980587F5C9, DAHL Caches",
+              "challenges": [
+                "challenge'Challenge_Collect_DahlCaches_1'",
+                "challenge'Challenge_Collect_DahlCaches_2'",
+                "challenge'Challenge_Collect_DahlCaches_3'",
+                "challenge'Challenge_Collect_DahlCaches_4'",
+                "challenge'Challenge_Collect_DahlCaches_5'"
+              ]
+            }
+          },
+          {
+            "challengelist_cowbell_dlc1_echologs": {
+              "challenge_list": "ChallengeList_Cowbell_DLC1_EchoLogs",
+              "displayname": "ChallengeLists_Cowbell, 3E030C5B47F32EF7D535EB84F9079714, ECHO logs",
+              "challenges": [
+                "challenge'Challenge_Collect_DLC1_EchoLog_1'",
+                "challenge'Challenge_Collect_DLC1_EchoLog_2'",
+                "challenge'Challenge_Collect_DLC1_EchoLog_3'",
+                "challenge'Challenge_Collect_DLC1_EchoLog_4'",
+                "challenge'Challenge_Collect_DLC1_EchoLog_5'",
+                "challenge'Challenge_Collect_DLC1_EchoLog_6'",
+                "challenge'Challenge_Collect_DLC1_EchoLog_7'",
+                "challenge'Challenge_Collect_DLC1_EchoLog_8'",
+                "challenge'Challenge_Collect_DLC1_EchoLog_9'",
+                "challenge'Challenge_Collect_DLC1_EchoLog_10'",
+                "challenge'Challenge_Collect_DLC1_EchoLog_11'",
+                "challenge'Challenge_Collect_DLC1_EchoLog_12'",
+                "challenge'Challenge_Collect_DLC1_EchoLog_13'",
+                "challenge'Challenge_Collect_DLC1_EchoLog_14'",
+                "challenge'Challenge_Collect_DLC1_EchoLog_15'",
+                "challenge'Challenge_Collect_DLC1_EchoLog_16'",
+                "challenge'Challenge_Collect_DLC1_EchoLog_17'",
+                "challenge'Challenge_Collect_DLC1_EchoLog_18'",
+                "challenge'Challenge_Collect_DLC1_EchoLog_19'",
+                "challenge'Challenge_Collect_DLC1_EchoLog_20'",
+                "challenge'Challenge_Collect_DLC1_EchoLog_21'",
+                "challenge'Challenge_Collect_DLC1_EchoLog_22'",
+                "challenge'Challenge_Collect_DLC1_EchoLog_23'",
+                "challenge'Challenge_Collect_DLC1_EchoLog_24'",
+                "challenge'Challenge_Collect_DLC1_EchoLog_25'",
+                "challenge'Challenge_Collect_DLC1_EchoLog_26'",
+                "challenge'Challenge_Collect_DLC1_EchoLog_27'",
+                "challenge'Challenge_Collect_DLC1_EchoLog_28'"
+              ]
+            }
+          },
+          {
+            "challengelist_cowbell_dlc1_echologs_recordplayers": {
+              "challenge_list": "ChallengeList_Cowbell_DLC1_EchoLogs_RecordPlayers",
+              "displayname": "ChallengeLists_Cowbell, 5ABB13444BFA38845FA5078E164F4463, Eldritch Phonographs",
+              "challenges": [
+                "challenge'Challenge_DLC1_EchoLog_RecordPlayer_1'",
+                "challenge'Challenge_DLC1_EchoLog_RecordPlayer_2'",
+                "challenge'Challenge_DLC1_EchoLog_RecordPlayer_3'",
+                "challenge'Challenge_DLC1_EchoLog_RecordPlayer_4'",
+                "challenge'Challenge_DLC1_EchoLog_RecordPlayer_5'"
+              ]
+            }
+          },
+          {
+            "challengelist_cowbell_dlc1_vaultsymbols": {
+              "challenge_list": "ChallengeList_Cowbell_DLC1_VaultSymbols",
+              "displayname": "ChallengeLists_Cowbell, 61ADF4D642CCEE4D971F1EA672F6F882, Vault Symbols of the Damned",
+              "challenges": [
+                "challenge'Challenge_Collect_DLC1_VaultSymbols_1'",
+                "challenge'Challenge_Collect_DLC1_VaultSymbols_2'",
+                "challenge'Challenge_Collect_DLC1_VaultSymbols_3'",
+                "challenge'Challenge_Collect_DLC1_VaultSymbols_4'",
+                "challenge'Challenge_Collect_DLC1_VaultSymbols_5'"
+              ]
+            }
+          },
+          {
+            "challengelist_cowbell_fuelsiphons": {
+              "challenge_list": "ChallengeList_Cowbell_FuelSiphons",
+              "displayname": "ChallengeLists_Cowbell, 80109D954A55F7A007708DB6F5E24698, Fuel Siphons",
+              "challenges": [
+                "challenge'Challenge_Activity_FuelSiphon_Parent'",
+                "challenge'Challenge_Activity_FuelSiphon_1'",
+                "challenge'Challenge_Activity_FuelSiphon_2'"
+              ]
+            }
+          },
+          {
+            "challengelist_cowbell_kickdowns": {
+              "challenge_list": "ChallengeList_Cowbell_Kickdowns",
+              "displayname": "ChallengeLists_Cowbell, 0016BE8E44FAAE8CB394F4B4E5BC6070, Cowbell Kickdown Challenges",
+              "challenges": [
+                "challenge'Challenge_Cowbell_Kickdowns_WSWBridge_Parent'",
+                "challenge'Challenge_Cowbell_Kickdowns_WSWBridge_Left'",
+                "challenge'Challenge_Cowbell_Kickdowns_WSWBridge_Right'"
+              ]
+            }
+          },
+          {
+            "challengelist_cowbell_recordplayers": {
+              "challenge_list": "ChallengeList_Cowbell_RecordPlayers",
+              "displayname": "ChallengeLists_Cowbell, 9E6A60D84323DEB0CE41DC820AB5226B, Record Players",
+              "challenges": [
+                "challenge'Challenge_Collect_RecordPlayer_1'",
+                "challenge'Challenge_Collect_RecordPlayer_2'",
+                "challenge'Challenge_Collect_RecordPlayer_3'",
+                "challenge'Challenge_Collect_RecordPlayer_4'",
+                "challenge'Challenge_Collect_RecordPlayer_5'"
+              ]
+            }
+          },
+          {
+            "challengelist_cowbell_shuggurathtanks": {
+              "challenge_list": "ChallengeList_Cowbell_ShuggurathTanks",
+              "displayname": "ChallengeLists_Cowbell, C9EC4A624A87DD63D4E9E7A755228BFC, Shuggurath Tanks",
+              "challenges": [
+                "challenge'Challenge_ShuggurathTank_01'",
+                "challenge'Challenge_ShuggurathTank_02'",
+                "challenge'Challenge_ShuggurathTank_03'"
+              ]
+            }
+          },
+          {
+            "challengelist_cowbell_speakeasydoors": {
+              "challenge_list": "ChallengeList_Cowbell_SpeakeasyDoors",
+              "displayname": "ChallengeLists_Cowbell, 1F5BFE7A4125353F887002923C7BDCDC, Speakeasy Doors",
+              "challenges": [
+                "challenge'Challenge_SpeakeasyDoor_Parent'",
+                "challenge'Challenge_SpeakeasyDoor_1'",
+                "challenge'Challenge_SpeakeasyDoor_2'",
+                "challenge'Challenge_SpeakeasyDoor_3'"
+              ]
+            }
+          },
+          {
+            "challengelist_cowbell_speakeasyportals": {
+              "challenge_list": "ChallengeList_Cowbell_SpeakeasyPortals",
+              "displayname": "ChallengeLists_Cowbell, FE99D21343E2BB1193A05C81D24FFA2E, Perspective Puzzles",
+              "challenges": [
+                "challenge'Challenge_SpeakeasyPortal_1'",
+                "challenge'Challenge_SpeakeasyPortal_2'",
+                "challenge'Challenge_SpeakeasyPortal_3'",
+                "challenge'Challenge_SpeakeasyPortal_4'",
+                "challenge'Challenge_SpeakeasyPortal_5'",
+                "challenge'Challenge_SpeakeasyPortal_6'"
+              ]
+            }
+          },
+          {
+            "challengelist_cowbell_speakeasysafes": {
+              "challenge_list": "ChallengeList_Cowbell_SpeakeasySafes",
+              "displayname": "ChallengeLists_Cowbell, 07E2047D4C60E2E138C941862D8B9BD2, Speakeasy Safes",
+              "challenges": [
+                "challenge'Challenge_SpeakeasySafe_1'",
+                "challenge'Challenge_SpeakeasySafe_2'",
+                "challenge'Challenge_SpeakeasySafe_3'",
+                "challenge'Challenge_SpeakeasySafe_4'",
+                "challenge'Challenge_SpeakeasySafe_5'"
+              ]
+            }
+          },
+          {
+            "challengelist_dlc2_digigunk": {
+              "challenge_list": "ChallengeList_DLC2_Digigunk",
+              "displayname": "Harmonica_ChallengeLists, E557885D4698405BAFC11AB652D70997, DLC2 DigiGunk",
+              "challenges": [
+                "challenge'Challenge_DLC2_Digigunk_01'",
+                "challenge'Challenge_DLC2_Digigunk_02'",
+                "challenge'Challenge_DLC2_Digigunk_03'",
+                "challenge'Challenge_DLC2_Digigunk_04'",
+                "challenge'Challenge_DLC2_Digigunk_05'",
+                "challenge'Challenge_DLC2_Digigunk_06'"
+              ]
+            }
+          },
+          {
+            "challengelist_dlc2_ziplineshortcuts": {
+              "challenge_list": "ChallengeList_DLC2_ZiplineShortcuts",
+              "displayname": "Harmonica_ChallengeLists, C608532246D8398CD4B01DBEBCF55839, Zipline Shortcuts",
+              "challenges": [
+                "challenge'Challenge_DLC2_ZiplineShortcut_01'",
+                "challenge'Challenge_DLC2_ZiplineShortcut_02'",
+                "challenge'Challenge_DLC2_ZiplineShortcut_03'",
+                "challenge'Challenge_DLC2_ZiplineShortcut_04'",
+                "challenge'Challenge_DLC2_ZiplineShortcut_05'",
+                "challenge'Challenge_DLC2_ZiplineShortcut_06'",
+                "challenge'Challenge_DLC2_ZiplineShortcut_07'"
+              ]
+            }
+          },
+          {
+            "challengelist_harmonica_enemies": {
+              "challenge_list": "ChallengeList_Harmonica_Enemies",
+              "challenges": [
+                "challenge'Harmonica_Challenge_Enemies_KillTedioreFrames'",
+                "challenge'Harmonica_Challenge_Enemies_KillTedioreGliders'",
+                "challenge'Harmonica_Challenge_Enemies_KillTedioreInfantry'",
+                "challenge'Harmonica_Challenge_Enemies_KillTedioreWalkerMechs'",
+                "challenge'Harmonica_Challenge_Enemies_KillTedioreReplacements'"
+              ]
+            }
+          },
+          {
+            "challengelist_harmonica_enemies_combat": {
+              "challenge_list": "ChallengeList_Harmonica_Enemies_Combat",
+              "challenges": [
+                "challenge'Harmonica_Challenge_Combat_KillFramesBeforeConversion'",
+                "challenge'Harmonica_Challenge_Combat_ZiplineKills'"
+              ]
+            }
+          },
+          {
+            "challengelist_harmonica_treasurehunt": {
+              "challenge_list": "ChallengeList_Harmonica_TreasureHunt",
+              "displayname": "Harmonica_ChallengeLists, 9EDAF3C4488BEF19D4DFDA977A56BA50, Treasure Hunt",
+              "challenges": [
+                "challenge'Challenge_Harmonica_TreasureHunt_BossKilled'",
+                "challenge'Challenge_Harmonica_TreasureHunt_DoorOpened'",
+                "challenge'Challenge_Harmonica_TreasureHunt_SwitchParent'",
+                "challenge'Challenge_Harmonica_TreasureHunt_Switch_01'",
+                "challenge'Challenge_Harmonica_TreasureHunt_Switch_02'",
+                "challenge'Challenge_Harmonica_TreasureHunt_Switch_03'",
+                "challenge'Challenge_Harmonica_TreasureHunt_Switch_04'",
+                "challenge'Challenge_Harmonica_TreasureHunt_Switch_05'"
+              ]
+            }
+          },
+          {
+            "challengelist_harmonica_world": {
+              "challenge_list": "ChallengeList_Harmonica_World",
+              "challenges": [
+                "challenge'Harmonica_Challenge_World_ManagerHands'",
+                "challenge'Harmonica_Challenge_World_VolcanoEvent'",
+                "challenge'Harmonica_Challenge_World_CompleteRifts'",
+                "challenge'Harmonica_Challenge_World_ClaimSafehouses'",
+                "challenge'Harmonica_Challenge_World_Grottos'",
+                "challenge'Harmonica_Challenge_World_Lockdowns'",
+                "challenge'Challenge_Activity_Grotto_Jungle'",
+                "challenge'Challenge_Activity_Grotto_Lava'",
+                "challenge'Challenge_Activity_Lockdown_Jungle'",
+                "challenge'Challenge_Activity_Lockdown_Lava'",
+                "challenge'Harmonica_Challenge_World_ClaimSafehouses_Intro'",
+                "challenge'Harmonica_Challenge_World_ClaimSafehouses_Jungle'",
+                "challenge'Harmonica_Challenge_World_ClaimSafehouses_Lava'",
+                "challenge'Harmonica_Challenge_World_ManagerHands_Hotel'",
+                "challenge'Harmonica_Challenge_World_ManagerHands_Lava'",
+                "challenge'Harmonica_Challenge_World_ManagerHands_Logistics'",
+                "challenge'Harmonica_Challenge_World_ManagerHands_Spa'",
+                "challenge'Harmonica_Challenge_World_ManagerHands_Theater'"
+              ]
+            }
+          },
+          {
+            "challengelist_robodealer": {
+              "challenge_list": "ChallengeList_RoboDealer",
+              "displayname": "ChallengeList_Achievements, AF1F4064430FF4BE748184B04B99B660, RoboDealer",
+              "challenges": [
+                "challenge'Cowbell_Challenges_Characters_Robodealer_LevelUp'",
+                "challenge'Cowbell_Challenges_Characters_Robodealer_Cleromancy_Single'",
+                "challenge'Cowbell_Challenges_Characters_Robodealer_Cleromancy_Tiered'",
+                "challenge'Cowbell_Challenges_Characters_Robodealer_Crossfire_Single'",
+                "challenge'Cowbell_Challenges_Characters_Robodealer_Crossfire_Tiered'",
+                "challenge'Cowbell_Challenges_Characters_Robodealer_SleightOfHand_Single'",
+                "challenge'Cowbell_Challenges_Characters_Robodealer_SleightOfHand_Tiered'"
+              ]
+            }
+          },
+          {
+            "challengelist_tutorials_dlc1": {
+              "challenge_list": "ChallengeList_Tutorials_DLC1",
+              "displayname": "ChallengeList_Tutorials_DLC1, D1EB4828457534D4FE1792B6AFA2F39B, DLC1 Tutorials",
+              "challenges": [
+                "challenge'Challenge_Tutorial_Collectible_DLC1_DahlCaches_Discovery'",
+                "challenge'Challenge_Tutorial_Collectible_DLC1_RecordPlayers_Discovery'",
+                "challenge'Challenge_Tutorial_Collectible_DLC1_VaultSymbols_Discovery'",
+                "challenge'Challenge_Tutorial_Misc_DLC1_IceFishing_Discovery'"
+              ]
+            }
+          },
+          {
+            "harmonica_challengelist_tutorials": {
+              "challenge_list": "Harmonica_ChallengeList_Tutorials",
+              "displayname": "Harmonica_ChallengeList_Tutorials, BE3848164539600C4A5135B3C7C3CB42, Tutorials",
+              "challenges": [
+                "challenge'Harmonica_Challenge_Tutorial_Digi-Gunk'",
+                "challenge'Harmonica_Challenge_Tutorial_Treasure_Hunt'",
+                "challenge'Harmonica_Challenge_Tutorial_Tiki_Safehouses'",
+                "challenge'Harmonica_Challenge_Tutorial_Mining_Grottos'",
+                "challenge'Harmonica_Challenge_Tutorial_Volcano_Event'",
+                "challenge'Harmonica_Challenge_Tutorial_Tediore_Pockets'",
+                "challenge'Harmonica_Challenge_Tutorial_Collectible_Tediore_Guns'",
+                "challenge'Harmonica_Challenge_Tutorial_Island_Safes'",
+                "challenge'Harmonica_Challenge_Tutorial_Ziplines'",
+                "challenge'Harmonica_Challenge_Tutorial_Cargo_Pod_Event'",
+                "challenge'Harmonica_Challenge_Tutorial_Tediore_Lockdown'",
+                "challenge'Harmonica_Challenge_Tutorial_Treasure_Hunt_Final'"
+              ]
+            }
+          },
+          {
+            "vc1_challengelist_debug": {
+              "challenge_list": "VC1_ChallengeList_DEBUG",
+              "displayname": "Challenges_Daily, 22FD63E6422AD50517C12A94B4DC63C4, Vault Card 1 Daily Challenges",
+              "bisvaultcard": "true",
+              "challenges": [
+                "challenge'VC1_LootLegendary10'",
+                "challenge'VC1_LootLegendary15'",
+                "challenge'VC1_LootLegendary5'"
+              ]
+            }
+          },
+          {
+            "vc2_challengelist_debug": {
+              "challenge_list": "VC2_ChallengeList_DEBUG",
+              "bisvaultcard": "true",
+              "challenges": [
+                "challenge'VC2_KillBandits20'"
+              ]
+            }
+          },
+          {
+            "vc3_challengelist_debug": {
+              "challenge_list": "VC3_ChallengeList_DEBUG",
+              "bisvaultcard": "true",
+              "challenges": [
+                "challenge'VC3_KillEnemiesWithTorgue10'"
+              ]
+            }
+          },
+          {
+            "vc4_challengelist_debug": {
+              "challenge_list": "VC4_ChallengeList_DEBUG",
+              "bisvaultcard": "true",
+              "challenges": [
+                "challenge'VC4_KillEnemiesWithTorgue10'"
+              ]
+            }
+          },
+          {
+            "vcchallenge_challengelist_dummy": {
+              "challenge_list": "VCChallenge_ChallengeList_DUMMY",
+              "bisvaultcard": "true",
+              "challenges": [
+                "challenge'vault_card_dummy_prereq_challenge'"
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "entries": [
+          {
+            "challengelist_assaultrifle": {
+              "challenge_list": "ChallengeList_AssaultRifle",
+              "displayname": "Challenges_AssaultRifle, FE08B1FB4FD7B1F3FF615E961255CD1E, Assault Rifle",
+              "challenges": [
+                "challenge'Challenge_Assault_Kills'",
+                "challenge'Challenge_Assault_CriticalKills'",
+                "challenge'Challenge_Assault_CriticalHits'",
+                "challenge'Challenge_Assault_CrouchedKills'",
+                "challenge'Challenge_Assault_ScopedKills'",
+                "challenge'Challenge_Assault_SecondWinds'"
+              ]
+            }
+          },
+          {
+            "challengelist_borg": {
+              "challenge_list": "ChallengeList_Borg",
+              "displayname": "Challenges_Borg, 2E9877C94405D3BA9466BE863CB86F33, Borg",
+              "challenges": [
+                "challenge'Challenge_Borg_Kills'",
+                "challenge'Challenge_Borg_UnderbarrelKills'",
+                "challenge'Challenge_Borg_CriticalHits'",
+                "challenge'Challenge_Borg_Multikills'"
+              ]
+            }
+          },
+          {
+            "challengelist_bounties_augur": {
+              "challenge_list": "ChallengeList_Bounties_Augur",
+              "displayname": "ChallengeLists_Activities, F3D32784409075955D4B90A5588C773D, Augur Bounties",
+              "challenges": [
+                "challenge'Challenge_Activity_AugerMines_Parent'",
+                "challenge'Challenge_Activity_AugerMines_Grasslands_1'",
+                "challenge'Challenge_Activity_AugerMines_Grasslands_2'",
+                "challenge'Challenge_Activity_AugerMines_Mountains_1'",
+                "challenge'Challenge_Activity_AugerMines_Mountains_2'",
+                "challenge'Challenge_Activity_AugerMines_Shatteredlands_1'",
+                "challenge'Challenge_Activity_AugerMines_Shatteredlands_2'",
+                "challenge'Challenge_Activity_AugerMines_City_1'"
+              ]
+            }
+          },
+          {
+            "challengelist_bounties_order": {
+              "challenge_list": "ChallengeList_Bounties_Order",
+              "displayname": "ChallengeLists_Activities, 0EE681DD4A41674517217C8B7FFAC864, Order Bounties",
+              "challenges": [
+                "challenge'Challenge_Activity_OrderBunkers_Parent'",
+                "challenge'Challenge_Activity_OrderBunkers_Grasslands_1'",
+                "challenge'Challenge_Activity_OrderBunkers_Grasslands_2'",
+                "challenge'Challenge_Activity_OrderBunkers_Mountains_1'",
+                "challenge'Challenge_Activity_OrderBunkers_Mountains_2'",
+                "challenge'Challenge_Activity_OrderBunkers_Shatteredlands_1'",
+                "challenge'Challenge_Activity_OrderBunkers_City_1'"
+              ]
+            }
+          },
+          {
+            "challengelist_bounties_vanguard": {
+              "challenge_list": "ChallengeList_Bounties_Vanguard",
+              "displayname": "ChallengeLists_Activities, E818BAEF4A9E30C7D4A3D5B5BE3DA05A, Vanguard Bounties",
+              "challenges": [
+                "challenge'Challenge_Activity_DrillSites_Parent'",
+                "challenge'Challenge_Activity_DrillSites_Grasslands_1'",
+                "challenge'Challenge_Activity_DrillSites_Grasslands_2'",
+                "challenge'Challenge_Activity_DrillSites_Mountains_1'",
+                "challenge'Challenge_Activity_DrillSites_Mountains_2'",
+                "challenge'Challenge_Activity_DrillSites_Shatteredlands_1'",
+                "challenge'Challenge_Activity_DrillSites_Shatteredlands_2'"
+              ]
+            }
+          },
+          {
+            "challengelist_caches": {
+              "challenge_list": "ChallengeList_Caches",
+              "displayname": "ChallengeLists_Collectibles, 9D02C0AD43BC2CF99472D9B70BFA8528, Caches",
+              "challenges": [
+                "challenge'Challenge_Collect_Caches_Parent'",
+                "challenge'Challenge_Collect_Caches_Grasslands_1'",
+                "challenge'Challenge_Collect_Caches_Grasslands_2'",
+                "challenge'Challenge_Collect_Caches_Grasslands_3'",
+                "challenge'Challenge_Collect_Caches_Grasslands_4'",
+                "challenge'Challenge_Collect_Caches_Grasslands_5'",
+                "challenge'Challenge_Collect_Caches_Grasslands_6'",
+                "challenge'Challenge_Collect_Caches_Grasslands_7'",
+                "challenge'Challenge_Collect_Caches_Grasslands_8'",
+                "challenge'Challenge_Collect_Caches_Grasslands_9'",
+                "challenge'Challenge_Collect_Caches_Grasslands_10'"
+              ]
+            }
+          },
+          {
+            "challengelist_capsules": {
+              "challenge_list": "ChallengeList_Capsules",
+              "displayname": "ChallengeLists_Collectibles, FBB2B7BF4D4ECEE6F60FC0BC49F4A996, Lost Capsules",
+              "challenges": [
+                "challenge'Challenge_Collect_Capsules_Parent'",
+                "challenge'Challenge_Collect_Capsules_City_1'",
+                "challenge'Challenge_Collect_Capsules_City_2'",
+                "challenge'Challenge_Collect_Capsules_City_3'",
+                "challenge'Challenge_Collect_Capsules_Grasslands_1'",
+                "challenge'Challenge_Collect_Capsules_Grasslands_2'",
+                "challenge'Challenge_Collect_Capsules_Grasslands_3'",
+                "challenge'Challenge_Collect_Capsules_Grasslands_4'",
+                "challenge'Challenge_Collect_Capsules_Grasslands_5'",
+                "challenge'Challenge_Collect_Capsules_Grasslands_6'",
+                "challenge'Challenge_Collect_Capsules_Mountains_1'",
+                "challenge'Challenge_Collect_Capsules_Mountains_2'",
+                "challenge'Challenge_Collect_Capsules_Mountains_3'",
+                "challenge'Challenge_Collect_Capsules_Mountains_4'",
+                "challenge'Challenge_Collect_Capsules_Mountains_5'",
+                "challenge'Challenge_Collect_Capsules_Mountains_6'",
+                "challenge'Challenge_Collect_Capsules_Shatteredlands_1'",
+                "challenge'Challenge_Collect_Capsules_Shatteredlands_2'",
+                "challenge'Challenge_Collect_Capsules_Shatteredlands_3'",
+                "challenge'Challenge_Collect_Capsules_Shatteredlands_4'",
+                "challenge'Challenge_Collect_Capsules_Shatteredlands_5'"
+              ]
+            }
+          },
+          {
+            "challengelist_combat": {
+              "challenge_list": "ChallengeList_Combat",
+              "displayname": "Challenges_Combat, 5C1CE04D4464FDB08AFC9F84BCDB6D24, Combat Challenges",
+              "challenges": [
+                "challenge'Challenge_RevivePartners'",
+                "challenge'Challenge_SecondWind'",
+                "challenge'Challenge_SecondWindBadass'"
+              ]
+            }
+          },
+          {
+            "challengelist_crawlers": {
+              "challenge_list": "ChallengeList_Crawlers",
+              "displayname": "ChallengeLists_Activities, 083869CF49F2478DB7794395B8B061C3, Crawlers",
+              "challenges": [
+                "challenge'Challenge_Activity_Crawlers_Grasslands_1'",
+                "challenge'Challenge_Activity_Crawlers_Grasslands_2'",
+                "challenge'Challenge_Activity_Crawlers_Grasslands_3'",
+                "challenge'Challenge_Activity_Crawlers_Grasslands_4'",
+                "challenge'Challenge_Activity_Crawlers_Mountains_1'",
+                "challenge'Challenge_Activity_Crawlers_Mountains_2'",
+                "challenge'Challenge_Activity_Crawlers_Mountains_3'",
+                "challenge'Challenge_Activity_Crawlers_Mountains_4'",
+                "challenge'Challenge_Activity_Crawlers_Shatteredlands_1'",
+                "challenge'Challenge_Activity_Crawlers_Shatteredlands_2'",
+                "challenge'Challenge_Activity_Crawlers_Shatteredlands_3'",
+                "challenge'Challenge_Activity_Crawlers_Parent'"
+              ]
+            }
+          },
+          {
+            "challengelist_daedalus": {
+              "challenge_list": "ChallengeList_Daedalus",
+              "displayname": "Challenges_Daedalus, 4353C1A44F121AA021E7D9B66922A3EB, Daedalus",
+              "challenges": [
+                "challenge'Challenge_Daedalus_Kills'",
+                "challenge'Challenge_Daedalus_UnderbarrelKills'",
+                "challenge'Challenge_Daedalus_Multiloader_Pistol'",
+                "challenge'Challenge_Daedalus_Multiloader_SMG'",
+                "challenge'Challenge_Daedalus_Multiloader_Assault'",
+                "challenge'Challenge_Daedalus_Multiloader_Shotgun'",
+                "challenge'Challenge_Daedalus_Multiloader_Sniper'"
+              ]
+            }
+          },
+          {
+            "challengelist_darksiren": {
+              "challenge_list": "ChallengeList_DarkSiren",
+              "displayname": "Challenges_DarkSiren, B8410DE041A89F955077C68682C6C67B, Dark Siren",
+              "challenges": [
+                "challenge'Challenge_DarkSiren_LevelUp'",
+                "challenge'Challenge_DarkSiren_Death_Single'",
+                "challenge'Challenge_DarkSiren_Death_Tiered'",
+                "challenge'Challenge_DarkSiren_Demonology_Single'",
+                "challenge'Challenge_DarkSiren_Demonology_Tiered'",
+                "challenge'Challenge_DarkSiren_Duplicate_Single'",
+                "challenge'Challenge_DarkSiren_Duplicate_Tiered'"
+              ]
+            }
+          },
+          {
+            "challengelist_echologs_arjay": {
+              "challenge_list": "ChallengeList_EchoLogs_Arjay",
+              "challenges": [
+                "challenge'Challenge_Collect_EchoLog_ARJ_CITY_01'",
+                "challenge'Challenge_Collect_EchoLog_ARJ_CITY_02'",
+                "challenge'Challenge_Collect_EchoLog_ARJ_CITY_03'",
+                "challenge'Challenge_Collect_EchoLog_ARJ_GRA_01'",
+                "challenge'Challenge_Collect_EchoLog_ARJ_GRA_02'",
+                "challenge'Challenge_Collect_EchoLog_ARJ_GRA_03'",
+                "challenge'Challenge_Collect_EchoLog_ARJ_MTN_01'",
+                "challenge'Challenge_Collect_EchoLog_ARJ_MTN_02'",
+                "challenge'Challenge_Collect_EchoLog_ARJ_MTN_03'",
+                "challenge'Challenge_Collect_EchoLog_ARJ_SHA_01'",
+                "challenge'Challenge_Collect_EchoLog_ARJ_SHA_02'",
+                "challenge'Challenge_Collect_EchoLog_ARJ_SHA_03'",
+                "challenge'Challenge_Collect_EchoLog_ARJ_Parent'"
+              ]
+            }
+          },
+          {
+            "challengelist_echologs_eridium": {
+              "challenge_list": "ChallengeList_EchoLogs_Eridium",
+              "challenges": [
+                "challenge'Challenge_Collect_EchoLog_ERD_01'",
+                "challenge'Challenge_Collect_EchoLog_ERD_02'",
+                "challenge'Challenge_Collect_EchoLog_ERD_03'",
+                "challenge'Challenge_Collect_EchoLog_ERD_04'",
+                "challenge'Challenge_Collect_EchoLog_ERD_05'",
+                "challenge'Challenge_Collect_EchoLog_ERD_06'",
+                "challenge'Challenge_Collect_EchoLog_ERD_07'",
+                "challenge'Challenge_Collect_EchoLog_ERD_08'",
+                "challenge'Challenge_Collect_EchoLog_ERD_09'",
+                "challenge'challenge_collect_echolog_erd_10'",
+                "challenge'challenge_collect_echolog_erd_11'",
+                "challenge'challenge_collect_echolog_erd_12'",
+                "challenge'challenge_collect_echolog_erd_13'",
+                "challenge'challenge_collect_echolog_erd_14'",
+                "challenge'challenge_collect_echolog_erd_15'",
+                "challenge'challenge_collect_echolog_erd_16'",
+                "challenge'challenge_collect_echolog_erd_17'",
+                "challenge'challenge_collect_echolog_erd_18'",
+                "challenge'Challenge_Collect_EchoLog_ERD_Parent'"
+              ]
+            }
+          },
+          {
+            "challengelist_echologs_general": {
+              "challenge_list": "ChallengeList_EchoLogs_General",
+              "displayname": "ChallengeLists_Collectibles, 0321195C4BCFB06F4CA931B14574F765, General ECHO Logs",
+              "challenges": [
+                "challenge'Challenge_Collect_EchoLog_GEN_CITY_01'",
+                "challenge'Challenge_Collect_EchoLog_GEN_CITY_02'",
+                "challenge'Challenge_Collect_EchoLog_GEN_CITY_03'",
+                "challenge'Challenge_Collect_EchoLog_GEN_CITY_04'",
+                "challenge'Challenge_Collect_EchoLog_GEN_CITY_05'",
+                "challenge'Challenge_Collect_EchoLog_GEN_CITY_06'",
+                "challenge'Challenge_Collect_EchoLog_GEN_CITY_07'",
+                "challenge'Challenge_Collect_EchoLog_GEN_CITY_08'",
+                "challenge'Challenge_Collect_EchoLog_GEN_CITY_09'",
+                "challenge'challenge_collect_echolog_gen_city_10'",
+                "challenge'challenge_collect_echolog_gen_city_11'",
+                "challenge'challenge_collect_echolog_gen_city_12'",
+                "challenge'challenge_collect_echolog_gen_city_13'",
+                "challenge'challenge_collect_echolog_gen_city_14'",
+                "challenge'challenge_collect_echolog_gen_city_15'",
+                "challenge'challenge_collect_echolog_gen_city_16'",
+                "challenge'challenge_collect_echolog_gen_city_17'",
+                "challenge'challenge_collect_echolog_gen_city_18'",
+                "challenge'challenge_collect_echolog_gen_city_19'",
+                "challenge'challenge_collect_echolog_gen_city_21'",
+                "challenge'challenge_collect_echolog_gen_city_22'",
+                "challenge'challenge_collect_echolog_gen_city_23'",
+                "challenge'Challenge_Collect_EchoLog_GEN_ELP_01'",
+                "challenge'Challenge_Collect_EchoLog_GEN_ELP_03'",
+                "challenge'Challenge_Collect_EchoLog_GEN_ELP_04'",
+                "challenge'Challenge_Collect_EchoLog_GEN_ELP_06'",
+                "challenge'Challenge_Collect_EchoLog_GEN_ELP_07'",
+                "challenge'Challenge_Collect_EchoLog_GEN_ELP_08'",
+                "challenge'Challenge_Collect_EchoLog_GEN_GRA_01'",
+                "challenge'Challenge_Collect_EchoLog_GEN_GRA_02'",
+                "challenge'Challenge_Collect_EchoLog_GEN_GRA_03'",
+                "challenge'Challenge_Collect_EchoLog_GEN_GRA_04'",
+                "challenge'Challenge_Collect_EchoLog_GEN_GRA_05'",
+                "challenge'Challenge_Collect_EchoLog_GEN_GRA_06'",
+                "challenge'Challenge_Collect_EchoLog_GEN_GRA_07'",
+                "challenge'Challenge_Collect_EchoLog_GEN_GRA_09'",
+                "challenge'challenge_collect_echolog_gen_gra_10'",
+                "challenge'challenge_collect_echolog_gen_gra_11'",
+                "challenge'challenge_collect_echolog_gen_gra_12'",
+                "challenge'challenge_collect_echolog_gen_gra_13'",
+                "challenge'challenge_collect_echolog_gen_gra_14'",
+                "challenge'challenge_collect_echolog_gen_gra_15'",
+                "challenge'challenge_collect_echolog_gen_gra_16'",
+                "challenge'challenge_collect_echolog_gen_gra_17'",
+                "challenge'challenge_collect_echolog_gen_gra_18'",
+                "challenge'challenge_collect_echolog_gen_gra_19'",
+                "challenge'challenge_collect_echolog_gen_gra_20'",
+                "challenge'challenge_collect_echolog_gen_gra_21'",
+                "challenge'challenge_collect_echolog_gen_gra_22'",
+                "challenge'challenge_collect_echolog_gen_gra_23'",
+                "challenge'challenge_collect_echolog_gen_gra_24'",
+                "challenge'challenge_collect_echolog_gen_gra_26'",
+                "challenge'challenge_collect_echolog_gen_gra_27'",
+                "challenge'challenge_collect_echolog_gen_gra_28'",
+                "challenge'Challenge_Collect_EchoLog_GEN_MTN_01'",
+                "challenge'Challenge_Collect_EchoLog_GEN_MTN_02'",
+                "challenge'Challenge_Collect_EchoLog_GEN_MTN_03'",
+                "challenge'Challenge_Collect_EchoLog_GEN_MTN_04'",
+                "challenge'Challenge_Collect_EchoLog_GEN_MTN_05'",
+                "challenge'Challenge_Collect_EchoLog_GEN_MTN_06'",
+                "challenge'Challenge_Collect_EchoLog_GEN_MTN_07'",
+                "challenge'Challenge_Collect_EchoLog_GEN_MTN_08'",
+                "challenge'Challenge_Collect_EchoLog_GEN_MTN_09'",
+                "challenge'challenge_collect_echolog_gen_mtn_10'",
+                "challenge'challenge_collect_echolog_gen_mtn_11'",
+                "challenge'challenge_collect_echolog_gen_mtn_12'",
+                "challenge'challenge_collect_echolog_gen_mtn_13'",
+                "challenge'challenge_collect_echolog_gen_mtn_14'",
+                "challenge'challenge_collect_echolog_gen_mtn_15'",
+                "challenge'challenge_collect_echolog_gen_mtn_16'",
+                "challenge'challenge_collect_echolog_gen_mtn_17'",
+                "challenge'challenge_collect_echolog_gen_mtn_18'",
+                "challenge'challenge_collect_echolog_gen_mtn_19'",
+                "challenge'challenge_collect_echolog_gen_mtn_20'",
+                "challenge'challenge_collect_echolog_gen_mtn_21'",
+                "challenge'challenge_collect_echolog_gen_mtn_22'",
+                "challenge'challenge_collect_echolog_gen_mtn_23'",
+                "challenge'challenge_collect_echolog_gen_mtn_24'",
+                "challenge'challenge_collect_echolog_gen_mtn_25'",
+                "challenge'challenge_collect_echolog_gen_mtn_26'",
+                "challenge'challenge_collect_echolog_gen_mtn_27'",
+                "challenge'challenge_collect_echolog_gen_mtn_28'",
+                "challenge'Challenge_Collect_EchoLog_GEN_SHA_01'",
+                "challenge'Challenge_Collect_EchoLog_GEN_SHA_02'",
+                "challenge'Challenge_Collect_EchoLog_GEN_SHA_03'",
+                "challenge'Challenge_Collect_EchoLog_GEN_SHA_04'",
+                "challenge'Challenge_Collect_EchoLog_GEN_SHA_05'",
+                "challenge'Challenge_Collect_EchoLog_GEN_SHA_06'",
+                "challenge'Challenge_Collect_EchoLog_GEN_SHA_07'",
+                "challenge'Challenge_Collect_EchoLog_GEN_SHA_08'",
+                "challenge'Challenge_Collect_EchoLog_GEN_SHA_09'",
+                "challenge'challenge_collect_echolog_gen_sha_10'",
+                "challenge'challenge_collect_echolog_gen_sha_11'",
+                "challenge'challenge_collect_echolog_gen_sha_12'",
+                "challenge'challenge_collect_echolog_gen_sha_13'",
+                "challenge'challenge_collect_echolog_gen_sha_14'",
+                "challenge'challenge_collect_echolog_gen_sha_15'",
+                "challenge'challenge_collect_echolog_gen_sha_16'",
+                "challenge'challenge_collect_echolog_gen_sha_17'",
+                "challenge'challenge_collect_echolog_gen_sha_18'",
+                "challenge'challenge_collect_echolog_gen_sha_19'",
+                "challenge'challenge_collect_echolog_gen_sha_20'",
+                "challenge'challenge_collect_echolog_gen_sha_21'",
+                "challenge'challenge_collect_echolog_gen_sha_22'",
+                "challenge'challenge_collect_echolog_gen_sha_23'",
+                "challenge'challenge_collect_echolog_gen_sha_24'",
+                "challenge'challenge_collect_echolog_gen_sha_25'",
+                "challenge'challenge_collect_echolog_gen_sha_26'",
+                "challenge'challenge_collect_echolog_gen_sha_27'",
+                "challenge'challenge_collect_echolog_gen_sha_28'",
+                "challenge'challenge_collect_echolog_gen_sha_29'",
+                "challenge'Challenge_Collect_EchoLog_GEN_Parent'",
+                "challenge'Challenge_Collect_EchoLog_MIS_CITY_01'",
+                "challenge'Challenge_Collect_EchoLog_MIS_CITY_02'",
+                "challenge'Challenge_Collect_EchoLog_MIS_CITY_03'",
+                "challenge'Challenge_Collect_EchoLog_MIS_CITY_04'",
+                "challenge'Challenge_Collect_EchoLog_MIS_CITY_05'",
+                "challenge'Challenge_Collect_EchoLog_MIS_CITY_06'",
+                "challenge'Challenge_Collect_EchoLog_MIS_CITY_07'",
+                "challenge'Challenge_Collect_EchoLog_MIS_CITY_08'",
+                "challenge'Challenge_Collect_EchoLog_MIS_CITY_09'",
+                "challenge'Challenge_Collect_EchoLog_MIS_CITY_10'",
+                "challenge'Challenge_Collect_EchoLog_MIS_CITY_11'",
+                "challenge'Challenge_Collect_EchoLog_MIS_CITY_12'",
+                "challenge'Challenge_Collect_EchoLog_MIS_CITY_13'",
+                "challenge'Challenge_Collect_EchoLog_MIS_CITY_14'",
+                "challenge'Challenge_Collect_EchoLog_MIS_CITY_15'",
+                "challenge'Challenge_Collect_EchoLog_MIS_GRA_01'",
+                "challenge'Challenge_Collect_EchoLog_MIS_GRA_02'",
+                "challenge'Challenge_Collect_EchoLog_MIS_GRA_03'",
+                "challenge'Challenge_Collect_EchoLog_MIS_GRA_04'",
+                "challenge'Challenge_Collect_EchoLog_MIS_GRA_05'",
+                "challenge'Challenge_Collect_EchoLog_MIS_GRA_06'",
+                "challenge'Challenge_Collect_EchoLog_MIS_GRA_07'",
+                "challenge'Challenge_Collect_EchoLog_MIS_GRA_08'",
+                "challenge'Challenge_Collect_EchoLog_MIS_GRA_09'",
+                "challenge'challenge_collect_echolog_mis_gra_10'",
+                "challenge'challenge_collect_echolog_mis_gra_11'",
+                "challenge'Challenge_Collect_EchoLog_MIS_MTN_04'",
+                "challenge'Challenge_Collect_EchoLog_MIS_MTN_05'",
+                "challenge'Challenge_Collect_EchoLog_MIS_MTN_07'",
+                "challenge'Challenge_Collect_EchoLog_MIS_MTN_06'",
+                "challenge'Challenge_Collect_EchoLog_MIS_SHA_01'",
+                "challenge'Challenge_Collect_EchoLog_MIS_SHA_02'",
+                "challenge'Challenge_Collect_EchoLog_MIS_SHA_03'",
+                "challenge'Challenge_Collect_EchoLog_MIS_SHA_04'",
+                "challenge'Challenge_Collect_EchoLog_MIS_SHA_05'",
+                "challenge'Challenge_Collect_EchoLog_MIS_SHA_06'",
+                "challenge'Challenge_Collect_EchoLog_MIS_SHA_07'",
+                "challenge'Challenge_Collect_EchoLog_MIS_SHA_08'",
+                "challenge'Challenge_Collect_EchoLog_MIS_SHA_09'",
+                "challenge'Challenge_Collect_EchoLog_MIS_SHA_10'",
+                "challenge'Challenge_Collect_EchoLog_MIS_SHA_11'",
+                "challenge'Challenge_Collect_EchoLog_MIS_SHA_12'",
+                "challenge'Challenge_Collect_EchoLog_MIS_SHA_13'",
+                "challenge'Challenge_Collect_EchoLog_MIS_SHA_14'",
+                "challenge'Challenge_Collect_EchoLog_MIS_SHA_15'"
+              ]
+            }
+          },
+          {
+            "challengelist_echologs_vaulthunter": {
+              "challenge_list": "ChallengeList_EchoLogs_VaultHunter",
+              "challenges": [
+                "challenge'Challenge_Collect_EchoLog_VH_CITY_01'",
+                "challenge'Challenge_Collect_EchoLog_VH_CITY_02'",
+                "challenge'Challenge_Collect_EchoLog_VH_CITY_03'",
+                "challenge'Challenge_Collect_EchoLog_VH_CITY_04'",
+                "challenge'Challenge_Collect_EchoLog_VH_CITY_05'",
+                "challenge'Challenge_Collect_EchoLog_VH_CITY_06'",
+                "challenge'Challenge_Collect_EchoLog_VH_CITY_07'",
+                "challenge'Challenge_Collect_EchoLog_VH_CITY_08'",
+                "challenge'Challenge_Collect_EchoLog_VH_CITY_09'",
+                "challenge'Challenge_Collect_EchoLog_VH_GRA_01'",
+                "challenge'Challenge_Collect_EchoLog_VH_GRA_02'",
+                "challenge'Challenge_Collect_EchoLog_VH_GRA_03'",
+                "challenge'Challenge_Collect_EchoLog_VH_GRA_04'",
+                "challenge'Challenge_Collect_EchoLog_VH_GRA_05'",
+                "challenge'Challenge_Collect_EchoLog_VH_GRA_06'",
+                "challenge'Challenge_Collect_EchoLog_VH_GRA_07'",
+                "challenge'Challenge_Collect_EchoLog_VH_GRA_08'",
+                "challenge'Challenge_Collect_EchoLog_VH_GRA_09'",
+                "challenge'challenge_collect_echolog_vh_gra_10'",
+                "challenge'Challenge_Collect_EchoLog_VH_MTN_01'",
+                "challenge'Challenge_Collect_EchoLog_VH_MTN_02'",
+                "challenge'Challenge_Collect_EchoLog_VH_MTN_03'",
+                "challenge'Challenge_Collect_EchoLog_VH_MTN_04'",
+                "challenge'Challenge_Collect_EchoLog_VH_MTN_05'",
+                "challenge'Challenge_Collect_EchoLog_VH_MTN_06'",
+                "challenge'Challenge_Collect_EchoLog_VH_MTN_07'",
+                "challenge'Challenge_Collect_EchoLog_VH_MTN_08'",
+                "challenge'Challenge_Collect_EchoLog_VH_MTN_09'",
+                "challenge'challenge_collect_echolog_vh_mtn_10'",
+                "challenge'Challenge_Collect_EchoLog_VH_SHA_01'",
+                "challenge'Challenge_Collect_EchoLog_VH_SHA_02'",
+                "challenge'Challenge_Collect_EchoLog_VH_SHA_03'",
+                "challenge'Challenge_Collect_EchoLog_VH_SHA_04'",
+                "challenge'Challenge_Collect_EchoLog_VH_SHA_05'",
+                "challenge'Challenge_Collect_EchoLog_VH_SHA_06'",
+                "challenge'Challenge_Collect_EchoLog_VH_SHA_07'",
+                "challenge'Challenge_Collect_EchoLog_VH_SHA_08'",
+                "challenge'Challenge_Collect_EchoLog_VH_SHA_09'",
+                "challenge'challenge_collect_echolog_vh_sha_10'",
+                "challenge'Challenge_Collect_EchoLog_VH_Parent'"
+              ]
+            }
+          },
+          {
+            "challengelist_economy": {
+              "challenge_list": "ChallengeList_Economy",
+              "displayname": "Challenges_Economy, 581B3D8D479196D5F844C4836DFA8C36, Economy",
+              "challenges": [
+                "challenge'Challenge_HaveCash'",
+                "challenge'Challenge_HaveMoreCash'",
+                "challenge'Challenge_SellLoot'",
+                "challenge'Challenge_UpgradeInventory'",
+                "challenge'Challenge_UpgradeInventoryAll'",
+                "challenge'Challenge_FirmwareSet'"
+              ]
+            }
+          },
+          {
+            "challengelist_elemental": {
+              "challenge_list": "ChallengeList_Elemental",
+              "displayname": "Challenges_Elemental, 2552C2514B2D039EFB110EBBED2F361E, Elemental Challenges",
+              "challenges": [
+                "challenge'Challenge_Corrosive_Kills'",
+                "challenge'Challenge_Cryo_Kills'",
+                "challenge'Challenge_Fire_Kills'",
+                "challenge'Challenge_Radiation_Kills'",
+                "challenge'Challenge_Shock_Kills'",
+                "challenge'Challenge_2_Status_Effects'"
+              ]
+            }
+          },
+          {
+            "challengelist_evocariums": {
+              "challenge_list": "ChallengeList_Evocariums",
+              "displayname": "ChallengeLists_Collectibles, 0BE9E7924ED473DAAF0946BF830D8275, Evocariums",
+              "challenges": [
+                "challenge'Challenge_Collect_Evocariums_Parent'",
+                "challenge'Challenge_Collect_Evocariums_Grasslands_1'",
+                "challenge'Challenge_Collect_Evocariums_Grasslands_2'",
+                "challenge'Challenge_Collect_Evocariums_Grasslands_3'",
+                "challenge'Challenge_Collect_Evocariums_Grasslands_4'",
+                "challenge'Challenge_Collect_Evocariums_Grasslands_5'",
+                "challenge'Challenge_Collect_Evocariums_Grasslands_6'",
+                "challenge'Challenge_Collect_Evocariums_Mountains_1'",
+                "challenge'Challenge_Collect_Evocariums_Mountains_2'",
+                "challenge'Challenge_Collect_Evocariums_Mountains_3'",
+                "challenge'Challenge_Collect_Evocariums_Mountains_4'",
+                "challenge'Challenge_Collect_Evocariums_Mountains_5'",
+                "challenge'Challenge_Collect_Evocariums_Shatteredlands_1'",
+                "challenge'Challenge_Collect_Evocariums_Shatteredlands_2'",
+                "challenge'Challenge_Collect_Evocariums_Shatteredlands_3'",
+                "challenge'Challenge_Collect_Evocariums_Shatteredlands_4'",
+                "challenge'Challenge_Collect_Evocariums_City_1'",
+                "challenge'Challenge_Collect_Evocariums_City_2'",
+                "challenge'Challenge_Collect_Evocariums_City_3'"
+              ]
+            }
+          },
+          {
+            "challengelist_exosoldier": {
+              "challenge_list": "ChallengeList_ExoSoldier",
+              "displayname": "Challenges_ExoSoldier, 6D76D1EE46151F4E096F16AEA6929E25, Exo-Soldier",
+              "challenges": [
+                "challenge'Challenge_ExoSoldier_LevelUp'",
+                "challenge'Challenge_ExoSoldier_AutoLock_Single'",
+                "challenge'Challenge_ExoSoldier_AutoLock_Tiered'",
+                "challenge'Challenge_ExoSoldier_Buster_Single'",
+                "challenge'Challenge_ExoSoldier_Buster_Tiered'",
+                "challenge'Challenge_ExoSoldier_HeavyArms_Single'",
+                "challenge'Challenge_ExoSoldier_HeavyArms_Tiered'"
+              ]
+            }
+          },
+          {
+            "challengelist_fishing": {
+              "challenge_list": "ChallengeList_Fishing",
+              "displayname": "ChallengeLists_Misc, 37B3FDC24606D5568AAFF2AFB174B19B, Misc - Open World",
+              "challenges": [
+                "challenge'Challenge_Fishing_FishesCaught'",
+                "challenge'Challenge_Misc_World_TipJar'",
+                "challenge'Challenge_Misc_World_CompleteCityEpilogue'"
+              ]
+            }
+          },
+          {
+            "challengelist_gravitar": {
+              "challenge_list": "ChallengeList_Gravitar",
+              "displayname": "Challenges_Gravitar, B91D31BA4FDC657CA9623695881AA780, Gravitar",
+              "challenges": [
+                "challenge'Challenge_Gravitar_LevelUp'",
+                "challenge'Challenge_Gravitar_Exodus_Single'",
+                "challenge'Challenge_Gravitar_Exodus_Tiered'",
+                "challenge'Challenge_Gravitar_Stasis_Single'",
+                "challenge'Challenge_Gravitar_Stasis_Tiered'",
+                "challenge'Challenge_Gravitar_Terminal_Single'",
+                "challenge'Challenge_Gravitar_Terminal_Tiered'"
+              ]
+            }
+          },
+          {
+            "challengelist_grenade": {
+              "challenge_list": "ChallengeList_Grenade",
+              "displayname": "Challenges_Grenades, E9BFCD00411F881F750CAC9A1104578B, Grenade Challenges",
+              "challenges": [
+                "challenge'Challenge_Grenade_Kills'",
+                "challenge'Challenge_Grenade_Multikills'",
+                "challenge'Challenge_Grenade_Amp'",
+                "challenge'Challenge_Grenade_Artillery'",
+                "challenge'Challenge_Grenade_Lingering'",
+                "challenge'Challenge_Grenade_Mirv'",
+                "challenge'Challenge_Grenade_Singularity'"
+              ]
+            }
+          },
+          {
+            "challengelist_heavyweapons": {
+              "challenge_list": "ChallengeList_HeavyWeapons",
+              "displayname": "Challenges_HeavyWeapons, 47F1BCE148B86454B9C5C58E4D9CC9C5, Heavy Guns",
+              "challenges": [
+                "challenge'Challenge_HeavyWeapon_Borg'",
+                "challenge'Challenge_HeavyWeapon_Torgue'",
+                "challenge'Challenge_HeavyWeapon_Maliwan'",
+                "challenge'Challenge_HeavyWeapon_Vladof'",
+                "challenge'Challenge_HeavyWeapon_Borg_Multikill'",
+                "challenge'Challenge_HeavyWeapon_Vladof_Multikill'",
+                "challenge'Challenge_HeavyWeapon_Maliwan_Bigshot'",
+                "challenge'Challenge_HeavyWeapon_Torgue_DirectHit'"
+              ]
+            }
+          },
+          {
+            "challengelist_kill_other": {
+              "challenge_list": "ChallengeList_Kill_Other",
+              "displayname": "Challenges_KillOther, EC8245F14CAF5F6FE07065B87937D234, Kill Other",
+              "challenges": [
+                "challenge'Challenge_Kill_Badasses'",
+                "challenge'Challenge_Kill_CriticalHits'",
+                "challenge'Challenge_Kill_GroundPound'",
+                "challenge'Challenge_Kill_WhileSliding'",
+                "challenge'Challenge_Kill_Corrupted'",
+                "challenge'Challenge_Kill_Enemies'",
+                "challenge'Challenge_Kill_Melee'",
+                "challenge'Challenge_Kill_Dashing'",
+                "challenge'Challenge_Kill_Airborne'"
+              ]
+            }
+          },
+          {
+            "challengelist_killbandits": {
+              "challenge_list": "ChallengeList_KillBandits",
+              "displayname": "Challenges_KillBandits, 03A2C252449A2F5AA5CC2DA754DAA24F, Kill Bandits",
+              "challenges": [
+                "challenge'Challenge_KillArmy_Bandits'",
+                "challenge'Challenge_Kill_Psychos'",
+                "challenge'Challenge_Kill_GunToters'",
+                "challenge'Challenge_Kill_Splices'",
+                "challenge'Challenge_Kill_Meatheads'",
+                "challenge'Challenge_Kill_Phalanx'"
+              ]
+            }
+          },
+          {
+            "challengelist_killbeasts": {
+              "challenge_list": "ChallengeList_KillBeasts",
+              "displayname": "Challenges_KillBeasts, B2C5091C41FF7A77DF6A4AAB2E3A7FB0, Kill Beasts",
+              "challenges": [
+                "challenge'Challenge_KillArmy_Beasts'",
+                "challenge'Challenge_Kill_Cats'",
+                "challenge'Challenge_Kill_Creeps'",
+                "challenge'Challenge_Kill_Bats'",
+                "challenge'Challenge_Kill_Pangolins'",
+                "challenge'Challenge_Kill_Beasts'",
+                "challenge'Challenge_Kill_Threshers'"
+              ]
+            }
+          },
+          {
+            "challengelist_killorder": {
+              "challenge_list": "ChallengeList_KillOrder",
+              "displayname": "Challenges_KillOrder, 941A1F594EE5C0F27D10E0838D38C070, Kill Order",
+              "challenges": [
+                "challenge'Challenge_KillArmy_Order'",
+                "challenge'Challenge_Kill_Soldiers'",
+                "challenge'Challenge_Kill_Strikers'",
+                "challenge'Challenge_Kill_Drones'",
+                "challenge'Challenge_Kill_Leaders'",
+                "challenge'Challenge_Kill_Brutes'",
+                "challenge'Challenge_Kill_Grunt'"
+              ]
+            }
+          },
+          {
+            "challengelist_loot": {
+              "challenge_list": "ChallengeList_Loot",
+              "displayname": "Challenges_Loot, F69FEB3F4DFB4B400D491A8DAEB22F34, Loot Challenges",
+              "challenges": [
+                "challenge'Challenge_GetCash'",
+                "challenge'Challenge_GetEridium'",
+                "challenge'Challenge_Loot_Whites'",
+                "challenge'Challenge_Loot_Greens'",
+                "challenge'Challenge_Loot_Blues'",
+                "challenge'Challenge_Loot_Purples'",
+                "challenge'Challenge_Loot_Legendaries'",
+                "challenge'Challenge_Loot_Weapons'",
+                "challenge'Challenge_Loot_Gadgets'",
+                "challenge'Challenge_Loot_Shields'",
+                "challenge'Challenge_Loot_RepKits'",
+                "challenge'Challenge_Loot_ClassMods'",
+                "challenge'Challenge_Loot_Enhancements'",
+                "challenge'Challenge_Loot_RedChest'",
+                "challenge'Challenge_Loot_Lootables'"
+              ]
+            }
+          },
+          {
+            "challengelist_maliwan": {
+              "challenge_list": "ChallengeList_Maliwan",
+              "displayname": "Challenges_Maliwan, 00837BD04B8C6AA63D1BAA95EB57759B, Maliwan",
+              "challenges": [
+                "challenge'Challenge_Maliwan_Kills'",
+                "challenge'Challenge_Maliwan_UnderbarrelKills'",
+                "challenge'Challenge_Maliwan_StatusCryo'",
+                "challenge'Challenge_Maliwan_StatusFire'",
+                "challenge'Challenge_Maliwan_StatusRadiation'",
+                "challenge'Challenge_Maliwan_StatusShock'",
+                "challenge'Challenge_Maliwan_StatusCorrosive'"
+              ]
+            }
+          },
+          {
+            "challengelist_order_manufacturer": {
+              "challenge_list": "ChallengeList_Order_Manufacturer",
+              "displayname": "Challenges_Order_Manufacturer, 330A249F4FE4BC68D6E7E9841EF8F599, Order Manufacturer",
+              "challenges": [
+                "challenge'Challenge_Order_Kills'",
+                "challenge'Challenge_Order_UnderbarrelKills'",
+                "challenge'Challenge_Order_HalfChargeKills'",
+                "challenge'Challenge_Order_FullChargeKills'",
+                "challenge'Challenge_Order_OneShotKills'",
+                "challenge'Challenge_Order_KillOrder'"
+              ]
+            }
+          },
+          {
+            "challengelist_paladin": {
+              "challenge_list": "ChallengeList_Paladin",
+              "displayname": "Challenges_Paladin, 3C9F41694C044E3BF76740876639A21B, Paladin",
+              "challenges": [
+                "challenge'Challenge_Paladin_LevelUp'",
+                "challenge'Challenge_Paladin_Cybernetics_Single'",
+                "challenge'Challenge_Paladin_Cybernetics_Tiered'",
+                "challenge'Challenge_Paladin_Vengeance_Single'",
+                "challenge'Challenge_Paladin_Vengeance_Tiered'",
+                "challenge'Challenge_Paladin_WeaponMaster_SIngle'",
+                "challenge'Challenge_Paladin_WeaponMaster_Tiered'"
+              ]
+            }
+          },
+          {
+            "challengelist_pistol": {
+              "challenge_list": "ChallengeList_Pistol",
+              "displayname": "Challenges_Pistol, 384AAC594710DEEB1B88C092992192C6, Pistol Challenges",
+              "challenges": [
+                "challenge'Challenge_Pistol_CriticalHits'",
+                "challenge'Challenge_Pistol_CriticalKills'",
+                "challenge'Challenge_Pistol_Kills'",
+                "challenge'Challenge_Pistol_ScopedKills'",
+                "challenge'Challenge_Pistol_SecondWinds'",
+                "challenge'Challenge_Pistol_GlidingKills'"
+              ]
+            }
+          },
+          {
+            "challengelist_propagandaspeakers": {
+              "challenge_list": "ChallengeList_PropagandaSpeakers",
+              "displayname": "ChallengeLists_Collectibles, 9C77F7784123872DE9394FA6DE358B15, Propaganda Speakers",
+              "challenges": [
+                "challenge'Challenge_Collect_PropagandaSpeakers_Parent'",
+                "challenge'Challenge_Collect_PropagandaSpeakers_City_1'",
+                "challenge'Challenge_Collect_PropagandaSpeakers_City_2'",
+                "challenge'Challenge_Collect_PropagandaSpeakers_City_3'",
+                "challenge'Challenge_Collect_PropagandaSpeakers_City_4'",
+                "challenge'Challenge_Collect_PropagandaSpeakers_Grasslands_1'",
+                "challenge'Challenge_Collect_PropagandaSpeakers_Grasslands_2'",
+                "challenge'Challenge_Collect_PropagandaSpeakers_Grasslands_3'",
+                "challenge'Challenge_Collect_PropagandaSpeakers_Grasslands_4'",
+                "challenge'Challenge_Collect_PropagandaSpeakers_Grasslands_5'",
+                "challenge'Challenge_Collect_PropagandaSpeakers_Grasslands_6'",
+                "challenge'Challenge_Collect_PropagandaSpeakers_Grasslands_7'",
+                "challenge'Challenge_Collect_PropagandaSpeakers_Grasslands_8'",
+                "challenge'Challenge_Collect_PropagandaSpeakers_Mountains_1'",
+                "challenge'Challenge_Collect_PropagandaSpeakers_Mountains_2'",
+                "challenge'Challenge_Collect_PropagandaSpeakers_Mountains_3'",
+                "challenge'Challenge_Collect_PropagandaSpeakers_Mountains_4'",
+                "challenge'Challenge_Collect_PropagandaSpeakers_Mountains_5'",
+                "challenge'Challenge_Collect_PropagandaSpeakers_Mountains_6'",
+                "challenge'Challenge_Collect_PropagandaSpeakers_Mountains_7'",
+                "challenge'Challenge_Collect_PropagandaSpeakers_Shatteredlands_1'",
+                "challenge'Challenge_Collect_PropagandaSpeakers_Shatteredlands_2'",
+                "challenge'Challenge_Collect_PropagandaSpeakers_Shatteredlands_3'",
+                "challenge'Challenge_Collect_PropagandaSpeakers_Shatteredlands_4'",
+                "challenge'Challenge_Collect_PropagandaSpeakers_Shatteredlands_5'",
+                "challenge'Challenge_Collect_PropagandaSpeakers_Shatteredlands_6'",
+                "challenge'Challenge_Collect_PropagandaSpeakers_Shatteredlands_7'",
+                "challenge'Challenge_Collect_PropagandaSpeakers_Shatteredlands_8'"
+              ]
+            }
+          },
+          {
+            "challengelist_repairkits": {
+              "challenge_list": "ChallengeList_RepairKits",
+              "displayname": "Challenge_RepairKit, 4A9FF566416DE4AEFB35B8ACFA3D5896, Repair Kit",
+              "challenges": [
+                "challenge'Challenge_RepairKit_Kills'",
+                "challenge'Challenge_RepairKit_HealSelf'",
+                "challenge'Challenge_RepairKit_HealOthers'",
+                "challenge'Challenge_RepairKit_Uses'",
+                "challenge'Challenge_RepairKit_Lifesteal'"
+              ]
+            }
+          },
+          {
+            "challengelist_safehouses": {
+              "challenge_list": "ChallengeList_Safehouses",
+              "displayname": "ChallengeLists_Activities, B57AA8C54E056A827F9A9FA2CAC65092, Safehouses",
+              "challenges": [
+                "challenge'Challenge_Activity_Safehouses_Parent'",
+                "challenge'Challenge_Activity_Safehouses_Grasslands_1'",
+                "challenge'Challenge_Activity_Safehouses_Grasslands_2'",
+                "challenge'Challenge_Activity_Safehouses_Grasslands_3'",
+                "challenge'Challenge_Activity_Safehouses_Grasslands_4'",
+                "challenge'Challenge_Activity_Safehouses_Mountains_1'",
+                "challenge'Challenge_Activity_Safehouses_Mountains_2'",
+                "challenge'Challenge_Activity_Safehouses_Mountains_3'",
+                "challenge'Challenge_Activity_Safehouses_Mountains_4'",
+                "challenge'Challenge_Activity_Safehouses_Shatteredlands_1'",
+                "challenge'Challenge_Activity_Safehouses_Shatteredlands_2'",
+                "challenge'Challenge_Activity_Safehouses_Shatteredlands_3'",
+                "challenge'Challenge_Activity_Safehouses_City_1'",
+                "challenge'Challenge_Activity_Safehouses_City_2'",
+                "challenge'Challenge_Activity_Safehouses_City_3'"
+              ]
+            }
+          },
+          {
+            "challengelist_safes": {
+              "challenge_list": "ChallengeList_Safes",
+              "displayname": "ChallengeLists_Collectibles, 815315434BD257BC262100AF6A4576B6, Safes",
+              "challenges": [
+                "challenge'Challenge_Collect_Safes_Parent'",
+                "challenge'Challenge_Collect_Safes_City_1'",
+                "challenge'Challenge_Collect_Safes_City_2'",
+                "challenge'Challenge_Collect_Safes_City_3'",
+                "challenge'Challenge_Collect_Safes_Shatteredlands_1'",
+                "challenge'Challenge_Collect_Safes_Shatteredlands_2'",
+                "challenge'Challenge_Collect_Safes_Shatteredlands_3'",
+                "challenge'Challenge_Collect_Safes_Shatteredlands_4'",
+                "challenge'Challenge_Collect_Safes_Shatteredlands_5'",
+                "challenge'Challenge_Collect_Safes_Shatteredlands_6'",
+                "challenge'Challenge_Collect_Safes_Shatteredlands_7'",
+                "challenge'Challenge_Collect_Safes_Shatteredlands_8'",
+                "challenge'Challenge_Collect_Safes_Shatteredlands_9'",
+                "challenge'Challenge_Collect_Safes_Shatteredlands_10'"
+              ]
+            }
+          },
+          {
+            "challengelist_shields": {
+              "challenge_list": "ChallengeList_Shields",
+              "displayname": "Challenges_Shields, 192AE03649C06F89773B4187293F12E6, Shield Challenges",
+              "challenges": [
+                "challenge'Challenge_Shield_AbsorbAmmo'",
+                "challenge'Challenge_Shield_Kills'",
+                "challenge'Challenge_Shield_NovaKills'",
+                "challenge'Challenge_Shield_PickupBoosters'",
+                "challenge'Challenge_Shield_PickupShards'",
+                "challenge'Challenge_Shield_ReflectedKills'",
+                "challenge'Challenge_Shield_TakeShieldDamage'",
+                "challenge'Challenge_Shield_AmpShield'"
+              ]
+            }
+          },
+          {
+            "challengelist_shiny": {
+              "challenge_list": "ChallengeList_Shiny",
+              "displayname": "Challenges_ShinyGear, C2C04D134EB83F7A56A860B9992A030D, Phosphene Guns",
+              "challenges": [
+                "challenge'Challenge_Collection_Shiny_Ultimate'",
+                "challenge'Challenge_Shiny_HeartGun'",
+                "challenge'Challenge_Shiny_DualDamage'",
+                "challenge'Challenge_Shiny_anarchy'",
+                "challenge'Challenge_Shiny_Asher'",
+                "challenge'Challenge_Shiny_ATLien'",
+                "challenge'Challenge_Shiny_BeeGun'",
+                "challenge'Challenge_Shiny_Lumberjack'",
+                "challenge'Challenge_Shiny_Bod'",
+                "challenge'Challenge_Shiny_BonnieClyde'",
+                "challenge'Challenge_Shiny_Boomslang'",
+                "challenge'Challenge_Shiny_Ballista'",
+                "challenge'Challenge_Shiny_Bugbear'",
+                "challenge'Challenge_Shiny_Bully'",
+                "challenge'Challenge_Shiny_Chuck'",
+                "challenge'Challenge_Shiny_ColdShoulder'",
+                "challenge'Challenge_Shiny_complex_root'",
+                "challenge'Challenge_Shiny_convergence'",
+                "challenge'Challenge_Shiny_bloodstarved'",
+                "challenge'Challenge_Shiny_DividedFocus'",
+                "challenge'Challenge_Shiny_Finnty'",
+                "challenge'Challenge_Shiny_Fisheye'",
+                "challenge'Challenge_Shiny_GMR'",
+                "challenge'Challenge_Shiny_Goalkeeper'",
+                "challenge'Challenge_Shiny_GoldenGod'",
+                "challenge'Challenge_Shiny_GoreMaster'",
+                "challenge'Challenge_Shiny_hellfire'",
+                "challenge'Challenge_Shiny_Hellwalker'",
+                "challenge'Challenge_Shiny_Slugger'",
+                "challenge'Challenge_Shiny_HeavyTurret'",
+                "challenge'Challenge_Shiny_Kaleidosplode'",
+                "challenge'Challenge_Shiny_KaoSon'",
+                "challenge'Challenge_Shiny_katagawa'",
+                "challenge'Challenge_Shiny_Kickballer'",
+                "challenge'Challenge_Shiny_KingsGambit'",
+                "challenge'Challenge_Shiny_LeadBalloon'",
+                "challenge'Challenge_Shiny_Linebacker'",
+                "challenge'Challenge_Shiny_Lucian'",
+                "challenge'Challenge_Shiny_RocketReload'",
+                "challenge'Challenge_Shiny_Luty'",
+                "challenge'Challenge_Shiny_NoisyCricket'",
+                "challenge'Challenge_Shiny_OhmIGot'",
+                "challenge'Challenge_Shiny_Onslaught'",
+                "challenge'Challenge_Shiny_OM'",
+                "challenge'Challenge_Shiny_Phantom_Flame'",
+                "challenge'Challenge_Shiny_PlasmaCoil'",
+                "challenge'Challenge_Shiny_PotatoThrower'",
+                "challenge'Challenge_Shiny_Prince'",
+                "challenge'Challenge_Shiny_QueensRest'",
+                "challenge'Challenge_Shiny_RainbowVomit'",
+                "challenge'Challenge_Shiny_Rangefinder'",
+                "challenge'Challenge_Shiny_Roach'",
+                "challenge'Challenge_Shiny_Rowan'",
+                "challenge'Challenge_Shiny_RubysGrasp'",
+                "challenge'Challenge_Shiny_QuickDraw'",
+                "challenge'Challenge_Shiny_seventh_sense'",
+                "challenge'Challenge_Shiny_Sideshow'",
+                "challenge'Challenge_Shiny_star_helix'",
+                "challenge'Challenge_Shiny_StopGap'",
+                "challenge'Challenge_Shiny_Stray'",
+                "challenge'Challenge_Shiny_Sweet_Embrace'",
+                "challenge'Challenge_Shiny_Symmetry'",
+                "challenge'Challenge_Shiny_TKsWave'",
+                "challenge'Challenge_Shiny_Truck'",
+                "challenge'Challenge_Shiny_Vamoose'",
+                "challenge'Challenge_Shiny_WF'",
+                "challenge'Challenge_Shiny_WomboCombo'",
+                "challenge'Challenge_Shiny_Zipgun'"
+              ]
+            }
+          },
+          {
+            "challengelist_shotgun": {
+              "challenge_list": "ChallengeList_Shotgun",
+              "displayname": "Challenges_Shotgun, DADECC944E943FB115D004BDD0817DF3, Shotgun Challenges",
+              "challenges": [
+                "challenge'Challenge_Shotgun_CloseKills'",
+                "challenge'Challenge_Shotgun_CriticalHits'",
+                "challenge'Challenge_Shotgun_CriticalKills'",
+                "challenge'Challenge_Shotgun_DistantKills'",
+                "challenge'Challenge_Shotgun_Kills'",
+                "challenge'Challenge_Shotgun_SecondWinds'",
+                "challenge'Challenge_Shotgun_SlidingKills'",
+                "challenge'Challenge_Shotgun_Dash'",
+                "challenge'Challenge_Shotgun_Bigshot'"
+              ]
+            }
+          },
+          {
+            "challengelist_shrines": {
+              "challenge_list": "ChallengeList_Shrines",
+              "displayname": "ChallengeLists_Collectibles, C371332F4D9F0DE89A57389E1DF19CDF, Shrines",
+              "challenges": [
+                "challenge'Challenge_Collect_Shrines_Parent'",
+                "challenge'Challenge_Collect_Shrines_Mountains_1'",
+                "challenge'Challenge_Collect_Shrines_Mountains_2'",
+                "challenge'Challenge_Collect_Shrines_Mountains_3'",
+                "challenge'Challenge_Collect_Shrines_Mountains_4'",
+                "challenge'Challenge_Collect_Shrines_Mountains_5'",
+                "challenge'Challenge_Collect_Shrines_Mountains_6'",
+                "challenge'Challenge_Collect_Shrines_Mountains_7'",
+                "challenge'Challenge_Collect_Shrines_Mountains_8'",
+                "challenge'Challenge_Collect_Shrines_Mountains_9'",
+                "challenge'Challenge_Collect_Shrines_Mountains_10'"
+              ]
+            }
+          },
+          {
+            "challengelist_silos": {
+              "challenge_list": "ChallengeList_Silos",
+              "displayname": "ChallengeLists_Activities, 02D35BEA47D1581C64B4BEAAA49DC953, Silos",
+              "challenges": [
+                "challenge'Challenge_Activity_Silos_Parent'",
+                "challenge'Challenge_Activity_Silos_Mountains_1'",
+                "challenge'Challenge_Activity_Silos_Mountains_2'",
+                "challenge'Challenge_Activity_Silos_Mountains_3'",
+                "challenge'Challenge_Activity_Silos_Grasslands_1'",
+                "challenge'Challenge_Activity_Silos_Grasslands_2'",
+                "challenge'Challenge_Activity_Silos_Grasslands_3'",
+                "challenge'Challenge_Activity_Silos_Shatteredlands_1'",
+                "challenge'Challenge_Activity_Silos_Shatteredlands_2'",
+                "challenge'Challenge_Activity_Silos_Shatteredlands_3'"
+              ]
+            }
+          },
+          {
+            "challengelist_smg": {
+              "challenge_list": "ChallengeList_SMG",
+              "displayname": "Challenges_SMG, 37F7CAA344DCEE728955E89B1D1B6901, SMG Challenges",
+              "challenges": [
+                "challenge'Challenge_SMG_CriticalHits'",
+                "challenge'Challenge_SMG_CriticalKills'",
+                "challenge'Challenge_SMG_Kills'",
+                "challenge'Challenge_SMG_SecondWinds'",
+                "challenge'Challenge_SMG_SlidingKills'",
+                "challenge'Challenge_SMG_Dash'"
+              ]
+            }
+          },
+          {
+            "challengelist_sniper": {
+              "challenge_list": "ChallengeList_Sniper",
+              "displayname": "Challenges_Sniper, 1605A0E6425FC6DB77E080AFA45F0D32, Sniper Challenges",
+              "challenges": [
+                "challenge'Challenge_Sniper_CriticalHits'",
+                "challenge'Challenge_Sniper_CriticalKills'",
+                "challenge'Challenge_Sniper_DistantKills'",
+                "challenge'Challenge_Sniper_Kills'",
+                "challenge'Challenge_Sniper_OneShotKills'",
+                "challenge'Challenge_Sniper_SecondWinds'",
+                "challenge'Challenge_Sniper_UnawareKills'",
+                "challenge'Challenge_Sniper_UnscopedKills'",
+                "challenge'Challenge_Sniper_Bigshot'"
+              ]
+            }
+          },
+          {
+            "challengelist_tediore": {
+              "challenge_list": "ChallengeList_Tediore",
+              "displayname": "Challenges_Tediore, CA7C464C46CBFF7CA347AABBAE4F1942, Tediore",
+              "challenges": [
+                "challenge'Challenge_Tediore_Kills'",
+                "challenge'Challenge_Tediore_UnderbarrelKills'",
+                "challenge'Challenge_Tediore_EmptyReload_Kills'",
+                "challenge'Challenge_Tediore_FullReload_Kills'",
+                "challenge'Challenge_Tediore_ComboReload_Kills'",
+                "challenge'Challenge_Tediore_Turret_Kills'"
+              ]
+            }
+          },
+          {
+            "challengelist_torgue": {
+              "challenge_list": "ChallengeList_Torgue",
+              "displayname": "Challenges_Torgue, 72539E2847DF193BC96BD0A1825CFDE3, Torgue",
+              "challenges": [
+                "challenge'Challenge_Torgue_Kills'",
+                "challenge'Challenge_Torgue_UnderbarrelKills'",
+                "challenge'Challenge_Torgue_SplashKills'",
+                "challenge'Challenge_Torgue_GrenadeKills'",
+                "challenge'Challenge_Torgue_ImpactKills'",
+                "challenge'Challenge_Torgue_StickyKills'"
+              ]
+            }
+          },
+          {
+            "challengelist_tutorials_activities": {
+              "challenge_list": "ChallengeList_Tutorials_Activities",
+              "displayname": "ChallengeList_Tutorials_Activities, A528522F4FBA6CD959BE888F688CE9F2, Activities",
+              "challenges": [
+                "challenge'Challenge_Tutorial_Activity_OrderBunker_Discovery'",
+                "challenge'Challenge_Tutorial_Activity_AugerMine_Discovery'",
+                "challenge'Challenge_Tutorial_Activity_DrillSite_Discovery'",
+                "challenge'Challenge_Tutorial_Activity_Crawler_Discovery'",
+                "challenge'Challenge_Tutorial_Activity_Safehouse_Capture'",
+                "challenge'Challenge_Tutorial_Activity_Safehouse_Discovery'",
+                "challenge'Challenge_Tutorial_Activity_Silo_Capture'",
+                "challenge'Challenge_Tutorial_Activity_Silo_Discovery'",
+                "challenge'Challenge_Tutorial_Activity_ContractBoard_Discovery'",
+                "challenge'Challenge_Tutorial_Activity_AugerMine_Locked'",
+                "challenge'Challenge_Tutorial_Activity_OrderBunker_Locked'"
+              ]
+            }
+          },
+          {
+            "challengelist_tutorials_collectibles": {
+              "challenge_list": "ChallengeList_Tutorials_Collectibles",
+              "displayname": "ChallengeList_Tutorials_Collectibles, B82FAF0443052C18D62B7085452788E1, Collectible Tutorials",
+              "challenges": [
+                "challenge'Challenge_Tutorial_Collectible_LostCapsules_Discovery'",
+                "challenge'Challenge_Tutorial_Collectible_LostCapsules_Decrypt'",
+                "challenge'Challenge_Tutorial_Collectible_Caches_Discovery'",
+                "challenge'Challenge_Tutorial_Collectible_Safes_Discovery'",
+                "challenge'Challenge_Tutorial_Collectible_Shrines_Discovery'",
+                "challenge'Challenge_Tutorial_Collectible_VaultSymbols_Discovery'",
+                "challenge'Challenge_Tutorial_Collectible_EchoLogArjay_Discovery'",
+                "challenge'Challenge_Tutorial_Collectible_EchoLogGeneral_Discovery'",
+                "challenge'Challenge_Tutorial_Collectible_EchoLogVH_Discovery'",
+                "challenge'Challenge_Tutorial_Collectible_Speakers_Discovery'",
+                "challenge'Challenge_Tutorial_Collectible_Evocariums_Discovery'",
+                "challenge'Challenge_Tutorial_Collectible_VaultPower_Discovery'"
+              ]
+            }
+          },
+          {
+            "challengelist_uvh_rankup_1": {
+              "challenge_list": "ChallengeList_UVH_Rankup_1",
+              "displayname": "UVH_Rankup_1_Challenges, AA6291F34F367E5811D56C8638F0AE45, UVH Rankup 1",
+              "challenges": [
+                "challenge'UVH_Rankup_1_FinalChallenge'",
+                "challenge'Challenge_UVH_Rankup_1_Firmware'",
+                "challenge'Challenge_UVH_Rankup_1_BMVM'",
+                "challenge'Challenge_UVH_Rankup_1_TrueBoss'"
+              ]
+            }
+          },
+          {
+            "challengelist_uvh_rankup_2": {
+              "challenge_list": "ChallengeList_UVH_Rankup_2",
+              "displayname": "UVH_Rankup_2_Challenges, CBCDE13B4BE3A1A4BC65CB9121FABB38, UVH Rankup 2",
+              "challenges": [
+                "challenge'Challenge_UVH_Rankup_2_Kratch'",
+                "challenge'Challenge_UVH_Rankup_2_Creep'",
+                "challenge'Challenge_UVH_Rankup_2_Order'",
+                "challenge'Challenge_UVH_Rankup_2_Ripper'",
+                "challenge'UVH_Rankup_2_FinalChallenge'"
+              ]
+            }
+          },
+          {
+            "challengelist_uvh_rankup_3": {
+              "challenge_list": "ChallengeList_UVH_Rankup_3",
+              "displayname": "UVH_Rankup_3_Challenges, 878B179949D92A55CDA2AE95E26EB823, UVH Rankup 3",
+              "challenges": [
+                "challenge'Challenge_UVH_Rankup_3_Cat'",
+                "challenge'Challenge_UVH_Rankup_3_Pangolin'",
+                "challenge'Challenge_UVH_Rankup_3_Order'",
+                "challenge'Challenge_UVH_Rankup_3_Ripper'",
+                "challenge'UVH_Rankup_3_FinalChallenge'"
+              ]
+            }
+          },
+          {
+            "challengelist_uvh_rankup_4": {
+              "challenge_list": "ChallengeList_UVH_Rankup_4",
+              "displayname": "UVH_Rankup_4_Challenges, 81B3E27949B93B9FF928F795B08C3BB1, UVH Rankup 4",
+              "challenges": [
+                "challenge'Challenge_UVH_Rankup_4_Beast'",
+                "challenge'Challenge_UVH_Rankup_4_Order'",
+                "challenge'Challenge_UVH_Rankup_4_Ripper'",
+                "challenge'Challenge_UVH_Rankup_4_Thresher'",
+                "challenge'UVH_Rankup_4_FinalChallenge'"
+              ]
+            }
+          },
+          {
+            "challengelist_uvh_rankup_5": {
+              "challenge_list": "ChallengeList_UVH_Rankup_5",
+              "displayname": "UVH_Rankup_5_Challenges, CC10B82F472586F0A348539D20CC01F0, UVH Rankup 5",
+              "challenges": [
+                "challenge'Challenge_UVH_Rankup_5_GL'",
+                "challenge'Challenge_UVH_Rankup_5_MOU'",
+                "challenge'Challenge_UVH_Rankup_5_SL'",
+                "challenge'UVH_Rankup_5_FinalChallenge'"
+              ]
+            }
+          },
+          {
+            "challengelist_vaultobjects": {
+              "challenge_list": "ChallengeList_VaultObjects",
+              "challenges": [
+                "challenge'Challenge_Collect_VaultKey_Grasslands_Parent'",
+                "challenge'Challenge_Collect_VaultKeyA_Grasslands'",
+                "challenge'Challenge_Collect_VaultKeyB_Grasslands'",
+                "challenge'Challenge_Collect_VaultKeyC_Grasslands'",
+                "challenge'Challenge_Collect_VaultKey_Mountains_Parent'",
+                "challenge'Challenge_Collect_VaultKeyA_Mountains'",
+                "challenge'Challenge_Collect_VaultKeyB_Mountains'",
+                "challenge'Challenge_Collect_VaultKeyC_Mountains'",
+                "challenge'Challenge_Collect_VaultKey_Shatteredlands_Parent'",
+                "challenge'Challenge_Collect_VaultKeyA_Shatteredlands'",
+                "challenge'Challenge_Collect_VaultKeyB_Shatteredlands'",
+                "challenge'Challenge_Collect_VaultKeyC_Shatteredlands'",
+                "challenge'Challenge_Unlock_VaultLock_Parent'",
+                "challenge'Challenge_Unlock_VaultLock_Grasslands'",
+                "challenge'Challenge_Unlock_VaultLock_Mountains'",
+                "challenge'Challenge_Unlock_VaultLock_Shatteredlands'",
+                "challenge'Challenge_Collect_VaultPower_Grasslands'",
+                "challenge'Challenge_Collect_VaultPower_Mountains'",
+                "challenge'Challenge_Collect_VaultPower_Shatteredlands'",
+                "challenge'Challenge_Unlock_VaultDoor_Grasslands'",
+                "challenge'Challenge_Unlock_VaultDoor_Mountains'",
+                "challenge'Challenge_Unlock_VaultDoor_Shatteredlands'"
+              ]
+            }
+          },
+          {
+            "challengelist_vaultsymbols": {
+              "challenge_list": "ChallengeList_VaultSymbols",
+              "displayname": "ChallengeLists_Collectibles, 528B756D41CF324A5B6B4CB6BC662544, Vault Symbols",
+              "challenges": [
+                "challenge'Challenge_Collect_VaultSymbols_Parent'",
+                "challenge'Challenge_Collect_VaultSymbols_Mountains_1'",
+                "challenge'Challenge_Collect_VaultSymbols_Mountains_2'",
+                "challenge'Challenge_Collect_VaultSymbols_Mountains_3'",
+                "challenge'Challenge_Collect_VaultSymbols_Mountains_4'",
+                "challenge'Challenge_Collect_VaultSymbols_Mountains_5'",
+                "challenge'Challenge_Collect_VaultSymbols_Mountains_6'",
+                "challenge'Challenge_Collect_VaultSymbols_Mountains_7'",
+                "challenge'Challenge_Collect_VaultSymbols_City_1'",
+                "challenge'Challenge_Collect_VaultSymbols_City_2'",
+                "challenge'Challenge_Collect_VaultSymbols_City_3'",
+                "challenge'Challenge_Collect_VaultSymbols_City_4'",
+                "challenge'Challenge_Collect_VaultSymbols_City_5'",
+                "challenge'Challenge_Collect_VaultSymbols_City_6'",
+                "challenge'Challenge_Collect_VaultSymbols_Grasslands_1'",
+                "challenge'Challenge_Collect_VaultSymbols_Grasslands_2'",
+                "challenge'Challenge_Collect_VaultSymbols_Grasslands_3'",
+                "challenge'Challenge_Collect_VaultSymbols_Grasslands_4'",
+                "challenge'Challenge_Collect_VaultSymbols_Grasslands_5'",
+                "challenge'Challenge_Collect_VaultSymbols_Grasslands_6'",
+                "challenge'Challenge_Collect_VaultSymbols_Grasslands_7'",
+                "challenge'Challenge_Collect_VaultSymbols_Shatteredlands_1'",
+                "challenge'Challenge_Collect_VaultSymbols_Shatteredlands_2'",
+                "challenge'Challenge_Collect_VaultSymbols_Shatteredlands_3'",
+                "challenge'Challenge_Collect_VaultSymbols_Shatteredlands_4'",
+                "challenge'Challenge_Collect_VaultSymbols_Shatteredlands_5'",
+                "challenge'Challenge_Collect_VaultSymbols_Shatteredlands_6'",
+                "challenge'Challenge_Collect_VaultSymbols_Shatteredlands_7'",
+                "challenge'Challenge_Collect_VaultSymbols_Elpis_1'",
+                "challenge'Challenge_Collect_VaultSymbols_Elpis_2'",
+                "challenge'Challenge_Collect_VaultSymbols_UpperCity_1'",
+                "challenge'Challenge_Collect_VaultSymbols_UpperCity_2'",
+                "challenge'Challenge_Collect_VaultSymbols_Grasslands_8'",
+                "challenge'Challenge_Collect_VaultSymbols_Grasslands_9'",
+                "challenge'Challenge_Collect_VaultSymbols_Grasslands_10'",
+                "challenge'Challenge_Collect_VaultSymbols_Grasslands_11'",
+                "challenge'Challenge_Collect_VaultSymbols_Grasslands_12'",
+                "challenge'Challenge_Collect_VaultSymbols_Mountains_8'",
+                "challenge'Challenge_Collect_VaultSymbols_Mountains_9'",
+                "challenge'Challenge_Collect_VaultSymbols_Mountains_10'",
+                "challenge'Challenge_Collect_VaultSymbols_Mountains_11'",
+                "challenge'Challenge_Collect_VaultSymbols_Mountains_12'",
+                "challenge'Challenge_Collect_VaultSymbols_Shatteredlands_8'",
+                "challenge'Challenge_Collect_VaultSymbols_Shatteredlands_9'",
+                "challenge'Challenge_Collect_VaultSymbols_Shatteredlands_10'",
+                "challenge'Challenge_Collect_VaultSymbols_Shatteredlands_11'",
+                "challenge'Challenge_Collect_VaultSymbols_Shatteredlands_12'"
+              ]
+            }
+          },
+          {
+            "challengelist_vladof": {
+              "challenge_list": "ChallengeList_Vladof",
+              "displayname": "Challenges_Vladof, 7C3DB07545B677102741E2A0C8B05A25, Vladof",
+              "challenges": [
+                "challenge'Challenge_Vladof_Kills'",
+                "challenge'Challenge_Vladof_ExtraBarrel'",
+                "challenge'Challenge_Vladof_ExplosiveUnderbarrel'",
+                "challenge'Challenge_Vladof_Bipod'",
+                "challenge'Challenge_Vladof_ShotgunUnderbarrel'"
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "entries": [
+          {
+            "challengelist_jakobs": {
+              "challenge_list": "ChallengeList_Jakobs",
+              "displayname": "Challenges_Jakobs, 7F47C0D248916FB04D4AF1984A67BE9F, Jakobs",
+              "challenges": [
+                "challenge'Challenge_Jakobs_Kills'",
+                "challenge'Challenge_Jakobs_GrenadeCrits'",
+                "challenge'Challenge_Jakobs_OneShotKills'",
+                "challenge'Challenge_Jakobs_Quickdraw'",
+                "challenge'Challenge_Jakobs_RicochetKills'",
+                "challenge'Challenge_Jakobs_UnderbarrelKills'"
+              ]
+            }
+          },
+          {
+            "challengelist_spareparts": {
+              "challenge_list": "ChallengeList_SpareParts",
+              "displayname": "Challenges_SpareParts, E38566CE42E148745DFFC6BEF27ABF19, Licensed Parts",
+              "challenges": [
+                "challenge'Challenge_SpareParts_AbsorbAmmo'",
+                "challenge'Challenge_SpareParts_AmpShieldHyperion'",
+                "challenge'Challenge_SpareParts_AtlasGrenades'",
+                "challenge'Challenge_SpareParts_AtlasPucks'",
+                "challenge'Challenge_SpareParts_CovOverheated'",
+                "challenge'Challenge_SpareParts_CovNotOverheated'",
+                "challenge'Challenge_SpareParts_ReflectDamageHyperion'"
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  }
+}

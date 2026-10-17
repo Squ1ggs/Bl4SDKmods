@@ -1,0 +1,4813 @@
+{
+  "inv_name_part": {
+    "records": [
+      {
+        "entries": [
+          {
+            "np_absolution": {
+              "inv_name_part": "np_absolution",
+              "partname": "WeaponNamingStrategies, F98DA3A24AAC025A7FAB1191A3789D21, Absolution",
+              "priority": "1.000000"
+            }
+          },
+          {
+            "np_aggrovator": {
+              "inv_name_part": "np_aggrovator",
+              "partname": "Uni_ORD_Aggrovator, 4416B1404217DF09F7D1EF89EF1FB67C, Chaumurky",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_angel": {
+              "inv_name_part": "np_angel",
+              "partname": "Uni_DAD_Angel, E339F919439D65FCBA889DAEC0398898, Guardian Angel",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_asher": {
+              "inv_name_part": "np_asher",
+              "partname": "Uni_MAL_SR_Katagawa, 70788A4B4BC33DD2CFC9EF9CF86051B1, Asher's Rise",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_atlien": {
+              "inv_name_part": "np_ATLien",
+              "partname": "Uni_Spinning_Blade, 63CA394143C24472D29D5B886A117212, Budget Deity",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_axe": {
+              "inv_name_part": "np_Axe",
+              "partname": "Uni_DAD_GRN_Axe, 91AF5530427D2D9F4BF9A8B15DB8CDD2, Buzz Axe",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_ballista": {
+              "inv_name_part": "np_ballista",
+              "partname": "Uni_MAL_SG_Kickballer, B655925341F05F72A9C44B8BFDDD823E, Borstel Ballista",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_barrelaged": {
+              "inv_name_part": "np_barrelAged",
+              "partname": "Uni_JAK_BarrelAged, 0DE17D394335FB14A98464B66E61C162, Oak-Aged Cask",
+              "priority": "1.000000"
+            }
+          },
+          {
+            "np_beegun": {
+              "inv_name_part": "np_BeeGun",
+              "partname": "Uni_MAL_SG_Kickballer, 287050D14CF1BA360EC00C89AA97FF2E, Birt's Bees",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_blockbuster": {
+              "inv_name_part": "np_Blockbuster",
+              "partname": "Uni_Spinning_Blade, 709F9D29464D3091784CA398AF46FDBD, Blockbuster",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_bod": {
+              "inv_name_part": "np_bod",
+              "partname": "Uni_BOR_SG_Convergence, BBD9DF7347BC5F2DA32E76869AEC6653, Bod",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_bonnieclyde": {
+              "inv_name_part": "np_BonnieClyde",
+              "partname": "Uni_MAL_SG_Kickballer, 78FCB94C4A830FE3648CF39CB2FE450E, Bonnie and Clyde",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_boomslang": {
+              "inv_name_part": "np_Boomslang",
+              "partname": "Uni_MAL_SG_Kickballer, 3944FD324B20CB1AB5B03FAC822DD50A, Boomslang",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_bottledlightning": {
+              "inv_name_part": "np_BottledLightning",
+              "partname": "Uni_Spinning_Blade, 5F3736044B70FD89ED072DA898A32472, Bottled Lightning",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_bugbear": {
+              "inv_name_part": "np_Bugbear",
+              "partname": "WeaponNamingStrategies, E10DC358478192E2DDB1C7B8A2B429F7, Bugbear",
+              "priority": "1.000000"
+            }
+          },
+          {
+            "np_bully": {
+              "inv_name_part": "np_Bully",
+              "partname": "WeaponNamingStrategies, 4632065B40564C22B87FAFBE181F36A9, Bully",
+              "priority": "1.000000",
+              "minrarity": "rarity'none'",
+              "maxrarity": "rarity'none'",
+              "requiredmanufacturer": "manufacturer'none'"
+            }
+          },
+          {
+            "np_chuck": {
+              "inv_name_part": "np_Chuck",
+              "partname": "Uni_MAL_SG_Kickballer, 706CDF834D829BDF5B22A38778427747, Chuck",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_coldshoulder": {
+              "inv_name_part": "NP_coldshoulder",
+              "partname": "Uni_TOR_AR_PotatoThrower, B22BF6D54C9418FD2C4DBB8421B49734, Cold Shoulder",
+              "priority": "1.000000"
+            }
+          },
+          {
+            "np_commbd": {
+              "inv_name_part": "np_commBD",
+              "partname": "Uni_Inv_TED_SG_Anarchy, E06816934D60C8ACD8939985739C2946, Forsaken Chaos",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_compleat": {
+              "inv_name_part": "np_compleat",
+              "partname": "Uni_CinderShelly, 939D12364C0093833C8BD4BF64357087, Compleation",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_discjockey": {
+              "inv_name_part": "np_DiscJockey",
+              "partname": "Uni_Spinning_Blade, 20A3087E44D3E683ABF0CC8D81604A72, Disc Jockey",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_disco_disc": {
+              "inv_name_part": "np_disco_disc",
+              "partname": "Uni_Spinning_Blade, D7099C8B4A697FBF323911BE0D36F9A6, Destructo Disco",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_dividedfocus": {
+              "inv_name_part": "np_DividedFocus",
+              "partname": "Uni_MAL_SG_Kickballer, C58B59B14FBC9316BC3D0B9C3F90392C, Divided Focus",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_dualdamage": {
+              "inv_name_part": "NP_DualDamage",
+              "partname": "Uni_VLA_AR_DualDamage, 9822400D4EDD59C5E78945A593D30BA5, Aegon's Dream",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_faultydetonator": {
+              "inv_name_part": "np_FaultyDetonator",
+              "partname": "Uni_Spinning_Blade, 8C7DE56648CE3336707E688874999685, Faulty Detonator",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_finnity": {
+              "inv_name_part": "np_Finnity",
+              "partname": "Uni_MAL_SG_Kickballer, DD8280394ECC1174085838A4644BC810, Finnity XXX-L",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_finnty_upgrade": {
+              "inv_name_part": "np_Finnty_Upgrade",
+              "partname": "Uni_MAL_SG_Kickballer, C5A1320A486E88A2E13B7EB41E65C8AD, Upgraded Finnity XXX-L",
+              "priority": "4.000000"
+            }
+          },
+          {
+            "np_firepot": {
+              "inv_name_part": "np_firepot",
+              "partname": "Uni_Spinning_Blade, BFC508824696A6DFE88F8DAB41C3AD87, Firepot",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_firewall": {
+              "inv_name_part": "np_firewall",
+              "partname": "Uni_Supernova, 5D52E82340325A10C72608B2964E205C, Firebreak",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_firewerks": {
+              "inv_name_part": "np_firewerks",
+              "partname": "Uni_CinderShelly, 61D53DB347655E2B665350BEFDB37C45, Firewerks",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_firework": {
+              "inv_name_part": "np_Firework",
+              "partname": "Uni_MAL_SM_Firework, 464240CD4DAD0756DF2D34B66D69FA8B, Matador's Match",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_firstimpression": {
+              "inv_name_part": "np_firstimpression",
+              "partname": "Uni_DAD_AR_Star_Helix, C1488F6F4F2948D6278CE49C835479AE, First Impression",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_fisheye": {
+              "inv_name_part": "np_Fisheye",
+              "partname": "Uni_MAL_SG_Kickballer, D1B01EFB4E30705D7F5D1392078CC459, Fisheye",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_fuse": {
+              "inv_name_part": "np_fuse",
+              "partname": "Uni_Spinning_Blade, 564603F449D3C51C0DC48AA907E138B6, Fuse",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_gammavoid": {
+              "inv_name_part": "np_GammaVoid",
+              "partname": "Uni_Spinning_Blade, 8A0FB02A4D09E0E868D8C984808AC708, Gamma Void",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_gmr": {
+              "inv_name_part": "np_GMR",
+              "partname": "Uni_MAL_SG_Kickballer, E8DB4E474DE78CE823E73A83D2DD14FC, G.M.R.",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_goalkeeper": {
+              "inv_name_part": "np_Goalkeeper",
+              "partname": "Uni_MAL_SG_Kickballer, F2AAA9DE4F38A4AEB4A1C3ADA8122837, Goalkeeper",
+              "priority": "3.000000",
+              "minrarity": "rarity'none'",
+              "maxrarity": "rarity'none'",
+              "requiredmanufacturer": "manufacturer'none'"
+            }
+          },
+          {
+            "np_goldengod": {
+              "inv_name_part": "NP_GoldenGod",
+              "partname": "Uni_BOR_SG_GoldenGod, 46C71EE54A28F5A15370CC962F40F0D7, Golden God",
+              "priority": "1.000000"
+            }
+          },
+          {
+            "np_goremaster": {
+              "inv_name_part": "NP_GoreMaster",
+              "partname": "Uni_BOR_SG_GoldenGod, DA8015B146C72649F7CC05B4BFA3EF2D, Goremaster",
+              "priority": "1.000000"
+            }
+          },
+          {
+            "np_heartgun": {
+              "inv_name_part": "NP_Heartgun",
+              "partname": "Uni_DAD_SG_HeartGun, 580257A740EC0ACF9147378AD40B733D, Acey May ",
+              "priority": "1.000000"
+            }
+          },
+          {
+            "np_heavyturret": {
+              "inv_name_part": "np_HeavyTurret",
+              "partname": "Uni_Inv_TED_SG_Anarchy, 7569DAFE4F12FFE91C0BDB84657741D9, Husky Friend",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_heavyweight": {
+              "inv_name_part": "np_HeavyWeight",
+              "partname": "Uni_VLA_HeavyWeight, 3432887E46B128C1B3BFC08D7A79BBAC, Heavyweight",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_hellwalker": {
+              "inv_name_part": "np_Hellwalker",
+              "partname": "Uni_JAK_SG_Hellwalker, 2E1DD31E44B9A804522742863BEB5C7D, Hellwalker",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_hoarder": {
+              "inv_name_part": "np_Hoarder",
+              "partname": "Uni_Supernova, 73EF5D424C209C05674839B089FB2D8D, Hoarder",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_javelin": {
+              "inv_name_part": "np_Javelin",
+              "partname": "Uni_TOR_HW_Javelin, 45CEDEB14BCF29BAB9B8F9B7805D6758, Sprezzatura",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_kaoson": {
+              "inv_name_part": "np_Kaoson",
+              "partname": "Uni_VLA_SM_KaoSon, 5B96D64F4724B69CB8AA6782EFDF54C9, Kaoson",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_kingsgambit": {
+              "inv_name_part": "np_KingsGambit",
+              "partname": "Uni_MAL_SG_Kickballer, 778C3C0747E43102CC69B3B18381C9E9, King's Gambit",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_leadballoon": {
+              "inv_name_part": "np_LeadBalloon",
+              "partname": "Uni_MAL_SG_Kickballer, 337D944D4AF6DA172F80508CF9D81192, Lead Balloon",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_lightning": {
+              "inv_name_part": "np_lightning",
+              "partname": "Uni_Supernova, 136DDA6D48BCDA7674084A8BA404DA4A, Sparky Shield",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_linebacker": {
+              "inv_name_part": "np_Linebacker",
+              "partname": "Uni_MAL_SG_Kickballer, 2A6D44724DA05FC353B63393A0A8F791, Linebacker",
+              "priority": "3.000000",
+              "minrarity": "rarity'none'",
+              "maxrarity": "rarity'none'",
+              "requiredmanufacturer": "manufacturer'none'"
+            }
+          },
+          {
+            "np_lucian": {
+              "inv_name_part": "np_Lucian",
+              "partname": "Uni_MAL_SG_Kickballer, EEE9DBED44451B175B13178A9527145A, Lucian's Flank",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_lumberjack": {
+              "inv_name_part": "np_Lumberjack",
+              "partname": "WeaponNamingStrategies, F78C537C4D538CBF67616FB89B19B64C, Bloody Lumberjack",
+              "priority": "1.000000",
+              "minrarity": "rarity'none'",
+              "maxrarity": "rarity'none'",
+              "requiredmanufacturer": "manufacturer'none'"
+            }
+          },
+          {
+            "np_momento": {
+              "inv_name_part": "np_momento",
+              "partname": "Uni_PandoranMomento, 389563454E5DE5B604EBE08B29A5ED4D, Pandoran Memento",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_ohmigot": {
+              "inv_name_part": "np_OhmIgot",
+              "partname": "Uni_MAL_SG_Kickballer, 06FC0E724FF8E8092BC9CAB6FDD12870, Ohm I Got",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_onionlayeredguard": {
+              "inv_name_part": "np_OnionLayeredGuard",
+              "partname": "Uni_OnionLayeredGuard, B5A403E64E561C109D9A54B6E484DB46, Onion",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_onslaught": {
+              "inv_name_part": "np_Onslaught",
+              "partname": "Uni_MAL_SG_Kickballer, B9F33499423D329A5157B3B41CC86C6F, Onslaught",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_phantom_flame": {
+              "inv_name_part": "np_phantom_flame",
+              "partname": "Uni_BOR_SM_Hellfire, 04CB30BE46EFA32BC9ADFA8CFD24F491, Phantom Flame",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_plasmacoil": {
+              "inv_name_part": "np_PlasmaCoil",
+              "partname": "Uni_MAL_SG_Kickballer, 3523A20D4E8E8C0893B63188A0C5C7A1, Plasma Coil",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_potatothrower": {
+              "inv_name_part": "NP_PotatoThrower",
+              "partname": "Uni_TOR_AR_PotatoThrower, A4AF8C414E0E71F993290088E4AA85A7, Potato Thrower IV",
+              "priority": "1.000000"
+            }
+          },
+          {
+            "np_predatordrone": {
+              "inv_name_part": "np_PredatorDrone",
+              "partname": "Uni_TED_Grenade_Gadget_PredatorDrone, DDF805AB411CDDD9E8D5B29C007E796E, UAV",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_prince": {
+              "inv_name_part": "np_prince",
+              "partname": "Uni_BOR_SM_Hellfire, 139D8E284A945C6063CEF5B28B3A90C8, Prince Harming",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_proteancell": {
+              "inv_name_part": "np_ProteanCell",
+              "partname": "Uni_Supernova, C76A1D554E14E10A30F41B8541966244, Protean Cell",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_queensrest": {
+              "inv_name_part": "np_QueensRest",
+              "partname": "Uni_MAL_SG_Kickballer, AB4FE2CF47808CA02CCDF0AF2E6092A4, Queen's Rest",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_quickdraw": {
+              "inv_name_part": "np_QuickDraw",
+              "partname": "Uni_MAL_SG_Kickballer, CDF0EE914E001465384D149ADA28C99A, San Saba Songbird",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_rainbowvomit": {
+              "inv_name_part": "np_RainbowVomit",
+              "partname": "Uni_MAL_SG_Kickballer, 1C24EC7E4C781505277F8B8438756B00, Rainbow Vomit",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_rangefinder": {
+              "inv_name_part": "np_rangefinder",
+              "partname": "Uni_MAL_SG_Kickballer, B15C729543E4B12D62CB3DBF971F547D, Rangefinder",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_recursive": {
+              "inv_name_part": "np_recursive",
+              "partname": "Uni_Spinning_Blade, F20D0B3948000B889411D0A53EB48EDF, Recursive",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_repkit_uni_jak_defibrillator": {
+              "inv_name_part": "np_repkit_uni_JAK_Defibrillator",
+              "partname": "RepKitNameParts, 15A81A3947E4CF59970BC3A9B030A56F, Defibrillator",
+              "priority": "2.000000"
+            }
+          },
+          {
+            "np_repkit_uni_ord_triplebypass": {
+              "inv_name_part": "np_repkit_uni_ORD_TripleBypass",
+              "partname": "RepKitNameParts, DA9743EF4D846FA4B4DB65A7850CBBC0, Triple Bypass",
+              "priority": "2.000000"
+            }
+          },
+          {
+            "np_roach": {
+              "inv_name_part": "np_Roach",
+              "partname": "Uni_MAL_SG_Kickballer, 559EB81B418E2665E9E85BB20A0D8B47, Roach",
+              "priority": "3.000000",
+              "minrarity": "rarity'none'",
+              "maxrarity": "rarity'none'",
+              "requiredmanufacturer": "manufacturer'none'"
+            }
+          },
+          {
+            "np_rocketreload": {
+              "inv_name_part": "np_RocketReload",
+              "partname": "WeaponNamingStrategies, FD13752E432D46CC8EEB659D3EBC8EC1, Lucky Clover",
+              "priority": "1.000000"
+            }
+          },
+          {
+            "np_rowan": {
+              "inv_name_part": "np_Rowan",
+              "partname": "Uni_MAL_SG_Kickballer, A956201D48F582190DEF0C8E244F6287, Rowan's Charge",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_rubber": {
+              "inv_name_part": "np_rubber",
+              "partname": "Uni_BOR_Rubber, C6DF4CF0474115C332FAF3B556BCEF77, Jelly",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_rubysgrasp": {
+              "inv_name_part": "np_RubysGrasp",
+              "partname": "Uni_MAL_SG_Kickballer, 3756C2EE497E5345BFC036BAA719E0FB, Ruby's Grasp",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_shieldboi": {
+              "inv_name_part": "np_ShieldBoi",
+              "partname": "Uni_Supernova, ACE3E4534356A29A0AEA6CBBEBCD5296, Principal",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_shokunai": {
+              "inv_name_part": "np_ShoKunai",
+              "partname": "Uni_Spinning_Blade, 8794978744F453F8D8B3698B14E32AC9, Sho Kunai",
+              "priority": "3.000000",
+              "minrarity": "rarity'none'",
+              "maxrarity": "rarity'none'",
+              "requiredmanufacturer": "manufacturer'none'"
+            }
+          },
+          {
+            "np_sideshow": {
+              "inv_name_part": "np_Sideshow",
+              "partname": "Uni_MAL_SG_Kickballer, 82B13853422B1A9A13B512B1B0791375, Sideshow",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_slippy": {
+              "inv_name_part": "np_slippy",
+              "partname": "Uni_Spinning_Blade, C67AD1ED41A773F91E6F10A7C7468DF3, Slippy",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_slugger": {
+              "inv_name_part": "np_Slugger",
+              "partname": "Uni_MAL_SG_Kickballer, 6D0B3A104FFC4E1248D1E5BB73E5B453, Hot Slugger",
+              "priority": "3.000000",
+              "minrarity": "rarity'none'",
+              "maxrarity": "rarity'none'",
+              "requiredmanufacturer": "manufacturer'none'"
+            }
+          },
+          {
+            "np_splatoon": {
+              "inv_name_part": "np_Splatoon",
+              "partname": "Uni_VLA_HW_Splatoon, 852000BE4AE041BD7FCA5ABD176A17CC, Inkling",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_stopgap": {
+              "inv_name_part": "np_StopGap",
+              "partname": "Uni_MAL_SG_Kickballer, C96F09704CAF907E331AF0A38A958F83, Stop Gap",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_stray": {
+              "inv_name_part": "np_Stray",
+              "partname": "Uni_MAL_SG_Kickballer, E4E55BD343EA03A38B245598D06EC0DD, Stray",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_streamer": {
+              "inv_name_part": "np_Streamer",
+              "partname": "Uni_BOR_HW_Streamer, 5DF819ED489E33F3A7DE788674046879, Streamer",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_superconductingplasmacoil": {
+              "inv_name_part": "np_SuperconductingPlasmaCoil",
+              "partname": "Uni_MAL_SM_PlasmaCoil, B214D72A45B8591D055E34A6A892B892, Superconducting Plasma Coil",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_supersoldier": {
+              "inv_name_part": "np_SuperSoldier",
+              "partname": "Uni_Supernova, 5FEF8BD6407369CABCDA98954932A18E, Super Soldier",
+              "priority": "3.000000",
+              "minrarity": "rarity'none'",
+              "maxrarity": "rarity'none'",
+              "requiredmanufacturer": "manufacturer'none'"
+            }
+          },
+          {
+            "np_swarm": {
+              "inv_name_part": "np_swarm",
+              "partname": "Uni_Spinning_Blade, 96FFE8EA4F1F705180795982F6388312, Swarm",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_sweet_embrace": {
+              "inv_name_part": "np_sweet_embrace",
+              "partname": "Uni_MAL_SG_Kickballer, 222D908746EC56D63C828AB19A5BDA4E, Sweet Embrace",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_symmetry": {
+              "inv_name_part": "np_symmetry",
+              "partname": "Uni_MAL_SG_Kickballer, EA7093C24DFBD830EBF9BE9738DFC7BD, Symmetry",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_timekeeper": {
+              "inv_name_part": "np_timekeeper",
+              "partname": "Uni_Supernova, 461514DA4331EF5B915103B22F73FC93, Timekeeper's New Shield",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_tkswave": {
+              "inv_name_part": "np_TKsWave",
+              "partname": "Uni_MAL_SG_Kickballer, 948FC7B24748E5700D940F8153060699, T.K's Wave",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_transmission": {
+              "inv_name_part": "np_transmission",
+              "partname": "Uni_BOR_Rubber, 84D03065420BEC6A5777EEA227C0CCE3, Transmitter",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_truck": {
+              "inv_name_part": "np_Truck",
+              "partname": "Uni_JAK_SR_Truck, 90B7081A4869403ED640DD8AC517426F, Truck",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_vamoose": {
+              "inv_name_part": "np_Vamoose",
+              "partname": "Uni_MAL_SG_Kickballer, 4B5B767241674C0761CC109ED8F6BB6A, Vamoose",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_waterfall": {
+              "inv_name_part": "np_Waterfall",
+              "partname": "Uni_Spinning_Blade, 1585702148A14F61E344B48B06CAB036, Waterfall",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_watts4dinner": {
+              "inv_name_part": "np_Watts4Dinner",
+              "partname": "Uni_Supernova, 769912BC4DED88FD565A4AB32EB1B5D0, Watts 4 Dinner",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_wf": {
+              "inv_name_part": "NP_WF",
+              "partname": "Uni_VLA_AR_DualDamage, C20567A7465D13891EC218A5816E0EED, Whiskey Foxtrot",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_wombocombo": {
+              "inv_name_part": "np_WomboCombo",
+              "partname": "WeaponNamingStrategies, 9378976748CD85C1C99892A5F81485E9, Wombo Combo",
+              "priority": "1.000000",
+              "minrarity": "rarity'none'",
+              "maxrarity": "rarity'none'",
+              "requiredmanufacturer": "manufacturer'none'"
+            }
+          },
+          {
+            "np_zipgun": {
+              "inv_name_part": "np_Zipgun",
+              "partname": "Uni_MAL_SG_Kickballer, 7F00B6CF4EEAB0B31A829D9FA65C03EB, Zipper",
+              "priority": "3.000000"
+            }
+          }
+        ]
+      },
+      {
+        "entries": [
+          {
+            "np_abyss": {
+              "inv_name_part": "np_Abyss",
+              "partname": "Uni_MAL_SG_Kickballer, DFD8D7934C7919686350C8917E94915A, Abyss",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_accretion": {
+              "inv_name_part": "np_accretion",
+              "partname": "Uni_MAL_SG_Kickballer, 448D090B40019438435737AB87E2CCAE, Honeymooner",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_aerodramatic": {
+              "inv_name_part": "np_AeroDramatic",
+              "partname": "Uni_MAL_SG_Kickballer, 01685367481C2D5578B5488F7E256E83, AeroDramatic",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_alignment": {
+              "inv_name_part": "np_alignment",
+              "partname": "Uni_ORD_Aggrovator, 5D1A93654025C11EB0B344B8C38C4A35, Alignment",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_arctic": {
+              "inv_name_part": "np_arctic",
+              "partname": "Uni_MAL_SG_Kickballer, C74BC1854BCB0B44B9CF8BA0D8419453, ARC-TAN",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_assembler": {
+              "inv_name_part": "np_assembler",
+              "partname": "Uni_MAL_SG_Kickballer, 3AEA1318467D0C953967F0BEB991122A, Decompiler",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_aura": {
+              "inv_name_part": "np_aura",
+              "partname": "Uni_MAL_SG_Kickballer, 30F4FAC24A01A7C5277A968CB20FFC36, Tempered Essence",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_avarice": {
+              "inv_name_part": "np_Avarice",
+              "partname": "Uni_MAL_SG_Kickballer, CCB55B044D2B2B14DEF9A0AD8AC3CBB9, Avarice",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_barb": {
+              "inv_name_part": "np_barb",
+              "partname": "Uni_Spinning_Blade, 0BABD7504A6F275F51FB87B0ACC0C9B9, Barb'ara",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_barrel": {
+              "inv_name_part": "np_Barrel",
+              "partname": "Uni_Spinning_Blade, E1C042C4430863B3B35AC6AFCD2368BC, Cooper Duper ",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_bismuth": {
+              "inv_name_part": "np_Bismuth",
+              "partname": "Uni_Spinning_Blade, 4E86BAE647D2B4950D7523B9142A4E76, Bismuth-Tipped Dagger",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_blackout": {
+              "inv_name_part": "np_blackout",
+              "partname": "Uni_MAL_SG_Kickballer, 57E022884D38CD3D74648097C2AD8A2A, Shield Overflow",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_breadth": {
+              "inv_name_part": "np_Breadth",
+              "partname": "Uni_MAL_SG_Kickballer, 97F41F7C462F1FBE00B45C85669C6DC6, Hardpoint",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_brickhouse": {
+              "inv_name_part": "np_brickhouse",
+              "partname": "Uni_MAL_SG_Kickballer, AC23DAE24E41AB75F94F168ED15797D4, Brickhouse",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_brudder": {
+              "inv_name_part": "np_Brudder",
+              "partname": "Uni_Spinning_Blade, 1C10498B4BDC4978BBB607886C9A23C0, Li'l Brudder",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_bubbles": {
+              "inv_name_part": "np_bubbles",
+              "partname": "Uni_MAL_SG_Kickballer, 3CDE5D344EB522F4DC2E878762665AB8, Bubbles",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_burrow": {
+              "inv_name_part": "np_Burrow",
+              "partname": "Uni_MAL_SG_Kickballer, 38A35B4046F0E9A1F395D0B32A783763, PRISM",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_clarity": {
+              "inv_name_part": "np_clarity",
+              "partname": "Uni_MAL_SR_ComplexRoot, EFD5454040A5B20D4A252DBBCFC78FEC, Clarity",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_cm_corpo_01": {
+              "inv_name_part": "np_cm_corpo_01",
+              "partname": "ClassModNameParts, 07468C164E259A5414189994B87ED3D5, Keylogger",
+              "priority": "1.000000"
+            }
+          },
+          {
+            "np_cm_corpo_02": {
+              "inv_name_part": "np_cm_corpo_02",
+              "partname": "ClassModNameParts, 2BB51A3E4281B1530B70A3A6CB36A08F, Hacktivist ",
+              "priority": "1.000000"
+            }
+          },
+          {
+            "np_cm_corpo_03": {
+              "inv_name_part": "np_cm_corpo_03",
+              "partname": "ClassModNameParts, 88B187B942B5F835168FD1AF45395CAB, Researcher",
+              "priority": "1.000000"
+            }
+          },
+          {
+            "np_cm_corpo_04": {
+              "inv_name_part": "np_cm_corpo_04",
+              "partname": "ClassModNameParts, DDA745EE48EDB11F4A05C99563CCEE55, Assimilator",
+              "priority": "1.000000"
+            }
+          },
+          {
+            "np_cm_corpo_05": {
+              "inv_name_part": "np_cm_corpo_05",
+              "partname": "ClassModNameParts, 7C2E99934097CFE2A82B15A028A95C77, Royal We",
+              "priority": "1.000000"
+            }
+          },
+          {
+            "np_cm_corpo_06": {
+              "inv_name_part": "np_cm_corpo_06",
+              "partname": "ClassModNameParts, D69528064FCF25C9C88EBE99D01E9823, Wyrmkind",
+              "priority": "1.000000"
+            }
+          },
+          {
+            "np_cm_corpo_07": {
+              "inv_name_part": "np_cm_corpo_07",
+              "partname": "ClassModNameParts, 8951C53D42C37A4B9134E1BADFFAA688, Defragger",
+              "priority": "1.000000"
+            }
+          },
+          {
+            "np_cm_corpo_08": {
+              "inv_name_part": "np_cm_corpo_08",
+              "partname": "ClassModNameParts, D88FE8474DA2537B44BD068F77B4DF00, Corrupter",
+              "priority": "1.000000"
+            }
+          },
+          {
+            "np_cm_corpo_09": {
+              "inv_name_part": "np_cm_corpo_09",
+              "partname": "ClassModNameParts, E356F17E476D2B9588929AAEFC8DD0A5, Eminence",
+              "priority": "1.000000"
+            }
+          },
+          {
+            "np_cm_corpo_10": {
+              "inv_name_part": "np_cm_corpo_10",
+              "partname": "ClassModNameParts, 532885B345B679B9BD2EAA8D8E26E56E, System",
+              "priority": "1.000000"
+            }
+          },
+          {
+            "np_cm_corpo_leg_01": {
+              "inv_name_part": "np_cm_corpo_leg_01",
+              "partname": "ClassModNameParts_CorpoHacker, 37E7A9DA4770846D1FADBA82504D4083, Devourer",
+              "priority": "1.000000"
+            }
+          },
+          {
+            "np_cm_corpo_leg_02": {
+              "inv_name_part": "np_cm_corpo_leg_02",
+              "partname": "ClassModNameParts, 4E76425449C0E107EEFF91B0EFEE247A, Virophile",
+              "priority": "1.000000"
+            }
+          },
+          {
+            "np_cm_corpo_leg_03": {
+              "inv_name_part": "np_cm_corpo_leg_03",
+              "partname": "ClassModNameParts, 1E5CE2754C6A6EFA57235A8F074033F7, Montage Maker",
+              "priority": "1.000000"
+            }
+          },
+          {
+            "np_cm_corpo_leg_04": {
+              "inv_name_part": "np_cm_corpo_leg_04",
+              "partname": "ClassModNameParts, 9F21C7CE47ED06EAD2C06BA357832B92, Memory Hoarder",
+              "priority": "1.000000"
+            }
+          },
+          {
+            "np_cm_corpo_leg_05": {
+              "inv_name_part": "np_cm_corpo_leg_05",
+              "partname": "ClassModNameParts_CorpoHacker, 28F25AFA43F1F80BEE2E97B175D6FEDB, Trackstar",
+              "priority": "1.000000"
+            }
+          },
+          {
+            "np_cm_corpo_leg_06": {
+              "inv_name_part": "np_cm_corpo_leg_06",
+              "partname": "ClassModNameParts, DEE46AAA4E97066A47D797A0CC688917, Functional Human",
+              "priority": "1.000000"
+            }
+          },
+          {
+            "np_cm_corpo_leg_dlc1": {
+              "inv_name_part": "np_cm_corpo_leg_dlc1",
+              "partname": "ClassModNameParts, 1BD1295F4B07659A128A7EB39DDFB995, Martyr",
+              "priority": "1.000000"
+            }
+          },
+          {
+            "np_cm_corpo_leg_dlc2": {
+              "inv_name_part": "np_cm_corpo_leg_dlc2",
+              "partname": "ClassModNameParts, 67F5648F41B1F1060CD77598E5F3AC3C, Programmer",
+              "priority": "1.000000"
+            }
+          },
+          {
+            "np_cm_corpo_leg_raid1": {
+              "inv_name_part": "np_cm_corpo_leg_raid1",
+              "partname": "ClassModNameParts, 2F9CE9E847A5859EC6809D9EE13C0108, Boomer",
+              "priority": "1.000000"
+            }
+          },
+          {
+            "np_cm_corpo_leg_raid2": {
+              "inv_name_part": "np_cm_corpo_leg_raid2",
+              "partname": "ClassModNameParts, 3A182F944BCE003C8F9CAC85D4166020, Plague Engineer",
+              "priority": "1.000000"
+            }
+          },
+          {
+            "np_cm_corpo_leg_tuba": {
+              "inv_name_part": "np_cm_corpo_leg_tuba",
+              "partname": "ClassModNameParts, 8BCE1F864500ABC8E6CCA192B962CB38, Puppetmaster",
+              "priority": "1.000000"
+            }
+          },
+          {
+            "np_cm_ds_leg_dlc1": {
+              "inv_name_part": "np_cm_ds_leg_dlc1",
+              "partname": "ClassModNameParts, 18EE838543259CA45C4049B430EEFC13, Configuration",
+              "priority": "1.000000"
+            }
+          },
+          {
+            "np_cm_ds_leg_harmonica": {
+              "inv_name_part": "np_cm_ds_leg_harmonica",
+              "partname": "ClassModNameParts, 203DD1D64830A0D7525FF3801149DBB0, GOAT",
+              "priority": "1.000000"
+            }
+          },
+          {
+            "np_cm_ds_leg_raid2": {
+              "inv_name_part": "np_cm_ds_leg_raid2",
+              "partname": "ClassModNameParts, A6A361704A0119E55C26A6985E6517DB, Grim Sister",
+              "priority": "1.000000"
+            }
+          },
+          {
+            "np_cm_exo_leg_cowbell": {
+              "inv_name_part": "np_cm_exo_leg_cowbell",
+              "partname": "ClassModNameParts, CC269E37473454A9849F658D6D246656, Reaparición",
+              "priority": "1.000000"
+            }
+          },
+          {
+            "np_cm_exo_leg_harmonica": {
+              "inv_name_part": "np_cm_exo_leg_harmonica",
+              "partname": "classmod_exosoldier_harmonica, 1E6D22194A101A793FDCE7BDA039DACF, Masochist",
+              "priority": "1.000000"
+            }
+          },
+          {
+            "np_cm_exo_leg_raid2": {
+              "inv_name_part": "np_cm_exo_leg_raid2",
+              "partname": "ClassModNameParts, 4C7A3E6A469BF508D54DA9A30A1D8D1C, Bombastic",
+              "priority": "1.000000"
+            }
+          },
+          {
+            "np_cm_grav_leg_cowbell": {
+              "inv_name_part": "np_cm_grav_leg_cowbell",
+              "partname": "ClassModNameParts, 8E7701014945D53C812B9680D2E0A39E, Phlebotomist",
+              "priority": "1.000000"
+            }
+          },
+          {
+            "np_cm_grav_leg_harmonica": {
+              "inv_name_part": "np_cm_grav_leg_harmonica",
+              "partname": "classmod_gravitar_harmonica, E7B37723431FDE5D0408AE9BB422D67A, Ultracapacitor",
+              "priority": "1.000000"
+            }
+          },
+          {
+            "np_cm_grav_leg_raid2": {
+              "inv_name_part": "np_cm_grav_leg_raid2",
+              "partname": "ClassModNameParts, 29C43EDF4D3211B351AF3980CAA0BA69, Plasmaphile",
+              "priority": "1.000000"
+            }
+          },
+          {
+            "np_cm_pld_leg_cowbell": {
+              "inv_name_part": "np_cm_pld_leg_cowbell",
+              "partname": "ClassModNameParts, ADE3B6154D860AB2794A3AB1C27855F9, Tempest",
+              "priority": "1.000000"
+            }
+          },
+          {
+            "np_cm_pld_leg_harmonica": {
+              "inv_name_part": "np_cm_pld_leg_harmonica",
+              "partname": "classmod_paladin_harmonica, B966978247BDD2B578E5D38CE6A44F74, Wastelander",
+              "priority": "1.000000"
+            }
+          },
+          {
+            "np_cm_pld_leg_raid2": {
+              "inv_name_part": "np_cm_pld_leg_raid2",
+              "partname": "ClassModNameParts, 7D1D807D49347F899A98E489D7652CAA, Artificer",
+              "priority": "1.000000"
+            }
+          },
+          {
+            "np_cm_robo_01": {
+              "inv_name_part": "np_cm_robo_01",
+              "partname": "ClassModNameParts, B135485D422119B8AEB713A5608AD701, Pistoleer",
+              "priority": "1.000000"
+            }
+          },
+          {
+            "np_cm_robo_02": {
+              "inv_name_part": "np_cm_robo_02",
+              "partname": "ClassModNameParts, 9E8767A94E0C288E278607975B3DB79D, Bane",
+              "priority": "1.000000"
+            }
+          },
+          {
+            "np_cm_robo_03": {
+              "inv_name_part": "np_cm_robo_03",
+              "partname": "ClassModNameParts, 6C737A9F477D5122EE24DD888749306C, Gambler",
+              "priority": "1.000000"
+            }
+          },
+          {
+            "np_cm_robo_04": {
+              "inv_name_part": "np_cm_robo_04",
+              "partname": "ClassModNameParts, 8A948AE14D8726F7E160AA9F7F81B28B, Puppeteer",
+              "priority": "1.000000"
+            }
+          },
+          {
+            "np_cm_robo_05": {
+              "inv_name_part": "np_cm_robo_05",
+              "partname": "ClassModNameParts, 41F6E7A048180E2EA407FBAAEC500415, Swindler",
+              "priority": "1.000000"
+            }
+          },
+          {
+            "np_cm_robo_06": {
+              "inv_name_part": "np_cm_robo_06",
+              "partname": "ClassModNameParts, E3F29FCA44C12857664710A35CE19C40, Antagonist",
+              "priority": "1.000000"
+            }
+          },
+          {
+            "np_cm_robo_07": {
+              "inv_name_part": "np_cm_robo_07",
+              "partname": "ClassModNameParts, 4CFC1ECA465E5732E1F08BA3CDD3A027, Powderbot",
+              "priority": "1.000000"
+            }
+          },
+          {
+            "np_cm_robo_08": {
+              "inv_name_part": "np_cm_robo_08",
+              "partname": "ClassModNameParts, 6012EE3E49CBAE36F3DC52B4AD3E058D, Triggerbot",
+              "priority": "1.000000"
+            }
+          },
+          {
+            "np_cm_robo_09": {
+              "inv_name_part": "np_cm_robo_09",
+              "partname": "ClassModNameParts, 466A0087404EAE59D4302C92B3D8E00C, Crack Shot",
+              "priority": "1.000000"
+            }
+          },
+          {
+            "np_cm_robo_10": {
+              "inv_name_part": "np_cm_robo_10",
+              "partname": "ClassModNameParts, 77C13A944D95145D6A4BAE90D36F0EBE, Pack Leader",
+              "priority": "1.000000"
+            }
+          },
+          {
+            "np_cm_robo_leg_01": {
+              "inv_name_part": "np_cm_robo_leg_01",
+              "partname": "ClassModNameParts_RoboDealer, B29DC0CC40CD771D81E870B119793CCA, Rounder",
+              "priority": "1.000000"
+            }
+          },
+          {
+            "np_cm_robo_leg_02": {
+              "inv_name_part": "np_cm_robo_leg_02",
+              "partname": "ClassModNameParts_RoboDealer, 863315DA4B3B2C953A9179BE87C96C6E, Ludopath",
+              "priority": "1.000000"
+            }
+          },
+          {
+            "np_cm_robo_leg_03": {
+              "inv_name_part": "np_cm_robo_leg_03",
+              "partname": "ClassModNameParts_RoboDealer, 4C5215E744091BB5CD07B6968ADDD1DB, Hotshot",
+              "priority": "1.000000"
+            }
+          },
+          {
+            "np_cm_robo_leg_04": {
+              "inv_name_part": "np_cm_robo_leg_04",
+              "partname": "ClassModNameParts_RoboDealer, 0C6ABA8C4C8C8E5EB574FC892CF4CF05, Cooler",
+              "priority": "1.000000"
+            }
+          },
+          {
+            "np_cm_robo_leg_05": {
+              "inv_name_part": "np_cm_robo_leg_05",
+              "partname": "ClassModNameParts_RoboDealer, 9A13FAAC49F29D5F104BC7931594A0E3, Whale",
+              "priority": "1.000000"
+            }
+          },
+          {
+            "np_cm_robo_leg_06": {
+              "inv_name_part": "np_cm_robo_leg_06",
+              "partname": "ClassModNameParts_RoboDealer, 0B3ACD5D44F1373CF69D849C7B4B29B3, Windrider",
+              "priority": "1.000000"
+            }
+          },
+          {
+            "np_cm_robo_leg_dlc1": {
+              "inv_name_part": "np_cm_robo_leg_dlc1",
+              "partname": "ClassModNameParts_RoboDealer, 3784E5674CFFC8549CC3B4978FCE1133, Gamer",
+              "priority": "1.000000"
+            }
+          },
+          {
+            "np_cm_robo_leg_harmonica": {
+              "inv_name_part": "np_cm_robo_leg_harmonica",
+              "partname": "classmod_robodealer_harmonica, B02C2D334007B912B87D25A30E1FDF19, Table Hopper",
+              "priority": "1.000000"
+            }
+          },
+          {
+            "np_cm_robo_leg_raid1": {
+              "inv_name_part": "np_cm_robo_leg_raid1",
+              "partname": "ClassModNameParts_RoboDealer, 68573E46404145AA3EF600BEBE49CC95, Hooligan",
+              "priority": "1.000000"
+            }
+          },
+          {
+            "np_cm_robo_leg_raid2": {
+              "inv_name_part": "np_cm_robo_leg_raid2",
+              "partname": "ClassModNameParts_RoboDealer, 881EF1F44D486C3207C0E69B57DF5D21, Prestidigitator",
+              "priority": "1.000000"
+            }
+          },
+          {
+            "np_collector": {
+              "inv_name_part": "np_Collector",
+              "partname": "Uni_Supernova, 50B16024418322ED7536C8A668DC4B2D, Collector",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_conflux": {
+              "inv_name_part": "np_conflux",
+              "partname": "Uni_MAL_SR_ComplexRoot, B055F7C84830778016FE1794CACF66C9, Conflux",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_constable": {
+              "inv_name_part": "np_Constable",
+              "partname": "Uni_JAK_SG_Hellwalker, C699194D464C6D045EF97E8F90A7A2B8, Constable",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_cormano": {
+              "inv_name_part": "np_Cormano",
+              "partname": "Uni_TOR_SG_Cormano, E67799DF4DD3CFCA60ACADA11AE28056, Cormano",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_crazedearl": {
+              "inv_name_part": "NP_CrazedEarl",
+              "partname": "Uni_BOR_SG_GoldenGod, F6E2D90A4B9D36157379C4AF661BB115, Crazed Earl",
+              "priority": "1.000000"
+            }
+          },
+          {
+            "np_crowsourced": {
+              "inv_name_part": "np_crowsourced",
+              "partname": "Uni_MAL_SG_Kickballer, 2B9090F143EB4973B81B8686A1F7E41C, Crow-Sourced",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_dahlfather": {
+              "inv_name_part": "np_DahlFather",
+              "partname": "Uni_TOR_HW_Javelin, 3FDF77464873E4C381C53E82F9D75FF1, Heimdahl",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_darkhard": {
+              "inv_name_part": "np_DarkHard",
+              "partname": "Uni_DAD_AR_OM, 629495CF4BBF9E8945F14888A7F50D60, Hard Dark",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_demo": {
+              "inv_name_part": "np_demo",
+              "partname": "Uni_BOR_SG_Convergence, 5E946BF0401A57A6AB2823B5509D1F1B, Hair Trigger",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_devourer": {
+              "inv_name_part": "np_devourer",
+              "partname": "Uni_MAL_SG_Kickballer, CDE495A24D18119C1C1E41BD4315AC5F, Devourer",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_discybusiness": {
+              "inv_name_part": "np_discybusiness",
+              "partname": "Uni_MAL_SG_DiscyBusiness, 5C54EC7A4CC05205A821ED9F02ADEB8F, Discy Business",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_doeshot": {
+              "inv_name_part": "np_Doeshot",
+              "partname": "Uni_MAL_SG_Kickballer, BD46F7AD46A2A671E63E18B69394658B, Doeshot",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_earlyexcess": {
+              "inv_name_part": "np_EarlyExcess",
+              "partname": "Uni_MAL_SG_Kickballer, 20BE89E1478C1C8BFECCB9B4A0B9A901, Overconsumption",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_eigenburst": {
+              "inv_name_part": "np_Eigenburst",
+              "partname": "Uni_Inv_TED_SG_Anarchy, 2EFD447D46F8C35C85C83EBE1F9C6257, Eigenburst",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_elpisstar": {
+              "inv_name_part": "np_elpisstar",
+              "partname": "Uni_Supernova, AFB23CD641F9D3729C08D4AF5D1E6CC8, Elpis Star",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_enumeration": {
+              "inv_name_part": "np_enumeration",
+              "partname": "Uni_BOR_SM_Hellfire, C12EDC9849F995BFD86231AC3E1231F3, Enumeration",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_exfoliatrix": {
+              "inv_name_part": "np_Exfoliatrix",
+              "partname": "Uni_OnionLayeredGuard, D2F0570642AD5271975021B2CF0447E2, Exfoliatrix",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_exhibition": {
+              "inv_name_part": "np_Exhibition",
+              "partname": "Uni_MAL_SG_Kickballer, AC7BF538461E6037438FC09AE6D4DFE4, Exhibition",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_extinction": {
+              "inv_name_part": "np_Extinction",
+              "partname": "WeaponNamingStrategies, F6DE4403412987726BA339A5E99B3066, Eradication",
+              "priority": "1.000000"
+            }
+          },
+          {
+            "np_falke": {
+              "inv_name_part": "np_falke",
+              "partname": "Uni_BOR_SM_Hellfire, 3895091D4BCBE34E615987997FE56E3C, Falke",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_fearstalker": {
+              "inv_name_part": "np_fearstalker",
+              "partname": "Uni_MAL_SG_Kickballer, 8BD80CE147FFA19B3FA9488329FC9BE2, Fearstalker",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_fl4k_weapon": {
+              "inv_name_part": "np_Fl4k_weapon",
+              "partname": "Uni_MAL_SG_Kickballer, EE3B4A7D4C9924F40BCC8DAA3B958D11, Fanged Beast",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_flak": {
+              "inv_name_part": "np_Flak",
+              "partname": "Uni_VLA_HW_Splatoon, 94697DDA434B4EFAA9F3C89D1B7E083E, Flak Cannon",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_flare": {
+              "inv_name_part": "np_flare",
+              "partname": "Uni_Spinning_Blade, 2007F0854A6A6CFF9614B48F16E8B2B8, Countermeasure",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_flashcyclone": {
+              "inv_name_part": "np_flashcyclone",
+              "partname": "Uni_MAL_SG_Kickballer, D7CA73BB40D87D45AB5AE4A4EC67491A, Flash Cyclone",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_flashfuel": {
+              "inv_name_part": "np_FlashFuel",
+              "partname": "Uni_MAL_SG_Kickballer, C6D1CE9140B1F02D8E01889F9E11E258, Flash Fuel",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_fleabag": {
+              "inv_name_part": "NP_fleabag",
+              "partname": "Uni_TOR_AR_PotatoThrower, C325671D4C70745B3BD6EFA45A2C7CC7, Fleabag",
+              "priority": "1.000000"
+            }
+          },
+          {
+            "np_follower": {
+              "inv_name_part": "np_follower",
+              "partname": "Inv_DAD_SM_BloodStarved, 4804B1294E78B22EB9BCEB97806B45F4, Prowler",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_fourier": {
+              "inv_name_part": "np_Fourier",
+              "partname": "Uni_Inv_TED_SG_Anarchy, 494C360F42FD86DA19BC0AB9E1BA392F, Fourier's Malady",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_gomie": {
+              "inv_name_part": "np_Gomie",
+              "partname": "Uni_MAL_SG_Kickballer, BDCDDAA246A55461E9694FAD342C390D, Gomie",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_handcannon": {
+              "inv_name_part": "np_Handcannon",
+              "partname": "Uni_MAL_SG_Kickballer, C9A40C1846BB9342CA4EF88FAB095AD3, Handcannon",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_handfrag": {
+              "inv_name_part": "np_handfrag",
+              "partname": "Inv_DAD_SM_BloodStarved, 78C7129140FF9E2E8AC9EDBEE3E97BF0, Hand Frag",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_hemorrhage": {
+              "inv_name_part": "np_Hemorrhage",
+              "partname": "Uni_MAL_SG_Kickballer, 17DAEDD04172B72FCC9BA3B05198D6C6, Hemorrhage",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_herald": {
+              "inv_name_part": "np_Herald",
+              "partname": "Uni_MAL_SG_Kickballer, 8085C0284709C684CF4433B73803FE5F, Herald",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_hippogun": {
+              "inv_name_part": "np_Hippogun",
+              "partname": "Uni_MAL_SG_Kickballer, E4B89F5441EEB83C79445EA03691B40D, Hippo Gun",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_honeybadger": {
+              "inv_name_part": "np_honeybadger",
+              "partname": "Uni_DAD_Angel, 0446EBCA46ED5A6BD822BC9CA32E01D3, Honey Badger",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_hopscotch": {
+              "inv_name_part": "np_Hopscotch",
+              "partname": "Uni_Supernova, DADC832C499D6E1EADA551A16D8E7E43, Hopscotch",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_hotmod": {
+              "inv_name_part": "np_HotMod",
+              "partname": "Uni_MAL_SG_Kickballer, 2B66DCB545C13FBE805E83A350ED6A3A, Lovelorn",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_hydrowerks": {
+              "inv_name_part": "np_hydrowerks",
+              "partname": "Uni_CinderShelly, 5AF6A48F4BA3DEF0A45AECBCD3B5BD05, Hydrowerks",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_ichor": {
+              "inv_name_part": "np_Ichor",
+              "partname": "Uni_Spinning_Blade, 7C5BD5DD446B6E80BD9158A09CC7C1F8, Ichor",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_infection": {
+              "inv_name_part": "np_Infection",
+              "partname": "Uni_MAL_SG_Kickballer, F92699584FBA344D68572DB14FDD88EF, Infection",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_inscriber": {
+              "inv_name_part": "np_Inscriber",
+              "partname": "Uni_MAL_SG_Kickballer, 1643B9D543DF0BDE3100B9B73C0F8E1D, Inscriber",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_jailbroken": {
+              "inv_name_part": "np_Jailbroken",
+              "partname": "Inv_DAD_SM_BloodStarved, BA38866C4C39589F6C2F23A15AED5586, Jail-Broken Gatling",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_jetset": {
+              "inv_name_part": "np_jetset",
+              "partname": "Uni_Spinning_Blade, 1F394BE140F2BF7A168C49BA3B9ED42A, Jetsetter",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_juliet": {
+              "inv_name_part": "np_Juliet",
+              "partname": "Uni_MAL_SG_Kickballer, E634A96B49D69BF8E5D2C99CFE6FA9EC, Juliet's Sparkle",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_kaos": {
+              "inv_name_part": "np_Kaos",
+              "partname": "Uni_MAL_SG_Kickballer, 753E780B4958B19C555624AFB99465EA, Kaos",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_lasercutter": {
+              "inv_name_part": "np_lasercutter",
+              "partname": "Uni_MAL_SG_Kickballer, 84B140B745F13174004735869138DA19, Laser-Cutter",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_laserdisc": {
+              "inv_name_part": "np_Laserdisc",
+              "partname": "Uni_MAL_SG_Kickballer, 94EF4EFC45400B2D979465A656326BDE, Laser Disker",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_lightgun": {
+              "inv_name_part": "np_LightGun",
+              "partname": "Uni_VLA_SR_LightGun, 8DE51ECE461E95A87BEECABFBD4394B9, Light Gun",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_lockjaw": {
+              "inv_name_part": "NP_lockjaw",
+              "partname": "Uni_TOR_AR_PotatoThrower, 3A7642C642A8BE2F49954DBE78A280CB, Lockjaw",
+              "priority": "1.000000"
+            }
+          },
+          {
+            "np_locust": {
+              "inv_name_part": "np_Locust",
+              "partname": "Uni_VLA_SM_Locust, 287050D14CF1BA360EC00C89AA97FF2E, Parasite",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_loiter": {
+              "inv_name_part": "np_Loiter",
+              "partname": "Uni_TOR_HW_Javelin, E60E0D6F4B72731C995F14A493F0442E, Loiter Sploiter",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_mantra": {
+              "inv_name_part": "np_mantra",
+              "partname": "Uni_MAL_SG_Kickballer, 8B0A60B14176AB9CD033418D79A096D7, Mantra",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_mercredi": {
+              "inv_name_part": "np_Mercredi",
+              "partname": "Uni_DAD_AR_OM, B4D0F23A4E2F25BA161E919FBEF68F8A, Mercredi",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_mercury": {
+              "inv_name_part": "np_mercury",
+              "partname": "Uni_MAL_SG_Kickballer, F39B64CA419E24C32C5D52BC2202A8CB, Mercurious",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_misslaser": {
+              "inv_name_part": "NP_misslaser",
+              "partname": "Uni_DAD_SG_HeartGun, E28CD9CD449E5668F49DF5A70C4AB830, Missilaser",
+              "priority": "1.000000"
+            }
+          },
+          {
+            "np_murder": {
+              "inv_name_part": "np_Murder",
+              "partname": "Uni_MAL_SG_Kickballer, 77CE67854E3ACD7EF4006F8756A4BFE3, Murmur",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_outback": {
+              "inv_name_part": "np_outback",
+              "partname": "Uni_MAL_SG_Kickballer, DED78B7345E78A9AB1F10198D3F46BB9, Wind Skimmer",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_overswarm": {
+              "inv_name_part": "np_OverSwarm",
+              "partname": "Uni_Supernova, 1689ACC549010C3F7DEEF6AF26559169, Over Swarm",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_patience": {
+              "inv_name_part": "NP_Patience",
+              "partname": "Uni_ORD_PS_NoisyCricket, 9569AB9E4E31B6D33F8B6B9817E8CA2D, Virtue",
+              "priority": "1.000000"
+            }
+          },
+          {
+            "np_pchonk": {
+              "inv_name_part": "np_PChonk",
+              "partname": "Uni_MAL_SG_Kickballer, FDD4EBED44646FD7993019B98D16D477, Pachonk",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_pellet": {
+              "inv_name_part": "np_pellet",
+              "partname": "Uni_BOR_Rubber, 73D3EB544C47D623776E1CA4836C3A17, Artillery Sphere",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_petanque": {
+              "inv_name_part": "np_petanque",
+              "partname": "Uni_MAL_SG_Kickballer, 52E91B4A4716703CAAA7E6859F659BDE, Petanque",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_plumbbob": {
+              "inv_name_part": "np_plumbbob",
+              "partname": "Uni_BOR_SG_Convergence, DC33E8814CB03583463A4CB2053B348F, Plumb Bob",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_pragmate": {
+              "inv_name_part": "NP_pragmate",
+              "partname": "Uni_DAD_SG_HeartGun, 2BB4AC8243CEA7E64A225BB63E71CB5D, Pragmate",
+              "priority": "1.000000"
+            }
+          },
+          {
+            "np_pressurecooker": {
+              "inv_name_part": "np_pressurecooker",
+              "partname": "Uni_Spinning_Blade, 768D97E8489292670A092CBFE769BA20, Pressure Kettle",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_quattro": {
+              "inv_name_part": "np_Quattro",
+              "partname": "Uni_VLA_HW_Splatoon, 45F7C17B40F20831C9039EB0F6CEEED6, Quadratus",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_raiden": {
+              "inv_name_part": "np_Raiden",
+              "partname": "Inv_DAD_SM_BloodStarved, C72915C941FE1022FF3E49AFBBBED29E, Raiden",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_rainmaker": {
+              "inv_name_part": "np_rainmaker",
+              "partname": "Uni_MAL_SG_Kickballer, BF530643466869A751ADC3A2BBCA1B04, Rainmaker",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_relay": {
+              "inv_name_part": "np_relay",
+              "partname": "Uni_BOR_SG_Convergence, 96B6B03E42F344195087C5A65241B5E7, Astonisher",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_relievingguard": {
+              "inv_name_part": "np_RelievingGuard",
+              "partname": "Uni_MAL_SG_Kickballer, 79941F8B4C3EEC502CCF4F8B45302026, Secured Relief",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_reminisce": {
+              "inv_name_part": "np_reminisce",
+              "partname": "Uni_MAL_SG_Kickballer, AA50DFE141F399A60FC15682D3308BDA, Reminisce",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_repkit_uni_bor_hugger": {
+              "inv_name_part": "np_repkit_uni_BOR_Hugger",
+              "partname": "Uni_BOR_RepKit_Hugger, AA2D6012976D456585032E11C68FB47D, Hugger",
+              "priority": "2.000000"
+            }
+          },
+          {
+            "np_repkit_uni_dad_healthraiser": {
+              "inv_name_part": "np_repkit_uni_DAD_healthraiser",
+              "partname": "RepKitNameParts, 65CB04144935BD64E267AA80F5B929A8, Healthraiser",
+              "priority": "2.000000"
+            }
+          },
+          {
+            "np_repkit_uni_mal_geigerroid": {
+              "inv_name_part": "np_repkit_uni_MAL_GeigerRoid",
+              "partname": "RepKitNameParts, 19D412B04F120327BA3E81812980FB74, Geiger-Roid",
+              "priority": "2.000000"
+            }
+          },
+          {
+            "np_repkit_uni_ord_paleblood": {
+              "inv_name_part": "np_repkit_uni_ORD_PaleBlood",
+              "partname": "RepKitNameParts, 566B8233435DFB867CDFEC8813321644, Blood Moon",
+              "priority": "2.000000"
+            }
+          },
+          {
+            "np_repkit_uni_ted_font": {
+              "inv_name_part": "np_repkit_uni_TED_font",
+              "partname": "RepKitNameParts, 27AA68474B72611F1060FBA0B682C9C3, Font of Life",
+              "priority": "2.000000"
+            }
+          },
+          {
+            "np_repkit_uni_tor_outburst": {
+              "inv_name_part": "np_repkit_uni_TOR_Outburst",
+              "partname": "RepKitNameParts, 9DFA731E4C43F8FFD8346794EDBD2351, Outburst",
+              "priority": "2.000000"
+            }
+          },
+          {
+            "np_repkit_uni_vla_bloodiron": {
+              "inv_name_part": "np_repkit_uni_VLA_BloodIron",
+              "partname": "RepKitNameParts, 52B5E9754AF47285BBA6CE9C11978A42, Oxidation",
+              "priority": "2.000000"
+            }
+          },
+          {
+            "np_rhythm": {
+              "inv_name_part": "NP_Rhythm",
+              "partname": "Uni_ORD_PS_NoisyCricket, 5186A6E94313B48A1C3D58937D7C4D3F, Rhythm",
+              "priority": "1.000000"
+            }
+          },
+          {
+            "np_ripple": {
+              "inv_name_part": "NP_Ripple",
+              "partname": "Uni_TOR_AR_PotatoThrower, 4E20FE0944E0017431B53FB1984289E9, Ripple",
+              "priority": "1.000000"
+            }
+          },
+          {
+            "np_roil": {
+              "inv_name_part": "np_Roil",
+              "partname": "Inv_DAD_SM_BloodStarved, B38DD81C4447CC8B672A34B28B7A4A60, Roil",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_roulette": {
+              "inv_name_part": "np_Roulette",
+              "partname": "WeaponNamingStrategies, 0DCFA95B41D43D54256EA7900C0B7B30, Roulette",
+              "priority": "1.000000"
+            }
+          },
+          {
+            "np_rowdy": {
+              "inv_name_part": "np_Rowdy",
+              "partname": "Uni_MAL_SG_Kickballer, D3B2BF384DBE6F7FC6EADBBBA70FCBFE, Rowdy Rider",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_scootshoot": {
+              "inv_name_part": "np_ScootShoot",
+              "partname": "Uni_MAL_SG_Kickballer, CA9B379545B5181BECA77CB56F13B8E9, Scoot'n'Shoot",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_screwed": {
+              "inv_name_part": "np_Screwed",
+              "partname": "Uni_DAD_SM_Screwed, D50CBD3248530692AE91E2B5858F7C11, Screwstonian",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_seamstress": {
+              "inv_name_part": "np_Seamstress",
+              "partname": "Uni_MAL_SG_Kickballer, B09B327049E4104E90FBE59D4CD70A09, Rooker",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_shalashaska": {
+              "inv_name_part": "np_shalashaska",
+              "partname": "Uni_MAL_SG_Kickballer, 1CC2CD5E47BAA937C0C485A1FA48922B, Shalashaska",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_shammy": {
+              "inv_name_part": "np_Shammy",
+              "partname": "Uni_MAL_SG_Kickballer, 12D78EC946B70AA1DC3EEF8FB7DD712D, Shammy Kablammy",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_shardenfreude": {
+              "inv_name_part": "np_Shardenfreude",
+              "partname": "Uni_DAD_AR_OM, E6D0C450449491B21D9ED78B7FFD0D9A, Shardenfreude",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_silversliver": {
+              "inv_name_part": "np_silversliver",
+              "partname": "Uni_MAL_SG_Kickballer, 7385224748552C245697ADBF72B6CBE1, Silver Sliver",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_skully": {
+              "inv_name_part": "np_skully",
+              "partname": "Uni_ORD_Aggrovator, A701912942195EDBDB9110B1692F4FC2, Skully",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_sledge": {
+              "inv_name_part": "np_Sledge",
+              "partname": "Uni_MAL_SG_Kickballer, 7C314B1E4A83ABA2462FDC84D9DACA1E, Critical Decay",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_songbird": {
+              "inv_name_part": "np_songbird",
+              "partname": "Uni_MAL_SG_Kickballer, D1375B9847D5E766777783A2CA67CD91, Broken Wings",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_soulsurvivor": {
+              "inv_name_part": "np_soulsurvivor",
+              "partname": "Uni_MAL_SG_Kickballer, B3AA4ED44967EC54ED38039C7F1A7437, Soul Survivor",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_stealth": {
+              "inv_name_part": "np_stealth",
+              "partname": "Uni_MAL_SR_ComplexRoot, D7149D5E410D5F09C07601B989057C4A, Stealth & Seek",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_sunspot": {
+              "inv_name_part": "NP_Sunspot",
+              "partname": "Uni_ORD_PS_NoisyCricket, A54B2A81471E44C1BE2BCE85C8B8DDE6, Sunspot",
+              "priority": "1.000000"
+            }
+          },
+          {
+            "np_tankbuster": {
+              "inv_name_part": "np_tankbuster",
+              "partname": "Uni_MAL_SG_Kickballer, 2C6B06444B2C07A6790E8385EF0AC235, Tankbuster",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_temper": {
+              "inv_name_part": "np_Temper",
+              "partname": "Uni_MAL_SG_Kickballer, A0618E9D48A951F358AAB09D7641731A, Solar Temper",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_testament": {
+              "inv_name_part": "np_Testament",
+              "partname": "Uni_MAL_SG_Kickballer, BA8E4EEE492F11178CF577B47562FF6B, Divided Glow",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_tradingup": {
+              "inv_name_part": "np_TradingUp",
+              "partname": "Uni_MAL_SG_Kickballer, 90F61DE24F63D433818F01B884065506, Paperclip",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_triplicate": {
+              "inv_name_part": "np_Triplicate",
+              "partname": "WeaponNamingStrategies, DC6C70064EA4727E97CF2B8ADB7786CA, Triplicate",
+              "priority": "1.000000"
+            }
+          },
+          {
+            "np_undershield": {
+              "inv_name_part": "np_undershield",
+              "partname": "Uni_Supernova, 089005234C563EE6FB22A297D1675AE5, Undershield",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_unstable_kor": {
+              "inv_name_part": "np_Unstable_Kor",
+              "partname": "Uni_MAL_SG_Kickballer, 49AB3CE941FFD84F9FC3C2909A98B571, Unstable Kor",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_urchin": {
+              "inv_name_part": "np_urchin",
+              "partname": "Uni_BOR_Rubber, 7AD8228A447EFE29A98ACCBAAA2DFB3C, Urchin",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_verce": {
+              "inv_name_part": "np_Verce",
+              "partname": "Uni_MAL_SG_Kickballer, CFF5869645D392757D61F6827D4E8C31, Verce",
+              "priority": "3.000000"
+            }
+          }
+        ]
+      },
+      {
+        "entries": [
+          {
+            "np_anarchy": {
+              "inv_name_part": "np_anarchy",
+              "partname": "Uni_Inv_TED_SG_Anarchy, 641B14834BAE08173BD6AAACEDAB0310, Anarchy",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_anchor": {
+              "inv_name_part": "np_anchor",
+              "partname": "Uni_Turret_Anchor, 641B14834BAE08173BD6AAACEDAB0310, Anchor",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_atlinggun": {
+              "inv_name_part": "np_AtlingGun",
+              "partname": "Uni_VLA_HW_AtlingGun, 641B14834BAE08173BD6AAACEDAB0310, Atling Gun",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_bloodstarved": {
+              "inv_name_part": "np_bloodstarved",
+              "partname": "Inv_DAD_SM_BloodStarved, 641B14834BAE08173BD6AAACEDAB0310, Darkbeast",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_buoy": {
+              "inv_name_part": "np_buoy",
+              "partname": "Uni_Spinning_Blade, E8467B8144B4BEC894A39D953FBD383F, Buoy",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_cindershelly": {
+              "inv_name_part": "np_cindershelly",
+              "partname": "Uni_CinderShelly, 641B14834BAE08173BD6AAACEDAB0310, Cindershelly",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_cm_ds_01": {
+              "inv_name_part": "np_cm_ds_01",
+              "partname": "ClassModNameParts, B3A1671C9E344582BB8DFD4F031F5F10, Psion",
+              "priority": "1.000000"
+            }
+          },
+          {
+            "np_cm_ds_02": {
+              "inv_name_part": "np_cm_ds_02",
+              "partname": "ClassModNameParts, 91D861F2606F43D992AF9207831370C7, Transistor",
+              "priority": "1.000000"
+            }
+          },
+          {
+            "np_cm_ds_03": {
+              "inv_name_part": "np_cm_ds_03",
+              "partname": "ClassModNameParts, A0E3A2B0E21444E68DEA3A80657D8B35, Firedancer",
+              "priority": "1.000000"
+            }
+          },
+          {
+            "np_cm_ds_04": {
+              "inv_name_part": "np_cm_ds_04",
+              "partname": "ClassModNameParts, 38DBE8BD975C4A8F89E29C605EAF8F19, Naturalist",
+              "priority": "1.000000"
+            }
+          },
+          {
+            "np_cm_ds_05": {
+              "inv_name_part": "np_cm_ds_05",
+              "partname": "ClassModNameParts, 9DE4EC9B781A474F93BCB588E5792F25, Weaver",
+              "priority": "1.000000"
+            }
+          },
+          {
+            "np_cm_ds_06": {
+              "inv_name_part": "np_cm_ds_06",
+              "partname": "ClassModNameParts, CFC7CFAEA6064DD08A3135891D656EFA, Radiance",
+              "priority": "1.000000"
+            }
+          },
+          {
+            "np_cm_ds_07": {
+              "inv_name_part": "np_cm_ds_07",
+              "partname": "ClassModNameParts, 3CF6A3DD04EB4D39870C5438EBAD5D20, Ritualist",
+              "priority": "1.000000"
+            }
+          },
+          {
+            "np_cm_ds_08": {
+              "inv_name_part": "np_cm_ds_08",
+              "partname": "ClassModNameParts, D9407098871A4833B8CA26A3727076E9, Alchemist",
+              "priority": "1.000000"
+            }
+          },
+          {
+            "np_cm_ds_09": {
+              "inv_name_part": "np_cm_ds_09",
+              "partname": "ClassModNameParts, AE38BE238FA54F9784FC2BE9510D376F, Commander",
+              "priority": "1.000000"
+            }
+          },
+          {
+            "np_cm_ds_10": {
+              "inv_name_part": "np_cm_ds_10",
+              "partname": "ClassModNameParts, 572A4BA93E27428D977C9D943E41DA7E, Hunter",
+              "priority": "1.000000"
+            }
+          },
+          {
+            "np_cm_ds_leg_01": {
+              "inv_name_part": "np_cm_ds_leg_01",
+              "partname": "ClassModNameParts, A677D4DC6A064F469EA92758653EBFA1, Technomancer",
+              "priority": "1.000000"
+            }
+          },
+          {
+            "np_cm_ds_leg_02": {
+              "inv_name_part": "np_cm_ds_leg_02",
+              "partname": "ClassModNameParts, 2402FC92FC0B412A88B3DB655CC1F833, Avatar",
+              "priority": "1.000000"
+            }
+          },
+          {
+            "np_cm_ds_leg_03": {
+              "inv_name_part": "np_cm_ds_leg_03",
+              "partname": "ClassModNameParts, 01FD9E3AEBA540BA877C7298BA196ADD, Undead Eye",
+              "priority": "1.000000"
+            }
+          },
+          {
+            "np_cm_ds_leg_04": {
+              "inv_name_part": "np_cm_ds_leg_04",
+              "partname": "ClassModNameParts, 5FA4DC47A21C498FB9D223D4C71A04F7, Kindread Spirits",
+              "priority": "1.000000"
+            }
+          },
+          {
+            "np_cm_ds_leg_05": {
+              "inv_name_part": "np_cm_ds_leg_05",
+              "partname": "ClassModNameParts, 0A7D1AD8543A4CA9ACFA0E04C8D85657, Illusionist",
+              "priority": "1.000000"
+            }
+          },
+          {
+            "np_cm_ds_leg_06": {
+              "inv_name_part": "np_cm_ds_leg_06",
+              "partname": "ClassModNameParts, F67F83326BE64152B22C76F055BCCA57, Teen Witch",
+              "priority": "1.000000"
+            }
+          },
+          {
+            "np_cm_exo_01": {
+              "inv_name_part": "np_cm_exo_01",
+              "partname": "ClassModNameParts, 37B15BC34879E67A2D373C84D8EF0ACF, Agente",
+              "priority": "1.000000"
+            }
+          },
+          {
+            "np_cm_exo_02": {
+              "inv_name_part": "np_cm_exo_02",
+              "partname": "ClassModNameParts, 256DAC6E48819799F77FE099A88C6604, Genio",
+              "priority": "1.000000"
+            }
+          },
+          {
+            "np_cm_exo_03": {
+              "inv_name_part": "np_cm_exo_03",
+              "partname": "ClassModNameParts, AE8C7A964F019C2980A6BC8DF3198327, Soldado",
+              "priority": "1.000000"
+            }
+          },
+          {
+            "np_cm_exo_04": {
+              "inv_name_part": "np_cm_exo_04",
+              "partname": "ClassModNameParts, 64E90C50459E0DCFD80025B885966D86, Demolitionist",
+              "priority": "1.000000"
+            }
+          },
+          {
+            "np_cm_exo_05": {
+              "inv_name_part": "np_cm_exo_05",
+              "partname": "ClassModNameParts, CF464C7D4E8D78D41672EFA3125AEE53, Técnico",
+              "priority": "1.000000"
+            }
+          },
+          {
+            "np_cm_exo_06": {
+              "inv_name_part": "np_cm_exo_06",
+              "partname": "ClassModNameParts, 36B4F96C4B6371EBC052E8A9B8963B1C, Mercenario",
+              "priority": "1.000000"
+            }
+          },
+          {
+            "np_cm_exo_07": {
+              "inv_name_part": "np_cm_exo_07",
+              "partname": "ClassModNameParts, F42D14A7468744EA7588D9B18284874C, Gearhead",
+              "priority": "1.000000"
+            }
+          },
+          {
+            "np_cm_exo_08": {
+              "inv_name_part": "np_cm_exo_08",
+              "partname": "ClassModNameParts, A3EDD1044C57E9DAAFFC6C9960720CE9, Trooper",
+              "priority": "1.000000"
+            }
+          },
+          {
+            "np_cm_exo_09": {
+              "inv_name_part": "np_cm_exo_09",
+              "partname": "ClassModNameParts, 6C13923141A1C7537D129C9EF4EEC8FF, Tanker",
+              "priority": "1.000000"
+            }
+          },
+          {
+            "np_cm_exo_10": {
+              "inv_name_part": "np_cm_exo_10",
+              "partname": "ClassModNameParts, 19BE6AAF466B26B5E4C350B255AAD140, Practitioner",
+              "priority": "1.000000"
+            }
+          },
+          {
+            "np_cm_exo_leg_01": {
+              "inv_name_part": "np_cm_exo_leg_01",
+              "partname": "ClassModNameParts, 8D9EDA004A3E65FCA526689A52888CAD, Dancer",
+              "priority": "1.000000"
+            }
+          },
+          {
+            "np_cm_exo_leg_02": {
+              "inv_name_part": "np_cm_exo_leg_02",
+              "partname": "ClassModNameParts, E8CF400C4C6D72A36CCA21A7FEDB7596, Filántropo",
+              "priority": "1.000000"
+            }
+          },
+          {
+            "np_cm_exo_leg_03": {
+              "inv_name_part": "np_cm_exo_leg_03",
+              "partname": "ClassModNameParts, EE98E6B6DBA04E128DD21D05105FAB3B, Instigator",
+              "priority": "1.000000"
+            }
+          },
+          {
+            "np_cm_exo_leg_04": {
+              "inv_name_part": "np_cm_exo_leg_04",
+              "partname": "ClassModNameParts, E510B4C2037F4FBC9DC92E1BC1A3526B, Buster",
+              "priority": "1.000000"
+            }
+          },
+          {
+            "np_cm_exo_leg_05": {
+              "inv_name_part": "np_cm_exo_leg_05",
+              "partname": "ClassModNameParts, 847F4BEDDF06433F941E8855BD3EFD64, Esgrimidor",
+              "priority": "1.000000"
+            }
+          },
+          {
+            "np_cm_exo_leg_06": {
+              "inv_name_part": "np_cm_exo_leg_06",
+              "partname": "ClassModNameParts, 93006650CD264B2C899CDB330E469323, Grenazerker",
+              "priority": "1.000000"
+            }
+          },
+          {
+            "np_cm_grav_01": {
+              "inv_name_part": "np_cm_grav_01",
+              "partname": "ClassModNameParts, EAB17C2A42BE3B149460F38B677913B7, Breaker",
+              "priority": "1.000000"
+            }
+          },
+          {
+            "np_cm_grav_02": {
+              "inv_name_part": "np_cm_grav_02",
+              "partname": "ClassModNameParts, 5A12E6B74EF2FB59EC3B22B5270717A8, Chemist",
+              "priority": "1.000000"
+            }
+          },
+          {
+            "np_cm_grav_03": {
+              "inv_name_part": "np_cm_grav_03",
+              "partname": "ClassModNameParts, A020DE924DE5C58B4DA75496FBBFA1C4, Assistant",
+              "priority": "1.000000"
+            }
+          },
+          {
+            "np_cm_grav_04": {
+              "inv_name_part": "np_cm_grav_04",
+              "partname": "ClassModNameParts, 7BA92A4B45CD8A57043AD983A739B364, Physicist",
+              "priority": "1.000000"
+            }
+          },
+          {
+            "np_cm_grav_05": {
+              "inv_name_part": "np_cm_grav_05",
+              "partname": "ClassModNameParts, 50A3D74D49432C719BE0FEA602BC5A24, Controller",
+              "priority": "1.000000"
+            }
+          },
+          {
+            "np_cm_grav_06": {
+              "inv_name_part": "np_cm_grav_06",
+              "partname": "ClassModNameParts, 86D299B946E6EFBA18715ABC67E4DB1E, Compiler",
+              "priority": "1.000000"
+            }
+          },
+          {
+            "np_cm_grav_07": {
+              "inv_name_part": "np_cm_grav_07",
+              "partname": "ClassModNameParts, 9C2BA21B431DD7F837C7C8A2D658FEFC, Specialist",
+              "priority": "1.000000"
+            }
+          },
+          {
+            "np_cm_grav_08": {
+              "inv_name_part": "np_cm_grav_08",
+              "partname": "ClassModNameParts, E465A0754647555E813A728EB96214CD, Bookworm",
+              "priority": "1.000000"
+            }
+          },
+          {
+            "np_cm_grav_09": {
+              "inv_name_part": "np_cm_grav_09",
+              "partname": "ClassModNameParts, BD963BF54C986E122FD0759D057B53D4, Radiologist",
+              "priority": "1.000000"
+            }
+          },
+          {
+            "np_cm_grav_10": {
+              "inv_name_part": "np_cm_grav_10",
+              "partname": "ClassModNameParts, CBD490ED49B57529661735949840314C, Savant",
+              "priority": "1.000000"
+            }
+          },
+          {
+            "np_cm_grav_leg_01": {
+              "inv_name_part": "np_cm_grav_leg_01",
+              "partname": "ClassModNameParts, 4B87D68445F7E4A6858B4DBEA6F629DB, Bio-Robot",
+              "priority": "1.000000"
+            }
+          },
+          {
+            "np_cm_grav_leg_02": {
+              "inv_name_part": "np_cm_grav_leg_02",
+              "partname": "ClassModNameParts, 40227CB14C0609D9FA5B93AAD0D70458, Reactor",
+              "priority": "1.000000"
+            }
+          },
+          {
+            "np_cm_grav_leg_03": {
+              "inv_name_part": "np_cm_grav_leg_03",
+              "partname": "ClassModNameParts, 9443D18A479A1420580B00BAD2C7C108, Generator",
+              "priority": "1.000000"
+            }
+          },
+          {
+            "np_cm_grav_leg_04": {
+              "inv_name_part": "np_cm_grav_leg_04",
+              "partname": "ClassModNameParts, 4F61FFA24D0BA5A65F85D48916C23202, Driver",
+              "priority": "1.000000"
+            }
+          },
+          {
+            "np_cm_grav_leg_05": {
+              "inv_name_part": "np_cm_grav_leg_05",
+              "partname": "ClassModNameParts, 8D2A7B71440FCEDCE710489BC2E2C213, Skeptic",
+              "priority": "1.000000"
+            }
+          },
+          {
+            "np_cm_grav_leg_06": {
+              "inv_name_part": "np_cm_grav_leg_06",
+              "partname": "ClassModNameParts, 42609A1949D7D7749188FCAB670F2EC7, Scientist",
+              "priority": "1.000000"
+            }
+          },
+          {
+            "np_cm_pal_01": {
+              "inv_name_part": "np_cm_pal_01",
+              "partname": "ClassModNameParts, D3B9A66B67DF4CDC9CBB172C8B6B26DF, Guardian",
+              "priority": "1.000000"
+            }
+          },
+          {
+            "np_cm_pal_02": {
+              "inv_name_part": "np_cm_pal_02",
+              "partname": "ClassModNameParts, B46AF86622BA495E8C7842A3858EF2C5, Brawler",
+              "priority": "1.000000"
+            }
+          },
+          {
+            "np_cm_pal_03": {
+              "inv_name_part": "np_cm_pal_03",
+              "partname": "ClassModNameParts, 1A4721C95B894556ACDA78D9D005E89B, Grenadier",
+              "priority": "1.000000"
+            }
+          },
+          {
+            "np_cm_pal_04": {
+              "inv_name_part": "np_cm_pal_04",
+              "partname": "ClassModNameParts, 00FCB0C8A0944BE9A29E12651550DC4A, Icebringer",
+              "priority": "1.000000"
+            }
+          },
+          {
+            "np_cm_pal_05": {
+              "inv_name_part": "np_cm_pal_05",
+              "partname": "ClassModNameParts, 42D4B3EC63E14E339937865E8202001E, Torchbearer",
+              "priority": "1.000000"
+            }
+          },
+          {
+            "np_cm_pal_06": {
+              "inv_name_part": "np_cm_pal_06",
+              "partname": "ClassModNameParts, AE32626A695A483A9580E72001D34CEC, Stormcaller",
+              "priority": "1.000000"
+            }
+          },
+          {
+            "np_cm_pal_07": {
+              "inv_name_part": "np_cm_pal_07",
+              "partname": "ClassModNameParts, 298A8CA0EC314C5A88DF672CFF940E54, Soldier",
+              "priority": "1.000000"
+            }
+          },
+          {
+            "np_cm_pal_08": {
+              "inv_name_part": "np_cm_pal_08",
+              "partname": "ClassModNameParts, 6EE61E8AB43345F5B89837A6B9121562, Commando",
+              "priority": "1.000000"
+            }
+          },
+          {
+            "np_cm_pal_09": {
+              "inv_name_part": "np_cm_pal_09",
+              "partname": "ClassModNameParts, 2A9EFA78F94D4F5EA286D6DC90DC0ECD, Cyborg",
+              "priority": "1.000000"
+            }
+          },
+          {
+            "np_cm_pal_10": {
+              "inv_name_part": "np_cm_pal_10",
+              "partname": "ClassModNameParts, C9DFD5078DC5468897ED13DBFABD20C3, Outlaw",
+              "priority": "1.000000"
+            }
+          },
+          {
+            "np_cm_pal_leg_01": {
+              "inv_name_part": "np_cm_pal_leg_01",
+              "partname": "ClassModNameParts, DA786B0B27B14FF4B45AB951BE1E2328, Furnace",
+              "priority": "1.000000"
+            }
+          },
+          {
+            "np_cm_pal_leg_02": {
+              "inv_name_part": "np_cm_pal_leg_02",
+              "partname": "ClassModNameParts, 8A1E379A81904ED5AC1D3515A4CA9B82, Elementalist",
+              "priority": "1.000000"
+            }
+          },
+          {
+            "np_cm_pal_leg_03": {
+              "inv_name_part": "np_cm_pal_leg_03",
+              "partname": "ClassModNameParts, 6395A169D4124F17921450D68E5AC6C7, Blacksmith",
+              "priority": "1.000000"
+            }
+          },
+          {
+            "np_cm_pal_leg_04": {
+              "inv_name_part": "np_cm_pal_leg_04",
+              "partname": "ClassModNameParts, FEEE40DA38FB40B39BFEC5698B0DBB4F, Shatterwight",
+              "priority": "1.000000"
+            }
+          },
+          {
+            "np_cm_pal_leg_05": {
+              "inv_name_part": "np_cm_pal_leg_05",
+              "partname": "ClassModNameParts, B561FC9897A440169ABBDAB651686E81, Viking",
+              "priority": "1.000000"
+            }
+          },
+          {
+            "np_cm_pal_leg_06": {
+              "inv_name_part": "np_cm_pal_leg_06",
+              "partname": "ClassModNameParts, C7C613E0D2224ED09D7C94F6167AC2A2, Forge Master",
+              "priority": "1.000000"
+            }
+          },
+          {
+            "np_complex_root": {
+              "inv_name_part": "np_complex_root",
+              "partname": "Uni_MAL_SR_ComplexRoot, 641B14834BAE08173BD6AAACEDAB0310, Complex Root",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_convergence": {
+              "inv_name_part": "np_convergence",
+              "partname": "Uni_BOR_SG_Convergence, 641B14834BAE08173BD6AAACEDAB0310, Convergence",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_crowdsourced": {
+              "inv_name_part": "np_CrowdSourced",
+              "partname": "Uni_VLA_SR_CrowdSourced, E3B6F5BF4E66F75E7CF22B940530957C, Midnight Defiance",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_gren_aug_artillery": {
+              "inv_name_part": "np_gren_aug_artillery",
+              "partname": "GrenadePartNames, A61715E64D0CAF3DABA402840262D8AF, Fusillade",
+              "priority": "1.000000",
+              "excludedbasetags": [
+                {
+                  "grenade_payload_augment": "grenade_payload_augment"
+                }
+              ]
+            }
+          },
+          {
+            "np_gren_aug_artillery_duration": {
+              "inv_name_part": "np_gren_aug_artillery_duration",
+              "partname": "GrenadePartNames, C64E6EC247631603402BDA8A34D8453F, Suppressing",
+              "priority": "1.500000"
+            }
+          },
+          {
+            "np_gren_aug_artillery_maglock": {
+              "inv_name_part": "np_gren_aug_artillery_maglock",
+              "partname": "GrenadePartNames, D6FA3CF84ECE875B440F4097396B9B88, Relentless",
+              "priority": "1.500000"
+            }
+          },
+          {
+            "np_gren_aug_artillery_micromissiles": {
+              "inv_name_part": "np_gren_aug_artillery_micromissiles",
+              "partname": "GrenadePartNames, 57CEB608416CDF52924CBF8FCF127AA8, Barrage",
+              "priority": "1.500000"
+            }
+          },
+          {
+            "np_gren_aug_artillery_mortar": {
+              "inv_name_part": "np_gren_aug_artillery_mortar",
+              "partname": "GrenadePartNames, B6A4AD6D42EFD3F7AA588C828B86B572, Artillery",
+              "priority": "1.500000"
+            }
+          },
+          {
+            "np_gren_aug_artillery_ricochet": {
+              "inv_name_part": "np_gren_aug_artillery_ricochet",
+              "partname": "GrenadePartNames, D6F59DD14428FF8AFB0661A7E05B6E96, Anti-Infantry",
+              "priority": "1.500000"
+            }
+          },
+          {
+            "np_gren_aug_damage_amp": {
+              "inv_name_part": "np_gren_aug_damage_amp",
+              "partname": "GrenadePartNames, 8AF4612745908BA1460F279A6685DDB0, Wounding",
+              "priority": "1.000000",
+              "excludedbasetags": [
+                {
+                  "grenade_payload_augment": "grenade_payload_augment"
+                }
+              ],
+              "requiredmanufacturer": "manufacturer'Jakobs'"
+            }
+          },
+          {
+            "np_gren_aug_damage_amp_bouncing": {
+              "inv_name_part": "np_gren_aug_damage_amp_Bouncing",
+              "partname": "GrenadePartNames, 35D366304526C6FBD7CE79BDBDD43BFC, Caroming",
+              "priority": "1.500000"
+            }
+          },
+          {
+            "np_gren_aug_damage_amp_penetrator": {
+              "inv_name_part": "np_gren_aug_damage_amp_penetrator",
+              "partname": "GrenadePartNames, F3C45331415249EBDCF18CA6CD18202F, Vivisecting",
+              "priority": "1.500000"
+            }
+          },
+          {
+            "np_gren_aug_damage_amp_suppressor": {
+              "inv_name_part": "np_gren_aug_damage_amp_suppressor",
+              "partname": "GrenadePartNames, 296202704D50572DB3F619B4B5230F2E, Maiming",
+              "priority": "1.500000"
+            }
+          },
+          {
+            "np_gren_aug_divider": {
+              "inv_name_part": "np_gren_aug_divider",
+              "partname": "GrenadePartNames, 7E85DE8D46F84568C661EEBAD9DB9615, Duplicating",
+              "priority": "1.000000",
+              "excludedbasetags": [
+                {
+                  "grenade_payload_augment": "grenade_payload_augment"
+                }
+              ]
+            }
+          },
+          {
+            "np_gren_aug_divider_children": {
+              "inv_name_part": "np_gren_aug_divider_children",
+              "partname": "GrenadePartNames, FB5C22D0488FB429EEB576A16C99291A, Multiplying",
+              "priority": "1.500000"
+            }
+          },
+          {
+            "np_gren_aug_divider_repeater": {
+              "inv_name_part": "np_gren_aug_divider_repeater",
+              "partname": "GrenadePartNames, 61B8CBDB461BBAEE6E3280BDB1E00461, Bombing Run",
+              "priority": "1.500000"
+            }
+          },
+          {
+            "np_gren_aug_divider_seeker": {
+              "inv_name_part": "np_gren_aug_divider_seeker",
+              "partname": "GrenadePartNames, 726B4DFE404C69D002B0A8B6705588B7, Pack-Hunter",
+              "priority": "1.500000"
+            }
+          },
+          {
+            "np_gren_aug_divider_singularity": {
+              "inv_name_part": "np_gren_aug_divider_singularity",
+              "partname": "GrenadePartNames, CB608EF447BA9236AB471585E5709F34, Binary",
+              "priority": "1.500000"
+            }
+          },
+          {
+            "np_gren_aug_divider_spring": {
+              "inv_name_part": "np_gren_aug_divider_spring",
+              "partname": "GrenadePartNames, A6D039A64294B53578E3078E298ACC29, Coursing",
+              "priority": "1.500000"
+            }
+          },
+          {
+            "np_gren_aug_lingering": {
+              "inv_name_part": "np_gren_aug_lingering",
+              "partname": "GrenadePartNames, 01814F554B24EF350E2AB0909A2DFBD6, Hazard",
+              "priority": "1.000000",
+              "excludedbasetags": [
+                {
+                  "grenade_payload_augment": "grenade_payload_augment"
+                }
+              ]
+            }
+          },
+          {
+            "np_gren_aug_lingering_alchemic": {
+              "inv_name_part": "np_gren_aug_lingering_alchemic",
+              "partname": "GrenadePartNames, FD606D224754678A703275BB7AF5D6C4, Potent",
+              "priority": "1.500000"
+            }
+          },
+          {
+            "np_gren_aug_lingering_duration": {
+              "inv_name_part": "np_gren_aug_lingering_duration",
+              "partname": "GrenadePartNames, E07C9CA64C8884AD492C87877EE88D07, Ruinous",
+              "priority": "1.500000"
+            }
+          },
+          {
+            "np_gren_aug_lingering_fracture": {
+              "inv_name_part": "np_gren_aug_lingering_fracture",
+              "partname": "GrenadePartNames, 9758634B4B6AB76593D580BE5DC047F5, Tectonic",
+              "priority": "1.500000"
+            }
+          },
+          {
+            "np_gren_aug_lingering_pulse": {
+              "inv_name_part": "np_gren_aug_lingering_pulse",
+              "partname": "GrenadePartNames, F9612ACF467EECA11510A6B8712BF2EE, Erupting",
+              "priority": "1.500000"
+            }
+          },
+          {
+            "np_gren_aug_lingering_splat": {
+              "inv_name_part": "np_gren_aug_lingering_splat",
+              "partname": "GrenadePartNames, E15330FA4CE4BBB376942681FA0D08CA, Bubbling",
+              "priority": "1.500000"
+            }
+          },
+          {
+            "np_gren_aug_mirv": {
+              "inv_name_part": "np_gren_aug_mirv",
+              "partname": "GrenadePartNames, 38F3DA16410F72AC1F07A4B07940FAB2, MIRV",
+              "priority": "1.000000",
+              "excludedbasetags": [
+                {
+                  "grenade_payload_augment": "grenade_payload_augment"
+                }
+              ]
+            }
+          },
+          {
+            "np_gren_aug_mirv_bouncer": {
+              "inv_name_part": "np_gren_aug_mirv_bouncer",
+              "partname": "GrenadePartNames, 08BAEF084F59559659BC91AF00ADC828, Festive",
+              "priority": "1.500000"
+            }
+          },
+          {
+            "np_gren_aug_mirv_children": {
+              "inv_name_part": "np_gren_aug_mirv_children",
+              "partname": "GrenadePartNames, 6B6460474BF77ECA896A7B9E6BA767DD, Clonal",
+              "priority": "1.500000"
+            }
+          },
+          {
+            "np_gren_aug_mirv_micro_mirv": {
+              "inv_name_part": "np_gren_aug_mirv_micro_mirv",
+              "partname": "GrenadePartNames, AF2AC70649813C078AB965A2A4AB56EB, Bountiful",
+              "priority": "1.500000"
+            }
+          },
+          {
+            "np_gren_aug_mirv_spring": {
+              "inv_name_part": "np_gren_aug_mirv_spring",
+              "partname": "GrenadePartNames, B4E8AF894386F13D9BC89B859999BA54, Bouquet",
+              "priority": "1.500000"
+            }
+          },
+          {
+            "np_gren_aug_singularity": {
+              "inv_name_part": "np_gren_aug_singularity",
+              "partname": "GrenadePartNames, 5FBA9B9446D59282CEE6FCB7327F1AEE, Singularity",
+              "priority": "1.000000",
+              "excludedbasetags": [
+                {
+                  "grenade_payload_augment": "grenade_payload_augment"
+                }
+              ]
+            }
+          },
+          {
+            "np_gren_aug_singularity_collapsing": {
+              "inv_name_part": "np_gren_aug_singularity_collapsing",
+              "partname": "GrenadePartNames, 65759908400A53A1A13415A2C9C1B4CD, Supermassive",
+              "priority": "1.500000"
+            }
+          },
+          {
+            "np_gren_aug_singularity_duration": {
+              "inv_name_part": "np_gren_aug_singularity_duration",
+              "partname": "GrenadePartNames, 225C70CC42F10892FA94B6AC616080A2, Stable",
+              "priority": "1.500000"
+            }
+          },
+          {
+            "np_gren_aug_singularity_lingering": {
+              "inv_name_part": "np_gren_aug_singularity_lingering",
+              "partname": "GrenadePartNames, 595B852849014DEEB73CD297958FA5B4, Spaghettifying",
+              "priority": "1.500000"
+            }
+          },
+          {
+            "np_gren_aug_singularity_repulsor": {
+              "inv_name_part": "np_gren_aug_singularity_repulsor",
+              "partname": "GrenadePartNames, 6CC520614F79D9F6090D4CA6D847F96F, White Hole",
+              "priority": "1.500000"
+            }
+          },
+          {
+            "np_gren_aug_spring": {
+              "inv_name_part": "np_gren_aug_spring",
+              "partname": "GrenadePartNames, 0425DD714B73F3E8B07C2881CF78A46A, Spring-Loaded",
+              "priority": "1.000000",
+              "excludedbasetags": [
+                {
+                  "grenade_payload_augment": "grenade_payload_augment"
+                }
+              ]
+            }
+          },
+          {
+            "np_gren_aug_spring_apex": {
+              "inv_name_part": "np_gren_aug_spring_apex",
+              "partname": "GrenadePartNames, 4E05A78C42466C826A3C2CB827CD2E21, Daisy Cutter",
+              "priority": "1.500000"
+            }
+          },
+          {
+            "np_gren_aug_spring_artillery": {
+              "inv_name_part": "np_gren_aug_spring_artillery",
+              "partname": "GrenadePartNames, 9316DC914FD0791EC0D0E1AB7044A7DC, Blossoming",
+              "priority": "1.500000"
+            }
+          },
+          {
+            "np_gren_aug_spring_bouncer": {
+              "inv_name_part": "np_gren_aug_spring_bouncer",
+              "partname": "GrenadePartNames, CD3561F7404EFEA88359408ACA08F658, Mad Hatter",
+              "priority": "1.500000"
+            }
+          },
+          {
+            "np_gren_aug_spring_compounded": {
+              "inv_name_part": "np_gren_aug_spring_compounded",
+              "partname": "GrenadePartNames, AB71448D4DD0765B515A01AE0C4CA327, Crescendo",
+              "priority": "1.500000"
+            }
+          },
+          {
+            "np_gren_aug_spring_springs": {
+              "inv_name_part": "np_gren_aug_spring_springs",
+              "partname": "GrenadePartNames, E1054E86472B12E795A25DBA8BA1C26C, Rebounding",
+              "priority": "1.500000"
+            }
+          },
+          {
+            "np_gren_manu_bor": {
+              "inv_name_part": "np_gren_manu_bor",
+              "partname": "GrenadePartNames, E6137BBF4610A09F56C63BB355B13B26, Reaver Grenade",
+              "priority": "0.500000",
+              "requiredmanufacturer": "manufacturer'Borg'"
+            }
+          },
+          {
+            "np_gren_manu_dad": {
+              "inv_name_part": "np_gren_manu_dad",
+              "partname": "GrenadePartNames, 6E8952B04538B0114E7860AF6690B3BA, Frag Grenade",
+              "priority": "0.500000",
+              "requiredmanufacturer": "manufacturer'daedalus'"
+            }
+          },
+          {
+            "np_gren_manu_jak": {
+              "inv_name_part": "np_gren_manu_jak",
+              "partname": "GrenadePartNames, 7896E12F41556BF8D6505B94DB0A7C06, Throwing Knife",
+              "priority": "0.500000",
+              "requiredmanufacturer": "manufacturer'Jakobs'"
+            }
+          },
+          {
+            "np_gren_manu_mal": {
+              "inv_name_part": "np_gren_manu_mal",
+              "partname": "GrenadePartNames, 927E35484E700F5E6361068FF5BDE571, Plasma Grenade",
+              "priority": "0.500000",
+              "requiredmanufacturer": "manufacturer'Maliwan'"
+            }
+          },
+          {
+            "np_gren_manu_ord": {
+              "inv_name_part": "np_gren_manu_ord",
+              "partname": "GrenadePartNames, 9E9719294162AAC3BD0E848DCF7358D2, Seeker",
+              "priority": "0.500000",
+              "requiredmanufacturer": "manufacturer'Order'"
+            }
+          },
+          {
+            "np_gren_manu_ted": {
+              "inv_name_part": "np_gren_manu_ted",
+              "partname": "GrenadePartNames, E22AC5D342E1A82D4B6112A7AED2F40B, Satchel Charge",
+              "priority": "0.500000",
+              "requiredmanufacturer": "manufacturer'Tediore'"
+            }
+          },
+          {
+            "np_gren_manu_tor": {
+              "inv_name_part": "np_gren_manu_tor",
+              "partname": "GrenadePartNames, 6C59E24F495CD183480988892345599A, EXPLODER",
+              "priority": "0.500000",
+              "requiredmanufacturer": "manufacturer'Torgue'"
+            }
+          },
+          {
+            "np_gren_manu_vla": {
+              "inv_name_part": "np_gren_manu_vla",
+              "partname": "GrenadePartNames, 6F4A397A4469F1424A6F5BB78B53E718, Impact Grenade",
+              "priority": "0.500000",
+              "requiredmanufacturer": "manufacturer'Vladof'"
+            }
+          },
+          {
+            "np_gren_stat_cooldown": {
+              "inv_name_part": "np_gren_stat_cooldown",
+              "partname": "GrenadePartNames, DF2DD9BA4E8B6B9D49E3F7AFA8884C86, Rapid",
+              "priority": "2.000000"
+            }
+          },
+          {
+            "np_gren_stat_crit_chance": {
+              "inv_name_part": "np_gren_stat_crit_chance",
+              "partname": "GrenadePartNames, 5DC6E71C4BE81F1017CB1E88932079F6, Bullseye",
+              "priority": "2.000000"
+            }
+          },
+          {
+            "np_gren_stat_crit_damage": {
+              "inv_name_part": "np_gren_stat_crit_damage",
+              "partname": "GrenadePartNames, 255143F74ECC35BD5F5B7AA98DECC32F, Killshot",
+              "priority": "2.000000"
+            }
+          },
+          {
+            "np_gren_stat_damage": {
+              "inv_name_part": "np_gren_stat_damage",
+              "partname": "GrenadePartNames, 922397A44D23B897428E6CB5D707CB05, Booming",
+              "priority": "2.000000"
+            }
+          },
+          {
+            "np_gren_stat_elemental_power": {
+              "inv_name_part": "np_gren_stat_elemental_power",
+              "partname": "GrenadePartNames, 6B473EB34B0D817C575049B147E4C62D, Ancient",
+              "priority": "2.000000"
+            }
+          },
+          {
+            "np_gren_stat_extra_charge": {
+              "inv_name_part": "np_gren_stat_extra_charge",
+              "partname": "GrenadePartNames, 6859BD2A4FE9273FD1B974B5C46357A4, Fully Loaded",
+              "priority": "2.000000"
+            }
+          },
+          {
+            "np_gren_stat_force": {
+              "inv_name_part": "np_gren_stat_force",
+              "partname": "GrenadePartNames, 7957C71845A55CD7CE6DF18A53D866B2, Concussive",
+              "priority": "2.000000"
+            }
+          },
+          {
+            "np_gren_stat_nuke": {
+              "inv_name_part": "np_gren_stat_nuke",
+              "partname": "GrenadePartNames, 16837A434CB4EFF8700EA49631CECAB7, Atomic",
+              "priority": "2.000000"
+            }
+          },
+          {
+            "np_gren_stat_oversized": {
+              "inv_name_part": "np_gren_stat_oversized",
+              "partname": "GrenadePartNames, B5FEF5994D99ACACF40D79857FEA0D6F, Augmented",
+              "priority": "2.000000"
+            }
+          },
+          {
+            "np_gren_stat_radius": {
+              "inv_name_part": "np_gren_stat_radius",
+              "partname": "GrenadePartNames, 44AF1BD04542AE8C639B619B1C0E4E89, Collateral",
+              "priority": "2.000000"
+            }
+          },
+          {
+            "np_gren_stat_transfusion": {
+              "inv_name_part": "np_gren_stat_transfusion",
+              "partname": "GrenadePartNames, 845DC78F4AB189D618FB368F58D75E98, Vampiric",
+              "priority": "2.000000"
+            }
+          },
+          {
+            "np_gren_stat_wideload": {
+              "inv_name_part": "np_gren_stat_wideload",
+              "partname": "GrenadePartNames, 5740D84A47E51FE2C7F3008AB35A852F, Double-Wide",
+              "priority": "2.000000"
+            }
+          },
+          {
+            "np_hellfire": {
+              "inv_name_part": "np_hellfire",
+              "partname": "Uni_BOR_SM_Hellfire, 641B14834BAE08173BD6AAACEDAB0310, Hellfire",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_kaleidosplode": {
+              "inv_name_part": "np_Kaleidosplode",
+              "partname": "Uni_MAL_SG_Kickballer, DC45B14E48C7552D1EA79A8D0E787AC3, Kaleidosplode",
+              "priority": "3.000000",
+              "minrarity": "rarity'none'",
+              "maxrarity": "rarity'none'",
+              "requiredmanufacturer": "manufacturer'none'"
+            }
+          },
+          {
+            "np_katagawa": {
+              "inv_name_part": "np_katagawa",
+              "partname": "Uni_MAL_SR_Katagawa, 641B14834BAE08173BD6AAACEDAB0310, Katagawa's Revenge",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_kickballer": {
+              "inv_name_part": "np_kickballer",
+              "partname": "Uni_MAL_SG_Kickballer, 641B14834BAE08173BD6AAACEDAB0310, Kickballer",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_luty": {
+              "inv_name_part": "np_Luty",
+              "partname": "Inv_DAD_SM_BloodStarved, 62941BE34C37A2A21CFDCF9C90FFBDAA, Luty Madlad",
+              "priority": "3.000000",
+              "minrarity": "rarity'none'",
+              "maxrarity": "rarity'none'",
+              "requiredmanufacturer": "manufacturer'none'"
+            }
+          },
+          {
+            "np_noisycricket": {
+              "inv_name_part": "NP_NoisyCricket",
+              "partname": "Uni_ORD_PS_NoisyCricket, 95D37E95414375F039063FA20CE02DE4, Noisy Cricket",
+              "priority": "1.000000"
+            }
+          },
+          {
+            "np_om": {
+              "inv_name_part": "np_OM",
+              "partname": "Uni_DAD_AR_OM, 5D8ACBA74D979307BA30129A43C9A196, Oscar Mike",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_on_the_go": {
+              "inv_name_part": "np_on_the_go",
+              "partname": "terminal_gadget_health, D4137B1B451507426ABF189B007392FA, On The Go",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_ravenfire": {
+              "inv_name_part": "np_ravenfire",
+              "partname": "Uni_TOR_HW_Ravenfire, 5A8EA9A8468EA19A9AF921A2887F74F4, Ravenfire",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_repkit_aug_d_aoe_heal": {
+              "inv_name_part": "np_repkit_aug_d_aoe_heal",
+              "partname": "RepKitNameParts, BA4491A84EA30C5D7790B5AEE3B369E7, Aerosolized",
+              "priority": "2.000000"
+            }
+          },
+          {
+            "np_repkit_aug_d_damage_reduction": {
+              "inv_name_part": "np_repkit_aug_d_damage_reduction",
+              "partname": "RepKitNameParts, 380997C045B2741260C77A91DA843235, Reinforcing",
+              "priority": "2.000000"
+            }
+          },
+          {
+            "np_repkit_aug_d_elem_immune_corrosive": {
+              "inv_name_part": "np_repkit_aug_d_elem_immune_corrosive",
+              "partname": "RepKitNameParts, 8B1C1BAF44C08FDEA5916C85FD76E7BF, Neutralizing",
+              "priority": "2.000000"
+            }
+          },
+          {
+            "np_repkit_aug_d_elem_immune_cryo": {
+              "inv_name_part": "np_repkit_aug_d_elem_immune_cryo",
+              "partname": "RepKitNameParts, 231299CD4FA4402CC7149FBB4B729FC1, Thermal",
+              "priority": "2.000000"
+            }
+          },
+          {
+            "np_repkit_aug_d_elem_immune_fire": {
+              "inv_name_part": "np_repkit_aug_d_elem_immune_fire",
+              "partname": "RepKitNameParts, 2A5FDB2F48C86ABDCD1E7DA8C59E3B45, Insulating",
+              "priority": "2.000000"
+            }
+          },
+          {
+            "np_repkit_aug_d_elem_immune_radiation": {
+              "inv_name_part": "np_repkit_aug_d_elem_immune_radiation",
+              "partname": "RepKitNameParts, 0380070743B01C8CE201ADB05F587121, Radioprotectant",
+              "priority": "2.000000"
+            }
+          },
+          {
+            "np_repkit_aug_d_elem_immune_shock": {
+              "inv_name_part": "np_repkit_aug_d_elem_immune_shock",
+              "partname": "RepKitNameParts, 2532D2F049BFD3424BFCB0A2D5ECC0BC, Grounding",
+              "priority": "2.000000"
+            }
+          },
+          {
+            "np_repkit_aug_d_elem_resist_corrosive": {
+              "inv_name_part": "np_repkit_aug_d_elem_resist_corrosive",
+              "partname": "RepKitNameParts, CACAF225443503FFBE7EDF9D4D31278A, Anionic",
+              "priority": "2.000000"
+            }
+          },
+          {
+            "np_repkit_aug_d_elem_resist_cryo": {
+              "inv_name_part": "np_repkit_aug_d_elem_resist_cryo",
+              "partname": "RepKitNameParts, EEB8D108440EBEB1AC49D38ABD9DBECA, Warming",
+              "priority": "2.000000"
+            }
+          },
+          {
+            "np_repkit_aug_d_elem_resist_fire": {
+              "inv_name_part": "np_repkit_aug_d_elem_resist_fire",
+              "partname": "RepKitNameParts, 08586B634B67F2ACB0EAB1B72E5A49A6, Tempered",
+              "priority": "2.000000"
+            }
+          },
+          {
+            "np_repkit_aug_d_elem_resist_radiation": {
+              "inv_name_part": "np_repkit_aug_d_elem_resist_radiation",
+              "partname": "RepKitNameParts, 574160E543BFB2CB3B8D53A36CD87D04, Leaded",
+              "priority": "2.000000"
+            }
+          },
+          {
+            "np_repkit_aug_d_elem_resist_shock": {
+              "inv_name_part": "np_repkit_aug_d_elem_resist_shock",
+              "partname": "RepKitNameParts, CE5BE6BE4896DC6968E6DD9EB21894BC, Rubberized",
+              "priority": "2.000000"
+            }
+          },
+          {
+            "np_repkit_aug_d_healing": {
+              "inv_name_part": "np_repkit_aug_d_healing",
+              "partname": "RepKitNameParts, 8053794F4774A0A67138E2BBAE8AE158, High Dosage",
+              "priority": "2.000000"
+            }
+          },
+          {
+            "np_repkit_aug_d_health_burst": {
+              "inv_name_part": "np_repkit_aug_d_health_burst",
+              "partname": "RepKitNameParts, 497DE86745D90FE6B8F3DBAC08576D35, Fast-Acting",
+              "priority": "2.000000"
+            }
+          },
+          {
+            "np_repkit_aug_d_lifesteal": {
+              "inv_name_part": "np_repkit_aug_d_lifesteal",
+              "partname": "RepKitNameParts, 77219D414CB9B065EF6D2E994A44317A, Parasitic",
+              "priority": "2.000000"
+            }
+          },
+          {
+            "np_repkit_aug_d_overshield": {
+              "inv_name_part": "np_repkit_aug_d_overshield",
+              "partname": "RepKitNameParts, F808CF8649E9173B08853E95C2B3B995, Synergizing",
+              "priority": "2.000000"
+            }
+          },
+          {
+            "np_repkit_aug_d_shield_charge": {
+              "inv_name_part": "np_repkit_aug_d_shield_charge",
+              "partname": "RepKitNameParts, 964BEEEE44B9CC8EEDD9C1BFC5064B61, Instigating",
+              "priority": "2.000000"
+            }
+          },
+          {
+            "np_repkit_aug_o_amp": {
+              "inv_name_part": "np_repkit_aug_o_amp",
+              "partname": "RepKitNameParts, 0968B5D14BD846E24BEBFA92F3D567C8, Amplified",
+              "priority": "2.000000"
+            }
+          },
+          {
+            "np_repkit_aug_o_elem_damage": {
+              "inv_name_part": "np_repkit_aug_o_elem_damage",
+              "partname": "RepKitNameParts, F730E8E0471356BFC733989F0F8229C9, Reactive",
+              "priority": "2.000000"
+            }
+          },
+          {
+            "np_repkit_aug_o_firerate": {
+              "inv_name_part": "np_repkit_aug_o_firerate",
+              "partname": "RepKitNameParts, 06863D6D438EEB606869F4862DF90DD2, Spasmodic",
+              "priority": "2.000000"
+            }
+          },
+          {
+            "np_repkit_aug_o_melee": {
+              "inv_name_part": "np_repkit_aug_o_melee",
+              "partname": "RepKitNameParts, C4B45C854B079C5E17970281011A057F, Steroidal",
+              "priority": "2.000000"
+            }
+          },
+          {
+            "np_repkit_aug_o_nova_corrosive": {
+              "inv_name_part": "np_repkit_aug_o_nova_corrosive",
+              "partname": "RepKitNameParts, 962ED2CD4C1F241CBE583882FEFDE5EA, Caustic",
+              "priority": "2.000000"
+            }
+          },
+          {
+            "np_repkit_aug_o_nova_cryo": {
+              "inv_name_part": "np_repkit_aug_o_nova_cryo",
+              "partname": "RepKitNameParts, 419B7B084E8E92AB8ED62C8C9A72E1A8, Cryogenic",
+              "priority": "2.000000"
+            }
+          },
+          {
+            "np_repkit_aug_o_nova_fire": {
+              "inv_name_part": "np_repkit_aug_o_nova_fire",
+              "partname": "RepKitNameParts, 601F9887414FAF80C982DB8AFA2D3559, Combustible",
+              "priority": "2.000000"
+            }
+          },
+          {
+            "np_repkit_aug_o_nova_radiation": {
+              "inv_name_part": "np_repkit_aug_o_nova_radiation",
+              "partname": "RepKitNameParts, FC25C0624894A5CDF72D1DBFCCAF8DD4, Fissile",
+              "priority": "2.000000"
+            }
+          },
+          {
+            "np_repkit_aug_o_nova_shock": {
+              "inv_name_part": "np_repkit_aug_o_nova_shock",
+              "partname": "RepKitNameParts, A97869B042D9AF27A6A32AAB7B42F85E, Plasmic",
+              "priority": "2.000000"
+            }
+          },
+          {
+            "np_repkit_aug_o_reload": {
+              "inv_name_part": "np_repkit_aug_o_reload",
+              "partname": "RepKitNameParts, 848BCAE94FFD7534E6BAFB93F9A272AA, Dextrous",
+              "priority": "2.000000"
+            }
+          },
+          {
+            "np_repkit_aug_o_splash": {
+              "inv_name_part": "np_repkit_aug_o_splash",
+              "partname": "RepKitNameParts, AC53DF3B42698D0F4B6A3482743DFC1B, Explosive",
+              "priority": "2.000000"
+            }
+          },
+          {
+            "np_repkit_aug_o_splat_corrosive": {
+              "inv_name_part": "np_repkit_aug_o_splat_corrosive",
+              "partname": "RepKitNameParts, 63C7F5A14E776021F5D2D68F25B94155, Digesting",
+              "priority": "2.000000"
+            }
+          },
+          {
+            "np_repkit_aug_o_splat_cryo": {
+              "inv_name_part": "np_repkit_aug_o_splat_cryo",
+              "partname": "RepKitNameParts, ECCD7E5D493E4E37DAD2CEA920226B52, Supercooling",
+              "priority": "2.000000"
+            }
+          },
+          {
+            "np_repkit_aug_o_splat_fire": {
+              "inv_name_part": "np_repkit_aug_o_splat_fire",
+              "partname": "RepKitNameParts, 658299034FEAFDD423C25FB2A40CB533, Igneous",
+              "priority": "2.000000"
+            }
+          },
+          {
+            "np_repkit_aug_o_splat_radiation": {
+              "inv_name_part": "np_repkit_aug_o_splat_radiation",
+              "partname": "RepKitNameParts, 40B262D8460B724D9A26ACAB6552319A, Radiant",
+              "priority": "2.000000"
+            }
+          },
+          {
+            "np_repkit_aug_o_splat_shock": {
+              "inv_name_part": "np_repkit_aug_o_splat_shock",
+              "partname": "RepKitNameParts, B13F626D4A17CFB6255E3D846626C00D, Conductive",
+              "priority": "2.000000"
+            }
+          },
+          {
+            "np_repkit_aug_u_all_dmg": {
+              "inv_name_part": "np_repkit_aug_u_all_dmg",
+              "partname": "RepKitNameParts, B5AF423B479C4B3C44EB53AE5963CF7A, Experimental",
+              "priority": "2.000000"
+            }
+          },
+          {
+            "np_repkit_aug_u_cooldown": {
+              "inv_name_part": "np_repkit_aug_u_cooldown",
+              "partname": "RepKitNameParts, 6BC92D9D49B9B5E0CB610194AD80614C, Quick-Charging",
+              "priority": "2.000000"
+            }
+          },
+          {
+            "np_repkit_aug_u_duration": {
+              "inv_name_part": "np_repkit_aug_u_duration",
+              "partname": "RepKitNameParts, 927043954F0C45B03448C1947486B2F9, Slow Release",
+              "priority": "2.000000"
+            }
+          },
+          {
+            "np_repkit_aug_u_gadget_cooldown": {
+              "inv_name_part": "np_repkit_aug_u_gadget_cooldown",
+              "partname": "RepKitNameParts, 4660B3F64DF525E214A4DD847F801612, Nootropic",
+              "priority": "2.000000"
+            }
+          },
+          {
+            "np_repkit_aug_u_movespeed": {
+              "inv_name_part": "np_repkit_aug_u_movespeed",
+              "partname": "RepKitNameParts, EA6970FE446113F0A78A0F831264E7B9, Caffienated",
+              "priority": "2.000000"
+            }
+          },
+          {
+            "np_repkit_aug_u_skill_cooldown": {
+              "inv_name_part": "np_repkit_aug_u_skill_cooldown",
+              "partname": "RepKitNameParts, F8666BD44C14141B63F694A51D99E710, Adrenalized",
+              "priority": "2.000000"
+            }
+          },
+          {
+            "np_repkit_manu_bor": {
+              "inv_name_part": "np_repkit_manu_BOR",
+              "partname": "RepKitNameParts, B878CBBB4829DE9EF602CC90DD1C578F, Scabber",
+              "priority": "1.000000"
+            }
+          },
+          {
+            "np_repkit_manu_dad": {
+              "inv_name_part": "np_repkit_manu_DAD",
+              "partname": "RepKitNameParts, 30A77A9E4B21850D058EAEA737BA781C, Stim",
+              "priority": "1.000000"
+            }
+          },
+          {
+            "np_repkit_manu_jak": {
+              "inv_name_part": "np_repkit_manu_JAK",
+              "partname": "RepKitNameParts, 01C550344F55B9EFCCCC7385B5F653B9, Tonic",
+              "priority": "1.000000"
+            }
+          },
+          {
+            "np_repkit_manu_mal": {
+              "inv_name_part": "np_repkit_manu_MAL",
+              "partname": "RepKitNameParts, 6ACD4EDF4FD7CB151671F1B637DF3BE5, Refresher",
+              "priority": "1.000000"
+            }
+          },
+          {
+            "np_repkit_manu_ord": {
+              "inv_name_part": "np_repkit_manu_ORD",
+              "partname": "RepKitNameParts, 1A0F8FF848038A9E20234E9635873207, Recorporator",
+              "priority": "1.000000"
+            }
+          },
+          {
+            "np_repkit_manu_ted": {
+              "inv_name_part": "np_repkit_manu_TED",
+              "partname": "RepKitNameParts, 25695C67418882640FA506B76642E725, Pocket Doc",
+              "priority": "1.000000"
+            }
+          },
+          {
+            "np_repkit_manu_tor": {
+              "inv_name_part": "np_repkit_manu_TOR",
+              "partname": "RepKitNameParts, A7601A1B4BEBA86BC41758A9323F1690, Juicer",
+              "priority": "1.000000"
+            }
+          },
+          {
+            "np_repkit_manu_vla": {
+              "inv_name_part": "np_repkit_manu_VLA",
+              "partname": "RepKitNameParts, 411214FD4D4D15A648D69F9CC784BF04, Sobirat",
+              "priority": "1.000000"
+            }
+          },
+          {
+            "np_repkit_payload_huge": {
+              "inv_name_part": "np_repkit_payload_huge",
+              "partname": "RepKitNameParts, 25B0CFAE4AFAB2FA42003EA3FEB308ED, Mega",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_repkit_payload_large": {
+              "inv_name_part": "np_repkit_payload_large",
+              "partname": "RepKitNameParts, 2B4A028246F5BCDBD0238BB0A60E4B0E, Large",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_repkit_payload_medium": {
+              "inv_name_part": "np_repkit_payload_medium",
+              "partname": "RepKitNameParts, B80C88ED47174515C3DE13A54291C431, Standard",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_repkit_payload_small": {
+              "inv_name_part": "np_repkit_payload_small",
+              "partname": "RepKitNameParts, A18024A848C0E86F58C1618EDD978A03, Mini",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_repkit_uni_bor_augmenter": {
+              "inv_name_part": "np_repkit_uni_BOR_Augmenter",
+              "partname": "RepKitNameParts, 5E3AECA84604FB17313840BF09A8E86D, Augmenter AF1000",
+              "priority": "2.000000"
+            }
+          },
+          {
+            "np_repkit_uni_mal_bloodanalyzer": {
+              "inv_name_part": "np_repkit_uni_MAL_BloodAnalyzer",
+              "partname": "RepKitNameParts, C593D11A4CBEBF39D1446F92345A4199, Blood Analyzer",
+              "priority": "2.000000"
+            }
+          },
+          {
+            "np_repkit_uni_ted_killspring": {
+              "inv_name_part": "np_repkit_uni_TED_KillSpring",
+              "partname": "RepKitNameParts, 9E2060CB4AEB4917E0FBE7B072FC3CCE, Kill Spring",
+              "priority": "2.000000"
+            }
+          },
+          {
+            "np_repkit_uni_tor_shinywarpaint": {
+              "inv_name_part": "np_repkit_uni_TOR_ShinyWarPaint",
+              "partname": "RepKitNameParts, 0F7251B6463BB2B514E59DB6AB6FA7EC, Shiny War Paint",
+              "priority": "2.000000"
+            }
+          },
+          {
+            "np_repkit_uni_vla_adrenalinepump": {
+              "inv_name_part": "np_repkit_uni_VLA_AdrenalinePump",
+              "partname": "RepKitNameParts, 429320DE48213FC03715E6ACEC47CEE8, Adrenaline Pump",
+              "priority": "2.000000"
+            }
+          },
+          {
+            "np_repkit_uni_vla_pacemaker": {
+              "inv_name_part": "np_repkit_uni_VLA_Pacemaker",
+              "partname": "RepKitNameParts, F533DFF04595CE113B1F35AFDACD8681, Pacemaker",
+              "priority": "2.000000"
+            }
+          },
+          {
+            "np_seventh_sense": {
+              "inv_name_part": "np_seventh_sense",
+              "partname": "Uni_BOR_SM_Hellfire, D85A6AF3459D75D81510D4A9D0ABFEA2, Seventh Sense",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_sidewinder": {
+              "inv_name_part": "np_sidewinder",
+              "partname": "Uni_TOR_HW_Sidewinder, 641B14834BAE08173BD6AAACEDAB0310, Sidewinder",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_spinning_blade": {
+              "inv_name_part": "np_spinning_blade",
+              "partname": "Uni_Spinning_Blade, 641B14834BAE08173BD6AAACEDAB0310, Spinning Blade",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_star_helix": {
+              "inv_name_part": "np_star_helix",
+              "partname": "Uni_DAD_AR_Star_Helix, 641B14834BAE08173BD6AAACEDAB0310, Star Helix",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_supernova": {
+              "inv_name_part": "np_supernova",
+              "partname": "Uni_Supernova, 221DAAD045939D874FD63E8CE7560964, Extra Medium",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_term_name_bor": {
+              "inv_name_part": "np_term_name_BOR",
+              "partname": "TerminalPartNames, 8C11C6FE404D1A4A13FC0E91F3E86B22, BOR Term",
+              "priority": "1.000000"
+            }
+          },
+          {
+            "np_term_name_dad": {
+              "inv_name_part": "np_term_name_DAD",
+              "partname": "TerminalPartNames, 9F63F30447A519796ADD80BF02CC6DEA, DAD Term",
+              "priority": "1.000000"
+            }
+          },
+          {
+            "np_term_name_jak": {
+              "inv_name_part": "np_term_name_JAK",
+              "partname": "TerminalPartNames, C930441B4FE8D0423C73ECB01141C17C, JAK Term",
+              "priority": "1.000000"
+            }
+          },
+          {
+            "np_term_name_mal": {
+              "inv_name_part": "np_term_name_MAL",
+              "partname": "TerminalPartNames, 7485A2EB4C3FBBE0DF69FCA7B151C78E, MAL Term",
+              "priority": "1.000000"
+            }
+          },
+          {
+            "np_term_name_ord": {
+              "inv_name_part": "np_term_name_ORD",
+              "partname": "TerminalPartNames, 8801DDEA47486EFD82FF89846B8F0941, ORD Term",
+              "priority": "1.000000",
+              "requiredmanufacturer": "manufacturer'Order'"
+            }
+          },
+          {
+            "np_term_name_ted": {
+              "inv_name_part": "np_term_name_TED",
+              "partname": "TerminalPartNames, A846A1A94756157A5055D3988FAAEBF1, TED Term",
+              "priority": "1.000000"
+            }
+          },
+          {
+            "np_term_name_tor": {
+              "inv_name_part": "np_term_name_TOR",
+              "partname": "TerminalPartNames, 27E4EE7A4A693D8979AF0FA9F9254F4D, TOR Term",
+              "priority": "1.000000"
+            }
+          },
+          {
+            "np_term_name_vla": {
+              "inv_name_part": "np_term_name_VLA",
+              "partname": "TerminalPartNames, A19C535548A60955B9CC1996F0FCD544, VLA Term",
+              "priority": "1.000000"
+            }
+          },
+          {
+            "np_term_pri_barr_barredaggression": {
+              "inv_name_part": "np_term_pri_barr_barredaggression",
+              "partname": "TerminalPartNames, A43A0F4440A67625DB9A778A4A09D55A, Barred1",
+              "priority": "2.000000"
+            }
+          },
+          {
+            "np_term_pri_barr_bulletamp": {
+              "inv_name_part": "np_term_pri_barr_bulletamp",
+              "partname": "TerminalPartNames, 9B45D67E4C1DDBC77E68039083423D91, BulletAmp1",
+              "priority": "2.000000"
+            }
+          },
+          {
+            "np_term_pri_barr_dome": {
+              "inv_name_part": "np_term_pri_barr_dome",
+              "partname": "TerminalPartNames, 67127B0E4A51E162705259B56931947D, Dome1",
+              "priority": "2.000000"
+            }
+          },
+          {
+            "np_term_pri_barr_elementalfield": {
+              "inv_name_part": "np_term_pri_barr_elementalfield",
+              "partname": "TerminalPartNames, 64F451A94234EE9B4A5AD3A0B9AC7610, ElementalField1",
+              "priority": "2.000000"
+            }
+          },
+          {
+            "np_term_pri_barr_health": {
+              "inv_name_part": "np_term_pri_barr_health",
+              "partname": "TerminalPartNames, C17C14CB468B31960187EEAF0648B8BB, Health1",
+              "priority": "2.000000"
+            }
+          },
+          {
+            "np_term_pri_barr_reflection": {
+              "inv_name_part": "np_term_pri_barr_reflection",
+              "partname": "TerminalPartNames, A09684FA4F5EB9EDBFE0F2ADB2CDF82C, Reflection1",
+              "priority": "2.000000"
+            }
+          },
+          {
+            "np_term_pri_barr_scopesup": {
+              "inv_name_part": "np_term_pri_barr_scopesup",
+              "partname": "TerminalPartNames, 5B29E8314B1AC0C5E51CD696D4A5E554, ScopesUp1",
+              "priority": "2.000000"
+            }
+          },
+          {
+            "np_term_pri_barr_speedgate": {
+              "inv_name_part": "np_term_pri_barr_speedgate",
+              "partname": "TerminalPartNames, 5431DDB4421CC3F3C756DB82B3539D5C, Speedgate1",
+              "priority": "2.000000"
+            }
+          },
+          {
+            "np_term_pri_com_coldshoulder": {
+              "inv_name_part": "np_term_pri_com_coldshoulder",
+              "partname": "TerminalPartNames, B61121A94B18809E090E569034430841, ColdShoulder1",
+              "priority": "2.000000"
+            }
+          },
+          {
+            "np_term_pri_com_contamination": {
+              "inv_name_part": "np_term_pri_com_contamination",
+              "partname": "TerminalPartNames, D8E433854697E7038CD6F7B283FC995E, Contamination1",
+              "priority": "2.000000"
+            }
+          },
+          {
+            "np_term_pri_com_killclip": {
+              "inv_name_part": "np_term_pri_com_killclip",
+              "partname": "TerminalPartNames, A677937944D3A25E3012AA93AF9A04DD, Killclip1",
+              "priority": "2.000000"
+            }
+          },
+          {
+            "np_term_pri_com_orbiting": {
+              "inv_name_part": "np_term_pri_com_orbiting",
+              "partname": "TerminalPartNames, 2D0BDF104EA919A1B02170BB2ABF77C5, Orbiting1",
+              "priority": "2.000000"
+            }
+          },
+          {
+            "np_term_pri_com_power": {
+              "inv_name_part": "np_term_pri_com_power",
+              "partname": "TerminalPartNames, C2F747CA454A6FCD8DAA0AB0E70874F1, ComPower1",
+              "priority": "2.000000"
+            }
+          },
+          {
+            "np_term_pri_com_radius": {
+              "inv_name_part": "np_term_pri_com_radius",
+              "partname": "TerminalPartNames, BF17CCD74EA1BEE7695300B76AC4F131, ComRadius1",
+              "priority": "2.000000"
+            }
+          },
+          {
+            "np_term_pri_com_reverb": {
+              "inv_name_part": "np_term_pri_com_reverb",
+              "partname": "TerminalPartNames, 40A2A46E44B0D1631B34B49ABD612666, Reverb1",
+              "priority": "2.000000"
+            }
+          },
+          {
+            "np_term_pri_com_tothenth": {
+              "inv_name_part": "np_term_pri_com_tothenth",
+              "partname": "TerminalPartNames, 4F479D7B4E80A72C570797A436F8CE98, ToTheNth1",
+              "priority": "2.000000"
+            }
+          },
+          {
+            "np_term_pri_heal_ironskin": {
+              "inv_name_part": "np_term_pri_heal_ironskin",
+              "partname": "TerminalPartNames, 7E2D2E2A4B67D4B5871AA6B39D3B9BE7, Ironskin1",
+              "priority": "2.000000"
+            }
+          },
+          {
+            "np_term_pri_heal_leechseed": {
+              "inv_name_part": "np_term_pri_heal_leechseed",
+              "partname": "TerminalPartNames, B53D4CD84D046ED6FE8BD59B12ADF25D, Leechseed1",
+              "priority": "2.000000"
+            }
+          },
+          {
+            "np_term_pri_heal_life_steal": {
+              "inv_name_part": "np_term_pri_heal_life_steal",
+              "partname": "TerminalPartNames, 5C1F26F14F8F6657205DD1929BCE78F3, Lifesteal1",
+              "priority": "2.000000"
+            }
+          },
+          {
+            "np_term_pri_heal_overshield": {
+              "inv_name_part": "np_term_pri_heal_overshield",
+              "partname": "TerminalPartNames, 9448113545BA1B6A95C8B7A0F97EDAE3, Overshield1",
+              "priority": "2.000000"
+            }
+          },
+          {
+            "np_term_pri_heal_power": {
+              "inv_name_part": "np_term_pri_heal_power",
+              "partname": "TerminalPartNames, 05D16A604E64774BD7666C97B128FAFB, HealPower1",
+              "priority": "2.000000"
+            }
+          },
+          {
+            "np_term_pri_heal_radius": {
+              "inv_name_part": "np_term_pri_heal_radius",
+              "partname": "TerminalPartNames, 6CD3A65449E49994A9ED419304BBBE3A, HealRadius1",
+              "priority": "2.000000"
+            }
+          },
+          {
+            "np_term_pri_heal_shield_recharge": {
+              "inv_name_part": "np_term_pri_heal_shield_recharge",
+              "partname": "TerminalPartNames, 9EECA7B74C747ECCE78315874FA6872E, ShieldRecharge1",
+              "priority": "2.000000"
+            }
+          },
+          {
+            "np_term_pri_heal_thorns": {
+              "inv_name_part": "np_term_pri_heal_thorns",
+              "partname": "TerminalPartNames, 025113944A454FAA5174D4955D922B42, Thorns1",
+              "priority": "2.000000"
+            }
+          },
+          {
+            "np_term_sec_barr_barredaggression": {
+              "inv_name_part": "np_term_sec_barr_barredaggression",
+              "partname": "TerminalPartNames, B353CE40440820324797DB88F0555BF0, Barred2",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_term_sec_barr_bulletamp": {
+              "inv_name_part": "np_term_sec_barr_bulletamp",
+              "partname": "TerminalPartNames, 92D409D344BC247F5A43C1B5AAE07FB3, BulletAmp2",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_term_sec_barr_dome": {
+              "inv_name_part": "np_term_sec_barr_dome",
+              "partname": "TerminalPartNames, AB9106AD406A899914DA26A120052DCB, Dome2",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_term_sec_barr_elementalfield": {
+              "inv_name_part": "np_term_sec_barr_elementalfield",
+              "partname": "TerminalPartNames, A7ADCDAF484785C5F52661B88C734080, ElementalField2",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_term_sec_barr_health": {
+              "inv_name_part": "np_term_sec_barr_health",
+              "partname": "TerminalPartNames, A6422E1F4A2ED5214FC17FBFF6E0FD31, Health2",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_term_sec_barr_reflection": {
+              "inv_name_part": "np_term_sec_barr_reflection",
+              "partname": "TerminalPartNames, 05C876F54DF256C6690B16B9DEBB9823, Reflection2",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_term_sec_barr_scopesup": {
+              "inv_name_part": "np_term_sec_barr_scopesup",
+              "partname": "TerminalPartNames, 4EA6CFC44E0DAEDDB753BC9040BDA811, ScopesUp2",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_term_sec_barr_speedgate": {
+              "inv_name_part": "np_term_sec_barr_speedgate",
+              "partname": "TerminalPartNames, 5E707BD84309C204AB05FA9836D054BF, Speedgate2",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_term_sec_com_coldshoulder": {
+              "inv_name_part": "np_term_sec_com_coldshoulder",
+              "partname": "TerminalPartNames, 9600FD6D4257B53BFA4BE89DFBB1F2C6, ColdShoulder2",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_term_sec_com_contamination": {
+              "inv_name_part": "np_term_sec_com_contamination",
+              "partname": "TerminalPartNames, 3B66AFF14072F2A836BACDB8B9049EE8, Contamination2",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_term_sec_com_killclip": {
+              "inv_name_part": "np_term_sec_com_killclip",
+              "partname": "TerminalPartNames, DEC256F043B55AE6B594439F1F4A3491, KillClip2",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_term_sec_com_orbiting": {
+              "inv_name_part": "np_term_sec_com_orbiting",
+              "partname": "TerminalPartNames, 16B7BB074535D13BB36750BB8EA42C60, Orbiting2",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_term_sec_com_power": {
+              "inv_name_part": "np_term_sec_com_power",
+              "partname": "TerminalPartNames, 0BA7FD654BC30B512DEB44A56A69B885, ComPower2",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_term_sec_com_radius": {
+              "inv_name_part": "np_term_sec_com_radius",
+              "partname": "TerminalPartNames, 0670F5C14096826F061338ADCFD1C6F1, ComRadius2",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_term_sec_com_reverb": {
+              "inv_name_part": "np_term_sec_com_reverb",
+              "partname": "TerminalPartNames, E6E48F9943CD1D406BDF088C56418036, Reverb2",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_term_sec_com_tothenth": {
+              "inv_name_part": "np_term_sec_com_tothenth",
+              "partname": "TerminalPartNames, 025D8E6648A80E6C7F5656B52DDDF099, ToTheNth2",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_term_sec_heal_ironskin": {
+              "inv_name_part": "np_term_sec_heal_ironskin",
+              "partname": "TerminalPartNames, 4CC9774A4A03DB8C19C1209F666591C8, Ironskin2",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_term_sec_heal_leechseed": {
+              "inv_name_part": "np_term_sec_heal_leechseed",
+              "partname": "TerminalPartNames, 2D5EF2A14FA1CA2608F0ACAC8DE50D40, Leechseed2",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_term_sec_heal_life_steal": {
+              "inv_name_part": "np_term_sec_heal_life_steal",
+              "partname": "TerminalPartNames, 3318B423497F258B64665CBF0C495DFE, Lifesteal2",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_term_sec_heal_overshield": {
+              "inv_name_part": "np_term_sec_heal_overshield",
+              "partname": "TerminalPartNames, C20004B0489DB4095414AFAA28705E3C, Overshield2",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_term_sec_heal_power": {
+              "inv_name_part": "np_term_sec_heal_power",
+              "partname": "TerminalPartNames, 3CCE55A34B088575A14F24A443F965CD, HealPower2",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_term_sec_heal_radius": {
+              "inv_name_part": "np_term_sec_heal_radius",
+              "partname": "TerminalPartNames, 76E1268B480127F34001328BD04CE311, HealRadius2",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_term_sec_heal_shield_recharge": {
+              "inv_name_part": "np_term_sec_heal_shield_recharge",
+              "partname": "TerminalPartNames, FA4289744277CC4D22D9E9B931EC72AC, ShieldRecharge2",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_term_sec_heal_thorns": {
+              "inv_name_part": "np_term_sec_heal_thorns",
+              "partname": "TerminalPartNames, EA066A9B493CF8DBE2EA819972D17FF0, Thorns2",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_turret_name_bor_basic": {
+              "inv_name_part": "np_turret_name_BOR_basic",
+              "partname": "TurretPartNames, 7FF06CA842CD9984EA6A85B1D8F77738, BORBASIC",
+              "priority": "1.000000",
+              "requiredbasetags": [
+                {
+                  "turret_basic": "turret_basic"
+                }
+              ]
+            }
+          },
+          {
+            "np_turret_name_bor_beam": {
+              "inv_name_part": "np_turret_name_BOR_Beam",
+              "partname": "TurretPartNames, 9594C15440D553F7C9CA91BD196A40A3, BORBEAM",
+              "priority": "1.000000",
+              "requiredbasetags": [
+                {
+                  "turret_beam": "turret_beam"
+                }
+              ]
+            }
+          },
+          {
+            "np_turret_name_bor_chaingun": {
+              "inv_name_part": "np_turret_name_BOR_Chaingun",
+              "partname": "TurretPartNames, AA5D4D4F455148629CC4B2AEA6EC067A, BORCHAIN",
+              "priority": "1.000000",
+              "requiredbasetags": [
+                {
+                  "turret_chaingun": "turret_chaingun"
+                }
+              ]
+            }
+          },
+          {
+            "np_turret_name_bor_longbarrel": {
+              "inv_name_part": "np_turret_name_BOR_LongBarrel",
+              "partname": "TurretPartNames, 12E8741A4B8E89A3BB542DA3363E3C44, BORLONG",
+              "priority": "1.000000",
+              "requiredbasetags": [
+                {
+                  "turret_longrifle": "turret_longrifle"
+                }
+              ]
+            }
+          },
+          {
+            "np_turret_name_bor_rocket": {
+              "inv_name_part": "np_turret_name_BOR_Rocket",
+              "partname": "TurretPartNames, 2F4F75054CDB02CD5A890EAEC643DC75, BORRocket",
+              "priority": "1.000000",
+              "requiredbasetags": [
+                {
+                  "turret_rocket": "turret_rocket"
+                }
+              ]
+            }
+          },
+          {
+            "np_turret_name_bor_shotgun": {
+              "inv_name_part": "np_turret_name_BOR_Shotgun",
+              "partname": "TurretPartNames, A8C3466940CB77B3850FDCB54F115E75, BORSHOTGUN",
+              "priority": "1.000000",
+              "requiredbasetags": [
+                {
+                  "turret_shotgun": "turret_shotgun"
+                }
+              ]
+            }
+          },
+          {
+            "np_turret_name_dad_basic": {
+              "inv_name_part": "np_turret_name_DAD_basic",
+              "partname": "TurretPartNames, 01344CA04B1C30699CE234B30239C7FE, DADBASIC",
+              "priority": "1.000000",
+              "requiredbasetags": [
+                {
+                  "turret_basic": "turret_basic"
+                }
+              ]
+            }
+          },
+          {
+            "np_turret_name_dad_beam": {
+              "inv_name_part": "np_turret_name_DAD_Beam",
+              "partname": "TurretPartNames, 651EADF540B902B458708098A1569C7D, DADBEAM",
+              "priority": "1.000000",
+              "requiredbasetags": [
+                {
+                  "turret_beam": "turret_beam"
+                }
+              ]
+            }
+          },
+          {
+            "np_turret_name_dad_chaingun": {
+              "inv_name_part": "np_turret_name_DAD_Chaingun",
+              "partname": "TurretPartNames, D9B503E4455DA6F2D34195A495DFEEBD, DADCHAIN",
+              "priority": "1.000000",
+              "requiredbasetags": [
+                {
+                  "turret_chaingun": "turret_chaingun"
+                }
+              ]
+            }
+          },
+          {
+            "np_turret_name_dad_longbarrel": {
+              "inv_name_part": "np_turret_name_DAD_LongBarrel",
+              "partname": "TurretPartNames, 7DF63DC84807923D9899EA9A8CD1DFED, DADLONG",
+              "priority": "1.000000",
+              "requiredbasetags": [
+                {
+                  "turret_longrifle": "turret_longrifle"
+                }
+              ]
+            }
+          },
+          {
+            "np_turret_name_dad_rocket": {
+              "inv_name_part": "np_turret_name_DAD_Rocket",
+              "partname": "TurretPartNames, F2FD45144F920E93DF8448800D033E5D, DADRocket",
+              "priority": "1.000000",
+              "requiredbasetags": [
+                {
+                  "turret_rocket": "turret_rocket"
+                }
+              ]
+            }
+          },
+          {
+            "np_turret_name_dad_shotgun": {
+              "inv_name_part": "np_turret_name_DAD_Shotgun",
+              "partname": "TurretPartNames, 7E99CAAD41BB5D20AA593394268D4578, DADSHOTGUN",
+              "priority": "1.000000",
+              "requiredbasetags": [
+                {
+                  "turret_shotgun": "turret_shotgun"
+                }
+              ]
+            }
+          },
+          {
+            "np_turret_name_jak_basic": {
+              "inv_name_part": "np_turret_name_JAK_basic",
+              "partname": "TurretPartNames, 025C0EA6497EFAF43FEDF683E815C72B, JAKBASIC",
+              "priority": "1.000000",
+              "requiredbasetags": [
+                {
+                  "turret_basic": "turret_basic"
+                }
+              ]
+            }
+          },
+          {
+            "np_turret_name_jak_beam": {
+              "inv_name_part": "np_turret_name_JAK_Beam",
+              "partname": "TurretPartNames, FC9619384DA5AE207243CC99EC2C4FA9, JAKBEAM",
+              "priority": "1.000000",
+              "requiredbasetags": [
+                {
+                  "turret_beam": "turret_beam"
+                }
+              ]
+            }
+          },
+          {
+            "np_turret_name_jak_chaingun": {
+              "inv_name_part": "np_turret_name_JAK_Chaingun",
+              "partname": "TurretPartNames, 109F3B3E45019C1CA88DB5AB27855949, JAKCHAIN",
+              "priority": "1.000000",
+              "requiredbasetags": [
+                {
+                  "turret_chaingun": "turret_chaingun"
+                }
+              ]
+            }
+          },
+          {
+            "np_turret_name_jak_longbarrel": {
+              "inv_name_part": "np_turret_name_JAK_LongBarrel",
+              "partname": "TurretPartNames, 875E09CB40B3528BFC3F16B1F25E3F11, JAKLONG",
+              "priority": "1.000000",
+              "requiredbasetags": [
+                {
+                  "turret_longrifle": "turret_longrifle"
+                }
+              ]
+            }
+          },
+          {
+            "np_turret_name_jak_rocket": {
+              "inv_name_part": "np_turret_name_JAK_Rocket",
+              "partname": "TurretPartNames, D99A31904F84F41B94F25CA93474F0CD, JAKRocket",
+              "priority": "1.000000",
+              "requiredbasetags": [
+                {
+                  "turret_rocket": "turret_rocket"
+                }
+              ]
+            }
+          },
+          {
+            "np_turret_name_jak_shotgun": {
+              "inv_name_part": "np_turret_name_JAK_Shotgun",
+              "partname": "TurretPartNames, 2AB315874A7436870445AD91F17C4C82, JAKSHOTGUN",
+              "priority": "1.000000",
+              "requiredbasetags": [
+                {
+                  "turret_shotgun": "turret_shotgun"
+                }
+              ]
+            }
+          },
+          {
+            "np_turret_name_mal_basic": {
+              "inv_name_part": "np_turret_name_MAL_basic",
+              "partname": "TurretPartNames, E8AD3D3C4C1223E3D9B840A9FAB618D0, MALBASIC",
+              "priority": "1.000000",
+              "requiredbasetags": [
+                {
+                  "turret_basic": "turret_basic"
+                }
+              ]
+            }
+          },
+          {
+            "np_turret_name_mal_beam": {
+              "inv_name_part": "np_turret_name_MAL_Beam",
+              "partname": "TurretPartNames, 82B106F64ABFB8828F25AAB27BC3A37D, MALBEAM",
+              "priority": "1.000000",
+              "requiredbasetags": [
+                {
+                  "turret_beam": "turret_beam"
+                }
+              ]
+            }
+          },
+          {
+            "np_turret_name_mal_chaingun": {
+              "inv_name_part": "np_turret_name_MAL_Chaingun",
+              "partname": "TurretPartNames, 0A83637B4A8F455E9C244297A093C7EF, MALCHAIN",
+              "priority": "1.000000",
+              "requiredbasetags": [
+                {
+                  "turret_chaingun": "turret_chaingun"
+                }
+              ]
+            }
+          },
+          {
+            "np_turret_name_mal_longbarrel": {
+              "inv_name_part": "np_turret_name_MAL_LongBarrel",
+              "partname": "TurretPartNames, C08E7AF345203F77E8651D91E85E1D32, MALLONG",
+              "priority": "1.000000",
+              "requiredbasetags": [
+                {
+                  "turret_longrifle": "turret_longrifle"
+                }
+              ]
+            }
+          },
+          {
+            "np_turret_name_mal_rocket": {
+              "inv_name_part": "np_turret_name_MAL_Rocket",
+              "partname": "TurretPartNames, BE094A114A3C7A89E8AF7A9634656851, MALRocket",
+              "priority": "1.000000",
+              "requiredbasetags": [
+                {
+                  "turret_rocket": "turret_rocket"
+                }
+              ]
+            }
+          },
+          {
+            "np_turret_name_mal_shotgun": {
+              "inv_name_part": "np_turret_name_MAL_Shotgun",
+              "partname": "TurretPartNames, B28A208748F2C288786131AC8CB99402, MALSHOTGUN",
+              "priority": "1.000000",
+              "requiredbasetags": [
+                {
+                  "turret_shotgun": "turret_shotgun"
+                }
+              ]
+            }
+          },
+          {
+            "np_turret_name_ord_basic": {
+              "inv_name_part": "np_turret_name_ORD_basic",
+              "partname": "TurretPartNames, 792F48734FB7AE7DA14651BC07B610CF, ORDBASIC",
+              "priority": "1.000000",
+              "requiredbasetags": [
+                {
+                  "turret_basic": "turret_basic"
+                }
+              ]
+            }
+          },
+          {
+            "np_turret_name_ord_beam": {
+              "inv_name_part": "np_turret_name_ORD_Beam",
+              "partname": "TurretPartNames, 6FE9870E48FA5AD297733FBEF5255DE8, ORDBEAM",
+              "priority": "1.000000",
+              "requiredbasetags": [
+                {
+                  "turret_beam": "turret_beam"
+                }
+              ]
+            }
+          },
+          {
+            "np_turret_name_ord_chaingun": {
+              "inv_name_part": "np_turret_name_ORD_Chaingun",
+              "partname": "TurretPartNames, FF8984014373E6D89378088A497B863A, ORDCHAIN",
+              "priority": "1.000000",
+              "requiredbasetags": [
+                {
+                  "turret_chaingun": "turret_chaingun"
+                }
+              ]
+            }
+          },
+          {
+            "np_turret_name_ord_longbarrel": {
+              "inv_name_part": "np_turret_name_ORD_LongBarrel",
+              "partname": "TurretPartNames, DFF9109B41B7F23AAC4780933BA41AFF, ORDLONG",
+              "priority": "1.000000",
+              "requiredbasetags": [
+                {
+                  "turret_longrifle": "turret_longrifle"
+                }
+              ]
+            }
+          },
+          {
+            "np_turret_name_ord_rocket": {
+              "inv_name_part": "np_turret_name_ORD_Rocket",
+              "partname": "TurretPartNames, FFE1B20D4BBF4718A76A1D91FEF5075D, ORDRocket",
+              "priority": "1.000000",
+              "requiredbasetags": [
+                {
+                  "turret_rocket": "turret_rocket"
+                }
+              ]
+            }
+          },
+          {
+            "np_turret_name_ord_shotgun": {
+              "inv_name_part": "np_turret_name_ORD_Shotgun",
+              "partname": "TurretPartNames, 339FA9054C6082646A77409790331CB6, ORDSHOTGUN",
+              "priority": "1.000000",
+              "requiredbasetags": [
+                {
+                  "turret_shotgun": "turret_shotgun"
+                }
+              ]
+            }
+          },
+          {
+            "np_turret_name_ted_basic": {
+              "inv_name_part": "np_turret_name_TED_basic",
+              "partname": "TurretPartNames, 92CA35524CD53E2B4A2E779A83338BCD, TEDBASIC",
+              "priority": "1.000000",
+              "requiredbasetags": [
+                {
+                  "turret_basic": "turret_basic"
+                }
+              ]
+            }
+          },
+          {
+            "np_turret_name_ted_beam": {
+              "inv_name_part": "np_turret_name_TED_Beam",
+              "partname": "TurretPartNames, C8B6FAC84FE69CB45EC707B39FDE9C39, TEDBEAM",
+              "priority": "1.000000",
+              "requiredbasetags": [
+                {
+                  "turret_beam": "turret_beam"
+                }
+              ]
+            }
+          },
+          {
+            "np_turret_name_ted_chaingun": {
+              "inv_name_part": "np_turret_name_TED_Chaingun",
+              "partname": "TurretPartNames, D2B6133D4DDE4FDD64F7EF9DD8B3D549, TEDCHAIN",
+              "priority": "1.000000",
+              "requiredbasetags": [
+                {
+                  "turret_chaingun": "turret_chaingun"
+                }
+              ]
+            }
+          },
+          {
+            "np_turret_name_ted_longbarrel": {
+              "inv_name_part": "np_turret_name_TED_LongBarrel",
+              "partname": "TurretPartNames, E05ABFBB4A0D754576953A9776888E53, TEDLONG",
+              "priority": "1.000000",
+              "requiredbasetags": [
+                {
+                  "turret_longrifle": "turret_longrifle"
+                }
+              ]
+            }
+          },
+          {
+            "np_turret_name_ted_rocket": {
+              "inv_name_part": "np_turret_name_TED_Rocket",
+              "partname": "TurretPartNames, 0E3EAD0748CF82D4DCE9E0BB9BD59447, TEDRocket",
+              "priority": "1.000000",
+              "requiredbasetags": [
+                {
+                  "turret_rocket": "turret_rocket"
+                }
+              ]
+            }
+          },
+          {
+            "np_turret_name_ted_shotgun": {
+              "inv_name_part": "np_turret_name_TED_Shotgun",
+              "partname": "TurretPartNames, 2713BC7C46B44585F28C02A2E79E380B, TEDSHOTGUN",
+              "priority": "1.000000",
+              "requiredbasetags": [
+                {
+                  "turret_shotgun": "turret_shotgun"
+                }
+              ]
+            }
+          },
+          {
+            "np_turret_name_tor_basic": {
+              "inv_name_part": "np_turret_name_TOR_basic",
+              "partname": "TurretPartNames, 3EA155994E2EE19B245F9B801A0AB42B, TORBASIC",
+              "priority": "1.000000",
+              "requiredbasetags": [
+                {
+                  "turret_basic": "turret_basic"
+                }
+              ]
+            }
+          },
+          {
+            "np_turret_name_tor_beam": {
+              "inv_name_part": "np_turret_name_TOR_Beam",
+              "partname": "TurretPartNames, 02B772F947CB6A5366AA95AAF49150AD, TORBEAM",
+              "priority": "1.000000",
+              "requiredbasetags": [
+                {
+                  "turret_beam": "turret_beam"
+                }
+              ]
+            }
+          },
+          {
+            "np_turret_name_tor_chaingun": {
+              "inv_name_part": "np_turret_name_TOR_Chaingun",
+              "partname": "TurretPartNames, 615DDF514F5C55979B42AE9822B72C30, TORCHAIN",
+              "priority": "1.000000",
+              "requiredbasetags": [
+                {
+                  "turret_chaingun": "turret_chaingun"
+                }
+              ]
+            }
+          },
+          {
+            "np_turret_name_tor_longbarrel": {
+              "inv_name_part": "np_turret_name_TOR_LongBarrel",
+              "partname": "TurretPartNames, 419F12BE4C54F7B9E4F291BBA38118A8, TORLONG",
+              "priority": "1.000000",
+              "requiredbasetags": [
+                {
+                  "turret_longrifle": "turret_longrifle"
+                }
+              ]
+            }
+          },
+          {
+            "np_turret_name_tor_rocket": {
+              "inv_name_part": "np_turret_name_TOR_Rocket",
+              "partname": "TurretPartNames, 2162445B46F38B1ACB26788D58B7ADC6, TORRocket",
+              "priority": "1.000000",
+              "requiredbasetags": [
+                {
+                  "turret_rocket": "turret_rocket"
+                }
+              ]
+            }
+          },
+          {
+            "np_turret_name_tor_shotgun": {
+              "inv_name_part": "np_turret_name_TOR_Shotgun",
+              "partname": "TurretPartNames, 6F980BEB4AE384F4D1E6F5A6666862A8, TORSHOTGUN",
+              "priority": "1.000000",
+              "requiredbasetags": [
+                {
+                  "turret_shotgun": "turret_shotgun"
+                }
+              ]
+            }
+          },
+          {
+            "np_turret_name_vla_basic": {
+              "inv_name_part": "np_turret_name_VLA_basic",
+              "partname": "TurretPartNames, 99CBA586420FAC166D363CA5B598C94D, VLABASIC",
+              "priority": "1.000000",
+              "requiredbasetags": [
+                {
+                  "turret_basic": "turret_basic"
+                }
+              ]
+            }
+          },
+          {
+            "np_turret_name_vla_beam": {
+              "inv_name_part": "np_turret_name_VLA_Beam",
+              "partname": "TurretPartNames, 16D00FBA48FE2A9163755D93EFB2992A, VLABEAM",
+              "priority": "1.000000",
+              "requiredbasetags": [
+                {
+                  "turret_beam": "turret_beam"
+                }
+              ]
+            }
+          },
+          {
+            "np_turret_name_vla_chaingun": {
+              "inv_name_part": "np_turret_name_VLA_Chaingun",
+              "partname": "TurretPartNames, ECC621F846DA6F2D045B3BB8B27A13BB, VLACHAIN",
+              "priority": "1.000000",
+              "requiredbasetags": [
+                {
+                  "turret_chaingun": "turret_chaingun"
+                }
+              ]
+            }
+          },
+          {
+            "np_turret_name_vla_longbarrel": {
+              "inv_name_part": "np_turret_name_VLA_LongBarrel",
+              "partname": "TurretPartNames, 391090204FC4C216BC54D99F3B43B2D9, VLALONG",
+              "priority": "1.000000",
+              "requiredbasetags": [
+                {
+                  "turret_longrifle": "turret_longrifle"
+                }
+              ]
+            }
+          },
+          {
+            "np_turret_name_vla_rocket": {
+              "inv_name_part": "np_turret_name_VLA_Rocket",
+              "partname": "TurretPartNames, 2E5250174F7F14797EDCDCB891C7B63F, VLARocket",
+              "priority": "1.000000",
+              "requiredbasetags": [
+                {
+                  "turret_rocket": "turret_rocket"
+                }
+              ]
+            }
+          },
+          {
+            "np_turret_name_vla_shotgun": {
+              "inv_name_part": "np_turret_name_VLA_Shotgun",
+              "partname": "TurretPartNames, 6404762347244FCAEC976883D2E23DC6, VLASHOTGUN",
+              "priority": "1.000000",
+              "requiredbasetags": [
+                {
+                  "turret_shotgun": "turret_shotgun"
+                }
+              ]
+            }
+          },
+          {
+            "np_weap_bor_sg_b01": {
+              "inv_name_part": "np_weap_BOR_SG_B01",
+              "partname": "WeaponNamingStrategies, 94C5C02840E863B73DB6D1B8669B7CD0, Weldwyrm",
+              "priority": "1.000000"
+            }
+          },
+          {
+            "np_weap_bor_sg_b02": {
+              "inv_name_part": "np_weap_BOR_SG_B02",
+              "partname": "WeaponNamingStrategies, 69D2793246E153D07ED80491517E2E71, Hellhound",
+              "priority": "1.000000"
+            }
+          },
+          {
+            "np_weap_bor_sm_b01": {
+              "inv_name_part": "np_weap_BOR_SM_B01",
+              "partname": "WeaponNamingStrategies, 666E25AC4DEC02805261859CAD3F3707, Phage",
+              "priority": "1.000000"
+            }
+          },
+          {
+            "np_weap_bor_sm_b02": {
+              "inv_name_part": "np_weap_BOR_SM_B02",
+              "partname": "WeaponNamingStrategies, 4239910C4C084E602A49DFAC154A41A8, Infestation",
+              "priority": "1.000000"
+            }
+          },
+          {
+            "np_weap_bor_sr_b01": {
+              "inv_name_part": "np_weap_BOR_SR_B01",
+              "partname": "WeaponNamingStrategies, E6DE4052440AE04BF7B10AB786E4AC83, Nullsaint",
+              "priority": "1.000000"
+            }
+          },
+          {
+            "np_weap_bor_sr_b02": {
+              "inv_name_part": "np_weap_BOR_SR_B02",
+              "partname": "WeaponNamingStrategies, A2A80094456A00114D64918886B90345, Daemon",
+              "priority": "1.000000"
+            }
+          },
+          {
+            "np_weap_dad_ar_b01": {
+              "inv_name_part": "np_weap_DAD_AR_B01",
+              "partname": "WeaponNamingStrategies, 8759E59B487826CABE7E6D9DE6393621, Spec-Tec",
+              "priority": "1.000000"
+            }
+          },
+          {
+            "np_weap_dad_ar_b02": {
+              "inv_name_part": "np_weap_DAD_AR_B02",
+              "partname": "WeaponNamingStrategies, ABD14C544AA6E941153075B71EA1E3AC, F.A.N.G.",
+              "priority": "1.000000"
+            }
+          },
+          {
+            "np_weap_dad_ps_b01": {
+              "inv_name_part": "np_weap_DAD_PS_B01",
+              "partname": "WeaponNamingStrategies, EF1853BA47DC739C818D26BC5A03887C, S23",
+              "priority": "1.000000"
+            }
+          },
+          {
+            "np_weap_dad_ps_b02": {
+              "inv_name_part": "np_weap_DAD_PS_B02",
+              "partname": "WeaponNamingStrategies, D9ABA9F647E6D1085338C78CA1AF5BB2, Bonn-91",
+              "priority": "1.000000"
+            }
+          },
+          {
+            "np_weap_dad_sg_b01": {
+              "inv_name_part": "np_weap_DAD_SG_B01",
+              "partname": "WeaponNamingStrategies, DB3A54864B0250E66067DDB1390D1ACC, Caliburn",
+              "priority": "1.000000"
+            }
+          },
+          {
+            "np_weap_dad_sg_b02": {
+              "inv_name_part": "np_weap_DAD_SG_B02",
+              "partname": "WeaponNamingStrategies, 250FBEE14D581ED350D4D58D8D632DFB, Durendal",
+              "priority": "1.000000"
+            }
+          },
+          {
+            "np_weap_dad_sm_b01": {
+              "inv_name_part": "np_weap_DAD_SM_B01",
+              "partname": "WeaponNamingStrategies, A6A6D950412577FB895AAD8BF8147762, GCX",
+              "priority": "1.000000"
+            }
+          },
+          {
+            "np_weap_dad_sm_b02": {
+              "inv_name_part": "np_weap_DAD_SM_B02",
+              "partname": "WeaponNamingStrategies, 9D159F57419E9984008673ABF2BE4AA2, Painter",
+              "priority": "1.000000"
+            }
+          },
+          {
+            "np_weap_jak_ar_b01": {
+              "inv_name_part": "np_weap_JAK_AR_B01",
+              "partname": "WeaponNamingStrategies, 4974BBE04479361F00A0DAB4EFF7379C, Karkadann",
+              "priority": "1.000000"
+            }
+          },
+          {
+            "np_weap_jak_ar_b02": {
+              "inv_name_part": "np_weap_JAK_AR_B02",
+              "partname": "WeaponNamingStrategies, 46C272DE4AC5134538250694DDE329B1, Rougarou",
+              "priority": "1.000000"
+            }
+          },
+          {
+            "np_weap_jak_ps_b01": {
+              "inv_name_part": "np_weap_JAK_PS_B01",
+              "partname": "WeaponNamingStrategies, AB3296014F3A97098D6AB99E55DB1367, Cuca",
+              "priority": "1.000000"
+            }
+          },
+          {
+            "np_weap_jak_ps_b02": {
+              "inv_name_part": "np_weap_JAK_PS_B02",
+              "partname": "WeaponNamingStrategies, 4A32D085416D26B95351CA81119DA361, Muki",
+              "priority": "1.000000"
+            }
+          },
+          {
+            "np_weap_jak_sg_b01": {
+              "inv_name_part": "np_weap_JAK_SG_B01",
+              "partname": "WeaponNamingStrategies, FEB471C941CE4AE5A7DB09B0E4D136A8, Dullahan",
+              "priority": "1.000000"
+            }
+          },
+          {
+            "np_weap_jak_sg_b02": {
+              "inv_name_part": "np_weap_JAK_SG_B02",
+              "partname": "WeaponNamingStrategies, AF9411CF49436E6B1A1755B6763485A9, Balor",
+              "priority": "1.000000"
+            }
+          },
+          {
+            "np_weap_jak_sr_b01": {
+              "inv_name_part": "np_weap_JAK_SR_B01",
+              "partname": "WeaponNamingStrategies, FCDB690645DA744F5A52B6B13D726105, Inkanyamba",
+              "priority": "1.000000"
+            }
+          },
+          {
+            "np_weap_jak_sr_b02": {
+              "inv_name_part": "np_weap_JAK_SR_B02",
+              "partname": "WeaponNamingStrategies, F5893E5941B15FB379ABF5B16588E8B2, Xiuhcoatl",
+              "priority": "1.000000"
+            }
+          },
+          {
+            "np_weap_mal_sg_b01": {
+              "inv_name_part": "np_weap_MAL_SG_B01",
+              "partname": "WeaponNamingStrategies, 6926BF93442DE12112F3E389C7C92AF2, Stellium",
+              "priority": "1.000000"
+            }
+          },
+          {
+            "np_weap_mal_sg_b02": {
+              "inv_name_part": "np_weap_MAL_SG_B02",
+              "partname": "WeaponNamingStrategies, 7F1CB9B44F37B2042E4147A0458B1895, Vertex",
+              "priority": "1.000000"
+            }
+          },
+          {
+            "np_weap_mal_sm_b01": {
+              "inv_name_part": "np_weap_MAL_SM_B01",
+              "partname": "WeaponNamingStrategies, 34EAB0134DF79BEAC5BED09AF40C31C4, Ephemeris",
+              "priority": "1.000000"
+            }
+          },
+          {
+            "np_weap_mal_sm_b02": {
+              "inv_name_part": "np_weap_MAL_SM_B02",
+              "partname": "WeaponNamingStrategies, 5BC96EE54D9099C4DB8B04ACE7996327, Synastry",
+              "priority": "1.000000"
+            }
+          },
+          {
+            "np_weap_mal_sr_b01": {
+              "inv_name_part": "np_weap_MAL_SR_B01",
+              "partname": "WeaponNamingStrategies, 05AA6BF644DD613ADEE2D89EBEEA046C, Midheaven",
+              "priority": "1.000000"
+            }
+          },
+          {
+            "np_weap_mal_sr_b02": {
+              "inv_name_part": "np_weap_MAL_SR_B02",
+              "partname": "WeaponNamingStrategies, 454DFFD6430E201EA668CD9369AC7070, Transit",
+              "priority": "1.000000"
+            }
+          },
+          {
+            "np_weap_ord_ar_b01": {
+              "inv_name_part": "np_weap_ORD_AR_B01",
+              "partname": "WeaponNamingStrategies, C8E59FE547A30009031740A97B3FC794, Indiction",
+              "priority": "1.000000"
+            }
+          },
+          {
+            "np_weap_ord_ar_b02": {
+              "inv_name_part": "np_weap_ORD_AR_B02",
+              "partname": "WeaponNamingStrategies, A9C9CB124AA7C991F9EA449F198D453E, Schema",
+              "priority": "1.000000"
+            }
+          },
+          {
+            "np_weap_ord_ps_b01": {
+              "inv_name_part": "np_weap_ORD_PS_B01",
+              "partname": "WeaponNamingStrategies, CDD05B3346B1B1CD1A45BF82CE8C8AF2, Punct",
+              "priority": "1.000000"
+            }
+          },
+          {
+            "np_weap_ord_ps_b02": {
+              "inv_name_part": "np_weap_ORD_PS_B02",
+              "partname": "WeaponNamingStrategies, FB7102B149D3E03AE677B781A01893D9, Lemma",
+              "priority": "1.000000"
+            }
+          },
+          {
+            "np_weap_ord_sr_b01": {
+              "inv_name_part": "np_weap_ORD_SR_B01",
+              "partname": "WeaponNamingStrategies, 4D60A56E458FF6A1C76364AAB85262A9, Yuga",
+              "priority": "1.000000"
+            }
+          },
+          {
+            "np_weap_ord_sr_b02": {
+              "inv_name_part": "np_weap_ORD_SR_B02",
+              "partname": "WeaponNamingStrategies, 309235F048E66F63D74200BA3156DA57, Piktun",
+              "priority": "1.000000"
+            }
+          },
+          {
+            "np_weap_ted_ar_b01": {
+              "inv_name_part": "np_weap_TED_AR_B01",
+              "partname": "WeaponNamingStrategies, 7AAEFEE74D1C153A9524CEAD415C2A03, Assaultomatic",
+              "priority": "1.000000"
+            }
+          },
+          {
+            "np_weap_ted_ar_b02": {
+              "inv_name_part": "np_weap_TED_AR_B02",
+              "partname": "WeaponNamingStrategies, 20881CA54846019A32F912818FCD850B, Perforator",
+              "priority": "1.000000"
+            }
+          },
+          {
+            "np_weap_ted_ps_b01": {
+              "inv_name_part": "np_weap_TED_PS_B01",
+              "partname": "WeaponNamingStrategies, 126F2BE2407EDA2CE6D1E68653788D18, Pocketshot",
+              "priority": "1.000000"
+            }
+          },
+          {
+            "np_weap_ted_ps_b02": {
+              "inv_name_part": "np_weap_TED_PS_B02",
+              "partname": "WeaponNamingStrategies, 7C66437C46BFD37A1A51CFB5899460C2, Widget",
+              "priority": "1.000000"
+            }
+          },
+          {
+            "np_weap_ted_sg_b01": {
+              "inv_name_part": "np_weap_TED_SG_B01",
+              "partname": "WeaponNamingStrategies, C61950F3437F4CCB8E04DEA5CA45C788, EZ-Blast",
+              "priority": "1.000000"
+            }
+          },
+          {
+            "np_weap_ted_sg_b02": {
+              "inv_name_part": "np_weap_TED_SG_B02",
+              "partname": "WeaponNamingStrategies, E98DD4904DC4F89FDA1E7E9EB065AC27, Omnibore",
+              "priority": "1.000000"
+            }
+          },
+          {
+            "np_weap_tor_ar_b01": {
+              "inv_name_part": "np_weap_TOR_AR_B01",
+              "partname": "WeaponNamingStrategies, 666E68AB492C02AFCD07B6B1F28BEB44, Handle",
+              "priority": "1.000000"
+            }
+          },
+          {
+            "np_weap_tor_ar_b02": {
+              "inv_name_part": "np_weap_TOR_AR_B02",
+              "partname": "WeaponNamingStrategies, 54A3D99A49F511011A718B94E03CBFCF, Truncheon",
+              "priority": "1.000000"
+            }
+          },
+          {
+            "np_weap_tor_ps_b01": {
+              "inv_name_part": "np_weap_TOR_PS_B01",
+              "partname": "WeaponNamingStrategies, 889C958D4B55F83C6E4D14AF85FD3857, Kitty",
+              "priority": "1.000000"
+            }
+          },
+          {
+            "np_weap_tor_ps_b02": {
+              "inv_name_part": "np_weap_TOR_PS_B02",
+              "partname": "WeaponNamingStrategies, 051881174F8DB410D7DD69A82C802480, Lotus",
+              "priority": "1.000000"
+            }
+          },
+          {
+            "np_weap_tor_sg_b01": {
+              "inv_name_part": "np_weap_TOR_SG_B01",
+              "partname": "WeaponNamingStrategies, A324B6914CDE1610BD978FA8787EBBBC, Rider",
+              "priority": "1.000000"
+            }
+          },
+          {
+            "np_weap_tor_sg_b02": {
+              "inv_name_part": "np_weap_TOR_SG_B02",
+              "partname": "WeaponNamingStrategies, 8D21343747B4033EBCF25F9A4FD5C4A1, Crank",
+              "priority": "1.000000"
+            }
+          },
+          {
+            "np_weap_vla_ar_b01": {
+              "inv_name_part": "np_weap_VLA_AR_B01",
+              "partname": "WeaponNamingStrategies, 703F81A54462AF256ACD96BF22A6183D, Buzzymuzz",
+              "priority": "1.000000"
+            }
+          },
+          {
+            "np_weap_vla_ar_b02": {
+              "inv_name_part": "np_weap_VLA_AR_B02",
+              "partname": "WeaponNamingStrategies, 38F9A286480598D59B39A48B9F02CD24, Gruppagrak",
+              "priority": "1.000000"
+            }
+          },
+          {
+            "np_weap_vla_sm_b01": {
+              "inv_name_part": "np_weap_VLA_SM_B01",
+              "partname": "WeaponNamingStrategies, 2824393D4BD6262B6132B395CD5761CD, Boory",
+              "priority": "1.000000"
+            }
+          },
+          {
+            "np_weap_vla_sm_b02": {
+              "inv_name_part": "np_weap_VLA_SM_B02",
+              "partname": "WeaponNamingStrategies, A61602664BBBD57620E1E78C73696F31, Flewdy",
+              "priority": "1.000000"
+            }
+          },
+          {
+            "np_weap_vla_sr_b01": {
+              "inv_name_part": "np_weap_VLA_SR_B01",
+              "partname": "WeaponNamingStrategies, F9FEF3444F10032743AD48AF2A1959A3, Ragoon",
+              "priority": "1.000000"
+            }
+          },
+          {
+            "np_weap_vla_sr_b02": {
+              "inv_name_part": "np_weap_VLA_SR_B02",
+              "partname": "WeaponNamingStrategies, 7BF53302463FF4FFCCA89BB1F0CEFE30, Vyudazy",
+              "priority": "1.000000"
+            }
+          },
+          {
+            "np_zadra_weapon": {
+              "inv_name_part": "np_zadra_weapon",
+              "partname": "Zadra_Weapon, 603B4230491CA2C4DC246A8FD34B560F, Absolution",
+              "priority": "1.000000"
+            }
+          },
+          {
+            "np_zadra_weapon_prefix": {
+              "inv_name_part": "np_zadra_weapon_prefix",
+              "partname": "Zadra_Weapon, D9C4873A4C12EF6E7D6A938291120795, A",
+              "priority": "10.000000"
+            }
+          }
+        ]
+      },
+      {
+        "entries": [
+          {
+            "np_cm_ds_leg_raid1": {
+              "inv_name_part": "np_cm_ds_leg_raid1",
+              "partname": "ClassModNameParts, 9EC79A764CDCF100E75DC490994EF971, Misericorde",
+              "priority": "1.000000"
+            }
+          },
+          {
+            "np_cm_exo_leg_raid1": {
+              "inv_name_part": "np_cm_exo_leg_raid1",
+              "partname": "ClassModNameParts, 87B25EE84D90B41A2C90B7A97640AFF9, Overdriver",
+              "priority": "1.000000"
+            }
+          },
+          {
+            "np_cm_grav_leg_raid1": {
+              "inv_name_part": "np_cm_grav_leg_raid1",
+              "partname": "ClassModNameParts, 1051FB88484C88DB90200DBF0712A54C, Trooper",
+              "priority": "1.000000"
+            }
+          },
+          {
+            "np_cm_pld_leg_raid1": {
+              "inv_name_part": "np_cm_pld_leg_raid1",
+              "partname": "ClassModNameParts, E0FC44E94F6E9965072805AFAE5A8E83, Lamplighter",
+              "priority": "1.000000"
+            }
+          }
+        ]
+      }
+    ]
+  }
+}

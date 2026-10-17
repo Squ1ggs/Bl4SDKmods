@@ -1,0 +1,24 @@
+{
+  "id": "gun_ord_sr",
+  "note": "Legendary Order sniper L70",
+  "input": {
+    "itemType": "Sniper",
+    "set": "ord_sr",
+    "part_names": [
+      "ord_sr.comp_05_legendary",
+      "ord_sr.part_body",
+      "ord_sr.part_barrel_01",
+      "ord_sr.part_mag_01"
+    ],
+    "level": 70
+  },
+  "expect": {
+    "item_type": "Sniper",
+    "damage": 13502,
+    "dps": 18806
+  },
+  "tolerance": {
+    "damage": { "mode": "pct", "value": 0.03 },
+    "dps": { "mode": "pct", "value": 0.05 }
+  }
+}

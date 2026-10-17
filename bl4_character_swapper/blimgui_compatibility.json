@@ -1,0 +1,15 @@
+{
+  "recommended_version": "1.1",
+  "author": "juso and smugg",
+  "official_page": "https://bl-sdk.github.io/oak2-mod-db/mods/blimgui/",
+  "download": "https://github.com/juso40/blimgui/raw/ff5be35f41d69f28056befdd1bfb8caddae5892b/blimgui.zip",
+  "upstream_commit": "ff5be35f41d69f28056befdd1bfb8caddae5892b",
+  "archive_sha256": "20f85a7386bf057fee2c6084e910daee8bfb09df8cb22af4627a0bc7a4bc18b4",
+  "archive_git_blob_sha1": "e96819897ea9bd3725a3e9a155a11ea9f433be42",
+  "inspected_on": "2026-10-17",
+  "supported_game": "Game.Oak2 (Borderlands 4)",
+  "native_abi": "CPython 3.14 Windows x64",
+  "native_import_check": "ImGui Bundle and pydantic-core imported successfully on Python 3.14.7",
+  "interfaces": ["official create_window callback API", "compatible register_tab/open_registered_tab API"],
+  "live_game_validation": "pending"
+}

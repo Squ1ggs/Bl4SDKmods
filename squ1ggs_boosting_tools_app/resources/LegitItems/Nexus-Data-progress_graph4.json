@@ -1,0 +1,60 @@
+{
+  "progress_graph": {
+    "records": [
+      {
+        "entries": [
+          {
+            "progress_robo_action_skills": {
+              "progress_graph": "progress_robo_action_skills",
+              "nodes": {
+                "pairs": {
+                  "pair2674582898": {
+                    "value": {
+                      "alias": "Sleight of Hand",
+                      "itemdata": {
+                        "structtype": "Asset'/Script/GbxGame.GbxUnlockableItemData_Skill'",
+                        "skill": "skill'Skill_Robo_SleightOfHand'",
+                        "activationskillstate": "skill_state'S_General_Slotted'"
+                      }
+                    }
+                  },
+                  "pair1008204052": {
+                    "value": {
+                      "alias": "Cross Fire",
+                      "itemdata": {
+                        "structtype": "Asset'/Script/GbxGame.GbxUnlockableItemData_Skill'",
+                        "skill": "skill'Skill_Robo_CrossFire'",
+                        "activationskillstate": "skill_state'S_General_Slotted'"
+                      }
+                    }
+                  },
+                  "pair256377300": {
+                    "value": {
+                      "alias": "Cleromancy",
+                      "itemdata": {
+                        "structtype": "Asset'/Script/GbxGame.GbxUnlockableItemData_Skill'",
+                        "skill": "skill'Skill_Robo_Cleromancy'",
+                        "activationskillstate": "skill_state'S_General_Slotted'"
+                      }
+                    }
+                  },
+                  "pair2442309920": {
+                    "value": {
+                      "alias": "Windfall",
+                      "itemdata": {
+                        "structtype": "Asset'/Script/GbxGame.GbxUnlockableItemData_Skill'",
+                        "skill": "skill'Trait_Robo_Windfall'",
+                        "activationskillstate": "skill_state'S_General_Slotted'"
+                      }
+                    }
+                  }
+                }
+              },
+              "parent": "progress_graph'progress_graph_action_skills_template'"
+            }
+          }
+        ]
+      }
+    ]
+  }
+}

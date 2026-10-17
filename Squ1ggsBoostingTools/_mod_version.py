@@ -1,0 +1,5 @@
+"""Single source of truth for the Squ1ggsBoostingTools package version."""
+
+__version__: str = "3.10.41"
+
+__version_info__: tuple[int, int, int] = (3, 10, 41)

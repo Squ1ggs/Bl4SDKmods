@@ -1,0 +1,544 @@
+{
+  "firmware": {
+    "records": [
+      {
+        "entries": [
+          {
+            "__op": 2,
+            "fw_tuba_bruiser": {
+              "__typeFlags": 515,
+              "value": {
+                "firmware": {
+                  "__typeFlags": 513,
+                  "value": "fw_tuba_bruiser"
+                },
+                "name": {
+                  "__typeFlags": 2561,
+                  "value": "Inv_Firmware, C8FF21D340B0FFAFBA62D6AAB7F81623, Bruiser"
+                },
+                "bonusaugmentdefs": {
+                  "__typeFlags": 514,
+                  "value": [
+                    {
+                      "__typeFlags": 515,
+                      "value": {
+                        "defs": {
+                          "__typeFlags": 514,
+                          "value": [
+                            {
+                              "__typeFlags": 515,
+                              "value": {
+                                "structtype": {
+                                  "__typeFlags": 769,
+                                  "value": "Asset'/Script/OakGame.InventoryAugmentDef'"
+                                },
+                                "equippedattributeeffects": {
+                                  "__typeFlags": 514,
+                                  "value": [
+                                    {
+                                      "__typeFlags": 515,
+                                      "value": {
+                                        "attributetomodify": {
+                                          "__typeFlags": 513,
+                                          "value": "attribute'damage_taken_multiplier'"
+                                        },
+                                        "modifiervalue": {
+                                          "__typeFlags": 515,
+                                          "value": {
+                                            "datatablevalue": {
+                                              "__typeFlags": 515,
+                                              "value": {
+                                                "datatable": {
+                                                  "__typeFlags": 513,
+                                                  "value": "gbx_ue_data_table'FirmwareTable_Init_Tuba'"
+                                                },
+                                                "rowname": {
+                                                  "__typeFlags": 513,
+                                                  "value": "Bruiser_1"
+                                                },
+                                                "columnname": {
+                                                  "__typeFlags": 513,
+                                                  "value": "Value_120_2D75E0C54D3035BFCEB34FA1EF7A9743"
+                                                }
+                                              }
+                                            },
+                                            "postscale": {
+                                              "__typeFlags": 513,
+                                              "value": "-1.000000"
+                                            }
+                                          }
+                                        }
+                                      }
+                                    }
+                                  ]
+                                },
+                                "duration": {
+                                  "__typeFlags": 515,
+                                  "value": {
+                                    "constant": {
+                                      "__typeFlags": 513,
+                                      "value": "0.000000"
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          ]
+                        },
+                        "uistat": {
+                          "__typeFlags": 513,
+                          "value": "ui_stat'uistat_firmware_bruiser_1'"
+                        }
+                      }
+                    },
+                    {
+                      "__typeFlags": 515,
+                      "value": {
+                        "defs": {
+                          "__typeFlags": 514,
+                          "value": [
+                            {
+                              "__typeFlags": 515,
+                              "value": {
+                                "structtype": {
+                                  "__typeFlags": 769,
+                                  "value": "Asset'/Script/OakGame.InventoryAugmentDef'"
+                                },
+                                "equippedattributeeffects": {
+                                  "__typeFlags": 514,
+                                  "value": [
+                                    {
+                                      "__typeFlags": 515,
+                                      "value": {
+                                        "attributetomodify": {
+                                          "__typeFlags": 513,
+                                          "value": "attribute'life_steal_percent'"
+                                        },
+                                        "modifiertype": {
+                                          "__typeFlags": 513,
+                                          "value": "PreAdd"
+                                        },
+                                        "modifiervalue": {
+                                          "__typeFlags": 515,
+                                          "value": {
+                                            "constant": {
+                                              "__typeFlags": 513,
+                                              "value": "-0.200000"
+                                            },
+                                            "datatablevalue": {
+                                              "__typeFlags": 515,
+                                              "value": {
+                                                "datatable": {
+                                                  "__typeFlags": 513,
+                                                  "value": "gbx_ue_data_table'FirmwareTable_Init_Tuba'"
+                                                },
+                                                "rowname": {
+                                                  "__typeFlags": 513,
+                                                  "value": "Bruiser_2"
+                                                },
+                                                "columnname": {
+                                                  "__typeFlags": 513,
+                                                  "value": "Value_120_2D75E0C54D3035BFCEB34FA1EF7A9743"
+                                                }
+                                              }
+                                            }
+                                          }
+                                        }
+                                      }
+                                    }
+                                  ]
+                                },
+                                "duration": {
+                                  "__typeFlags": 515,
+                                  "value": {
+                                    "constant": {
+                                      "__typeFlags": 513,
+                                      "value": "0.000000"
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          ]
+                        },
+                        "uistat": {
+                          "__typeFlags": 513,
+                          "value": "ui_stat'uistat_firmware_bruiser_2'"
+                        },
+                        "firmwarecount": {
+                          "__typeFlags": 513,
+                          "value": "2"
+                        }
+                      }
+                    },
+                    {
+                      "__typeFlags": 515,
+                      "value": {
+                        "defs": {
+                          "__typeFlags": 514,
+                          "value": [
+                            {
+                              "__typeFlags": 515,
+                              "value": {
+                                "structtype": {
+                                  "__typeFlags": 769,
+                                  "value": "Asset'/Script/OakGame.InventoryAugmentDef_ActorScript'"
+                                },
+                                "conditionappliedscript": {
+                                  "__typeFlags": 769,
+                                  "value": "Asset'/Game/DLC/Tuba/Gear/Firmware/InvAugScript_Bruiser_3.InvAugScript_Bruiser_3_C'"
+                                },
+                                "conditionname": {
+                                  "__typeFlags": 513,
+                                  "value": "enemy_kill"
+                                },
+                                "duration": {
+                                  "__typeFlags": 515,
+                                  "value": {
+                                    "constant": {
+                                      "__typeFlags": 513,
+                                      "value": "0.000000"
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          ]
+                        },
+                        "uistat": {
+                          "__typeFlags": 513,
+                          "value": "ui_stat'uistat_firmware_bruiser_3'"
+                        },
+                        "firmwarecount": {
+                          "__typeFlags": 513,
+                          "value": "3"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        ]
+      },
+      {
+        "entries": [
+          {
+            "__op": 2,
+            "jak_bounce_pass": {
+              "__typeFlags": 515,
+              "value": {
+                "firmware": {
+                  "__typeFlags": 513,
+                  "value": "jak_bounce_pass"
+                },
+                "bonusaugmentdefs": {
+                  "__typeFlags": 514,
+                  "value": [
+                    {
+                      "__typeFlags": 515,
+                      "value": {
+                        "defs": {
+                          "__typeFlags": 514,
+                          "value": [
+                            {
+                              "__typeFlags": 515,
+                              "value": {
+                                "structtype": {
+                                  "__typeFlags": 769,
+                                  "value": "Asset'/Script/OakGame.InventoryAugmentDef'"
+                                },
+                                "equippedattributeeffects": {
+                                  "__typeFlags": 514,
+                                  "value": [
+                                    {
+                                      "__typeFlags": 515,
+                                      "value": {
+                                        "attributetomodify": {
+                                          "__typeFlags": 513,
+                                          "value": "attribute'weapon_manufacturer_mod_param3'"
+                                        },
+                                        "modifiertype": {
+                                          "__typeFlags": 513,
+                                          "value": "OverrideBaseValue"
+                                        },
+                                        "modifiervalue": {
+                                          "__typeFlags": 515,
+                                          "value": {
+                                            "constant": {
+                                              "__typeFlags": 513,
+                                              "value": "1.000000"
+                                            }
+                                          }
+                                        }
+                                      }
+                                    }
+                                  ]
+                                }
+                              }
+                            }
+                          ]
+                        }
+                      }
+                    },
+                    {
+                      "__typeFlags": 515,
+                      "value": {
+                        "defs": {
+                          "__typeFlags": 514,
+                          "value": [
+                            {
+                              "__typeFlags": 515,
+                              "value": {
+                                "structtype": {
+                                  "__typeFlags": 769,
+                                  "value": "Asset'/Script/OakGame.InventoryAugmentDef'"
+                                },
+                                "equippedattributeeffects": {
+                                  "__typeFlags": 514,
+                                  "value": [
+                                    {
+                                      "__typeFlags": 515,
+                                      "value": {
+                                        "attributetomodify": {
+                                          "__typeFlags": 513,
+                                          "value": "attribute'accuracy_resource_max_value'"
+                                        },
+                                        "modifiervalue": {
+                                          "__typeFlags": 515,
+                                          "value": {
+                                            "constant": {
+                                              "__typeFlags": 513,
+                                              "value": "-0.200000"
+                                            },
+                                            "datatablevalue": {
+                                              "__typeFlags": 515,
+                                              "value": {
+                                                "datatable": {
+                                                  "__typeFlags": 513,
+                                                  "value": "gbx_ue_data_table'FirmwareTable_Init'"
+                                                },
+                                                "columnname": {
+                                                  "__typeFlags": 513,
+                                                  "value": "Value_120_2D75E0C54D3035BFCEB34FA1EF7A9743"
+                                                }
+                                              }
+                                            }
+                                          }
+                                        }
+                                      }
+                                    },
+                                    {
+                                      "__typeFlags": 515,
+                                      "value": {
+                                        "attributetomodify": {
+                                          "__typeFlags": 513,
+                                          "value": "attribute'caused_damage_critical_hit_multiplier'"
+                                        },
+                                        "modifiervalue": {
+                                          "__typeFlags": 515,
+                                          "value": {
+                                            "constant": {
+                                              "__typeFlags": 513,
+                                              "value": "0.500000"
+                                            },
+                                            "datatablevalue": {
+                                              "__typeFlags": 515,
+                                              "value": {
+                                                "datatable": {
+                                                  "__typeFlags": 513,
+                                                  "value": "gbx_ue_data_table'FirmwareTable_Init'"
+                                                },
+                                                "columnname": {
+                                                  "__typeFlags": 513,
+                                                  "value": "Value_120_2D75E0C54D3035BFCEB34FA1EF7A9743"
+                                                }
+                                              }
+                                            }
+                                          }
+                                        }
+                                      }
+                                    },
+                                    {
+                                      "__typeFlags": 515,
+                                      "value": {
+                                        "attributetomodify": {
+                                          "__typeFlags": 513,
+                                          "value": "attribute'weapon_accuracy_impulse'"
+                                        },
+                                        "modifiervalue": {
+                                          "__typeFlags": 515,
+                                          "value": {
+                                            "constant": {
+                                              "__typeFlags": 513,
+                                              "value": "-0.200000"
+                                            },
+                                            "datatablevalue": {
+                                              "__typeFlags": 515,
+                                              "value": {
+                                                "datatable": {
+                                                  "__typeFlags": 513,
+                                                  "value": "gbx_ue_data_table'FirmwareTable_Init'"
+                                                },
+                                                "columnname": {
+                                                  "__typeFlags": 513,
+                                                  "value": "Value_120_2D75E0C54D3035BFCEB34FA1EF7A9743"
+                                                }
+                                              }
+                                            }
+                                          }
+                                        }
+                                      }
+                                    },
+                                    {
+                                      "__typeFlags": 515,
+                                      "value": {
+                                        "attributetomodify": {
+                                          "__typeFlags": 513,
+                                          "value": "attribute'weapon_recoil_scale'"
+                                        },
+                                        "modifiervalue": {
+                                          "__typeFlags": 515,
+                                          "value": {
+                                            "constant": {
+                                              "__typeFlags": 513,
+                                              "value": "-0.200000"
+                                            },
+                                            "datatablevalue": {
+                                              "__typeFlags": 515,
+                                              "value": {
+                                                "datatable": {
+                                                  "__typeFlags": 513,
+                                                  "value": "gbx_ue_data_table'FirmwareTable_Init'"
+                                                },
+                                                "columnname": {
+                                                  "__typeFlags": 513,
+                                                  "value": "Value_120_2D75E0C54D3035BFCEB34FA1EF7A9743"
+                                                }
+                                              }
+                                            }
+                                          }
+                                        }
+                                      }
+                                    }
+                                  ]
+                                }
+                              }
+                            }
+                          ]
+                        }
+                      }
+                    },
+                    {
+                      "__typeFlags": 515,
+                      "value": {
+                        "defs": {
+                          "__typeFlags": 514,
+                          "value": [
+                            {
+                              "__typeFlags": 515,
+                              "value": {
+                                "structtype": {
+                                  "__typeFlags": 769,
+                                  "value": "Asset'/Script/OakGame.InventoryAugmentDef_ShotModifier'"
+                                },
+                                "shotmodifier": {
+                                  "__typeFlags": 515,
+                                  "value": {
+                                    "structtype": {
+                                      "__typeFlags": 769,
+                                      "value": "Asset'/Script/GbxWeapon.ShotModifierData'"
+                                    },
+                                    "modifierflags": {
+                                      "__typeFlags": 513,
+                                      "value": "2"
+                                    },
+                                    "conditionalmodifiers": {
+                                      "__typeFlags": 514,
+                                      "value": [
+                                        {
+                                          "__typeFlags": 515,
+                                          "value": {
+                                            "structtype": {
+                                              "__typeFlags": 769,
+                                              "value": "Asset'/Script/GbxGame.DamageModifierDef'"
+                                            },
+                                            "criticalfilter": {
+                                              "__typeFlags": 513,
+                                              "value": "MustNotBeAnyCritical"
+                                            },
+                                            "randomchancefilter": {
+                                              "__typeFlags": 515,
+                                              "value": {
+                                                "chance": {
+                                                  "__typeFlags": 515,
+                                                  "value": {
+                                                    "constant": {
+                                                      "__typeFlags": 513,
+                                                      "value": "0.200000"
+                                                    }
+                                                  }
+                                                }
+                                              }
+                                            },
+                                            "bcantriggeronbonusdamage": {
+                                              "__typeFlags": 513,
+                                              "value": "false"
+                                            },
+                                            "bpasstochild": {
+                                              "__typeFlags": 513,
+                                              "value": "false"
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    },
+                                    "btriggereveryxshots": {
+                                      "__typeFlags": 513,
+                                      "value": "true"
+                                    },
+                                    "triggereveryxshots": {
+                                      "__typeFlags": 515,
+                                      "value": {
+                                        "constant": {
+                                          "__typeFlags": 513,
+                                          "value": "4.000000"
+                                        },
+                                        "datatablevalue": {
+                                          "__typeFlags": 515,
+                                          "value": {
+                                            "datatable": {
+                                              "__typeFlags": 513,
+                                              "value": "gbx_ue_data_table'FirmwareTable_Init'"
+                                            },
+                                            "columnname": {
+                                              "__typeFlags": 513,
+                                              "value": "Value_120_2D75E0C54D3035BFCEB34FA1EF7A9743"
+                                            }
+                                          }
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          ]
+                        }
+                      }
+                    }
+                  ]
+                },
+                "manufacturer": {
+                  "__typeFlags": 513,
+                  "value": "manufacturer'Jakobs'"
+                }
+              }
+            }
+          }
+        ]
+      }
+    ]
+  }
+}

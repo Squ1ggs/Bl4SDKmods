@@ -1,0 +1,36 @@
+{
+  "id": "ordnance_grenade",
+  "note": "Order legendary grenade — manufacturer part Cooldown/Radius/Charges; Compounding + Explosive/Expansive %",
+  "input": {
+    "itemType": "Ordnance",
+    "set": "ord_grenade_gadget",
+    "part_names": [
+      "ord_grenade_gadget.comp_05_legendary",
+      "grenade_gadget.part_03_spring_03_compound",
+      "grenade_gadget.part_stat_03_damage",
+      "grenade_gadget.part_stat_04_radius",
+      "grenade_gadget.part_firmware_airstrike"
+    ],
+    "level": 70
+  },
+  "expect": {
+    "item_type": "Ordnance",
+    "primary_min_count": 4,
+    "firmware_min": 1,
+    "primary_numbers": [8.4, 16337, 459, 1],
+    "secondary_includes": [
+      "\\+25%",
+      "\\+13%",
+      "\\+20\\.6%",
+      "\\+41%"
+    ]
+  },
+  "tolerance": {
+    "primary_numbers": [
+      { "mode": "pct", "value": 0.05 },
+      { "mode": "pct", "value": 0.05 },
+      { "mode": "pct", "value": 0.05 },
+      { "mode": "abs", "value": 0 }
+    ]
+  }
+}

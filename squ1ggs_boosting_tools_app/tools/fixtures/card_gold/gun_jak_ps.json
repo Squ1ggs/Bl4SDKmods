@@ -1,0 +1,24 @@
+{
+  "id": "gun_jak_ps",
+  "note": "Legendary Jakobs pistol L70 — Damage/DPS must resolve offline (not partial)",
+  "input": {
+    "itemType": "Pistol",
+    "set": "jak_ps",
+    "part_names": [
+      "jak_ps.comp_05_legendary",
+      "jak_ps.part_body",
+      "jak_ps.part_barrel_01",
+      "jak_ps.part_mag_01"
+    ],
+    "level": 70
+  },
+  "expect": {
+    "item_type": "Pistol",
+    "damage": 10002,
+    "dps": 14316
+  },
+  "tolerance": {
+    "damage": { "mode": "pct", "value": 0.03 },
+    "dps": { "mode": "pct", "value": 0.05 }
+  }
+}

@@ -1,0 +1,763 @@
+{
+  "ui_challenge_list": {
+    "records": [
+      {
+        "entries": [
+          {
+            "default_challenge_list_def": {
+              "ui_challenge_list": "default_challenge_list_def",
+              "challengecategories": [
+                {
+                  "displayname": "menu_challenges, 2B67B8BE486C71194A640893732E65CE, Ultimate Vault Hunter",
+                  "icon": "ultimate_vh_icon",
+                  "ident": "uvh",
+                  "challenges": [
+                    "challenge'Challenge_UVH_Rankup_7_Parent'",
+                    "challenge'Challenge_UVH_Rankup_6_Bloomreaper'",
+                    "challenge'UVH_Rankup_5_FinalChallenge'",
+                    "challenge'Challenge_UVH_Rankup_5_SL'",
+                    "challenge'Challenge_UVH_Rankup_5_MOU'",
+                    "challenge'Challenge_UVH_Rankup_5_GL'",
+                    "challenge'UVH_Rankup_4_FinalChallenge'",
+                    "challenge'Challenge_UVH_Rankup_4_Order'",
+                    "challenge'Challenge_UVH_Rankup_4_Thresher'",
+                    "challenge'Challenge_UVH_Rankup_4_Beast'",
+                    "challenge'Challenge_UVH_Rankup_4_Ripper'",
+                    "challenge'UVH_Rankup_3_FinalChallenge'",
+                    "challenge'Challenge_UVH_Rankup_3_Order'",
+                    "challenge'Challenge_UVH_Rankup_3_Pangolin'",
+                    "challenge'Challenge_UVH_Rankup_3_Cat'",
+                    "challenge'Challenge_UVH_Rankup_3_Ripper'",
+                    "challenge'UVH_Rankup_2_FinalChallenge'",
+                    "challenge'Challenge_UVH_Rankup_2_Order'",
+                    "challenge'Challenge_UVH_Rankup_2_Ripper'",
+                    "challenge'Challenge_UVH_Rankup_2_Creep'",
+                    "challenge'Challenge_UVH_Rankup_2_Kratch'",
+                    "challenge'UVH_Rankup_1_FinalChallenge'",
+                    "challenge'Challenge_UVH_Rankup_1_TrueBoss'",
+                    "challenge'Challenge_UVH_Rankup_1_BMVM'",
+                    "challenge'Challenge_UVH_Rankup_1_Firmware'"
+                  ]
+                },
+                {
+                  "displayname": "menu_challenges, 86C6E82C4874C25228E41AB69708F7F2, Phosphene Guns",
+                  "icon": "shiny_gear_icon",
+                  "ident": "shinygear",
+                  "challenges": [
+                    "challenge'Challenge_Shiny_Zipgun'",
+                    "challenge'Challenge_Shiny_WomboCombo'",
+                    "challenge'Challenge_Shiny_WF'",
+                    "challenge'Challenge_Shiny_Vamoose'",
+                    "challenge'Challenge_Shiny_Truck'",
+                    "challenge'Challenge_Shiny_TKsWave'",
+                    "challenge'Challenge_Shiny_Symmetry'",
+                    "challenge'Challenge_Shiny_Sweet_Embrace'",
+                    "challenge'Challenge_Shiny_Stray'",
+                    "challenge'Challenge_Shiny_StopGap'",
+                    "challenge'Challenge_Shiny_star_helix'",
+                    "challenge'Challenge_Shiny_Sideshow'",
+                    "challenge'Challenge_Shiny_seventh_sense'",
+                    "challenge'Challenge_Shiny_QuickDraw'",
+                    "challenge'Challenge_Shiny_RubysGrasp'",
+                    "challenge'Challenge_Shiny_Rowan'",
+                    "challenge'Challenge_Shiny_Roach'",
+                    "challenge'Challenge_Shiny_Rangefinder'",
+                    "challenge'Challenge_Shiny_RainbowVomit'",
+                    "challenge'Challenge_Shiny_QueensRest'",
+                    "challenge'Challenge_Shiny_Prince'",
+                    "challenge'Challenge_Shiny_PotatoThrower'",
+                    "challenge'Challenge_Shiny_PlasmaCoil'",
+                    "challenge'Challenge_Shiny_Phantom_Flame'",
+                    "challenge'Challenge_Shiny_OM'",
+                    "challenge'Challenge_Shiny_Onslaught'",
+                    "challenge'Challenge_Shiny_OhmIGot'",
+                    "challenge'Challenge_Shiny_NoisyCricket'",
+                    "challenge'Challenge_Shiny_CrowdSourced'",
+                    "challenge'Challenge_Shiny_Luty'",
+                    "challenge'Challenge_Shiny_RocketReload'",
+                    "challenge'Challenge_Shiny_Lucian'",
+                    "challenge'Challenge_Shiny_Linebacker'",
+                    "challenge'Challenge_Shiny_LeadBalloon'",
+                    "challenge'Challenge_Shiny_KingsGambit'",
+                    "challenge'Challenge_Shiny_Kickballer'",
+                    "challenge'Challenge_Shiny_katagawa'",
+                    "challenge'Challenge_Shiny_KaoSon'",
+                    "challenge'Challenge_Shiny_Kaleidosplode'",
+                    "challenge'Challenge_Shiny_HeavyTurret'",
+                    "challenge'Challenge_Shiny_Slugger'",
+                    "challenge'Challenge_Shiny_Hellwalker'",
+                    "challenge'Challenge_Shiny_hellfire'",
+                    "challenge'Challenge_Shiny_GoreMaster'",
+                    "challenge'Challenge_Shiny_GoldenGod'",
+                    "challenge'Challenge_Shiny_Goalkeeper'",
+                    "challenge'Challenge_Shiny_GMR'",
+                    "challenge'Challenge_Shiny_CommBD'",
+                    "challenge'Challenge_Shiny_Fisheye'",
+                    "challenge'Challenge_Shiny_Finnty'",
+                    "challenge'Challenge_Shiny_DividedFocus'",
+                    "challenge'Challenge_Shiny_bloodstarved'",
+                    "challenge'Challenge_Shiny_convergence'",
+                    "challenge'Challenge_Shiny_complex_root'",
+                    "challenge'Challenge_Shiny_ColdShoulder'",
+                    "challenge'Challenge_Shiny_Chuck'",
+                    "challenge'Challenge_Shiny_Bully'",
+                    "challenge'Challenge_Shiny_Bugbear'",
+                    "challenge'Challenge_Shiny_ATLien'",
+                    "challenge'Challenge_Shiny_Ballista'",
+                    "challenge'Challenge_Shiny_Boomslang'",
+                    "challenge'Challenge_Shiny_BonnieClyde'",
+                    "challenge'Challenge_Shiny_Bod'",
+                    "challenge'Challenge_Shiny_Lumberjack'",
+                    "challenge'Challenge_Shiny_BeeGun'",
+                    "challenge'Challenge_Shiny_Asher'",
+                    "challenge'Challenge_Shiny_anarchy'",
+                    "challenge'Challenge_Shiny_DualDamage'",
+                    "challenge'Challenge_Shiny_HeartGun'",
+                    "challenge'Challenge_Collection_Shiny_Ultimate'"
+                  ]
+                },
+                {
+                  "displayname": "menu_challenges, E7D6999245477DDE01FC5CB873AE1563, FL4K and the Last Resort",
+                  "icon": "harmonica_icon",
+                  "ident": "harmonica",
+                  "challenges": [
+                    "challenge'Harmonica_Challenge_Combat_KillFramesBeforeConversion'",
+                    "challenge'Harmonica_Challenge_Combat_ZiplineKills'",
+                    "challenge'Harmonica_Challenge_Enemies_KillTedioreFrames'",
+                    "challenge'Harmonica_Challenge_Enemies_KillTedioreGliders'",
+                    "challenge'Harmonica_Challenge_Enemies_KillTedioreInfantry'",
+                    "challenge'Harmonica_Challenge_Enemies_KillTedioreWalkerMechs'",
+                    "challenge'Harmonica_Challenge_Enemies_KillTedioreReplacements'",
+                    "challenge'Challenge_Collect_DLC2_EchoLog_Parent'",
+                    "challenge'Challenge_Collect_DLC2_IslandSafe_Parent'",
+                    "challenge'Challenge_Collect_DLC2_Tediore_Parent'",
+                    "challenge'Challenge_Harmonica_TreasureHunt_SwitchParent'",
+                    "challenge'Harmonica_Challenge_World_ManagerHands'",
+                    "challenge'Harmonica_Challenge_World_CompleteRifts'",
+                    "challenge'Harmonica_Challenge_World_ClaimSafehouses'",
+                    "challenge'Harmonica_Challenge_World_Grottos'",
+                    "challenge'Harmonica_Challenge_World_Lockdowns'",
+                    "challenge'Harmonica_Challenge_World_VolcanoEvent'"
+                  ],
+                  "dlcdef": "DLCDef'DLCDef_Harmonica'"
+                },
+                {
+                  "displayname": "menu_challenges, 0C100221422D5452B925108E47984DD8, Vault of the Damned",
+                  "icon": "cowbell_icon",
+                  "ident": "cowbell",
+                  "challenges": [
+                    "challenge'Challenge_SpeakeasyPortal_Parent'",
+                    "challenge'Cowbell_Challenges_World_Rift_Bosses'",
+                    "challenge'Cowbell_Challenges_World_SpookyStories'",
+                    "challenge'Challenge_Collect_DahlCaches_Parent'",
+                    "challenge'Challenge_Collect_RecordPlayer_Parent'",
+                    "challenge'Challenge_Collect_DLC1_VaultSymbols_Parent'",
+                    "challenge'Challenge_Collect_DLC1_EchoLog_Parent'",
+                    "challenge'Cowbell_Challenges_Enemies_kill_kraggons'",
+                    "challenge'Cowbell_Challenges_Enemies_kill_dahl_mechs'",
+                    "challenge'Cowbell_Challenges_Enemies_kill_dahl_grunts'",
+                    "challenge'Cowbell_Challenges_Enemies_kill_scav_splices'",
+                    "challenge'Cowbell_Challenges_Enemies_kill_scav_outlaws'",
+                    "challenge'Cowbell_Challenges_Enemies_kill_scav_guntoters'",
+                    "challenge'Cowbell_Challenges_Enemies_kill_scav_psychos'",
+                    "challenge'Cowbell_Challenges_Combat_dahl_nightmare_split'",
+                    "challenge'Cowbell_Challenges_Combat_kraggon_secondwind'"
+                  ],
+                  "dlcdef": "DLCDef'DLCDef_Cowbell'"
+                },
+                {
+                  "displayname": "menu_challenges, 20852F174D1FD50B4F07E089718DA6A6, Character",
+                  "icon": "char_corpohacker_icon",
+                  "ident": "char_corpohacker",
+                  "characterident": "char_corpohacker",
+                  "challenges": [
+                    "challenge'Harmonica_Challenges_Characters_CorpoHacker_Contagion_Tiered'",
+                    "challenge'Harmonica_Challenges_Characters_CorpoHacker_Contagion_Single'",
+                    "challenge'Harmonica_Challenges_Characters_CorpoHacker_VPN_Tiered'",
+                    "challenge'Harmonica_Challenges_Characters_CorpoHacker_VPN_Single'",
+                    "challenge'Harmonica_Challenges_Characters_CorpoHacker_Manifestation_Tiered'",
+                    "challenge'Harmonica_Challenges_Characters_CorpoHacker_Manifestation_Single'",
+                    "challenge'Cowbell_Challenges_Characters_CorpoHacker_LevelUp'"
+                  ],
+                  "dlcdef": "DLCDef'DLCDef_Harmonica'"
+                },
+                {
+                  "displayname": "menu_challenges, 690EB4D34BA0E8F6B36273B8FAFCC26A, Character",
+                  "icon": "char_robodealer_icon",
+                  "ident": "char_robodealer",
+                  "characterident": "char_robodealer",
+                  "challenges": [
+                    "challenge'Cowbell_Challenges_Characters_Robodealer_SleightOfHand_Tiered'",
+                    "challenge'Cowbell_Challenges_Characters_Robodealer_SleightOfHand_Single'",
+                    "challenge'Cowbell_Challenges_Characters_Robodealer_Crossfire_Tiered'",
+                    "challenge'Cowbell_Challenges_Characters_Robodealer_Crossfire_Single'",
+                    "challenge'Cowbell_Challenges_Characters_Robodealer_Cleromancy_Tiered'",
+                    "challenge'Cowbell_Challenges_Characters_Robodealer_Cleromancy_Single'",
+                    "challenge'Cowbell_Challenges_Characters_Robodealer_LevelUp'"
+                  ],
+                  "dlcdef": "DLCDef'DLCDef_Cowbell'"
+                },
+                {
+                  "displayname": "menu_challenges, F5A9258B4E516B22B90E69B521F794FD, Character",
+                  "icon": "char_darksiren_icon",
+                  "ident": "char_darksiren",
+                  "characterident": "char_darksiren",
+                  "challenges": [
+                    "challenge'Challenge_DarkSiren_Duplicate_Tiered'",
+                    "challenge'Challenge_DarkSiren_Duplicate_Single'",
+                    "challenge'Challenge_DarkSiren_Demonology_Tiered'",
+                    "challenge'Challenge_DarkSiren_Demonology_Single'",
+                    "challenge'Challenge_DarkSiren_Death_Tiered'",
+                    "challenge'Challenge_DarkSiren_Death_Single'",
+                    "challenge'Challenge_DarkSiren_LevelUp'"
+                  ]
+                },
+                {
+                  "displayname": "menu_challenges, BE685A0744750086FB19C7A3FE25804B, Character",
+                  "icon": "char_exosoldier_icon",
+                  "ident": "char_exosoldier",
+                  "characterident": "char_exosoldier",
+                  "challenges": [
+                    "challenge'Challenge_ExoSoldier_HeavyArms_Tiered'",
+                    "challenge'Challenge_ExoSoldier_HeavyArms_Single'",
+                    "challenge'Challenge_ExoSoldier_Buster_Tiered'",
+                    "challenge'Challenge_ExoSoldier_Buster_Single'",
+                    "challenge'Challenge_ExoSoldier_AutoLock_Tiered'",
+                    "challenge'Challenge_ExoSoldier_AutoLock_Single'",
+                    "challenge'Challenge_ExoSoldier_LevelUp'"
+                  ]
+                },
+                {
+                  "displayname": "menu_challenges, 0EB8A00447D57912F2509CA34B72BA4C, Character",
+                  "icon": "char_gravitar_icon",
+                  "ident": "char_gravitar",
+                  "characterident": "char_gravitar",
+                  "challenges": [
+                    "challenge'Challenge_Gravitar_Terminal_Tiered'",
+                    "challenge'Challenge_Gravitar_Terminal_Single'",
+                    "challenge'Challenge_Gravitar_Stasis_Tiered'",
+                    "challenge'Challenge_Gravitar_Stasis_Single'",
+                    "challenge'Challenge_Gravitar_Exodus_Tiered'",
+                    "challenge'Challenge_Gravitar_Exodus_Single'",
+                    "challenge'Challenge_Gravitar_LevelUp'"
+                  ]
+                },
+                {
+                  "displayname": "menu_challenges, 00F4ECB7408538D1426001872CF854F9, Character",
+                  "icon": "char_paladin_icon",
+                  "ident": "char_paladin",
+                  "characterident": "char_paladin",
+                  "challenges": [
+                    "challenge'Challenge_Paladin_WeaponMaster_Tiered'",
+                    "challenge'Challenge_Paladin_WeaponMaster_SIngle'",
+                    "challenge'Challenge_Paladin_Vengeance_Tiered'",
+                    "challenge'Challenge_Paladin_Vengeance_Single'",
+                    "challenge'Challenge_Paladin_Cybernetics_Tiered'",
+                    "challenge'Challenge_Paladin_Cybernetics_Single'",
+                    "challenge'Challenge_Paladin_LevelUp'"
+                  ]
+                },
+                {
+                  "displayname": "menu_challenges, 73B59A2E46575BF44B331EA9A293B1E2, Combat",
+                  "icon": "kills_icon",
+                  "ident": "combat",
+                  "challenges": [
+                    "challenge'Challenge_RevivePartners'",
+                    "challenge'Challenge_SecondWindBadass'",
+                    "challenge'Challenge_SecondWind'",
+                    "challenge'Challenge_RepairKit_Lifesteal'",
+                    "challenge'Challenge_RepairKit_Uses'",
+                    "challenge'Challenge_Kill_Dashing'",
+                    "challenge'Challenge_Kill_Airborne'",
+                    "challenge'Challenge_Kill_WhileSliding'",
+                    "challenge'Challenge_Kill_GroundPound'",
+                    "challenge'Challenge_Kill_Melee'",
+                    "challenge'Challenge_Kill_CriticalHits'",
+                    "challenge'Challenge_Kill_Badasses'",
+                    "challenge'Challenge_Kill_Enemies'"
+                  ]
+                },
+                {
+                  "displayname": "menu_challenges, CAF1477540B2F6F5BEE55D849005051F, Enemies",
+                  "icon": "enemies_icon",
+                  "ident": "enemy",
+                  "challenges": [
+                    "challenge'Challenge_Kill_Corrupted'",
+                    "challenge'Challenge_Kill_Leaders'",
+                    "challenge'Challenge_Kill_Brutes'",
+                    "challenge'Challenge_Kill_Drones'",
+                    "challenge'Challenge_Kill_Strikers'",
+                    "challenge'Challenge_Kill_Soldiers'",
+                    "challenge'Challenge_Kill_Grunt'",
+                    "challenge'Challenge_KillArmy_Order'",
+                    "challenge'Challenge_KillArmy_Bandits'",
+                    "challenge'Challenge_Kill_Threshers'",
+                    "challenge'Challenge_Kill_Pangolins'",
+                    "challenge'Challenge_Kill_Creeps'",
+                    "challenge'Challenge_Kill_Cats'",
+                    "challenge'Challenge_Kill_Beasts'",
+                    "challenge'Challenge_Kill_Bats'",
+                    "challenge'Challenge_KillArmy_Beasts'",
+                    "challenge'Challenge_Kill_Phalanx'",
+                    "challenge'Challenge_Kill_Meatheads'",
+                    "challenge'Challenge_Kill_Splices'",
+                    "challenge'Challenge_Kill_GunToters'",
+                    "challenge'Challenge_Kill_Psychos'"
+                  ]
+                },
+                {
+                  "displayname": "menu_challenges, D15AE1F349B008C8145C92A33BA1E311, Elemental",
+                  "icon": "elemental_icon",
+                  "ident": "elemental",
+                  "challenges": [
+                    "challenge'Challenge_2_Status_Effects'",
+                    "challenge'Challenge_Radiation_Kills'",
+                    "challenge'Challenge_Corrosive_Kills'",
+                    "challenge'Challenge_Shock_Kills'",
+                    "challenge'Challenge_Cryo_Kills'",
+                    "challenge'Challenge_Fire_Kills'"
+                  ]
+                },
+                {
+                  "displayname": "menu_challenges, 9FC864CD43E9131C824EEA9BD232A754, Economy",
+                  "icon": "economy_icon",
+                  "ident": "economy",
+                  "challenges": [
+                    "challenge'Challenge_FirmwareSet'",
+                    "challenge'Challenge_UpgradeInventoryAll'",
+                    "challenge'Challenge_UpgradeInventory'",
+                    "challenge'Challenge_SellLoot'",
+                    "challenge'Challenge_HaveMoreCash'",
+                    "challenge'Challenge_HaveCash'"
+                  ]
+                },
+                {
+                  "displayname": "menu_challenges, 7F00B2F44B38409B610A0CAAA26E24B2, Loot",
+                  "icon": "loot_icon",
+                  "ident": "loot",
+                  "challenges": [
+                    "challenge'Challenge_Loot_Legendaries'",
+                    "challenge'Challenge_Loot_Purples'",
+                    "challenge'Challenge_Loot_Blues'",
+                    "challenge'Challenge_Loot_Greens'",
+                    "challenge'Challenge_Loot_Whites'",
+                    "challenge'Challenge_Loot_Enhancements'",
+                    "challenge'Challenge_Loot_Gadgets'",
+                    "challenge'Challenge_Loot_Shields'",
+                    "challenge'Challenge_Loot_ClassMods'",
+                    "challenge'Challenge_Loot_RepKits'",
+                    "challenge'Challenge_Loot_Weapons'",
+                    "challenge'Challenge_Loot_RedChest'",
+                    "challenge'Challenge_Loot_Lootables'",
+                    "challenge'Challenge_GetEridium'",
+                    "challenge'Challenge_GetCash'"
+                  ]
+                },
+                {
+                  "displayname": "menu_challenges, 4E96F4AA42D1C581486709B4E67E519C, Activities",
+                  "icon": "activities_icon",
+                  "ident": "activity",
+                  "challenges": [
+                    "challenge'Challenge_Activity_DrillSites_Parent'",
+                    "challenge'Challenge_Activity_OrderBunkers_Parent'",
+                    "challenge'Challenge_Activity_AugerMines_Parent'",
+                    "challenge'Challenge_Activity_Crawlers_Parent'",
+                    "challenge'Challenge_Activity_Safehouses_Parent'",
+                    "challenge'Challenge_Activity_Silos_Parent'"
+                  ]
+                },
+                {
+                  "displayname": "menu_challenges, 3550E1DC44576DDE8D24D2A3F330CBDD, Collectibles",
+                  "icon": "collectable_icon",
+                  "ident": "collectible",
+                  "challenges": [
+                    "challenge'Challenge_Collect_Capsules_Parent'",
+                    "challenge'Challenge_Collect_PropagandaSpeakers_Parent'",
+                    "challenge'Challenge_Collect_Safes_Parent'",
+                    "challenge'Challenge_Collect_Shrines_Parent'",
+                    "challenge'Challenge_Collect_Caches_Parent'",
+                    "challenge'Challenge_Collect_Evocariums_Parent'",
+                    "challenge'Challenge_Collect_VaultSymbols_Parent'",
+                    "challenge'Challenge_Collect_EchoLog_ARJ_Parent'",
+                    "challenge'Challenge_Collect_EchoLog_VH_Parent'",
+                    "challenge'Challenge_Collect_EchoLog_GEN_Parent'"
+                  ]
+                },
+                {
+                  "displayname": "menu_challenges, F2ED55FC402057EFE8CF8284D4088C29, World",
+                  "icon": "world_icon",
+                  "ident": "world",
+                  "challenges": [
+                    "challenge'Challenge_Fishing_FishesCaught'",
+                    "challenge'Challenges_Achievements_12_worldevents_meteor'",
+                    "challenge'Challenges_Achievements_10_worldevents_colosseum'",
+                    "challenge'Challenges_Achievements_11_worldevents_airship'",
+                    "challenge'Challenges_Achievements_24_missions_side'",
+                    "challenge'Challenges_Achievements_29_missions_main'"
+                  ]
+                },
+                {
+                  "displayname": "menu_challenges, 06884EC9E5CE477B823CCDD975D97BE6, Pistol",
+                  "icon": "pistol_icon",
+                  "ident": "pistol",
+                  "challenges": [
+                    "challenge'Challenge_Pistol_ScopedKills'",
+                    "challenge'Challenge_Pistol_GlidingKills'",
+                    "challenge'Challenge_Pistol_SecondWinds'",
+                    "challenge'Challenge_Pistol_CriticalKills'",
+                    "challenge'Challenge_Pistol_CriticalHits'",
+                    "challenge'Challenge_Pistol_Kills'"
+                  ]
+                },
+                {
+                  "displayname": "menu_challenges, 1A7CE4B6B5EB45DDA2A1E0B9BACC56CB, Submachine Gun",
+                  "icon": "smg_icon",
+                  "ident": "smg",
+                  "challenges": [
+                    "challenge'Challenge_SMG_Dash'",
+                    "challenge'Challenge_SMG_SlidingKills'",
+                    "challenge'Challenge_SMG_SecondWinds'",
+                    "challenge'Challenge_SMG_CriticalKills'",
+                    "challenge'Challenge_SMG_CriticalHits'",
+                    "challenge'Challenge_SMG_Kills'"
+                  ]
+                },
+                {
+                  "displayname": "menu_challenges, FA57582272FA4D37AB5C73D63F981DB4, Assault Rifle",
+                  "icon": "ar_icon",
+                  "ident": "ar",
+                  "challenges": [
+                    "challenge'Challenge_Assault_ScopedKills'",
+                    "challenge'Challenge_Assault_CrouchedKills'",
+                    "challenge'Challenge_Assault_SecondWinds'",
+                    "challenge'Challenge_Assault_CriticalKills'",
+                    "challenge'Challenge_Assault_CriticalHits'",
+                    "challenge'Challenge_Assault_Kills'"
+                  ]
+                },
+                {
+                  "displayname": "menu_challenges, D36A005BCD804467A69DA8F0BA5F6353, Shotgun",
+                  "icon": "shotgun_icon",
+                  "ident": "shotgun",
+                  "challenges": [
+                    "challenge'Challenge_Shotgun_Bigshot'",
+                    "challenge'Challenge_Shotgun_DistantKills'",
+                    "challenge'Challenge_Shotgun_CloseKills'",
+                    "challenge'Challenge_Shotgun_Dash'",
+                    "challenge'Challenge_Shotgun_SlidingKills'",
+                    "challenge'Challenge_Shotgun_SecondWinds'",
+                    "challenge'Challenge_Shotgun_CriticalKills'",
+                    "challenge'Challenge_Shotgun_CriticalHits'",
+                    "challenge'Challenge_Shotgun_Kills'"
+                  ]
+                },
+                {
+                  "displayname": "menu_challenges, 3E6E80A94BA0D03BC5C81DA3ECA5E7C7, Sniper Rifle",
+                  "icon": "sniper_icon",
+                  "ident": "sniper",
+                  "challenges": [
+                    "challenge'Challenge_Sniper_Bigshot'",
+                    "challenge'Challenge_Sniper_DistantKills'",
+                    "challenge'Challenge_Sniper_UnawareKills'",
+                    "challenge'Challenge_Sniper_UnscopedKills'",
+                    "challenge'Challenge_Sniper_OneShotKills'",
+                    "challenge'Challenge_Sniper_SecondWinds'",
+                    "challenge'Challenge_Sniper_CriticalKills'",
+                    "challenge'Challenge_Sniper_CriticalHits'",
+                    "challenge'Challenge_Sniper_Kills'"
+                  ]
+                },
+                {
+                  "displayname": "menu_challenges, 9620153E491A1EB71F47D9BB260E17BC, Heavy Guns",
+                  "icon": "heavy_icon",
+                  "ident": "heavy",
+                  "challenges": [
+                    "challenge'Challenge_HeavyWeapon_Borg_Multikill'",
+                    "challenge'Challenge_HeavyWeapon_Borg'",
+                    "challenge'Challenge_HeavyWeapon_Maliwan_Bigshot'",
+                    "challenge'Challenge_HeavyWeapon_Maliwan'",
+                    "challenge'Challenge_HeavyWeapon_Torgue_DirectHit'",
+                    "challenge'Challenge_HeavyWeapon_Torgue'",
+                    "challenge'Challenge_HeavyWeapon_Vladof_Multikill'",
+                    "challenge'Challenge_HeavyWeapon_Vladof'"
+                  ]
+                },
+                {
+                  "displayname": "menu_challenges, 787F5DA64D06576CF15BB193756FA21D, Grenade",
+                  "icon": "grenade_icon",
+                  "ident": "grenade",
+                  "challenges": [
+                    "challenge'Challenge_Grenade_Mirv'",
+                    "challenge'Challenge_Grenade_Artillery'",
+                    "challenge'Challenge_Grenade_Singularity'",
+                    "challenge'Challenge_Grenade_Lingering'",
+                    "challenge'Challenge_Grenade_Amp'",
+                    "challenge'Challenge_Grenade_Multikills'",
+                    "challenge'Challenge_Grenade_Kills'"
+                  ]
+                },
+                {
+                  "displayname": "menu_challenges, 74C732D339E24550A5B0F5E480060D79, Shield",
+                  "icon": "shield_icon",
+                  "ident": "shield",
+                  "challenges": [
+                    "challenge'Challenge_Shield_AbsorbAmmo'",
+                    "challenge'Challenge_Shield_ReflectedKills'",
+                    "challenge'Challenge_Shield_NovaKills'",
+                    "challenge'Challenge_Shield_AmpShield'",
+                    "challenge'Challenge_Shield_Kills'",
+                    "challenge'Challenge_Shield_PickupBoosters'",
+                    "challenge'Challenge_Shield_PickupShards'",
+                    "challenge'Challenge_Shield_TakeShieldDamage'"
+                  ]
+                },
+                {
+                  "displayname": "menu_challenges, 544649E740A3070C90E41D93560E59A0, Repkits",
+                  "icon": "repair_kit_icon",
+                  "ident": "repkits",
+                  "challenges": [
+                    "challenge'Challenge_RepairKit_Kills'",
+                    "challenge'Challenge_RepairKit_HealOthers'",
+                    "challenge'Challenge_RepairKit_HealSelf'"
+                  ]
+                },
+                {
+                  "displayname": "menu_challenges, 1DD6F4954F8A8DDC659A898999EC0AA9, Jakobs",
+                  "icon": "jakobs_icon",
+                  "ident": "jakobs",
+                  "challenges": [
+                    "challenge'Challenge_Jakobs_GrenadeCrits'",
+                    "challenge'Challenge_Jakobs_OneShotKills'",
+                    "challenge'Challenge_Jakobs_Quickdraw'",
+                    "challenge'Challenge_Jakobs_RicochetKills'",
+                    "challenge'Challenge_Jakobs_UnderbarrelKills'",
+                    "challenge'Challenge_Jakobs_Kills'"
+                  ]
+                },
+                {
+                  "displayname": "menu_challenges, C0F247ED4AB2FDBFF5BC34B0AF148397, Vladof",
+                  "icon": "vladof_icon",
+                  "ident": "vladof",
+                  "challenges": [
+                    "challenge'Challenge_Vladof_Bipod'",
+                    "challenge'Challenge_Vladof_ExtraBarrel'",
+                    "challenge'Challenge_Vladof_ExplosiveUnderbarrel'",
+                    "challenge'Challenge_Vladof_ShotgunUnderbarrel'",
+                    "challenge'Challenge_Vladof_Kills'"
+                  ]
+                },
+                {
+                  "displayname": "menu_challenges, CD9FBBC54BA48FAF53ADDEB502A3D63D, Torgue",
+                  "icon": "torgue_icon",
+                  "ident": "torgue",
+                  "challenges": [
+                    "challenge'Challenge_Torgue_GrenadeKills'",
+                    "challenge'Challenge_Torgue_StickyKills'",
+                    "challenge'Challenge_Torgue_ImpactKills'",
+                    "challenge'Challenge_Torgue_SplashKills'",
+                    "challenge'Challenge_Torgue_UnderbarrelKills'",
+                    "challenge'Challenge_Torgue_Kills'"
+                  ]
+                },
+                {
+                  "displayname": "menu_challenges, D782870D442AC1D32C077AB7EBE506EA, Tediore",
+                  "icon": "tediore_icon",
+                  "ident": "tediore",
+                  "challenges": [
+                    "challenge'Challenge_Tediore_Turret_Kills'",
+                    "challenge'Challenge_Tediore_ComboReload_Kills'",
+                    "challenge'Challenge_Tediore_FullReload_Kills'",
+                    "challenge'Challenge_Tediore_EmptyReload_Kills'",
+                    "challenge'Challenge_Tediore_UnderbarrelKills'",
+                    "challenge'Challenge_Tediore_Kills'"
+                  ]
+                },
+                {
+                  "displayname": "menu_challenges, D89D66554C18E5C5820C9FA75B64FC2A, Maliwan",
+                  "icon": "maliwan_icon",
+                  "ident": "maliwan",
+                  "challenges": [
+                    "challenge'Challenge_Maliwan_StatusRadiation'",
+                    "challenge'Challenge_Maliwan_StatusCorrosive'",
+                    "challenge'Challenge_Maliwan_StatusShock'",
+                    "challenge'Challenge_Maliwan_StatusCryo'",
+                    "challenge'Challenge_Maliwan_StatusFire'",
+                    "challenge'Challenge_Maliwan_UnderbarrelKills'",
+                    "challenge'Challenge_Maliwan_Kills'"
+                  ]
+                },
+                {
+                  "displayname": "menu_challenges, 53149A0042EF9E2E32ADD0841DBFFB2D, Daedalus",
+                  "icon": "daedalus_icon",
+                  "ident": "daedalus",
+                  "challenges": [
+                    "challenge'Challenge_Daedalus_Multiloader_Sniper'",
+                    "challenge'Challenge_Daedalus_Multiloader_Shotgun'",
+                    "challenge'Challenge_Daedalus_Multiloader_Assault'",
+                    "challenge'Challenge_Daedalus_Multiloader_SMG'",
+                    "challenge'Challenge_Daedalus_Multiloader_Pistol'",
+                    "challenge'Challenge_Daedalus_UnderbarrelKills'",
+                    "challenge'Challenge_Daedalus_Kills'"
+                  ]
+                },
+                {
+                  "displayname": "menu_challenges, B55DD7634884B2B7A272BA890B9FA070, Ripper",
+                  "icon": "borg_icon",
+                  "ident": "ripper",
+                  "challenges": [
+                    "challenge'Challenge_Borg_CriticalHits'",
+                    "challenge'Challenge_Borg_Multikills'",
+                    "challenge'Challenge_Borg_UnderbarrelKills'",
+                    "challenge'Challenge_Borg_Kills'"
+                  ]
+                },
+                {
+                  "displayname": "menu_challenges, A92E0E9B44F4D2EEBC3D8FABC6D9AFE7, Order",
+                  "icon": "order_icon",
+                  "ident": "order",
+                  "challenges": [
+                    "challenge'Challenge_Order_KillOrder'",
+                    "challenge'Challenge_Order_OneShotKills'",
+                    "challenge'Challenge_Order_HalfChargeKills'",
+                    "challenge'Challenge_Order_FullChargeKills'",
+                    "challenge'Challenge_Order_UnderbarrelKills'",
+                    "challenge'Challenge_Order_Kills'"
+                  ]
+                },
+                {
+                  "displayname": "menu_challenges, 0616B8F044316F5C661AFA92F3A85E73, Licensed Parts",
+                  "icon": "spare_parts_icon",
+                  "ident": "licensedparts",
+                  "challenges": [
+                    "challenge'Challenge_SpareParts_ReflectDamageHyperion'",
+                    "challenge'Challenge_SpareParts_AmpShieldHyperion'",
+                    "challenge'Challenge_SpareParts_AbsorbAmmo'",
+                    "challenge'Challenge_SpareParts_CovNotOverheated'",
+                    "challenge'Challenge_SpareParts_CovOverheated'",
+                    "challenge'Challenge_SpareParts_AtlasGrenades'",
+                    "challenge'Challenge_SpareParts_AtlasPucks'"
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "test_challenge_list_def": {
+              "ui_challenge_list": "test_challenge_list_def",
+              "challengecategories": [
+                {
+                  "displayname": "menu_challenges, 6754EDA74974F847EFC2FCB3FCE2FA42, Shield",
+                  "challenges": [
+                    "challenge'Challenge_Shield_TakeShieldDamage'",
+                    "challenge'Challenge_Shield_Kills'",
+                    "challenge'Challenge_Shield_NovaKills'",
+                    "challenge'Challenge_Shield_ReflectedKills'",
+                    "challenge'Challenge_Shield_PickupShards'",
+                    "challenge'Challenge_Shield_PickupBoosters'",
+                    "challenge'Challenge_Shield_AbsorbAmmo'"
+                  ]
+                },
+                {
+                  "displayname": "menu_challenges, 8737595B4F086687FD2B658A2823E759, Repkit",
+                  "challenges": [
+                    "challenge'Challenge_RepairKit_HealSelf'",
+                    "challenge'Challenge_RepairKit_HealOthers'",
+                    "challenge'Challenge_RepairKit_Uses'"
+                  ]
+                },
+                {
+                  "displayname": "menu_challenges, B267EBC84C6894E56E397DB4F599E015, Grenades",
+                  "challenges": [
+                    "challenge'Challenge_Grenade_Kills'",
+                    "challenge'Challenge_Grenade_Multikills'",
+                    "challenge'Challenge_Grenade_Amp'",
+                    "challenge'Challenge_Grenade_Artillery'",
+                    "challenge'Challenge_Grenade_Lingering'",
+                    "challenge'Challenge_Grenade_Mirv'",
+                    "challenge'Challenge_Grenade_Singularity'",
+                    "challenge'Challenge_Grenade_Multikills'"
+                  ]
+                },
+                {
+                  "displayname": "menu_challenges, A3468A83486510E1F9E76CA41F21F357, Heavy Guns",
+                  "challenges": [
+                    "challenge'Challenge_HeavyWeapon_Kills'",
+                    "challenge'Challenge_HeavyWeapon_Borg'",
+                    "challenge'Challenge_HeavyWeapon_Maliwan'",
+                    "challenge'Challenge_HeavyWeapon_Torgue'",
+                    "challenge'Challenge_HeavyWeapon_Vladof'",
+                    "challenge'Challenge_HeavyWeapon_Borg_Multikill'",
+                    "challenge'Challenge_HeavyWeapon_Maliwan_Bigshot'",
+                    "challenge'Challenge_HeavyWeapon_Vladof_Multikill'"
+                  ]
+                },
+                {
+                  "displayname": "menu_challenges, 81665FF94D4F9022E683C59F4F520309, Pistol",
+                  "challenges": [
+                    "challenge'Challenge_Pistol_CriticalHits'",
+                    "challenge'Challenge_Pistol_CriticalKills'",
+                    "challenge'Challenge_Pistol_Kills'",
+                    "challenge'Challenge_Pistol_ScopedKills'",
+                    "challenge'Challenge_Pistol_SecondWinds'",
+                    "challenge'Challenge_Pistol_GlidingKills'"
+                  ]
+                },
+                {
+                  "displayname": "menu_challenges, F0D4804C4D54EFA708FE5E9591A57E68, Submachine Gun",
+                  "challenges": [
+                    "challenge'Challenge_SMG_CriticalHits'",
+                    "challenge'Challenge_SMG_CriticalKills'",
+                    "challenge'Challenge_SMG_Kills'",
+                    "challenge'Challenge_SMG_SecondWinds'",
+                    "challenge'Challenge_SMG_SlidingKills'",
+                    "challenge'Challenge_SMG_SprintingKills'",
+                    "challenge'Challenge_SMG_Dash'"
+                  ]
+                },
+                {
+                  "displayname": "menu_challenges, 3D6914F84D3D08E276342F8A0AE6B7D0, Assault Rifle",
+                  "challenges": [
+                    "challenge'Challenge_Assault_Kills'",
+                    "challenge'Challenge_Assault_CriticalKills'",
+                    "challenge'Challenge_Assault_CriticalHits'",
+                    "challenge'Challenge_Assault_CrouchedKills'",
+                    "challenge'Challenge_Assault_ScopedKills'",
+                    "challenge'Challenge_Assault_SecondWinds'"
+                  ]
+                },
+                {
+                  "displayname": "menu_challenges, 0FF61EE1420CFECA5D64F29BC2F64A1A, Shotgun",
+                  "challenges": [
+                    "challenge'Challenge_Shotgun_CloseKills'",
+                    "challenge'Challenge_Shotgun_CriticalHits'",
+                    "challenge'Challenge_Shotgun_CriticalKills'",
+                    "challenge'Challenge_Shotgun_DistantKills'",
+                    "challenge'Challenge_Shotgun_Kills'",
+                    "challenge'Challenge_Shotgun_SecondWinds'",
+                    "challenge'Challenge_Shotgun_SlidingKills'",
+                    "challenge'Challenge_Shotgun_Dash'",
+                    "challenge'Challenge_Shotgun_Bigshot'"
+                  ]
+                },
+                {
+                  "displayname": "menu_challenges, 9FAC640D4BB8B610DB53B19DA8D50A17, Sniper",
+                  "challenges": [
+                    "challenge'Challenge_Sniper_CriticalHits'",
+                    "challenge'Challenge_Sniper_CriticalKills'",
+                    "challenge'Challenge_Sniper_DistantKills'",
+                    "challenge'Challenge_Sniper_Kills'",
+                    "challenge'Challenge_Sniper_OneShotKills'",
+                    "challenge'Challenge_Sniper_SecondWinds'",
+                    "challenge'Challenge_Sniper_UnawareKills'",
+                    "challenge'Challenge_Sniper_UnscopedKills'",
+                    "challenge'Challenge_Sniper_Bigshot'"
+                  ]
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  }
+}

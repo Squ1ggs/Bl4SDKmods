@@ -1,0 +1,169 @@
+{
+  "progress_graph_group": {
+    "records": [
+      {
+        "entries": [
+          {
+            "progress_group_exo": {
+              "progress_graph_group": "progress_group_exo",
+              "groupname": "Exo Progress Groups",
+              "progressgraphs": [
+                "progress_graph'progress_graph_exo_action_skills'",
+                "progress_graph'progress_graph_exo_mods_auto_lock'",
+                "progress_graph'progress_graph_exo_mods_buster'",
+                "progress_graph'progress_graph_exo_mods_heavy_arms'",
+                "progress_graph'vaultpower_vaultreward_upgrades'",
+                "progress_graph'Progress_EXO_Trunk_PeoplePerson'",
+                "progress_graph'Progress_EXO_Branch_PeoplePerson_01'",
+                "progress_graph'Progress_EXO_Branch_PeoplePerson_02'",
+                "progress_graph'Progress_EXO_Branch_PeoplePerson_03'",
+                "progress_graph'Progress_EXO_Trunk_Gimmick'",
+                "progress_graph'Progress_EXO_Branch_Gimmick_01'",
+                "progress_graph'Progress_EXO_Branch_Gimmick_02'",
+                "progress_graph'Progress_EXO_Branch_Gimmick_03'",
+                "progress_graph'Progress_EXO_Trunk_RemoteAgent'",
+                "progress_graph'Progress_EXO_Branch_RemoteAgent_01'",
+                "progress_graph'Progress_EXO_Branch_RemoteAgent_02'",
+                "progress_graph'Progress_EXO_Branch_RemoteAgent_03'",
+                "progress_graph'ProgressGraph_Specializations'",
+                "progress_graph'ProgressGraph_Specializations_Skills'"
+              ],
+              "displaydata": [
+                "skilltrees_data'exo_skill_trees'",
+                "specializations_data'UI_Specializations_DisplayData'"
+              ]
+            }
+          },
+          {
+            "progress_group_gravitar": {
+              "progress_graph_group": "progress_group_gravitar",
+              "groupname": "Gravitar Progress Groups",
+              "progressgraphs": [
+                "progress_graph'progress_graph_grav_action_skills'",
+                "progress_graph'progress_graph_grav_mods_exodus'",
+                "progress_graph'progress_graph_grav_mods_stasis'",
+                "progress_graph'progress_graph_grav_mods_terminal'",
+                "progress_graph'vaultpower_vaultreward_upgrades'",
+                "progress_graph'Progress_Grav_Trunk_StasisShard'",
+                "progress_graph'Progress_Grav_Branch_StasisShard_01'",
+                "progress_graph'Progress_Grav_Branch_StasisShard_02'",
+                "progress_graph'Progress_Grav_Branch_StasisShard_03'",
+                "progress_graph'Progress_Grav_Trunk_TerminalShard'",
+                "progress_graph'Progress_Grav_Branch_TerminalShard_01'",
+                "progress_graph'Progress_Grav_Branch_TerminalShard_02'",
+                "progress_graph'Progress_Grav_Branch_TerminalShard_03'",
+                "progress_graph'Progress_Grav_Trunk_ExodusShard'",
+                "progress_graph'Progress_Grav_Branch_ExodusShard_01'",
+                "progress_graph'Progress_Grav_Branch_ExodusShard_02'",
+                "progress_graph'Progress_Grav_Branch_ExodusShard_03'",
+                "progress_graph'ProgressGraph_Specializations'",
+                "progress_graph'ProgressGraph_Specializations_Skills'"
+              ],
+              "displaydata": [
+                "skilltrees_data'gravitar_skill_trees'",
+                "specializations_data'UI_Specializations_DisplayData'"
+              ]
+            }
+          },
+          {
+            "progressgroup_darksiren": {
+              "progress_graph_group": "ProgressGroup_DarkSiren",
+              "groupname": "Dark Siren Progress Groups",
+              "progressgraphs": [
+                "progress_graph'Progress_DarkSiren_ActionSkills'",
+                "progress_graph'Progress_DarkSiren_ActionSkill_Modifiers_PhaseFamiliar'",
+                "progress_graph'Progress_DarkSiren_ActionSkill_Modifiers_PhaseAvatar'",
+                "progress_graph'Progress_DarkSiren_ActionSkill_Modifiers_PhaseShard'",
+                "progress_graph'Progress_DS_Trunk_Domination'",
+                "progress_graph'Progress_DS_Branch_Domination_01'",
+                "progress_graph'Progress_DS_Branch_Domination_02'",
+                "progress_graph'Progress_DS_Branch_Domination_03'",
+                "progress_graph'Progress_DS_Trunk_Death'",
+                "progress_graph'Progress_DS_Branch_Death_01'",
+                "progress_graph'Progress_DS_Branch_Death_02'",
+                "progress_graph'Progress_DS_Branch_Death_03'",
+                "progress_graph'Progress_DS_Trunk_Duplicate'",
+                "progress_graph'Progress_DS_Branch_Duplicate_01'",
+                "progress_graph'Progress_DS_Branch_Duplicate_02'",
+                "progress_graph'Progress_DS_Branch_Duplicate_03'",
+                "progress_graph'vaultpower_vaultreward_upgrades'",
+                "progress_graph'ProgressGraph_Specializations'",
+                "progress_graph'ProgressGraph_Specializations_Skills'"
+              ],
+              "displaydata": [
+                "skilltrees_data'dark_siren_skill_trees'",
+                "specializations_data'UI_Specializations_DisplayData'"
+              ]
+            }
+          },
+          {
+            "progressgroup_paladin": {
+              "progress_graph_group": "ProgressGroup_Paladin",
+              "groupname": "Paladin Progress Groups",
+              "progressgraphs": [
+                "progress_graph'Progress_Paladin_ActionSkills'",
+                "progress_graph'Progress_Paladin_ActionSkill_Modifiers_WeaponMaster'",
+                "progress_graph'Progress_Paladin_ActionSkill_Modifiers_Scourge'",
+                "progress_graph'Progress_Paladin_ActionSkill_Modifiers_Warforge'",
+                "progress_graph'Progress_PLD_Trunk_Calamity'",
+                "progress_graph'Progress_PLD_Branch_Calamity_01'",
+                "progress_graph'Progress_PLD_Branch_Calamity_02'",
+                "progress_graph'Progress_PLD_Branch_Calamity_03'",
+                "progress_graph'Progress_PLD_Trunk_Cybernetics'",
+                "progress_graph'Progress_PLD_Branch_Cybernetics_01'",
+                "progress_graph'Progress_PLD_Branch_Cybernetics_02'",
+                "progress_graph'Progress_PLD_Branch_Cybernetics_03'",
+                "progress_graph'Progress_PLD_Trunk_Vengeance'",
+                "progress_graph'Progress_PLD_Branch_Vengeance_01'",
+                "progress_graph'Progress_PLD_Branch_Vengeance_02'",
+                "progress_graph'Progress_PLD_Branch_Vengeance_03'",
+                "progress_graph'vaultpower_vaultreward_upgrades'",
+                "progress_graph'ProgressGraph_Specializations'",
+                "progress_graph'ProgressGraph_Specializations_Skills'"
+              ],
+              "displaydata": [
+                "skilltrees_data'paladin_skill_trees'",
+                "specializations_data'UI_Specializations_DisplayData'"
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "entries": [
+          {
+            "progressgroup_robodealer": {
+              "progress_graph_group": "ProgressGroup_Robodealer",
+              "groupname": "Robodealer Progress Groups",
+              "progressgraphs": [
+                "progress_graph'progress_robo_action_skills'",
+                "progress_graph'progress_robo_mods_sleightOfHand'",
+                "progress_graph'progress_robo_mods_crossFire'",
+                "progress_graph'progress_robo_mods_cleromancy'",
+                "progress_graph'Progress_robo_branch_cleromancy_1'",
+                "progress_graph'Progress_robo_branch_cleromancy_2'",
+                "progress_graph'Progress_robo_branch_cleromancy_3'",
+                "progress_graph'Progress_robo_branch_crossFire_1'",
+                "progress_graph'Progress_robo_branch_crossFire_2'",
+                "progress_graph'Progress_robo_branch_crossFire_3'",
+                "progress_graph'Progress_robo_branch_sleightOfHand_1'",
+                "progress_graph'Progress_robo_branch_sleightOfHand_2'",
+                "progress_graph'Progress_robo_branch_sleightOfHand_3'",
+                "progress_graph'Progress_robo_trunk_cleromancy'",
+                "progress_graph'Progress_robo_trunk_crossFire'",
+                "progress_graph'Progress_robo_trunk_sleightOfHand'",
+                "progress_graph'ProgressGraph_Specializations'",
+                "progress_graph'ProgressGraph_Specializations_Skills'",
+                "progress_graph'vaultpower_vaultreward_upgrades'"
+              ],
+              "displaydata": [
+                "skilltrees_data'robodealer_skill_trees'",
+                "specializations_data'UI_Specializations_DisplayData'"
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  }
+}

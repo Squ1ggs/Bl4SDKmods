@@ -1,0 +1,1766 @@
+{
+ "schema": "squ1ggs.mission_catalog.v1",
+ "build": "Borderlands4.exe PE 0x6aa81051",
+ "missions": [
+  {
+   "name": "Mission_Main_Beach",
+   "title": "Recruitment Drive",
+   "category": "story",
+   "exits": [
+    "None"
+   ]
+  },
+  {
+   "name": "Mission_Main_Grasslands1",
+   "title": "Down and Outbound",
+   "category": "story",
+   "exits": [
+    "None"
+   ]
+  },
+  {
+   "name": "Mission_Main_Grasslands2",
+   "title": "A Lot to Process",
+   "category": "story",
+   "exits": [
+    "None"
+   ]
+  },
+  {
+   "name": "mission_main_grasslands2b",
+   "title": "One Fell Swoop",
+   "category": "story",
+   "exits": [
+    "None"
+   ]
+  },
+  {
+   "name": "Mission_Main_Grasslands3",
+   "title": "Rush the Gate",
+   "category": "story",
+   "exits": [
+    "None"
+   ]
+  },
+  {
+   "name": "Mission_Main_Mountains1",
+   "title": "Shadow of the Mountain",
+   "category": "story",
+   "exits": [
+    "None"
+   ]
+  },
+  {
+   "name": "Mission_Main_Mountains2",
+   "title": "Crystal Brawl",
+   "category": "story",
+   "exits": [
+    "None"
+   ]
+  },
+  {
+   "name": "Mission_Main_Mountains2b",
+   "title": "Dark Subject",
+   "category": "story",
+   "exits": [
+    "None"
+   ]
+  },
+  {
+   "name": "Mission_Main_Mountains3",
+   "title": "His Vile Sanctum",
+   "category": "story",
+   "exits": [
+    "None"
+   ]
+  },
+  {
+   "name": "Mission_Main_Shatteredlands1",
+   "title": "Wrath of the Ripper Queen",
+   "category": "story",
+   "exits": [
+    "None"
+   ]
+  },
+  {
+   "name": "mission_main_shatteredlands1b",
+   "title": "Siege and Destroy",
+   "category": "story",
+   "exits": [
+    "None"
+   ]
+  },
+  {
+   "name": "Mission_Main_Shatteredlands2",
+   "title": "Unpaid Tab",
+   "category": "story",
+   "exits": [
+    "None",
+    "Exit"
+   ]
+  },
+  {
+   "name": "Mission_Main_Shatteredlands3",
+   "title": "Her Flaming Vision",
+   "category": "story",
+   "exits": [
+    "None"
+   ]
+  },
+  {
+   "name": "Mission_Main_SearchForLilith",
+   "title": "Rising Action",
+   "category": "story",
+   "exits": [
+    "None"
+   ]
+  },
+  {
+   "name": "Mission_Main_City1",
+   "title": "The Falling Wall",
+   "category": "story",
+   "exits": [
+    "None"
+   ]
+  },
+  {
+   "name": "mission_main_city1_b",
+   "title": "Means of Ascent",
+   "category": "story",
+   "exits": [
+    "None"
+   ]
+  },
+  {
+   "name": "Mission_Main_City2",
+   "title": "Plan Z",
+   "category": "story",
+   "exits": [
+    "None"
+   ]
+  },
+  {
+   "name": "Mission_Main_City3",
+   "title": "The Timekeeper's Order",
+   "category": "story",
+   "exits": [
+    "None"
+   ]
+  },
+  {
+   "name": "mission_main_cityepilogue",
+   "title": "Secrets of the Vault",
+   "category": "story",
+   "exits": [
+    "None"
+   ]
+  },
+  {
+   "name": "Mission_Main_Elpis",
+   "title": "Another Universe",
+   "category": "story",
+   "exits": [
+    "None"
+   ]
+  },
+  {
+   "name": "mission_main_cowbell0",
+   "title": "An Invitation",
+   "category": "dlc",
+   "exits": [
+    "None"
+   ]
+  },
+  {
+   "name": "Mission_Main_Harmonica0",
+   "title": "FL4K and the Last Resort",
+   "category": "dlc",
+   "exits": [
+    "None"
+   ]
+  },
+  {
+   "name": "mission_main_harmonica1",
+   "title": "The Skag and the Robot",
+   "category": "dlc",
+   "exits": [
+    "None"
+   ]
+  },
+  {
+   "name": "Mission_Main_Harmonica4",
+   "title": "The Rescue",
+   "category": "dlc",
+   "exits": [
+    "None"
+   ]
+  },
+  {
+   "name": "Grasslands_Side_ClaptrapOfPandora",
+   "title": "No Place Like Home",
+   "category": "side",
+   "exits": [
+    "None"
+   ]
+  },
+  {
+   "name": "Grasslands_Side_MurderMystery",
+   "title": "Meat is Murder",
+   "category": "side",
+   "exits": [
+    "None",
+    "Exit"
+   ]
+  },
+  {
+   "name": "Grasslands_Side_RocketMonsters",
+   "title": "Wayward Gun",
+   "category": "side",
+   "exits": [
+    "None"
+   ]
+  },
+  {
+   "name": "Grasslands_Survivalists01",
+   "title": "Null and Void",
+   "category": "side",
+   "exits": [
+    "None"
+   ]
+  },
+  {
+   "name": "Grasslands_Survivalists02",
+   "title": "All Charged Up",
+   "category": "side",
+   "exits": [
+    "None"
+   ]
+  },
+  {
+   "name": "Grasslands_Survivalists03",
+   "title": "Bound for Launch",
+   "category": "side",
+   "exits": [
+    "None"
+   ]
+  },
+  {
+   "name": "Micro_AugerScout",
+   "title": "Way Too Chill",
+   "category": "side",
+   "exits": [
+    "None"
+   ]
+  },
+  {
+   "name": "micro_blackmarketbolts",
+   "title": "Tandem Access Memory",
+   "category": "side",
+   "exits": [
+    "None"
+   ]
+  },
+  {
+   "name": "Micro_BoltFuneralRites",
+   "title": "Returned to the Mountain",
+   "category": "side",
+   "exits": [
+    "None"
+   ]
+  },
+  {
+   "name": "Micro_Grasslands_CarriedAway01",
+   "title": "Carried Away",
+   "category": "side",
+   "exits": [
+    "None"
+   ]
+  },
+  {
+   "name": "Micro_Grasslands_CarriedAway02",
+   "title": "Droning On",
+   "category": "side",
+   "exits": [
+    "None"
+   ]
+  },
+  {
+   "name": "Micro_Grasslands_CarriedAway03",
+   "title": "Drone Ranger",
+   "category": "side",
+   "exits": [
+    "None"
+   ]
+  },
+  {
+   "name": "Micro_Grasslands_ExtremeBopIT",
+   "title": "Free for the TASKing",
+   "category": "side",
+   "exits": [
+    "None"
+   ]
+  },
+  {
+   "name": "Micro_Grasslands_ExtremeBopIt2",
+   "title": "TASK and Ye Shall Receive",
+   "category": "side",
+   "exits": [
+    "None"
+   ]
+  },
+  {
+   "name": "Micro_Grasslands_ExtremeBopIt3",
+   "title": "TASK Master",
+   "category": "side",
+   "exits": [
+    "None"
+   ]
+  },
+  {
+   "name": "Micro_Grasslands_HydroplantPowerUp",
+   "title": "Electroshock Therapy",
+   "category": "side",
+   "exits": [
+    "None"
+   ]
+  },
+  {
+   "name": "Micro_Grasslands_SplicerSplits",
+   "title": "To the Limb It",
+   "category": "side",
+   "exits": [
+    "None"
+   ]
+  },
+  {
+   "name": "Micro_Grasslands_UnderConstruction",
+   "title": "Working for Tips",
+   "category": "side",
+   "exits": [
+    "None"
+   ]
+  },
+  {
+   "name": "Micro_Mountains_YouAreTheLifeCoachPT1",
+   "title": "The Next Quest Thing",
+   "category": "side",
+   "exits": [
+    "None"
+   ]
+  },
+  {
+   "name": "micro_nevermeetyourheroes",
+   "title": "Never Meet Your Heroes",
+   "category": "side",
+   "exits": [
+    "None"
+   ]
+  },
+  {
+   "name": "micro_orderup",
+   "title": "A Brother in Need",
+   "category": "side",
+   "exits": [
+    "None"
+   ]
+  },
+  {
+   "name": "Micro_Shattered_BrokenShips",
+   "title": "Broken Ships",
+   "category": "side",
+   "exits": [
+    "None"
+   ]
+  },
+  {
+   "name": "Micro_Shattered_EP_Agri",
+   "title": "Enter the Electi Part 1",
+   "category": "side",
+   "exits": [
+    "None"
+   ]
+  },
+  {
+   "name": "Micro_Shattered_EP_Mole",
+   "title": "Enter the Electi Part 2",
+   "category": "side",
+   "exits": [
+    "None"
+   ]
+  },
+  {
+   "name": "Micro_Shattered_HOF1",
+   "title": "Her Own Funeral",
+   "category": "side",
+   "exits": [
+    "None"
+   ]
+  },
+  {
+   "name": "Micro_Shattered_HTBRipperPBJ",
+   "title": "PB&J",
+   "category": "side",
+   "exits": [
+    "None"
+   ]
+  },
+  {
+   "name": "Micro_Shattered_RipplesAndRituals",
+   "title": "Ripples and Rituals",
+   "category": "side",
+   "exits": [
+    "None"
+   ]
+  },
+  {
+   "name": "Micro_Shattered_SiblingRivalry",
+   "title": "Imminent Jest",
+   "category": "side",
+   "exits": [
+    "None"
+   ]
+  },
+  {
+   "name": "Mission_Micro_AndWelcomeToTheJam",
+   "title": "And Welcome to the Jam",
+   "category": "side",
+   "exits": [
+    "None"
+   ]
+  },
+  {
+   "name": "Mission_Micro_BackMcCrackyPt1",
+   "title": "Crack This Guy's Back",
+   "category": "side",
+   "exits": [
+    "None"
+   ]
+  },
+  {
+   "name": "Mission_Micro_BlackMarket",
+   "title": "The Black Market",
+   "category": "side",
+   "exits": [
+    "None"
+   ]
+  },
+  {
+   "name": "Mission_Micro_Catnapping",
+   "title": "The Cat's Pajamas",
+   "category": "side",
+   "exits": [
+    "None"
+   ]
+  },
+  {
+   "name": "Mission_Micro_HeistRecruits_Demo",
+   "title": "Scoundrel Roundup: Kilo",
+   "category": "side",
+   "exits": [
+    "None"
+   ]
+  },
+  {
+   "name": "Mission_Micro_HeistRecruits_Tech",
+   "title": "Scoundrel Roundup: Glitch",
+   "category": "side",
+   "exits": [
+    "None"
+   ]
+  },
+  {
+   "name": "Mission_Micro_HuntedPart1",
+   "title": "The Neverending Quarry",
+   "category": "side",
+   "exits": [
+    "None"
+   ]
+  },
+  {
+   "name": "Mission_Micro_HuntedPart2",
+   "title": "A Quarry of Epic Proportions",
+   "category": "side",
+   "exits": [
+    "None"
+   ]
+  },
+  {
+   "name": "Mission_Micro_HuntedPart3",
+   "title": "The Final Quarrel",
+   "category": "side",
+   "exits": [
+    "None"
+   ]
+  },
+  {
+   "name": "Mission_Micro_JoeAndSue",
+   "title": "Joe & Sue",
+   "category": "side",
+   "exits": [
+    "None"
+   ]
+  },
+  {
+   "name": "Mission_Micro_PowercorePlinko",
+   "title": "PowerDrop",
+   "category": "side",
+   "exits": [
+    "None"
+   ]
+  },
+  {
+   "name": "Mission_Micro_RainbowEgg",
+   "title": "Brew-ha-ha",
+   "category": "side",
+   "exits": [
+    "None"
+   ]
+  },
+  {
+   "name": "Mission_Micro_Resistance",
+   "title": "Old Tricks",
+   "category": "side",
+   "exits": [
+    "None"
+   ]
+  },
+  {
+   "name": "Mission_Micro_TheEntertainment",
+   "title": "La-La-Last Call",
+   "category": "side",
+   "exits": [
+    "None"
+   ]
+  },
+  {
+   "name": "Mission_Micro_TheSupply",
+   "title": "Ain't No Sham in It",
+   "category": "side",
+   "exits": [
+    "None"
+   ]
+  },
+  {
+   "name": "Mission_Micro_WhackAThresher",
+   "title": "Whack-A-Thresher",
+   "category": "side",
+   "exits": [
+    "None"
+   ]
+  },
+  {
+   "name": "Mission_Micro_Zanzibart",
+   "title": "Forgive Me",
+   "category": "side",
+   "exits": [
+    "None"
+   ]
+  },
+  {
+   "name": "Mission_Side_AGreatDisturbance",
+   "title": "Fault Hunting",
+   "category": "side",
+   "exits": [
+    "None"
+   ]
+  },
+  {
+   "name": "Mission_Side_BelowTheSurface",
+   "title": "Below the Surface",
+   "category": "side",
+   "exits": [
+    "None"
+   ]
+  },
+  {
+   "name": "Mission_Side_CastingCall",
+   "title": "The Power Ballad of Rodd Vomit",
+   "category": "side",
+   "exits": [
+    "None"
+   ]
+  },
+  {
+   "name": "Mission_Side_City_WaterTheChances",
+   "title": "Love in the Time of Eridium Poisoning",
+   "category": "side",
+   "exits": [
+    "None"
+   ]
+  },
+  {
+   "name": "Mission_Side_ElectiFactionMission1",
+   "title": "The Council Divided",
+   "category": "side",
+   "exits": [
+    "None"
+   ]
+  },
+  {
+   "name": "Mission_Side_ElectiFactionMission3",
+   "title": "The Mole's Gambit",
+   "category": "side",
+   "exits": [
+    "None"
+   ]
+  },
+  {
+   "name": "Mission_Side_FlatKairoser",
+   "title": "Flat Kairoser",
+   "category": "side",
+   "exits": [
+    "None"
+   ]
+  },
+  {
+   "name": "Mission_Side_LifeCoach",
+   "title": "Sage Against the Machine",
+   "category": "side",
+   "exits": [
+    "None"
+   ]
+  },
+  {
+   "name": "Mission_Side_LifesPurpose",
+   "title": "Ready to Blow",
+   "category": "side",
+   "exits": [
+    "None"
+   ]
+  },
+  {
+   "name": "Mission_Side_MountainsFaction1",
+   "title": "Mob Mentality",
+   "category": "side",
+   "exits": [
+    "None"
+   ]
+  },
+  {
+   "name": "Mission_Side_MountainsFaction2",
+   "title": "Mob Rules",
+   "category": "side",
+   "exits": [
+    "None"
+   ]
+  },
+  {
+   "name": "Mission_Side_MountainsFaction3",
+   "title": "Angry Mob",
+   "category": "side",
+   "exits": [
+    "None"
+   ]
+  },
+  {
+   "name": "Mission_Side_MountainsFaction4",
+   "title": "Mob Justice",
+   "category": "side",
+   "exits": [
+    "None"
+   ]
+  },
+  {
+   "name": "Mission_Side_ObstacleCourse_Grapple",
+   "title": "Peak Performance",
+   "category": "side",
+   "exits": [
+    "None"
+   ]
+  },
+  {
+   "name": "Mission_Side_ObstacleCourseGlide",
+   "title": "Father of the Glide",
+   "category": "side",
+   "exits": [
+    "None"
+   ]
+  },
+  {
+   "name": "Mission_Side_OldRaymondPart1",
+   "title": "Old Raymond",
+   "category": "side",
+   "exits": [
+    "None"
+   ]
+  },
+  {
+   "name": "Mission_Side_OldRaymondPart2",
+   "title": "Old Lads",
+   "category": "side",
+   "exits": [
+    "None"
+   ]
+  },
+  {
+   "name": "Mission_Side_PlanetaryEscape",
+   "title": "Exit Through the Rift Shop",
+   "category": "side",
+   "exits": [
+    "None",
+    "Exit"
+   ]
+  },
+  {
+   "name": "Mission_Side_SeedsOfRevolutionPart1",
+   "title": "Bad Seed ",
+   "category": "side",
+   "exits": [
+    "None"
+   ]
+  },
+  {
+   "name": "Mission_Side_SeedsOfRevolutionPart2",
+   "title": "Bad Seed Pt. 2",
+   "category": "side",
+   "exits": [
+    "None"
+   ]
+  },
+  {
+   "name": "Mission_Side_TheCure",
+   "title": "Hangover Helper",
+   "category": "side",
+   "exits": [
+    "None"
+   ]
+  },
+  {
+   "name": "Mission_Side_ThePriceOfFreedomPart2",
+   "title": "Price of Freedom Pt. 2",
+   "category": "side",
+   "exits": [
+    "None"
+   ]
+  },
+  {
+   "name": "Mission_Side_TheWeirdWayHome",
+   "title": "It's a Whole Phase Situation",
+   "category": "side",
+   "exits": [
+    "None"
+   ]
+  },
+  {
+   "name": "Mission_Side_Vending",
+   "title": "Vend of the Line",
+   "category": "side",
+   "exits": [
+    "None",
+    "Exit",
+    "Exit_0"
+   ]
+  },
+  {
+   "name": "Mission_Side_WhatLurksBeneath",
+   "title": "One Slimy Issue",
+   "category": "side",
+   "exits": [
+    "None"
+   ]
+  },
+  {
+   "name": "VendingMicro1_Zink",
+   "title": "Vicious News Cycle: Cannon Fodder",
+   "category": "side",
+   "exits": [
+    "None",
+    "Exit"
+   ]
+  },
+  {
+   "name": "Micro_Grasslands_AbductionInjunction",
+   "title": "Abduction Injunction",
+   "category": "side",
+   "exits": [
+    "None"
+   ]
+  },
+  {
+   "name": "Micro_Grasslands_GottaGoFast",
+   "title": "Finway's Cup",
+   "category": "side",
+   "exits": [
+    "None"
+   ]
+  },
+  {
+   "name": "Micro_Grasslands_HydroplantPowerup2",
+   "title": "Electroshock Therapy: The Second Session",
+   "category": "side",
+   "exits": [
+    "None"
+   ]
+  },
+  {
+   "name": "Micro_Grasslands_SplicerSplits2",
+   "title": "To the Limb It: Redux",
+   "category": "side",
+   "exits": [
+    "None"
+   ]
+  },
+  {
+   "name": "Micro_Grasslands_SplicerSplits3",
+   "title": "To the Limb It: Couples Therapy",
+   "category": "side",
+   "exits": [
+    "None"
+   ]
+  },
+  {
+   "name": "Micro_Shattered_VGDave",
+   "title": "Vicious News Cycle: Hot Tag ",
+   "category": "side",
+   "exits": [
+    "None",
+    "Exit",
+    "Exit_0",
+    "Exit_1"
+   ]
+  },
+  {
+   "name": "Micro_Shattered_William",
+   "title": "Vicious News Cycle: Mine Time Live",
+   "category": "side",
+   "exits": [
+    "None",
+    "Exit_0",
+    "Exit"
+   ]
+  },
+  {
+   "name": "Micro_Mountains_WhoNeedsInstructions",
+   "title": "The Importance of Being Furnished",
+   "category": "side",
+   "exits": [
+    "None",
+    "Exit",
+    "Exit_0"
+   ]
+  },
+  {
+   "name": "Mission_City_Side_OverwritingAWrong",
+   "title": "Overwriting a Wrong",
+   "category": "side",
+   "exits": [
+    "None"
+   ]
+  },
+  {
+   "name": "Mission_Side_City_AAAForEffort",
+   "title": "AAA for Effort",
+   "category": "side",
+   "exits": [
+    "None"
+   ]
+  },
+  {
+   "name": "MIssion_Side_ClapGen",
+   "title": "Potty Mouth",
+   "category": "side",
+   "exits": [
+    "None"
+   ]
+  },
+  {
+   "name": "Mission_Side_ElectiFactionMission2",
+   "title": "A Traitor Within",
+   "category": "side",
+   "exits": [
+    "None"
+   ]
+  },
+  {
+   "name": "Mission_Side_GrasslandsVault",
+   "title": "Primordial Vault: Fadefields",
+   "category": "side",
+   "exits": [
+    "None"
+   ]
+  },
+  {
+   "name": "Mission_Side_Heist",
+   "title": "The Kairos Job",
+   "category": "side",
+   "exits": [
+    "None"
+   ]
+  },
+  {
+   "name": "Mission_Side_MadScientist",
+   "title": "A Call for Help",
+   "category": "side",
+   "exits": [
+    "None",
+    "Exit"
+   ]
+  },
+  {
+   "name": "Mission_Side_NoEscapeRoom",
+   "title": "No-Escape Room",
+   "category": "side",
+   "exits": [
+    "None"
+   ]
+  },
+  {
+   "name": "Mission_Side_OneGassyIssue",
+   "title": "One Gassy Issue",
+   "category": "side",
+   "exits": [
+    "None"
+   ]
+  },
+  {
+   "name": "Mission_Side_ResonatorVault",
+   "title": "Primordial Vault: Carcadia Burn",
+   "category": "side",
+   "exits": [
+    "None"
+   ]
+  },
+  {
+   "name": "Mission_Side_ThePriceOfFreedomPart1",
+   "title": "Price of Freedom",
+   "category": "side",
+   "exits": [
+    "None"
+   ]
+  },
+  {
+   "name": "Mission_Side_ThePriceOfFreedomPart3",
+   "title": "Price of Freedom Pt. 3",
+   "category": "side",
+   "exits": [
+    "None"
+   ]
+  },
+  {
+   "name": "Mission_Side_ThresherRancher",
+   "title": "Breeding Daisies",
+   "category": "side",
+   "exits": [
+    "None"
+   ]
+  },
+  {
+   "name": "Mission_Side_Vault_Glide",
+   "title": "Primordial Vault: Terminus Range",
+   "category": "side",
+   "exits": [
+    "None"
+   ]
+  },
+  {
+   "name": "Side_Grasslands_LighthouseKeeper",
+   "title": "Gone Are My Leggies",
+   "category": "side",
+   "exits": [
+    "None"
+   ]
+  },
+  {
+   "name": "Side_Grasslands_SalvageRipperTunnels",
+   "title": "Savage Salvage",
+   "category": "side",
+   "exits": [
+    "None"
+   ]
+  },
+  {
+   "name": "Side_Grasslands_SumOfHisParts",
+   "title": "Sum of His Parts",
+   "category": "side",
+   "exits": [
+    "None"
+   ]
+  },
+  {
+   "name": "Mission_DLC_Banjo",
+   "title": "The War On Mercenary Day",
+   "category": "dlc",
+   "exits": [
+    "None"
+   ]
+  },
+  {
+   "name": "Mission_DLC_Cello",
+   "title": "The Cursed Mine",
+   "category": "dlc",
+   "exits": [
+    "None"
+   ]
+  },
+  {
+   "name": "Mission_DLC_Harp",
+   "title": "Murders & Acquisitions",
+   "category": "dlc",
+   "exits": [
+    "None"
+   ]
+  },
+  {
+   "name": "Mission_DLC_Mandolin",
+   "title": "A Zane to Kill For",
+   "category": "dlc",
+   "exits": [
+    "None"
+   ]
+  },
+  {
+   "name": "Mission_DLC_Raid1",
+   "title": "The Wrath of Bloomreaper",
+   "category": "dlc",
+   "exits": [
+    "None"
+   ]
+  },
+  {
+   "name": "Mission_DLC_Raid2",
+   "title": "Brothers in Harm",
+   "category": "dlc",
+   "exits": [
+    "None"
+   ]
+  },
+  {
+   "name": "mission_main_cowbell1",
+   "title": "On Icebound Shores Abandoned",
+   "category": "dlc",
+   "exits": [
+    "None"
+   ]
+  },
+  {
+   "name": "Mission_Main_Cowbell2",
+   "title": "Hearing Things",
+   "category": "dlc",
+   "exits": [
+    "None"
+   ]
+  },
+  {
+   "name": "Mission_Main_Cowbell3",
+   "title": "It Grows Below",
+   "category": "dlc",
+   "exits": [
+    "None"
+   ]
+  },
+  {
+   "name": "Mission_Main_Cowbell4",
+   "title": "What Lies Dreaming",
+   "category": "dlc",
+   "exits": [
+    "None"
+   ]
+  },
+  {
+   "name": "Mission_Main_Cowbell5",
+   "title": "Damnation Encroaches",
+   "category": "dlc",
+   "exits": [
+    "None"
+   ]
+  },
+  {
+   "name": "Mission_Main_Harmonica2",
+   "title": "The Chase",
+   "category": "dlc",
+   "exits": [
+    "None"
+   ]
+  },
+  {
+   "name": "Mission_main_Harmonica2B",
+   "title": "Clear Comms",
+   "category": "dlc",
+   "exits": [
+    "None"
+   ]
+  },
+  {
+   "name": "Mission_Main_Harmonica3",
+   "title": "Throwing Down the Digi-Gauntlet",
+   "category": "dlc",
+   "exits": [
+    "None"
+   ]
+  },
+  {
+   "name": "Mission_Main_Harmonica3_Hotel",
+   "title": "Digi-Gauntlet: Team Building",
+   "category": "dlc",
+   "exits": [
+    "None"
+   ]
+  },
+  {
+   "name": "Mission_Main_Harmonica3_Lava",
+   "title": "Digi-Gauntlet: Some Like It Hot",
+   "category": "dlc",
+   "exits": [
+    "None"
+   ]
+  },
+  {
+   "name": "Mission_Main_Harmonica3_Logistics",
+   "title": "Digi-Gauntlet: M3_Final_v5",
+   "category": "dlc",
+   "exits": [
+    "None"
+   ]
+  },
+  {
+   "name": "Mission_Main_Harmonica3_Spa",
+   "title": "Digi-Gauntlet: You Can't Fire Me, I Quit",
+   "category": "dlc",
+   "exits": [
+    "None"
+   ]
+  },
+  {
+   "name": "Mission_Main_Harmonica3_Theatre",
+   "title": "Digi-Gauntlet: R&D",
+   "category": "dlc",
+   "exits": [
+    "None"
+   ]
+  },
+  {
+   "name": "Mission_Micro_CatchingFire",
+   "title": "Burnt Offering",
+   "category": "dlc",
+   "exits": [
+    "None",
+    "Exit"
+   ]
+  },
+  {
+   "name": "Mission_Micro_Harmonica_Guarded",
+   "title": "The Relieving of the Guard",
+   "category": "dlc",
+   "exits": [
+    "None"
+   ]
+  },
+  {
+   "name": "Mission_Micro_Harmonica_GuardedEnding",
+   "title": "The Second Relieving of the Guard",
+   "category": "dlc",
+   "exits": [
+    "None"
+   ]
+  },
+  {
+   "name": "Mission_Micro_Hosting",
+   "title": "Host in the Shell",
+   "category": "dlc",
+   "exits": [
+    "None"
+   ]
+  },
+  {
+   "name": "Mission_Micro_IceFishing",
+   "title": "Ice Fishing",
+   "category": "dlc",
+   "exits": [
+    "None"
+   ]
+  },
+  {
+   "name": "Mission_Micro_ManagerHand1_Pangolin",
+   "title": "No Sunrise",
+   "category": "dlc",
+   "exits": [
+    "None"
+   ]
+  },
+  {
+   "name": "Mission_Micro_ManagerHand2_Tediore",
+   "title": "Disallowed Leftward",
+   "category": "dlc",
+   "exits": [
+    "None"
+   ]
+  },
+  {
+   "name": "Mission_Micro_Operation",
+   "title": "Doc of the Bay",
+   "category": "dlc",
+   "exits": [
+    "None",
+    "Exit"
+   ]
+  },
+  {
+   "name": "Mission_Micro_SnowCone",
+   "title": "Pay to Play",
+   "category": "dlc",
+   "exits": [
+    "None"
+   ]
+  },
+  {
+   "name": "Mission_Micro_WhoDidIt",
+   "title": "Yes, Chef",
+   "category": "dlc",
+   "exits": [
+    "None"
+   ]
+  },
+  {
+   "name": "Mission_Side_DutyBeyondDeath",
+   "title": "Voices Carry",
+   "category": "dlc",
+   "exits": [
+    "None"
+   ]
+  },
+  {
+   "name": "Mission_Side_Harmonica_Microplastics",
+   "title": "The Tainted Truth",
+   "category": "dlc",
+   "exits": [
+    "None"
+   ]
+  },
+  {
+   "name": "Mission_Side_Harmonica_NoVacancy",
+   "title": "The Rusty Butler",
+   "category": "dlc",
+   "exits": [
+    "None"
+   ]
+  },
+  {
+   "name": "Mission_Side_Harmonica_RescueRangers",
+   "title": "Rescue Rangers",
+   "category": "dlc",
+   "exits": [
+    "None"
+   ]
+  },
+  {
+   "name": "Mission_Side_Harmonica_SpatialAwareness1",
+   "title": "Spatial Awareness",
+   "category": "dlc",
+   "exits": [
+    "None"
+   ]
+  },
+  {
+   "name": "Mission_Side_Harmonica_SpatialAwareness2",
+   "title": "The Parting of the Ways",
+   "category": "dlc",
+   "exits": [
+    "None"
+   ]
+  },
+  {
+   "name": "Mission_Side_Harmonica_SpatialAwarenessReward",
+   "title": "Old Friend",
+   "category": "dlc",
+   "exits": [
+    "None"
+   ]
+  },
+  {
+   "name": "Mission_Side_Harmonica_TradingUp",
+   "title": "Barter Up",
+   "category": "dlc",
+   "exits": [
+    "None"
+   ]
+  },
+  {
+   "name": "Mission_Side_Invasive1",
+   "title": "Symbiotic Security",
+   "category": "dlc",
+   "exits": [
+    "None"
+   ]
+  },
+  {
+   "name": "Mission_Side_Invasive2",
+   "title": "Symbiotic Security Part 2",
+   "category": "dlc",
+   "exits": [
+    "None"
+   ]
+  },
+  {
+   "name": "Mission_Side_RomeoAndRomeo",
+   "title": "Star-Crossed",
+   "category": "dlc",
+   "exits": [
+    "None",
+    "Exit",
+    "Exit_0",
+    "Exit_1"
+   ]
+  },
+  {
+   "name": "Mission_Side_SafeHaven",
+   "title": "A Humble Abode",
+   "category": "dlc",
+   "exits": [
+    "None"
+   ]
+  },
+  {
+   "name": "Mission_Side_SasaengInvasion",
+   "title": "Fandomination",
+   "category": "dlc",
+   "exits": [
+    "None"
+   ]
+  },
+  {
+   "name": "Mission_Side_SummoningCircle",
+   "title": "Summoner's Gift",
+   "category": "dlc",
+   "exits": [
+    "None"
+   ]
+  },
+  {
+   "name": "Mission_Side_UnfinishedBusiness",
+   "title": "Ghost Stories",
+   "category": "dlc",
+   "exits": [
+    "None"
+   ]
+  },
+  {
+   "name": "Mission_Side_VeryMerryUnfestival",
+   "title": "A Festivus for the Electivus",
+   "category": "dlc",
+   "exits": [
+    "None"
+   ]
+  },
+  {
+   "name": "Micro_BackMcCrackyPt1",
+   "title": "Crack This Guy's Back",
+   "category": "side",
+   "exits": [
+    "None"
+   ]
+  },
+  {
+   "name": "Mission_Micro_HeistRecruits_Intro",
+   "title": "Scoundrel Roundup: Shim",
+   "category": "side",
+   "exits": [
+    "None"
+   ]
+  },
+  {
+   "name": "Mission_DLC_Viola",
+   "title": "The Rift Crisis",
+   "category": "dlc",
+   "exits": [
+    "None"
+   ]
+  },
+  {
+   "name": "Grasslands_Side_MurderMystery_Beckon",
+   "title": "Grasslands_Side_MurderMystery_Beckon",
+   "category": "side",
+   "exits": [
+    "None"
+   ]
+  },
+  {
+   "name": "Grasslands_Side_SalvageRipperTunnelsIntro",
+   "title": "Grasslands_Side_SalvageRipperTunnelsIntro",
+   "category": "side",
+   "exits": [
+    "None"
+   ]
+  },
+  {
+   "name": "Mission_Side_ThresherRancherIntro",
+   "title": "Mission_GL_Side_ThresherRancher_InvisIntro",
+   "category": "side",
+   "exits": [
+    "None"
+   ]
+  },
+  {
+   "name": "Mission_Side_InvasiveINVIS",
+   "title": "Side_Invasive_INVIS",
+   "category": "side",
+   "exits": [
+    "None"
+   ]
+  },
+  {
+   "name": "Mission_Side_PlanetaryEscape_Intro",
+   "title": "Mission_Side_PlanetaryEscape_Intro",
+   "category": "side",
+   "exits": [
+    "None"
+   ]
+  },
+  {
+   "name": "Micro_UVH_BlackMarketTutorial",
+   "title": "Ultimate Vault Hunter: Maurice's Bounty",
+   "category": "side",
+   "exits": [
+    "None"
+   ]
+  },
+  {
+   "name": "micro_uvh_trait",
+   "title": "Ultimate Vault Hunter: Wildcard Missions",
+   "category": "side",
+   "exits": [
+    "None"
+   ]
+  },
+  {
+   "name": "Micro_UVH_FirmwareTransferTutorial",
+   "title": "Ultimate Vault Hunter: Zane's Firmware",
+   "category": "side",
+   "exits": [
+    "None",
+    "Micro_UVH_FirmwareTransferTutorial_GRA_Exit",
+    "Micro_UVH_FirmwareTransferTutorial_MOU_Exit",
+    "Micro_UVH_FirmwareTransferTutorial_SHA_Exit"
+   ]
+  },
+  {
+   "name": "Micro_UVH_TrueBoss",
+   "title": "Ultimate Vault Hunter: Big Encore",
+   "category": "side",
+   "exits": [
+    "None",
+    "Exit"
+   ]
+  },
+  {
+   "name": "Mission_Micro_BackMcCrackyPt2",
+   "title": "Crack This Guy's Back - Setting the Mood",
+   "category": "side",
+   "exits": [
+    "None"
+   ]
+  },
+  {
+   "name": "Mission_Micro_BackMcCrackyPt3",
+   "title": "Crack This Guy's Back - Advanced Maneuver",
+   "category": "side",
+   "exits": [
+    "None"
+   ]
+  },
+  {
+   "name": "Mission_DLC_Tuba",
+   "title": "Takedown: Child of Terramorphous",
+   "category": "dlc",
+   "exits": [
+    "None"
+   ]
+  },
+  {
+   "name": "Mission_DLC_Tuba_Base",
+   "title": "The Shape of Slaughter: Takedown at Hadron Abyss",
+   "category": "dlc",
+   "exits": [
+    "None"
+   ]
+  },
+  {
+   "name": "Mission_Mandolin_CircleOfSlaughter",
+   "title": "Silent Crisis: Time Scope 5",
+   "category": "dlc",
+   "exits": [
+    "None"
+   ]
+  },
+  {
+   "name": "Mission_DLC_Tuba_Hardcore",
+   "title": "The Shape of Slaughter: Hardcore Takedown at Hadron Abyss",
+   "category": "dlc",
+   "exits": [
+    "None"
+   ]
+  },
+  {
+   "name": "Mission_DLC_Tuba_TimerBase",
+   "title": "The Shape of Slaughter: Mayhem Takedown at Hadron Abyss",
+   "category": "dlc",
+   "exits": [
+    "None"
+   ]
+  },
+  {
+   "name": "ZoneActivity_Grasslands_Silo1",
+   "title": "Silo: The Stockroom",
+   "category": "side",
+   "exits": [
+    "None"
+   ]
+  },
+  {
+   "name": "ZoneActivity_Grasslands_Silo2",
+   "title": "Silo: The Kit Hole",
+   "category": "side",
+   "exits": [
+    "None"
+   ]
+  },
+  {
+   "name": "ZoneActivity_Grasslands_Silo3",
+   "title": "Silo: Deep Seven",
+   "category": "side",
+   "exits": [
+    "None"
+   ]
+  },
+  {
+   "name": "ZoneActivity_Mountains_Silo1",
+   "title": "Silo: Covered Charge",
+   "category": "side",
+   "exits": [
+    "None"
+   ]
+  },
+  {
+   "name": "ZoneActivity_Mountains_Silo2",
+   "title": "Silo: The Reliquary",
+   "category": "side",
+   "exits": [
+    "None"
+   ]
+  },
+  {
+   "name": "ZoneActivity_Mountains_Silo3",
+   "title": "Silo: Deathright",
+   "category": "side",
+   "exits": [
+    "None"
+   ]
+  },
+  {
+   "name": "ZoneActivity_Shatteredlands_Silo1",
+   "title": "Silo: Rustical Hurl",
+   "category": "side",
+   "exits": [
+    "None"
+   ]
+  },
+  {
+   "name": "ZoneActivity_Shatteredlands_Silo2",
+   "title": "Silo: Judgement's Lapse",
+   "category": "side",
+   "exits": [
+    "None"
+   ]
+  },
+  {
+   "name": "ZoneActivity_Shatteredlands_Silo3",
+   "title": "Silo: Site Unseen",
+   "category": "side",
+   "exits": [
+    "None"
+   ]
+  },
+  {
+   "name": "ZoneActivity_City_Safehouse2",
+   "title": "Safehouse: The Food Court",
+   "category": "side",
+   "exits": [
+    "None"
+   ]
+  },
+  {
+   "name": "ZoneActivity_City_Safehouse3",
+   "title": "Safehouse: Sumpview Falls",
+   "category": "side",
+   "exits": [
+    "None"
+   ]
+  },
+  {
+   "name": "ZoneActivity_Grasslands_Safehouse2",
+   "title": "Safehouse: Shut-Eye Keep",
+   "category": "side",
+   "exits": [
+    "None"
+   ]
+  },
+  {
+   "name": "ZoneActivity_Grasslands_Safehouse3",
+   "title": "Safehouse: Someday Rise",
+   "category": "side",
+   "exits": [
+    "None"
+   ]
+  },
+  {
+   "name": "ZoneActivity_Grasslands_Safehouse4",
+   "title": "Safehouse: Wyclef's Reprieve",
+   "category": "side",
+   "exits": [
+    "None"
+   ]
+  },
+  {
+   "name": "ZoneActivity_Mountains_Safehouse1",
+   "title": "Safehouse: Grey Havenage",
+   "category": "side",
+   "exits": [
+    "None"
+   ]
+  },
+  {
+   "name": "ZoneActivity_Mountains_Safehouse2",
+   "title": "Safehouse: Heritage Opus",
+   "category": "side",
+   "exits": [
+    "None"
+   ]
+  },
+  {
+   "name": "ZoneActivity_Mountains_Safehouse3",
+   "title": "Safehouse: The Nightcap",
+   "category": "side",
+   "exits": [
+    "None"
+   ]
+  },
+  {
+   "name": "ZoneActivity_Mountains_Safehouse4",
+   "title": "Safehouse: Snowy Wells",
+   "category": "side",
+   "exits": [
+    "None"
+   ]
+  },
+  {
+   "name": "ZoneActivity_Shatteredlands_Safehouse1",
+   "title": "Safehouse: The Lowrise",
+   "category": "side",
+   "exits": [
+    "None"
+   ]
+  },
+  {
+   "name": "ZoneActivity_Shatteredlands_Safehouse2",
+   "title": "Safehouse: Makeshift Chalet",
+   "category": "side",
+   "exits": [
+    "None"
+   ]
+  },
+  {
+   "name": "ZoneActivity_Shatteredlands_Safehouse3",
+   "title": "Safehouse: Wildhorn's Beard",
+   "category": "side",
+   "exits": [
+    "None"
+   ]
+  }
+ ],
+ "travel_checkpoints": [
+  {
+   "key": "electi",
+   "parent": "Mission_Main_Shatteredlands2",
+   "fact": "missions.missionset_main_shatteredlands2.Mission_Main_Shatteredlands2.Final.Repair_Leaders_Chamber_critical_systems_EndState"
+  },
+  {
+   "key": "heist",
+   "parent": "Mission_Side_Heist",
+   "fact": "missions.MissionSet_Side_GrasslandsB.Mission_Side_Heist.Final.Take_a_walk_with_Shim_EndState"
+  },
+  {
+   "key": "vending",
+   "parent": "Mission_Side_Vending",
+   "fact": "missions.MissionSet_Side_ShatteredlandsA.Mission_Side_Vending.Final.TalkStreamsStart_EndState"
+  },
+  {
+   "key": "clapgen",
+   "parent": "mission_main_shatteredlands1b",
+   "fact": "missions.missionset_main_shatteredlands1.mission_main_shatteredlands1b.Final.meet_zane_endstate"
+  },
+  {
+   "key": "cowbell_ellie",
+   "parent": "Mission_Main_Cowbell4",
+   "fact": "Missions.MissionSet_Main_Cowbell.Mission_Main_Cowbell4.Final.Follow_Ellie_EndState"
+  },
+  {
+   "key": "cowbell_hatchery",
+   "parent": "Mission_Main_Cowbell2",
+   "fact": "missions.missionset_main_cowbell.Mission_Main_Cowbell2.Final.InvestigateHatchery_EndState"
+  },
+  {
+   "key": "travel_0",
+   "parent": "Mission_Main_SearchForLilith",
+   "fact": "missions.missionset_main_searchforlilith.Mission_Main_SearchForLilith.Final.SFL_Talk_To_Amara_EndState"
+  },
+  {
+   "key": "travel_1",
+   "parent": "Mission_Main_SearchForLilith",
+   "fact": "missions.missionset_main_searchforlilith.Mission_Main_SearchForLilith.Final.sfl_activate_space_elevator_endstate"
+  },
+  {
+   "key": "travel_2",
+   "parent": "Mission_Main_Grasslands3",
+   "fact": "missions.missionset_main_grasslands3.Mission_Main_Grasslands3.Final.enterfortress_endstate"
+  },
+  {
+   "key": "travel_3",
+   "parent": "Mission_Main_Grasslands2",
+   "fact": "missions.missionset_main_grasslands2a.Mission_Main_Grasslands2.Final.Find_Zadra_1_EndState"
+  },
+  {
+   "key": "travel_4",
+   "parent": "Mission_Main_Grasslands1",
+   "fact": "missions.MissionSet_Main_Grasslands1.Mission_Main_Grasslands1.Final.Meet_Nudge_EndState"
+  },
+  {
+   "key": "travel_5",
+   "parent": "Mission_Main_Mountains3",
+   "fact": "Missions.missionset_main_mountains3.Mission_Main_Mountains3.Final.invis_obj_waypointforwayback_endstate"
+  },
+  {
+   "key": "travel_cowbell_ui",
+   "parent": "mission_main_cowbell1",
+   "fact": "missions.missionset_main_cowbell.mission_main_cowbell1.final.findmancubus_endstate"
+  },
+  {
+   "key": "travel_beach_safehouse",
+   "parent": "Mission_Main_Beach",
+   "fact": "missions.missionset_main_beach.Mission_Main_Beach.Final.activate__cl4ptps_safehouse_endstate"
+  },
+  {
+   "key": "travel_cello_power_cell",
+   "parent": "Mission_DLC_Cello",
+   "fact": "Missions.MissionSet_DLC_Cello.Mission_DLC_Cello.Final.Cello_Unlock_Door_Power_Cell_1_EndState"
+  },
+  {
+   "key": "travel_mountains_entry",
+   "parent": "Mission_Main_Mountains1",
+   "fact": "missions.missionset_main_mountains1.Mission_Main_Mountains1.Final.mtn1_enter_the_mountain_zone_EndState"
+  },
+  {
+   "key": "travel_city_entry",
+   "parent": "Mission_Main_City1",
+   "fact": "Missions.missionset_main_city1.Mission_Main_City1.Final.inv_enter_the_city_bc5_endstate"
+  },
+  {
+   "key": "travel_city_safehouse",
+   "parent": "Mission_Main_City1",
+   "fact": "missions.missionset_main_city1.Mission_Main_City1.Final.Capture_safehouse_EndState"
+  },
+  {
+   "key": "travel_shattered_generator",
+   "parent": "Mission_Main_Shatteredlands2",
+   "fact": "missions.missionset_main_shatteredlands2.Mission_Main_Shatteredlands2.Final.Melee_generator_EndState"
+  }
+ ]
+}

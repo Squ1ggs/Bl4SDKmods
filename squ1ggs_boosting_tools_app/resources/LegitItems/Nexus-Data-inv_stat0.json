@@ -1,0 +1,1259 @@
+{
+  "inv_stat": {
+    "records": [
+      {
+        "entries": [
+          {
+            "grenade": {
+              "inv_stat": "Grenade",
+              "categories": {
+                "category": [
+                  {
+                    "power": {
+                      "category": {
+                        "power": "power"
+                      },
+                      "stats": [
+                        {
+                          "damage": "damage"
+                        },
+                        {
+                          "force": "force"
+                        },
+                        {
+                          "splash_damage": "splash_damage"
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "precision": {
+                      "category": {
+                        "precision": "precision"
+                      },
+                      "stats": [
+                        {
+                          "critical_chance": "critical_chance"
+                        },
+                        {
+                          "critical_damage": "critical_damage"
+                        },
+                        {
+                          "splash_radius": "splash_radius"
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "tactical": {
+                      "category": {
+                        "tactical": "tactical"
+                      },
+                      "stats": [
+                        {
+                          "cooldown": "cooldown"
+                        },
+                        {
+                          "elemental_power": "elemental_power"
+                        },
+                        {
+                          "extra_charge": "extra_charge"
+                        },
+                        {
+                          "homing_turn_rate": "homing_turn_rate"
+                        },
+                        {
+                          "projectile_speed": "projectile_speed"
+                        },
+                        {
+                          "transfusion": "transfusion"
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "attributes": {
+                "attribute": [
+                  {
+                    "damage": {
+                      "attribute": {
+                        "damage": "damage"
+                      },
+                      "stat": "damage",
+                      "definition": "attribute'grenade_gadget_damage'",
+                      "stattoattributemodifierscalar": {
+                        "datatablevalue": {
+                          "datatable": "gbx_ue_data_table'GrenadeMod_Stats'",
+                          "rowname": "damage",
+                          "columnname": "Default"
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "force": {
+                      "attribute": {
+                        "force": "force"
+                      },
+                      "stat": "force",
+                      "definition": "attribute'grenade_gadget_force'",
+                      "stattoattributemodifierscalar": {
+                        "datatablevalue": {
+                          "datatable": "gbx_ue_data_table'GrenadeMod_Stats'",
+                          "rowname": "force",
+                          "columnname": "Default"
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "critical_chance": {
+                      "attribute": {
+                        "critical_chance": "critical_chance"
+                      },
+                      "stat": "critical_chance",
+                      "definition": "attribute'grenade_gadget_crit_chance'",
+                      "stattoattributemodifierscalar": {
+                        "datatablevalue": {
+                          "datatable": "gbx_ue_data_table'GrenadeMod_Stats'",
+                          "rowname": "CritChance",
+                          "columnname": "Default"
+                        }
+                      },
+                      "modifiertype": "PreAdd"
+                    }
+                  },
+                  {
+                    "critical_damage": {
+                      "attribute": {
+                        "critical_damage": "critical_damage"
+                      },
+                      "stat": "critical_damage",
+                      "definition": "attribute'grenade_gadget_crit_damage'",
+                      "stattoattributemodifierscalar": {
+                        "datatablevalue": {
+                          "datatable": "gbx_ue_data_table'GrenadeMod_Stats'",
+                          "rowname": "CritDamage",
+                          "columnname": "Default"
+                        }
+                      },
+                      "modifiertype": "PreAdd"
+                    }
+                  },
+                  {
+                    "splash_radius": {
+                      "attribute": {
+                        "splash_radius": "splash_radius"
+                      },
+                      "stat": "splash_radius",
+                      "definition": "attribute'grenade_gadget_radius'",
+                      "stattoattributemodifierscalar": {
+                        "datatablevalue": {
+                          "datatable": "gbx_ue_data_table'GrenadeMod_Stats'",
+                          "rowname": "Radius",
+                          "columnname": "Default"
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "status_chance": {
+                      "attribute": {
+                        "status_chance": "status_chance"
+                      },
+                      "stat": "elemental_power",
+                      "definition": "attribute'grenade_damage_modifier_base_status_effect_chance'",
+                      "stattoattributemodifierscalar": {
+                        "datatablevalue": {
+                          "datatable": "gbx_ue_data_table'GrenadeMod_Stats'",
+                          "rowname": "StatusChance",
+                          "columnname": "Default"
+                        }
+                      },
+                      "modifiertype": "ScaleAdd"
+                    }
+                  },
+                  {
+                    "status_charge": {
+                      "attribute": {
+                        "status_charge": "status_charge"
+                      },
+                      "stat": "elemental_power",
+                      "definition": "attribute'grenade_damage_modifier_base_status_effect_charge'",
+                      "stattoattributemodifierscalar": {
+                        "datatablevalue": {
+                          "datatable": "gbx_ue_data_table'GrenadeMod_Stats'",
+                          "rowname": "CryoImpact",
+                          "columnname": "Default"
+                        }
+                      },
+                      "modifiertype": "ScaleAdd"
+                    }
+                  },
+                  {
+                    "status_damage": {
+                      "attribute": {
+                        "status_damage": "status_damage"
+                      },
+                      "stat": "elemental_power",
+                      "definition": "attribute'grenade_damage_modifier_base_status_effect_damage'",
+                      "stattoattributemodifierscalar": {
+                        "datatablevalue": {
+                          "datatable": "gbx_ue_data_table'GrenadeMod_Stats'",
+                          "rowname": "StatusDamage",
+                          "columnname": "Default"
+                        }
+                      },
+                      "modifiertype": "ScaleAdd"
+                    }
+                  },
+                  {
+                    "cooldown": {
+                      "attribute": {
+                        "cooldown": "cooldown"
+                      },
+                      "stat": "cooldown",
+                      "definition": "attribute'Gadget_Cooldown'",
+                      "stattoattributemodifierscalar": {
+                        "datatablevalue": {
+                          "datatable": "gbx_ue_data_table'GrenadeMod_Stats'",
+                          "rowname": "cooldown",
+                          "columnname": "Default"
+                        }
+                      },
+                      "bzeroisbetter": "true"
+                    }
+                  },
+                  {
+                    "projectile_speed": {
+                      "attribute": {
+                        "projectile_speed": "projectile_speed"
+                      },
+                      "stat": "projectile_speed",
+                      "definition": "attribute'grenade_shooting_projectile_speed_scale'",
+                      "stattoattributemodifierscalar": {
+                        "datatablevalue": {
+                          "datatable": "gbx_ue_data_table'GrenadeMod_Stats'",
+                          "rowname": "ProjectileSpeed",
+                          "columnname": "Default"
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "rarity_damage": {
+                      "attribute": {
+                        "rarity_damage": "rarity_damage"
+                      },
+                      "stat": "rarity_bonus",
+                      "definition": "attribute'grenade_gadget_damage'",
+                      "stattoattributemodifierscalar": {
+                        "datatablevalue": {
+                          "datatable": "gbx_ue_data_table'GrenadeMod_RarityScale'",
+                          "columnname": "Damage_Scale"
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "rarity_radius": {
+                      "attribute": {
+                        "rarity_radius": "rarity_radius"
+                      },
+                      "stat": "rarity_bonus",
+                      "definition": "attribute'grenade_gadget_radius'",
+                      "stattoattributemodifierscalar": {
+                        "datatablevalue": {
+                          "datatable": "gbx_ue_data_table'GrenadeMod_RarityScale'",
+                          "columnname": "Radius_Scale"
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "rarity_cooldown": {
+                      "attribute": {
+                        "rarity_cooldown": "rarity_cooldown"
+                      },
+                      "stat": "rarity_bonus",
+                      "definition": "attribute'Gadget_Cooldown'",
+                      "stattoattributemodifierscalar": {
+                        "datatablevalue": {
+                          "datatable": "gbx_ue_data_table'GrenadeMod_RarityScale'",
+                          "columnname": "Cooldown_Scale"
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "extra_charge": {
+                      "attribute": {
+                        "extra_charge": "extra_charge"
+                      },
+                      "stat": "extra_charge",
+                      "definition": "attribute'grenade_gadget_max_number_of_charges'",
+                      "roundingmode": "FloorToInt",
+                      "modifiertype": "PreAdd"
+                    }
+                  },
+                  {
+                    "homing_turn_rate": {
+                      "attribute": {
+                        "homing_turn_rate": "homing_turn_rate"
+                      },
+                      "stat": "homing_turn_rate",
+                      "definition": "attribute'grenade_gadget_homing_turn_speed_scale'",
+                      "stattoattributemodifierscalar": {
+                        "datatablevalue": {
+                          "datatable": "gbx_ue_data_table'GrenadeMod_Stats'",
+                          "rowname": "HomingTurnScale",
+                          "columnname": "Default_44_19DD2E0C4D36676330DEABAD6E6A5C6C"
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "transfusion": {
+                      "attribute": {
+                        "transfusion": "transfusion"
+                      },
+                      "stat": "transfusion",
+                      "definition": "attribute'grenade_gadget_transfusion_percent'",
+                      "stattoattributemodifierscalar": {
+                        "datatablevalue": {
+                          "datatable": "gbx_ue_data_table'GrenadeMod_Stats'",
+                          "rowname": "Transfusion",
+                          "columnname": "Default"
+                        }
+                      },
+                      "modifiertype": "ScaleAdd"
+                    }
+                  }
+                ]
+              },
+              "type": "Asset'/Script/OakGame.GadgetStatsDef'",
+              "class": "weaponstats"
+            }
+          },
+          {
+            "inv_stats_default": {
+              "inv_stat": "inv_stats_default",
+              "type": "/Script/GbxGame.InventoryStatsDef"
+            }
+          },
+          {
+            "weapon": {
+              "inv_stat": "Weapon",
+              "categories": {
+                "category": [
+                  {
+                    "power": {
+                      "category": {
+                        "power": "Power"
+                      },
+                      "stats": [
+                        {
+                          "damage": "damage"
+                        },
+                        {
+                          "fire_rate": "fire_rate"
+                        },
+                        {
+                          "melee_damage": "melee_damage"
+                        },
+                        {
+                          "splash_damage": "splash_damage"
+                        },
+                        {
+                          "throw_damage": "throw_damage"
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "precision": {
+                      "category": {
+                        "precision": "Precision"
+                      },
+                      "stats": [
+                        {
+                          "accuracy": "accuracy"
+                        },
+                        {
+                          "ads_proficiency": "ads_proficiency"
+                        },
+                        {
+                          "critical_damage": "critical_damage"
+                        },
+                        {
+                          "splash_radius": "splash_radius"
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "tactical": {
+                      "category": {
+                        "tactical": "tactical"
+                      },
+                      "stats": [
+                        {
+                          "elemental_power": "elemental_power"
+                        },
+                        {
+                          "ergonomics": "ergonomics"
+                        },
+                        {
+                          "magazine_size": "magazine_size"
+                        },
+                        {
+                          "reload_speed": "reload_speed"
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "raritybaseinitialization": {
+                      "category": {
+                        "raritybaseinitialization": "RarityBaseInitialization"
+                      },
+                      "stats": [
+                        {
+                          "rarity_bonus": "rarity_bonus"
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "hyperionaccuracy": {
+                      "category": {
+                        "hyperionaccuracy": "HyperionAccuracy"
+                      },
+                      "stats": [
+                        {
+                          "hyperion_accuracy": "hyperion_accuracy"
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "attributes": {
+                "attribute": [
+                  {
+                    "damage": {
+                      "attribute": {
+                        "damage": "damage"
+                      },
+                      "stat": "damage",
+                      "definition": "attribute'weapon_damage'",
+                      "stattoattributemodifierscalar": {
+                        "datatablevalue": {
+                          "datatable": "gbx_ue_data_table'Weapon_Stats'",
+                          "rowname": "Damage",
+                          "columnname": "Default"
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "fire_rate": {
+                      "attribute": {
+                        "fire_rate": "fire_rate"
+                      },
+                      "stat": "fire_rate",
+                      "definition": "attribute'weapon_fire_rate'",
+                      "stattoattributemodifierscalar": {
+                        "datatablevalue": {
+                          "datatable": "gbx_ue_data_table'Weapon_Stats'",
+                          "rowname": "Fire_Rate",
+                          "columnname": "Default"
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "burst_fire_delay": {
+                      "attribute": {
+                        "burst_fire_delay": "burst_fire_delay"
+                      },
+                      "stat": "fire_rate",
+                      "definition": "attribute'weapon_burst_fire_delay'",
+                      "stattoattributemodifierscalar": {
+                        "datatablevalue": {
+                          "datatable": "gbx_ue_data_table'Weapon_Stats'",
+                          "rowname": "Burst_Fire_Delay",
+                          "columnname": "Default"
+                        }
+                      },
+                      "bzeroisbetter": "true"
+                    }
+                  },
+                  {
+                    "charge_time": {
+                      "attribute": {
+                        "charge_time": "charge_time"
+                      },
+                      "stat": "fire_rate",
+                      "definition": "attribute'weapon_charge_time'",
+                      "stattoattributemodifierscalar": {
+                        "datatablevalue": {
+                          "datatable": "gbx_ue_data_table'Weapon_Stats'",
+                          "rowname": "Charge_Time",
+                          "columnname": "Default"
+                        }
+                      },
+                      "bzeroisbetter": "true"
+                    }
+                  },
+                  {
+                    "spinup_time": {
+                      "attribute": {
+                        "spinup_time": "spinup_time"
+                      },
+                      "stat": "fire_rate",
+                      "definition": "attribute'weapon_fire_rate_accel_duration'",
+                      "stattoattributemodifierscalar": {
+                        "datatablevalue": {
+                          "datatable": "gbx_ue_data_table'Weapon_Stats'",
+                          "rowname": "Charge_Time",
+                          "columnname": "Default"
+                        }
+                      },
+                      "bzeroisbetter": "true"
+                    }
+                  },
+                  {
+                    "max_accuracy": {
+                      "attribute": {
+                        "max_accuracy": "max_accuracy"
+                      },
+                      "stat": "accuracy",
+                      "definition": "attribute'accuracy_resource_max_value'",
+                      "stattoattributemodifierscalar": {
+                        "datatablevalue": {
+                          "datatable": "gbx_ue_data_table'Weapon_Stats'",
+                          "rowname": "Max_Accuracy",
+                          "columnname": "Default"
+                        }
+                      },
+                      "bzeroisbetter": "true"
+                    }
+                  },
+                  {
+                    "spread": {
+                      "attribute": {
+                        "spread": "spread"
+                      },
+                      "stat": "accuracy",
+                      "definition": "attribute'weapon_spread'",
+                      "stattoattributemodifierscalar": {
+                        "datatablevalue": {
+                          "datatable": "gbx_ue_data_table'Weapon_Stats'",
+                          "rowname": "Spread",
+                          "columnname": "Default"
+                        }
+                      },
+                      "bzeroisbetter": "true"
+                    }
+                  },
+                  {
+                    "accuracy_impluse": {
+                      "attribute": {
+                        "accuracy_impluse": "accuracy_impluse"
+                      },
+                      "stat": "accuracy",
+                      "definition": "attribute'weapon_accuracy_impulse'",
+                      "stattoattributemodifierscalar": {
+                        "datatablevalue": {
+                          "datatable": "gbx_ue_data_table'Weapon_Stats'",
+                          "rowname": "Accuracy_Impulse",
+                          "columnname": "Default"
+                        }
+                      },
+                      "bzeroisbetter": "true"
+                    }
+                  },
+                  {
+                    "accuracy_burst_impluse": {
+                      "attribute": {
+                        "accuracy_burst_impluse": "accuracy_burst_impluse"
+                      },
+                      "stat": "accuracy",
+                      "definition": "attribute'weapon_burst_accuracy_impulse_scale'",
+                      "stattoattributemodifierscalar": {
+                        "datatablevalue": {
+                          "datatable": "gbx_ue_data_table'Weapon_Stats'",
+                          "rowname": "Accuracy_Burst_Impulse",
+                          "columnname": "Default"
+                        }
+                      },
+                      "bzeroisbetter": "true"
+                    }
+                  },
+                  {
+                    "recoil_height": {
+                      "attribute": {
+                        "recoil_height": "recoil_height"
+                      },
+                      "stat": "accuracy",
+                      "definition": "attribute'weapon_recoil_scale_y'",
+                      "stattoattributemodifierscalar": {
+                        "datatablevalue": {
+                          "datatable": "gbx_ue_data_table'Weapon_Stats'",
+                          "rowname": "Recoil_Height",
+                          "columnname": "Default"
+                        }
+                      },
+                      "bzeroisbetter": "true",
+                      "bnegativelimitset": "true"
+                    }
+                  },
+                  {
+                    "recoil_width": {
+                      "attribute": {
+                        "recoil_width": "recoil_width"
+                      },
+                      "stat": "accuracy",
+                      "definition": "attribute'weapon_recoil_scale_x'",
+                      "stattoattributemodifierscalar": {
+                        "datatablevalue": {
+                          "datatable": "gbx_ue_data_table'Weapon_Stats'",
+                          "rowname": "Recoil_Width",
+                          "columnname": "Default"
+                        }
+                      },
+                      "bzeroisbetter": "true",
+                      "bnegativelimitset": "true"
+                    }
+                  },
+                  {
+                    "projectile_speed": {
+                      "attribute": {
+                        "projectile_speed": "projectile_speed"
+                      },
+                      "stat": "accuracy",
+                      "definition": "attribute'weapon_projectile_speed_scale'",
+                      "stattoattributemodifierscalar": {
+                        "datatablevalue": {
+                          "datatable": "gbx_ue_data_table'Weapon_Stats'",
+                          "rowname": "Projectile_Speed",
+                          "columnname": "Default"
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "acc_sway_zoom_scale": {
+                      "attribute": {
+                        "acc_sway_zoom_scale": "acc_sway_zoom_scale"
+                      },
+                      "stat": "accuracy",
+                      "definition": "attribute'weapon_sway_zoom_scale'",
+                      "stattoattributemodifierscalar": {
+                        "datatablevalue": {
+                          "datatable": "gbx_ue_data_table'Weapon_Stats'",
+                          "rowname": "Acc_Sway_Scale",
+                          "columnname": "Default"
+                        }
+                      },
+                      "bzeroisbetter": "true"
+                    }
+                  },
+                  {
+                    "acc_sway_accuracy_scale": {
+                      "attribute": {
+                        "acc_sway_accuracy_scale": "acc_sway_accuracy_scale"
+                      },
+                      "stat": "accuracy",
+                      "definition": "attribute'weapon_sway_accuracy_scale'",
+                      "stattoattributemodifierscalar": {
+                        "datatablevalue": {
+                          "datatable": "gbx_ue_data_table'Weapon_Stats'",
+                          "rowname": "Acc_Sway_Scale",
+                          "columnname": "Default"
+                        }
+                      },
+                      "bzeroisbetter": "true"
+                    }
+                  },
+                  {
+                    "acc_sway_zoom_accuracy_scale": {
+                      "attribute": {
+                        "acc_sway_zoom_accuracy_scale": "acc_sway_zoom_accuracy_scale"
+                      },
+                      "stat": "accuracy",
+                      "definition": "attribute'weapon_sway_zoom_accuracy_scale'",
+                      "stattoattributemodifierscalar": {
+                        "datatablevalue": {
+                          "datatable": "gbx_ue_data_table'Weapon_Stats'",
+                          "rowname": "Acc_Sway_Scale",
+                          "columnname": "Default"
+                        }
+                      },
+                      "bzeroisbetter": "true"
+                    }
+                  },
+                  {
+                    "critical_damage": {
+                      "attribute": {
+                        "critical_damage": "critical_damage"
+                      },
+                      "stat": "critical_damage",
+                      "definition": "attribute'weapon_damage_modifier_add_critical_hit'",
+                      "stattoattributemodifierscalar": {
+                        "datatablevalue": {
+                          "datatable": "gbx_ue_data_table'Weapon_Stats'",
+                          "rowname": "Critical_Damage",
+                          "columnname": "Default"
+                        }
+                      },
+                      "modifiertype": "PreAdd"
+                    }
+                  },
+                  {
+                    "splash_damage": {
+                      "attribute": {
+                        "splash_damage": "splash_damage"
+                      },
+                      "stat": "splash_damage",
+                      "stattoattributemodifierscalar": {
+                        "datatablevalue": {
+                          "datatable": "gbx_ue_data_table'Weapon_Stats'",
+                          "rowname": "Damage_Radius",
+                          "columnname": "Default"
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "damage_radius": {
+                      "attribute": {
+                        "damage_radius": "damage_radius"
+                      },
+                      "stat": "splash_radius",
+                      "definition": "attribute'weapon_damage_radius'",
+                      "stattoattributemodifierscalar": {
+                        "datatablevalue": {
+                          "datatable": "gbx_ue_data_table'Weapon_Stats'",
+                          "rowname": "Damage_Radius",
+                          "columnname": "Default"
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "ted_thrown_radius": {
+                      "attribute": {
+                        "ted_thrown_radius": "ted_thrown_radius"
+                      },
+                      "stat": "throw_damage",
+                      "definition": "attribute'weapon_ted_throw_radius'",
+                      "stattoattributemodifierscalar": {
+                        "datatablevalue": {
+                          "datatable": "gbx_ue_data_table'Weapon_Stats'",
+                          "rowname": "Damage_Radius",
+                          "columnname": "Default"
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "ted_thrown_damage": {
+                      "attribute": {
+                        "ted_thrown_damage": "ted_thrown_damage"
+                      },
+                      "stat": "throw_damage",
+                      "definition": "attribute'weapon_ted_throw_damage_scale'",
+                      "stattoattributemodifierscalar": {
+                        "datatablevalue": {
+                          "datatable": "gbx_ue_data_table'Weapon_Stats'",
+                          "rowname": "Damage_Radius",
+                          "columnname": "Default"
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "ads_speed": {
+                      "attribute": {
+                        "ads_speed": "ads_speed"
+                      },
+                      "stat": "ads_proficiency",
+                      "definition": "attribute'weapon_zoom_duration'",
+                      "stattoattributemodifierscalar": {
+                        "datatablevalue": {
+                          "datatable": "gbx_ue_data_table'Weapon_Stats'",
+                          "rowname": "Zoom_Speed",
+                          "columnname": "Default"
+                        }
+                      },
+                      "bzeroisbetter": "true"
+                    }
+                  },
+                  {
+                    "sway_zoom_scale": {
+                      "attribute": {
+                        "sway_zoom_scale": "sway_zoom_scale"
+                      },
+                      "stat": "ads_proficiency",
+                      "definition": "attribute'weapon_sway_zoom_scale'",
+                      "stattoattributemodifierscalar": {
+                        "datatablevalue": {
+                          "datatable": "gbx_ue_data_table'Weapon_Stats'",
+                          "rowname": "Sway_Scale",
+                          "columnname": "Default"
+                        }
+                      },
+                      "bzeroisbetter": "true"
+                    }
+                  },
+                  {
+                    "sway_accuracy_scale": {
+                      "attribute": {
+                        "sway_accuracy_scale": "sway_accuracy_scale"
+                      },
+                      "stat": "ads_proficiency",
+                      "definition": "attribute'weapon_sway_accuracy_scale'",
+                      "stattoattributemodifierscalar": {
+                        "datatablevalue": {
+                          "datatable": "gbx_ue_data_table'Weapon_Stats'",
+                          "rowname": "Sway_Scale",
+                          "columnname": "Default"
+                        }
+                      },
+                      "bzeroisbetter": "true"
+                    }
+                  },
+                  {
+                    "sway_zoom_accuracy_scale": {
+                      "attribute": {
+                        "sway_zoom_accuracy_scale": "sway_zoom_accuracy_scale"
+                      },
+                      "stat": "ads_proficiency",
+                      "definition": "attribute'weapon_sway_zoom_accuracy_scale'",
+                      "stattoattributemodifierscalar": {
+                        "datatablevalue": {
+                          "datatable": "gbx_ue_data_table'Weapon_Stats'",
+                          "rowname": "Sway_Scale",
+                          "columnname": "Default"
+                        }
+                      },
+                      "bzeroisbetter": "true"
+                    }
+                  },
+                  {
+                    "max_loaded_ammo": {
+                      "attribute": {
+                        "max_loaded_ammo": "max_loaded_ammo"
+                      },
+                      "stat": "magazine_size",
+                      "definition": "attribute'weapon_max_loaded_ammo'",
+                      "stattoattributemodifierscalar": {
+                        "datatablevalue": {
+                          "datatable": "gbx_ue_data_table'Weapon_Stats'",
+                          "rowname": "Max_Loaded_Ammo",
+                          "columnname": "Default"
+                        }
+                      },
+                      "roundingmode": "CeilToInt"
+                    }
+                  },
+                  {
+                    "heat_per_shot": {
+                      "attribute": {
+                        "heat_per_shot": "heat_per_shot"
+                      },
+                      "stat": "magazine_size",
+                      "definition": "attribute'weapon_heat_impulse'",
+                      "stattoattributemodifierscalar": {
+                        "datatablevalue": {
+                          "datatable": "gbx_ue_data_table'Weapon_Stats'",
+                          "rowname": "Heat_Per_Shot",
+                          "columnname": "Default"
+                        }
+                      },
+                      "modifiertype": "ScaleAdd",
+                      "bzeroisbetter": "true"
+                    }
+                  },
+                  {
+                    "min_shots_to_break": {
+                      "attribute": {
+                        "min_shots_to_break": "min_shots_to_break"
+                      },
+                      "stat": "magazine_size",
+                      "definition": "attribute'weapon_min_shots_to_break'",
+                      "stattoattributemodifierscalar": {
+                        "datatablevalue": {
+                          "datatable": "gbx_ue_data_table'Weapon_Stats'",
+                          "rowname": "Heat_Per_Shot",
+                          "columnname": "Default"
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "max_shots_to_break": {
+                      "attribute": {
+                        "max_shots_to_break": "max_shots_to_break"
+                      },
+                      "stat": "magazine_size",
+                      "definition": "attribute'weapon_max_shots_to_break'",
+                      "stattoattributemodifierscalar": {
+                        "datatablevalue": {
+                          "datatable": "gbx_ue_data_table'Weapon_Stats'",
+                          "rowname": "Heat_Per_Shot",
+                          "columnname": "Default"
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "reload_time": {
+                      "attribute": {
+                        "reload_time": "reload_time"
+                      },
+                      "stat": "reload_speed",
+                      "definition": "attribute'weapon_reload_time'",
+                      "stattoattributemodifierscalar": {
+                        "datatablevalue": {
+                          "datatable": "gbx_ue_data_table'Weapon_Stats'",
+                          "rowname": "Reload_Time",
+                          "columnname": "Default"
+                        }
+                      },
+                      "bzeroisbetter": "true"
+                    }
+                  },
+                  {
+                    "status_damage": {
+                      "attribute": {
+                        "status_damage": "status_damage"
+                      },
+                      "stat": "elemental_power",
+                      "definition": "attribute'weapon_damage_modifier_base_status_effect_damage'",
+                      "stattoattributemodifierscalar": {
+                        "datatablevalue": {
+                          "datatable": "gbx_ue_data_table'Weapon_Stats'",
+                          "rowname": "Status_Damage",
+                          "columnname": "Default"
+                        }
+                      },
+                      "modifiertype": "ScaleAdd"
+                    }
+                  },
+                  {
+                    "status_chance": {
+                      "attribute": {
+                        "status_chance": "status_chance"
+                      },
+                      "stat": "elemental_power",
+                      "definition": "attribute'weapon_damage_modifier_base_status_effect_chance'",
+                      "stattoattributemodifierscalar": {
+                        "datatablevalue": {
+                          "datatable": "gbx_ue_data_table'Weapon_Stats'",
+                          "rowname": "Status_Chance",
+                          "columnname": "Default"
+                        }
+                      },
+                      "modifiertype": "ScaleAdd"
+                    }
+                  },
+                  {
+                    "status_charge": {
+                      "attribute": {
+                        "status_charge": "status_charge"
+                      },
+                      "stat": "elemental_power",
+                      "definition": "attribute'impact_contribution_scalar'",
+                      "stattoattributemodifierscalar": {
+                        "datatablevalue": {
+                          "datatable": "gbx_ue_data_table'Weapon_Stats'",
+                          "rowname": "CryoImpact",
+                          "columnname": "Default"
+                        }
+                      },
+                      "modifiertype": "ScaleAdd"
+                    }
+                  },
+                  {
+                    "equip_time": {
+                      "attribute": {
+                        "equip_time": "equip_time"
+                      },
+                      "stat": "ergonomics",
+                      "definition": "attribute'weapon_equip_time'",
+                      "stattoattributemodifierscalar": {
+                        "datatablevalue": {
+                          "datatable": "gbx_ue_data_table'Weapon_Stats'",
+                          "rowname": "Equip_Time",
+                          "columnname": "Default"
+                        }
+                      },
+                      "bzeroisbetter": "true"
+                    }
+                  },
+                  {
+                    "put_down_time": {
+                      "attribute": {
+                        "put_down_time": "put_down_time"
+                      },
+                      "stat": "ergonomics",
+                      "definition": "attribute'weapon_put_down_time'",
+                      "stattoattributemodifierscalar": {
+                        "datatablevalue": {
+                          "datatable": "gbx_ue_data_table'Weapon_Stats'",
+                          "rowname": "PutDown_Time",
+                          "columnname": "Default"
+                        }
+                      },
+                      "bzeroisbetter": "true"
+                    }
+                  },
+                  {
+                    "modeswitch_time": {
+                      "attribute": {
+                        "modeswitch_time": "modeswitch_time"
+                      },
+                      "stat": "ergonomics",
+                      "definition": "attribute'weapon_switch_mode_time_scale'",
+                      "stattoattributemodifierscalar": {
+                        "datatablevalue": {
+                          "datatable": "gbx_ue_data_table'Weapon_Stats'",
+                          "rowname": "ModeSwitch_Time",
+                          "columnname": "Default"
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "rarity_damage": {
+                      "attribute": {
+                        "rarity_damage": "rarity_damage"
+                      },
+                      "stat": "rarity_bonus",
+                      "definition": "attribute'weapon_damage'",
+                      "stattoattributemodifierscalar": {
+                        "datatablevalue": {
+                          "datatable": "gbx_ue_data_table'Weapon_Rarity_Init'",
+                          "rowname": "StatValuePerRarityTier",
+                          "columnname": "Damage"
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "rarity_max_accuracy": {
+                      "attribute": {
+                        "rarity_max_accuracy": "rarity_max_accuracy"
+                      },
+                      "stat": "rarity_bonus",
+                      "definition": "attribute'accuracy_resource_max_value'",
+                      "stattoattributemodifierscalar": {
+                        "datatablevalue": {
+                          "datatable": "gbx_ue_data_table'Weapon_Rarity_Init'",
+                          "rowname": "StatValuePerRarityTier",
+                          "columnname": "Accuracy"
+                        }
+                      },
+                      "bzeroisbetter": "true"
+                    }
+                  },
+                  {
+                    "rarity_spread": {
+                      "attribute": {
+                        "rarity_spread": "rarity_spread"
+                      },
+                      "stat": "rarity_bonus",
+                      "definition": "attribute'weapon_spread'",
+                      "stattoattributemodifierscalar": {
+                        "datatablevalue": {
+                          "datatable": "gbx_ue_data_table'Weapon_Rarity_Init'",
+                          "rowname": "StatValuePerRarityTier",
+                          "columnname": "Spread"
+                        }
+                      },
+                      "bzeroisbetter": "true"
+                    }
+                  },
+                  {
+                    "rarity_recoil_height": {
+                      "attribute": {
+                        "rarity_recoil_height": "rarity_recoil_height"
+                      },
+                      "stat": "rarity_bonus",
+                      "definition": "attribute'weapon_recoil_scale_y'",
+                      "stattoattributemodifierscalar": {
+                        "datatablevalue": {
+                          "datatable": "gbx_ue_data_table'Weapon_Rarity_Init'",
+                          "rowname": "StatValuePerRarityTier",
+                          "columnname": "Recoil"
+                        }
+                      },
+                      "bzeroisbetter": "true"
+                    }
+                  },
+                  {
+                    "rarity_recoil_width": {
+                      "attribute": {
+                        "rarity_recoil_width": "rarity_recoil_width"
+                      },
+                      "stat": "rarity_bonus",
+                      "definition": "attribute'weapon_recoil_scale_x'",
+                      "stattoattributemodifierscalar": {
+                        "datatablevalue": {
+                          "datatable": "gbx_ue_data_table'Weapon_Rarity_Init'",
+                          "rowname": "StatValuePerRarityTier",
+                          "columnname": "Recoil"
+                        }
+                      },
+                      "bzeroisbetter": "true"
+                    }
+                  },
+                  {
+                    "rarity_sway_accuracy_scale": {
+                      "attribute": {
+                        "rarity_sway_accuracy_scale": "rarity_sway_accuracy_scale"
+                      },
+                      "stat": "rarity_bonus",
+                      "definition": "attribute'weapon_sway_accuracy_scale'",
+                      "stattoattributemodifierscalar": {
+                        "datatablevalue": {
+                          "datatable": "gbx_ue_data_table'Weapon_Rarity_Init'",
+                          "rowname": "StatValuePerRarityTier",
+                          "columnname": "Sway"
+                        }
+                      },
+                      "bzeroisbetter": "true"
+                    }
+                  },
+                  {
+                    "rarity_sway_zoom_scale": {
+                      "attribute": {
+                        "rarity_sway_zoom_scale": "rarity_sway_zoom_scale"
+                      },
+                      "stat": "rarity_bonus",
+                      "definition": "attribute'weapon_sway_zoom_scale'",
+                      "stattoattributemodifierscalar": {
+                        "datatablevalue": {
+                          "datatable": "gbx_ue_data_table'Weapon_Rarity_Init'",
+                          "rowname": "StatValuePerRarityTier",
+                          "columnname": "Sway"
+                        }
+                      },
+                      "bzeroisbetter": "true"
+                    }
+                  },
+                  {
+                    "rarity_sway_zoom_accuracy_scale": {
+                      "attribute": {
+                        "rarity_sway_zoom_accuracy_scale": "rarity_sway_zoom_accuracy_scale"
+                      },
+                      "stat": "rarity_bonus",
+                      "definition": "attribute'weapon_sway_zoom_accuracy_scale'",
+                      "stattoattributemodifierscalar": {
+                        "datatablevalue": {
+                          "datatable": "gbx_ue_data_table'Weapon_Rarity_Init'",
+                          "rowname": "StatValuePerRarityTier",
+                          "columnname": "Sway"
+                        }
+                      },
+                      "bzeroisbetter": "true"
+                    }
+                  },
+                  {
+                    "rarity_accuracy_impluse": {
+                      "attribute": {
+                        "rarity_accuracy_impluse": "rarity_accuracy_impluse"
+                      },
+                      "stat": "rarity_bonus",
+                      "definition": "attribute'weapon_accuracy_impulse'",
+                      "stattoattributemodifierscalar": {
+                        "datatablevalue": {
+                          "datatable": "gbx_ue_data_table'Weapon_Rarity_Init'",
+                          "rowname": "StatValuePerRarityTier",
+                          "columnname": "AccImpulse"
+                        }
+                      },
+                      "bzeroisbetter": "true"
+                    }
+                  },
+                  {
+                    "rarity_accuracy_burst_impluse": {
+                      "attribute": {
+                        "rarity_accuracy_burst_impluse": "rarity_accuracy_burst_impluse"
+                      },
+                      "stat": "rarity_bonus",
+                      "definition": "attribute'weapon_burst_accuracy_impulse_scale'",
+                      "stattoattributemodifierscalar": {
+                        "datatablevalue": {
+                          "datatable": "gbx_ue_data_table'Weapon_Rarity_Init'",
+                          "rowname": "StatValuePerRarityTier",
+                          "columnname": "AccImpulse"
+                        }
+                      },
+                      "bzeroisbetter": "true"
+                    }
+                  },
+                  {
+                    "rarity_ads_speed": {
+                      "attribute": {
+                        "rarity_ads_speed": "rarity_ads_speed"
+                      },
+                      "stat": "rarity_bonus",
+                      "definition": "attribute'weapon_zoom_duration'",
+                      "stattoattributemodifierscalar": {
+                        "datatablevalue": {
+                          "datatable": "gbx_ue_data_table'Weapon_Rarity_Init'",
+                          "rowname": "StatValuePerRarityTier",
+                          "columnname": "ZoomTime"
+                        }
+                      },
+                      "bzeroisbetter": "true"
+                    }
+                  },
+                  {
+                    "rarity_equip_time": {
+                      "attribute": {
+                        "rarity_equip_time": "rarity_equip_time"
+                      },
+                      "stat": "rarity_bonus",
+                      "definition": "attribute'weapon_equip_time'",
+                      "stattoattributemodifierscalar": {
+                        "datatablevalue": {
+                          "datatable": "gbx_ue_data_table'Weapon_Stats'"
+                        }
+                      },
+                      "bzeroisbetter": "true"
+                    }
+                  },
+                  {
+                    "melee_damage": {
+                      "attribute": {
+                        "melee_damage": "melee_damage"
+                      },
+                      "stat": "melee_damage",
+                      "definition": "attribute'weapon_melee_multiplier'",
+                      "stattoattributemodifierscalar": {
+                        "datatablevalue": {
+                          "datatable": "gbx_ue_data_table'Weapon_Stats'",
+                          "rowname": "Melee_Damage",
+                          "columnname": "Default"
+                        }
+                      },
+                      "modifiertype": "PreAdd"
+                    }
+                  }
+                ]
+              },
+              "type": "Asset'/Script/GbxWeapon.WeaponStatsDef'",
+              "class": "weaponstats"
+            }
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "id": "classmod_c4sh_heavy",
+  "note": "Heavy C4SH classmod — skill glyphs in primary",
+  "input": {
+    "itemType": "Class Mod",
+    "type_label": "Class Mod",
+    "set": "classmod_corpohacker",
+    "part_names": [
+      "classmod_corpohacker.body_05",
+      "classmod_corpohacker.passive_blue_1_1_tier_5",
+      "classmod_corpohacker.passive_blue_1_2_tier_5",
+      "classmod_corpohacker.passive_blue_1_3_tier_5",
+      "classmod_corpohacker.passive_red_1_1_tier_5",
+      "classmod_corpohacker.passive_red_1_2_tier_5",
+      "classmod_corpohacker.passive_green_1_1_tier_5",
+      "classmod_corpohacker.passive_green_1_2_tier_5",
+      "classmod_corpohacker.passive_blue_1_4_tier_5"
+    ],
+    "level": 70
+  },
+  "expect": {
+    "item_type": "Classmod",
+    "primary_min_count": 6
+  }
+}

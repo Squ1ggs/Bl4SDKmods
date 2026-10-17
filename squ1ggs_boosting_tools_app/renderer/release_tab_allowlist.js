@@ -1,0 +1,1 @@
+window.SQBT_RELEASE_TAB_ALLOWLIST = ["home", "builds", "auto_lobby", "editor", "appearance", "picture_item", "camera", "player", "progression", "missions", "loot", "serials", "mobility", "vehicle", "damage", "resources", "world", "mob_io", "freecam", "display", "loot_shapes", "faafo", "keybinds", "toggles", "pack_bay", "party_bay", "log", "support"];

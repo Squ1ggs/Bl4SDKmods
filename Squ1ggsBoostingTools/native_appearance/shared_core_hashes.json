@@ -1,0 +1,17 @@
+{
+  "source": "appearance_release/src/bl4_character_swapper",
+  "files": {
+    "runtime.py": "dcdc11bac1ebb4de1510fb121ab95ad4c337a2b7532c308311b41db7321559d8",
+    "native_spawn.py": "44a365eb20a85c28c88b47039ca330b2fe671153e555665d19ed6c8ef5cf2284",
+    "native_helpers.py": "be8d8db956b31ece0fde2d54364d6a4fcba6f81096d5c8397ea463a47b35321d",
+    "native_resolution.py": "31d3d0019e11d65a3999a260f85bd405472f108faa5bace9dc86613c68eb5785",
+    "attachment.py": "0a40547e9fc8ed3ba68759a8a9dce6a8872ac5e2940f2c352e93b0d9ff238d9c",
+    "appearance_visibility.py": "c8fd32df35a385684b40ac2117c19db13a10fc12d0b9f1fd295bdb47f4a8650f",
+    "animation.py": "96e0c8b293b95ac595ba395e95ee2ffda677a3fef5e4a64e310b51de59e8ca23",
+    "data/bl4_characters.json": "e532ff4f77fd6d0b2a366d95d29dbcb07221abc1e26ed44236bb905c6b1431c7",
+    "LICENSE": "4d67f7ccd0aaf2dde13708c7b24cde7f5d8dbfc4c3639d1c868a9d39d0ed492b",
+    "COPYING": "35dedf5b01f508ec891b9b51eb0b8cfa777ec3b29e0a0fb8cc24d297f454fc2b",
+    "THIRD_PARTY_NOTICES.md": "42d13b60a79026d452e07510b44f0e9cf8ea72a6c4625847afd2908139db9ab9",
+    "provenance.json": "5a5f0f230154b178f8a7ee38a9057e62eb91bc77e260ec59d1269a19f7378395"
+  }
+}

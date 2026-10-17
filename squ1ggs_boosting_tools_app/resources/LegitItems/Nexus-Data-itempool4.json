@@ -1,0 +1,1237 @@
+{
+  "itempool": {
+    "records": [
+      {
+        "entries": [
+          {
+            "itempool_bor_sg_05_legendary_plumbbob_shiny": {
+              "itempool": "itempool_bor_sg_05_legendary_PlumbBob_shiny",
+              "items": [
+                {
+                  "item": {
+                    "item": {
+                      "handle": "inv'bor_sg.comp_05_legendary_plumbbob'"
+                    }
+                  }
+                }
+              ],
+              "mingamestage": "attribute'Att_MinGameStage_WeaponType_Shotgun'",
+              "customizationlist": [
+                {
+                  "probability": {
+                    "attribute": "attribute'attr_is_story_complete'"
+                  },
+                  "customization": "inv_custom'Cosmetics_Weapon_Shiny_PlumbBob'"
+                }
+              ]
+            }
+          },
+          {
+            "itempool_bor_sm_05_legendary_enumeration_shiny": {
+              "itempool": "itempool_bor_sm_05_legendary_enumeration_shiny",
+              "items": [
+                {
+                  "item": {
+                    "item": {
+                      "handle": "inv'BOR_SM.comp_05_legendary_enumeration'"
+                    }
+                  }
+                }
+              ],
+              "mingamestage": "attribute'Att_MinGameStage_WeaponType_SMG'",
+              "customizationlist": [
+                {
+                  "probability": {
+                    "attribute": "attribute'attr_is_story_complete'"
+                  },
+                  "customization": "inv_custom'Cosmetics_Weapon_Shiny_enumeration'"
+                }
+              ]
+            }
+          },
+          {
+            "itempool_classmods_raid2": {
+              "itempool": "itempool_ClassMods_Raid2",
+              "items": [
+                {
+                  "item": {
+                    "item": {
+                      "handle": "inv'classmod_dark_siren.comp_05_legendary_raid2'"
+                    }
+                  },
+                  "weight": {
+                    "attribute": "attribute'weight_classmod_siren'"
+                  }
+                },
+                {
+                  "item": {
+                    "item": {
+                      "handle": "inv'classmod_exo_soldier.comp_05_legendary_raid2'"
+                    }
+                  },
+                  "weight": {
+                    "attribute": "attribute'weight_classmod_exo'"
+                  }
+                },
+                {
+                  "item": {
+                    "item": {
+                      "handle": "inv'classmod_gravitar.comp_05_legendary_raid2'"
+                    }
+                  },
+                  "weight": {
+                    "attribute": "attribute'weight_classmod_gravitar'"
+                  }
+                },
+                {
+                  "item": {
+                    "item": {
+                      "handle": "inv'classmod_paladin.comp_05_legendary_raid2'"
+                    }
+                  },
+                  "weight": {
+                    "attribute": "attribute'weight_classmod_paladin'"
+                  }
+                },
+                {
+                  "item": {
+                    "item": {
+                      "handle": "inv'classmod_robodealer.comp_05_legendary_raid2'"
+                    }
+                  },
+                  "weight": {
+                    "attribute": "attribute'weight_classmod_robodealer'"
+                  }
+                },
+                {
+                  "item": {
+                    "item": {
+                      "handle": "inv'classmod_corpohacker.comp_05_legendary_raid2'"
+                    }
+                  },
+                  "weight": {
+                    "attribute": "attribute'weight_classmod_corpohacker'"
+                  }
+                }
+              ],
+              "mingamestage": "attribute'Att_MinGameStage_ClassMod'"
+            }
+          },
+          {
+            "itempool_dad_ar_05_legendary_darkhard_shiny": {
+              "itempool": "itempool_dad_ar_05_legendary_DarkHard_shiny",
+              "items": [
+                {
+                  "item": {
+                    "item": {
+                      "handle": "inv'DAD_AR.comp_05_legendary_Mercredi'"
+                    }
+                  }
+                }
+              ],
+              "mingamestage": "attribute'Att_MinGameStage_WEaponType_AssaultRifle'",
+              "customizationlist": [
+                {
+                  "probability": {
+                    "attribute": "attribute'attr_is_story_complete'"
+                  },
+                  "customization": "inv_custom'Cosmetics_Weapon_Shiny_mercredi'"
+                }
+              ]
+            }
+          },
+          {
+            "itempool_dad_ar_05_legendary_discybusiness_shiny": {
+              "itempool": "itempool_dad_ar_05_legendary_DiscyBusiness_shiny",
+              "items": [
+                {
+                  "item": {
+                    "item": {
+                      "handle": "inv'MAL_SG.comp_05_legendary_DiscyBusiness'"
+                    }
+                  }
+                }
+              ],
+              "mingamestage": "attribute'Att_MinGameStage_WeaponType_Shotgun'",
+              "customizationlist": [
+                {
+                  "probability": {
+                    "attribute": "attribute'attr_is_story_complete'"
+                  },
+                  "customization": "inv_custom'Cosmetics_Weapon_Shiny_DiscyBusiness'"
+                }
+              ]
+            }
+          },
+          {
+            "itempool_dad_ps_05_legendary_silversliver_shiny": {
+              "itempool": "itempool_dad_ps_05_legendary_silversliver_shiny",
+              "items": [
+                {
+                  "item": {
+                    "item": {
+                      "handle": "inv'dad_ps.comp_05_legendary_silversliver'"
+                    }
+                  }
+                }
+              ],
+              "mingamestage": "attribute'Att_MinGameStage_WeaponType_Pistol'",
+              "customizationlist": [
+                {
+                  "probability": {
+                    "attribute": "attribute'attr_is_story_complete'"
+                  },
+                  "customization": "inv_custom'Cosmetics_Weapon_Shiny_silversliver'"
+                }
+              ]
+            }
+          },
+          {
+            "itempool_dad_sg_05_legendary_cannonbrawl_shiny": {
+              "itempool": "itempool_dad_sg_05_legendary_Cannonbrawl_shiny",
+              "items": [
+                {
+                  "item": {
+                    "item": {
+                      "handle": "inv'DAD_SG.comp_05_legendary_cannonbrawl'"
+                    }
+                  }
+                }
+              ],
+              "mingamestage": "attribute'Att_MinGameStage_WeaponType_Shotgun'",
+              "customizationlist": [
+                {
+                  "probability": {
+                    "attribute": "attribute'attr_is_story_complete'"
+                  },
+                  "customization": "inv_custom'Cosmetics_Weapon_Shiny_misslaser'"
+                }
+              ]
+            }
+          },
+          {
+            "itempool_dad_sg_05_legendary_pragmate_shiny": {
+              "itempool": "itempool_dad_sg_05_legendary_pragmate_shiny",
+              "items": [
+                {
+                  "item": {
+                    "item": {
+                      "handle": "inv'DAD_SG.comp_05_legendary_pragmate'"
+                    }
+                  }
+                }
+              ],
+              "mingamestage": "attribute'Att_MinGameStage_WeaponType_Shotgun'",
+              "customizationlist": [
+                {
+                  "probability": {
+                    "attribute": "attribute'attr_is_story_complete'"
+                  },
+                  "customization": "inv_custom'Cosmetics_Weapon_Shiny_pragmate'"
+                }
+              ]
+            }
+          },
+          {
+            "itempool_goldsilver_classmods_raid1": {
+              "itempool": "itempool_GoldSilver_ClassMods_Raid1",
+              "items": [
+                {
+                  "item": {
+                    "item": {
+                      "handle": "inv'classmod_dark_siren.comp_05_legendary_raid1'"
+                    }
+                  },
+                  "weight": {
+                    "attribute": "attribute'weight_classmod_siren'"
+                  }
+                },
+                {
+                  "item": {
+                    "item": {
+                      "handle": "inv'classmod_exo_soldier.comp_05_legendary_raid1'"
+                    }
+                  },
+                  "weight": {
+                    "attribute": "attribute'weight_classmod_exo'"
+                  }
+                },
+                {
+                  "item": {
+                    "item": {
+                      "handle": "inv'classmod_gravitar.comp_05_legendary_raid1'"
+                    }
+                  },
+                  "weight": {
+                    "attribute": "attribute'weight_classmod_gravitar'"
+                  }
+                },
+                {
+                  "item": {
+                    "item": {
+                      "handle": "inv'classmod_paladin.comp_05_legendary_raid1'"
+                    }
+                  },
+                  "weight": {
+                    "attribute": "attribute'weight_classmod_paladin'"
+                  }
+                },
+                {
+                  "item": {
+                    "item": {
+                      "handle": "inv'classmod_robodealer.comp_05_legendary_raid1'"
+                    }
+                  },
+                  "weight": {
+                    "attribute": "attribute'weight_classmod_robodealer'"
+                  }
+                },
+                {
+                  "item": {
+                    "item": {
+                      "handle": "inv'classmod_corpohacker.comp_05_legendary_raid1'"
+                    }
+                  },
+                  "weight": {
+                    "attribute": "attribute'weight_classmod_corpohacker'"
+                  }
+                }
+              ],
+              "mingamestage": "attribute'Att_MinGameStage_ClassMod'"
+            }
+          },
+          {
+            "itempool_jak_ps_05_legendary_manifest_shiny": {
+              "itempool": "itempool_jak_ps_05_legendary_manifest_shiny",
+              "items": [
+                {
+                  "item": {
+                    "item": {
+                      "handle": "inv'MAL_SR.comp_05_legendary_manifest'"
+                    }
+                  }
+                }
+              ],
+              "mingamestage": "attribute'Att_MinGameStage_WeaponType_SniperRifle'",
+              "customizationlist": [
+                {
+                  "probability": {
+                    "attribute": "attribute'attr_is_story_complete'"
+                  },
+                  "customization": "inv_custom'Cosmetics_Weapon_Shiny_manifest'"
+                }
+              ]
+            }
+          },
+          {
+            "itempool_jak_ps_05_legendary_shalashaska_shiny": {
+              "itempool": "itempool_jak_ps_05_legendary_Shalashaska_shiny",
+              "items": [
+                {
+                  "item": {
+                    "item": {
+                      "handle": "inv'JAK_PS.comp_05_legendary_Shalashaska'"
+                    }
+                  }
+                }
+              ],
+              "mingamestage": "attribute'Att_MinGameStage_WeaponType_Pistol'",
+              "customizationlist": [
+                {
+                  "probability": {
+                    "attribute": "attribute'attr_is_story_complete'"
+                  },
+                  "customization": "inv_custom'Cosmetics_Weapon_Shiny_Shalashaska'"
+                }
+              ]
+            }
+          },
+          {
+            "itempool_jak_ps_05_legendary_shoals_shiny": {
+              "itempool": "itempool_jak_ps_05_legendary_shoals_shiny",
+              "items": [
+                {
+                  "item": {
+                    "item": {
+                      "handle": "inv'JAK_PS.comp_05_legendary_Shoals'"
+                    }
+                  }
+                }
+              ],
+              "mingamestage": "attribute'Att_MinGameStage_WeaponType_Pistol'",
+              "customizationlist": [
+                {
+                  "probability": {
+                    "attribute": "attribute'attr_is_story_complete'"
+                  },
+                  "customization": "inv_custom'Cosmetics_Weapon_Shiny_shoals'"
+                }
+              ]
+            }
+          },
+          {
+            "itempool_jak_sr_legendary_triplicate_shiny": {
+              "itempool": "itempool_jak_sr_legendary_Triplicate_shiny",
+              "items": [
+                {
+                  "item": {
+                    "item": {
+                      "handle": "inv'VLA_AR.comp_05_legendary_Triplicate'"
+                    }
+                  }
+                }
+              ],
+              "mingamestage": "attribute'Att_MinGameStage_WEaponType_AssaultRifle'",
+              "customizationlist": [
+                {
+                  "probability": {
+                    "attribute": "attribute'attr_is_story_complete'"
+                  },
+                  "customization": "inv_custom'Cosmetics_Weapon_Shiny_Triplicate'"
+                }
+              ]
+            }
+          },
+          {
+            "itempool_mal_sg_05_legendary_mantra_shiny": {
+              "itempool": "itempool_mal_sg_05_legendary_mantra_shiny",
+              "items": [
+                {
+                  "item": {
+                    "item": {
+                      "handle": "inv'MAL_SG.comp_05_legendary_mantra'"
+                    }
+                  }
+                }
+              ],
+              "mingamestage": "attribute'Att_MinGameStage_WeaponType_Shotgun'",
+              "customizationlist": [
+                {
+                  "probability": {
+                    "attribute": "attribute'attr_is_story_complete'"
+                  },
+                  "customization": "inv_custom'Cosmetics_Weapon_Shiny_mantra'"
+                }
+              ]
+            }
+          },
+          {
+            "itempool_mal_sg_05_legendary_outback_shiny": {
+              "itempool": "itempool_mal_sg_05_legendary_outback_shiny",
+              "items": [
+                {
+                  "item": {
+                    "item": {
+                      "handle": "inv'jak_sr.comp_05_legendary_outback'"
+                    }
+                  }
+                }
+              ],
+              "mingamestage": "attribute'Att_MinGameStage_WeaponType_SniperRifle'",
+              "customizationlist": [
+                {
+                  "probability": {
+                    "attribute": "attribute'attr_is_story_complete'"
+                  },
+                  "customization": "inv_custom'Cosmetics_Weapon_Shiny_outback'"
+                }
+              ]
+            }
+          },
+          {
+            "itempool_mal_sm_05_legendary_brickhouse_shiny": {
+              "itempool": "itempool_mal_sm_05_legendary_brickhouse_shiny",
+              "items": [
+                {
+                  "item": {
+                    "item": {
+                      "handle": "inv'VLA_SM.comp_05_legendary_brickhouse'"
+                    }
+                  }
+                }
+              ],
+              "mingamestage": "attribute'Att_MinGameStage_WeaponType_SMG'",
+              "customizationlist": [
+                {
+                  "probability": {
+                    "attribute": "attribute'attr_is_story_complete'"
+                  },
+                  "customization": "inv_custom'Cosmetics_Weapon_Shiny_mercury'"
+                }
+              ]
+            }
+          },
+          {
+            "itempool_mal_sm_05_legendary_mercury_shiny": {
+              "itempool": "itempool_mal_sm_05_legendary_mercury_shiny",
+              "items": [
+                {
+                  "item": {
+                    "item": {
+                      "handle": "inv'VLA_SM.comp_05_legendary_mercury'"
+                    }
+                  }
+                }
+              ],
+              "mingamestage": "attribute'Att_MinGameStage_WeaponType_SMG'",
+              "customizationlist": [
+                {
+                  "probability": {
+                    "attribute": "attribute'attr_is_story_complete'"
+                  },
+                  "customization": "inv_custom'Cosmetics_Weapon_Shiny_mercury'"
+                }
+              ]
+            }
+          },
+          {
+            "itempool_mal_sm_05_legendary_songbird_shiny": {
+              "itempool": "itempool_mal_sm_05_legendary_songbird_shiny",
+              "items": [
+                {
+                  "item": {
+                    "item": {
+                      "handle": "inv'MAL_SM.comp_05_legendary_songbird'"
+                    }
+                  }
+                }
+              ],
+              "mingamestage": "attribute'Att_MinGameStage_WeaponType_SMG'",
+              "customizationlist": [
+                {
+                  "probability": {
+                    "attribute": "attribute'attr_is_story_complete'"
+                  },
+                  "customization": "inv_custom'Cosmetics_Weapon_Shiny_songbird'"
+                }
+              ]
+            }
+          },
+          {
+            "itempool_mal_sr_05_legendary_clarity_shiny": {
+              "itempool": "itempool_mal_sr_05_legendary_Clarity_shiny",
+              "items": [
+                {
+                  "item": {
+                    "item": {
+                      "handle": "inv'MAL_SR.comp_05_legendary_Clarity'"
+                    }
+                  }
+                }
+              ],
+              "mingamestage": "attribute'Att_MinGameStage_WeaponType_SniperRifle'",
+              "customizationlist": [
+                {
+                  "probability": {
+                    "attribute": "attribute'attr_is_story_complete'"
+                  },
+                  "customization": "inv_custom'Cosmetics_Weapon_Shiny_Clarity'"
+                }
+              ]
+            }
+          },
+          {
+            "itempool_ord_ps_05_legendary_roulette_shiny": {
+              "itempool": "itempool_ord_ps_05_legendary_Roulette_shiny",
+              "items": [
+                {
+                  "item": {
+                    "item": {
+                      "handle": "inv'ORD_PS.comp_05_legendary_Roulette'"
+                    }
+                  }
+                }
+              ],
+              "mingamestage": "attribute'Att_MinGameStage_WeaponType_Pistol'",
+              "customizationlist": [
+                {
+                  "probability": {
+                    "attribute": "attribute'attr_is_story_complete'"
+                  },
+                  "customization": "inv_custom'Cosmetics_Weapon_Shiny_Roulette'"
+                }
+              ]
+            }
+          },
+          {
+            "itempool_ord_sr_05_legendary_ishmael_shiny": {
+              "itempool": "itempool_ord_sr_05_legendary_Ishmael_shiny",
+              "items": [
+                {
+                  "item": {
+                    "item": {
+                      "handle": "inv'ORD_SR.comp_05_legendary_ishmael'"
+                    }
+                  }
+                }
+              ],
+              "mingamestage": "attribute'Att_MinGameStage_WeaponType_SniperRifle'",
+              "customizationlist": [
+                {
+                  "probability": {
+                    "attribute": "attribute'attr_is_story_complete'"
+                  },
+                  "customization": "inv_custom'Cosmetics_Weapon_Shiny_Ishmael'"
+                }
+              ]
+            }
+          },
+          {
+            "itempool_splicearm_launcher": {
+              "itempool": "itempool_SpliceArm_Launcher",
+              "items": [
+                {
+                  "item": {
+                    "item": {
+                      "handle": "inv'Weapon_SpliceArm_Launcher.comp_SpliceArm_Launcher'"
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "itempool_ted_ar_05_legendary_laserdisc_shiny": {
+              "itempool": "itempool_ted_ar_05_legendary_laserdisc_shiny",
+              "items": [
+                {
+                  "item": {
+                    "item": {
+                      "handle": "inv'TED_AR.comp_05_legendary_laserdisc'"
+                    }
+                  }
+                }
+              ],
+              "mingamestage": "attribute'Att_MinGameStage_WEaponType_AssaultRifle'",
+              "customizationlist": [
+                {
+                  "probability": {
+                    "attribute": "attribute'attr_is_story_complete'"
+                  },
+                  "customization": "inv_custom'Cosmetics_Weapon_Shiny_LaserDisc'"
+                }
+              ]
+            }
+          },
+          {
+            "itempool_ted_ar_05_legendary_murder_shiny": {
+              "itempool": "itempool_ted_ar_05_legendary_murder_shiny",
+              "items": [
+                {
+                  "item": {
+                    "item": {
+                      "handle": "inv'TED_AR.comp_05_legendary_murder'"
+                    }
+                  }
+                }
+              ],
+              "mingamestage": "attribute'Att_MinGameStage_WEaponType_AssaultRifle'",
+              "customizationlist": [
+                {
+                  "probability": {
+                    "attribute": "attribute'attr_is_story_complete'"
+                  },
+                  "customization": "inv_custom'Cosmetics_Weapon_Shiny_murder'"
+                }
+              ]
+            }
+          },
+          {
+            "itempool_ted_ps_05_legendary_earlyexcess_shiny": {
+              "itempool": "itempool_ted_ps_05_legendary_EarlyExcess_shiny",
+              "items": [
+                {
+                  "item": {
+                    "item": {
+                      "handle": "inv'TED_PS.comp_05_legendary_EarlyExcess'"
+                    }
+                  }
+                }
+              ],
+              "mingamestage": "attribute'Att_MinGameStage_WeaponType_Pistol'",
+              "customizationlist": [
+                {
+                  "probability": {
+                    "attribute": "attribute'attr_is_story_complete'"
+                  },
+                  "customization": "inv_custom'Cosmetics_Weapon_Shiny_EarlyExcess'"
+                }
+              ]
+            }
+          },
+          {
+            "itempool_ted_ps_05_legendary_shammy_shiny": {
+              "itempool": "itempool_ted_ps_05_legendary_Shammy_shiny",
+              "items": [
+                {
+                  "item": {
+                    "item": {
+                      "handle": "inv'TED_PS.comp_05_legendary_Shammy'"
+                    }
+                  }
+                }
+              ],
+              "mingamestage": "attribute'Att_MinGameStage_WeaponType_Pistol'",
+              "customizationlist": [
+                {
+                  "probability": {
+                    "attribute": "attribute'attr_is_story_complete'"
+                  },
+                  "customization": "inv_custom'Cosmetics_Weapon_Shiny_Shammy'"
+                }
+              ]
+            }
+          },
+          {
+            "itempool_tor_ar_05_legendary_fleabag_shiny": {
+              "itempool": "itempool_tor_ar_05_legendary_Fleabag_shiny",
+              "items": [
+                {
+                  "item": {
+                    "item": {
+                      "handle": "inv'TOR_AR.comp_05_legendary_fleabag'"
+                    }
+                  }
+                }
+              ],
+              "mingamestage": "attribute'Att_MinGameStage_WEaponType_AssaultRifle'",
+              "customizationlist": [
+                {
+                  "probability": {
+                    "attribute": "attribute'attr_is_story_complete'"
+                  },
+                  "customization": "inv_custom'Cosmetics_Weapon_Shiny_Fleabag'"
+                }
+              ]
+            }
+          },
+          {
+            "itempool_tor_ar_05_legendary_lockjaw_shiny": {
+              "itempool": "itempool_tor_ar_05_legendary_lockjaw_shiny",
+              "items": [
+                {
+                  "item": {
+                    "item": {
+                      "handle": "inv'TOR_AR.comp_05_legendary_lockjaw'"
+                    }
+                  }
+                }
+              ],
+              "mingamestage": "attribute'Att_MinGameStage_WEaponType_AssaultRifle'",
+              "customizationlist": [
+                {
+                  "probability": {
+                    "attribute": "attribute'attr_is_story_complete'"
+                  },
+                  "customization": "inv_custom'Cosmetics_Weapon_Shiny_lockjaw'"
+                }
+              ]
+            }
+          },
+          {
+            "itempool_tor_sg_05_legendary_demo_shiny": {
+              "itempool": "itempool_tor_sg_05_legendary_Demo_shiny",
+              "items": [
+                {
+                  "item": {
+                    "item": {
+                      "handle": "inv'BOR_SG.comp_05_legendary_demo'"
+                    }
+                  }
+                }
+              ],
+              "mingamestage": "attribute'Att_MinGameStage_WeaponType_Shotgun'",
+              "customizationlist": [
+                {
+                  "probability": {
+                    "attribute": "attribute'attr_is_story_complete'"
+                  },
+                  "customization": "inv_custom'Cosmetics_Weapon_Shiny_Demo'"
+                }
+              ]
+            }
+          },
+          {
+            "itempool_tor_sg_05_legendary_doeshot_shiny": {
+              "itempool": "itempool_tor_sg_05_legendary_Doeshot_shiny",
+              "items": [
+                {
+                  "item": {
+                    "item": {
+                      "handle": "inv'JAK_SG.comp_05_legendary_Doeshot'"
+                    }
+                  }
+                }
+              ],
+              "mingamestage": "attribute'Att_MinGameStage_WeaponType_Shotgun'",
+              "customizationlist": [
+                {
+                  "probability": {
+                    "attribute": "attribute'attr_is_story_complete'"
+                  },
+                  "customization": "inv_custom'Cosmetics_Weapon_Shiny_Doeshot'"
+                }
+              ]
+            }
+          },
+          {
+            "itempool_vla_ar_05_legendary_bubbles_shiny": {
+              "itempool": "itempool_vla_ar_05_legendary_bubbles_shiny",
+              "items": [
+                {
+                  "item": {
+                    "item": {
+                      "handle": "inv'VLA_AR.comp_05_Legendary_bubbles'"
+                    }
+                  }
+                }
+              ],
+              "mingamestage": "attribute'Att_MinGameStage_WEaponType_AssaultRifle'",
+              "customizationlist": [
+                {
+                  "probability": {
+                    "attribute": "attribute'attr_is_story_complete'"
+                  },
+                  "customization": "inv_custom'Cosmetics_Weapon_Shiny_bubbles'"
+                }
+              ]
+            }
+          },
+          {
+            "itempool_wolrdboss_october": {
+              "itempool": "ItemPool_WolrdBoss_October",
+              "items": [
+                {
+                  "item": {
+                    "item": {
+                      "handle": "inv'TED_AR.comp_05_legendary_murder'"
+                    }
+                  },
+                  "weight": {
+                    "constant": "0.075000"
+                  }
+                },
+                {
+                  "item": {
+                    "item": {
+                      "handle": "inv'ord_grenade_gadget.comp_05_legendary_skully'"
+                    }
+                  },
+                  "weight": {
+                    "constant": "0.075000"
+                  }
+                },
+                {
+                  "item": {
+                    "criteria": {
+                      "criteria": {
+                        "name": [
+                          {
+                            "type": {
+                              "name": {
+                                "type": "Type"
+                              },
+                              "tags": [
+                                {
+                                  "gadget": "Gadget"
+                                },
+                                {
+                                  "weapon": "Weapon"
+                                }
+                              ]
+                            }
+                          },
+                          {
+                            "gadget": {
+                              "name": {
+                                "gadget": "Gadget"
+                              },
+                              "tags": [
+                                {
+                                  "grenade_gadget": "grenade_gadget"
+                                }
+                              ]
+                            }
+                          },
+                          {
+                            "element": {
+                              "name": {
+                                "element": "element"
+                              },
+                              "tags": [
+                                {
+                                  "corrosive": "corrosive"
+                                },
+                                {
+                                  "cryo": "cryo"
+                                },
+                                {
+                                  "fire": "fire"
+                                },
+                                {
+                                  "radiation": "radiation"
+                                },
+                                {
+                                  "shock": "shock"
+                                },
+                                {
+                                  "sonic": "sonic"
+                                }
+                              ],
+                              "bnoneset": "true"
+                            }
+                          },
+                          {
+                            "rarity": {
+                              "name": {
+                                "rarity": "Rarity"
+                              },
+                              "tags": [
+                                {
+                                  "epic": "epic"
+                                },
+                                {
+                                  "legendary": "legendary"
+                                },
+                                {
+                                  "rare": "rare"
+                                }
+                              ],
+                              "tagweights": {
+                                "pairs": {
+                                  "pair436263080": {
+                                    "key": "rare",
+                                    "value": {
+                                      "constant": "0.700000"
+                                    }
+                                  },
+                                  "pair1090228686": {
+                                    "key": "epic",
+                                    "value": {
+                                      "constant": "0.250000"
+                                    }
+                                  },
+                                  "pair367381760": {
+                                    "key": "legendary",
+                                    "value": {
+                                      "constant": "0.050000"
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          },
+                          {
+                            "manufacturer": {
+                              "name": {
+                                "manufacturer": "Manufacturer"
+                              },
+                              "tags": [
+                                {
+                                  "atlas": "Atlas"
+                                },
+                                {
+                                  "borg": "Borg"
+                                },
+                                {
+                                  "cov": "CoV"
+                                },
+                                {
+                                  "daedalus": "daedalus"
+                                },
+                                {
+                                  "hyperion": "Hyperion"
+                                },
+                                {
+                                  "jakobs": "Jakobs"
+                                },
+                                {
+                                  "maliwan": "Maliwan"
+                                },
+                                {
+                                  "order": "Order"
+                                },
+                                {
+                                  "tediore": "Tediore"
+                                },
+                                {
+                                  "torgue": "Torgue"
+                                },
+                                {
+                                  "vladof": "Vladof"
+                                }
+                              ]
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  },
+                  "weight": {
+                    "constant": "0.850000"
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "entries": [
+          {
+            "itempool_enemies_guns_ar": {
+              "itempool": "itempool_enemies_guns_ar",
+              "items": [
+                {
+                  "item": {
+                    "handle": "itempool'itempool_ar_01_common'"
+                  }
+                },
+                {
+                  "item": {
+                    "handle": "itempool'itempool_ar_02_uncommon'"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "itempool_enemydrop_currencyorammo_intro": {
+              "itempool": "ItemPool_EnemyDrop_CurrencyOrAmmo_Intro",
+              "items": [
+                {
+                  "item": {
+                    "item": {
+                      "handle": "itempool'itempool_ammo'"
+                    }
+                  }
+                },
+                {
+                  "item": {
+                    "item": {
+                      "handle": "itempool'itempool_money_normal'"
+                    }
+                  }
+                },
+                {
+                  "item": {
+                    "item": {
+                      "handle": "inv'Health'"
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "itempool_lootabledrop_ammo_twopieces": {
+              "itempool": "ItemPool_LootableDrop_Ammo_TwoPieces",
+              "items": [
+                {
+                  "item": {
+                    "criteria": {
+                      "preset": "criteria_preset'LootPreset_Ammo'"
+                    }
+                  }
+                }
+              ],
+              "quantity": {
+                "constant": "2.000000",
+                "datatablevalue": {
+                  "datatable": "gbx_ue_data_table'Table_EnemyDrops'",
+                  "rowname": "Chump",
+                  "columnname": "CurrencyAmmo_HowMany_60_E09620F34AF446618F731D8CED6476B2"
+                }
+              }
+            }
+          },
+          {
+            "itempool_money": {
+              "itempool": "itempool_money",
+              "items": [
+                {
+                  "item": {
+                    "criteria": {
+                      "preset": "criteria_preset'LootPreset_Money'"
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "itempool_ted_ps": {
+              "itempool": "itempool_ted_ps",
+              "items": [
+                {
+                  "item": {
+                    "item": {
+                      "handle": "inv'TED_PS.comp_01_common'"
+                    }
+                  },
+                  "weight": {
+                    "attribute": "attribute'Att_RarityWeight_01_Common'"
+                  }
+                },
+                {
+                  "item": {
+                    "item": {
+                      "handle": "inv'TED_PS.comp_02_uncommon'"
+                    }
+                  },
+                  "weight": {
+                    "attribute": "attribute'Att_RarityWeight_02_Uncommon'"
+                  }
+                },
+                {
+                  "item": {
+                    "item": {
+                      "handle": "inv'TED_PS.comp_03_rare'"
+                    }
+                  },
+                  "weight": {
+                    "attribute": "attribute'Att_RarityWeight_03_Rare'"
+                  }
+                },
+                {
+                  "item": {
+                    "item": {
+                      "handle": "inv'TED_PS.comp_04_epic'"
+                    }
+                  },
+                  "weight": {
+                    "attribute": "attribute'Att_RarityWeight_04_VeryRare'"
+                  }
+                }
+              ],
+              "mingamestage": "attribute'Att_MinGameStage_WeaponType_Pistol'"
+            }
+          },
+          {
+            "itempool_turret_weapon_basic": {
+              "itempool": "itempool_turret_weapon_basic",
+              "items": [
+                {
+                  "item": {
+                    "item": {
+                      "handle": "inv'turret_weapon_basic.comp_turret_weapon'"
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "itempool_turret_weapon_beam": {
+              "itempool": "itempool_turret_weapon_beam",
+              "items": [
+                {
+                  "item": {
+                    "handle": "inv'turret_weapon_beam.comp_turret_weapon'"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "itempool_turret_weapon_chaingun": {
+              "itempool": "itempool_turret_weapon_chaingun",
+              "items": [
+                {
+                  "item": {
+                    "handle": "inv'turret_weapon_chaingun.comp_turret_weapon'"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "itempool_turret_weapon_longrifle": {
+              "itempool": "itempool_turret_weapon_longrifle",
+              "items": [
+                {
+                  "item": {
+                    "handle": "inv'turret_weapon_longrifle.comp_turret_weapon'"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "itempool_turret_weapon_rocketlauncher": {
+              "itempool": "itempool_turret_weapon_rocketlauncher",
+              "items": [
+                {
+                  "item": {
+                    "handle": "inv'turret_weapon_rocketlauncher.comp_turret_weapon'"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "itempool_turret_weapon_shotgun": {
+              "itempool": "itempool_turret_weapon_shotgun",
+              "items": [
+                {
+                  "item": {
+                    "handle": "inv'turret_weapon_shotgun.comp_turret_weapon'"
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "entries": [
+          {
+            "itempool_meathead_flamethrower": {
+              "itempool": "ItemPool_Meathead_Flamethrower",
+              "items": [
+                {
+                  "item": {
+                    "handle": "inv'Weapon_Meathead_Flamethrower.Comp_Meathead_Flamethrower'"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "itempool_splicespiderjumbo_rocketgun": {
+              "itempool": "ItemPool_SpliceSpiderJumbo_RocketGun",
+              "items": [
+                {
+                  "item": {
+                    "item": {
+                      "handle": "inv'Weapon_SpliceSpiderJumbo_RocketGun.CompSpliceJumboRocket'"
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "entries": [
+          {
+            "itempool_ted_sg_heavyturret": {
+              "itempool": "itempool_TED_SG_HeavyTurret",
+              "items": [
+                {
+                  "item": {
+                    "item": {
+                      "handle": "inv'TOR_HW.comp_02_uncommon_Unique_HeavyTurret'"
+                    }
+                  }
+                }
+              ],
+              "mingamestage": "attribute'Att_MinGameStage_Gadget_HeavyWeapon'"
+            }
+          }
+        ]
+      }
+    ]
+  }
+}

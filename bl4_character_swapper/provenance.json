@@ -1,0 +1,108 @@
+{
+  "author": "RDPSqu1ggs",
+  "repository": "https://github.com/Squ1ggs/Bl4SDKmods",
+  "files": [
+    {
+      "source": "Squ1ggsBoostingTools\\dev_tools.py",
+      "source_sha256": "e9a4394b27e8f0ee72ade490149844fc793545bb712648c275834e564d90f82f",
+      "output": "attachment.py",
+      "output_sha256": "0a40547e9fc8ed3ba68759a8a9dce6a8872ac5e2940f2c352e93b0d9ff238d9c",
+      "functions": [
+        "_call_quiet",
+        "_component_visible",
+        "_set_component_visible",
+        "_actor_location",
+        "_actor_label",
+        "_appearance_skeletal_components",
+        "_appearance_mesh_ready",
+        "_apply_worn_source_appearance_legacy"
+      ]
+    },
+    {
+      "source": "Squ1ggsBoostingTools\\embedded_oak\\engine.py",
+      "source_sha256": "10bdf43a25bac6cb7d3e0309ec75ccbcde04fc0f1aee7a18be5937a5228e5617",
+      "output": "native_helpers.py",
+      "output_sha256": "be8d8db956b31ece0fde2d54364d6a4fcba6f81096d5c8397ea463a47b35321d",
+      "functions": [
+        "_unwrap",
+        "_actor_mesh",
+        "_mesh_asset_for_kind",
+        "_copy_actor_data",
+        "_spawn_actor_deferred"
+      ]
+    },
+    {
+      "source": "Squ1ggsBoostingTools\\embedded_oak\\engine.py",
+      "source_sha256": "10bdf43a25bac6cb7d3e0309ec75ccbcde04fc0f1aee7a18be5937a5228e5617",
+      "output": "native_resolution.py",
+      "output_sha256": "31d3d0019e11d65a3999a260f85bd405472f108faa5bace9dc86613c68eb5785",
+      "functions": [
+        "_actor_body_packages",
+        "_actor_class_packages",
+        "_alias_key",
+        "_alive_actors_for_spawner_component",
+        "_call_load_package",
+        "_class_for_actor_name",
+        "_class_from_registry",
+        "_console_exec_one",
+        "_console_load_package",
+        "_cooked_paths_in",
+        "_legacy_fgbx_def_ptr",
+        "_load_one_spawn_package",
+        "_make_actor_def_shell",
+        "_mesh_already_streamed",
+        "_on_dev_testing_map",
+        "_registry_get_asset",
+        "_registry_helpers_cdo",
+        "_registry_named_assets",
+        "_soft_path_text",
+        "_spawnai_path_package",
+        "_try_soft_load_class",
+        "_usable_spawn_class",
+        "_world_from_pc"
+      ]
+    },
+    {
+      "source": "Squ1ggsBoostingTools/appearance_visibility.py",
+      "source_sha256": "8bd7307758461d7048ead623ec8064fb7dfd8cc8a4a96aa7743772934e460e63",
+      "output": "appearance_visibility.py",
+      "output_sha256": "c8fd32df35a385684b40ac2117c19db13a10fc12d0b9f1fd295bdb47f4a8650f",
+      "functions": []
+    },
+    {
+      "source": "Squ1ggsBoostingTools/embedded_bms/data/squ1ggs_actor_catalog.json",
+      "source_sha256": "7233b24d01c84934c887b0c6c45debf529bf9a86cf0e11c8b64b4f67459d4df7",
+      "output": "data/bl4_characters.json",
+      "output_sha256": "e532ff4f77fd6d0b2a366d95d29dbcb07221abc1e26ed44236bb905c6b1431c7",
+      "functions": []
+    },
+    {
+      "source": "Squ1ggsBoostingTools/embedded_oak/data/actor_body_paths.json",
+      "source_sha256": "5ec5ed1e14c625dee3603508a3c5763ec53349cab81e34f76c13786fe073282e",
+      "output": "data/bl4_characters.json",
+      "output_sha256": "e532ff4f77fd6d0b2a366d95d29dbcb07221abc1e26ed44236bb905c6b1431c7",
+      "functions": []
+    },
+    {
+      "source": "Squ1ggsBoostingTools/embedded_bms/spawn_core.py",
+      "source_sha256": "a09428ae82e414fc1b7c6db698d6250ea4c3227e63993bff1a93ceeedac5f97d",
+      "output": "data/bl4_characters.json",
+      "output_sha256": "e532ff4f77fd6d0b2a366d95d29dbcb07221abc1e26ed44236bb905c6b1431c7",
+      "functions": []
+    },
+    {
+      "source": "Squ1ggsBoostingTools/appearance_animation.py",
+      "source_sha256": "96e0c8b293b95ac595ba395e95ee2ffda677a3fef5e4a64e310b51de59e8ca23",
+      "output": "animation.py",
+      "output_sha256": "96e0c8b293b95ac595ba395e95ee2ffda677a3fef5e4a64e310b51de59e8ca23",
+      "functions": []
+    },
+    {
+      "source": "Squ1ggsBoostingTools/LICENSE",
+      "source_sha256": "ca0fdca798050069c6e37c0f7a968612385dccd6614f7d8434336049038338eb",
+      "output": "LICENSE",
+      "output_sha256": "4d67f7ccd0aaf2dde13708c7b24cde7f5d8dbfc4c3639d1c868a9d39d0ed492b",
+      "functions": []
+    }
+  ]
+}

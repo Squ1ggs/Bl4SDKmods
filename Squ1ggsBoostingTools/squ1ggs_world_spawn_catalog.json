@@ -1,0 +1,381 @@
+{
+  "version": 1,
+  "count": 75,
+  "entries": [
+    {
+      "mix_id": "Mix_GRA_Bandit",
+      "category": "Army",
+      "source": "live_editor_dump_all_OakWorldPainterLayer_Spawn_12_20260608T131543Z.json"
+    },
+    {
+      "mix_id": "Mix_GRA_Order",
+      "category": "Army",
+      "source": "live_editor_dump_all_OakWorldPainterLayer_Spawn_12_20260608T131543Z.json"
+    },
+    {
+      "mix_id": "Mix_MOU_Bandit",
+      "category": "Army",
+      "source": "live_editor_dump_all_OakWorldPainterLayer_Spawn_12_20260608T131543Z.json"
+    },
+    {
+      "mix_id": "Mix_Order_ARMY_ALL",
+      "category": "Army",
+      "source": "live_editor_dump_all_OakWorldPainterLayer_Spawn_12_20260608T131543Z.json"
+    },
+    {
+      "mix_id": "Mix_SHA_Bandit",
+      "category": "Army",
+      "source": "live_editor_dump_all_OakWorldPainterLayer_Spawn_12_20260608T131543Z.json"
+    },
+    {
+      "mix_id": "Mix_SHA_Order",
+      "category": "Army",
+      "source": "live_editor_dump_all_OakWorldPainterLayer_Spawn_12_20260608T131543Z.json"
+    },
+    {
+      "mix_id": "Mix_Vault_MOU_Clan_TK",
+      "category": "Army",
+      "source": "live_editor_dump_all_OakWorldPainterLayer_Spawn_12_20260608T131543Z.json"
+    },
+    {
+      "mix_id": "Mix_Vault_SHA_Clan_TK",
+      "category": "Army",
+      "source": "live_editor_dump_all_OakWorldPainterLayer_Spawn_12_20260608T131543Z.json"
+    },
+    {
+      "mix_id": "Mix_World_City_BanditHard",
+      "category": "Army",
+      "source": "live_editor_dump_all_OakWorldPainterLayer_Spawn_12_20260608T131543Z.json"
+    },
+    {
+      "mix_id": "Mix_World_Clan_RQ",
+      "category": "Army",
+      "source": "live_editor_dump_all_OakWorldPainterLayer_Spawn_12_20260608T131543Z.json"
+    },
+    {
+      "mix_id": "Mix_World_City_BanditEasy",
+      "category": "Army_CITY",
+      "source": "live_editor_dump_all_OakWorldPainterLayer_Spawn_12_20260608T131543Z.json"
+    },
+    {
+      "mix_id": "Mix_World_City_OrderEasy",
+      "category": "Army_CITY",
+      "source": "live_editor_dump_all_OakWorldPainterLayer_Spawn_12_20260608T131543Z.json"
+    },
+    {
+      "mix_id": "Mix_World_City_OrderHard",
+      "category": "Army_CITY",
+      "source": "live_editor_dump_all_OakWorldPainterLayer_Spawn_12_20260608T131543Z.json"
+    },
+    {
+      "mix_id": "Mix_World_City_RedGuard",
+      "category": "Army_CITY",
+      "source": "live_editor_dump_all_OakWorldPainterLayer_Spawn_12_20260608T131543Z.json"
+    },
+    {
+      "mix_id": "Mix_GRA_Bandit_GRAFortress",
+      "category": "Army_GRA",
+      "source": "live_editor_dump_all_OakWorldPainterLayer_Spawn_12_20260608T131543Z.json"
+    },
+    {
+      "mix_id": "Mix_GRA_Bandit_HydroDam",
+      "category": "Army_GRA",
+      "source": "live_editor_dump_all_OakWorldPainterLayer_Spawn_12_20260608T131543Z.json"
+    },
+    {
+      "mix_id": "Mix_GRA_Bandit_KotOFoB",
+      "category": "Army_GRA",
+      "source": "live_editor_dump_all_OakWorldPainterLayer_Spawn_12_20260608T131543Z.json"
+    },
+    {
+      "mix_id": "Mix_GRA_Bandit_SolarArray",
+      "category": "Army_GRA",
+      "source": "live_editor_dump_all_OakWorldPainterLayer_Spawn_12_20260608T131543Z.json"
+    },
+    {
+      "mix_id": "Mix_GRA_Order_Coastal",
+      "category": "Army_GRA",
+      "source": "live_editor_dump_all_OakWorldPainterLayer_Spawn_12_20260608T131543Z.json"
+    },
+    {
+      "mix_id": "Mix_GRA_Order_Farmlands",
+      "category": "Army_GRA",
+      "source": "live_editor_dump_all_OakWorldPainterLayer_Spawn_12_20260608T131543Z.json"
+    },
+    {
+      "mix_id": "Mix_GRA_Order_GRAFortress",
+      "category": "Army_GRA",
+      "source": "live_editor_dump_all_OakWorldPainterLayer_Spawn_12_20260608T131543Z.json"
+    },
+    {
+      "mix_id": "Mix_GRA_Order_Hydrodam",
+      "category": "Army_GRA",
+      "source": "live_editor_dump_all_OakWorldPainterLayer_Spawn_12_20260608T131543Z.json"
+    },
+    {
+      "mix_id": "Mix_GRA_Order_KotOFoB",
+      "category": "Army_GRA",
+      "source": "live_editor_dump_all_OakWorldPainterLayer_Spawn_12_20260608T131543Z.json"
+    },
+    {
+      "mix_id": "Mix_GRA_Order_KotOMotherBase",
+      "category": "Army_GRA",
+      "source": "live_editor_dump_all_OakWorldPainterLayer_Spawn_12_20260608T131543Z.json"
+    },
+    {
+      "mix_id": "Mix_GRA_Order_SolarArray",
+      "category": "Army_GRA",
+      "source": "live_editor_dump_all_OakWorldPainterLayer_Spawn_12_20260608T131543Z.json"
+    },
+    {
+      "mix_id": "Mix_MOU_Bandit_Cliffs",
+      "category": "Army_MOU",
+      "source": "live_editor_dump_all_OakWorldPainterLayer_Spawn_12_20260608T131543Z.json"
+    },
+    {
+      "mix_id": "Mix_MOU_Bandit_MTNFortress",
+      "category": "Army_MOU",
+      "source": "live_editor_dump_all_OakWorldPainterLayer_Spawn_12_20260608T131543Z.json"
+    },
+    {
+      "mix_id": "Mix_MOU_Bandit_OrderBunker",
+      "category": "Army_MOU",
+      "source": "live_editor_dump_all_OakWorldPainterLayer_Spawn_12_20260608T131543Z.json"
+    },
+    {
+      "mix_id": "Mix_MOU_Bandit_OrderChkpt",
+      "category": "Army_MOU",
+      "source": "live_editor_dump_all_OakWorldPainterLayer_Spawn_12_20260608T131543Z.json"
+    },
+    {
+      "mix_id": "Mix_MOU_Order_Cliffs",
+      "category": "Army_MOU",
+      "source": "live_editor_dump_all_OakWorldPainterLayer_Spawn_12_20260608T131543Z.json"
+    },
+    {
+      "mix_id": "Mix_MOU_Order_MTNFortress",
+      "category": "Army_MOU",
+      "source": "live_editor_dump_all_OakWorldPainterLayer_Spawn_12_20260608T131543Z.json"
+    },
+    {
+      "mix_id": "Mix_MOU_Order_Mine",
+      "category": "Army_MOU",
+      "source": "live_editor_dump_all_OakWorldPainterLayer_Spawn_12_20260608T131543Z.json"
+    },
+    {
+      "mix_id": "Mix_MOU_Order_OrderBunker",
+      "category": "Army_MOU",
+      "source": "live_editor_dump_all_OakWorldPainterLayer_Spawn_12_20260608T131543Z.json"
+    },
+    {
+      "mix_id": "Mix_MOU_Order_OrderChkpt",
+      "category": "Army_MOU",
+      "source": "live_editor_dump_all_OakWorldPainterLayer_Spawn_12_20260608T131543Z.json"
+    },
+    {
+      "mix_id": "Mix_MOU_Order_Timberlands",
+      "category": "Army_MOU",
+      "source": "live_editor_dump_all_OakWorldPainterLayer_Spawn_12_20260608T131543Z.json"
+    },
+    {
+      "mix_id": "Mix_SHA_Bandit_ElectiTown",
+      "category": "Army_SHA",
+      "source": "live_editor_dump_all_OakWorldPainterLayer_Spawn_12_20260608T131543Z.json"
+    },
+    {
+      "mix_id": "Mix_SHA_Bandit_Plateau",
+      "category": "Army_SHA",
+      "source": "live_editor_dump_all_OakWorldPainterLayer_Spawn_12_20260608T131543Z.json"
+    },
+    {
+      "mix_id": "Mix_SHA_Bandit_Scrapyard",
+      "category": "Army_SHA",
+      "source": "live_editor_dump_all_OakWorldPainterLayer_Spawn_12_20260608T131543Z.json"
+    },
+    {
+      "mix_id": "Mix_SHA_Order_Beach",
+      "category": "Army_SHA",
+      "source": "live_editor_dump_all_OakWorldPainterLayer_Spawn_12_20260608T131543Z.json"
+    },
+    {
+      "mix_id": "Mix_SHA_Order_Electitown",
+      "category": "Army_SHA",
+      "source": "live_editor_dump_all_OakWorldPainterLayer_Spawn_12_20260608T131543Z.json"
+    },
+    {
+      "mix_id": "Mix_SHA_Order_Plateau",
+      "category": "Army_SHA",
+      "source": "live_editor_dump_all_OakWorldPainterLayer_Spawn_12_20260608T131543Z.json"
+    },
+    {
+      "mix_id": "Mix_SHA_Order_SHAFortress",
+      "category": "Army_SHA",
+      "source": "live_editor_dump_all_OakWorldPainterLayer_Spawn_12_20260608T131543Z.json"
+    },
+    {
+      "mix_id": "Mix_SHA_Order_Scrapyard",
+      "category": "Army_SHA",
+      "source": "live_editor_dump_all_OakWorldPainterLayer_Spawn_12_20260608T131543Z.json"
+    },
+    {
+      "mix_id": "Mix_World_City_Creep",
+      "category": "Creature",
+      "source": "live_editor_dump_all_OakWorldPainterLayer_Spawn_12_20260608T131543Z.json"
+    },
+    {
+      "mix_id": "Mix_World_GRA_Creature_Bat",
+      "category": "Creature",
+      "source": "live_editor_dump_all_OakWorldPainterLayer_Spawn_12_20260608T131543Z.json"
+    },
+    {
+      "mix_id": "Mix_World_GRA_Creature_Beast",
+      "category": "Creature",
+      "source": "live_editor_dump_all_OakWorldPainterLayer_Spawn_12_20260608T131543Z.json"
+    },
+    {
+      "mix_id": "Mix_World_GRA_Creature_Cat",
+      "category": "Creature",
+      "source": "live_editor_dump_all_OakWorldPainterLayer_Spawn_12_20260608T131543Z.json"
+    },
+    {
+      "mix_id": "Mix_World_MOU_Creature_Bat",
+      "category": "Creature",
+      "source": "live_editor_dump_all_OakWorldPainterLayer_Spawn_12_20260608T131543Z.json"
+    },
+    {
+      "mix_id": "Mix_World_MOU_Creature_Beast",
+      "category": "Creature",
+      "source": "live_editor_dump_all_OakWorldPainterLayer_Spawn_12_20260608T131543Z.json"
+    },
+    {
+      "mix_id": "Mix_World_MOU_Creature_Cat",
+      "category": "Creature",
+      "source": "live_editor_dump_all_OakWorldPainterLayer_Spawn_12_20260608T131543Z.json"
+    },
+    {
+      "mix_id": "Mix_World_MOU_Creature_Creep",
+      "category": "Creature",
+      "source": "live_editor_dump_all_OakWorldPainterLayer_Spawn_12_20260608T131543Z.json"
+    },
+    {
+      "mix_id": "Mix_World_MOU_Creature_Thresher",
+      "category": "Creature",
+      "source": "live_editor_dump_all_OakWorldPainterLayer_Spawn_12_20260608T131543Z.json"
+    },
+    {
+      "mix_id": "Mix_World_SHA_Creature_Bat",
+      "category": "Creature",
+      "source": "live_editor_dump_all_OakWorldPainterLayer_Spawn_12_20260608T131543Z.json"
+    },
+    {
+      "mix_id": "Mix_World_SHA_Creature_Creep",
+      "category": "Creature",
+      "source": "live_editor_dump_all_OakWorldPainterLayer_Spawn_12_20260608T131543Z.json"
+    },
+    {
+      "mix_id": "Mix_World_SHA_Creature_Pangolin",
+      "category": "Creature",
+      "source": "live_editor_dump_all_OakWorldPainterLayer_Spawn_12_20260608T131543Z.json"
+    },
+    {
+      "mix_id": "Mix_World_City_Bats",
+      "category": "Creature_CITY",
+      "source": "live_editor_dump_all_OakWorldPainterLayer_Spawn_12_20260608T131543Z.json"
+    },
+    {
+      "mix_id": "Mix_World_City_Cats",
+      "category": "Creature_CITY",
+      "source": "live_editor_dump_all_OakWorldPainterLayer_Spawn_12_20260608T131543Z.json"
+    },
+    {
+      "mix_id": "Mix_World_City_Thresher",
+      "category": "Creature_CITY",
+      "source": "live_editor_dump_all_OakWorldPainterLayer_Spawn_12_20260608T131543Z.json"
+    },
+    {
+      "mix_id": "Mix_World_Elpis_Thresher",
+      "category": "Creature_CITY",
+      "source": "live_editor_dump_all_OakWorldPainterLayer_Spawn_12_20260608T131543Z.json"
+    },
+    {
+      "mix_id": "Mix_GRA_East_Bat",
+      "category": "Creature_GRA",
+      "source": "live_editor_dump_all_OakWorldPainterLayer_Spawn_12_20260608T131543Z.json"
+    },
+    {
+      "mix_id": "Mix_GRA_East_Beast",
+      "category": "Creature_GRA",
+      "source": "live_editor_dump_all_OakWorldPainterLayer_Spawn_12_20260608T131543Z.json"
+    },
+    {
+      "mix_id": "Mix_GRA_West_Beast",
+      "category": "Creature_GRA",
+      "source": "live_editor_dump_all_OakWorldPainterLayer_Spawn_12_20260608T131543Z.json"
+    },
+    {
+      "mix_id": "Mix_GRA_West_Cat",
+      "category": "Creature_GRA",
+      "source": "live_editor_dump_all_OakWorldPainterLayer_Spawn_12_20260608T131543Z.json"
+    },
+    {
+      "mix_id": "Mix_MOU_North_Beast",
+      "category": "Creature_MOU",
+      "source": "live_editor_dump_all_OakWorldPainterLayer_Spawn_12_20260608T131543Z.json"
+    },
+    {
+      "mix_id": "Mix_MOU_North_Cat",
+      "category": "Creature_MOU",
+      "source": "live_editor_dump_all_OakWorldPainterLayer_Spawn_12_20260608T131543Z.json"
+    },
+    {
+      "mix_id": "Mix_MOU_North_Creep",
+      "category": "Creature_MOU",
+      "source": "live_editor_dump_all_OakWorldPainterLayer_Spawn_12_20260608T131543Z.json"
+    },
+    {
+      "mix_id": "Mix_MOU_South_Bat",
+      "category": "Creature_MOU",
+      "source": "live_editor_dump_all_OakWorldPainterLayer_Spawn_12_20260608T131543Z.json"
+    },
+    {
+      "mix_id": "Mix_MOU_South_Beast",
+      "category": "Creature_MOU",
+      "source": "live_editor_dump_all_OakWorldPainterLayer_Spawn_12_20260608T131543Z.json"
+    },
+    {
+      "mix_id": "Mix_MOU_South_Cat",
+      "category": "Creature_MOU",
+      "source": "live_editor_dump_all_OakWorldPainterLayer_Spawn_12_20260608T131543Z.json"
+    },
+    {
+      "mix_id": "Mix_MOU_South_Creep",
+      "category": "Creature_MOU",
+      "source": "live_editor_dump_all_OakWorldPainterLayer_Spawn_12_20260608T131543Z.json"
+    },
+    {
+      "mix_id": "Mix_SHA_North_Bat",
+      "category": "Creature_SHA",
+      "source": "live_editor_dump_all_OakWorldPainterLayer_Spawn_12_20260608T131543Z.json"
+    },
+    {
+      "mix_id": "Mix_SHA_North_Thresher",
+      "category": "Creature_SHA",
+      "source": "live_editor_dump_all_OakWorldPainterLayer_Spawn_12_20260608T131543Z.json"
+    },
+    {
+      "mix_id": "Mix_SHA_South_Bat",
+      "category": "Creature_SHA",
+      "source": "live_editor_dump_all_OakWorldPainterLayer_Spawn_12_20260608T131543Z.json"
+    },
+    {
+      "mix_id": "Mix_SHA_South_Creep",
+      "category": "Creature_SHA",
+      "source": "live_editor_dump_all_OakWorldPainterLayer_Spawn_12_20260608T131543Z.json"
+    },
+    {
+      "mix_id": "Mix_SHA_South_Pangolin",
+      "category": "Creature_SHA",
+      "source": "live_editor_dump_all_OakWorldPainterLayer_Spawn_12_20260608T131543Z.json"
+    }
+  ]
+}

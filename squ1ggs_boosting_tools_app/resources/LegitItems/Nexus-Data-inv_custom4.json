@@ -1,0 +1,2641 @@
+{
+  "inv_custom": {
+    "records": [
+      {
+        "entries": [
+          {
+            "blueskin": {
+              "inv_custom": "Blueskin",
+              "dataasset": "Asset'/Game/Gear/Weapons/_Shared/Materials/Proxy/DA_MD_POXY_Rare.DA_MD_POXY_Rare'",
+              "serialindex": {
+                "status": "Active",
+                "index": "111",
+                "_category": "inv_custom",
+                "_scope": "Root"
+              }
+            }
+          },
+          {
+            "cosmetics_weapon_mat01_synthwave": {
+              "inv_custom": "Cosmetics_Weapon_Mat01_Synthwave",
+              "dataasset": "Asset'/Game/Gear/Weapons/_Shared/Materials/_Global/DA_MD_GLOBAL_01.DA_MD_GLOBAL_01'",
+              "unlockable": "unlockable'Unlockable_Weapons.Mat01_Synthwave'",
+              "filterdata": {
+                "criteria": {
+                  "preset": "criteria_preset'Preset_WeaponRarity_NotUnique'"
+                }
+              },
+              "uiname": "Cosmetics_Weapon, 5682C27143088C8C33C4BEA9D90D3ADC, Solar Flair",
+              "displayname": "Cosmetics_Weapon, 9E1E5E804F2D2668EF77B3B765BFAA75, Solar Flair",
+              "icon": "Asset'/Game/uiresources/menu_customization/assets/Baked_Textures/WeaponsAndVehicles/Cosmetics_Weapon_Mat01_Synthwave.Cosmetics_Weapon_Mat01_Synthwave'",
+              "sortorder": "1",
+              "serialindex": {
+                "status": "Active",
+                "index": "110",
+                "_category": "inv_custom",
+                "_scope": "Root"
+              },
+              "type": "/Script/GbxGame.InventorySkinDef"
+            }
+          },
+          {
+            "cosmetics_weapon_mat02_lavarock": {
+              "inv_custom": "Cosmetics_Weapon_Mat02_LavaRock",
+              "dataasset": "Asset'/Game/Gear/Weapons/_Shared/Materials/_Global/DA_MD_COS_02_Lava.DA_MD_COS_02_Lava'",
+              "unlockable": "unlockable'Unlockable_Weapons.Mat02_LavaRock'",
+              "filterdata": {
+                "criteria": {
+                  "preset": "criteria_preset'Preset_WeaponRarity_NotUnique'"
+                }
+              },
+              "uiname": "Cosmetics_Weapon, AA2EA065401E88148929B4A3A10BD82F, The Gun is Lava",
+              "displayname": "Cosmetics_Weapon, 2C02C03447508029BC82C0978D769B66, The Gun is Lava",
+              "icon": "Asset'/Game/uiresources/menu_customization/assets/Baked_Textures/WeaponsAndVehicles/Cosmetics_Weapon_Mat02_LavaRock.Cosmetics_Weapon_Mat02_LavaRock'",
+              "sortorder": "2",
+              "serialindex": {
+                "status": "Active",
+                "index": "109",
+                "_category": "inv_custom",
+                "_scope": "Root"
+              },
+              "type": "/Script/GbxGame.InventorySkinDef"
+            }
+          },
+          {
+            "cosmetics_weapon_mat03_biogoo": {
+              "inv_custom": "Cosmetics_Weapon_Mat03_BioGoo",
+              "dataasset": "Asset'/Game/Gear/Weapons/_Shared/Materials/_Global/DA_MD_COS_03.DA_MD_COS_03'",
+              "unlockable": "unlockable'Unlockable_Weapons.Mat03_BioGoo'",
+              "filterdata": {
+                "criteria": {
+                  "preset": "criteria_preset'Preset_WeaponRarity_NotUnique'"
+                }
+              },
+              "uiname": "Cosmetics_Weapon, 256C2D54483219A887F485BBBF26EAF2, Coast to Coast",
+              "displayname": "Cosmetics_Weapon, 5AC8B87142178654D8C0799C38D89D92, Coast to Coast",
+              "icon": "Asset'/Game/uiresources/menu_customization/assets/Baked_Textures/WeaponsAndVehicles/Cosmetics_Weapon_Mat03_BioGoo.Cosmetics_Weapon_Mat03_BioGoo'",
+              "sortorder": "3",
+              "serialindex": {
+                "status": "Active",
+                "index": "108",
+                "_category": "inv_custom",
+                "_scope": "Root"
+              },
+              "type": "/Script/GbxGame.InventorySkinDef"
+            }
+          },
+          {
+            "cosmetics_weapon_mat04_doodles": {
+              "inv_custom": "Cosmetics_Weapon_Mat04_Doodles",
+              "dataasset": "Asset'/Game/Gear/Weapons/_Shared/Materials/_Global/DA_MD_COS_04_Sketchbook.DA_MD_COS_04_Sketchbook'",
+              "unlockable": "unlockable'Unlockable_Weapons.Mat04_Doodles'",
+              "filterdata": {
+                "criteria": {
+                  "preset": "criteria_preset'Preset_WeaponRarity_NotUnique'"
+                }
+              },
+              "uiname": "Cosmetics_Weapon, B66D642041A60EDABCAB96BFBE8783A2, Drawn This Way",
+              "displayname": "Cosmetics_Weapon, 3C1AE6C8466A97EA4BA282AB83B42104, Drawn This Way",
+              "icon": "Asset'/Game/uiresources/menu_customization/assets/Baked_Textures/WeaponsAndVehicles/Cosmetics_Weapon_Mat04_Doodles.Cosmetics_Weapon_Mat04_Doodles'",
+              "sortorder": "4",
+              "serialindex": {
+                "status": "Active",
+                "index": "107",
+                "_category": "inv_custom",
+                "_scope": "Root"
+              },
+              "type": "/Script/GbxGame.InventorySkinDef"
+            }
+          },
+          {
+            "cosmetics_weapon_mat05_fransfroyo": {
+              "inv_custom": "Cosmetics_Weapon_Mat05_FransFroyo",
+              "dataasset": "Asset'/Game/Gear/Weapons/_Shared/Materials/_Global/DA_MD_COS_05_Retro.DA_MD_COS_05_Retro'",
+              "unlockable": "unlockable'Unlockable_Weapons.Mat05_FransFroyo'",
+              "filterdata": {
+                "criteria": {
+                  "preset": "criteria_preset'Preset_WeaponRarity_NotUnique'"
+                }
+              },
+              "uiname": "Cosmetics_Weapon, 8391D1FD4991040F9ECBC99138DD7E0C, Fran's Frogurt",
+              "displayname": "Cosmetics_Weapon, 4F3E73924E15DE6BA10FFB8DFC766763, Fran's Frogurt",
+              "icon": "Asset'/Game/uiresources/menu_customization/assets/Baked_Textures/WeaponsAndVehicles/Cosmetics_Weapon_Mat05_FransFroyo.Cosmetics_Weapon_Mat05_FransFroyo'",
+              "sortorder": "5",
+              "serialindex": {
+                "status": "Active",
+                "index": "106",
+                "_category": "inv_custom",
+                "_scope": "Root"
+              },
+              "type": "/Script/GbxGame.InventorySkinDef"
+            }
+          },
+          {
+            "cosmetics_weapon_mat06_electisamurai": {
+              "inv_custom": "Cosmetics_Weapon_Mat06_ElectiSamurai",
+              "dataasset": "Asset'/Game/Gear/Weapons/_Shared/Materials/_Global/DA_MD_COS_06_Electi.DA_MD_COS_06_Electi'",
+              "unlockable": "unlockable'Unlockable_Weapons.Mat06_ElectiSamurai'",
+              "filterdata": {
+                "criteria": {
+                  "preset": "criteria_preset'Preset_WeaponRarity_NotUnique'"
+                }
+              },
+              "uiname": "Cosmetics_Weapon, E6325CCC4D7F984148D7E0BF26C874EE, Carcade Shooter",
+              "displayname": "Cosmetics_Weapon, 657556114BF5E37F6E349C8434FC21F1, Carcade Shooter",
+              "icon": "Asset'/Game/uiresources/menu_customization/assets/Baked_Textures/WeaponsAndVehicles/Cosmetics_Weapon_Mat06_ElectiSamurai.Cosmetics_Weapon_Mat06_ElectiSamurai'",
+              "sortorder": "6",
+              "serialindex": {
+                "status": "Active",
+                "index": "105",
+                "_category": "inv_custom",
+                "_scope": "Root"
+              },
+              "type": "/Script/GbxGame.InventorySkinDef"
+            }
+          },
+          {
+            "cosmetics_weapon_mat07_cutecat": {
+              "inv_custom": "Cosmetics_Weapon_Mat07_CuteCat",
+              "dataasset": "Asset'/Game/Gear/Weapons/_Shared/Materials/_Global/DA_MD_COS_07_Cat.DA_MD_COS_07_Cat'",
+              "unlockable": "unlockable'Unlockable_Weapons.Mat07_CuteCat'",
+              "filterdata": {
+                "criteria": {
+                  "preset": "criteria_preset'Preset_WeaponRarity_NotUnique'"
+                }
+              },
+              "uiname": "Cosmetics_Weapon, 57B6D3A74E092EA156CF91B7F09047CC, Itty Bitty Kitty Committee",
+              "displayname": "Cosmetics_Weapon, 080911E94C96581F64AF8F8F78149587, Itty Bitty Kitty Committee",
+              "icon": "Asset'/Game/uiresources/menu_customization/assets/Baked_Textures/WeaponsAndVehicles/Cosmetics_Weapon_Mat07_CuteCat.Cosmetics_Weapon_Mat07_CuteCat'",
+              "sortorder": "7",
+              "serialindex": {
+                "status": "Active",
+                "index": "104",
+                "_category": "inv_custom",
+                "_scope": "Root"
+              },
+              "type": "/Script/GbxGame.InventorySkinDef"
+            }
+          },
+          {
+            "cosmetics_weapon_mat08_echobot": {
+              "inv_custom": "Cosmetics_Weapon_Mat08_EchoBot",
+              "dataasset": "Asset'/Game/Gear/Weapons/_Shared/Materials/_Global/DA_MD_COS_08_Echo.DA_MD_COS_08_Echo'",
+              "unlockable": "unlockable'Unlockable_Weapons.Mat08_EchoBot'",
+              "filterdata": {
+                "criteria": {
+                  "preset": "criteria_preset'Preset_WeaponRarity_NotUnique'"
+                }
+              },
+              "uiname": "Cosmetics_Weapon, 14D4C7034218E3822830638E90028CBB, Game Bot",
+              "displayname": "Cosmetics_Weapon, 54097D344C2C7C6C32BCD18FD7E558FF, Game Bot",
+              "icon": "Asset'/Game/uiresources/menu_customization/assets/Baked_Textures/WeaponsAndVehicles/Cosmetics_Weapon_Mat08_EchoBot.Cosmetics_Weapon_Mat08_EchoBot'",
+              "sortorder": "8",
+              "serialindex": {
+                "status": "Active",
+                "index": "103",
+                "_category": "inv_custom",
+                "_scope": "Root"
+              },
+              "type": "/Script/GbxGame.InventorySkinDef"
+            }
+          },
+          {
+            "cosmetics_weapon_mat09_folkhero": {
+              "inv_custom": "Cosmetics_Weapon_Mat09_FolkHero",
+              "dataasset": "Asset'/Game/Gear/Weapons/_Shared/Materials/_Global/DA_MD_COS_09_Outbounders.DA_MD_COS_09_Outbounders'",
+              "unlockable": "unlockable'Unlockable_Weapons.Mat09_FolkHero'",
+              "filterdata": {
+                "criteria": {
+                  "preset": "criteria_preset'Preset_WeaponRarity_NotUnique'"
+                }
+              },
+              "uiname": "Cosmetics_Weapon, D06B2FAE4070F35FF4360C98F6083C96, Never Say DIY",
+              "displayname": "Cosmetics_Weapon, CC31E0044369C08979A4DA8BB3C02524, Never Say DIY",
+              "icon": "Asset'/Game/uiresources/menu_customization/assets/Baked_Textures/WeaponsAndVehicles/Cosmetics_Weapon_Mat09_FolkHero.Cosmetics_Weapon_Mat09_FolkHero'",
+              "sortorder": "9",
+              "serialindex": {
+                "status": "Active",
+                "index": "102",
+                "_category": "inv_custom",
+                "_scope": "Root"
+              },
+              "type": "/Script/GbxGame.InventorySkinDef"
+            }
+          },
+          {
+            "cosmetics_weapon_mat10_graffiti": {
+              "inv_custom": "Cosmetics_Weapon_Mat10_Graffiti",
+              "dataasset": "Asset'/Game/Gear/Weapons/_Shared/Materials/_Global/DA_MD_COS_10_Arjay.DA_MD_COS_10_Arjay'",
+              "unlockable": "unlockable'Unlockable_Weapons.Mat10_Graffiti'",
+              "filterdata": {
+                "criteria": {
+                  "preset": "criteria_preset'Preset_WeaponRarity_NotUnique'"
+                }
+              },
+              "uiname": "Cosmetics_Weapon, 6C35B6444ECB3BDD15ED769F40EF32AC, Prison Buddy",
+              "displayname": "Cosmetics_Weapon, C4945EB0494247A7BE96B8BE6CA5A6F2, Prison Buddy",
+              "icon": "Asset'/Game/uiresources/menu_customization/assets/Baked_Textures/WeaponsAndVehicles/Cosmetics_Weapon_Mat10_Graffiti.Cosmetics_Weapon_Mat10_Graffiti'",
+              "sortorder": "10",
+              "serialindex": {
+                "status": "Active",
+                "index": "101",
+                "_category": "inv_custom",
+                "_scope": "Root"
+              },
+              "type": "/Script/GbxGame.InventorySkinDef"
+            }
+          },
+          {
+            "cosmetics_weapon_mat11_cupcake": {
+              "inv_custom": "Cosmetics_Weapon_Mat11_Cupcake",
+              "dataasset": "Asset'/Game/Gear/Weapons/_Shared/Materials/_Global/DA_MD_COS_11_Cupcake.DA_MD_COS_11_Cupcake'",
+              "unlockable": "unlockable'Unlockable_Weapons.Mat11_Cupcake'",
+              "filterdata": {
+                "criteria": {
+                  "preset": "criteria_preset'Preset_WeaponRarity_NotUnique'"
+                }
+              },
+              "uiname": "Cosmetics_Weapon, 1D97E52642C2C3EB72B3FDAD5B53B211, Sprinked",
+              "displayname": "Cosmetics_Weapon, FB44011D481F0B24EC71BDAAEF8BFF84, Sprinked",
+              "icon": "Asset'/Game/uiresources/menu_customization/assets/Baked_Textures/WeaponsAndVehicles/Cosmetics_Weapon_Mat11_Cupcake.Cosmetics_Weapon_Mat11_Cupcake'",
+              "sortorder": "11",
+              "serialindex": {
+                "status": "Active",
+                "index": "100",
+                "_category": "inv_custom",
+                "_scope": "Root"
+              },
+              "type": "/Script/GbxGame.InventorySkinDef"
+            }
+          },
+          {
+            "cosmetics_weapon_mat12_animalprint": {
+              "inv_custom": "Cosmetics_Weapon_Mat12_AnimalPrint",
+              "dataasset": "Asset'/Game/Gear/Weapons/_Shared/Materials/_Global/DA_MD_COS_12_Bone.DA_MD_COS_12_Bone'",
+              "unlockable": "unlockable'Unlockable_Weapons.Mat12_AnimalPrint'",
+              "filterdata": {
+                "criteria": {
+                  "preset": "criteria_preset'Preset_WeaponRarity_NotUnique'"
+                }
+              },
+              "uiname": "Cosmetics_Weapon, C851B9AE4DAF59B53E8E61911A6C42D6, Awoooooo!",
+              "displayname": "Cosmetics_Weapon, C4393C4B4FFC4F7EA9A8F78742911EF8, Awoooooo!",
+              "icon": "Asset'/Game/uiresources/menu_customization/assets/Baked_Textures/WeaponsAndVehicles/Cosmetics_Weapon_Mat12_AnimalPrint.Cosmetics_Weapon_Mat12_AnimalPrint'",
+              "sortorder": "12",
+              "serialindex": {
+                "status": "Active",
+                "index": "99",
+                "_category": "inv_custom",
+                "_scope": "Root"
+              },
+              "type": "/Script/GbxGame.InventorySkinDef"
+            }
+          },
+          {
+            "cosmetics_weapon_mat13_whiteout": {
+              "inv_custom": "Cosmetics_Weapon_Mat13_Whiteout",
+              "dataasset": "Asset'/Game/Gear/Weapons/_Shared/Materials/_Global/DA_MD_COS_13_Pearl.DA_MD_COS_13_Pearl'",
+              "unlockable": "unlockable'Unlockable_Weapons.Mat13_Whiteout'",
+              "filterdata": {
+                "criteria": {
+                  "preset": "criteria_preset'Preset_WeaponRarity_NotUnique'"
+                }
+              },
+              "uiname": "Cosmetics_Weapon, 0C6C253D4A4CBD79A225CD8CFE547D1A, Gloss",
+              "displayname": "Cosmetics_Weapon, E7A5AB6F4C564BF5606DB3965E1F5C23, Gloss",
+              "icon": "Asset'/Game/uiresources/menu_customization/assets/Baked_Textures/WeaponsAndVehicles/Cosmetics_Weapon_Mat13_Whiteout.Cosmetics_Weapon_Mat13_Whiteout'",
+              "sortorder": "13",
+              "serialindex": {
+                "status": "Active",
+                "index": "98",
+                "_category": "inv_custom",
+                "_scope": "Root"
+              },
+              "type": "/Script/GbxGame.InventorySkinDef"
+            }
+          },
+          {
+            "cosmetics_weapon_mat14_grunt": {
+              "inv_custom": "Cosmetics_Weapon_Mat14_Grunt",
+              "dataasset": "Asset'/Game/Gear/Weapons/_Shared/Materials/_Global/DA_MD_COS_14_KOTO.DA_MD_COS_14_KOTO'",
+              "unlockable": "unlockable'Unlockable_Weapons.Mat14_Grunt'",
+              "filterdata": {
+                "criteria": {
+                  "preset": "criteria_preset'Preset_WeaponRarity_NotUnique'"
+                }
+              },
+              "uiname": "Cosmetics_Weapon, 7B3CBEDD4640EEF307529495F7313D69, Chain of Command",
+              "displayname": "Cosmetics_Weapon, 1970EA294E4A865A257682B47D03425B, Chain of Command",
+              "icon": "Asset'/Game/uiresources/menu_customization/assets/Baked_Textures/WeaponsAndVehicles/Cosmetics_Weapon_Mat14_Grunt.Cosmetics_Weapon_Mat14_Grunt'",
+              "sortorder": "14",
+              "serialindex": {
+                "status": "Active",
+                "index": "97",
+                "_category": "inv_custom",
+                "_scope": "Root"
+              },
+              "type": "/Script/GbxGame.InventorySkinDef"
+            }
+          },
+          {
+            "cosmetics_weapon_mat15_retro": {
+              "inv_custom": "Cosmetics_Weapon_Mat15_Retro",
+              "dataasset": "Asset'/Game/Gear/Weapons/_Shared/Materials/_Global/DA_MD_COS_15_RetroTech.DA_MD_COS_15_RetroTech'",
+              "unlockable": "unlockable'Unlockable_Weapons.Mat15_Retro'",
+              "filterdata": {
+                "criteria": {
+                  "preset": "criteria_preset'Preset_WeaponRarity_NotUnique'"
+                }
+              },
+              "uiname": "Cosmetics_Weapon, 0A36CE1B448F79B9B76CAFAD9897DD38, Pixel Perfect",
+              "displayname": "Cosmetics_Weapon, A5AA3BB14C220E040B5C7E8DF0304F12, Pixel Perfect",
+              "icon": "Asset'/Game/uiresources/menu_customization/assets/Baked_Textures/WeaponsAndVehicles/Cosmetics_Weapon_Mat15_Retro.Cosmetics_Weapon_Mat15_Retro'",
+              "sortorder": "15",
+              "serialindex": {
+                "status": "Active",
+                "index": "96",
+                "_category": "inv_custom",
+                "_scope": "Root"
+              },
+              "type": "/Script/GbxGame.InventorySkinDef"
+            }
+          },
+          {
+            "cosmetics_weapon_mat16_poleposition": {
+              "inv_custom": "Cosmetics_Weapon_Mat16_PolePosition",
+              "dataasset": "Asset'/Game/Gear/Weapons/_Shared/Materials/MAL/DA_MD_MAL_Recolor.DA_MD_MAL_Recolor'",
+              "unlockable": "unlockable'Unlockable_Weapons.Mat16_PolePosition'",
+              "filterdata": {
+                "criteria": {
+                  "preset": "criteria_preset'Preset_WeaponRarity_NotUnique'"
+                }
+              },
+              "uiname": "Cosmetics_Weapon, 767E79D543B09CBF20725FA0D1043425, Bestia Rossa",
+              "displayname": "Cosmetics_Weapon, 3F75E5684B7B0C734CA3FBADDE3985E2, Bestia Rossa",
+              "icon": "Asset'/Game/uiresources/menu_customization/assets/Baked_Textures/WeaponsAndVehicles/Cosmetics_Weapon_Mat16_PolePosition.Cosmetics_Weapon_Mat16_PolePosition'",
+              "sortorder": "16",
+              "serialindex": {
+                "status": "Active",
+                "index": "95",
+                "_category": "inv_custom",
+                "_scope": "Root"
+              },
+              "type": "/Script/GbxGame.InventorySkinDef"
+            }
+          },
+          {
+            "cosmetics_weapon_mat17_deadwood": {
+              "inv_custom": "Cosmetics_Weapon_Mat17_DeadWood",
+              "dataasset": "Asset'/Game/Gear/Weapons/_Shared/Materials/JAK/DA_MD_JAK_Recolor.DA_MD_JAK_Recolor'",
+              "unlockable": "unlockable'Unlockable_Weapons.Mat17_DeadWood'",
+              "filterdata": {
+                "criteria": {
+                  "preset": "criteria_preset'Preset_WeaponRarity_NotUnique'"
+                }
+              },
+              "uiname": "Cosmetics_Weapon, 2563A4A14A5497A578A8F6AB88B9D541, With the Grain",
+              "displayname": "Cosmetics_Weapon, 109D237B47437A927F36F293C35EEFC2, With the Grain",
+              "icon": "Asset'/Game/uiresources/menu_customization/assets/Baked_Textures/WeaponsAndVehicles/Cosmetics_Weapon_Mat17_DeadWood.Cosmetics_Weapon_Mat17_DeadWood'",
+              "sortorder": "17",
+              "serialindex": {
+                "status": "Active",
+                "index": "94",
+                "_category": "inv_custom",
+                "_scope": "Root"
+              },
+              "type": "/Script/GbxGame.InventorySkinDef"
+            }
+          },
+          {
+            "cosmetics_weapon_mat18_crashtest": {
+              "inv_custom": "Cosmetics_Weapon_Mat18_CrashTest",
+              "dataasset": "Asset'/Game/Gear/Weapons/_Shared/Materials/DAD/DA_MD_DAD_Recolor.DA_MD_DAD_Recolor'",
+              "unlockable": "unlockable'Unlockable_Weapons.Mat18_CrashTest'",
+              "filterdata": {
+                "criteria": {
+                  "preset": "criteria_preset'Preset_WeaponRarity_NotUnique'"
+                }
+              },
+              "uiname": "Cosmetics_Weapon, F141F6BF4C7831E1413E26B9A1FEE288, High Impact",
+              "displayname": "Cosmetics_Weapon, 64458C404ECCEF815345A9AE26CEE6F5, High Impact",
+              "icon": "Asset'/Game/uiresources/menu_customization/assets/Baked_Textures/WeaponsAndVehicles/Cosmetics_Weapon_Mat18_CrashTest.Cosmetics_Weapon_Mat18_CrashTest'",
+              "sortorder": "18",
+              "serialindex": {
+                "status": "Active",
+                "index": "93",
+                "_category": "inv_custom",
+                "_scope": "Root"
+              },
+              "type": "/Script/GbxGame.InventorySkinDef"
+            }
+          },
+          {
+            "cosmetics_weapon_mat19_meltdown": {
+              "inv_custom": "Cosmetics_Weapon_Mat19_Meltdown",
+              "dataasset": "Asset'/Game/Gear/Weapons/_Shared/Materials/VLA/DA_MD_VLA_Recolor.DA_MD_VLA_Recolor'",
+              "unlockable": "unlockable'Unlockable_Weapons.Mat19_Meltdown'",
+              "filterdata": {
+                "criteria": {
+                  "preset": "criteria_preset'Preset_WeaponRarity_NotUnique'"
+                }
+              },
+              "uiname": "Cosmetics_Weapon, B07433D7463CDB248E87FABEF647A5C3, Meltdown",
+              "displayname": "Cosmetics_Weapon, D9EE4C994BFB343356663090816CD807, Meltdown",
+              "icon": "Asset'/Game/uiresources/menu_customization/assets/Baked_Textures/WeaponsAndVehicles/Cosmetics_Weapon_Mat19_Meltdown.Cosmetics_Weapon_Mat19_Meltdown'",
+              "sortorder": "19",
+              "serialindex": {
+                "status": "Active",
+                "index": "92",
+                "_category": "inv_custom",
+                "_scope": "Root"
+              },
+              "type": "/Script/GbxGame.InventorySkinDef"
+            }
+          },
+          {
+            "cosmetics_weapon_mat20_cyberspace": {
+              "inv_custom": "Cosmetics_Weapon_Mat20_Cyberspace",
+              "dataasset": "Asset'/Game/Gear/Weapons/_Shared/Materials/ORD/DA_MD_ORD_Recolor.DA_MD_ORD_Recolor'",
+              "unlockable": "unlockable'Unlockable_Weapons.Mat20_Cyberspace'",
+              "filterdata": {
+                "criteria": {
+                  "preset": "criteria_preset'Preset_WeaponRarity_NotUnique'"
+                }
+              },
+              "uiname": "Cosmetics_Weapon, 733FB0B34584B666079F3F9E252B13AF, Halt, Citizen",
+              "displayname": "Cosmetics_Weapon, B63BDD41458F605A30C9C2AC823EF8D5, Halt, Citizen",
+              "icon": "Asset'/Game/uiresources/menu_customization/assets/Baked_Textures/WeaponsAndVehicles/Cosmetics_Weapon_Mat20_Cyberspace.Cosmetics_Weapon_Mat20_Cyberspace'",
+              "sortorder": "20",
+              "serialindex": {
+                "status": "Active",
+                "index": "91",
+                "_category": "inv_custom",
+                "_scope": "Root"
+              },
+              "type": "/Script/GbxGame.InventorySkinDef"
+            }
+          },
+          {
+            "cosmetics_weapon_mat21_afterburn": {
+              "inv_custom": "Cosmetics_Weapon_Mat21_Afterburn",
+              "dataasset": "Asset'/Game/Gear/Weapons/_Shared/Materials/TOR/DA_MD_TOR_Recolor.DA_MD_TOR_Recolor'",
+              "unlockable": "unlockable'Unlockable_Weapons.Mat21_Afterburn'",
+              "filterdata": {
+                "criteria": {
+                  "preset": "criteria_preset'Preset_WeaponRarity_NotUnique'"
+                }
+              },
+              "uiname": "Cosmetics_Weapon, 23855600431AD6391973C7B19A822717, Afterparty",
+              "displayname": "Cosmetics_Weapon, ECA059984DBBA530B1981DAE601AD50C, Afterparty",
+              "icon": "Asset'/Game/uiresources/menu_customization/assets/Baked_Textures/WeaponsAndVehicles/Cosmetics_Weapon_Mat21_Afterburn.Cosmetics_Weapon_Mat21_Afterburn'",
+              "sortorder": "21",
+              "serialindex": {
+                "status": "Active",
+                "index": "90",
+                "_category": "inv_custom",
+                "_scope": "Root"
+              },
+              "type": "/Script/GbxGame.InventorySkinDef"
+            }
+          },
+          {
+            "cosmetics_weapon_mat22_overload": {
+              "inv_custom": "Cosmetics_Weapon_Mat22_Overload",
+              "dataasset": "Asset'/Game/Gear/Weapons/_Shared/Materials/BOR/DA_MD_BOR_Recolor.DA_MD_BOR_Recolor'",
+              "unlockable": "unlockable'Unlockable_Weapons.Mat22_Overload'",
+              "filterdata": {
+                "criteria": {
+                  "preset": "criteria_preset'Preset_WeaponRarity_NotUnique'"
+                }
+              },
+              "uiname": "Cosmetics_Weapon, 2ACE47414DEEF0E72A218094226AEB9C, Frenzy Forever",
+              "displayname": "Cosmetics_Weapon, 1E43C654444D218C1804AFBC3B08BD52, Frenzy Forever",
+              "icon": "Asset'/Game/uiresources/menu_customization/assets/Baked_Textures/WeaponsAndVehicles/Cosmetics_Weapon_Mat22_Overload.Cosmetics_Weapon_Mat22_Overload'",
+              "sortorder": "22",
+              "serialindex": {
+                "status": "Active",
+                "index": "89",
+                "_category": "inv_custom",
+                "_scope": "Root"
+              },
+              "type": "/Script/GbxGame.InventorySkinDef"
+            }
+          },
+          {
+            "cosmetics_weapon_mat23_futureproof": {
+              "inv_custom": "Cosmetics_Weapon_Mat23_FutureProof",
+              "dataasset": "Asset'/Game/Gear/Weapons/_Shared/Materials/TED/DA_MD_TED_Recolor.DA_MD_TED_Recolor'",
+              "unlockable": "unlockable'Unlockable_Weapons.Mat23_FutureProof'",
+              "filterdata": {
+                "criteria": {
+                  "preset": "criteria_preset'Preset_WeaponRarity_NotUnique'"
+                }
+              },
+              "uiname": "Cosmetics_Weapon, 3B39E2734B95FC83B753448567A71DCF, Future Proof",
+              "displayname": "Cosmetics_Weapon, 08249094403C38AD6979CF8A8BFB319B, Future Proof",
+              "icon": "Asset'/Game/uiresources/menu_customization/assets/Baked_Textures/WeaponsAndVehicles/Cosmetics_Weapon_Mat23_FutureProof.Cosmetics_Weapon_Mat23_FutureProof'",
+              "sortorder": "23",
+              "serialindex": {
+                "status": "Active",
+                "index": "88",
+                "_category": "inv_custom",
+                "_scope": "Root"
+              },
+              "type": "/Script/GbxGame.InventorySkinDef"
+            }
+          },
+          {
+            "cosmetics_weapon_mat24_propaganda": {
+              "inv_custom": "Cosmetics_Weapon_Mat24_Propaganda",
+              "dataasset": "Asset'/Game/Gear/Weapons/_Shared/Materials/_Global/DA_MD_MIS_01_Propaganda.DA_MD_MIS_01_Propaganda'",
+              "unlockable": "unlockable'Unlockable_Weapons.Mat24_Propaganda'",
+              "filterdata": {
+                "criteria": {
+                  "preset": "criteria_preset'Preset_WeaponRarity_NotUnique'"
+                }
+              },
+              "uiname": "Cosmetics_Weapon, D3B4349048668B159DD2F7B5594FF86F, The System",
+              "displayname": "Cosmetics_Weapon, 0A05C4B746304C0A9941559B1A3FA762, The System",
+              "icon": "Asset'/Game/uiresources/menu_customization/assets/Baked_Textures/WeaponsAndVehicles/Cosmetics_Weapon_Mat24_Propaganda.Cosmetics_Weapon_Mat24_Propaganda'",
+              "sortorder": "24",
+              "serialindex": {
+                "status": "Active",
+                "index": "87",
+                "_category": "inv_custom",
+                "_scope": "Root"
+              },
+              "type": "/Script/GbxGame.InventorySkinDef"
+            }
+          },
+          {
+            "cosmetics_weapon_mat25_locustgas": {
+              "inv_custom": "Cosmetics_Weapon_Mat25_LocustGas",
+              "dataasset": "Asset'/Game/Gear/Weapons/_Shared/Materials/_Global/DA_MD_MIS_02_Toxic.DA_MD_MIS_02_Toxic'",
+              "unlockable": "unlockable'Unlockable_Weapons.Mat25_LocustGas'",
+              "filterdata": {
+                "criteria": {
+                  "preset": "criteria_preset'Preset_WeaponRarity_NotUnique'"
+                }
+              },
+              "uiname": "Cosmetics_Weapon, 91291BA54640E2647D3513BD3C070EFC, Devourer",
+              "displayname": "Cosmetics_Weapon, C86BD9B44326858E88DDC3B930873BDE, Devourer",
+              "icon": "Asset'/Game/uiresources/menu_customization/assets/Baked_Textures/WeaponsAndVehicles/Cosmetics_Weapon_Mat25_LocustGas.Cosmetics_Weapon_Mat25_LocustGas'",
+              "sortorder": "25",
+              "serialindex": {
+                "status": "Active",
+                "index": "86",
+                "_category": "inv_custom",
+                "_scope": "Root"
+              },
+              "type": "/Script/GbxGame.InventorySkinDef"
+            }
+          },
+          {
+            "cosmetics_weapon_mat26_augersight": {
+              "inv_custom": "Cosmetics_Weapon_Mat26_AugerSight",
+              "dataasset": "Asset'/Game/Gear/Weapons/_Shared/Materials/_Global/DA_MD_MIS_03_Mountains.DA_MD_MIS_03_Mountains'",
+              "unlockable": "unlockable'Unlockable_Weapons.Mat26_AugerSight'",
+              "filterdata": {
+                "criteria": {
+                  "preset": "criteria_preset'Preset_WeaponRarity_NotUnique'"
+                }
+              },
+              "uiname": "Cosmetics_Weapon, 36C5FD4441B101C0E78CA382DA5C6778, Wellspring-Loaded",
+              "displayname": "Cosmetics_Weapon, FDD77B5C48EB528E04F3068BCF834E0D, Wellspring-Loaded",
+              "icon": "Asset'/Game/uiresources/menu_customization/assets/Baked_Textures/WeaponsAndVehicles/Cosmetics_Weapon_Mat26_AugerSight.Cosmetics_Weapon_Mat26_AugerSight'",
+              "sortorder": "26",
+              "serialindex": {
+                "status": "Active",
+                "index": "85",
+                "_category": "inv_custom",
+                "_scope": "Root"
+              },
+              "type": "/Script/GbxGame.InventorySkinDef"
+            }
+          },
+          {
+            "cosmetics_weapon_mat27_goldenpower": {
+              "inv_custom": "Cosmetics_Weapon_Mat27_GoldenPower",
+              "dataasset": "Asset'/Game/Gear/Weapons/_Shared/Materials/_Global/DA_MD_MIS_04_OrderCity.DA_MD_MIS_04_OrderCity'",
+              "unlockable": "unlockable'Unlockable_Weapons.Mat27_GoldenPower'",
+              "filterdata": {
+                "criteria": {
+                  "preset": "criteria_preset'Preset_WeaponRarity_NotUnique'"
+                }
+              },
+              "uiname": "Cosmetics_Weapon, E3F2CEE44B3602557B0BE4BF5747FD98, Highrise",
+              "displayname": "Cosmetics_Weapon, D897BC9D4EE68055872163A1B0E53D80, Highrise",
+              "icon": "Asset'/Game/uiresources/menu_customization/assets/Baked_Textures/WeaponsAndVehicles/Cosmetics_Weapon_Mat27_GoldenPower.Cosmetics_Weapon_Mat27_GoldenPower'",
+              "sortorder": "27",
+              "serialindex": {
+                "status": "Active",
+                "index": "84",
+                "_category": "inv_custom",
+                "_scope": "Root"
+              },
+              "type": "/Script/GbxGame.InventorySkinDef"
+            }
+          },
+          {
+            "cosmetics_weapon_mat28_ripper": {
+              "inv_custom": "Cosmetics_Weapon_Mat28_Ripper",
+              "dataasset": "Asset'/Game/Gear/Weapons/_Shared/Materials/_Global/DA_MD_MIS_05_Bomber.DA_MD_MIS_05_Bomber'",
+              "unlockable": "unlockable'Unlockable_Weapons.Mat28_Ripper'",
+              "filterdata": {
+                "criteria": {
+                  "preset": "criteria_preset'Preset_WeaponRarity_NotUnique'"
+                }
+              },
+              "uiname": "Cosmetics_Weapon, 0F2744934DB9DEBAA7BF7D953D10794C, Self Excision",
+              "displayname": "Cosmetics_Weapon, 602C390941DD7EDE51D07AB09D65919B, Self Excision",
+              "icon": "Asset'/Game/uiresources/menu_customization/assets/Baked_Textures/WeaponsAndVehicles/Cosmetics_Weapon_Mat28_Ripper.Cosmetics_Weapon_Mat28_Ripper'",
+              "sortorder": "28",
+              "serialindex": {
+                "status": "Active",
+                "index": "83",
+                "_category": "inv_custom",
+                "_scope": "Root"
+              },
+              "type": "/Script/GbxGame.InventorySkinDef"
+            }
+          },
+          {
+            "cosmetics_weapon_mat29_cheers": {
+              "inv_custom": "Cosmetics_Weapon_Mat29_Cheers",
+              "dataasset": "Asset'/Game/Gear/Weapons/_Shared/Materials/_Global/DA_MD_MIS_06_Beer.DA_MD_MIS_06_Beer'",
+              "unlockable": "unlockable'Unlockable_Weapons.Mat29_Cheers'",
+              "filterdata": {
+                "criteria": {
+                  "preset": "criteria_preset'Preset_WeaponRarity_NotUnique'"
+                }
+              },
+              "uiname": "Cosmetics_Weapon, 0A439B5146F4A7CD52305B9B63C88B17, Soused",
+              "displayname": "Cosmetics_Weapon, 74C76F464DC5FEC1A9F223AB49382D7F, Soused",
+              "icon": "Asset'/Game/uiresources/menu_customization/assets/Baked_Textures/WeaponsAndVehicles/Cosmetics_Weapon_Mat29_Cheers.Cosmetics_Weapon_Mat29_Cheers'",
+              "sortorder": "29",
+              "serialindex": {
+                "status": "Active",
+                "index": "82",
+                "_category": "inv_custom",
+                "_scope": "Root"
+              },
+              "type": "/Script/GbxGame.InventorySkinDef"
+            }
+          },
+          {
+            "cosmetics_weapon_mat30_crimsonraiders": {
+              "inv_custom": "Cosmetics_Weapon_Mat30_CrimsonRaiders",
+              "dataasset": "Asset'/Game/Gear/Weapons/_Shared/Materials/_Global/DA_MD_MIS_07_CrimsonRaiders.DA_MD_MIS_07_CrimsonRaiders'",
+              "unlockable": "unlockable'Unlockable_Weapons.Mat30_CrimsonRaiders'",
+              "filterdata": {
+                "criteria": {
+                  "preset": "criteria_preset'Preset_WeaponRarity_NotUnique'"
+                }
+              },
+              "uiname": "Cosmetics_Weapon, 5078794F4C293B1FE92AED8801983292, Bird of Prey",
+              "displayname": "Cosmetics_Weapon, 97BF69234CB294B9825B1FBEE6D16563, Bird of Prey",
+              "icon": "Asset'/Game/uiresources/menu_customization/assets/Baked_Textures/WeaponsAndVehicles/Cosmetics_Weapon_Mat30_CrimsonRaiders.Cosmetics_Weapon_Mat30_CrimsonRaiders'",
+              "sortorder": "30",
+              "serialindex": {
+                "status": "Active",
+                "index": "81",
+                "_category": "inv_custom",
+                "_scope": "Root"
+              },
+              "type": "/Script/GbxGame.InventorySkinDef"
+            }
+          },
+          {
+            "cosmetics_weapon_mat31_splash": {
+              "inv_custom": "Cosmetics_Weapon_Mat31_Splash",
+              "dataasset": "Asset'/Game/Gear/Weapons/_Shared/Materials/_Global/DA_MD_MIS_08_Soaker.DA_MD_MIS_08_Soaker'",
+              "unlockable": "unlockable'Unlockable_Weapons.Mat31_Splash'",
+              "filterdata": {
+                "criteria": {
+                  "preset": "criteria_preset'Preset_WeaponRarity_NotUnique'"
+                }
+              },
+              "uiname": "Cosmetics_Weapon, CB852CE843C6D7BAF3FCF1B4D7443346, Splash Damage",
+              "displayname": "Cosmetics_Weapon, C1B0B3844D01592E40AAFA9CCDA79EF5, Splash Damage",
+              "icon": "Asset'/Game/uiresources/menu_customization/assets/Baked_Textures/WeaponsAndVehicles/Cosmetics_Weapon_Mat31_Splash.Cosmetics_Weapon_Mat31_Splash'",
+              "sortorder": "31",
+              "serialindex": {
+                "status": "Active",
+                "index": "80",
+                "_category": "inv_custom",
+                "_scope": "Root"
+              },
+              "type": "/Script/GbxGame.InventorySkinDef"
+            }
+          },
+          {
+            "cosmetics_weapon_mat32_imperialguard": {
+              "inv_custom": "Cosmetics_Weapon_Mat32_ImperialGuard",
+              "dataasset": "Asset'/Game/Gear/Weapons/_Shared/Materials/_Global/DA_MD_MIS_09_RedGun.DA_MD_MIS_09_RedGun'",
+              "unlockable": "unlockable'Unlockable_Weapons.Mat32_ImperialGuard'",
+              "filterdata": {
+                "criteria": {
+                  "preset": "criteria_preset'Preset_WeaponRarity_NotUnique'"
+                }
+              },
+              "uiname": "Cosmetics_Weapon, 1C3A69A14736D6B129FC59B86F925FEF, Eternal Defender",
+              "displayname": "Cosmetics_Weapon, 98E19495421DB39884BA8F90F8889F37, Eternal Defender",
+              "icon": "Asset'/Game/uiresources/menu_customization/assets/Baked_Textures/WeaponsAndVehicles/Cosmetics_Weapon_Mat32_ImperialGuard.Cosmetics_Weapon_Mat32_ImperialGuard'",
+              "sortorder": "32",
+              "serialindex": {
+                "status": "Active",
+                "index": "79",
+                "_category": "inv_custom",
+                "_scope": "Root"
+              },
+              "type": "/Script/GbxGame.InventorySkinDef"
+            }
+          },
+          {
+            "cosmetics_weapon_mat33_creepy": {
+              "inv_custom": "Cosmetics_Weapon_Mat33_Creepy",
+              "dataasset": "Asset'/Game/Gear/Weapons/_Shared/Materials/_Global/DA_MD_MIS_10_Below.DA_MD_MIS_10_Below'",
+              "unlockable": "unlockable'Unlockable_Weapons.Mat33_Creepy'",
+              "filterdata": {
+                "criteria": {
+                  "preset": "criteria_preset'Preset_WeaponRarity_NotUnique'"
+                }
+              },
+              "uiname": "Cosmetics_Weapon, D86A16614145516A81CF9F871CECE862, Weirdo",
+              "displayname": "Cosmetics_Weapon, 0B3050444A6FC3433B13A0850B6661A2, Weirdo",
+              "icon": "Asset'/Game/uiresources/menu_customization/assets/Baked_Textures/WeaponsAndVehicles/Cosmetics_Weapon_Mat33_Creepy.Cosmetics_Weapon_Mat33_Creepy'",
+              "sortorder": "33",
+              "serialindex": {
+                "status": "Active",
+                "index": "78",
+                "_category": "inv_custom",
+                "_scope": "Root"
+              },
+              "type": "/Script/GbxGame.InventorySkinDef"
+            }
+          },
+          {
+            "cosmetics_weapon_mat34_moneycamo": {
+              "inv_custom": "Cosmetics_Weapon_Mat34_MoneyCamo",
+              "dataasset": "Asset'/Game/Gear/Weapons/_Shared/Materials/_Global/DA_MD_MIS_11_Question.DA_MD_MIS_11_Question'",
+              "unlockable": "unlockable'Unlockable_Weapons.Mat34_MoneyCamo'",
+              "filterdata": {
+                "criteria": {
+                  "preset": "criteria_preset'Preset_WeaponRarity_NotUnique'"
+                }
+              },
+              "uiname": "Cosmetics_Weapon, D1BF01B0471B2230716D068E0BA0E631, Smiley",
+              "displayname": "Cosmetics_Weapon, EE135F7E45CF2A072DCECBB507A30E01, Smiley",
+              "icon": "Asset'/Game/uiresources/menu_customization/assets/Baked_Textures/WeaponsAndVehicles/Cosmetics_Weapon_Mat34_MoneyCamo.Cosmetics_Weapon_Mat34_MoneyCamo'",
+              "sortorder": "34",
+              "serialindex": {
+                "status": "Active",
+                "index": "77",
+                "_category": "inv_custom",
+                "_scope": "Root"
+              },
+              "type": "/Script/GbxGame.InventorySkinDef"
+            }
+          },
+          {
+            "cosmetics_weapon_mat35_gearboxdev": {
+              "inv_custom": "Cosmetics_Weapon_Mat35_GearboxDev",
+              "dataasset": "Asset'/Game/Gear/Weapons/_Shared/Materials/_Global/DA_MD_DEV.DA_MD_DEV'",
+              "unlockable": "unlockable'Unlockable_Weapons.Mat35_GearboxDev'",
+              "filterdata": {
+                "criteria": {
+                  "preset": "criteria_preset'Preset_WeaponRarity_NotUnique'"
+                }
+              },
+              "uiname": "Cosmetics_Weapon, A33372AD4929B8C03440CB924BD8E3B3, Gearbox® Gear",
+              "displayname": "Cosmetics_Weapon, E09E37D144F078DD0E6C299C2ECE1A4D, Gearbox® Gear",
+              "icon": "Asset'/Game/uiresources/menu_customization/assets/Baked_Textures/WeaponsAndVehicles/Cosmetics_Weapon_Mat35_GearboxDev.Cosmetics_Weapon_Mat35_GearboxDev'",
+              "sortorder": "35",
+              "serialindex": {
+                "status": "Active",
+                "index": "76",
+                "_category": "inv_custom",
+                "_scope": "Root"
+              },
+              "type": "/Script/GbxGame.InventorySkinDef"
+            }
+          },
+          {
+            "cosmetics_weapon_mat36_preorder": {
+              "inv_custom": "Cosmetics_Weapon_Mat36_PreOrder",
+              "dataasset": "Asset'/Game/Gear/Weapons/_Shared/Materials/_Global/DA_MD_BON_Timekeeper.DA_MD_BON_Timekeeper'",
+              "unlockable": "unlockable'Unlockable_Weapons.Mat36_PreOrder'",
+              "filterdata": {
+                "criteria": {
+                  "preset": "criteria_preset'Preset_WeaponRarity_NotUnique'"
+                }
+              },
+              "uiname": "Cosmetics_Weapon, 94BC74164D9918D04F407585E693F491, Broken Order",
+              "displayname": "Cosmetics_Weapon, 09C4B4CD4FD25A7604ECB6AC19DBCA10, Broken Order",
+              "icon": "Asset'/Game/uiresources/menu_customization/assets/Baked_Textures/WeaponsAndVehicles/Cosmetics_Weapon_Mat36_PreOrder.Cosmetics_Weapon_Mat36_PreOrder'",
+              "sortorder": "36",
+              "serialindex": {
+                "status": "Active",
+                "index": "75",
+                "_category": "inv_custom",
+                "_scope": "Root"
+              },
+              "type": "/Script/GbxGame.InventorySkinDef"
+            }
+          },
+          {
+            "cosmetics_weapon_mat37_shift": {
+              "inv_custom": "Cosmetics_Weapon_Mat37_SHiFT",
+              "dataasset": "Asset'/Game/Gear/Weapons/_Shared/Materials/_Global/DA_MD_BON_Shift.DA_MD_BON_Shift'",
+              "unlockable": "unlockable'Unlockable_Weapons.Mat37_SHiFT'",
+              "filterdata": {
+                "criteria": {
+                  "preset": "criteria_preset'Preset_WeaponRarity_NotUnique'"
+                }
+              },
+              "uiname": "Cosmetics_Weapon, 8446CB7A4EA87647E6AC239638E0FF26, Hazard Pay",
+              "displayname": "Cosmetics_Weapon, C27D9A7242608D203497E588FBE4B1AD, Hazard Pay",
+              "icon": "Asset'/Game/uiresources/menu_customization/assets/Baked_Textures/WeaponsAndVehicles/Cosmetics_Weapon_Mat37_SHiFT.Cosmetics_Weapon_Mat37_SHiFT'",
+              "sortorder": "37",
+              "serialindex": {
+                "status": "Active",
+                "index": "74",
+                "_category": "inv_custom",
+                "_scope": "Root"
+              },
+              "type": "/Script/GbxGame.InventorySkinDef"
+            }
+          },
+          {
+            "cosmetics_weapon_mat38_headhunter": {
+              "inv_custom": "Cosmetics_Weapon_Mat38_HeadHunter",
+              "dataasset": "Asset'/Game/Gear/Weapons/_Shared/Materials/_Global/DA_MD_BON_Firehawk.DA_MD_BON_Firehawk'",
+              "unlockable": "unlockable'Unlockable_Weapons.Mat38_HeadHunter'",
+              "filterdata": {
+                "criteria": {
+                  "preset": "criteria_preset'Preset_WeaponRarity_NotUnique'"
+                }
+              },
+              "uiname": "Cosmetics_Weapon, 027C869546A78F45BDBBECBFF89C158C, Firehawk's Fury",
+              "displayname": "Cosmetics_Weapon, 19FD57C74F4DB43AD310D49850A1B9BE, Firehawk's Fury",
+              "icon": "Asset'/Game/uiresources/menu_customization/assets/Baked_Textures/WeaponsAndVehicles/Cosmetics_Weapon_Mat38_HeadHunter.Cosmetics_Weapon_Mat38_HeadHunter'",
+              "sortorder": "38",
+              "serialindex": {
+                "status": "Active",
+                "index": "73",
+                "_category": "inv_custom",
+                "_scope": "Root"
+              },
+              "type": "/Script/GbxGame.InventorySkinDef"
+            }
+          },
+          {
+            "cosmetics_weapon_mat39_premium": {
+              "inv_custom": "Cosmetics_Weapon_Mat39_Premium",
+              "dataasset": "Asset'/Game/Gear/Weapons/_Shared/Materials/_Global/DA_MD_BON_Moxxi.DA_MD_BON_Moxxi'",
+              "unlockable": "unlockable'Unlockable_Weapons.Mat39_Premium'",
+              "filterdata": {
+                "criteria": {
+                  "preset": "criteria_preset'Preset_WeaponRarity_NotUnique'"
+                }
+              },
+              "uiname": "Cosmetics_Weapon, CDD6826444B78FD761D66DB8AD37ED44, Sugar Coated",
+              "displayname": "Cosmetics_Weapon, A5D1581E4A090C211EFA9D9556DB50BD, Sugar Coated",
+              "icon": "Asset'/Game/uiresources/menu_customization/assets/Baked_Textures/WeaponsAndVehicles/Cosmetics_Weapon_Mat39_Premium.Cosmetics_Weapon_Mat39_Premium'",
+              "sortorder": "39",
+              "serialindex": {
+                "status": "Active",
+                "index": "72",
+                "_category": "inv_custom",
+                "_scope": "Root"
+              },
+              "type": "/Script/GbxGame.InventorySkinDef"
+            }
+          },
+          {
+            "test": {
+              "inv_custom": "test",
+              "dataasset": "Asset'/Game/Gear/Weapons/_Shared/Materials/_Global/DA_MD_GLOBAL_01.DA_MD_GLOBAL_01'",
+              "serialindex": {
+                "status": "Active",
+                "index": "112",
+                "_category": "inv_custom",
+                "_scope": "Root"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "entries": [
+          {
+            "cosmetics_weapon_mat40_halloween": {
+              "inv_custom": "Cosmetics_Weapon_Mat40_Halloween",
+              "dataasset": "Asset'/Game/DLC/Patch_25_10/Gear/Weapons/Materials/DA_MD_Halloween_01.DA_MD_Halloween_01'",
+              "unlockable": "unlockable'Unlockable_Weapons.Mat40_Halloween'",
+              "filterdata": {
+                "criteria": {
+                  "preset": "criteria_preset'Preset_WeaponRarity_NotUnique'"
+                }
+              },
+              "uiname": "Cosmetics_Weapon, 9F2110E14432D1F3BDD3059748F6E86A, Hex Appeal",
+              "displayname": "Cosmetics_Weapon, 85F91185429383D6B99C51A29CCC26AC, Hex Appeal",
+              "icon": "Asset'/Game/DLC/Patch_25_10/uiresources/menu_customization/assets/Baked_Textures/WeaponAndVehicles/Cosmetics_Weapon_Mat40_Halloween.Cosmetics_Weapon_Mat40_Halloween'",
+              "sortorder": "40",
+              "type": "/Script/GbxGame.InventorySkinDef"
+            }
+          },
+          {
+            "cosmetics_weapon_mat41_starrynight": {
+              "inv_custom": "Cosmetics_Weapon_Mat41_StarryNight",
+              "dataasset": "Asset'/Game/DLC/Banjo/Gear/Weapons/Materials/DA_MD_BP1_01.DA_MD_BP1_01'",
+              "unlockable": "unlockable'Unlockable_Weapons.Mat41_StarryNight'",
+              "filterdata": {
+                "criteria": {
+                  "preset": "criteria_preset'Preset_WeaponRarity_NotUnique'"
+                }
+              },
+              "uiname": "Cosmetics_Weapon, 7892B5224923FB75C538F68B72B82350, Silent Fight, Holy Fight",
+              "displayname": "Cosmetics_Weapon, B9F4564A4EE6B7623F1A9684EFC87304, Silent Fight, Holy Fight",
+              "icon": "Asset'/Game/DLC/Banjo/uiresources/menu_customization/assets/Baked_Textures/WeaponAndVehicles/Cosmetics_Weapon_Mat41_StarryNight.Cosmetics_Weapon_Mat41_StarryNight'",
+              "sortorder": "41",
+              "type": "/Script/GbxGame.InventorySkinDef"
+            }
+          },
+          {
+            "cosmetics_weapon_mat42_uglyxmassweater": {
+              "inv_custom": "Cosmetics_Weapon_Mat42_UglyXmasSweater",
+              "dataasset": "Asset'/Game/DLC/Banjo/Gear/Weapons/Materials/DA_MD_BP1_02.DA_MD_BP1_02'",
+              "unlockable": "unlockable'Unlockable_Weapons.Mat42_UglyXmasSweater'",
+              "filterdata": {
+                "criteria": {
+                  "preset": "criteria_preset'Preset_WeaponRarity_NotUnique'"
+                }
+              },
+              "uiname": "Cosmetics_Weapon, 30099BFA45BBF07E5178BEAA1265452E, It's The Thought That Counts",
+              "displayname": "Cosmetics_Weapon, C0AF907F422EB49A9119C8B77A9CB654, It's The Thought That Counts",
+              "icon": "Asset'/Game/DLC/Banjo/uiresources/menu_customization/assets/Baked_Textures/WeaponAndVehicles/Cosmetics_Weapon_Mat42_UglyXmasSweater.Cosmetics_Weapon_Mat42_UglyXmasSweater'",
+              "sortorder": "42",
+              "type": "/Script/GbxGame.InventorySkinDef"
+            }
+          },
+          {
+            "cosmetics_weapon_mat43_snowfall": {
+              "inv_custom": "Cosmetics_Weapon_Mat43_Snowfall",
+              "dataasset": "Asset'/Game/DLC/Banjo/Gear/Weapons/Materials/DA_MD_BP1_03.DA_MD_BP1_03'",
+              "unlockable": "unlockable'Unlockable_Weapons.Mat43_Snowfall'",
+              "filterdata": {
+                "criteria": {
+                  "preset": "criteria_preset'Preset_WeaponRarity_NotUnique'"
+                }
+              },
+              "uiname": "Cosmetics_Weapon, CC1D3EFB4596EE7007509C95E536578B, Baby You're Cold Inside",
+              "displayname": "Cosmetics_Weapon, 69CB3F4B403C7EB617628DB092F5B4E8, Baby You're Cold Inside",
+              "icon": "Asset'/Game/DLC/Banjo/uiresources/menu_customization/assets/Baked_Textures/WeaponAndVehicles/Cosmetics_Weapon_Mat43_Snowfall.Cosmetics_Weapon_Mat43_Snowfall'",
+              "sortorder": "43",
+              "type": "/Script/GbxGame.InventorySkinDef"
+            }
+          },
+          {
+            "cosmetics_weapon_mat44_giftwrap": {
+              "inv_custom": "Cosmetics_Weapon_Mat44_GiftWrap",
+              "dataasset": "Asset'/Game/DLC/Banjo/Gear/Weapons/Materials/DA_MD_BP1_04.DA_MD_BP1_04'",
+              "unlockable": "unlockable'Unlockable_Weapons.Mat44_GiftWrap'",
+              "filterdata": {
+                "criteria": {
+                  "preset": "criteria_preset'Preset_WeaponRarity_NotUnique'"
+                }
+              },
+              "uiname": "Cosmetics_Weapon, 653A5E9548D822E72461BDBC18709BE4, So Much More Than A Bag",
+              "displayname": "Cosmetics_Weapon, 4D6FD6ED4670181B4BBC7685BD379C48, So Much More Than A Bag",
+              "icon": "Asset'/Game/DLC/Banjo/uiresources/menu_customization/assets/Baked_Textures/WeaponAndVehicles/Cosmetics_Weapon_Mat44_GiftWrap.Cosmetics_Weapon_Mat44_GiftWrap'",
+              "sortorder": "44",
+              "type": "/Script/GbxGame.InventorySkinDef"
+            }
+          },
+          {
+            "cosmetics_weapon_mat45_gingerbread": {
+              "inv_custom": "Cosmetics_Weapon_Mat45_Gingerbread",
+              "dataasset": "Asset'/Game/DLC/Banjo/Gear/Weapons/Materials/DA_MD_BP1_05.DA_MD_BP1_05'",
+              "unlockable": "unlockable'Unlockable_Weapons.Mat45_Gingerbread'",
+              "filterdata": {
+                "criteria": {
+                  "preset": "criteria_preset'Preset_WeaponRarity_NotUnique'"
+                }
+              },
+              "uiname": "Cosmetics_Weapon, F4AA649D44E986D4D71BDFA1875EC039, Eat Me",
+              "displayname": "Cosmetics_Weapon, 9D81C710451CE9F94E7CE598694CC97E, Eat Me",
+              "icon": "Asset'/Game/DLC/Banjo/uiresources/menu_customization/assets/Baked_Textures/WeaponAndVehicles/Cosmetics_Weapon_Mat45_Gingerbread.Cosmetics_Weapon_Mat45_Gingerbread'",
+              "sortorder": "45",
+              "type": "/Script/GbxGame.InventorySkinDef"
+            }
+          },
+          {
+            "cosmetics_weapon_mat46_mechyeah": {
+              "inv_custom": "Cosmetics_Weapon_Mat46_MechYeah",
+              "dataasset": "Asset'/Game/DLC/Cello/Gear/Weapons/Materials/DA_MD_BP2_01.DA_MD_BP2_01'",
+              "unlockable": "unlockable'Unlockable_Weapons.Mat46_MechYeah'",
+              "filterdata": {
+                "criteria": {
+                  "preset": "criteria_preset'Preset_WeaponRarity_NotUnique'"
+                }
+              },
+              "uiname": "Cosmetics_Weapon, B8198E614A40EC262CA8B7AFD4B379C8, Congratulations!",
+              "displayname": "Cosmetics_Weapon, FC2DF98C4275F7C0858111AFCBDC4D23, Congratulations!",
+              "icon": "Asset'/Game/DLC/Cello/uiresources/menu_customization/assets/Baked_Textures/WeaponAndVehicles/Cosmetics_Weapon_Mat46_MechYeah.Cosmetics_Weapon_Mat46_MechYeah'",
+              "sortorder": "46",
+              "type": "/Script/GbxGame.InventorySkinDef"
+            }
+          },
+          {
+            "cosmetics_weapon_mat47_assault": {
+              "inv_custom": "Cosmetics_Weapon_Mat47_Assault",
+              "dataasset": "Asset'/Game/DLC/Cello/Gear/Weapons/Materials/DA_MD_BP2_02.DA_MD_BP2_02'",
+              "unlockable": "unlockable'Unlockable_Weapons.Mat47_Assault'",
+              "filterdata": {
+                "criteria": {
+                  "preset": "criteria_preset'Preset_WeaponRarity_NotUnique'"
+                }
+              },
+              "uiname": "Cosmetics_Weapon, BD22E4844A3EECF9D3AF44A24D254B77, ...Gear?!",
+              "displayname": "Cosmetics_Weapon, 4562776C43022308A3BA888F4C70C94E, ...Gear?!",
+              "icon": "Asset'/Game/DLC/Cello/uiresources/menu_customization/assets/Baked_Textures/WeaponAndVehicles/Cosmetics_Weapon_Mat47_Assault.Cosmetics_Weapon_Mat47_Assault'",
+              "sortorder": "47",
+              "type": "/Script/GbxGame.InventorySkinDef"
+            }
+          },
+          {
+            "cosmetics_weapon_mat48_boltron": {
+              "inv_custom": "Cosmetics_Weapon_Mat48_Boltron",
+              "dataasset": "Asset'/Game/DLC/Cello/Gear/Weapons/Materials/DA_MD_BP2_03.DA_MD_BP2_03'",
+              "unlockable": "unlockable'Unlockable_Weapons.Mat48_Boltron'",
+              "filterdata": {
+                "criteria": {
+                  "preset": "criteria_preset'Preset_WeaponRarity_NotUnique'"
+                }
+              },
+              "uiname": "Cosmetics_Weapon, 20C30CA24D23E292A78F6AB3C7AAA625, Volt Hunter",
+              "displayname": "Cosmetics_Weapon, 6A932D7249740F99B8095DB994788F08, Volt Hunter",
+              "icon": "Asset'/Game/DLC/Cello/uiresources/menu_customization/assets/Baked_Textures/WeaponAndVehicles/Cosmetics_Weapon_Mat48_Boltron.Cosmetics_Weapon_Mat48_Boltron'",
+              "sortorder": "48",
+              "type": "/Script/GbxGame.InventorySkinDef"
+            }
+          },
+          {
+            "cosmetics_weapon_mat49_furboy": {
+              "inv_custom": "Cosmetics_Weapon_Mat49_Furboy",
+              "dataasset": "Asset'/Game/DLC/Cello/Gear/Weapons/Materials/DA_MD_BP2_04.DA_MD_BP2_04'",
+              "unlockable": "unlockable'Unlockable_Weapons.Mat49_Furboy'",
+              "filterdata": {
+                "criteria": {
+                  "preset": "criteria_preset'Preset_WeaponRarity_NotUnique'"
+                }
+              },
+              "uiname": "Cosmetics_Weapon, 06E6A0A94A4B1B0EE65F789B12593EDE, Beast Mode",
+              "displayname": "Cosmetics_Weapon, D5C95C9147099DE65E491CA7097DEF2E, Beast Mode",
+              "icon": "Asset'/Game/DLC/Cello/uiresources/menu_customization/assets/Baked_Textures/WeaponAndVehicles/Cosmetics_Weapon_Mat49_Furboy.Cosmetics_Weapon_Mat49_Furboy'",
+              "sortorder": "49",
+              "type": "/Script/GbxGame.InventorySkinDef"
+            }
+          },
+          {
+            "cosmetics_weapon_mat50_spicyiguana": {
+              "inv_custom": "Cosmetics_Weapon_Mat50_SpicyIguana",
+              "dataasset": "Asset'/Game/DLC/Cello/Gear/Weapons/Materials/DA_MD_BP2_05.DA_MD_BP2_05'",
+              "unlockable": "unlockable'Unlockable_Weapons.Mat50_SpicyIguana'",
+              "filterdata": {
+                "criteria": {
+                  "preset": "criteria_preset'Preset_WeaponRarity_NotUnique'"
+                }
+              },
+              "uiname": "Cosmetics_Weapon, 8F3C306F49C2D48B1AC456ADEF68E5AE, Kaiju Killa",
+              "displayname": "Cosmetics_Weapon, C8B4335D4BBDBD063EBD228F58409674, Kaiju Killa",
+              "icon": "Asset'/Game/DLC/Cello/uiresources/menu_customization/assets/Baked_Textures/WeaponAndVehicles/Cosmetics_Weapon_Mat50_SpicyIguana.Cosmetics_Weapon_Mat50_SpicyIguana'",
+              "sortorder": "50",
+              "type": "/Script/GbxGame.InventorySkinDef"
+            }
+          },
+          {
+            "cosmetics_weapon_mat51_gore": {
+              "inv_custom": "Cosmetics_Weapon_Mat51_Gore",
+              "dataasset": "Asset'/Game/DLC/Cowbell/Gear/Weapons/Materials/Cosmetic/DA_MD_DLC1_COS_01.DA_MD_DLC1_COS_01'",
+              "unlockable": "unlockable'Unlockable_Weapons.Mat51_Gore'",
+              "filterdata": {
+                "criteria": {
+                  "preset": "criteria_preset'Preset_WeaponRarity_NotUnique'"
+                }
+              },
+              "uiname": "Cosmetics_Weapon, 4DDABA0D445ACCE1C029FC979492D5FD, Hand that Feeds",
+              "displayname": "Cosmetics_Weapon, F132ABEF4270BB8AE8177FB34477AB5E, Hand that Feeds",
+              "icon": "Asset'/Game/DLC/Cowbell/uiresources/menu_customization/assets/Baked_Textures/WeaponsAndVehicles/Cosmetics_Weapon_Mat51_Gore.Cosmetics_Weapon_Mat51_Gore'",
+              "sortorder": "51",
+              "type": "/Script/GbxGame.InventorySkinDef"
+            }
+          },
+          {
+            "cosmetics_weapon_mat52_ghostly": {
+              "inv_custom": "Cosmetics_Weapon_Mat52_Ghostly",
+              "dataasset": "Asset'/Game/DLC/Cowbell/Gear/Weapons/Materials/Cosmetic/DA_MD_DLC1_COS_02.DA_MD_DLC1_COS_02'",
+              "unlockable": "unlockable'Unlockable_Weapons.Mat52_Ghostly'",
+              "filterdata": {
+                "criteria": {
+                  "preset": "criteria_preset'Preset_WeaponRarity_NotUnique'"
+                }
+              },
+              "uiname": "Cosmetics_Weapon, D4C7866F4DF2EC826BF09BA2F3933BAF, Discontent",
+              "displayname": "Cosmetics_Weapon, 151F2D074BD42B0E338EB1ABB7BAD24D, Discontent",
+              "icon": "Asset'/Game/DLC/Cowbell/uiresources/menu_customization/assets/Baked_Textures/WeaponsAndVehicles/Cosmetics_Weapon_Mat52_Ghostly.Cosmetics_Weapon_Mat52_Ghostly'",
+              "sortorder": "52",
+              "type": "/Script/GbxGame.InventorySkinDef"
+            }
+          },
+          {
+            "cosmetics_weapon_mat53_occult": {
+              "inv_custom": "Cosmetics_Weapon_Mat53_Occult",
+              "dataasset": "Asset'/Game/DLC/Cowbell/Gear/Weapons/Materials/Cosmetic/DA_MD_DLC1_COS_03.DA_MD_DLC1_COS_03'",
+              "unlockable": "unlockable'Unlockable_Weapons.Mat53_Occult'",
+              "filterdata": {
+                "criteria": {
+                  "preset": "criteria_preset'Preset_WeaponRarity_NotUnique'"
+                }
+              },
+              "uiname": "Cosmetics_Weapon, 87E4032F4BB61505129B0B88792061FE, Shoot What Thou Wilt",
+              "displayname": "Cosmetics_Weapon, 7C29AEC940B827862C723BB1F2F6BBF0, Shoot What Thou Wilt",
+              "icon": "Asset'/Game/DLC/Cowbell/uiresources/menu_customization/assets/Baked_Textures/WeaponsAndVehicles/Cosmetics_Weapon_Mat53_Occult.Cosmetics_Weapon_Mat53_Occult'",
+              "sortorder": "53",
+              "type": "/Script/GbxGame.InventorySkinDef"
+            }
+          },
+          {
+            "cosmetics_weapon_mat54_shipwreck": {
+              "inv_custom": "Cosmetics_Weapon_Mat54_Shipwreck",
+              "dataasset": "Asset'/Game/DLC/Cowbell/Gear/Weapons/Materials/Cosmetic/DA_MD_DLC1_COS_04.DA_MD_DLC1_COS_04'",
+              "unlockable": "unlockable'Unlockable_Weapons.Mat54_Shipwreck'",
+              "filterdata": {
+                "criteria": {
+                  "preset": "criteria_preset'Preset_WeaponRarity_NotUnique'"
+                }
+              },
+              "uiname": "Cosmetics_Weapon, 7E866F8848AE0DE8B2C20A88BB0DB364, Stock and Stone",
+              "displayname": "Cosmetics_Weapon, C83A5B83431D72BB62C7A6AF9DAFB1C4, Stock and Stone",
+              "icon": "Asset'/Game/DLC/Cowbell/uiresources/menu_customization/assets/Baked_Textures/WeaponsAndVehicles/Cosmetics_Weapon_Mat54_Shipwreck.Cosmetics_Weapon_Mat54_Shipwreck'",
+              "sortorder": "54",
+              "type": "/Script/GbxGame.InventorySkinDef"
+            }
+          },
+          {
+            "cosmetics_weapon_mat63_goldenhoneycomb": {
+              "inv_custom": "Cosmetics_Weapon_Mat63_GoldenHoneycomb",
+              "dataasset": "Asset'/Game/DLC/Harp/Gear/Weapons/Materials/Cosmetic/DA_MD_HARP_GoldenHoneycomb.DA_MD_HARP_GoldenHoneycomb'",
+              "unlockable": "unlockable'Unlockable_Weapons.Mat63_GoldenHoneycomb'",
+              "filterdata": {
+                "criteria": {
+                  "preset": "criteria_preset'Preset_WeaponRarity_NotUnique'"
+                }
+              },
+              "uiname": "Cosmetics_Weapon, B745432E441CCD9E1E63EFA447D617F9, Hexy Beast",
+              "displayname": "Cosmetics_Weapon, 6A29AE144FCD264FFC464F8394770120, Hexy Beast",
+              "icon": "Asset'/Game/DLC/Harp/uiresources/menu_customization/assets/Baked_Textures/WeaponsAndVehicles/Cosmetics_Weapon_Mat63_GoldenHoneycomb.Cosmetics_Weapon_Mat63_GoldenHoneycomb'",
+              "sortorder": "63",
+              "type": "/Script/GbxGame.InventorySkinDef"
+            }
+          },
+          {
+            "cosmetics_weapon_mat64_fancysometimes": {
+              "inv_custom": "Cosmetics_Weapon_Mat64_FancySometimes",
+              "dataasset": "Asset'/Game/DLC/Harp/Gear/Weapons/Materials/Cosmetic/DA_MD_HARP_FancySometimes.DA_MD_HARP_FancySometimes'",
+              "unlockable": "unlockable'Unlockable_Weapons.Mat64_FancySometimes'",
+              "filterdata": {
+                "criteria": {
+                  "preset": "criteria_preset'Preset_WeaponRarity_NotUnique'"
+                }
+              },
+              "uiname": "Cosmetics_Weapon, 0EF096B74F05F7A6D37046B25A467227, Violet Tendencies",
+              "displayname": "Cosmetics_Weapon, F9F897BE4FFD7A18A5385F8EC8B83AE8, Violet Tendencies",
+              "icon": "Asset'/Game/DLC/Harp/uiresources/menu_customization/assets/Baked_Textures/WeaponsAndVehicles/Cosmetics_Weapon_Mat64_FancySometimes.Cosmetics_Weapon_Mat64_FancySometimes'",
+              "sortorder": "64",
+              "type": "/Script/GbxGame.InventorySkinDef"
+            }
+          },
+          {
+            "cosmetics_weapon_mat65_acridlandscape": {
+              "inv_custom": "Cosmetics_Weapon_Mat65_AcridLandscape",
+              "dataasset": "Asset'/Game/DLC/Harp/Gear/Weapons/Materials/Cosmetic/DA_MD_HARP_AcridLandscape.DA_MD_HARP_AcridLandscape'",
+              "unlockable": "unlockable'Unlockable_Weapons.Mat65_AcridLandscape'",
+              "filterdata": {
+                "criteria": {
+                  "preset": "criteria_preset'Preset_WeaponRarity_NotUnique'"
+                }
+              },
+              "uiname": "Cosmetics_Weapon, F3F14E6E4481BD3A501FF0B0A31CFB16, Acid Cloud",
+              "displayname": "Cosmetics_Weapon, E91728674D015286340390A8103E50A7, Acid Cloud",
+              "icon": "Asset'/Game/DLC/Harp/uiresources/menu_customization/assets/Baked_Textures/WeaponsAndVehicles/Cosmetics_Weapon_Mat65_AcridLandscape.Cosmetics_Weapon_Mat65_AcridLandscape'",
+              "sortorder": "65",
+              "type": "/Script/GbxGame.InventorySkinDef"
+            }
+          },
+          {
+            "cosmetics_weapon_mat66_techrain": {
+              "inv_custom": "Cosmetics_Weapon_Mat66_TechRain",
+              "dataasset": "Asset'/Game/DLC/Harp/Gear/Weapons/Materials/Cosmetic/DA_MD_HARP_TechRain.DA_MD_HARP_TechRain'",
+              "unlockable": "unlockable'Unlockable_Weapons.Mat66_TechRain'",
+              "filterdata": {
+                "criteria": {
+                  "preset": "criteria_preset'Preset_WeaponRarity_NotUnique'"
+                }
+              },
+              "uiname": "Cosmetics_Weapon, 589A465D4CB98E51E8CBC4B3B88B110B, Cyber Rain",
+              "displayname": "Cosmetics_Weapon, 0BDCE3DA4857F1637F005FA6071FCE56, Cyber Rain",
+              "icon": "Asset'/Game/DLC/Harp/uiresources/menu_customization/assets/Baked_Textures/WeaponsAndVehicles/Cosmetics_Weapon_Mat66_TechRain.Cosmetics_Weapon_Mat66_TechRain'",
+              "sortorder": "66",
+              "type": "/Script/GbxGame.InventorySkinDef"
+            }
+          },
+          {
+            "cosmetics_weapon_mat67_oilcamo": {
+              "inv_custom": "Cosmetics_Weapon_Mat67_OilCamo",
+              "dataasset": "Asset'/Game/DLC/Harp/Gear/Weapons/Materials/Cosmetic/DA_MD_HARP_OilCamo.DA_MD_HARP_OilCamo'",
+              "unlockable": "unlockable'Unlockable_Weapons.Mat67_OilCamo'",
+              "filterdata": {
+                "criteria": {
+                  "preset": "criteria_preset'Preset_WeaponRarity_NotUnique'"
+                }
+              },
+              "uiname": "Cosmetics_Weapon, BB5B9CC545B0A84AFA18578B163FCC89, Concealed Carry",
+              "displayname": "Cosmetics_Weapon, 83AC3A5449F4C01FB99ECCA34294EC38, Concealed Carry",
+              "icon": "Asset'/Game/DLC/Harp/uiresources/menu_customization/assets/Baked_Textures/WeaponsAndVehicles/Cosmetics_Weapon_Mat67_OilCamo.Cosmetics_Weapon_Mat67_OilCamo'",
+              "sortorder": "67",
+              "type": "/Script/GbxGame.InventorySkinDef"
+            }
+          },
+          {
+            "cosmetics_weapon_mat82_grasslands": {
+              "inv_custom": "Cosmetics_Weapon_Mat82_Grasslands",
+              "dataasset": "Asset'/Game/Gear/Vehicles/Personal/_Shared/Materials/Grassland/DA_MD_PV_Grasslands_Default.DA_MD_PV_Grasslands_Default'",
+              "unlockable": "unlockable'Unlockable_Weapons.Mat82_Grasslands'",
+              "filterdata": {
+                "criteria": {
+                  "preset": "criteria_preset'Preset_WeaponRarity_NotUnique'"
+                }
+              },
+              "uiname": "Cosmetics_Weapon, 46A7A6B34F7F1B397545F998A9C17E11, Local Flavor",
+              "displayname": "Cosmetics_Weapon, 66456B424CEB41988FA25487A6652D6E, Local Flavor",
+              "icon": "Asset'/Game/DLC/Harmonica/uiresources/menu_customization/assets/Baked_Textures/WeaponsAndVehicles/Cosmetics_Weapon_Mat82_Grasslands.Cosmetics_Weapon_Mat82_Grasslands'",
+              "sortorder": "82",
+              "type": "/Script/GbxGame.InventorySkinDef"
+            }
+          },
+          {
+            "cosmetics_weapon_mat83_gravitar": {
+              "inv_custom": "Cosmetics_Weapon_Mat83_Gravitar",
+              "dataasset": "Asset'/Game/Gear/Vehicles/Personal/_Shared/Materials/Gravitar/DA_MD_PV_Gravitar_Default.DA_MD_PV_Gravitar_Default'",
+              "unlockable": "unlockable'Unlockable_Weapons.Mat83_Gravitar'",
+              "filterdata": {
+                "criteria": {
+                  "preset": "criteria_preset'Preset_WeaponRarity_NotUnique'"
+                }
+              },
+              "uiname": "Cosmetics_Weapon, E1C333B14DDBA0B79808859EF17DAE3E, Merch Line",
+              "displayname": "Cosmetics_Weapon, E245AD8B4840D2F55CEADEB44CB52760, Merch Line",
+              "icon": "Asset'/Game/DLC/Harmonica/uiresources/menu_customization/assets/Baked_Textures/WeaponsAndVehicles/Cosmetics_Weapon_Mat83_Gravitar.Cosmetics_Weapon_Mat83_Gravitar'",
+              "sortorder": "83",
+              "type": "/Script/GbxGame.InventorySkinDef"
+            }
+          },
+          {
+            "cosmetics_weapon_mat84_exosoldier": {
+              "inv_custom": "Cosmetics_Weapon_Mat84_ExoSoldier",
+              "dataasset": "Asset'/Game/Gear/Vehicles/Personal/_Shared/Materials/ExoSoldier/DA_MD_PV_ExoSoldier_Default.DA_MD_PV_ExoSoldier_Default'",
+              "unlockable": "unlockable'Unlockable_Weapons.Mat84_ExoSoldier'",
+              "filterdata": {
+                "criteria": {
+                  "preset": "criteria_preset'Preset_WeaponRarity_NotUnique'"
+                }
+              },
+              "uiname": "Cosmetics_Weapon, F696824D4870EC830457F28FC488AC84, Fresh Spray",
+              "displayname": "Cosmetics_Weapon, 74D33688482D9C80CD1E15B47E366393, Fresh Spray",
+              "icon": "Asset'/Game/DLC/Harmonica/uiresources/menu_customization/assets/Baked_Textures/WeaponsAndVehicles/Cosmetics_Weapon_Mat84_ExoSoldier.Cosmetics_Weapon_Mat84_ExoSoldier'",
+              "sortorder": "84",
+              "type": "/Script/GbxGame.InventorySkinDef"
+            }
+          },
+          {
+            "cosmetics_weapon_mat85_paladin": {
+              "inv_custom": "Cosmetics_Weapon_Mat85_Paladin",
+              "dataasset": "Asset'/Game/Gear/Vehicles/Personal/_Shared/Materials/Paladin/DA_MD_PV_Paladin_Default.DA_MD_PV_Paladin_Default'",
+              "unlockable": "unlockable'Unlockable_Weapons.Mat85_Paladin'",
+              "filterdata": {
+                "criteria": {
+                  "preset": "criteria_preset'Preset_WeaponRarity_NotUnique'"
+                }
+              },
+              "uiname": "Cosmetics_Weapon, 5914CA7C493B7BE5D37E15B437588A27, Tally Them All",
+              "displayname": "Cosmetics_Weapon, D467115847235C318E91B5A0C964B057, Tally Them All",
+              "icon": "Asset'/Game/DLC/Harmonica/uiresources/menu_customization/assets/Baked_Textures/WeaponsAndVehicles/Cosmetics_Weapon_Mat85_Paladin.Cosmetics_Weapon_Mat85_Paladin'",
+              "sortorder": "85",
+              "type": "/Script/GbxGame.InventorySkinDef"
+            }
+          },
+          {
+            "cosmetics_weapon_mat86_ripper": {
+              "inv_custom": "Cosmetics_Weapon_Mat86_Ripper",
+              "dataasset": "Asset'/Game/Gear/Vehicles/Personal/_Shared/Materials/Ripper/DA_MD_PV_Ripper_Default.DA_MD_PV_Ripper_Default'",
+              "unlockable": "unlockable'Unlockable_Weapons.Mat86_Ripper'",
+              "filterdata": {
+                "criteria": {
+                  "preset": "criteria_preset'Preset_WeaponRarity_NotUnique'"
+                }
+              },
+              "uiname": "Cosmetics_Weapon, 397E84B4421DD3D096517BAD9A30C7E9, Queen's Demand",
+              "displayname": "Cosmetics_Weapon, DD01ED534924A37D93BF50963FDE08FB, Queen's Demand",
+              "icon": "Asset'/Game/DLC/Harmonica/uiresources/menu_customization/assets/Baked_Textures/WeaponsAndVehicles/Cosmetics_Weapon_Mat86_Ripper.Cosmetics_Weapon_Mat86_Ripper'",
+              "sortorder": "86",
+              "type": "/Script/GbxGame.InventorySkinDef"
+            }
+          },
+          {
+            "cosmetics_weapon_mat87_darksiren": {
+              "inv_custom": "Cosmetics_Weapon_Mat87_DarkSiren",
+              "dataasset": "Asset'/Game/Gear/Vehicles/Personal/_Shared/Materials/DarkSiren/DA_MD_PV_DarkSiren_Default.DA_MD_PV_DarkSiren_Default'",
+              "unlockable": "unlockable'Unlockable_Weapons.Mat87_DarkSiren'",
+              "filterdata": {
+                "criteria": {
+                  "preset": "criteria_preset'Preset_WeaponRarity_NotUnique'"
+                }
+              },
+              "uiname": "Cosmetics_Weapon, A70658224283FB249494DE9BDC13A47A, Troubled Upbringing",
+              "displayname": "Cosmetics_Weapon, AC6E76A345F1B64C4E1931898774AA9E, Troubled Upbringing",
+              "icon": "Asset'/Game/DLC/Harmonica/uiresources/menu_customization/assets/Baked_Textures/WeaponsAndVehicles/Cosmetics_Weapon_Mat87_DarkSiren.Cosmetics_Weapon_Mat87_DarkSiren'",
+              "sortorder": "87",
+              "type": "/Script/GbxGame.InventorySkinDef"
+            }
+          },
+          {
+            "cosmetics_weapon_mat88_shatterlandv1": {
+              "inv_custom": "Cosmetics_Weapon_Mat88_ShatterlandV1",
+              "dataasset": "Asset'/Game/DLC/Banjo/Gear/Vehicles/Personal/_Shared/Materials/ShatterlandV1/DA_MD_PV_ShatterlandV1_Default.DA_MD_PV_ShatterlandV1_Default'",
+              "unlockable": "unlockable'Unlockable_Weapons.Mat88_ShatterlandV1'",
+              "filterdata": {
+                "criteria": {
+                  "preset": "criteria_preset'Preset_WeaponRarity_NotUnique'"
+                }
+              },
+              "uiname": "Cosmetics_Weapon, 6EC165D14677C32B870FE286F77FC9CC, Shatterwave",
+              "displayname": "Cosmetics_Weapon, 4EB9DE7547AE20F7AA973B8D1EC756BB, Shatterwave",
+              "icon": "Asset'/Game/DLC/Harmonica/uiresources/menu_customization/assets/Baked_Textures/WeaponsAndVehicles/Cosmetics_Weapon_Mat88_ShatterlandV1.Cosmetics_Weapon_Mat88_ShatterlandV1'",
+              "sortorder": "88",
+              "type": "/Script/GbxGame.InventorySkinDef"
+            }
+          },
+          {
+            "cosmetics_weapon_mat89_mountain": {
+              "inv_custom": "Cosmetics_Weapon_Mat89_Mountain",
+              "dataasset": "Asset'/Game/DLC/Cello/Gear/Vehicles/Personal/_Shared/Materials/Mountain/DA_MD_PV_Mountain_Default.DA_MD_PV_Mountain_Default'",
+              "unlockable": "unlockable'Unlockable_Weapons.Mat89_Mountain'",
+              "filterdata": {
+                "criteria": {
+                  "preset": "criteria_preset'Preset_WeaponRarity_NotUnique'"
+                }
+              },
+              "uiname": "Cosmetics_Weapon, B45E94FE408A6CC5C4ABFF8F58F1B2CB, Bad Augury",
+              "displayname": "Cosmetics_Weapon, 446352D941CD553B774888B5000CC810, Bad Augury",
+              "icon": "Asset'/Game/DLC/Harmonica/uiresources/menu_customization/assets/Baked_Textures/WeaponsAndVehicles/Cosmetics_Weapon_Mat89_Mountain.Cosmetics_Weapon_Mat89_Mountain'",
+              "sortorder": "89",
+              "type": "/Script/GbxGame.InventorySkinDef"
+            }
+          },
+          {
+            "cosmetics_weapon_mat90_cityorder": {
+              "inv_custom": "Cosmetics_Weapon_Mat90_CityOrder",
+              "dataasset": "Asset'/Game/DLC/Mandolin/Gear/Vehicles/Personal/_Shared/Materials/CityOrder/DA_MD_PV_CityOrder_Default.DA_MD_PV_CityOrder_Default'",
+              "unlockable": "unlockable'Unlockable_Weapons.Mat90_CityOrder'",
+              "filterdata": {
+                "criteria": {
+                  "preset": "criteria_preset'Preset_WeaponRarity_NotUnique'"
+                }
+              },
+              "uiname": "Cosmetics_Weapon, F194481D477C7AD4DA3776B48D00A1D4, Electric Etch",
+              "displayname": "Cosmetics_Weapon, 32AC09DD41F5CC8669DF2C8B2E132948, Electric Etch",
+              "icon": "Asset'/Game/DLC/Harmonica/uiresources/menu_customization/assets/Baked_Textures/WeaponsAndVehicles/Cosmetics_Weapon_Mat90_CityOrder.Cosmetics_Weapon_Mat90_CityOrder'",
+              "sortorder": "90",
+              "type": "/Script/GbxGame.InventorySkinDef"
+            }
+          },
+          {
+            "cosmetics_weapon_mat91_shatterlandv2": {
+              "inv_custom": "Cosmetics_Weapon_Mat91_ShatterlandV2",
+              "dataasset": "Asset'/Game/DLC/Harp/Gear/Vehicles/Personal/_Shared/Materials/ShatterlandV2/DA_MD_PV_ShatterlandV2_Default.DA_MD_PV_ShatterlandV2_Default'",
+              "unlockable": "unlockable'Unlockable_Weapons.Mat91_ShatterlandV2'",
+              "filterdata": {
+                "criteria": {
+                  "preset": "criteria_preset'Preset_WeaponRarity_NotUnique'"
+                }
+              },
+              "uiname": "Cosmetics_Weapon, DD0BA32E4E1C256E64D480A4F0707ED6, Wave Collapse",
+              "displayname": "Cosmetics_Weapon, 6497B94C4A3970F6D2F5D59BEE0A604B, Wave Collapse",
+              "icon": "Asset'/Game/DLC/Harmonica/uiresources/menu_customization/assets/Baked_Textures/WeaponsAndVehicles/Cosmetics_Weapon_Mat91_ShatterlandV2.Cosmetics_Weapon_Mat91_ShatterlandV2'",
+              "sortorder": "91",
+              "type": "/Script/GbxGame.InventorySkinDef"
+            }
+          },
+          {
+            "cosmetics_weapon_mat92_stingray": {
+              "inv_custom": "Cosmetics_Weapon_Mat92_Stingray",
+              "dataasset": "Asset'/Game/DLC/Viola/Gear/Vehicles/Personal/_Shared/Materials/Stingray/DA_MD_PV_Stingray_Default.DA_MD_PV_Stingray_Default'",
+              "unlockable": "unlockable'Unlockable_Weapons.Mat92_Stingray'",
+              "filterdata": {
+                "criteria": {
+                  "preset": "criteria_preset'Preset_WeaponRarity_NotUnique'"
+                }
+              },
+              "uiname": "Cosmetics_Weapon, 76A75DF048BEC4A7FF57F08EC5E5AC04, Frozen Over",
+              "displayname": "Cosmetics_Weapon, C54805A94EE7D0FFAAA07EBBD5107CFC, Frozen Over",
+              "icon": "Asset'/Game/DLC/Harmonica/uiresources/menu_customization/assets/Baked_Textures/WeaponsAndVehicles/Cosmetics_Weapon_Mat92_Stingray.Cosmetics_Weapon_Mat92_Stingray'",
+              "sortorder": "92",
+              "type": "/Script/GbxGame.InventorySkinDef"
+            }
+          },
+          {
+            "cosmetics_weapon_shiny_aerodramatic": {
+              "inv_custom": "Cosmetics_Weapon_Shiny_AeroDramatic",
+              "dataasset": "Asset'/Game/Gear/Weapons/_Shared/Materials/_Global/DA_MD_SHINY_01.DA_MD_SHINY_01'",
+              "unlockable": "unlockable'Unlockable_Weapons.Shiny_AeroDramatic'",
+              "filterdata": {
+                "item": "inv'TOR_SG.comp_05_legendary_AeroDramatic'"
+              },
+              "uiname": "Cosmetics_Weapon, CA7F8CB64955C18861D20F828598B5FE, Phosphene",
+              "displayname": "Cosmetics_Weapon, 64AC10604016CAFFFD5A3E98C22AB866, Phosphene",
+              "icon": "Asset'/Game/uiresources/menu_customization/assets/Baked_Textures/WeaponsAndVehicles/Cosmetics_Weapon_Shiny_anarchy.Cosmetics_Weapon_Shiny_anarchy'",
+              "type": "/Script/GbxGame.InventorySkinDef"
+            }
+          },
+          {
+            "cosmetics_weapon_shiny_arctic": {
+              "inv_custom": "Cosmetics_Weapon_Shiny_arctic",
+              "dataasset": "Asset'/Game/Gear/Weapons/_Shared/Materials/_Global/DA_MD_SHINY_01.DA_MD_SHINY_01'",
+              "unlockable": "unlockable'Unlockable_Weapons.Shiny_arctic'",
+              "filterdata": {
+                "item": "inv'TOR_SG.comp_05_legendary_arctic'"
+              },
+              "uiname": "Cosmetics_Weapon, A73575854832C77EAC6476A249164A14, Phosphene",
+              "displayname": "Cosmetics_Weapon, D1DFCFCA4DCDE247D91DB48B8D5BC5F7, Phosphene",
+              "icon": "Asset'/Game/uiresources/menu_customization/assets/Baked_Textures/WeaponsAndVehicles/Cosmetics_Weapon_Shiny_anarchy.Cosmetics_Weapon_Shiny_anarchy'",
+              "type": "/Script/GbxGame.InventorySkinDef"
+            }
+          },
+          {
+            "cosmetics_weapon_shiny_assembler": {
+              "inv_custom": "Cosmetics_Weapon_Shiny_assembler",
+              "dataasset": "Asset'/Game/Gear/Weapons/_Shared/Materials/_Global/DA_MD_SHINY_01.DA_MD_SHINY_01'",
+              "unlockable": "unlockable'Unlockable_Weapons.Shiny_reminisce'",
+              "filterdata": {
+                "item": "inv'MAL_SG.comp_05_legendary_Reminisce'"
+              },
+              "uiname": "Cosmetics_Weapon, D5729967477CCA3DB896A9BBB64B0499, Phosphene",
+              "displayname": "Cosmetics_Weapon, A8E7E0114D3F2F22870341BDD2FE48CD, Phosphene",
+              "icon": "Asset'/Game/uiresources/menu_customization/assets/Baked_Textures/WeaponsAndVehicles/Cosmetics_Weapon_Shiny_anarchy.Cosmetics_Weapon_Shiny_anarchy'",
+              "type": "/Script/GbxGame.InventorySkinDef"
+            }
+          },
+          {
+            "cosmetics_weapon_shiny_aura": {
+              "inv_custom": "Cosmetics_Weapon_Shiny_aura",
+              "dataasset": "Asset'/Game/Gear/Weapons/_Shared/Materials/_Global/DA_MD_SHINY_01.DA_MD_SHINY_01'",
+              "unlockable": "unlockable'Unlockable_Weapons.Shiny_aura'",
+              "filterdata": {
+                "item": "inv'VLA_SM.comp_05_legendary_aura'"
+              },
+              "uiname": "Cosmetics_Weapon, C715EFE246E74D6ADE1D3C845E536D14, Phosphene",
+              "displayname": "Cosmetics_Weapon, 7C0ED90C4806E9D6D3A0499A45A77F87, Phosphene",
+              "icon": "Asset'/Game/uiresources/menu_customization/assets/Baked_Textures/WeaponsAndVehicles/Cosmetics_Weapon_Shiny_anarchy.Cosmetics_Weapon_Shiny_anarchy'",
+              "type": "/Script/GbxGame.InventorySkinDef"
+            }
+          },
+          {
+            "cosmetics_weapon_shiny_blackout": {
+              "inv_custom": "Cosmetics_Weapon_Shiny_blackout",
+              "dataasset": "Asset'/Game/Gear/Weapons/_Shared/Materials/_Global/DA_MD_SHINY_01.DA_MD_SHINY_01'",
+              "unlockable": "unlockable'Unlockable_Weapons.Shiny_blackout'",
+              "filterdata": {
+                "item": "inv'DAD_PS.comp_05_legendary_blackout'"
+              },
+              "uiname": "Cosmetics_Weapon, A4A8F5E548A17C75D6B0B3A73457114B, Phosphene",
+              "displayname": "Cosmetics_Weapon, 4F84D5E340E172531F05B3B9F11F160C, Phosphene",
+              "icon": "Asset'/Game/uiresources/menu_customization/assets/Baked_Textures/WeaponsAndVehicles/Cosmetics_Weapon_Shiny_anarchy.Cosmetics_Weapon_Shiny_anarchy'",
+              "type": "/Script/GbxGame.InventorySkinDef"
+            }
+          },
+          {
+            "cosmetics_weapon_shiny_breadth": {
+              "inv_custom": "Cosmetics_Weapon_Shiny_Breadth",
+              "dataasset": "Asset'/Game/Gear/Weapons/_Shared/Materials/_Global/DA_MD_SHINY_01.DA_MD_SHINY_01'",
+              "unlockable": "unlockable'Unlockable_Weapons.Shiny_Breadth'",
+              "filterdata": {
+                "item": "inv'TOR_PS.comp_05_legendary_Breadth'"
+              },
+              "uiname": "Cosmetics_Weapon, A73575854832C77EAC6476A249164A14, Phosphene",
+              "displayname": "Cosmetics_Weapon, D1DFCFCA4DCDE247D91DB48B8D5BC5F7, Phosphene",
+              "icon": "Asset'/Game/uiresources/menu_customization/assets/Baked_Textures/WeaponsAndVehicles/Cosmetics_Weapon_Shiny_anarchy.Cosmetics_Weapon_Shiny_anarchy'",
+              "type": "/Script/GbxGame.InventorySkinDef"
+            }
+          },
+          {
+            "cosmetics_weapon_shiny_brickhouse": {
+              "inv_custom": "Cosmetics_Weapon_Shiny_brickhouse",
+              "dataasset": "Asset'/Game/Gear/Weapons/_Shared/Materials/_Global/DA_MD_SHINY_01.DA_MD_SHINY_01'",
+              "unlockable": "unlockable'Unlockable_Weapons.Shiny_brickhouse'",
+              "filterdata": {
+                "item": "inv'VLA_SM.comp_05_legendary_brickhouse'"
+              },
+              "uiname": "Cosmetics_Weapon, 6A542C404CA37D57D685D2AB71314D73, Phosphene",
+              "displayname": "Cosmetics_Weapon, EF46A74942A7D3F72E9F6DAE5B0D48C1, Phosphene",
+              "icon": "Asset'/Game/uiresources/menu_customization/assets/Baked_Textures/WeaponsAndVehicles/Cosmetics_Weapon_Shiny_anarchy.Cosmetics_Weapon_Shiny_anarchy'",
+              "type": "/Script/GbxGame.InventorySkinDef"
+            }
+          },
+          {
+            "cosmetics_weapon_shiny_bubbles": {
+              "inv_custom": "Cosmetics_Weapon_Shiny_bubbles",
+              "dataasset": "Asset'/Game/Gear/Weapons/_Shared/Materials/_Global/DA_MD_SHINY_01.DA_MD_SHINY_01'",
+              "unlockable": "unlockable'Unlockable_Weapons.Shiny_bubbles'",
+              "filterdata": {
+                "item": "inv'VLA_AR.comp_05_Legendary_bubbles'"
+              },
+              "uiname": "Cosmetics_Weapon, A73575854832C77EAC6476A249164A14, Phosphene",
+              "displayname": "Cosmetics_Weapon, D1DFCFCA4DCDE247D91DB48B8D5BC5F7, Phosphene",
+              "icon": "Asset'/Game/uiresources/menu_customization/assets/Baked_Textures/WeaponsAndVehicles/Cosmetics_Weapon_Shiny_anarchy.Cosmetics_Weapon_Shiny_anarchy'",
+              "type": "/Script/GbxGame.InventorySkinDef"
+            }
+          },
+          {
+            "cosmetics_weapon_shiny_burrow": {
+              "inv_custom": "Cosmetics_Weapon_Shiny_Burrow",
+              "dataasset": "Asset'/Game/Gear/Weapons/_Shared/Materials/_Global/DA_MD_SHINY_01.DA_MD_SHINY_01'",
+              "unlockable": "unlockable'Unlockable_Weapons.Shiny_Burrow'",
+              "filterdata": {
+                "item": "inv'JAK_SR.comp_05_legendary_Burrow'"
+              },
+              "uiname": "Cosmetics_Weapon, B899F203459C8830CCFB66AA7FD86F7D, Phosphene",
+              "displayname": "Cosmetics_Weapon, BEEA9F754985B61D4F37159B8D895682, Phosphene",
+              "icon": "Asset'/Game/uiresources/menu_customization/assets/Baked_Textures/WeaponsAndVehicles/Cosmetics_Weapon_Shiny_anarchy.Cosmetics_Weapon_Shiny_anarchy'",
+              "type": "/Script/GbxGame.InventorySkinDef"
+            }
+          },
+          {
+            "cosmetics_weapon_shiny_cannonbrawl": {
+              "inv_custom": "Cosmetics_Weapon_Shiny_Cannonbrawl",
+              "dataasset": "Asset'/Game/Gear/Weapons/_Shared/Materials/_Global/DA_MD_SHINY_01.DA_MD_SHINY_01'",
+              "unlockable": "unlockable'Unlockable_Weapons.Shiny_cannonbrawl'",
+              "filterdata": {
+                "item": "inv'DAD_SG.comp_05_legendary_cannonbrawl'"
+              },
+              "uiname": "Cosmetics_Weapon, FD4C384343573D175E7DCD8ACBF70003, Phosphene",
+              "displayname": "Cosmetics_Weapon, D3398761443453B10F887B95E51C896C, Phosphene",
+              "icon": "Asset'/Game/uiresources/menu_customization/assets/Baked_Textures/WeaponsAndVehicles/Cosmetics_Weapon_Shiny_anarchy.Cosmetics_Weapon_Shiny_anarchy'",
+              "type": "/Script/GbxGame.InventorySkinDef"
+            }
+          },
+          {
+            "cosmetics_weapon_shiny_clarity": {
+              "inv_custom": "Cosmetics_Weapon_Shiny_Clarity",
+              "dataasset": "Asset'/Game/Gear/Weapons/_Shared/Materials/_Global/DA_MD_SHINY_01.DA_MD_SHINY_01'",
+              "unlockable": "unlockable'Unlockable_Weapons.Shiny_Clarity'",
+              "filterdata": {
+                "item": "inv'MAL_SR.comp_05_legendary_Clarity'"
+              },
+              "uiname": "Cosmetics_Weapon, 46A9E61E4F51757B7BD5C48F8D0B7B3C, Phosphene",
+              "displayname": "Cosmetics_Weapon, D33785D1410B380D8D715FB8D3F1193A, Phosphene",
+              "icon": "Asset'/Game/uiresources/menu_customization/assets/Baked_Textures/WeaponsAndVehicles/Cosmetics_Weapon_Shiny_anarchy.Cosmetics_Weapon_Shiny_anarchy'",
+              "type": "/Script/GbxGame.InventorySkinDef"
+            }
+          },
+          {
+            "cosmetics_weapon_shiny_cormano": {
+              "inv_custom": "Cosmetics_Weapon_Shiny_Cormano",
+              "dataasset": "Asset'/Game/Gear/Weapons/_Shared/Materials/_Global/DA_MD_SHINY_01.DA_MD_SHINY_01'",
+              "unlockable": "unlockable'Unlockable_Weapons.Shiny_Cormano'",
+              "filterdata": {
+                "item": "inv'TOR_SG.comp_05_legendary_Cormano'"
+              },
+              "uiname": "Cosmetics_Weapon, EC3B331B4C5A55AF111C0B9EE713BF2D, Phosphene",
+              "displayname": "Cosmetics_Weapon, 83AE9CEE40C8B0A0062890849080B98B, Phosphene",
+              "icon": "Asset'/Game/uiresources/menu_customization/assets/Baked_Textures/WeaponsAndVehicles/Cosmetics_Weapon_Shiny_anarchy.Cosmetics_Weapon_Shiny_anarchy'",
+              "type": "/Script/GbxGame.InventorySkinDef"
+            }
+          },
+          {
+            "cosmetics_weapon_shiny_crazedearl": {
+              "inv_custom": "Cosmetics_Weapon_Shiny_crazedEarl",
+              "dataasset": "Asset'/Game/Gear/Weapons/_Shared/Materials/_Global/DA_MD_SHINY_01.DA_MD_SHINY_01'",
+              "unlockable": "unlockable'Unlockable_Weapons.Shiny_CrazedEarl'",
+              "filterdata": {
+                "item": "inv'BOR_SG.comp_05_legendary_CrazedEarl'"
+              },
+              "uiname": "Cosmetics_Weapon, A73575854832C77EAC6476A249164A14, Phosphene",
+              "displayname": "Cosmetics_Weapon, D1DFCFCA4DCDE247D91DB48B8D5BC5F7, Phosphene",
+              "icon": "Asset'/Game/uiresources/menu_customization/assets/Baked_Textures/WeaponsAndVehicles/Cosmetics_Weapon_Shiny_anarchy.Cosmetics_Weapon_Shiny_anarchy'",
+              "type": "/Script/GbxGame.InventorySkinDef"
+            }
+          },
+          {
+            "cosmetics_weapon_shiny_demo": {
+              "inv_custom": "Cosmetics_Weapon_Shiny_Demo",
+              "dataasset": "Asset'/Game/Gear/Weapons/_Shared/Materials/_Global/DA_MD_SHINY_01.DA_MD_SHINY_01'",
+              "unlockable": "unlockable'Unlockable_Weapons.Shiny_Demo'",
+              "filterdata": {
+                "item": "inv'BOR_SG.comp_05_legendary_demo'"
+              },
+              "uiname": "Cosmetics_Weapon, A73575854832C77EAC6476A249164A14, Phosphene",
+              "displayname": "Cosmetics_Weapon, D1DFCFCA4DCDE247D91DB48B8D5BC5F7, Phosphene",
+              "icon": "Asset'/Game/uiresources/menu_customization/assets/Baked_Textures/WeaponsAndVehicles/Cosmetics_Weapon_Shiny_anarchy.Cosmetics_Weapon_Shiny_anarchy'",
+              "type": "/Script/GbxGame.InventorySkinDef"
+            }
+          },
+          {
+            "cosmetics_weapon_shiny_devourer": {
+              "inv_custom": "Cosmetics_Weapon_Shiny_devourer",
+              "dataasset": "Asset'/Game/Gear/Weapons/_Shared/Materials/_Global/DA_MD_SHINY_01.DA_MD_SHINY_01'",
+              "unlockable": "unlockable'Unlockable_Weapons.Shiny_rainmaker'",
+              "filterdata": {
+                "item": "inv'bor_sr.comp_05_legendary_rainmaker'"
+              },
+              "uiname": "Cosmetics_Weapon, 6C842120495574AC2782DBAD3BD1C3EE, Phosphene",
+              "displayname": "Cosmetics_Weapon, EAD62C7244BDAD6A1D22569943A590CA, Phosphene",
+              "icon": "Asset'/Game/uiresources/menu_customization/assets/Baked_Textures/WeaponsAndVehicles/Cosmetics_Weapon_Shiny_anarchy.Cosmetics_Weapon_Shiny_anarchy'",
+              "type": "/Script/GbxGame.InventorySkinDef"
+            }
+          },
+          {
+            "cosmetics_weapon_shiny_discybusiness": {
+              "inv_custom": "Cosmetics_Weapon_Shiny_DiscyBusiness",
+              "dataasset": "Asset'/Game/Gear/Weapons/_Shared/Materials/_Global/DA_MD_SHINY_01.DA_MD_SHINY_01'",
+              "unlockable": "unlockable'Unlockable_Weapons.Shiny_DiscyBusiness'",
+              "filterdata": {
+                "item": "inv'MAL_SG.comp_05_legendary_DiscyBusiness'"
+              },
+              "uiname": "Cosmetics_Weapon, EC3B331B4C5A55AF111C0B9EE713BF2D, Phosphene",
+              "displayname": "Cosmetics_Weapon, 83AE9CEE40C8B0A0062890849080B98B, Phosphene",
+              "icon": "Asset'/Game/uiresources/menu_customization/assets/Baked_Textures/WeaponsAndVehicles/Cosmetics_Weapon_Shiny_anarchy.Cosmetics_Weapon_Shiny_anarchy'",
+              "type": "/Script/GbxGame.InventorySkinDef"
+            }
+          },
+          {
+            "cosmetics_weapon_shiny_doeshot": {
+              "inv_custom": "Cosmetics_Weapon_Shiny_Doeshot",
+              "dataasset": "Asset'/Game/Gear/Weapons/_Shared/Materials/_Global/DA_MD_SHINY_01.DA_MD_SHINY_01'",
+              "unlockable": "unlockable'Unlockable_Weapons.Shiny_Doeshot'",
+              "filterdata": {
+                "item": "inv'JAK_SG.comp_05_legendary_Doeshot'"
+              },
+              "uiname": "Cosmetics_Weapon, A73575854832C77EAC6476A249164A14, Phosphene",
+              "displayname": "Cosmetics_Weapon, D1DFCFCA4DCDE247D91DB48B8D5BC5F7, Phosphene",
+              "icon": "Asset'/Game/uiresources/menu_customization/assets/Baked_Textures/WeaponsAndVehicles/Cosmetics_Weapon_Shiny_anarchy.Cosmetics_Weapon_Shiny_anarchy'",
+              "type": "/Script/GbxGame.InventorySkinDef"
+            }
+          },
+          {
+            "cosmetics_weapon_shiny_earlyexcess": {
+              "inv_custom": "Cosmetics_Weapon_Shiny_EarlyExcess",
+              "dataasset": "Asset'/Game/Gear/Weapons/_Shared/Materials/_Global/DA_MD_SHINY_01.DA_MD_SHINY_01'",
+              "unlockable": "unlockable'Unlockable_Weapons.Shiny_EarlyExcess'",
+              "filterdata": {
+                "item": "inv'TED_PS.comp_05_legendary_EarlyExcess'"
+              },
+              "uiname": "Cosmetics_Weapon, A01612314F5E0714FEA83684F7383B61, Phosphene",
+              "displayname": "Cosmetics_Weapon, 1CE5C5F347FE305ABC1F0CAEF7C27CED, Phosphene",
+              "icon": "Asset'/Game/uiresources/menu_customization/assets/Baked_Textures/WeaponsAndVehicles/Cosmetics_Weapon_Shiny_anarchy.Cosmetics_Weapon_Shiny_anarchy'",
+              "type": "/Script/GbxGame.InventorySkinDef"
+            }
+          },
+          {
+            "cosmetics_weapon_shiny_enumeration": {
+              "inv_custom": "Cosmetics_Weapon_Shiny_enumeration",
+              "dataasset": "Asset'/Game/Gear/Weapons/_Shared/Materials/_Global/DA_MD_SHINY_01.DA_MD_SHINY_01'",
+              "unlockable": "unlockable'Unlockable_Weapons.Shiny_enumeration'",
+              "filterdata": {
+                "item": "inv'BOR_SM.comp_05_legendary_enumeration'"
+              },
+              "uiname": "Cosmetics_Weapon, F2E89AA6432E299C34FAF299514333FE, Phosphene",
+              "displayname": "Cosmetics_Weapon, D5C9A1AF43EE685AA8A19C88E53B66FE, Phosphene",
+              "icon": "Asset'/Game/uiresources/menu_customization/assets/Baked_Textures/WeaponsAndVehicles/Cosmetics_Weapon_Shiny_anarchy.Cosmetics_Weapon_Shiny_anarchy'",
+              "type": "/Script/GbxGame.InventorySkinDef"
+            }
+          },
+          {
+            "cosmetics_weapon_shiny_extinction": {
+              "inv_custom": "Cosmetics_Weapon_Shiny_Extinction",
+              "dataasset": "Asset'/Game/Gear/Weapons/_Shared/Materials/_Global/DA_MD_SHINY_01.DA_MD_SHINY_01'",
+              "unlockable": "unlockable'Unlockable_Weapons.Shiny_Extinction'",
+              "filterdata": {
+                "item": "inv'VLA_AR.comp_05_legendary_Extinction'"
+              },
+              "uiname": "Cosmetics_Weapon, B899F203459C8830CCFB66AA7FD86F7D, Phosphene",
+              "displayname": "Cosmetics_Weapon, BEEA9F754985B61D4F37159B8D895682, Phosphene",
+              "icon": "Asset'/Game/uiresources/menu_customization/assets/Baked_Textures/WeaponsAndVehicles/Cosmetics_Weapon_Shiny_anarchy.Cosmetics_Weapon_Shiny_anarchy'",
+              "type": "/Script/GbxGame.InventorySkinDef"
+            }
+          },
+          {
+            "cosmetics_weapon_shiny_fishward": {
+              "inv_custom": "Cosmetics_Weapon_Shiny_fishward",
+              "dataasset": "Asset'/Game/Gear/Weapons/_Shared/Materials/_Global/DA_MD_SHINY_01.DA_MD_SHINY_01'",
+              "unlockable": "unlockable'Unlockable_Weapons.Shiny_fishward'",
+              "filterdata": {
+                "item": "inv'JAK_AR.comp_05_legendary_fishward'"
+              },
+              "uiname": "Cosmetics_Weapon, 70F40DBB4786D162E1F861A50BCB72CD, Phosphene",
+              "displayname": "Cosmetics_Weapon, 77386AD44D37A03ECB805BA28837CD2C, Phosphene",
+              "icon": "Asset'/Game/uiresources/menu_customization/assets/Baked_Textures/WeaponsAndVehicles/Cosmetics_Weapon_Shiny_anarchy.Cosmetics_Weapon_Shiny_anarchy'",
+              "type": "/Script/GbxGame.InventorySkinDef"
+            }
+          },
+          {
+            "cosmetics_weapon_shiny_flashfuel": {
+              "inv_custom": "Cosmetics_Weapon_Shiny_FlashFuel",
+              "dataasset": "Asset'/Game/Gear/Weapons/_Shared/Materials/_Global/DA_MD_SHINY_01.DA_MD_SHINY_01'",
+              "unlockable": "unlockable'Unlockable_Weapons.Shiny_FlashFuel'",
+              "filterdata": {
+                "item": "inv'JAK_AR.comp_05_legendary_FlashFuel'"
+              },
+              "uiname": "Cosmetics_Weapon, A73575854832C77EAC6476A249164A14, Phosphene",
+              "displayname": "Cosmetics_Weapon, D1DFCFCA4DCDE247D91DB48B8D5BC5F7, Phosphene",
+              "icon": "Asset'/Game/uiresources/menu_customization/assets/Baked_Textures/WeaponsAndVehicles/Cosmetics_Weapon_Shiny_anarchy.Cosmetics_Weapon_Shiny_anarchy'",
+              "type": "/Script/GbxGame.InventorySkinDef"
+            }
+          },
+          {
+            "cosmetics_weapon_shiny_fleabag": {
+              "inv_custom": "Cosmetics_Weapon_Shiny_Fleabag",
+              "dataasset": "Asset'/Game/Gear/Weapons/_Shared/Materials/_Global/DA_MD_SHINY_01.DA_MD_SHINY_01'",
+              "unlockable": "unlockable'Unlockable_Weapons.Shiny_Fleabag'",
+              "filterdata": {
+                "item": "inv'TOR_AR.comp_05_legendary_fleabag'"
+              },
+              "uiname": "Cosmetics_Weapon, F4D04F764862565085A36A9F6E71BA41, Phosphene",
+              "displayname": "Cosmetics_Weapon, F5CF262441E43DDB1297E193F0B9AB64, Phosphene",
+              "icon": "Asset'/Game/uiresources/menu_customization/assets/Baked_Textures/WeaponsAndVehicles/Cosmetics_Weapon_Shiny_anarchy.Cosmetics_Weapon_Shiny_anarchy'",
+              "type": "/Script/GbxGame.InventorySkinDef"
+            }
+          },
+          {
+            "cosmetics_weapon_shiny_harddark": {
+              "inv_custom": "Cosmetics_Weapon_Shiny_HardDark",
+              "dataasset": "Asset'/Game/Gear/Weapons/_Shared/Materials/_Global/DA_MD_SHINY_01.DA_MD_SHINY_01'",
+              "unlockable": "unlockable'Unlockable_Weapons.Shiny_HardDark'",
+              "filterdata": {
+                "item": "inv'dad_ar.comp_05_legendary_HardDark'"
+              },
+              "uiname": "Cosmetics_Weapon, EC3B331B4C5A55AF111C0B9EE713BF2D, Phosphene",
+              "displayname": "Cosmetics_Weapon, 83AE9CEE40C8B0A0062890849080B98B, Phosphene",
+              "icon": "Asset'/Game/uiresources/menu_customization/assets/Baked_Textures/WeaponsAndVehicles/Cosmetics_Weapon_Shiny_anarchy.Cosmetics_Weapon_Shiny_anarchy'",
+              "type": "/Script/GbxGame.InventorySkinDef"
+            }
+          },
+          {
+            "cosmetics_weapon_shiny_ishmael": {
+              "inv_custom": "Cosmetics_Weapon_Shiny_Ishmael",
+              "dataasset": "Asset'/Game/Gear/Weapons/_Shared/Materials/_Global/DA_MD_SHINY_01.DA_MD_SHINY_01'",
+              "unlockable": "unlockable'Unlockable_Weapons.Shiny_Ishmael'",
+              "filterdata": {
+                "item": "inv'ORD_SR.comp_05_legendary_ishmael'"
+              },
+              "uiname": "Cosmetics_Weapon, A73575854832C77EAC6476A249164A14, Phosphene",
+              "displayname": "Cosmetics_Weapon, D1DFCFCA4DCDE247D91DB48B8D5BC5F7, Phosphene",
+              "icon": "Asset'/Game/uiresources/menu_customization/assets/Baked_Textures/WeaponsAndVehicles/Cosmetics_Weapon_Shiny_anarchy.Cosmetics_Weapon_Shiny_anarchy'",
+              "type": "/Script/GbxGame.InventorySkinDef"
+            }
+          },
+          {
+            "cosmetics_weapon_shiny_jailbroken": {
+              "inv_custom": "Cosmetics_Weapon_Shiny_Jailbroken",
+              "dataasset": "Asset'/Game/Gear/Weapons/_Shared/Materials/_Global/DA_MD_SHINY_01.DA_MD_SHINY_01'",
+              "unlockable": "unlockable'Unlockable_Weapons.Shiny_Jailbroken'",
+              "filterdata": {
+                "item": "inv'BOR_SM.comp_05_legendary_Jailbroken'"
+              },
+              "uiname": "Cosmetics_Weapon, E75E69174F135B925E683DA090A961B8, Phosphene",
+              "displayname": "Cosmetics_Weapon, CCDD20884EE197507420759C7A2FF73A, Phosphene",
+              "icon": "Asset'/Game/uiresources/menu_customization/assets/Baked_Textures/WeaponsAndVehicles/Cosmetics_Weapon_Shiny_anarchy.Cosmetics_Weapon_Shiny_anarchy'",
+              "type": "/Script/GbxGame.InventorySkinDef"
+            }
+          },
+          {
+            "cosmetics_weapon_shiny_laserdisc": {
+              "inv_custom": "Cosmetics_Weapon_Shiny_LaserDisc",
+              "dataasset": "Asset'/Game/Gear/Weapons/_Shared/Materials/_Global/DA_MD_SHINY_01.DA_MD_SHINY_01'",
+              "unlockable": "unlockable'Unlockable_Weapons.Shiny_laserdisc'",
+              "filterdata": {
+                "item": "inv'TED_AR.comp_05_legendary_laserdisc'"
+              },
+              "uiname": "Cosmetics_Weapon, F4D04F764862565085A36A9F6E71BA41, Phosphene",
+              "displayname": "Cosmetics_Weapon, F5CF262441E43DDB1297E193F0B9AB64, Phosphene",
+              "icon": "Asset'/Game/uiresources/menu_customization/assets/Baked_Textures/WeaponsAndVehicles/Cosmetics_Weapon_Shiny_anarchy.Cosmetics_Weapon_Shiny_anarchy'",
+              "type": "/Script/GbxGame.InventorySkinDef"
+            }
+          },
+          {
+            "cosmetics_weapon_shiny_lightgun": {
+              "inv_custom": "Cosmetics_Weapon_Shiny_LightGun",
+              "dataasset": "Asset'/Game/Gear/Weapons/_Shared/Materials/_Global/DA_MD_SHINY_01.DA_MD_SHINY_01'",
+              "unlockable": "unlockable'Unlockable_Weapons.Shiny_LightGun'",
+              "filterdata": {
+                "item": "inv'TOR_SG.comp_05_legendary_Cormano'"
+              },
+              "uiname": "Cosmetics_Weapon, EC3B331B4C5A55AF111C0B9EE713BF2D, Phosphene",
+              "displayname": "Cosmetics_Weapon, 83AE9CEE40C8B0A0062890849080B98B, Phosphene",
+              "icon": "Asset'/Game/uiresources/menu_customization/assets/Baked_Textures/WeaponsAndVehicles/Cosmetics_Weapon_Shiny_anarchy.Cosmetics_Weapon_Shiny_anarchy'",
+              "type": "/Script/GbxGame.InventorySkinDef"
+            }
+          },
+          {
+            "cosmetics_weapon_shiny_lockjaw": {
+              "inv_custom": "Cosmetics_Weapon_Shiny_lockjaw",
+              "dataasset": "Asset'/Game/Gear/Weapons/_Shared/Materials/_Global/DA_MD_SHINY_01.DA_MD_SHINY_01'",
+              "unlockable": "unlockable'Unlockable_Weapons.Shiny_lockjaw'",
+              "filterdata": {
+                "item": "inv'TOR_AR.comp_05_legendary_lockjaw'"
+              },
+              "uiname": "Cosmetics_Weapon, 5A67245D4E04F21F4AC9F2989485E845, Phosphene",
+              "displayname": "Cosmetics_Weapon, ABF58D3D487DD70655C4EAACBE344A7B, Phosphene",
+              "icon": "Asset'/Game/uiresources/menu_customization/assets/Baked_Textures/WeaponsAndVehicles/Cosmetics_Weapon_Shiny_anarchy.Cosmetics_Weapon_Shiny_anarchy'",
+              "type": "/Script/GbxGame.InventorySkinDef"
+            }
+          },
+          {
+            "cosmetics_weapon_shiny_locust": {
+              "inv_custom": "Cosmetics_Weapon_Shiny_Locust",
+              "dataasset": "Asset'/Game/Gear/Weapons/_Shared/Materials/_Global/DA_MD_SHINY_01.DA_MD_SHINY_01'",
+              "unlockable": "unlockable'Unlockable_Weapons.Shiny_Locust'",
+              "filterdata": {
+                "item": "inv'VLA_SM.comp_06_pearl_Locust'"
+              },
+              "uiname": "Cosmetics_Weapon, 88998BDA4DB549243FBEE8825B98CA0E, Phosphene",
+              "displayname": "Cosmetics_Weapon, D8B437784FD819D2DDE417ADF8E7A86C, Phosphene",
+              "icon": "Asset'/Game/uiresources/menu_customization/assets/Baked_Textures/WeaponsAndVehicles/Cosmetics_Weapon_Shiny_anarchy.Cosmetics_Weapon_Shiny_anarchy'",
+              "type": "/Script/GbxGame.InventorySkinDef"
+            }
+          },
+          {
+            "cosmetics_weapon_shiny_manifest": {
+              "inv_custom": "Cosmetics_Weapon_Shiny_manifest",
+              "dataasset": "Asset'/Game/Gear/Weapons/_Shared/Materials/_Global/DA_MD_SHINY_01.DA_MD_SHINY_01'",
+              "unlockable": "unlockable'Unlockable_Weapons.Shiny_manifest'",
+              "filterdata": {
+                "item": "inv'MAL_SR.comp_05_legendary_manifest'"
+              },
+              "uiname": "Cosmetics_Weapon, A73575854832C77EAC6476A249164A14, Phosphene",
+              "displayname": "Cosmetics_Weapon, D1DFCFCA4DCDE247D91DB48B8D5BC5F7, Phosphene",
+              "icon": "Asset'/Game/uiresources/menu_customization/assets/Baked_Textures/WeaponsAndVehicles/Cosmetics_Weapon_Shiny_anarchy.Cosmetics_Weapon_Shiny_anarchy'",
+              "type": "/Script/GbxGame.InventorySkinDef"
+            }
+          },
+          {
+            "cosmetics_weapon_shiny_mantra": {
+              "inv_custom": "Cosmetics_Weapon_Shiny_mantra",
+              "dataasset": "Asset'/Game/Gear/Weapons/_Shared/Materials/_Global/DA_MD_SHINY_01.DA_MD_SHINY_01'",
+              "unlockable": "unlockable'Unlockable_Weapons.Shiny_mantra'",
+              "filterdata": {
+                "item": "inv'MAL_SG.comp_05_legendary_mantra'"
+              },
+              "uiname": "Cosmetics_Weapon, A73575854832C77EAC6476A249164A14, Phosphene",
+              "displayname": "Cosmetics_Weapon, D1DFCFCA4DCDE247D91DB48B8D5BC5F7, Phosphene",
+              "icon": "Asset'/Game/uiresources/menu_customization/assets/Baked_Textures/WeaponsAndVehicles/Cosmetics_Weapon_Shiny_anarchy.Cosmetics_Weapon_Shiny_anarchy'",
+              "type": "/Script/GbxGame.InventorySkinDef"
+            }
+          },
+          {
+            "cosmetics_weapon_shiny_mercredi": {
+              "inv_custom": "Cosmetics_Weapon_Shiny_mercredi",
+              "dataasset": "Asset'/Game/Gear/Weapons/_Shared/Materials/_Global/DA_MD_SHINY_01.DA_MD_SHINY_01'",
+              "unlockable": "unlockable'Unlockable_Weapons.Shiny_mercredi'",
+              "filterdata": {
+                "item": "inv'DAD_AR.comp_05_legendary_Mercredi'"
+              },
+              "uiname": "Cosmetics_Weapon, A73575854832C77EAC6476A249164A14, Phosphene",
+              "displayname": "Cosmetics_Weapon, D1DFCFCA4DCDE247D91DB48B8D5BC5F7, Phosphene",
+              "icon": "Asset'/Game/uiresources/menu_customization/assets/Baked_Textures/WeaponsAndVehicles/Cosmetics_Weapon_Shiny_anarchy.Cosmetics_Weapon_Shiny_anarchy'",
+              "type": "/Script/GbxGame.InventorySkinDef"
+            }
+          },
+          {
+            "cosmetics_weapon_shiny_mercury": {
+              "inv_custom": "Cosmetics_Weapon_Shiny_mercury",
+              "dataasset": "Asset'/Game/Gear/Weapons/_Shared/Materials/_Global/DA_MD_SHINY_01.DA_MD_SHINY_01'",
+              "unlockable": "unlockable'Unlockable_Weapons.Shiny_mercury'",
+              "filterdata": {
+                "item": "inv'VLA_SM.comp_05_legendary_mercury'"
+              },
+              "uiname": "Cosmetics_Weapon, A73575854832C77EAC6476A249164A14, Phosphene",
+              "displayname": "Cosmetics_Weapon, D1DFCFCA4DCDE247D91DB48B8D5BC5F7, Phosphene",
+              "icon": "Asset'/Game/uiresources/menu_customization/assets/Baked_Textures/WeaponsAndVehicles/Cosmetics_Weapon_Shiny_anarchy.Cosmetics_Weapon_Shiny_anarchy'",
+              "type": "/Script/GbxGame.InventorySkinDef"
+            }
+          },
+          {
+            "cosmetics_weapon_shiny_misslaser": {
+              "inv_custom": "Cosmetics_Weapon_Shiny_misslaser",
+              "dataasset": "Asset'/Game/Gear/Weapons/_Shared/Materials/_Global/DA_MD_SHINY_01.DA_MD_SHINY_01'",
+              "unlockable": "unlockable'Unlockable_Weapons.Shiny_misslaser'",
+              "filterdata": {
+                "item": "inv'DAD_SG.comp_05_legendary_misslaser'"
+              },
+              "uiname": "Cosmetics_Weapon, A73575854832C77EAC6476A249164A14, Phosphene",
+              "displayname": "Cosmetics_Weapon, D1DFCFCA4DCDE247D91DB48B8D5BC5F7, Phosphene",
+              "icon": "Asset'/Game/uiresources/menu_customization/assets/Baked_Textures/WeaponsAndVehicles/Cosmetics_Weapon_Shiny_anarchy.Cosmetics_Weapon_Shiny_anarchy'",
+              "type": "/Script/GbxGame.InventorySkinDef"
+            }
+          },
+          {
+            "cosmetics_weapon_shiny_murder": {
+              "inv_custom": "Cosmetics_Weapon_Shiny_murder",
+              "dataasset": "Asset'/Game/Gear/Weapons/_Shared/Materials/_Global/DA_MD_SHINY_01.DA_MD_SHINY_01'",
+              "unlockable": "unlockable'Unlockable_Weapons.Shiny_mantra'",
+              "filterdata": {
+                "item": "inv'TED_AR.comp_05_legendary_murder'"
+              },
+              "uiname": "Cosmetics_Weapon, A73575854832C77EAC6476A249164A14, Phosphene",
+              "displayname": "Cosmetics_Weapon, D1DFCFCA4DCDE247D91DB48B8D5BC5F7, Phosphene",
+              "icon": "Asset'/Game/uiresources/menu_customization/assets/Baked_Textures/WeaponsAndVehicles/Cosmetics_Weapon_Shiny_anarchy.Cosmetics_Weapon_Shiny_anarchy'",
+              "type": "/Script/GbxGame.InventorySkinDef"
+            }
+          },
+          {
+            "cosmetics_weapon_shiny_outback": {
+              "inv_custom": "Cosmetics_Weapon_Shiny_outback",
+              "dataasset": "Asset'/Game/Gear/Weapons/_Shared/Materials/_Global/DA_MD_SHINY_01.DA_MD_SHINY_01'",
+              "unlockable": "unlockable'Unlockable_Weapons.Shiny_outback'",
+              "filterdata": {
+                "item": "inv'jak_sr.comp_05_legendary_outback'"
+              },
+              "uiname": "Cosmetics_Weapon, 4C6A66C74F9AA05EDF63B39A359AA740, Phosphene",
+              "displayname": "Cosmetics_Weapon, 4BDC0FD249BAAD4985B04DB54C0D6144, Phosphene",
+              "icon": "Asset'/Game/uiresources/menu_customization/assets/Baked_Textures/WeaponsAndVehicles/Cosmetics_Weapon_Shiny_anarchy.Cosmetics_Weapon_Shiny_anarchy'",
+              "type": "/Script/GbxGame.InventorySkinDef"
+            }
+          },
+          {
+            "cosmetics_weapon_shiny_pchonk": {
+              "inv_custom": "Cosmetics_Weapon_Shiny_Pchonk",
+              "dataasset": "Asset'/Game/Gear/Weapons/_Shared/Materials/_Global/DA_MD_SHINY_01.DA_MD_SHINY_01'",
+              "unlockable": "unlockable'Unlockable_Weapons.Shiny_PChonk'",
+              "filterdata": {
+                "item": "inv'ORD_AR.comp_05_legendary_PChonk'"
+              },
+              "uiname": "Cosmetics_Weapon, 6909D66A4E72DF742F0E84A6611956D0, Phosphene",
+              "displayname": "Cosmetics_Weapon, 9A123C36490A0C005A30CEB9162F5056, Phosphene",
+              "icon": "Asset'/Game/uiresources/menu_customization/assets/Baked_Textures/WeaponsAndVehicles/Cosmetics_Weapon_Shiny_anarchy.Cosmetics_Weapon_Shiny_anarchy'",
+              "type": "/Script/GbxGame.InventorySkinDef"
+            }
+          },
+          {
+            "cosmetics_weapon_shiny_plumbbob": {
+              "inv_custom": "Cosmetics_Weapon_Shiny_PlumbBob",
+              "dataasset": "Asset'/Game/Gear/Weapons/_Shared/Materials/_Global/DA_MD_SHINY_01.DA_MD_SHINY_01'",
+              "unlockable": "unlockable'Unlockable_Weapons.Shiny_PlumbBob'",
+              "filterdata": {
+                "item": "inv'bor_sg.comp_05_legendary_plumbbob'"
+              },
+              "uiname": "Cosmetics_Weapon, EC3B331B4C5A55AF111C0B9EE713BF2D, Phosphene",
+              "displayname": "Cosmetics_Weapon, 83AE9CEE40C8B0A0062890849080B98B, Phosphene",
+              "icon": "Asset'/Game/uiresources/menu_customization/assets/Baked_Textures/WeaponsAndVehicles/Cosmetics_Weapon_Shiny_anarchy.Cosmetics_Weapon_Shiny_anarchy'",
+              "type": "/Script/GbxGame.InventorySkinDef"
+            }
+          },
+          {
+            "cosmetics_weapon_shiny_pragmate": {
+              "inv_custom": "Cosmetics_Weapon_Shiny_pragmate",
+              "dataasset": "Asset'/Game/Gear/Weapons/_Shared/Materials/_Global/DA_MD_SHINY_01.DA_MD_SHINY_01'",
+              "unlockable": "unlockable'Unlockable_Weapons.Shiny_pragmate'",
+              "filterdata": {
+                "item": "inv'DAD_SG.comp_05_legendary_pragmate'"
+              },
+              "uiname": "Cosmetics_Weapon, C72986DF483CAA706AAE7F84DC949444, Phosphene",
+              "displayname": "Cosmetics_Weapon, BFDFC63E4540843862EADBB5CEDB711F, Phosphene",
+              "icon": "Asset'/Game/uiresources/menu_customization/assets/Baked_Textures/WeaponsAndVehicles/Cosmetics_Weapon_Shiny_anarchy.Cosmetics_Weapon_Shiny_anarchy'",
+              "type": "/Script/GbxGame.InventorySkinDef"
+            }
+          },
+          {
+            "cosmetics_weapon_shiny_relay": {
+              "inv_custom": "Cosmetics_Weapon_Shiny_relay",
+              "dataasset": "Asset'/Game/Gear/Weapons/_Shared/Materials/_Global/DA_MD_SHINY_01.DA_MD_SHINY_01'",
+              "unlockable": "unlockable'Unlockable_Weapons.Shiny_relay'",
+              "filterdata": {
+                "item": "inv'BOR_SG.comp_05_legendary_relay'"
+              },
+              "uiname": "Cosmetics_Weapon, 2068FD174F72707B97C0AAB224E440D7, Phosphene",
+              "displayname": "Cosmetics_Weapon, 6E9EF2EF4B5A581176D5F1A6315C3904, Phosphene",
+              "icon": "Asset'/Game/uiresources/menu_customization/assets/Baked_Textures/WeaponsAndVehicles/Cosmetics_Weapon_Shiny_anarchy.Cosmetics_Weapon_Shiny_anarchy'",
+              "type": "/Script/GbxGame.InventorySkinDef"
+            }
+          },
+          {
+            "cosmetics_weapon_shiny_rhythm": {
+              "inv_custom": "Cosmetics_Weapon_Shiny_Rhythm",
+              "dataasset": "Asset'/Game/Gear/Weapons/_Shared/Materials/_Global/DA_MD_SHINY_01.DA_MD_SHINY_01'",
+              "unlockable": "unlockable'Unlockable_Weapons.Shiny_Rhythm'",
+              "filterdata": {
+                "item": "inv'ord_ps.comp_05_legendary_Rhythm'"
+              },
+              "uiname": "Cosmetics_Weapon, 310744DC4D764D14FCC264BE829E652E, Phosphene",
+              "displayname": "Cosmetics_Weapon, FB8F75B246C7851ABB045DB57E871297, Phosphene",
+              "icon": "Asset'/Game/uiresources/menu_customization/assets/Baked_Textures/WeaponsAndVehicles/Cosmetics_Weapon_Shiny_anarchy.Cosmetics_Weapon_Shiny_anarchy'",
+              "type": "/Script/GbxGame.InventorySkinDef"
+            }
+          },
+          {
+            "cosmetics_weapon_shiny_roil": {
+              "inv_custom": "Cosmetics_Weapon_Shiny_roil",
+              "dataasset": "Asset'/Game/Gear/Weapons/_Shared/Materials/_Global/DA_MD_SHINY_01.DA_MD_SHINY_01'",
+              "unlockable": "unlockable'Unlockable_Weapons.Shiny_roil'",
+              "filterdata": {
+                "item": "inv'BOR_SM.comp_05_legendary_Roil'"
+              },
+              "uiname": "Cosmetics_Weapon, A73575854832C77EAC6476A249164A14, Phosphene",
+              "displayname": "Cosmetics_Weapon, D1DFCFCA4DCDE247D91DB48B8D5BC5F7, Phosphene",
+              "icon": "Asset'/Game/uiresources/menu_customization/assets/Baked_Textures/WeaponsAndVehicles/Cosmetics_Weapon_Shiny_anarchy.Cosmetics_Weapon_Shiny_anarchy'",
+              "type": "/Script/GbxGame.InventorySkinDef"
+            }
+          },
+          {
+            "cosmetics_weapon_shiny_roulette": {
+              "inv_custom": "Cosmetics_Weapon_Shiny_Roulette",
+              "dataasset": "Asset'/Game/Gear/Weapons/_Shared/Materials/_Global/DA_MD_SHINY_01.DA_MD_SHINY_01'",
+              "unlockable": "unlockable'Unlockable_Weapons.Shiny_Roulette'",
+              "filterdata": {
+                "item": "inv'ORD_PS.comp_05_legendary_Roulette'"
+              },
+              "uiname": "Cosmetics_Weapon, F4D04F764862565085A36A9F6E71BA41, Phosphene",
+              "displayname": "Cosmetics_Weapon, F5CF262441E43DDB1297E193F0B9AB64, Phosphene",
+              "icon": "Asset'/Game/uiresources/menu_customization/assets/Baked_Textures/WeaponsAndVehicles/Cosmetics_Weapon_Shiny_anarchy.Cosmetics_Weapon_Shiny_anarchy'",
+              "type": "/Script/GbxGame.InventorySkinDef"
+            }
+          },
+          {
+            "cosmetics_weapon_shiny_seamstress": {
+              "inv_custom": "Cosmetics_Weapon_Shiny_seamstress",
+              "dataasset": "Asset'/Game/Gear/Weapons/_Shared/Materials/_Global/DA_MD_SHINY_01.DA_MD_SHINY_01'",
+              "unlockable": "unlockable'Unlockable_Weapons.Shiny_seamstress'",
+              "filterdata": {
+                "item": "inv'ORD_SR.comp_05_legendary_Seamstress'"
+              },
+              "uiname": "Cosmetics_Weapon, A73575854832C77EAC6476A249164A14, Phosphene",
+              "displayname": "Cosmetics_Weapon, D1DFCFCA4DCDE247D91DB48B8D5BC5F7, Phosphene",
+              "icon": "Asset'/Game/uiresources/menu_customization/assets/Baked_Textures/WeaponsAndVehicles/Cosmetics_Weapon_Shiny_anarchy.Cosmetics_Weapon_Shiny_anarchy'",
+              "type": "/Script/GbxGame.InventorySkinDef"
+            }
+          },
+          {
+            "cosmetics_weapon_shiny_shalashaska": {
+              "inv_custom": "Cosmetics_Weapon_Shiny_Shalashaska",
+              "dataasset": "Asset'/Game/Gear/Weapons/_Shared/Materials/_Global/DA_MD_SHINY_01.DA_MD_SHINY_01'",
+              "unlockable": "unlockable'Unlockable_Weapons.Shiny_Shalashaska'",
+              "filterdata": {
+                "item": "inv'JAK_PS.comp_05_legendary_Shalashaska'"
+              },
+              "uiname": "Cosmetics_Weapon, A73575854832C77EAC6476A249164A14, Phosphene",
+              "displayname": "Cosmetics_Weapon, D1DFCFCA4DCDE247D91DB48B8D5BC5F7, Phosphene",
+              "icon": "Asset'/Game/uiresources/menu_customization/assets/Baked_Textures/WeaponsAndVehicles/Cosmetics_Weapon_Shiny_anarchy.Cosmetics_Weapon_Shiny_anarchy'",
+              "type": "/Script/GbxGame.InventorySkinDef"
+            }
+          },
+          {
+            "cosmetics_weapon_shiny_shammy": {
+              "inv_custom": "Cosmetics_Weapon_Shiny_Shammy",
+              "dataasset": "Asset'/Game/Gear/Weapons/_Shared/Materials/_Global/DA_MD_SHINY_01.DA_MD_SHINY_01'",
+              "unlockable": "unlockable'Unlockable_Weapons.Shiny_Shammy'",
+              "filterdata": {
+                "item": "inv'TED_PS.comp_05_legendary_Shammy'"
+              },
+              "uiname": "Cosmetics_Weapon, A73575854832C77EAC6476A249164A14, Phosphene",
+              "displayname": "Cosmetics_Weapon, D1DFCFCA4DCDE247D91DB48B8D5BC5F7, Phosphene",
+              "icon": "Asset'/Game/uiresources/menu_customization/assets/Baked_Textures/WeaponsAndVehicles/Cosmetics_Weapon_Shiny_anarchy.Cosmetics_Weapon_Shiny_anarchy'",
+              "type": "/Script/GbxGame.InventorySkinDef"
+            }
+          },
+          {
+            "cosmetics_weapon_shiny_shoals": {
+              "inv_custom": "Cosmetics_Weapon_Shiny_shoals",
+              "dataasset": "Asset'/Game/Gear/Weapons/_Shared/Materials/_Global/DA_MD_SHINY_01.DA_MD_SHINY_01'",
+              "unlockable": "unlockable'Unlockable_Weapons.Shiny_shoals'",
+              "filterdata": {
+                "item": "inv'JAK_PS.comp_05_legendary_Shoals'"
+              },
+              "uiname": "Cosmetics_Weapon, A73575854832C77EAC6476A249164A14, Phosphene",
+              "displayname": "Cosmetics_Weapon, D1DFCFCA4DCDE247D91DB48B8D5BC5F7, Phosphene",
+              "icon": "Asset'/Game/uiresources/menu_customization/assets/Baked_Textures/WeaponsAndVehicles/Cosmetics_Weapon_Shiny_anarchy.Cosmetics_Weapon_Shiny_anarchy'",
+              "type": "/Script/GbxGame.InventorySkinDef"
+            }
+          },
+          {
+            "cosmetics_weapon_shiny_silversliver": {
+              "inv_custom": "Cosmetics_Weapon_Shiny_silversliver",
+              "dataasset": "Asset'/Game/Gear/Weapons/_Shared/Materials/_Global/DA_MD_SHINY_01.DA_MD_SHINY_01'",
+              "unlockable": "unlockable'Unlockable_Weapons.Shiny_silversliver'",
+              "filterdata": {
+                "item": "inv'dad_ps.comp_05_legendary_silversliver'"
+              },
+              "uiname": "Cosmetics_Weapon, A01612314F5E0714FEA83684F7383B61, Phosphene",
+              "displayname": "Cosmetics_Weapon, 1CE5C5F347FE305ABC1F0CAEF7C27CED, Phosphene",
+              "icon": "Asset'/Game/uiresources/menu_customization/assets/Baked_Textures/WeaponsAndVehicles/Cosmetics_Weapon_Shiny_anarchy.Cosmetics_Weapon_Shiny_anarchy'",
+              "type": "/Script/GbxGame.InventorySkinDef"
+            }
+          },
+          {
+            "cosmetics_weapon_shiny_songbird": {
+              "inv_custom": "Cosmetics_Weapon_Shiny_songbird",
+              "dataasset": "Asset'/Game/Gear/Weapons/_Shared/Materials/_Global/DA_MD_SHINY_01.DA_MD_SHINY_01'",
+              "unlockable": "unlockable'Unlockable_Weapons.Shiny_songbird'",
+              "filterdata": {
+                "item": "inv'MAL_SM.comp_05_legendary_songbird'"
+              },
+              "uiname": "Cosmetics_Weapon, A73575854832C77EAC6476A249164A14, Phosphene",
+              "displayname": "Cosmetics_Weapon, D1DFCFCA4DCDE247D91DB48B8D5BC5F7, Phosphene",
+              "icon": "Asset'/Game/uiresources/menu_customization/assets/Baked_Textures/WeaponsAndVehicles/Cosmetics_Weapon_Shiny_anarchy.Cosmetics_Weapon_Shiny_anarchy'",
+              "type": "/Script/GbxGame.InventorySkinDef"
+            }
+          },
+          {
+            "cosmetics_weapon_shiny_stealth": {
+              "inv_custom": "Cosmetics_Weapon_Shiny_Stealth",
+              "dataasset": "Asset'/Game/Gear/Weapons/_Shared/Materials/_Global/DA_MD_SHINY_01.DA_MD_SHINY_01'",
+              "unlockable": "unlockable'Unlockable_Weapons.Shiny_Stealth'",
+              "filterdata": {
+                "item": "inv'mal_sr.comp_05_legendary_stealth'"
+              },
+              "uiname": "Cosmetics_Weapon, EC3B331B4C5A55AF111C0B9EE713BF2D, Phosphene",
+              "displayname": "Cosmetics_Weapon, 83AE9CEE40C8B0A0062890849080B98B, Phosphene",
+              "icon": "Asset'/Game/uiresources/menu_customization/assets/Baked_Textures/WeaponsAndVehicles/Cosmetics_Weapon_Shiny_anarchy.Cosmetics_Weapon_Shiny_anarchy'",
+              "type": "/Script/GbxGame.InventorySkinDef"
+            }
+          },
+          {
+            "cosmetics_weapon_shiny_tankbuster": {
+              "inv_custom": "Cosmetics_Weapon_Shiny_tankbuster",
+              "dataasset": "Asset'/Game/Gear/Weapons/_Shared/Materials/_Global/DA_MD_SHINY_01.DA_MD_SHINY_01'",
+              "unlockable": "unlockable'Unlockable_Weapons.Shiny_tankbuster'",
+              "filterdata": {
+                "item": "inv'bor_sr.comp_05_legendary_tankbuster'"
+              },
+              "uiname": "Cosmetics_Weapon, A73575854832C77EAC6476A249164A14, Phosphene",
+              "displayname": "Cosmetics_Weapon, D1DFCFCA4DCDE247D91DB48B8D5BC5F7, Phosphene",
+              "icon": "Asset'/Game/uiresources/menu_customization/assets/Baked_Textures/WeaponsAndVehicles/Cosmetics_Weapon_Shiny_anarchy.Cosmetics_Weapon_Shiny_anarchy'",
+              "type": "/Script/GbxGame.InventorySkinDef"
+            }
+          },
+          {
+            "cosmetics_weapon_shiny_triplicate": {
+              "inv_custom": "Cosmetics_Weapon_Shiny_Triplicate",
+              "dataasset": "Asset'/Game/Gear/Weapons/_Shared/Materials/_Global/DA_MD_SHINY_01.DA_MD_SHINY_01'",
+              "unlockable": "unlockable'Unlockable_Weapons.Shiny_Triplicate'",
+              "filterdata": {
+                "item": "inv'VLA_AR.comp_05_legendary_Triplicate'"
+              },
+              "uiname": "Cosmetics_Weapon, 0FDF03DC4B1CA1E58FF33AA5A7FCC23F, Phosphene",
+              "displayname": "Cosmetics_Weapon, FE56671A46DC021DB3F258A0AA9ED727, Phosphene",
+              "icon": "Asset'/Game/uiresources/menu_customization/assets/Baked_Textures/WeaponsAndVehicles/Cosmetics_Weapon_Shiny_anarchy.Cosmetics_Weapon_Shiny_anarchy'",
+              "type": "/Script/GbxGame.InventorySkinDef"
+            }
+          },
+          {
+            "cosmetics_weapon_shiny_verce": {
+              "inv_custom": "Cosmetics_Weapon_Shiny_Verce",
+              "dataasset": "Asset'/Game/Gear/Weapons/_Shared/Materials/_Global/DA_MD_SHINY_01.DA_MD_SHINY_01'",
+              "unlockable": "unlockable'Unlockable_Weapons.Shiny_Verce'",
+              "filterdata": {
+                "item": "inv'JAK_SG.comp_05_legendary_Verce'"
+              },
+              "uiname": "Cosmetics_Weapon, 8A32077641F9B86222ADC28DD2668C72, Phosphene",
+              "displayname": "Cosmetics_Weapon, 5DD978BB457FF305A0C4E2B2293386BE, Phosphene",
+              "icon": "Asset'/Game/uiresources/menu_customization/assets/Baked_Textures/WeaponsAndVehicles/Cosmetics_Weapon_Shiny_anarchy.Cosmetics_Weapon_Shiny_anarchy'",
+              "type": "/Script/GbxGame.InventorySkinDef"
+            }
+          }
+        ]
+      },
+      {
+        "entries": [
+          {
+            "cosmetics_weapon_mat55_trappedexperiment": {
+              "inv_custom": "Cosmetics_Weapon_Mat55_TrappedExperiment",
+              "dataasset": "Asset'/Game/DLC/Tuba/Gear/Weapons/Materials/Cosmetic/DA_MD_TUBA_COS_TrappedExperiment.DA_MD_TUBA_COS_TrappedExperiment'",
+              "unlockable": "unlockable'Unlockable_Weapons.Mat55_TrappedExperiment'",
+              "filterdata": {
+                "criteria": {
+                  "preset": "criteria_preset'Preset_WeaponRarity_NotUnique'"
+                }
+              },
+              "uiname": "Cosmetics_Weapon, 56B3156C42E7FDADC1700CB450CC0B08, Rapturous",
+              "displayname": "Cosmetics_Weapon, 8F2A6AAC4AE3FCD2053BEFA33C55373A, Rapturous",
+              "icon": "Asset'/Game/DLC/Tuba/uiresources/menu_customization/assets/Baked_Textures/WeaponsAndVehicles/Cosmetics_Weapon_Mat55_TrappedExperiment.Cosmetics_Weapon_Mat55_TrappedExperiment'",
+              "sortorder": "55",
+              "type": "/Script/GbxGame.InventorySkinDef"
+            }
+          },
+          {
+            "cosmetics_weapon_mat56_deepocean": {
+              "inv_custom": "Cosmetics_Weapon_Mat56_DeepOcean",
+              "dataasset": "Asset'/Game/DLC/Tuba/Gear/Weapons/Materials/Cosmetic/DA_MD_TUBA_COS_DeepOcean.DA_MD_TUBA_COS_DeepOcean'",
+              "unlockable": "unlockable'Unlockable_Weapons.Mat56_DeepOcean'",
+              "filterdata": {
+                "criteria": {
+                  "preset": "criteria_preset'Preset_WeaponRarity_NotUnique'"
+                }
+              },
+              "uiname": "Cosmetics_Weapon, BBD46E0543E7304D770F21A4EA861405, Waveform",
+              "displayname": "Cosmetics_Weapon, 045353954C267B1014FB51A2632F497B, Waveform",
+              "icon": "Asset'/Game/DLC/Tuba/uiresources/menu_customization/assets/Baked_Textures/WeaponsAndVehicles/Cosmetics_Weapon_Mat56_DeepOcean.Cosmetics_Weapon_Mat56_DeepOcean'",
+              "sortorder": "56",
+              "type": "/Script/GbxGame.InventorySkinDef"
+            }
+          },
+          {
+            "cosmetics_weapon_mat57_unstablereactor": {
+              "inv_custom": "Cosmetics_Weapon_Mat57_UnstableReactor",
+              "dataasset": "Asset'/Game/DLC/Tuba/Gear/Weapons/Materials/Cosmetic/DA_MD_TUBA_COS_UnstableReactor.DA_MD_TUBA_COS_UnstableReactor'",
+              "unlockable": "unlockable'Unlockable_Weapons.Mat57_UnstableReactor'",
+              "filterdata": {
+                "criteria": {
+                  "preset": "criteria_preset'Preset_WeaponRarity_NotUnique'"
+                }
+              },
+              "uiname": "Cosmetics_Weapon, 32B360F6419395CC9E627FA86E1C8E5E, Martian Law",
+              "displayname": "Cosmetics_Weapon, 8A8266814F690463782A54B56E481AD4, Martian Law",
+              "icon": "Asset'/Game/DLC/Tuba/uiresources/menu_customization/assets/Baked_Textures/WeaponsAndVehicles/Cosmetics_Weapon_Mat57_UnstableReactor.Cosmetics_Weapon_Mat57_UnstableReactor'",
+              "sortorder": "57",
+              "type": "/Script/GbxGame.InventorySkinDef"
+            }
+          },
+          {
+            "cosmetics_weapon_mat58_kairosvice": {
+              "inv_custom": "Cosmetics_Weapon_Mat58_KairosVice",
+              "dataasset": "Asset'/Game/DLC/Mandolin/Gear/Weapons/Materials/DA_MD_BP3_01.DA_MD_BP3_01'",
+              "unlockable": "unlockable'Unlockable_Weapons.Mat58_KairosVice'",
+              "filterdata": {
+                "criteria": {
+                  "preset": "criteria_preset'Preset_WeaponRarity_NotUnique'"
+                }
+              },
+              "uiname": "Cosmetics_Weapon, FA0B4F9E4DFAB76D67CA16BD4CE85586, Dot Wav",
+              "displayname": "Cosmetics_Weapon, 29A844F0494F8FC7F396F59129D91172, Dot Wav",
+              "icon": "Asset'/Game/DLC/Mandolin/uiresources/menu_customization/assets/Baked_Textures/WeaponsAndVehicles/Cosmetics_Weapon_Mat58_KairosVice.Cosmetics_Weapon_Mat58_KairosVice'",
+              "sortorder": "58",
+              "type": "/Script/GbxGame.InventorySkinDef"
+            }
+          },
+          {
+            "cosmetics_weapon_mat59_rollerrink": {
+              "inv_custom": "Cosmetics_Weapon_Mat59_RollerRink",
+              "dataasset": "Asset'/Game/DLC/Mandolin/Gear/Weapons/Materials/DA_MD_BP3_02.DA_MD_BP3_02'",
+              "unlockable": "unlockable'Unlockable_Weapons.Mat59_RollerRink'",
+              "filterdata": {
+                "criteria": {
+                  "preset": "criteria_preset'Preset_WeaponRarity_NotUnique'"
+                }
+              },
+              "uiname": "Cosmetics_Weapon, D17B1FDE46F40CA97CC20E9B7B0C24B5, Roller Rink",
+              "displayname": "Cosmetics_Weapon, 4FE43AB74957FE83695597A0372694C0, Roller Rink",
+              "icon": "Asset'/Game/DLC/Mandolin/uiresources/menu_customization/assets/Baked_Textures/WeaponsAndVehicles/Cosmetics_Weapon_Mat59_RollerRink.Cosmetics_Weapon_Mat59_RollerRink'",
+              "sortorder": "59",
+              "type": "/Script/GbxGame.InventorySkinDef"
+            }
+          },
+          {
+            "cosmetics_weapon_mat60_nightcall": {
+              "inv_custom": "Cosmetics_Weapon_Mat60_NightCall",
+              "dataasset": "Asset'/Game/DLC/Mandolin/Gear/Weapons/Materials/DA_MD_BP3_03.DA_MD_BP3_03'",
+              "unlockable": "unlockable'Unlockable_Weapons.Mat60_NightCall'",
+              "filterdata": {
+                "criteria": {
+                  "preset": "criteria_preset'Preset_WeaponRarity_NotUnique'"
+                }
+              },
+              "uiname": "Cosmetics_Weapon, 1D461D1E4F6CC9FD2BB406961B479CB7, Night Call",
+              "displayname": "Cosmetics_Weapon, D93A335D432D73D609778983080CFD63, Night Call",
+              "icon": "Asset'/Game/DLC/Mandolin/uiresources/menu_customization/assets/Baked_Textures/WeaponsAndVehicles/Cosmetics_Weapon_Mat60_NightCall.Cosmetics_Weapon_Mat60_NightCall'",
+              "sortorder": "60",
+              "type": "/Script/GbxGame.InventorySkinDef"
+            }
+          },
+          {
+            "cosmetics_weapon_mat61_arcvector": {
+              "inv_custom": "Cosmetics_Weapon_Mat61_ArcVector",
+              "dataasset": "Asset'/Game/DLC/Mandolin/Gear/Weapons/Materials/DA_MD_BP3_04.DA_MD_BP3_04'",
+              "unlockable": "unlockable'Unlockable_Weapons.Mat61_ArcVector'",
+              "filterdata": {
+                "criteria": {
+                  "preset": "criteria_preset'Preset_WeaponRarity_NotUnique'"
+                }
+              },
+              "uiname": "Cosmetics_Weapon, B65D839F4C1F9057C8985EA591232AD0, Sunset Vector",
+              "displayname": "Cosmetics_Weapon, A4928A924546C27F2DAB2198350DCA6C, Sunset Vector",
+              "icon": "Asset'/Game/DLC/Mandolin/uiresources/menu_customization/assets/Baked_Textures/WeaponsAndVehicles/Cosmetics_Weapon_Mat61_ArcVector.Cosmetics_Weapon_Mat61_ArcVector'",
+              "sortorder": "61",
+              "type": "/Script/GbxGame.InventorySkinDef"
+            }
+          },
+          {
+            "cosmetics_weapon_mat62_tracerbullet": {
+              "inv_custom": "Cosmetics_Weapon_Mat62_TracerBullet",
+              "dataasset": "Asset'/Game/DLC/Mandolin/Gear/Weapons/Materials/DA_MD_BP3_05.DA_MD_BP3_05'",
+              "unlockable": "unlockable'Unlockable_Weapons.Mat62_TracerBullet'",
+              "filterdata": {
+                "criteria": {
+                  "preset": "criteria_preset'Preset_WeaponRarity_NotUnique'"
+                }
+              },
+              "uiname": "Cosmetics_Weapon, 434883A341CD79ED1128AAABCF92F979, Tracer Bullet",
+              "displayname": "Cosmetics_Weapon, 5486A9D442ED3C4031AEE0AC561BFFAF, Tracer Bullet",
+              "icon": "Asset'/Game/DLC/Mandolin/uiresources/menu_customization/assets/Baked_Textures/WeaponsAndVehicles/Cosmetics_Weapon_Mat62_TracerBullet.Cosmetics_Weapon_Mat62_TracerBullet'",
+              "sortorder": "62",
+              "type": "/Script/GbxGame.InventorySkinDef"
+            }
+          },
+          {
+            "cosmetics_weapon_mat68_bubbles": {
+              "inv_custom": "Cosmetics_Weapon_Mat68_Bubbles",
+              "dataasset": "Asset'/Game/DLC/Tuba/Gear/Weapons/Materials/Cosmetic/DA_MD_TUBA_COS_Bubbles.DA_MD_TUBA_COS_Bubbles'",
+              "unlockable": "unlockable'Unlockable_Weapons.Mat68_Bubbles'",
+              "filterdata": {
+                "criteria": {
+                  "preset": "criteria_preset'Preset_WeaponRarity_NotUnique'"
+                }
+              },
+              "uiname": "Cosmetics_Weapon, 7918049E4C8B0709688EE6984F962F90, Barna-Kill",
+              "displayname": "Cosmetics_Weapon, B80B32D1463118A19971249E28693F8B, Barna-Kill",
+              "icon": "Asset'/Game/DLC/Tuba/uiresources/menu_customization/assets/Baked_Textures/WeaponsAndVehicles/Cosmetics_Weapon_Mat68_Bubbles.Cosmetics_Weapon_Mat68_Bubbles'",
+              "sortorder": "68",
+              "type": "/Script/GbxGame.InventorySkinDef"
+            }
+          },
+          {
+            "cosmetics_weapon_mat69_empirecamo": {
+              "inv_custom": "Cosmetics_Weapon_Mat69_EmpireCamo",
+              "dataasset": "Asset'/Game/DLC/Tuba/Gear/Weapons/Materials/Cosmetic/DA_MD_TUBA_COS_EmpireCamo.DA_MD_TUBA_COS_EmpireCamo'",
+              "unlockable": "unlockable'Unlockable_Weapons.Mat69_EmpireCamo'",
+              "filterdata": {
+                "criteria": {
+                  "preset": "criteria_preset'Preset_WeaponRarity_NotUnique'"
+                }
+              },
+              "uiname": "Cosmetics_Weapon, 73421CDA4D3946745DB35F94E1FCD88A, Fin Dominance",
+              "displayname": "Cosmetics_Weapon, 89BE0B1A4645B505B3F76BA6DB6DC966, Fin Dominance",
+              "icon": "Asset'/Game/DLC/Tuba/uiresources/menu_customization/assets/Baked_Textures/WeaponsAndVehicles/Cosmetics_Weapon_Mat69_EmpireCamo.Cosmetics_Weapon_Mat69_EmpireCamo'",
+              "sortorder": "69",
+              "type": "/Script/GbxGame.InventorySkinDef"
+            }
+          },
+          {
+            "cosmetics_weapon_mat70_shinymap": {
+              "inv_custom": "Cosmetics_Weapon_Mat70_ShinyMap",
+              "dataasset": "Asset'/Game/DLC/Tuba/Gear/Weapons/Materials/Cosmetic/DA_MD_TUBA_COS_ShinyMap.DA_MD_TUBA_COS_ShinyMap'",
+              "unlockable": "unlockable'Unlockable_Weapons.Mat70_ShinyMap'",
+              "filterdata": {
+                "criteria": {
+                  "preset": "criteria_preset'Preset_WeaponRarity_NotUnique'"
+                }
+              },
+              "uiname": "Cosmetics_Weapon, 364AEF9A47E47CA177647E838528BDA8, Unagi",
+              "displayname": "Cosmetics_Weapon, 4D7187FE485BC8D747872DADC1F7E2B7, Unagi",
+              "icon": "Asset'/Game/DLC/Tuba/uiresources/menu_customization/assets/Baked_Textures/WeaponsAndVehicles/Cosmetics_Weapon_Mat70_ShinyMap.Cosmetics_Weapon_Mat70_ShinyMap'",
+              "sortorder": "70",
+              "type": "/Script/GbxGame.InventorySkinDef"
+            }
+          },
+          {
+            "cosmetics_weapon_mat71_corroded": {
+              "inv_custom": "Cosmetics_Weapon_Mat71_Corroded",
+              "dataasset": "Asset'/Game/DLC/Viola/Gear/Weapons/Materials/Cosmetics/DA_MD_Viola_COS_Corroded.DA_MD_Viola_COS_Corroded'",
+              "unlockable": "unlockable'Unlockable_Weapons.Mat71_Corroded'",
+              "filterdata": {
+                "criteria": {
+                  "preset": "criteria_preset'Preset_WeaponRarity_NotUnique'"
+                }
+              },
+              "uiname": "Cosmetics_Weapon, D6B3CC504E4FE12365F50A8EE570EEEB, Rusticulated",
+              "displayname": "Cosmetics_Weapon, C0256CD049471203B54C2085D9128028, Rusticulated",
+              "icon": "Asset'/Game/DLC/Viola/uiresources/menu_customization/assets/Baked_Textures/WeaponsAndVehicles/Cosmetics_Weapon_Mat71_Corroded.Cosmetics_Weapon_Mat71_Corroded'",
+              "sortorder": "71",
+              "type": "/Script/GbxGame.InventorySkinDef"
+            }
+          },
+          {
+            "cosmetics_weapon_mat72_destroyer": {
+              "inv_custom": "Cosmetics_Weapon_Mat72_Destroyer",
+              "dataasset": "Asset'/Game/DLC/Viola/Gear/Weapons/Materials/Cosmetics/DA_MD_Destroyer_COS_01.DA_MD_Destroyer_COS_01'",
+              "unlockable": "unlockable'Unlockable_Weapons.Mat72_Destroyer'",
+              "filterdata": {
+                "criteria": {
+                  "preset": "criteria_preset'Preset_WeaponRarity_NotUnique'"
+                }
+              },
+              "uiname": "Cosmetics_Weapon, CAE18F2B48355C8EF05125BA95DA10A9, Superweapon",
+              "displayname": "Cosmetics_Weapon, D31A1C174EA8776CD31C4AA8084BF7F8, Superweapon",
+              "icon": "Asset'/Game/DLC/Viola/uiresources/menu_customization/assets/Baked_Textures/WeaponsAndVehicles/Cosmetics_Weapon_Mat72_Destroyer.Cosmetics_Weapon_Mat72_Destroyer'",
+              "sortorder": "72",
+              "type": "/Script/GbxGame.InventorySkinDef"
+            }
+          },
+          {
+            "cosmetics_weapon_mat73_odyssey": {
+              "inv_custom": "Cosmetics_Weapon_Mat73_Odyssey",
+              "dataasset": "Asset'/Game/DLC/Viola/Gear/Weapons/Materials/Cosmetics/DA_MD_Odyssey_COS_01.DA_MD_Odyssey_COS_01'",
+              "unlockable": "unlockable'Unlockable_Weapons.Mat73_Odyssey'",
+              "filterdata": {
+                "criteria": {
+                  "preset": "criteria_preset'Preset_WeaponRarity_NotUnique'"
+                }
+              },
+              "uiname": "Cosmetics_Weapon, 3CC313D14B134668BF90B98911B27ED8, Beaches of Aquator",
+              "displayname": "Cosmetics_Weapon, C98451F04D598CF02BCAB09F439ED979, Beaches of Aquator",
+              "icon": "Asset'/Game/DLC/Viola/uiresources/menu_customization/assets/Baked_Textures/WeaponsAndVehicles/Cosmetics_Weapon_Mat73_Odyssey.Cosmetics_Weapon_Mat73_Odyssey'",
+              "sortorder": "73",
+              "type": "/Script/GbxGame.InventorySkinDef"
+            }
+          },
+          {
+            "cosmetics_weapon_mat74_blackhole": {
+              "inv_custom": "Cosmetics_Weapon_Mat74_Blackhole",
+              "dataasset": "Asset'/Game/DLC/Viola/Gear/Weapons/Materials/Cosmetics/DA_MD_Blackhole_COS_01.DA_MD_Blackhole_COS_01'",
+              "unlockable": "unlockable'Unlockable_Weapons.Mat74_Blackhole'",
+              "filterdata": {
+                "criteria": {
+                  "preset": "criteria_preset'Preset_WeaponRarity_NotUnique'"
+                }
+              },
+              "uiname": "Cosmetics_Weapon, 5B43EB7F4781BA6BA19838A6E7E179E3, The Big Rip",
+              "displayname": "Cosmetics_Weapon, FCE3420149A1FB8EC09B71ADC33C743F, The Big Rip",
+              "icon": "Asset'/Game/DLC/Viola/uiresources/menu_customization/assets/Baked_Textures/WeaponsAndVehicles/Cosmetics_Weapon_Mat74_Blackhole.Cosmetics_Weapon_Mat74_Blackhole'",
+              "sortorder": "74",
+              "type": "/Script/GbxGame.InventorySkinDef"
+            }
+          },
+          {
+            "cosmetics_weapon_mat75_nasa": {
+              "inv_custom": "Cosmetics_Weapon_Mat75_NASA",
+              "dataasset": "Asset'/Game/DLC/Viola/Gear/Weapons/Materials/Cosmetics/DA_MD_NASA_COS_01.DA_MD_NASA_COS_01'",
+              "unlockable": "unlockable'Unlockable_Weapons.Mat75_NASA'",
+              "filterdata": {
+                "criteria": {
+                  "preset": "criteria_preset'Preset_WeaponRarity_NotUnique'"
+                }
+              },
+              "uiname": "Cosmetics_Weapon, 0F9531A048C61E006B32BEB2CEDDEC86, Orbital Aurum",
+              "displayname": "Cosmetics_Weapon, 34213BB64210749B8C36A28DC02535A0, Orbital Aurum",
+              "icon": "Asset'/Game/DLC/Viola/uiresources/menu_customization/assets/Baked_Textures/WeaponsAndVehicles/Cosmetics_Weapon_Mat75_NASA.Cosmetics_Weapon_Mat75_NASA'",
+              "sortorder": "75",
+              "type": "/Script/GbxGame.InventorySkinDef"
+            }
+          },
+          {
+            "cosmetics_weapon_mat76_managerial": {
+              "inv_custom": "Cosmetics_Weapon_Mat76_Managerial",
+              "dataasset": "Asset'/Game/DLC/Harmonica/Gear/Weapons/Materials/DA_WEP_MD_COS_Manager.DA_WEP_MD_COS_Manager'",
+              "unlockable": "unlockable'Unlockable_Weapons.Mat76_Managerial'",
+              "filterdata": {
+                "criteria": {
+                  "preset": "criteria_preset'Preset_WeaponRarity_NotUnique'"
+                }
+              },
+              "uiname": "Cosmetics_Weapon, E233F8DD41D4A1E49CB968B32751C094, Managerial",
+              "displayname": "Cosmetics_Weapon, 6015BDCB4743B707CA4990B74458EBEF, Managerial",
+              "icon": "Asset'/Game/DLC/Harmonica/uiresources/menu_customization/assets/Baked_Textures/WeaponsAndVehicles/Cosmetics_Weapon_Mat76_Managerial.Cosmetics_Weapon_Mat76_Managerial'",
+              "sortorder": "76",
+              "type": "/Script/GbxGame.InventorySkinDef"
+            }
+          },
+          {
+            "cosmetics_weapon_mat77_jungler": {
+              "inv_custom": "Cosmetics_Weapon_Mat77_Jungler",
+              "dataasset": "Asset'/Game/DLC/Harmonica/Gear/Weapons/Materials/DA_WEP_MD_COS_JungleChallenge.DA_WEP_MD_COS_JungleChallenge'",
+              "unlockable": "unlockable'Unlockable_Weapons.Mat77_Jungler'",
+              "filterdata": {
+                "criteria": {
+                  "preset": "criteria_preset'Preset_WeaponRarity_NotUnique'"
+                }
+              },
+              "uiname": "Cosmetics_Weapon, 01A57E8B4512EC3D5DEDE78B09FA0AD7, Jungler",
+              "displayname": "Cosmetics_Weapon, 57DE9FE94BE34EA9C77513AD875F30FA, Jungler",
+              "icon": "Asset'/Game/DLC/Harmonica/uiresources/menu_customization/assets/Baked_Textures/WeaponsAndVehicles/Cosmetics_Weapon_Mat77_Jungler.Cosmetics_Weapon_Mat77_Jungler'",
+              "sortorder": "77",
+              "type": "/Script/GbxGame.InventorySkinDef"
+            }
+          },
+          {
+            "cosmetics_weapon_mat78_miaculpa": {
+              "inv_custom": "Cosmetics_Weapon_Mat78_MiaCulpa",
+              "dataasset": "Asset'/Game/DLC/Harmonica/Gear/Weapons/Materials/DA_WEP_MD_COS_LostTEDs.DA_WEP_MD_COS_LostTEDs'",
+              "unlockable": "unlockable'Unlockable_Weapons.Mat78_MiaCulpa'",
+              "filterdata": {
+                "criteria": {
+                  "preset": "criteria_preset'Preset_WeaponRarity_NotUnique'"
+                }
+              },
+              "uiname": "Cosmetics_Weapon, 0CEB5871411CD5D10FF50195777C1BB0, MIA Culpa",
+              "displayname": "Cosmetics_Weapon, DD3223FE47F16A83417F2199E2BC152B, MIA Culpa",
+              "icon": "Asset'/Game/DLC/Harmonica/uiresources/menu_customization/assets/Baked_Textures/WeaponsAndVehicles/Cosmetics_Weapon_Mat78_MiaCulpa.Cosmetics_Weapon_Mat78_MiaCulpa'",
+              "sortorder": "78",
+              "type": "/Script/GbxGame.InventorySkinDef"
+            }
+          },
+          {
+            "cosmetics_weapon_mat79_chewedup": {
+              "inv_custom": "Cosmetics_Weapon_Mat79_ChewedUp",
+              "dataasset": "Asset'/Game/DLC/Harmonica/Gear/Weapons/Materials/DA_WEP_MD_COS_CuteChew.DA_WEP_MD_COS_CuteChew'",
+              "unlockable": "unlockable'Unlockable_Weapons.Mat79_ChewedUp'",
+              "filterdata": {
+                "criteria": {
+                  "preset": "criteria_preset'Preset_WeaponRarity_NotUnique'"
+                }
+              },
+              "uiname": "Cosmetics_Weapon, 3A6C89D144B53B7926614780491FD838, Chewed Up",
+              "displayname": "Cosmetics_Weapon, DD19C21649E3A67140AD42BF087A7990, Chewed Up",
+              "icon": "Asset'/Game/DLC/Harmonica/uiresources/menu_customization/assets/Baked_Textures/WeaponsAndVehicles/Cosmetics_Weapon_Mat79_ChewedUp.Cosmetics_Weapon_Mat79_ChewedUp'",
+              "sortorder": "79",
+              "type": "/Script/GbxGame.InventorySkinDef"
+            }
+          },
+          {
+            "cosmetics_weapon_mat80_electified": {
+              "inv_custom": "Cosmetics_Weapon_Mat80_Electified",
+              "dataasset": "Asset'/Game/DLC/Harmonica/Gear/Weapons/Materials/DA_WEP_MD_COS_Electi.DA_WEP_MD_COS_Electi'",
+              "unlockable": "unlockable'Unlockable_Weapons.Mat80_Electified'",
+              "filterdata": {
+                "criteria": {
+                  "preset": "criteria_preset'Preset_WeaponRarity_NotUnique'"
+                }
+              },
+              "uiname": "Cosmetics_Weapon, E4607ED4475A81CED04C9DBAA058D9E6, Electi-Fied",
+              "displayname": "Cosmetics_Weapon, 1F67FE8F4C0D2DE82FF0169CA7ECA728, Electi-Fied",
+              "icon": "Asset'/Game/DLC/Harmonica/uiresources/menu_customization/assets/Baked_Textures/WeaponsAndVehicles/Cosmetics_Weapon_Mat80_Electified.Cosmetics_Weapon_Mat80_Electified'",
+              "sortorder": "80",
+              "type": "/Script/GbxGame.InventorySkinDef"
+            }
+          },
+          {
+            "cosmetics_weapon_mat81_harmonious": {
+              "inv_custom": "Cosmetics_Weapon_Mat81_Harmonious",
+              "dataasset": "Asset'/Game/DLC/Harmonica/Gear/Weapons/Materials/DA_WEP_MD_COS_Harmony.DA_WEP_MD_COS_Harmony'",
+              "unlockable": "unlockable'Unlockable_Weapons.Mat81_Harmonious'",
+              "filterdata": {
+                "criteria": {
+                  "preset": "criteria_preset'Preset_WeaponRarity_NotUnique'"
+                }
+              },
+              "uiname": "Cosmetics_Weapon, 8E7DBB354D20DB2B70E4C895530C1A63, Harmonious",
+              "displayname": "Cosmetics_Weapon, 14FA8CB8480FD987D8743F8FA7B19828, Harmonious",
+              "icon": "Asset'/Game/DLC/Harmonica/uiresources/menu_customization/assets/Baked_Textures/WeaponsAndVehicles/Cosmetics_Weapon_Mat81_Harmonious.Cosmetics_Weapon_Mat81_Harmonious'",
+              "sortorder": "81",
+              "type": "/Script/GbxGame.InventorySkinDef"
+            }
+          }
+        ]
+      },
+      {
+        "entries": [
+          {
+            "cosmetics_weapon_shiny_loarmaster": {
+              "inv_custom": "Cosmetics_Weapon_Shiny_Loarmaster",
+              "dataasset": "Asset'/Game/Gear/Weapons/_Shared/Materials/_Global/DA_MD_SHINY_01.DA_MD_SHINY_01'",
+              "unlockable": "unlockable'Unlockable_Weapons.Shiny_Loarmaster'",
+              "filterdata": {
+                "item": "inv'DAD_SM.comp_05_legendary_loarmaster'"
+              },
+              "uiname": "Cosmetics_Weapon, 4A73B5B8472D1901BB5015B2CA2D516B, Phosphene",
+              "displayname": "Cosmetics_Weapon, 689B919E4A14B30A409B0C845458D00A, Phosphene",
+              "icon": "Asset'/Game/uiresources/menu_customization/assets/Baked_Textures/WeaponsAndVehicles/Cosmetics_Weapon_Shiny_anarchy.Cosmetics_Weapon_Shiny_anarchy'",
+              "serialindex": {
+                "status": "Active",
+                "index": "16",
+                "_category": "inv_custom",
+                "_scope": "Root"
+              },
+              "type": "/Script/GbxGame.InventorySkinDef"
+            }
+          },
+          {
+            "cosmetics_weapon_shiny_ultimate": {
+              "inv_custom": "Cosmetics_Weapon_Shiny_Ultimate",
+              "dataasset": "Asset'/Game/Gear/Weapons/_Shared/Materials/_Global/DA_MD_SHINY_ULT.DA_MD_SHINY_ULT'",
+              "unlockable": "unlockable'Unlockable_Weapons.Shiny_Ultimate'",
+              "filterdata": {
+                "item": "inv'Weapon'"
+              },
+              "uiname": "Cosmetics_Weapon, 966F931243630C24B8BBF1AA8F5B8AEA, Ratatataclysm",
+              "displayname": "Cosmetics_Weapon, 945785B74393D734A0B73A955FCC1155, Ratatataclysm",
+              "icon": "Asset'/Game/uiresources/menu_customization/assets/Baked_Textures/WeaponsAndVehicles/Cosmetics_Weapon_Shiny_Ultimate.Cosmetics_Weapon_Shiny_Ultimate'",
+              "sortorder": "900",
+              "serialindex": {
+                "status": "Active",
+                "index": "71",
+                "_category": "inv_custom",
+                "_scope": "Root"
+              },
+              "type": "/Script/GbxGame.InventorySkinDef"
+            }
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,547 @@
+{
+  "game_region": {
+    "records": [
+      {
+        "entries": [
+          {
+            "city": {
+              "game_region": "City",
+              "infamyfactaddress": "transient.city_infamy",
+              "regioninfo": "display_data'UIRegionDisplayData_City'",
+              "loadingscreendef": "loadingscreen_data'ls_under_city'",
+              "zonehandle": "map'World_P.Zone_City'",
+              "displayname": "world_regions, 8A5127C742C88BAA917EBBA4B6D6B738, Dominion",
+              "type": "Asset'/Script/OakGame.WorldRegionDef'",
+              "discoveredaudioevent": "audio_event'ASB_Pickups.ASB_Pickups_Spawn_Legendary'"
+            }
+          },
+          {
+            "city_regiona": {
+              "game_region": "city_RegionA",
+              "infamyfactaddress": "transient.city_infamy",
+              "regioninfo": "display_data'UIRegionDisplayData_City_RegionA'",
+              "zonehandle": "map'World_P.Zone_City_GRA'",
+              "displayname": "world_regions, 9BC0D4B94ACE7BACCECFBC8CED76D951, Fades District",
+              "type": "Asset'/Script/OakGame.WorldRegionDef'",
+              "discoveredaudioevent": "audio_event'ASB_Pickups.ASB_Pickups_Spawn_Legendary'",
+              "priority": "10",
+              "parent": "game_region'city'"
+            }
+          },
+          {
+            "city_regionb": {
+              "game_region": "city_RegionB",
+              "infamyfactaddress": "transient.city_infamy",
+              "regioninfo": "display_data'UIRegionDisplayData_City_RegionB'",
+              "zonehandle": "map'World_P.Zone_City_MNT'",
+              "displayname": "world_regions, 9457A35F494242B351EE2D86C94894CC, Terminus District",
+              "type": "Asset'/Script/OakGame.WorldRegionDef'",
+              "discoveredaudioevent": "audio_event'ASB_Pickups.ASB_Pickups_Spawn_Legendary'",
+              "priority": "10",
+              "parent": "game_region'city'"
+            }
+          },
+          {
+            "city_regionc": {
+              "game_region": "city_RegionC",
+              "infamyfactaddress": "transient.city_infamy",
+              "regioninfo": "display_data'UIRegionDisplayData_City_RegionC'",
+              "zonehandle": "map'World_P.Zone_City_SHA'",
+              "displayname": "world_regions, 8345A68A44B8D27C8E4D2596D1FD3722, Carcadia District",
+              "type": "Asset'/Script/OakGame.WorldRegionDef'",
+              "discoveredaudioevent": "audio_event'ASB_Pickups.ASB_Pickups_Spawn_Legendary'",
+              "priority": "10",
+              "parent": "game_region'city'"
+            }
+          },
+          {
+            "city_upper": {
+              "game_region": "city_Upper",
+              "infamyfactaddress": "transient.city_infamy",
+              "regioninfo": "display_data'UIRegionDisplayData_City_Upper'",
+              "zonehandle": "map'none'",
+              "displayname": "world_regions, AA72FD85483EEDCDFDBE679D3E376A41, Upper Dominion",
+              "type": "Asset'/Script/OakGame.WorldRegionDef'",
+              "discoveredaudioevent": "audio_event'ASB_Pickups.ASB_Pickups_Spawn_Legendary'",
+              "parent": "game_region'city'"
+            }
+          },
+          {
+            "elpis": {
+              "game_region": "elpis",
+              "regioninfo": "display_data'UIRegionDisplayData_Elpis'",
+              "loadingscreendef": "loadingscreen_data'ls_elpis'",
+              "displayname": "world_regions, F051B0B4484FAEE5458BD6BC49C8524B, Elpis Orbital Shatterfield",
+              "type": "Asset'/Script/OakGame.WorldRegionDef'",
+              "discoveredaudioevent": "audio_event'ASB_Pickups.ASB_Pickups_Spawn_Legendary'"
+            }
+          },
+          {
+            "elpis_elevator": {
+              "game_region": "elpis_elevator",
+              "regioninfo": "display_data'UIRegionDisplayData_Elpis_Elevator'",
+              "loadingscreendef": "loadingscreen_data'ls_the_ladder'",
+              "displayname": "world_regions, 558A637A4A395EF23D8B4B81690C826F, The Ladder",
+              "type": "Asset'/Script/OakGame.WorldRegionDef'",
+              "discoveredaudioevent": "audio_event'ASB_Pickups.ASB_Pickups_Spawn_Legendary'",
+              "parent": "game_region'elpis'"
+            }
+          },
+          {
+            "grasslands": {
+              "game_region": "grasslands",
+              "infamyfactaddress": "Transient.Grasslands_Infamy",
+              "regioninfo": "display_data'UIRegionDisplayData_Grasslands'",
+              "armyspawnzones": "Asset'/Game/GameData/WorldPainter/WPLayer_SpawnArmy_GRA.WPLayer_SpawnArmy_GRA'",
+              "creaturespawnzones": "Asset'/Game/GameData/WorldPainter/WPLayer_SpawnCreature_GRA.WPLayer_SpawnCreature_GRA'",
+              "loadingscreendef": "loadingscreen_data'ls_grasslands'",
+              "zonehandle": "map'World_P.Zone_Grasslands'",
+              "displayname": "world_regions, 5CDF43CE4C08DC35A9B436A3B6CA39C7, The Fadefields",
+              "type": "Asset'/Script/OakGame.WorldRegionDef'",
+              "discoveredaudioevent": "audio_event'ASB_Pickups.ASB_Pickups_Spawn_Legendary'"
+            }
+          },
+          {
+            "grasslands_fortress": {
+              "game_region": "Grasslands_Fortress",
+              "infamyfactaddress": "transient.grasslands_infamy",
+              "regioninfo": "display_data'UIRegionDisplayData_Grasslands_Fortress'",
+              "armyspawnzones": "Asset'None'",
+              "creaturespawnzones": "Asset'None'",
+              "loadingscreendef": "loadingscreen_data'ls_grasslands_fortress'",
+              "zonehandle": "map'none'",
+              "displayname": "world_regions, 9881B6BE486A1F57AA2281B582F0E7F5, Fortress Indomita",
+              "type": "Asset'/Script/OakGame.WorldRegionDef'",
+              "discoveredaudioevent": "audio_event'ASB_Pickups.ASB_Pickups_Spawn_Legendary'",
+              "parent": "game_region'grasslands'"
+            }
+          },
+          {
+            "grasslands_fortress_ext": {
+              "game_region": "grasslands_Fortress_Ext",
+              "infamyfactaddress": "transient.grasslands_infamy",
+              "regioninfo": "display_data'UIRegionDisplayData_Grasslands_Fortress'",
+              "displayname": "world_regions, 080BA2554F5D1B3502AC1C818A66AD8B, Fortress Indomita",
+              "type": "Asset'/Script/OakGame.WorldRegionDef'",
+              "discoveredaudioevent": "audio_event'ASB_Pickups.ASB_Pickups_Spawn_Legendary'",
+              "parent": "game_region'grasslands_RegionD'",
+              "priority": "10"
+            }
+          },
+          {
+            "grasslands_hub": {
+              "game_region": "grasslands_Hub",
+              "infamyfactaddress": "transient.grasslands_infamy",
+              "regioninfo": "display_data'UIRegionDisplayData_Grasslands_Hub'",
+              "displayname": "world_regions, 3CC1ADC9407C9346F330CBA9BA9881AD, The Launchpad",
+              "type": "Asset'/Script/OakGame.WorldRegionDef'",
+              "discoveredaudioevent": "audio_event'ASB_Pickups.ASB_Pickups_Spawn_Legendary'",
+              "parent": "game_region'grasslands_RegionC'",
+              "priority": "10"
+            }
+          },
+          {
+            "grasslands_prison": {
+              "game_region": "grasslands_Prison",
+              "infamyfactaddress": "transient.grasslands_infamy",
+              "regioninfo": "display_data'UIRegionDisplayData_Grasslands_Prison'",
+              "loadingscreendef": "loadingscreen_data'ls_prison'",
+              "zonehandle": "map'none'",
+              "displayname": "world_regions, E4FBD7874A25354628B9D3A9BE1A0D57, Welcome Center",
+              "type": "Asset'/Script/OakGame.WorldRegionDef'",
+              "discoveredaudioevent": "audio_event'ASB_Pickups.ASB_Pickups_Spawn_Legendary'",
+              "parent": "game_region'grasslands'"
+            }
+          },
+          {
+            "grasslands_regiona": {
+              "game_region": "grasslands_RegionA",
+              "infamyfactaddress": "transient.grasslands_infamy",
+              "regioninfo": "display_data'UIRegionDisplayData_Grasslands_RegionA'",
+              "displayname": "world_regions, A9AA02084E75C397C9EBE4B402379A3D, Coastal Bonescape",
+              "type": "Asset'/Script/OakGame.WorldRegionDef'",
+              "discoveredaudioevent": "audio_event'ASB_Pickups.ASB_Pickups_Spawn_Legendary'",
+              "priority": "100",
+              "parent": "game_region'grasslands'"
+            }
+          },
+          {
+            "grasslands_regionb": {
+              "game_region": "grasslands_RegionB",
+              "infamyfactaddress": "transient.grasslands_infamy",
+              "regioninfo": "display_data'UIRegionDisplayData_Grasslands_RegionB'",
+              "displayname": "world_regions, 7E21F04B493078738081CC839C43D029, Hungering Plain",
+              "type": "Asset'/Script/OakGame.WorldRegionDef'",
+              "discoveredaudioevent": "audio_event'ASB_Pickups.ASB_Pickups_Spawn_Legendary'",
+              "priority": "100",
+              "parent": "game_region'grasslands'"
+            }
+          },
+          {
+            "grasslands_regionc": {
+              "game_region": "grasslands_RegionC",
+              "infamyfactaddress": "transient.grasslands_infamy",
+              "regioninfo": "display_data'UIRegionDisplayData_Grasslands_RegionC'",
+              "displayname": "world_regions, 7CCD139143E7E18B7507FF85D28A815E, The Howl",
+              "type": "Asset'/Script/OakGame.WorldRegionDef'",
+              "discoveredaudioevent": "audio_event'ASB_Pickups.ASB_Pickups_Spawn_Legendary'",
+              "priority": "100",
+              "parent": "game_region'grasslands'"
+            }
+          },
+          {
+            "grasslands_regiond": {
+              "game_region": "grasslands_RegionD",
+              "infamyfactaddress": "transient.grasslands_infamy",
+              "regioninfo": "display_data'UIRegionDisplayData_Grasslands_RegionD'",
+              "displayname": "world_regions, 691950454C88271CAFB7E2BDC2F2BE3B, Idolator's Noose",
+              "type": "Asset'/Script/OakGame.WorldRegionDef'",
+              "discoveredaudioevent": "audio_event'ASB_Pickups.ASB_Pickups_Spawn_Legendary'",
+              "priority": "100",
+              "parent": "game_region'grasslands'"
+            }
+          },
+          {
+            "grasslands_regione": {
+              "game_region": "grasslands_RegionE",
+              "infamyfactaddress": "transient.grasslands_infamy",
+              "regioninfo": "display_data'UIRegionDisplayData_Grasslands_RegionE'",
+              "displayname": "world_regions, DE43BDD947DB35A7A173FEB31C8E0CBB, Dissected Plateau",
+              "type": "Asset'/Script/OakGame.WorldRegionDef'",
+              "discoveredaudioevent": "audio_event'ASB_Pickups.ASB_Pickups_Spawn_Legendary'",
+              "priority": "100",
+              "parent": "game_region'grasslands'"
+            }
+          },
+          {
+            "grasslands_vault": {
+              "game_region": "Grasslands_Vault",
+              "infamyfactaddress": "transient.grasslands_infamy",
+              "regioninfo": "display_data'UIRegionDisplayData_Grasslands_Vault'",
+              "loadingscreendef": "loadingscreen_data'ls_vault'",
+              "zonehandle": "map'none'",
+              "displayname": "world_regions, 13E5FB394F1B54CEAE5DC7920B51E8AE, Vault of Inceptus",
+              "type": "Asset'/Script/OakGame.WorldRegionDef'",
+              "discoveredaudioevent": "audio_event'ASB_Pickups.ASB_Pickups_Spawn_Legendary'",
+              "parent": "game_region'grasslands'"
+            }
+          },
+          {
+            "kairosgeneric": {
+              "game_region": "KairosGeneric",
+              "regioninfo": "display_data'UIRegionDisplayData_KairosGeneric'",
+              "priority": "-100",
+              "displayname": "world_regions, EF81906B40F32566BD46189E1CB94818, Kairos",
+              "type": "Asset'/Script/OakGame.WorldRegionDef'",
+              "discoveredaudioevent": "audio_event'ASB_Pickups.ASB_Pickups_Spawn_Legendary'"
+            }
+          },
+          {
+            "mountains": {
+              "game_region": "mountains",
+              "infamyfactaddress": "Transient.Mountains_Infamy",
+              "regioninfo": "display_data'UIRegionDisplayData_Mountains'",
+              "armyspawnzones": "Asset'/Game/GameData/WorldPainter/WPLayer_SpawnArmy_MOU.WPLayer_SpawnArmy_MOU'",
+              "creaturespawnzones": "Asset'/Game/GameData/WorldPainter/WPLayer_SpawnCreature_MOU.WPLayer_SpawnCreature_MOU'",
+              "loadingscreendef": "loadingscreen_data'ls_mountains'",
+              "zonehandle": "map'World_P.Zone_Mountains'",
+              "displayname": "world_regions, B90E17B3437BBFB9194862A4786D98E1, Terminus Range",
+              "type": "Asset'/Script/OakGame.WorldRegionDef'",
+              "discoveredaudioevent": "audio_event'ASB_Pickups.ASB_Pickups_Spawn_Legendary'"
+            }
+          },
+          {
+            "mountains_fortress": {
+              "game_region": "Mountains_Fortress",
+              "infamyfactaddress": "transient.mountains_infamy",
+              "regioninfo": "display_data'UIRegionDisplayData_Mountains_Fortress'",
+              "armyspawnzones": "Asset'None'",
+              "creaturespawnzones": "Asset'None'",
+              "loadingscreendef": "loadingscreen_data'ls_mountains_fortress'",
+              "zonehandle": "map'none'",
+              "displayname": "world_regions, 9FA12BF94A27BE56467D9CB75913655C, Umbral Foundry",
+              "type": "Asset'/Script/OakGame.WorldRegionDef'",
+              "discoveredaudioevent": "audio_event'ASB_Pickups.ASB_Pickups_Spawn_Legendary'",
+              "parent": "game_region'mountains'"
+            }
+          },
+          {
+            "mountains_fortress_ext": {
+              "game_region": "mountains_Fortress_Ext",
+              "infamyfactaddress": "transient.mountains_infamy",
+              "regioninfo": "display_data'UIRegionDisplayData_Mountains_Fortress'",
+              "displayname": "world_regions, A9744F744D2FECF7E5103F808F528789, Umbral Foundry",
+              "type": "Asset'/Script/OakGame.WorldRegionDef'",
+              "discoveredaudioevent": "audio_event'ASB_Pickups.ASB_Pickups_Spawn_Legendary'",
+              "parent": "game_region'mountains_RegionE'",
+              "priority": "10"
+            }
+          },
+          {
+            "mountains_hub": {
+              "game_region": "mountains_Hub",
+              "infamyfactaddress": "transient.mountains_infamy",
+              "regioninfo": "display_data'UIRegionDisplayData_Mountains_Hub'",
+              "displayname": "world_regions, B29C98D4448A28CA502B3D99DBD3B848, Belton's Bore",
+              "type": "Asset'/Script/OakGame.WorldRegionDef'",
+              "discoveredaudioevent": "audio_event'ASB_Pickups.ASB_Pickups_Spawn_Legendary'",
+              "parent": "game_region'mountains_RegionC'",
+              "priority": "10"
+            }
+          },
+          {
+            "mountains_regiona": {
+              "game_region": "mountains_RegionA",
+              "infamyfactaddress": "transient.mountains_infamy",
+              "regioninfo": "display_data'UIRegionDisplayData_Mountains_RegionA'",
+              "displayname": "world_regions, 16DC0D7341369B8549C2A3AFD9F5D9D7, Cuspid Climb",
+              "type": "Asset'/Script/OakGame.WorldRegionDef'",
+              "discoveredaudioevent": "audio_event'ASB_Pickups.ASB_Pickups_Spawn_Legendary'",
+              "priority": "100",
+              "parent": "game_region'mountains'"
+            }
+          },
+          {
+            "mountains_regionb": {
+              "game_region": "mountains_RegionB",
+              "infamyfactaddress": "transient.mountains_infamy",
+              "regioninfo": "display_data'UIRegionDisplayData_Mountains_RegionB'",
+              "displayname": "world_regions, B55B7AD14D236DCEED483F9FCFA42CD8, Stoneblood Forest",
+              "type": "Asset'/Script/OakGame.WorldRegionDef'",
+              "discoveredaudioevent": "audio_event'ASB_Pickups.ASB_Pickups_Spawn_Legendary'",
+              "priority": "100",
+              "parent": "game_region'mountains'"
+            }
+          },
+          {
+            "mountains_regionc": {
+              "game_region": "mountains_RegionC",
+              "infamyfactaddress": "transient.mountains_infamy",
+              "regioninfo": "display_data'UIRegionDisplayData_Mountains_RegionC'",
+              "displayname": "world_regions, 4F1C7E974E25CF7CC4F42B97D82221BA, The Low Leys",
+              "type": "Asset'/Script/OakGame.WorldRegionDef'",
+              "discoveredaudioevent": "audio_event'ASB_Pickups.ASB_Pickups_Spawn_Legendary'",
+              "priority": "100",
+              "parent": "game_region'mountains'"
+            }
+          },
+          {
+            "mountains_regiond": {
+              "game_region": "mountains_RegionD",
+              "infamyfactaddress": "transient.mountains_infamy",
+              "regioninfo": "display_data'UIRegionDisplayData_Mountains_RegionD'",
+              "displayname": "world_regions, 99F2862A455248C7094679BCDC8FB34D, Heart of the Mountain",
+              "type": "Asset'/Script/OakGame.WorldRegionDef'",
+              "discoveredaudioevent": "audio_event'ASB_Pickups.ASB_Pickups_Spawn_Legendary'",
+              "priority": "100",
+              "parent": "game_region'mountains'"
+            }
+          },
+          {
+            "mountains_regione": {
+              "game_region": "mountains_RegionE",
+              "infamyfactaddress": "transient.mountains_infamy",
+              "regioninfo": "display_data'UIRegionDisplayData_Mountains_RegionE'",
+              "displayname": "world_regions, 1C919B974CD6913975924D935F493C3D, Windspear",
+              "type": "Asset'/Script/OakGame.WorldRegionDef'",
+              "discoveredaudioevent": "audio_event'ASB_Pickups.ASB_Pickups_Spawn_Legendary'",
+              "priority": "100",
+              "parent": "game_region'mountains'"
+            }
+          },
+          {
+            "mountains_vault": {
+              "game_region": "mountains_Vault",
+              "infamyfactaddress": "transient.mountains_infamy",
+              "regioninfo": "display_data'UIRegionDisplayData_Mountains_Vault'",
+              "loadingscreendef": "loadingscreen_data'ls_vault'",
+              "zonehandle": "map'none'",
+              "displayname": "world_regions, 581CB0F04966667EF18257B8551D8724, Vault of Origo",
+              "type": "Asset'/Script/OakGame.WorldRegionDef'",
+              "discoveredaudioevent": "audio_event'ASB_Pickups.ASB_Pickups_Spawn_Legendary'",
+              "parent": "game_region'mountains'"
+            }
+          },
+          {
+            "shatteredlands": {
+              "game_region": "shatteredlands",
+              "infamyfactaddress": "Transient.Shatteredlands_Infamy",
+              "regioninfo": "display_data'UIRegionDisplayData_ShatteredLands'",
+              "armyspawnzones": "Asset'/Game/GameData/WorldPainter/WPLayer_SpawnArmy_SHA.WPLayer_SpawnArmy_SHA'",
+              "creaturespawnzones": "Asset'/Game/GameData/WorldPainter/WPLayer_SpawnCreature_SHA.WPLayer_SpawnCreature_SHA'",
+              "loadingscreendef": "loadingscreen_data'ls_shatteredlands'",
+              "zonehandle": "map'World_P.Zone_ShatteredLands'",
+              "displayname": "world_regions, A7528BFB46F9EDD9BE0BDD91BC923EA7, Carcadia Burn",
+              "type": "Asset'/Script/OakGame.WorldRegionDef'",
+              "discoveredaudioevent": "audio_event'ASB_Pickups.ASB_Pickups_Spawn_Legendary'"
+            }
+          },
+          {
+            "shatteredlands_fortress": {
+              "game_region": "shatteredlands_Fortress",
+              "infamyfactaddress": "transient.shatteredlands_infamy",
+              "regioninfo": "display_data'UIRegionDisplayData_ShatteredLands_Fortress'",
+              "armyspawnzones": "Asset'None'",
+              "creaturespawnzones": "Asset'None'",
+              "loadingscreendef": "loadingscreen_data'ls_shatteredlands_fortress'",
+              "zonehandle": "map'none'",
+              "displayname": "world_regions, 0EB01B4044D6F911EC6D1B9803C8F438, Moon-Called Throne",
+              "type": "Asset'/Script/OakGame.WorldRegionDef'",
+              "discoveredaudioevent": "audio_event'ASB_Pickups.ASB_Pickups_Spawn_Legendary'",
+              "parent": "game_region'shatteredlands'"
+            }
+          },
+          {
+            "shatteredlands_fortress_ext": {
+              "game_region": "shatteredlands_Fortress_Ext",
+              "infamyfactaddress": "transient.shatteredlands_infamy",
+              "regioninfo": "display_data'UIRegionDisplayData_ShatteredLands_Fortress'",
+              "displayname": "world_regions, DCAB553F45C1ED4486C15B8101792BD4, Moon-Called Throne",
+              "type": "Asset'/Script/OakGame.WorldRegionDef'",
+              "discoveredaudioevent": "audio_event'ASB_Pickups.ASB_Pickups_Spawn_Legendary'",
+              "priority": "10",
+              "parent": "game_region'shatteredlands_RegionE'"
+            }
+          },
+          {
+            "shatteredlands_hub": {
+              "game_region": "shatteredlands_Hub",
+              "infamyfactaddress": "transient.shatteredlands_infamy",
+              "regioninfo": "display_data'UIRegionDisplayData_ShatteredLands_Hub'",
+              "displayname": "world_regions, D4F091F84E739A338D671E88DBA17410, Carcadia",
+              "type": "Asset'/Script/OakGame.WorldRegionDef'",
+              "discoveredaudioevent": "audio_event'ASB_Pickups.ASB_Pickups_Spawn_Legendary'",
+              "parent": "game_region'shatteredlands_RegionB'",
+              "priority": "10"
+            }
+          },
+          {
+            "shatteredlands_regiona": {
+              "game_region": "shatteredlands_RegionA",
+              "infamyfactaddress": "transient.shatteredlands_infamy",
+              "regioninfo": "display_data'UIRegionDisplayData_ShatteredLands_RegionA'",
+              "displayname": "world_regions, 89C25F02455A0F0F9E4E9ABA66C69117, Grindstone of the Worthy",
+              "type": "Asset'/Script/OakGame.WorldRegionDef'",
+              "discoveredaudioevent": "audio_event'ASB_Pickups.ASB_Pickups_Spawn_Legendary'",
+              "priority": "100",
+              "parent": "game_region'shatteredlands'"
+            }
+          },
+          {
+            "shatteredlands_regionb": {
+              "game_region": "shatteredlands_RegionB",
+              "infamyfactaddress": "transient.shatteredlands_infamy",
+              "regioninfo": "display_data'UIRegionDisplayData_ShatteredLands_RegionB'",
+              "displayname": "world_regions, 7348BFEB48A6EBCA97A217A2E8B1B5A5, Ruined Sumplands",
+              "type": "Asset'/Script/OakGame.WorldRegionDef'",
+              "discoveredaudioevent": "audio_event'ASB_Pickups.ASB_Pickups_Spawn_Legendary'",
+              "priority": "100",
+              "parent": "game_region'shatteredlands'"
+            }
+          },
+          {
+            "shatteredlands_regionc": {
+              "game_region": "shatteredlands_RegionC",
+              "infamyfactaddress": "transient.shatteredlands_infamy",
+              "regioninfo": "display_data'UIRegionDisplayData_ShatteredLands_RegionC'",
+              "displayname": "world_regions, 941FE0534271423FABF96C9F185EFAE5, Tonnage Peel",
+              "type": "Asset'/Script/OakGame.WorldRegionDef'",
+              "discoveredaudioevent": "audio_event'ASB_Pickups.ASB_Pickups_Spawn_Legendary'",
+              "priority": "100",
+              "parent": "game_region'shatteredlands'"
+            }
+          },
+          {
+            "shatteredlands_regiond": {
+              "game_region": "shatteredlands_RegionD",
+              "infamyfactaddress": "transient.shatteredlands_infamy",
+              "regioninfo": "display_data'UIRegionDisplayData_ShatteredLands_RegionD'",
+              "displayname": "world_regions, 2FB353CA4FFA7F7DF7C2FCB7C9A8C2B7, Lopside",
+              "type": "Asset'/Script/OakGame.WorldRegionDef'",
+              "discoveredaudioevent": "audio_event'ASB_Pickups.ASB_Pickups_Spawn_Legendary'",
+              "priority": "100",
+              "parent": "game_region'shatteredlands'"
+            }
+          },
+          {
+            "shatteredlands_regione": {
+              "game_region": "shatteredlands_RegionE",
+              "infamyfactaddress": "transient.shatteredlands_infamy",
+              "regioninfo": "display_data'UIRegionDisplayData_ShatteredLands_RegionE'",
+              "displayname": "world_regions, E358E03645796B58C0FD69A74DB8D14E, Fallen Crown",
+              "type": "Asset'/Script/OakGame.WorldRegionDef'",
+              "discoveredaudioevent": "audio_event'ASB_Pickups.ASB_Pickups_Spawn_Legendary'",
+              "priority": "100",
+              "parent": "game_region'shatteredlands'"
+            }
+          },
+          {
+            "shatteredlands_vault": {
+              "game_region": "shatteredlands_Vault",
+              "infamyfactaddress": "transient.shatteredlands_infamy",
+              "regioninfo": "display_data'UIRegionDisplayData_ShatteredLands_Vault'",
+              "loadingscreendef": "loadingscreen_data'ls_vault'",
+              "zonehandle": "map'none'",
+              "displayname": "world_regions, 798C6FEE469436B672AE309724609CE9, Vault of Radix",
+              "type": "Asset'/Script/OakGame.WorldRegionDef'",
+              "discoveredaudioevent": "audio_event'ASB_Pickups.ASB_Pickups_Spawn_Legendary'",
+              "parent": "game_region'shatteredlands'"
+            }
+          }
+        ]
+      },
+      {
+        "entries": [
+          {
+            "cowbell": {
+              "game_region": "Cowbell",
+              "regioninfo": "display_data'UIRegionDisplayData_Cowbell'",
+              "armyspawnzones": "Asset'/Game/DLC/Cowbell/GameData/WorldPaintLayers/WPLayer_DLC1_SpawnArmy.WPLayer_DLC1_SpawnArmy'",
+              "creaturespawnzones": "Asset'/Game/DLC/Cowbell/GameData/WorldPaintLayers/WPLayer_DLC1_SpawnCreature.WPLayer_DLC1_SpawnCreature'",
+              "loadingscreendef": "loadingscreen_data'ls_WhisperingGlacier'",
+              "priority": "100",
+              "displayname": "dlc1_world_regions, D25BAEF144CDD5F70CC359A89B3BAA93, Do not localize, this is never used",
+              "type": "/Script/OakGame.WorldRegionDef"
+            }
+          },
+          {
+            "cowbell_crookedteeth": {
+              "game_region": "Cowbell_CrookedTeeth",
+              "regioninfo": "display_data'UIRegionDisplayData_Cowbell_CrookedTeeth'",
+              "type": "/Script/OakGame.WorldRegionDef",
+              "parent": "game_region'Cowbell'"
+            }
+          },
+          {
+            "harmonica": {
+              "game_region": "Harmonica",
+              "regioninfo": "display_data'UIRegionDisplayData_Harmonica'",
+              "armyspawnzones": "Asset'/Game/DLC/Harmonica/GameData/WorldPaintLayers/WPLayer_SpawnArmy_ISLE.WPLayer_SpawnArmy_ISLE'",
+              "creaturespawnzones": "Asset'/Game/DLC/Harmonica/GameData/WorldPaintLayers/WPLayer_SpawnCreature_ISLE.WPLayer_SpawnCreature_ISLE'",
+              "loadingscreendef": "loadingscreen_data'ls_providenceisland'",
+              "priority": "100",
+              "displayname": "dlc1_world_regions, 34AFDC3245F07E2D5058BF9C212CD996, Do not localize, this is never used",
+              "type": "/Script/OakGame.WorldRegionDef"
+            }
+          },
+          {
+            "harmonica_vinechokedcanopy": {
+              "game_region": "Harmonica_VinechokedCanopy",
+              "regioninfo": "display_data'UIRegionDisplayData_Harmonica_VinechokedCanopy'",
+              "type": "/Script/OakGame.WorldRegionDef",
+              "parent": "game_region'Harmonica'"
+            }
+          },
+          {
+            "harmonica_volcanofortress": {
+              "game_region": "Harmonica_VolcanoFortress",
+              "regioninfo": "display_data'UIRegionDisplayData_Harmonica_VolcanoFortress'",
+              "priority": "0",
+              "parent": "game_region'Harmonica'"
+            }
+          }
+        ]
+      }
+    ]
+  }
+}

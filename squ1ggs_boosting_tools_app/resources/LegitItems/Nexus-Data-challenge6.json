@@ -1,0 +1,2851 @@
+{
+  "challenge": {
+    "records": [
+      {
+        "entries": [
+          {
+            "challenge_activity_augermines_demo_1": {
+              "challenge": "Challenge_Activity_AugerMines_Demo_1",
+              "displayname": "Challenges_Bounty_Augur, DCA364FA4B92C00DE3F622AF0D48403E, Challenge - Augur Bounty - Demo 1",
+              "description": "Challenges_Bounty_Augur, 75313A034C56067A275395B465A00E0E, Demo challenge description",
+              "showprogressui": "false",
+              "showcompletionui": "false",
+              "associatedstat": "stats.openworld.activities.bounties_augur.augurbounty_grasslands_1",
+              "bispartychallenge": "true",
+              "bisprogressreplicated": "true",
+              "challengetype": "Mission",
+              "busecustommissionlist": "true",
+              "missiondefs": [
+                "mission'ZoneActivity_Template_Mine'"
+              ],
+              "challengetiers": [
+                {
+                  "goalvalue": "1",
+                  "notificationthreshold": "1"
+                }
+              ]
+            }
+          },
+          {
+            "challenge_activity_crawlers_demo_1": {
+              "challenge": "Challenge_Activity_Crawlers_Demo_1",
+              "displayname": "Challenges_Crawler, 9BEF55634EAB86C32C1A6AA46EAB4B95, Challenge - Crawlers - Demo 1",
+              "description": "Challenges_Crawler, 55659AEB4600DAB5C512F0BD5CBCC54A, Complete this Crawler",
+              "associatedstat": "stats.openworld.activities.crawlers.crawler_grasslands_1",
+              "bispartychallenge": "true",
+              "bisprogressreplicated": "true",
+              "challengetype": "Mission",
+              "busecustommissionlist": "true",
+              "missiondefs": [
+                "mission'TestMission_Activity_Crawler'"
+              ],
+              "challengetiers": [
+                {
+                  "goalvalue": "1",
+                  "notificationthreshold": "1"
+                }
+              ]
+            }
+          },
+          {
+            "challenge_activity_crawlers_grasslands_parent": {
+              "challenge": "Challenge_Activity_Crawlers_Grasslands_Parent",
+              "showprogressui": "false",
+              "showcompletionui": "false",
+              "associatedstat": "stats.openworld.activities.crawlers.crawlers_grasslands",
+              "challengetiers": [
+                ""
+              ]
+            }
+          },
+          {
+            "challenge_activity_crawlers_mountains_parent": {
+              "challenge": "Challenge_Activity_Crawlers_Mountains_Parent",
+              "showprogressui": "false",
+              "showcompletionui": "false",
+              "uichallengeicontype": "activities_icon",
+              "associatedstat": "stats.openworld.activities.crawlers.crawlers_mountains",
+              "bfiremissingrewardsonload": "true",
+              "challengetiers": [
+                {
+                  "goalvalue": "4",
+                  "notificationthreshold": "1"
+                }
+              ]
+            }
+          },
+          {
+            "challenge_activity_crawlers_shatterlands_parent": {
+              "challenge": "Challenge_Activity_Crawlers_Shatterlands_Parent",
+              "showprogressui": "false",
+              "showcompletionui": "false",
+              "uichallengeicontype": "activities_icon",
+              "associatedstat": "stats.openworld.activities.crawlers.crawlers_shatteredlands",
+              "challengetiers": [
+                {
+                  "goalvalue": "3",
+                  "notificationthreshold": "1"
+                }
+              ]
+            }
+          },
+          {
+            "challenge_activity_drillsites_demo_1": {
+              "challenge": "Challenge_Activity_DrillSites_Demo_1",
+              "displayname": "Challenges_Bounty_Vanguard, 913A763C4DEF86AB8147E081BE851148, Challenge - Vanguard Bounty - Demo 1",
+              "description": "Challenges_Bounty_Vanguard, 64EBDDF245249E2814D79CA16F5F5DE5, Demo challenge description",
+              "showprogressui": "false",
+              "showcompletionui": "false",
+              "associatedstat": "stats.openworld.activities.bounties_vanguard.vanguardbounty_grasslands_1",
+              "bispartychallenge": "true",
+              "bisprogressreplicated": "true",
+              "challengetype": "FactTrigger",
+              "missiondefs": [
+                "mission'none'"
+              ],
+              "eventfactaddress": "registry.activities_p.top.vanguardbounty.poaactor_vanguardbounty.state",
+              "challengetiers": [
+                {
+                  "goalvalue": "1",
+                  "notificationthreshold": "1"
+                }
+              ]
+            }
+          },
+          {
+            "challenge_activity_orderbunkers_demo_1": {
+              "challenge": "Challenge_Activity_OrderBunkers_Demo_1",
+              "displayname": "Challenges_Bounty_Order, FA3B0332405DE3B9156E00941A41E479, Challenge - Order Bounty - Demo 1",
+              "description": "Challenges_Bounty_Order, 478DA08346242545E445EAB54ACF62E0, Demo challenge description",
+              "showprogressui": "false",
+              "showcompletionui": "false",
+              "associatedstat": "stats.openworld.activities.bounties_order.orderbounty_grasslands_1",
+              "bispartychallenge": "true",
+              "bisprogressreplicated": "true",
+              "challengetype": "Mission",
+              "busecustommissionlist": "true",
+              "missiondefs": [
+                "mission'TestMission_Activity_OrderBunker'"
+              ],
+              "challengetiers": [
+                {
+                  "goalvalue": "1",
+                  "notificationthreshold": "1"
+                }
+              ]
+            }
+          },
+          {
+            "challenge_activity_safehouses_demo_1": {
+              "challenge": "Challenge_Activity_Safehouses_Demo_1",
+              "displayname": "Challenges_Safehouse, C4336F644CFE023A929E92B41D0E1BE3, Challenge - Safehouse - Demo 1",
+              "description": "Challenges_Safehouse, 48036E4840D88A5AF4B1BEB7842F91A0, Demo challenge description",
+              "associatedstat": "Stats.OpenWorld.Activities.safehouses.safehouse_grasslands_1",
+              "bispartychallenge": "true",
+              "bisprogressreplicated": "true",
+              "challengetype": "Mission",
+              "busecustommissionlist": "true",
+              "missiondefs": [
+                "mission'TestMission_Activity_Safehouse'"
+              ],
+              "challengetiers": [
+                {
+                  "goalvalue": "1",
+                  "notificationthreshold": "1",
+                  "reward": {
+                    "type": "RewardDef",
+                    "value": "rewards'ChallengeReward_Activity_Safehouse'"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "challenge_activity_silos_demo_1": {
+              "challenge": "Challenge_Activity_Silos_Demo_1",
+              "displayname": "Challenges_Silo, 57632BDF47114835B439CDA873214635, Challenge - Silo - Demo 1",
+              "description": "Challenges_Silo, 46D152234D87F87A79B85A9B1CB73E58, Demo challenge description",
+              "associatedstat": "Stats.OpenWorld.Activities.silos.silo_grasslands_1",
+              "bispartychallenge": "true",
+              "bisprogressreplicated": "true",
+              "challengetype": "Mission",
+              "busecustommissionlist": "true",
+              "missiondefs": [
+                "mission'TestMission_Activity_Silo'"
+              ],
+              "challengetiers": [
+                {
+                  "goalvalue": "1",
+                  "notificationthreshold": "1",
+                  "reward": {
+                    "type": "RewardDef",
+                    "value": "rewards'ChallengeReward_Activity_Silo'"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "challenge_all_status_effects": {
+              "challenge": "Challenge_All_Status_Effects",
+              "displayname": "Challenges_Elemental, 28F18DD146F7CA3C68BA1097F9C22917, I Can See Flavors",
+              "description": "Challenges_Elemental, 277EDED048AE9F1210ABFA84908FBF09, Apply all 5 Elemental Effects to a single enemy at once.",
+              "associatedstat": "stats.challenge.apply_all_status",
+              "bispartychallenge": "true",
+              "otherscenario": "AllStatusEffects",
+              "challengetiers": [
+                {
+                  "goalvalue": "1",
+                  "reward": {
+                    "type": "RewardDef",
+                    "value": "rewards'Challenge_Reward_GenericTier_3'"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "challenge_collect_allkeys_echolocationtest": {
+              "challenge": "Challenge_Collect_AllKeys_EchoLocationTest",
+              "showprogressui": "false",
+              "showcompletionui": "false",
+              "associatedstat": "stats.openworld.collectibles.vaultkey_grasslands",
+              "bispartychallenge": "true",
+              "bisprogressreplicated": "true",
+              "challengetype": "ParentChallenge",
+              "challengetiers": [
+                {
+                  "goalvalue": "3",
+                  "notificationthreshold": "3"
+                }
+              ]
+            }
+          },
+          {
+            "challenge_collect_capsules_demo_1": {
+              "challenge": "Challenge_Collect_Capsules_Demo_1",
+              "displayname": "Challenges_Capsules, BA2261784FDC8A67562FE18E1A56CF1A, Lost Capsule",
+              "description": "Challenges_Capsules, 446E802C4E7A0B31F1538C9B79D6A8CD, Find and bring this capsule back to a decrypt station",
+              "associatedstat": "Stats.OpenWorld.collectibles.capsules.capsule_grasslands_1",
+              "challengetype": "BlueprintDriven",
+              "eventfactaddress": "none",
+              "challengetiers": [
+                {
+                  "goalvalue": "1",
+                  "notificationthreshold": "1",
+                  "reward": {
+                    "type": "RewardDef",
+                    "value": "rewards'ChallengeReward_Collectible_LostCapsule'"
+                  }
+                }
+              ],
+              "parent": "challenge'Challenge_Collect_Capsules_Parent'"
+            }
+          },
+          {
+            "challenge_collect_echolog_mis_city_17": {
+              "challenge": "Challenge_Collect_EchoLog_MIS_CITY_17",
+              "displayname": "Challenges_EchoLogs_General, CA3133134D5B8F862E1B80B0114F8E30, Echo Log",
+              "description": "Challenges_EchoLogs_General, 3FCDE2F8436D3DF33A282AA655A9E187, Collect this Echo Log",
+              "showprogressui": "false",
+              "showcompletionui": "false",
+              "associatedstat": "stats.openworld.collectibles.echologs_general.el_g_city.city_mis_17",
+              "bisprogressreplicated": "true",
+              "challengetype": "FactTrigger",
+              "challengetiers": [
+                {
+                  "goalvalue": "1",
+                  "notificationthreshold": "1"
+                }
+              ]
+            }
+          },
+          {
+            "challenge_collect_echolog_mis_sha_16": {
+              "challenge": "Challenge_Collect_EchoLog_MIS_SHA_16",
+              "displayname": "Challenges_EchoLogs_General, B883BD0D449CE03163CE199A6F21652A, Echo Log",
+              "description": "Challenges_EchoLogs_General, 19D1A75A4221BE96B6980D88BFC27A49, Collect this Echo Log",
+              "showprogressui": "false",
+              "showcompletionui": "false",
+              "bisprogressreplicated": "true",
+              "associatedstat": "Stats.OpenWorld.collectibles.echologs_general.EL_G_Shatteredlands.SHA_MIS_16",
+              "challengetype": "FactTrigger",
+              "challengetiers": [
+                {
+                  "goalvalue": "1",
+                  "notificationthreshold": "1"
+                }
+              ]
+            }
+          },
+          {
+            "challenge_collect_echolog_mis_sha_17": {
+              "challenge": "Challenge_Collect_EchoLog_MIS_SHA_17",
+              "displayname": "Challenges_EchoLogs_General, 44F17B55486454478B1BFFB1C9BA5968, Echo Log",
+              "description": "Challenges_EchoLogs_General, D4FF393F40BFB51B54F71C8A25EB9BCD, Collect this Echo Log",
+              "showprogressui": "false",
+              "showcompletionui": "false",
+              "bisprogressreplicated": "true",
+              "associatedstat": "Stats.OpenWorld.collectibles.echologs_general.EL_G_Shatteredlands.SHA_MIS_17",
+              "challengetype": "FactTrigger",
+              "challengetiers": [
+                {
+                  "goalvalue": "1",
+                  "notificationthreshold": "1"
+                }
+              ]
+            }
+          },
+          {
+            "challenge_collect_echolog_mis_sha_18": {
+              "challenge": "Challenge_Collect_EchoLog_MIS_SHA_18",
+              "displayname": "Challenges_EchoLogs_General, 7E30720F4703FC35631A4EAFC1937154, Echo Log",
+              "description": "Challenges_EchoLogs_General, 4B7FA9014B692BAAD8C0BB952646BC16, Collect this Echo Log",
+              "showprogressui": "false",
+              "showcompletionui": "false",
+              "bisprogressreplicated": "true",
+              "associatedstat": "Stats.OpenWorld.collectibles.echologs_general.EL_G_Shatteredlands.SHA_MIS_18",
+              "challengetype": "FactTrigger",
+              "challengetiers": [
+                {
+                  "goalvalue": "1",
+                  "notificationthreshold": "1"
+                }
+              ]
+            }
+          },
+          {
+            "challenge_collect_echolog_mis_sha_19": {
+              "challenge": "Challenge_Collect_EchoLog_MIS_SHA_19",
+              "displayname": "Challenges_EchoLogs_General, A246B7BB445CBD9BACE2D9827BDC6122, Echo Log",
+              "description": "Challenges_EchoLogs_General, 063B39A94022F53A1C5BEF8C7445F278, Collect this Echo Log",
+              "showprogressui": "false",
+              "showcompletionui": "false",
+              "bisprogressreplicated": "true",
+              "associatedstat": "Stats.OpenWorld.collectibles.echologs_general.EL_G_Shatteredlands.SHA_MIS_19",
+              "challengetype": "FactTrigger",
+              "challengetiers": [
+                {
+                  "goalvalue": "1",
+                  "notificationthreshold": "1"
+                }
+              ]
+            }
+          },
+          {
+            "challenge_collect_echolog_mis_sha_20": {
+              "challenge": "Challenge_Collect_EchoLog_MIS_SHA_20",
+              "displayname": "Challenges_EchoLogs_General, 9E97CD1744097903F53F12876760EAE0, Echo Log",
+              "description": "Challenges_EchoLogs_General, 5F4568F6460E58B9C2E667A01B961279, Collect this Echo Log",
+              "showprogressui": "false",
+              "showcompletionui": "false",
+              "bisprogressreplicated": "true",
+              "associatedstat": "Stats.OpenWorld.collectibles.echologs_general.EL_G_Shatteredlands.SHA_MIS_20",
+              "challengetype": "FactTrigger",
+              "challengetiers": [
+                {
+                  "goalvalue": "1",
+                  "notificationthreshold": "1"
+                }
+              ]
+            }
+          },
+          {
+            "challenge_collect_echolog_mis_sha_21": {
+              "challenge": "Challenge_Collect_EchoLog_MIS_SHA_21",
+              "displayname": "Challenges_EchoLogs_General, B678DAD84EAAD1A6823A7891A13408D2, Echo Log",
+              "description": "Challenges_EchoLogs_General, 4F3509304150F3A87C95919A533A4FF1, Collect this Echo Log",
+              "showprogressui": "false",
+              "showcompletionui": "false",
+              "bisprogressreplicated": "true",
+              "associatedstat": "Stats.OpenWorld.collectibles.echologs_general.EL_G_Shatteredlands.SHA_MIS_21",
+              "challengetype": "FactTrigger",
+              "challengetiers": [
+                {
+                  "goalvalue": "1",
+                  "notificationthreshold": "1"
+                }
+              ]
+            }
+          },
+          {
+            "challenge_collect_echolog_mis_sha_22": {
+              "challenge": "Challenge_Collect_EchoLog_MIS_SHA_22",
+              "displayname": "Challenges_EchoLogs_General, F9448A4D4495CA971EC5E1A47404052F, Echo Log",
+              "description": "Challenges_EchoLogs_General, EE9F30BB4EAF812F434F188C3E0159C9, Collect this Echo Log",
+              "showprogressui": "false",
+              "showcompletionui": "false",
+              "bisprogressreplicated": "true",
+              "associatedstat": "Stats.OpenWorld.collectibles.echologs_general.EL_G_Shatteredlands.SHA_MIS_22",
+              "challengetype": "FactTrigger",
+              "challengetiers": [
+                {
+                  "goalvalue": "1",
+                  "notificationthreshold": "1"
+                }
+              ]
+            }
+          },
+          {
+            "challenge_collect_echolog_mis_sha_23": {
+              "challenge": "Challenge_Collect_EchoLog_MIS_SHA_23",
+              "displayname": "Challenges_EchoLogs_General, BF58FADD42BA6E679C4ADCAF6306C6FE, Echo Log",
+              "description": "Challenges_EchoLogs_General, F40C6C204AA4B128804C0ABD26EA9F67, Collect this Echo Log",
+              "showprogressui": "false",
+              "showcompletionui": "false",
+              "bisprogressreplicated": "true",
+              "associatedstat": "Stats.OpenWorld.collectibles.echologs_general.EL_G_Shatteredlands.SHA_MIS_23",
+              "challengetype": "FactTrigger",
+              "challengetiers": [
+                {
+                  "goalvalue": "1",
+                  "notificationthreshold": "1"
+                }
+              ]
+            }
+          },
+          {
+            "challenge_collect_echolog_mis_sha_24": {
+              "challenge": "Challenge_Collect_EchoLog_MIS_SHA_24",
+              "displayname": "Challenges_EchoLogs_General, D705A5E64F6B2A609F902FA7010CC44B, Echo Log",
+              "description": "Challenges_EchoLogs_General, CCE20B6E4B27683B3F630E92AF777821, Collect this Echo Log",
+              "showprogressui": "false",
+              "showcompletionui": "false",
+              "bisprogressreplicated": "true",
+              "associatedstat": "Stats.OpenWorld.collectibles.echologs_general.EL_G_Shatteredlands.SHA_MIS_24",
+              "challengetype": "FactTrigger",
+              "challengetiers": [
+                {
+                  "goalvalue": "1",
+                  "notificationthreshold": "1"
+                }
+              ]
+            }
+          },
+          {
+            "challenge_collect_echolog_mis_sha_25": {
+              "challenge": "Challenge_Collect_EchoLog_MIS_SHA_25",
+              "displayname": "Challenges_EchoLogs_General, 548E625C4EC7A6967DF66A93691FD161, Echo Log",
+              "description": "Challenges_EchoLogs_General, 0F753F44465E678DA9C61E9FC23FAA52, Collect this Echo Log",
+              "showprogressui": "false",
+              "showcompletionui": "false",
+              "bisprogressreplicated": "true",
+              "associatedstat": "Stats.OpenWorld.collectibles.echologs_general.EL_G_Shatteredlands.SHA_MIS_25",
+              "challengetype": "FactTrigger",
+              "challengetiers": [
+                {
+                  "goalvalue": "1",
+                  "notificationthreshold": "1"
+                }
+              ]
+            }
+          },
+          {
+            "challenge_collect_echolog_mis_sha_26": {
+              "challenge": "Challenge_Collect_EchoLog_MIS_SHA_26",
+              "displayname": "Challenges_EchoLogs_General, FD048B5D42E92A55D49459B645F7A360, Echo Log",
+              "description": "Challenges_EchoLogs_General, 92908E124E9D0A9D62E8EAB708EF42CE, Collect this Echo Log",
+              "showprogressui": "false",
+              "showcompletionui": "false",
+              "bisprogressreplicated": "true",
+              "associatedstat": "Stats.OpenWorld.collectibles.echologs_general.EL_G_Shatteredlands.SHA_MIS_26",
+              "challengetype": "FactTrigger",
+              "challengetiers": [
+                {
+                  "goalvalue": "1",
+                  "notificationthreshold": "1"
+                }
+              ]
+            }
+          },
+          {
+            "challenge_collect_echolog_mis_sha_27": {
+              "challenge": "Challenge_Collect_EchoLog_MIS_SHA_27",
+              "displayname": "Challenges_EchoLogs_General, 1618755E488AB74C3946009792C4496C, Echo Log",
+              "description": "Challenges_EchoLogs_General, 974044A14BB237827767CAB3CF062ECE, Collect this Echo Log",
+              "showprogressui": "false",
+              "showcompletionui": "false",
+              "bisprogressreplicated": "true",
+              "associatedstat": "Stats.OpenWorld.collectibles.echologs_general.EL_G_Shatteredlands.SHA_MIS_27",
+              "challengetype": "FactTrigger",
+              "challengetiers": [
+                {
+                  "goalvalue": "1",
+                  "notificationthreshold": "1"
+                }
+              ]
+            }
+          },
+          {
+            "challenge_collect_echolog_mis_sha_28": {
+              "challenge": "Challenge_Collect_EchoLog_MIS_SHA_28",
+              "displayname": "Challenges_EchoLogs_General, 44EF3BDE4A207E0778A2848F706A5172, Echo Log",
+              "description": "Challenges_EchoLogs_General, DDADB323448A5CAF916769AEE9F7733E, Collect this Echo Log",
+              "showprogressui": "false",
+              "showcompletionui": "false",
+              "bisprogressreplicated": "true",
+              "associatedstat": "Stats.OpenWorld.collectibles.echologs_general.EL_G_Shatteredlands.SHA_MIS_28",
+              "challengetype": "FactTrigger",
+              "challengetiers": [
+                {
+                  "goalvalue": "1",
+                  "notificationthreshold": "1"
+                }
+              ]
+            }
+          },
+          {
+            "challenge_collect_echolog_mis_sha_29": {
+              "challenge": "Challenge_Collect_EchoLog_MIS_SHA_29",
+              "displayname": "Challenges_EchoLogs_General, 210439A6454956D61A4E95895F7FB81C, Echo Log",
+              "description": "Challenges_EchoLogs_General, FABFB65C4BBD1A0F8F39878F2A5204D8, Collect this Echo Log",
+              "showprogressui": "false",
+              "showcompletionui": "false",
+              "bisprogressreplicated": "true",
+              "associatedstat": "Stats.OpenWorld.collectibles.echologs_general.EL_G_Shatteredlands.SHA_MIS_29",
+              "challengetype": "FactTrigger",
+              "challengetiers": [
+                {
+                  "goalvalue": "1",
+                  "notificationthreshold": "1"
+                }
+              ]
+            }
+          },
+          {
+            "challenge_collect_echolog_mis_sha_30": {
+              "challenge": "Challenge_Collect_EchoLog_MIS_SHA_30",
+              "displayname": "Challenges_EchoLogs_General, 0FD206E14D28B4DEF81845B87CE34218, Echo Log",
+              "description": "Challenges_EchoLogs_General, 6DD5F5444E3638FD8D0599A01D90C886, Collect this Echo Log",
+              "showprogressui": "false",
+              "showcompletionui": "false",
+              "associatedstat": "stats.openworld.collectibles.echologs_general.el_g_shatteredlands.sha_mis_30",
+              "bisprogressreplicated": "true",
+              "accountwideunlockable": "unlockable'echo_log_challenges.Collect_EchoLog_MIS_SHA_30'",
+              "challengetype": "FactTrigger",
+              "challengetiers": [
+                {
+                  "goalvalue": "1",
+                  "notificationthreshold": "1",
+                  "reward": {
+                    "type": "Inline",
+                    "value": {
+                      "rewarddata": [
+                        {
+                          "structtype": "Asset'/Script/GbxGame.GbxRewardData_Unlockable'",
+                          "unlockabledef": "unlockable'echo_log_challenges.Collect_EchoLog_MIS_SHA_30'"
+                        }
+                      ]
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "challenge_collect_echolog_mis_sha_31": {
+              "challenge": "Challenge_Collect_EchoLog_MIS_SHA_31",
+              "displayname": "Challenges_EchoLogs_General, 147D95F741895DDA85D7AD909763B9C2, Echo Log",
+              "description": "Challenges_EchoLogs_General, 908EB6FE4C10FE47AB7393ADCEC86474, Collect this Echo Log",
+              "showprogressui": "false",
+              "showcompletionui": "false",
+              "associatedstat": "stats.openworld.collectibles.echologs_general.el_g_shatteredlands.sha_mis_31",
+              "bisprogressreplicated": "true",
+              "accountwideunlockable": "unlockable'echo_log_challenges.Collect_EchoLog_MIS_SHA_31'",
+              "challengetype": "FactTrigger",
+              "challengetiers": [
+                {
+                  "goalvalue": "1",
+                  "notificationthreshold": "1",
+                  "reward": {
+                    "type": "Inline",
+                    "value": {
+                      "rewarddata": [
+                        {
+                          "structtype": "Asset'/Script/GbxGame.GbxRewardData_Unlockable'",
+                          "unlockabledef": "unlockable'echo_log_challenges.Collect_EchoLog_MIS_SHA_31'"
+                        }
+                      ]
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "challenge_collect_evocariums_demo_1": {
+              "challenge": "Challenge_Collect_Evocariums_Demo_1",
+              "displayname": "Challenges_Evocariums, 6633EFEC488FF45AF660BD83468745CB, Challenge - Evocarium - Demo 1",
+              "description": "Challenges_Evocariums, A2B549B54A72605E5BA76DBF54610A38, Demo challenge description",
+              "associatedstat": "Stats.OpenWorld.collectibles.evocariums.evocarium_grasslands_1",
+              "bispartychallenge": "true",
+              "bisprogressreplicated": "true",
+              "challengetype": "FactTrigger",
+              "challengetiers": [
+                {
+                  "goalvalue": "1",
+                  "notificationthreshold": "1",
+                  "reward": {
+                    "type": "RewardDef",
+                    "value": "rewards'ChallengeReward_Collectible_Evocarium'"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "challenge_collect_evocariums_demo_2": {
+              "challenge": "Challenge_Collect_Evocariums_Demo_2",
+              "displayname": "Challenges_Evocariums, EEC19B7C48F1C933E77D3E8F0658FBD1, Challenge - Evocarium - Demo  2",
+              "description": "Challenges_Evocariums, 524709484932E9B575265A9294C4A835, Demo challenge description",
+              "showprogressui": "false",
+              "showcompletionui": "false",
+              "associatedstat": "Stats.OpenWorld.collectibles.evocariums.evocarium_grasslands_2",
+              "bispartychallenge": "true",
+              "bisprogressreplicated": "true",
+              "challengetype": "FactTrigger",
+              "eventfactaddress": "Stats.OpenWorld.collectibles.evocariums.evocarium_grasslands_2",
+              "challengetiers": [
+                {
+                  "goalvalue": "1",
+                  "notificationthreshold": "1",
+                  "reward": {
+                    "type": "RewardDef",
+                    "value": "rewards'ChallengeReward_Collectible_Evocarium'"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "challenge_collect_evocariums_demo_3": {
+              "challenge": "Challenge_Collect_Evocariums_Demo_3",
+              "displayname": "Challenges_Evocariums, 3BAF94F94DE9A9DA51E17FA9FDA36E4D, Challenge - Evocarium - Demo  3",
+              "description": "Challenges_Evocariums, 1924EAAA4887547D637F5C8EC21F9755, Demo challenge description",
+              "showprogressui": "false",
+              "showcompletionui": "false",
+              "associatedstat": "Stats.OpenWorld.collectibles.evocariums.evocarium_grasslands_3",
+              "bispartychallenge": "true",
+              "bisprogressreplicated": "true",
+              "challengetype": "FactTrigger",
+              "eventfactaddress": "Stats.OpenWorld.collectibles.evocariums.evocarium_grasslands_3",
+              "challengetiers": [
+                {
+                  "goalvalue": "1",
+                  "notificationthreshold": "1",
+                  "reward": {
+                    "type": "RewardDef",
+                    "value": "rewards'ChallengeReward_Collectible_Evocarium'"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "challenge_collect_propagandaspeakers_city_5": {
+              "challenge": "Challenge_Collect_PropagandaSpeakers_City_5",
+              "displayname": "Challenges_PropagandaSpeakers, C757DFBD48B929F9E4FCA9AE4DBCF02A, Propaganda Speaker",
+              "description": "Challenges_PropagandaSpeakers, 7287557A46F22CF56876F1BD2211C216, Hack into the airwaves and bring sanity back to Kairos",
+              "associatedstat": "Stats.OpenWorld.collectibles.propaspeakers.propaspeakers_city_5",
+              "challengetype": "FactTrigger",
+              "eventfactaddress": "none",
+              "challengetiers": [
+                {
+                  "goalvalue": "1",
+                  "notificationthreshold": "1",
+                  "reward": {
+                    "type": "RewardDef",
+                    "value": "rewards'ChallengeReward_Collectible_PropagandaSpeaker'"
+                  }
+                }
+              ],
+              "showprogressui": "false",
+              "showcompletionui": "false",
+              "bispartychallenge": "true",
+              "bisprogressreplicated": "true",
+              "parent": "challenge'Challenge_Collect_PropagandaSpeakers_Parent'"
+            }
+          },
+          {
+            "challenge_collect_propagandaspeakers_city_6": {
+              "challenge": "Challenge_Collect_PropagandaSpeakers_City_6",
+              "displayname": "Challenges_PropagandaSpeakers, 5E1BE7C84D4D7F8B6C77F69A0EBB2327, Propaganda Speaker",
+              "description": "Challenges_PropagandaSpeakers, 74F568B343C00380145E0E87571CB333, Hack into the airwaves and bring sanity back to Kairos",
+              "associatedstat": "Stats.OpenWorld.collectibles.propaspeakers.propaspeakers_city_6",
+              "challengetype": "FactTrigger",
+              "eventfactaddress": "none",
+              "challengetiers": [
+                {
+                  "goalvalue": "1",
+                  "notificationthreshold": "1",
+                  "reward": {
+                    "type": "RewardDef",
+                    "value": "rewards'ChallengeReward_Collectible_PropagandaSpeaker'"
+                  }
+                }
+              ],
+              "showprogressui": "false",
+              "showcompletionui": "false",
+              "bispartychallenge": "true",
+              "bisprogressreplicated": "true",
+              "parent": "challenge'Challenge_Collect_PropagandaSpeakers_Parent'"
+            }
+          },
+          {
+            "challenge_collect_propagandaspeakers_demo": {
+              "challenge": "Challenge_Collect_PropagandaSpeakers_Demo",
+              "displayname": "Challenges_PropagandaSpeakers, 9C1F487E47C96548FB5D51BFC6E849F1, Propaganda Speaker",
+              "description": "Challenges_PropagandaSpeakers, D4A527DC4E63B85ACAFC1DA8219B925C, Hack into the airwaves and bring sanity back to Kairos",
+              "associatedstat": "Stats.OpenWorld.collectibles.propaspeakers.propaspeakers_grasslands_1",
+              "challengetype": "FactTrigger",
+              "eventfactaddress": "none",
+              "challengetiers": [
+                {
+                  "goalvalue": "1",
+                  "notificationthreshold": "1",
+                  "reward": {
+                    "type": "RewardDef",
+                    "value": "rewards'ChallengeReward_Collectible_PropagandaSpeaker'"
+                  }
+                }
+              ],
+              "showprogressui": "false",
+              "showcompletionui": "false",
+              "bispartychallenge": "true",
+              "bisprogressreplicated": "true",
+              "parent": "challenge'Challenge_Collect_PropagandaSpeakers_Parent'"
+            }
+          },
+          {
+            "challenge_collect_propagandaspeakers_mountains_8": {
+              "challenge": "Challenge_Collect_PropagandaSpeakers_Mountains_8",
+              "displayname": "Challenges_PropagandaSpeakers, 2631F45D44588EB4FE1F37A3E72AF05D, Propaganda Speaker",
+              "description": "Challenges_PropagandaSpeakers, 3662A0D44C6DF50CF1D5C2B4159EBE5B, Hack into the airwaves and bring sanity back to Kairos",
+              "associatedstat": "Stats.OpenWorld.collectibles.propaspeakers.propaspeakers_mountains_8",
+              "challengetype": "FactTrigger",
+              "eventfactaddress": "none",
+              "challengetiers": [
+                {
+                  "goalvalue": "1",
+                  "notificationthreshold": "1",
+                  "reward": {
+                    "type": "RewardDef",
+                    "value": "rewards'ChallengeReward_Collectible_PropagandaSpeaker'"
+                  }
+                }
+              ],
+              "showprogressui": "false",
+              "showcompletionui": "false",
+              "bispartychallenge": "true",
+              "bisprogressreplicated": "true",
+              "parent": "challenge'Challenge_Collect_PropagandaSpeakers_Parent'"
+            }
+          },
+          {
+            "challenge_collect_safes_demo_1": {
+              "challenge": "Challenge_Collect_Safes_Demo_1",
+              "displayname": "Challenges_Safes, D32C594742A0DCD29C6CADADDEA40733, Safecracker",
+              "description": "Challenges_Safes, D4E50F514B54AEF03BAADAAF9D8954F5, Find and open this safe",
+              "associatedstat": "Stats.OpenWorld.collectibles.safes.safe_shatteredlands_1",
+              "challengetype": "FactTrigger",
+              "eventfactaddress": "none",
+              "challengetiers": [
+                {
+                  "goalvalue": "1",
+                  "notificationthreshold": "1",
+                  "reward": {
+                    "type": "RewardDef",
+                    "value": "rewards'ChallengeReward_Collectible_Safe'"
+                  }
+                }
+              ],
+              "bispartychallenge": "true",
+              "bisprogressreplicated": "true",
+              "parent": "challenge'Challenge_Collect_Safes_Parent'"
+            }
+          },
+          {
+            "challenge_collect_shrines_demo_1": {
+              "challenge": "Challenge_Collect_Shrines_Demo_1",
+              "displayname": "Challenges_Shrines, CB5114BB40B1E34CE7F076934C8E563C, Challenge - Shrines - Demo 1",
+              "description": "Challenges_Shrines, 4F83E319432071A0C43A75B765E8E9D4, Demo challenge description",
+              "associatedstat": "Stats.OpenWorld.collectibles.shrines.shrine_grasslands_1",
+              "bispartychallenge": "true",
+              "bisprogressreplicated": "true",
+              "challengetype": "FactTrigger",
+              "challengetiers": [
+                {
+                  "goalvalue": "1",
+                  "notificationthreshold": "1",
+                  "reward": {
+                    "type": "RewardDef",
+                    "value": "rewards'ChallengeReward_Collectible_Shrine'"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "challenge_collect_shrines_demo_2": {
+              "challenge": "Challenge_Collect_Shrines_Demo_2",
+              "displayname": "Challenges_Shrines, 4848F143454E7C65D087E285AF190960, Challenge - Shrines - Demo 2",
+              "description": "Challenges_Shrines, D8FBB2D64B5947CB7B3C8FA5D4F6EC78, Demo challenge description",
+              "associatedstat": "Stats.OpenWorld.collectibles.shrines.shrine_grasslands_2",
+              "bispartychallenge": "true",
+              "bisprogressreplicated": "true",
+              "challengetype": "FactTrigger",
+              "challengetiers": [
+                {
+                  "goalvalue": "1",
+                  "notificationthreshold": "1",
+                  "reward": {
+                    "type": "RewardDef",
+                    "value": "rewards'ChallengeReward_Collectible_Shrine'"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "challenge_collect_shrines_demo_3": {
+              "challenge": "Challenge_Collect_Shrines_Demo_3",
+              "displayname": "Challenges_Shrines, 75A23EC24317C534345A798C7CB08680, Challenge - Shrines - Demo 3",
+              "description": "Challenges_Shrines, 9559473C4C91B1E0081249AFA049222D, Demo challenge description",
+              "associatedstat": "Stats.OpenWorld.collectibles.shrines.shrine_grasslands_3",
+              "bispartychallenge": "true",
+              "bisprogressreplicated": "true",
+              "challengetype": "FactTrigger",
+              "challengetiers": [
+                {
+                  "goalvalue": "1",
+                  "notificationthreshold": "1",
+                  "reward": {
+                    "type": "RewardDef",
+                    "value": "rewards'ChallengeReward_Collectible_Shrine'"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "challenge_collect_vaultsymbols_demo_1": {
+              "challenge": "Challenge_Collect_VaultSymbols_Demo_1",
+              "displayname": "Challenges_VaultSymbols, 51F5058B48A397C620ABA6854B256375, Challenge - Vault Symbols - Demo 1",
+              "description": "Challenges_VaultSymbols, CDBA11564A550D9375D2749B26C7FA87, Demo challenge description",
+              "associatedstat": "stats.openworld.collectibles.vaultsymbols.vaultsymbol_grasslands_1",
+              "bispartychallenge": "true",
+              "bisprogressreplicated": "true",
+              "challengetype": "FactTrigger",
+              "challengetiers": [
+                {
+                  "goalvalue": "1",
+                  "notificationthreshold": "1",
+                  "reward": {
+                    "type": "RewardDef",
+                    "value": "rewards'ChallengeReward_Collectible_VaultSymbol'"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "challenge_collect_vaultsymbols_demo_2": {
+              "challenge": "Challenge_Collect_VaultSymbols_Demo_2",
+              "displayname": "Challenges_VaultSymbols, 5C672E2E444CFA33B96EAA9E11F1A80D, Challenge - Vault Symbols - Demo 2",
+              "description": "Challenges_VaultSymbols, 5FC5E31B4AFE7C9B409DE29251D6B99A, Demo challenge description",
+              "associatedstat": "stats.openworld.collectibles.vaultsymbols.vaultsymbol_grasslands_2",
+              "bispartychallenge": "true",
+              "bisprogressreplicated": "true",
+              "challengetype": "FactTrigger",
+              "challengetiers": [
+                {
+                  "goalvalue": "1",
+                  "notificationthreshold": "1",
+                  "reward": {
+                    "type": "RewardDef",
+                    "value": "rewards'ChallengeReward_Collectible_VaultSymbol'"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "challenge_collect_vaultsymbols_demo_3": {
+              "challenge": "Challenge_Collect_VaultSymbols_Demo_3",
+              "displayname": "Challenges_VaultSymbols, 3C3436884B3F0E00B8C1349ECEC5D56D, Challenge - Vault Symbols - Demo 3",
+              "description": "Challenges_VaultSymbols, D405451D492DB5AEB77648A3E0905A51, Demo challenge description",
+              "associatedstat": "stats.openworld.collectibles.vaultsymbols.vaultsymbol_grasslands_3",
+              "bispartychallenge": "true",
+              "bisprogressreplicated": "true",
+              "challengetype": "FactTrigger",
+              "challengetiers": [
+                {
+                  "goalvalue": "1",
+                  "notificationthreshold": "1",
+                  "reward": {
+                    "type": "RewardDef",
+                    "value": "rewards'ChallengeReward_Collectible_VaultSymbol'"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "challenge_cryo_status": {
+              "challenge": "Challenge_Cryo_Status",
+              "displayname": "Challenges_Elemental, D210AC9F49AD729D65B246864607698F, Ice Sculptures",
+              "description": "Challenges_Elemental, 836F36E843527024B41BCA800C9C7731, Freeze enemies solid with Cryo weapons.",
+              "associatedstat": "Stats.challenge.kill_elemental_cryo_status",
+              "challengetype": "Enemy_Kill",
+              "playerdamagesource": {
+                "data": [
+                  {
+                    "dmgsrc_statuseffect": "damagesource'DmgSrc_StatusEffect'"
+                  }
+                ]
+              },
+              "playerdamagetype": "damagetype'Cryo_Status'",
+              "challengetiers": [
+                {
+                  "goalvalue": "25",
+                  "notificationthreshold": "15",
+                  "reward": {
+                    "type": "RewardDef",
+                    "value": "rewards'Challenge_Reward_GenericTier_1'"
+                  }
+                },
+                {
+                  "goalvalue": "100",
+                  "notificationthreshold": "40",
+                  "reward": {
+                    "type": "RewardDef",
+                    "value": "rewards'Challenge_Reward_GenericTier_2'"
+                  }
+                },
+                {
+                  "goalvalue": "500",
+                  "notificationthreshold": "150",
+                  "reward": {
+                    "type": "RewardDef",
+                    "value": "rewards'Challenge_Reward_GenericTier_3'"
+                  }
+                },
+                {
+                  "goalvalue": "1000",
+                  "notificationthreshold": "200",
+                  "reward": {
+                    "type": "RewardDef",
+                    "value": "rewards'Challenge_Reward_GenericTier_4'"
+                  }
+                },
+                {
+                  "goalvalue": "10000",
+                  "notificationthreshold": "2000",
+                  "reward": {
+                    "type": "RewardDef",
+                    "value": "rewards'Challenge_Reward_GenericTier_5'"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "challenge_firmwaretransfers": {
+              "challenge": "Challenge_FirmwareTransfers",
+              "displayname": "Challenges_Economy, 487B00B64638AC7131D6E1AE8BEC2D5F, Always Read the Patchnotes",
+              "description": "Challenges_Economy, 24F02EC84B4C72ED0D00C7940B2BB48E, Perform Firmware transfers.",
+              "uichallengeicontype": "economy_icon",
+              "bhideuntilprogressmade": "true",
+              "associatedstat": "stats.challenge.economy_firmware_transfers",
+              "challengetype": "FirmwareTransfer",
+              "challengetiers": [
+                {
+                  "goalvalue": "1",
+                  "notificationthreshold": "1",
+                  "reward": {
+                    "type": "RewardDef",
+                    "value": "rewards'Challenge_Reward_GenericTier_1'"
+                  }
+                },
+                {
+                  "goalvalue": "5",
+                  "notificationthreshold": "2",
+                  "reward": {
+                    "type": "RewardDef",
+                    "value": "rewards'Challenge_Reward_GenericTier_2'"
+                  }
+                },
+                {
+                  "goalvalue": "10",
+                  "notificationthreshold": "3",
+                  "reward": {
+                    "type": "RewardDef",
+                    "value": "rewards'Challenge_Reward_GenericTier_3'"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "challenge_kill_gunships": {
+              "challenge": "Challenge_Kill_Gunships",
+              "displayname": "Challenges_KillOther, 2D4E61324DCC5AE0BB079E82C17DD814, Oppression Is My Profession",
+              "description": "Challenges_KillOther, DA4B78B24C00FAFF1DD1B69A2421821B, Kill Oppressors.",
+              "uichallengeicontype": "enemies_icon",
+              "associatedstat": "Stats.challenge.killenemytype_gunship",
+              "damagetargettags": {
+                "gameplaytags": [
+                  {
+                    "tagname": "GbxActor.Character.EnemyType.Gunship"
+                  }
+                ]
+              },
+              "challengetiers": [
+                {
+                  "goalvalue": "20",
+                  "notificationthreshold": "15",
+                  "reward": {
+                    "type": "RewardDef",
+                    "value": "rewards'Challenge_Reward_GenericTier_1'"
+                  }
+                },
+                {
+                  "goalvalue": "100",
+                  "notificationthreshold": "30",
+                  "reward": {
+                    "type": "RewardDef",
+                    "value": "rewards'Challenge_Reward_GenericTier_2'"
+                  }
+                },
+                {
+                  "goalvalue": "1000",
+                  "notificationthreshold": "300",
+                  "reward": {
+                    "type": "RewardDef",
+                    "value": "rewards'Challenge_Reward_GenericTier_3'"
+                  }
+                },
+                {
+                  "goalvalue": "10000",
+                  "notificationthreshold": "3000",
+                  "reward": {
+                    "type": "RewardDef",
+                    "value": "rewards'Challenge_Reward_GenericTier_4'"
+                  }
+                },
+                {
+                  "goalvalue": "100000",
+                  "notificationthreshold": "30000",
+                  "reward": {
+                    "type": "RewardDef",
+                    "value": "rewards'Challenge_Reward_GenericTier_5'"
+                  }
+                }
+              ],
+              "parent": "challenge'ChallengeParent_KillEnemy'"
+            }
+          },
+          {
+            "challenge_misc_world_completemainstory": {
+              "challenge": "Challenge_Misc_World_CompleteMainStory",
+              "displayname": "Challenges_Misc_World, 467054BB4D6206E18E7BEB8F69DBC848, Reign of the Timekeeper",
+              "description": "Challenges_Misc_World, 91EE9CAC48B5A69C4432919D7664F329, (Complete main missions)",
+              "uichallengeicontype": "world_icon",
+              "challengetype": "Mission",
+              "busecustommissionlist": "true",
+              "bcompleteeachmissiononce": "true",
+              "missiondefs": [
+                "mission'Mission_Main_PrisonPrologue'",
+                "mission'Mission_Main_Beach'",
+                "mission'Mission_Main_Grasslands1'",
+                "mission'Mission_Main_Grasslands2'",
+                "mission'Mission_Main_Grasslands2b'",
+                "mission'Mission_Main_Grasslands3'",
+                "mission'Mission_Main_Mountains1'",
+                "mission'Mission_Main_Mountains2'",
+                "mission'Mission_Main_Mountains2b'",
+                "mission'Mission_Main_Mountains3'",
+                "mission'Mission_Main_Shatteredlands1'",
+                "mission'Mission_Main_Shatteredlands2'",
+                "mission'Mission_Main_Shatteredlands3'",
+                "mission'Mission_Main_SearchForLilith'",
+                "mission'Mission_Main_City1'",
+                "mission'Mission_Main_City2'",
+                "mission'Mission_Main_City3'",
+                "mission'Mission_Main_Elpis'"
+              ],
+              "challengetiers": [
+                {
+                  "goalvalue": "1",
+                  "notificationthreshold": "1",
+                  "reward": {
+                    "type": "RewardDef",
+                    "value": "rewards'Challenge_Reward_GenericTier_1'"
+                  }
+                },
+                {
+                  "goalvalue": "6",
+                  "reward": {
+                    "type": "RewardDef",
+                    "value": "rewards'Challenge_Reward_GenericTier_2'"
+                  }
+                },
+                {
+                  "goalvalue": "10",
+                  "reward": {
+                    "type": "RewardDef",
+                    "value": "rewards'Challenge_Reward_GenericTier_3'"
+                  }
+                },
+                {
+                  "goalvalue": "14",
+                  "reward": {
+                    "type": "RewardDef",
+                    "value": "rewards'ChallengeReward_EchoMesh_03_Order'"
+                  }
+                },
+                {
+                  "goalvalue": "18",
+                  "reward": {
+                    "type": "RewardDef",
+                    "value": "rewards'Challenge_Reward_GenericTier_5'"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "challenge_misc_world_completesidemissions": {
+              "challenge": "Challenge_Misc_World_CompleteSideMissions",
+              "displayname": "Challenges_Misc_World, 08A8CB454BE6C008B1190BB476214B16, Grassroots Campaigner",
+              "description": "Challenges_Misc_World, 3D6D100A4B4CA8C38FA46DA2D3C8BB7D, Complete side missions.",
+              "uichallengeicontype": "world_icon",
+              "associatedstat": "stats.challenge.mission_side_all",
+              "challengetype": "Mission",
+              "missiontype": "SideMission",
+              "busecustommissionlist": "true",
+              "bcompleteeachmissiononce": "true",
+              "missiondefs": [
+                "mission'Grasslands_Survivalists01'",
+                "mission'Grasslands_Survivalists02'",
+                "mission'Grasslands_Survivalists03'",
+                "mission'Grasslands_Side_ClaptrapOfPandora'",
+                "mission'Grasslands_Side_MurderMystery'",
+                "mission'Side_Grasslands_SalvageRipperTunnels'",
+                "mission'Mission_Side_Heist'",
+                "mission'Mission_Side_LifesPurpose'",
+                "mission'Mission_Side_PlanetaryEscape'",
+                "mission'Mission_Side_TheCure'",
+                "mission'Mission_Side_ThresherRancher'",
+                "mission'Side_Grasslands_LighthouseKeeper'",
+                "mission'Side_Grasslands_SumOfHisParts'",
+                "mission'Mission_Side_ElectiFactionMission1'",
+                "mission'Mission_Side_ElectiFactionMission2'",
+                "mission'Mission_Side_ElectiFactionMission3'",
+                "mission'Mission_Side_MountainsFaction1'",
+                "mission'Mission_Side_MountainsFaction2'",
+                "mission'Mission_Side_MountainsFaction3'",
+                "mission'Mission_Side_MountainsFaction4'",
+                "mission'Mission_Side_AGreatDisturbance'",
+                "mission'Mission_Side_CastingCall'",
+                "mission'Mission_Side_NoEscapeRoom'",
+                "mission'Mission_Side_ThePriceOfFreedomPart1'",
+                "mission'Mission_Side_ThePriceOfFreedomPart2'",
+                "mission'Mission_Side_ThePriceOfFreedomPart3'",
+                "mission'Mission_Side_OldRaymondPart1'",
+                "mission'Mission_Side_OldRaymondPart2'",
+                "mission'Mission_Side_City_AAAForEffort'",
+                "mission'Mission_Side_BelowTheSurface'",
+                "mission'Mission_City_Side_OverwritingAWrong'",
+                "mission'Mission_Side_OneGassyIssue'",
+                "mission'Mission_Side_SeedsOfRevolutionPart1'",
+                "mission'Mission_Side_SeedsOfRevolutionPart2'",
+                "mission'Mission_Side_WhatLurksBeneath'",
+                "mission'Grasslands_Side_RocketMonsters'",
+                "mission'Mission_Side_FlatKairoser'",
+                "mission'Mission_Side_LifeCoach'",
+                "mission'Mission_Side_MadScientist'",
+                "mission'Mission_Side_ObstacleCourse_Grapple'",
+                "mission'Mission_Side_ObstacleCourseGlide'",
+                "mission'Mission_Side_TheWeirdWayHome'",
+                "mission'MIssion_Side_ClapGen'",
+                "mission'Mission_Side_Vending'"
+              ],
+              "challengetiers": [
+                {
+                  "goalvalue": "5",
+                  "reward": {
+                    "type": "RewardDef",
+                    "value": "rewards'Challenge_Reward_GenericTier_1'"
+                  }
+                },
+                {
+                  "goalvalue": "15",
+                  "reward": {
+                    "type": "RewardDef",
+                    "value": "rewards'Challenge_Reward_GenericTier_2'"
+                  }
+                },
+                {
+                  "goalvalue": "30",
+                  "reward": {
+                    "type": "RewardDef",
+                    "value": "rewards'Challenge_Reward_GenericTier_3'"
+                  }
+                },
+                {
+                  "goalvalue": "44",
+                  "reward": {
+                    "type": "RewardDef",
+                    "value": "rewards'ChallengeReward_CharacterHead_13_Robot'"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "challenge_misc_worldevent_grasslands": {
+              "challenge": "Challenge_Misc_WorldEvent_Grasslands",
+              "displayname": "Challenges_Misc_World, E55D95F74109D4A7B5C216B851C7A02A, Reverse Abduction",
+              "description": "Challenges_Misc_World, F119095B4F50D3435D97DEA31389F5FB, Complete the Airship world event.",
+              "uichallengeicontype": "world_icon",
+              "bhideuntilprogressmade": "true",
+              "associatedstat": "stats.challenge.world_event_grasslands",
+              "challengetype": "Mission",
+              "missiontype": "Event",
+              "busecustommissionlist": "true",
+              "missiondefs": [
+                "mission'Mission_WorldEvent_EnterAirship'"
+              ],
+              "challengetiers": [
+                {
+                  "goalvalue": "1",
+                  "reward": {
+                    "type": "RewardDef",
+                    "value": "rewards'Challenge_Reward_GenericTier_1'"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "challenge_misc_worldevent_mountains": {
+              "challenge": "Challenge_Misc_WorldEvent_Mountains",
+              "displayname": "Challenges_Misc_World, 5C6465E64DF53ABFE6518BB0C276C6C4, Arena Grande",
+              "description": "Challenges_Misc_World, B384C2F74EF8B8F88258658E946EC1A6, Complete the Goredello world event.",
+              "uichallengeicontype": "world_icon",
+              "bhideuntilprogressmade": "true",
+              "associatedstat": "stats.challenge.world_event_mountains",
+              "challengetype": "Mission",
+              "missiontype": "Event",
+              "busecustommissionlist": "true",
+              "missiondefs": [
+                "mission'Mission_WorldEvent_Colosseum'"
+              ],
+              "challengetiers": [
+                {
+                  "goalvalue": "1",
+                  "reward": {
+                    "type": "RewardDef",
+                    "value": "rewards'Challenge_Reward_GenericTier_1'"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "challenge_misc_worldevent_shatteredlands": {
+              "challenge": "Challenge_Misc_WorldEvent_Shatteredlands",
+              "displayname": "Challenges_Misc_World, B955529C438A2ACB5CEF998824455B60, Shoot the Moon",
+              "description": "Challenges_Misc_World, C53647F84CA7B061B90BD594A09C9319, Complete the Creep Impact world event.",
+              "uichallengeicontype": "world_icon",
+              "bhideuntilprogressmade": "true",
+              "associatedstat": "stats.challenge.world_event_shatteredlands",
+              "challengetype": "Mission",
+              "missiontype": "Event",
+              "busecustommissionlist": "true",
+              "missiondefs": [
+                "mission'Mission_WorldEvent_MeteorDestroyer'"
+              ],
+              "challengetiers": [
+                {
+                  "goalvalue": "1",
+                  "reward": {
+                    "type": "RewardDef",
+                    "value": "rewards'Challenge_Reward_GenericTier_1'"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "challenge_shield_buffkills": {
+              "challenge": "Challenge_Shield_BuffKills",
+              "displayname": "Challenges_Shields, 56DB630C4F45E9872FE2BDBB9EB11F82, Rebuffed",
+              "description": "Challenges_Shields, 7BDB71A840D60EB0DFDA7ABE095129AB, Kill enemies who are buffed by Shields.",
+              "uichallengeicontype": "shield_icon",
+              "associatedstat": "stats.challenge.shield_kills_buff"
+            }
+          },
+          {
+            "challenge_upgradeweaponslots": {
+              "challenge": "Challenge_UpgradeWeaponSlots",
+              "displayname": "Challenges_Economy, 22896C0A4F2D981DE93E8895A3631BA0, And Then the Vault Hunter Had Four Guns",
+              "description": "Challenges_Economy, 83BB816940C09EDDBC75309497B658D0, Unlock all four weapon slots.",
+              "uichallengeicontype": "economy_icon",
+              "associatedstat": "stats.challenge.economy_upgrade_weaponslots",
+              "challengetype": "EchoUpgrade",
+              "echoupgradecondition": "AllWeaponSlotsUnlocked",
+              "challengetiers": [
+                {
+                  "goalvalue": "1"
+                }
+              ]
+            }
+          },
+          {
+            "challenge_uvh_rankup_1_trait": {
+              "challenge": "Challenge_UVH_Rankup_1_Trait",
+              "displayname": "UVH_Rankup_1_Challenges, 3E5F2A9847C9BF48B54E47820D53C467, Into the Wilds",
+              "description": "UVH_Rankup_1_Challenges, 3712B4A14455B5E3F56E42B9FC16D012, Complete Lilith's Wildcard mission to unlock UVH 1.",
+              "uichallengeicontype": "ultimate_vh_icon",
+              "bunlockedfromstart": "false",
+              "prerequisitechallenges": [
+                "challenge'Challenge_Misc_World_CompleteCityEpilogue'"
+              ],
+              "associatedstat": "stats.challenge.mission_uvh_1d",
+              "bispartychallenge": "true",
+              "challengetype": "TraitMission",
+              "traitmissiondef": "trait_mission'TraitMission_UVH_Rankup_1'",
+              "challengetiers": [
+                {
+                  "goalvalue": "1",
+                  "reward": {
+                    "type": "RewardDef",
+                    "value": "rewards'Challenge_Reward_GenericTier_1'"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "challengeparent_torgue": {
+              "challenge": "ChallengeParent_Torgue",
+              "displayname": "Challenges_Torgue, C5D1C7774AF7FC2388A0CB9F3A4A65FD, (Torgue Manufacturer Challenge )",
+              "description": "Challenges_Torgue, C6FA94004641D230D197E9A609AFF83E, (A placehold Challenge for the Torgue Manufacturer)",
+              "uichallengeicontype": "torgue_icon",
+              "playerdamagetags": [
+                {
+                  "torgue": "Torgue"
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "entries": [
+          {
+            "challenge_collect_bp4_echolog_1": {
+              "challenge": "Challenge_Collect_BP4_EchoLog_1",
+              "displayname": "Challenge_Collect_BP4_EchoLogs, 5B418D224AB28F3B531989A85BD831EB, BP4 Echo Log",
+              "description": "Challenge_Collect_BP4_EchoLogs, 7A41531D4CD62755414F0E9A11BD759B, Collect this Echo Log",
+              "showprogressui": "false",
+              "showcompletionui": "false",
+              "associatedstat": "stats.harp_openworld.harp_collectibles.harp_echologs.harp_echolog_1",
+              "bisprogressreplicated": "true",
+              "challengetype": "FactTrigger",
+              "challengetiers": [
+                {
+                  "goalvalue": "1",
+                  "notificationthreshold": "1"
+                }
+              ]
+            }
+          },
+          {
+            "challenge_collect_bp4_echolog_2": {
+              "challenge": "Challenge_Collect_BP4_EchoLog_2",
+              "displayname": "Challenge_Collect_BP4_EchoLogs, 77698F85452437047E5FC39DC3960A1D, BP4 Echo Log",
+              "description": "Challenge_Collect_BP4_EchoLogs, 28DEFA484056106F30110A90BF8B02E4, Collect this Echo Log",
+              "showprogressui": "false",
+              "showcompletionui": "false",
+              "associatedstat": "stats.harp_openworld.harp_collectibles.harp_echologs.harp_echolog_2",
+              "bisprogressreplicated": "true",
+              "challengetype": "FactTrigger",
+              "challengetiers": [
+                {
+                  "goalvalue": "1",
+                  "notificationthreshold": "1"
+                }
+              ]
+            }
+          },
+          {
+            "challenge_collect_bp4_echolog_3": {
+              "challenge": "Challenge_Collect_BP4_EchoLog_3",
+              "displayname": "Challenge_Collect_BP4_EchoLogs, 010D0ECF4F7F75FB0742A9A612ACAF23, BP4 Echo Log",
+              "description": "Challenge_Collect_BP4_EchoLogs, E5D7701446959594910256AAEC30912D, Collect this Echo Log",
+              "showprogressui": "false",
+              "showcompletionui": "false",
+              "associatedstat": "stats.harp_openworld.harp_collectibles.harp_echologs.harp_echolog_3",
+              "bisprogressreplicated": "true",
+              "challengetype": "FactTrigger",
+              "challengetiers": [
+                {
+                  "goalvalue": "1",
+                  "notificationthreshold": "1"
+                }
+              ]
+            }
+          },
+          {
+            "challenge_collect_bp4_echolog_4": {
+              "challenge": "Challenge_Collect_BP4_EchoLog_4",
+              "displayname": "Challenge_Collect_BP4_EchoLogs, 8D3AD7AD4BAAFAC691C4CA92B422FA84, BP4 Echo Log",
+              "description": "Challenge_Collect_BP4_EchoLogs, 1CFEE7C84B8B657D22649BB260BED7FD, Collect this Echo Log",
+              "showprogressui": "false",
+              "showcompletionui": "false",
+              "associatedstat": "stats.harp_openworld.harp_collectibles.harp_echologs.harp_echolog_4",
+              "bisprogressreplicated": "true",
+              "challengetype": "FactTrigger",
+              "challengetiers": [
+                {
+                  "goalvalue": "1",
+                  "notificationthreshold": "1"
+                }
+              ]
+            }
+          },
+          {
+            "challenge_collect_bp4_echolog_5": {
+              "challenge": "Challenge_Collect_BP4_EchoLog_5",
+              "displayname": "Challenge_Collect_BP4_EchoLogs, F80DBED4490746DA19E6BAA4BF10F6AE, BP4 Echo Log",
+              "description": "Challenge_Collect_BP4_EchoLogs, 051C747A44C63ADA0D6EAD9D3F5AAF31, Collect this Echo Log",
+              "showprogressui": "false",
+              "showcompletionui": "false",
+              "associatedstat": "stats.harp_openworld.harp_collectibles.harp_echologs.harp_echolog_5",
+              "bisprogressreplicated": "true",
+              "challengetype": "FactTrigger",
+              "challengetiers": [
+                {
+                  "goalvalue": "1",
+                  "notificationthreshold": "1"
+                }
+              ]
+            }
+          },
+          {
+            "challenge_dlc1_echolog_recordplayer_parent": {
+              "challenge": "Challenge_DLC1_EchoLog_RecordPlayer_Parent",
+              "displayname": "Challenges_DLC1_EchoLogs_RecordPlayers, 2EB1E87C4F5E5B5E7AEAB4BD3A3A0E54, Eldritch Phonographs",
+              "description": "Challenges_DLC1_EchoLogs_RecordPlayers, 6BDB58CC4E3C3E95EBAACEB770508787, Collect all Eldrith Phonographs",
+              "showprogressui": "false",
+              "showcompletionui": "false",
+              "bhideuntilprogressmade": "true",
+              "associatedstat": "stats.cowbell_openworld.cowbell_collectibles.dlc1_echologs_recordplayers",
+              "bispartychallenge": "true",
+              "challengetype": "ParentChallenge",
+              "challengetiers": [
+                {
+                  "goalvalue": "5",
+                  "notificationthreshold": "5"
+                }
+              ]
+            }
+          },
+          {
+            "challenge_echolog_tuba_1": {
+              "challenge": "Challenge_EchoLog_Tuba_1",
+              "displayname": "Challenges_Tuba_EchoLogs, D495C711499D346202FD79AC218A8F72, Echo Log",
+              "description": "Challenges_Tuba_EchoLogs, 150FBD4944F0125C7D63569D5EDE1979, Collect this Echo Log",
+              "showprogressui": "false",
+              "showcompletionui": "false",
+              "associatedstat": "stats.tuba_openworld.tuba_collectibles.tuba_echologs.tuba_echolog_1",
+              "accountwideunlockable": "unlockable'SharedProgress_Tuba.Collectible_EchoLog1'",
+              "challengetype": "FactTrigger",
+              "challengetiers": [
+                {
+                  "goalvalue": "1",
+                  "notificationthreshold": "1",
+                  "reward": {
+                    "type": "Inline",
+                    "value": {
+                      "rewarddata": [
+                        {
+                          "structtype": "Asset'/Script/GbxGame.GbxRewardData_Unlockable'",
+                          "unlockabledef": "unlockable'SharedProgress_Tuba.Collectible_EchoLog1'"
+                        }
+                      ],
+                      "customdata": {
+                        "structtype": "Asset'none'"
+                      },
+                      "bisunique": "false",
+                      "uniquename": "challenge_Challenge_EchoLog_Tuba_1_t0"
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "challenge_echolog_tuba_2": {
+              "challenge": "Challenge_EchoLog_Tuba_2",
+              "displayname": "Challenges_Tuba_EchoLogs, A004E2AD4B5E9AF06F5D34A3ADF74E5B, Echo Log",
+              "description": "Challenges_Tuba_EchoLogs, E36CEEB346EC5B4E4983B0B36252992F, Collect this Echo Log",
+              "showprogressui": "false",
+              "showcompletionui": "false",
+              "associatedstat": "stats.tuba_openworld.tuba_collectibles.tuba_echologs.tuba_echolog_2",
+              "accountwideunlockable": "unlockable'SharedProgress_Tuba.Collectible_EchoLog2'",
+              "challengetype": "FactTrigger",
+              "challengetiers": [
+                {
+                  "goalvalue": "1",
+                  "notificationthreshold": "1",
+                  "reward": {
+                    "type": "Inline",
+                    "value": {
+                      "rewarddata": [
+                        {
+                          "structtype": "Asset'/Script/GbxGame.GbxRewardData_Unlockable'",
+                          "unlockabledef": "unlockable'SharedProgress_Tuba.Collectible_EchoLog2'"
+                        }
+                      ],
+                      "customdata": {
+                        "structtype": "Asset'none'"
+                      },
+                      "bisunique": "false",
+                      "uniquename": "challenge_Challenge_EchoLog_Tuba_2_t0"
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "challenge_echolog_tuba_3": {
+              "challenge": "Challenge_EchoLog_Tuba_3",
+              "displayname": "Challenges_Tuba_EchoLogs, 9160F3EF4CA590AFC4CF47BF3FCE900F, Echo Log",
+              "description": "Challenges_Tuba_EchoLogs, 6ED6E7EF47F99560D14A37BE4BAF22D3, Collect this Echo Log",
+              "showprogressui": "false",
+              "showcompletionui": "false",
+              "associatedstat": "stats.tuba_openworld.tuba_collectibles.tuba_echologs.tuba_echolog_3",
+              "accountwideunlockable": "unlockable'SharedProgress_Tuba.Collectible_EchoLog3'",
+              "challengetype": "FactTrigger",
+              "challengetiers": [
+                {
+                  "goalvalue": "1",
+                  "notificationthreshold": "1",
+                  "reward": {
+                    "type": "Inline",
+                    "value": {
+                      "rewarddata": [
+                        {
+                          "structtype": "Asset'/Script/GbxGame.GbxRewardData_Unlockable'",
+                          "unlockabledef": "unlockable'SharedProgress_Tuba.Collectible_EchoLog3'"
+                        }
+                      ],
+                      "customdata": {
+                        "structtype": "Asset'none'"
+                      },
+                      "bisunique": "false",
+                      "uniquename": "challenge_Challenge_EchoLog_Tuba_3_t0"
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "challenge_echolog_tuba_4": {
+              "challenge": "Challenge_EchoLog_Tuba_4",
+              "displayname": "Challenges_Tuba_EchoLogs, F5B4F043453AD5DB6405B7B36DEED83C, Echo Log",
+              "description": "Challenges_Tuba_EchoLogs, F38BFD524B6FA2386190A2AA8382470D, Collect this Echo Log",
+              "showprogressui": "false",
+              "showcompletionui": "false",
+              "associatedstat": "stats.tuba_openworld.tuba_collectibles.tuba_echologs.tuba_echolog_4",
+              "accountwideunlockable": "unlockable'SharedProgress_Tuba.Collectible_EchoLog4'",
+              "challengetype": "FactTrigger",
+              "challengetiers": [
+                {
+                  "goalvalue": "1",
+                  "notificationthreshold": "1",
+                  "reward": {
+                    "type": "Inline",
+                    "value": {
+                      "rewarddata": [
+                        {
+                          "structtype": "Asset'/Script/GbxGame.GbxRewardData_Unlockable'",
+                          "unlockabledef": "unlockable'SharedProgress_Tuba.Collectible_EchoLog4'"
+                        }
+                      ],
+                      "customdata": {
+                        "structtype": "Asset'none'"
+                      },
+                      "bisunique": "false",
+                      "uniquename": "challenge_Challenge_EchoLog_Tuba_4_t0"
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "challenge_echolog_tuba_5": {
+              "challenge": "Challenge_EchoLog_Tuba_5",
+              "displayname": "Challenges_Tuba_EchoLogs, D18B523A462956A2DC8DB7A9213EE0EF, Echo Log",
+              "description": "Challenges_Tuba_EchoLogs, 206044DC43F2DB25C5C470B0E6DF4A27, Collect this Echo Log",
+              "showprogressui": "false",
+              "showcompletionui": "false",
+              "associatedstat": "stats.tuba_openworld.tuba_collectibles.tuba_echologs.tuba_echolog_5",
+              "accountwideunlockable": "unlockable'SharedProgress_Tuba.Collectible_EchoLog5'",
+              "challengetype": "FactTrigger",
+              "challengetiers": [
+                {
+                  "goalvalue": "1",
+                  "notificationthreshold": "1",
+                  "reward": {
+                    "type": "Inline",
+                    "value": {
+                      "rewarddata": [
+                        {
+                          "structtype": "Asset'/Script/GbxGame.GbxRewardData_Unlockable'",
+                          "unlockabledef": "unlockable'SharedProgress_Tuba.Collectible_EchoLog5'"
+                        }
+                      ],
+                      "customdata": {
+                        "structtype": "Asset'none'"
+                      },
+                      "bisunique": "false",
+                      "uniquename": "challenge_Challenge_EchoLog_Tuba_5_t0"
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "challenge_echolog_tuba_6": {
+              "challenge": "Challenge_EchoLog_Tuba_6",
+              "displayname": "Challenges_Tuba_EchoLogs, D756B72C4DF78994E20EDBB0F21147BC, Echo Log",
+              "description": "Challenges_Tuba_EchoLogs, 61FEFBDB41C2212BC7EEE894CCFA412C, Collect this Echo Log",
+              "showprogressui": "false",
+              "showcompletionui": "false",
+              "associatedstat": "stats.tuba_openworld.tuba_collectibles.tuba_echologs.tuba_echolog_6",
+              "accountwideunlockable": "unlockable'SharedProgress_Tuba.Collectible_EchoLog6'",
+              "challengetype": "FactTrigger",
+              "challengetiers": [
+                {
+                  "goalvalue": "1",
+                  "notificationthreshold": "1",
+                  "reward": {
+                    "type": "Inline",
+                    "value": {
+                      "rewarddata": [
+                        {
+                          "structtype": "Asset'/Script/GbxGame.GbxRewardData_Unlockable'",
+                          "unlockabledef": "unlockable'SharedProgress_Tuba.Collectible_EchoLog6'"
+                        }
+                      ],
+                      "customdata": {
+                        "structtype": "Asset'none'"
+                      },
+                      "bisunique": "false",
+                      "uniquename": "challenge_Challenge_EchoLog_Tuba_6_t0"
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "challenge_echolog_tuba_7": {
+              "challenge": "Challenge_EchoLog_Tuba_7",
+              "displayname": "Challenges_Tuba_EchoLogs, F90482364531A42B38DA47B601D3566A, Echo Log",
+              "description": "Challenges_Tuba_EchoLogs, AF8B349F4C94047D2D57D9ADA8194482, Collect this Echo Log",
+              "showprogressui": "false",
+              "showcompletionui": "false",
+              "associatedstat": "stats.tuba_openworld.tuba_collectibles.tuba_echologs.tuba_echolog_7",
+              "accountwideunlockable": "unlockable'SharedProgress_Tuba.Collectible_EchoLog7'",
+              "challengetype": "FactTrigger",
+              "challengetiers": [
+                {
+                  "goalvalue": "1",
+                  "notificationthreshold": "1",
+                  "reward": {
+                    "type": "Inline",
+                    "value": {
+                      "rewarddata": [
+                        {
+                          "structtype": "Asset'/Script/GbxGame.GbxRewardData_Unlockable'",
+                          "unlockabledef": "unlockable'SharedProgress_Tuba.Collectible_EchoLog7'"
+                        }
+                      ],
+                      "customdata": {
+                        "structtype": "Asset'none'"
+                      },
+                      "bisunique": "false",
+                      "uniquename": "challenge_Challenge_EchoLog_Tuba_7_t0"
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "challenge_echolog_viola_1": {
+              "challenge": "Challenge_EchoLog_Viola_1",
+              "displayname": "Challenges_Viola_EchoLogs, D495C711499D346202FD79AC218A8F72, Echo Log",
+              "description": "Challenges_Viola_EchoLogs, 150FBD4944F0125C7D63569D5EDE1979, Collect this Echo Log",
+              "showprogressui": "false",
+              "showcompletionui": "false",
+              "associatedstat": "stats.viola_openworld.viola_collectibles.viola_echologs.viola_echolog_1",
+              "bisaccountwideunlockablesharedprogression": "false",
+              "challengetype": "FactTrigger",
+              "challengetiers": [
+                {
+                  "goalvalue": "1",
+                  "notificationthreshold": "1"
+                }
+              ]
+            }
+          },
+          {
+            "challenge_echolog_viola_2": {
+              "challenge": "Challenge_EchoLog_Viola_2",
+              "displayname": "Challenges_Viola_EchoLogs, A004E2AD4B5E9AF06F5D34A3ADF74E5B, Echo Log",
+              "description": "Challenges_Viola_EchoLogs, E36CEEB346EC5B4E4983B0B36252992F, Collect this Echo Log",
+              "showprogressui": "false",
+              "showcompletionui": "false",
+              "associatedstat": "stats.viola_openworld.viola_collectibles.viola_echologs.viola_echolog_2",
+              "bisaccountwideunlockablesharedprogression": "false",
+              "challengetype": "FactTrigger",
+              "challengetiers": [
+                {
+                  "goalvalue": "1",
+                  "notificationthreshold": "1"
+                }
+              ]
+            }
+          },
+          {
+            "challenge_echolog_viola_3": {
+              "challenge": "Challenge_EchoLog_Viola_3",
+              "displayname": "Challenges_Viola_EchoLogs, 9160F3EF4CA590AFC4CF47BF3FCE900F, Echo Log",
+              "description": "Challenges_Viola_EchoLogs, 6ED6E7EF47F99560D14A37BE4BAF22D3, Collect this Echo Log",
+              "showprogressui": "false",
+              "showcompletionui": "false",
+              "associatedstat": "stats.viola_openworld.viola_collectibles.viola_echologs.viola_echolog_3",
+              "bisaccountwideunlockablesharedprogression": "false",
+              "challengetype": "FactTrigger",
+              "challengetiers": [
+                {
+                  "goalvalue": "1",
+                  "notificationthreshold": "1"
+                }
+              ]
+            }
+          },
+          {
+            "challenge_echolog_viola_4": {
+              "challenge": "Challenge_EchoLog_Viola_4",
+              "displayname": "Challenges_Viola_EchoLogs, 0CA9977D4CEF26493A1F7BBC46549044, Echo Log",
+              "description": "Challenges_Viola_EchoLogs, 7C4020E442AC6350E675EBAD5BC6AFFB, Collect this Echo Log",
+              "showprogressui": "false",
+              "showcompletionui": "false",
+              "associatedstat": "stats.viola_openworld.viola_collectibles.viola_echologs.viola_echolog_4",
+              "bisaccountwideunlockablesharedprogression": "false",
+              "challengetype": "FactTrigger",
+              "challengetiers": [
+                {
+                  "goalvalue": "1",
+                  "notificationthreshold": "1"
+                }
+              ]
+            }
+          },
+          {
+            "challenge_mandolin_tutorial_cos_badassswitch": {
+              "challenge": "Challenge_Mandolin_Tutorial_CoS_BadassSwitch",
+              "showprogressui": "false",
+              "showcompletionui": "false",
+              "associatedstat": "stats.tutorial.misc_bp3_circleofslaughter_badassswitch",
+              "challengetype": "FactTrigger",
+              "challengetiers": [
+                {
+                  "goalvalue": "1",
+                  "notificationthreshold": "1"
+                }
+              ]
+            }
+          },
+          {
+            "challenges_achievements_35_cello_enemies_defeat": {
+              "challenge": "Challenges_Achievements_35_Cello_enemies_defeat",
+              "displayname": "Challenges_Achievements, A6CD31F048C783826BFE0FAC8744DF87, Ordon't You Glad I Didn't Say Eridium",
+              "description": "Challenges_Achievements, 42F22A1D49B322907264B58C91D1346B, Kill 50 Ordonite Enemies.",
+              "showprogressui": "false",
+              "showcompletionui": "false",
+              "associatedstat": "stats.cello_achievements.35_cello_enemies_defeat",
+              "achievementdef": "achievement'ID_Achievement_35_Cello_enemies_defeat'",
+              "challengetype": "Enemy_Kill",
+              "damagetargettags": {
+                "gameplaytags": [
+                  {
+                    "tagname": "Audio.Enemies.Shared.Cello.OrdiniteInfused"
+                  }
+                ]
+              },
+              "busecustommissionlist": "true",
+              "missiondefs": [
+                "mission'Mission_WorldBossEvent_Default'",
+                "mission'Mission_WorldBossEvent_Default2'",
+                "mission'Mission_WorldBossEvent_Default3'"
+              ],
+              "challengetiers": [
+                {
+                  "goalvalue": "50",
+                  "notificationthreshold": "50"
+                }
+              ]
+            }
+          },
+          {
+            "challenges_achievements_36_cello_boss_cat": {
+              "challenge": "Challenges_Achievements_36_Cello_boss_cat",
+              "showprogressui": "false",
+              "showcompletionui": "false",
+              "associatedstat": "stats.cello_achievements.36_cello_boss_defeat.cat",
+              "bispartychallenge": "true",
+              "challengetype": "Enemy_Kill",
+              "damagetargetcharacterdef": "gbxactor'Char_Cat_OrdiniteInfused_MiniBoss'",
+              "challengetiers": [
+                {
+                  "goalvalue": "1",
+                  "notificationthreshold": "1"
+                }
+              ]
+            }
+          },
+          {
+            "challenges_achievements_36_cello_boss_defeat": {
+              "challenge": "Challenges_Achievements_36_Cello_boss_defeat",
+              "displayname": "Challenges_Achievements, 116C64B64D143862B6F267B57028658B, Fist of the Mountain",
+              "description": "Challenges_Achievements, 4BB308A747FCA184F747D2AC00CFFA1C, Defeat all bosses in The Demon's Domain.",
+              "showprogressui": "false",
+              "showcompletionui": "false",
+              "uichallengeicontype": "world_icon",
+              "associatedstat": "stats.cello_achievements.36_cello_boss_defeat",
+              "achievementdef": "achievement'ID_Achievement_36_Cello_boss_defeat'",
+              "challengetype": "ParentChallenge",
+              "challengetiers": [
+                {
+                  "goalvalue": "5",
+                  "notificationthreshold": "5"
+                }
+              ]
+            }
+          },
+          {
+            "challenges_achievements_36_cello_boss_meathead": {
+              "challenge": "Challenges_Achievements_36_Cello_boss_meathead",
+              "showprogressui": "false",
+              "showcompletionui": "false",
+              "associatedstat": "stats.cello_achievements.36_cello_boss_defeat.meathead",
+              "bispartychallenge": "true",
+              "challengetype": "Enemy_Kill",
+              "damagetargetcharacterdef": "gbxactor'Char_Meathead_OrdiniteInfused_MiniBoss'",
+              "challengetiers": [
+                {
+                  "goalvalue": "1",
+                  "notificationthreshold": "1"
+                }
+              ]
+            }
+          },
+          {
+            "challenges_achievements_36_cello_boss_pangolin": {
+              "challenge": "Challenges_Achievements_36_Cello_boss_pangolin",
+              "showprogressui": "false",
+              "showcompletionui": "false",
+              "associatedstat": "stats.cello_achievements.36_cello_boss_defeat.pangolin",
+              "bispartychallenge": "true",
+              "challengetype": "Enemy_Kill",
+              "damagetargetcharacterdef": "gbxactor'Char_Pangolin_BountyPack2_Boss_OrdiniteInfused'",
+              "challengetiers": [
+                {
+                  "goalvalue": "1",
+                  "notificationthreshold": "1"
+                }
+              ]
+            }
+          },
+          {
+            "challenges_achievements_36_cello_boss_phalanx": {
+              "challenge": "Challenges_Achievements_36_Cello_boss_phalanx",
+              "showprogressui": "false",
+              "showcompletionui": "false",
+              "associatedstat": "stats.cello_achievements.36_cello_boss_defeat.phalanx",
+              "bispartychallenge": "true",
+              "challengetype": "Enemy_Kill",
+              "damagetargetcharacterdef": "gbxactor'Char_Phalanx_OrdiniteInfused_MiniBoss'",
+              "challengetiers": [
+                {
+                  "goalvalue": "1",
+                  "notificationthreshold": "1"
+                }
+              ]
+            }
+          },
+          {
+            "challenges_achievements_36_cello_boss_splice": {
+              "challenge": "Challenges_Achievements_36_Cello_boss_splice",
+              "showprogressui": "false",
+              "showcompletionui": "false",
+              "associatedstat": "stats.cello_achievements.36_cello_boss_defeat.splice",
+              "bispartychallenge": "true",
+              "challengetype": "Enemy_Kill",
+              "damagetargetcharacterdef": "gbxactor'Char_Splice_OrdiniteInfused_MiniBoss'",
+              "challengetiers": [
+                {
+                  "goalvalue": "1",
+                  "notificationthreshold": "1"
+                }
+              ]
+            }
+          },
+          {
+            "challenges_achievements_46_mandolin_coin_chest": {
+              "challenge": "Challenges_Achievements_46_Mandolin_coin_chest",
+              "displayname": "Challenges_Achievements, A8726DE9468645CEE84A90AF7448CD50, Pay to Win",
+              "description": "Challenges_Achievements, 43F35F2E46747EB6C993A8A46DCAFAEE, Use coins to open a chest.",
+              "showprogressui": "false",
+              "showcompletionui": "false",
+              "associatedstat": "stats.mandolin_achievements.46_mandolin_coin_chest",
+              "bispartychallenge": "true",
+              "achievementdef": "achievement'ID_Achievement_46_Mandolin_coin_chest'",
+              "challengetype": "BlueprintDriven",
+              "challengetiers": [
+                {
+                  "goalvalue": "1",
+                  "notificationthreshold": "1"
+                }
+              ]
+            }
+          },
+          {
+            "challenges_achievements_47_mandolin_boss_cleaner": {
+              "challenge": "Challenges_Achievements_47_Mandolin_boss_cleaner",
+              "showprogressui": "false",
+              "showcompletionui": "false",
+              "associatedstat": "stats.mandolin_achievements.47_mandolin_boss_defeat.cleaner",
+              "bispartychallenge": "true",
+              "challengetype": "Enemy_Kill",
+              "damagetargetcharacterdef": "gbxactor'Char_Striker_Cleaner_BossMini'",
+              "challengetiers": [
+                {
+                  "goalvalue": "1",
+                  "notificationthreshold": "1"
+                }
+              ]
+            }
+          },
+          {
+            "challenges_achievements_47_mandolin_boss_defeat": {
+              "challenge": "Challenges_Achievements_47_Mandolin_boss_defeat",
+              "displayname": "Challenges_Achievements, 352485734D8E044339FF7496CC2C9E47, AI Psychosis",
+              "description": "Challenges_Achievements, 9D2E3733474D350CE38AA4A07EF30A7A, Defeat all bosses in PRIVATE DICK",
+              "showprogressui": "false",
+              "showcompletionui": "false",
+              "associatedstat": "stats.mandolin_achievements.47_mandolin_boss_defeat",
+              "achievementdef": "achievement'ID_Achievement_47_Mandolin_boss_defeat'",
+              "challengetype": "ParentChallenge",
+              "challengetiers": [
+                {
+                  "goalvalue": "3",
+                  "notificationthreshold": "3"
+                }
+              ]
+            }
+          },
+          {
+            "challenges_achievements_47_mandolin_boss_fixer": {
+              "challenge": "Challenges_Achievements_47_Mandolin_boss_fixer",
+              "showprogressui": "false",
+              "showcompletionui": "false",
+              "associatedstat": "stats.mandolin_achievements.47_mandolin_boss_defeat.fixer",
+              "bispartychallenge": "true",
+              "challengetype": "Enemy_Kill",
+              "damagetargetcharacterdef": "gbxactor'Char_Striker_Fixer_BossMini'",
+              "challengetiers": [
+                {
+                  "goalvalue": "1",
+                  "notificationthreshold": "1"
+                }
+              ]
+            }
+          },
+          {
+            "challenges_achievements_47_mandolin_boss_main": {
+              "challenge": "Challenges_Achievements_47_Mandolin_boss_main",
+              "showprogressui": "false",
+              "showcompletionui": "false",
+              "associatedstat": "stats.mandolin_achievements.47_mandolin_boss_defeat.main",
+              "bispartychallenge": "true",
+              "challengetype": "FactTrigger",
+              "challengetiers": [
+                {
+                  "goalvalue": "1",
+                  "notificationthreshold": "1"
+                }
+              ]
+            }
+          },
+          {
+            "challenges_achievements_48_mandolin_missions_main": {
+              "challenge": "Challenges_Achievements_48_Mandolin_missions_main",
+              "displayname": "Challenges_Achievements, 7B48FCB548AC046C7C00F486118A0B53, Bane of Zane",
+              "description": "Challenges_Achievements, 7F2EDC4949373ECDFE93B9AC5F3428C1, Complete mission \"A Zane to Kill For\".",
+              "showprogressui": "false",
+              "showcompletionui": "false",
+              "associatedstat": "stats.mandolin_achievements.48_mandolin_missions_main",
+              "bispartychallenge": "true",
+              "achievementdef": "achievement'ID_Achievement_48_Mandolin_missions_main'",
+              "challengetype": "Mission",
+              "busecustommissionlist": "true",
+              "missiondefs": [
+                "mission'Mission_DLC_Mandolin'"
+              ],
+              "challengetiers": [
+                {
+                  "goalvalue": "1",
+                  "notificationthreshold": "1",
+                  "reward": {
+                    "type": "RewardDef",
+                    "value": "rewards'Challenge_Reward_GenericTier_5'"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "challenges_achievements_49_harp_responses_all": {
+              "challenge": "Challenges_Achievements_49_Harp_responses_all",
+              "displayname": "Challenges_Achievements, 0A29667B4BBEE1BD8FE2919567877C3C, The Full Flock ",
+              "description": "Challenges_Achievements, 4692B2C246E10A2C875D7694E55AF3CF, Select all responses in mission \"Murders & Acquisitions\".",
+              "showprogressui": "false",
+              "showcompletionui": "false",
+              "associatedstat": "stats.harp_achievements.49_harp_responses_all",
+              "bisaccountwideunlockablesharedprogression": "false",
+              "achievementdef": "achievement'ID_Achievement_49_Harp_responses_all'",
+              "challengetype": "ParentChallenge",
+              "challengetiers": [
+                {
+                  "goalvalue": "6",
+                  "notificationthreshold": "6"
+                }
+              ]
+            }
+          },
+          {
+            "challenges_achievements_50_harp_boss_betamaxxx": {
+              "challenge": "Challenges_Achievements_50_Harp_boss_betamaxxx",
+              "showprogressui": "false",
+              "showcompletionui": "false",
+              "associatedstat": "stats.harp_achievements.50_harp_boss_defeat.betamaxxx",
+              "bispartychallenge": "true",
+              "challengetype": "Enemy_Kill",
+              "damagetargettags": {
+                "gameplaytags": [
+                  {
+                    "tagname": "Bosses.Harp.BlasphemerBoss"
+                  }
+                ]
+              },
+              "challengetiers": [
+                {
+                  "goalvalue": "1",
+                  "notificationthreshold": "1"
+                }
+              ]
+            }
+          },
+          {
+            "challenges_achievements_50_harp_boss_defeat": {
+              "challenge": "Challenges_Achievements_50_Harp_boss_defeat",
+              "displayname": "Challenges_Achievements, 0C53CE7B4CD9DC9A563119A4B863BD33, Detoxed and Ready to Rock",
+              "description": "Challenges_Achievements, DB9ABE4C43D5BF3A804FBB874228D6E3, Defeat all bosses in The Toxic Scowl.",
+              "showprogressui": "false",
+              "showcompletionui": "false",
+              "associatedstat": "stats.harp_achievements.50_harp_boss_defeat",
+              "bisaccountwideunlockablesharedprogression": "false",
+              "achievementdef": "achievement'ID_Achievement_50_Harp_boss_defeat'",
+              "challengetype": "ParentChallenge",
+              "challengetiers": [
+                {
+                  "goalvalue": "4",
+                  "notificationthreshold": "4"
+                }
+              ]
+            }
+          },
+          {
+            "challenges_achievements_50_harp_boss_infamousdave": {
+              "challenge": "Challenges_Achievements_50_Harp_boss_infamousdave",
+              "showprogressui": "false",
+              "showcompletionui": "false",
+              "associatedstat": "stats.harp_achievements.50_harp_boss_defeat.infamousdave",
+              "bispartychallenge": "true",
+              "bisprogressreplicated": "true",
+              "bisaccountwideunlockablesharedprogression": "false",
+              "challengetype": "Enemy_Kill",
+              "damagetargettags": {
+                "gameplaytags": [
+                  {
+                    "tagname": "Bosses.Harp.InfamousDave"
+                  }
+                ]
+              },
+              "challengetiers": [
+                {
+                  "goalvalue": "1",
+                  "notificationthreshold": "1"
+                }
+              ]
+            }
+          },
+          {
+            "challenges_achievements_50_harp_boss_maxxxsupreme": {
+              "challenge": "Challenges_Achievements_50_Harp_boss_maxxxsupreme",
+              "showprogressui": "false",
+              "showcompletionui": "false",
+              "associatedstat": "stats.harp_achievements.50_harp_boss_defeat.maxxxsupreme",
+              "bispartychallenge": "true",
+              "bisprogressreplicated": "true",
+              "bisaccountwideunlockablesharedprogression": "false",
+              "challengetype": "Enemy_Kill",
+              "damagetargettags": {
+                "gameplaytags": [
+                  {
+                    "tagname": "Bosses.Harp.MaxxxSupreme"
+                  }
+                ]
+              },
+              "challengetiers": [
+                {
+                  "goalvalue": "1",
+                  "notificationthreshold": "1"
+                }
+              ]
+            }
+          },
+          {
+            "challenges_achievements_50_harp_boss_skankeyes": {
+              "challenge": "Challenges_Achievements_50_Harp_boss_skankeyes",
+              "showprogressui": "false",
+              "showcompletionui": "false",
+              "associatedstat": "stats.harp_achievements.50_harp_boss_defeat.skankeyes",
+              "bispartychallenge": "true",
+              "bisprogressreplicated": "true",
+              "bisaccountwideunlockablesharedprogression": "false",
+              "challengetype": "Enemy_Kill",
+              "damagetargettags": {
+                "gameplaytags": [
+                  {
+                    "tagname": "Bosses.Harp.SkankEyes"
+                  }
+                ]
+              },
+              "challengetiers": [
+                {
+                  "goalvalue": "1",
+                  "notificationthreshold": "1"
+                }
+              ]
+            }
+          },
+          {
+            "challenges_achievements_52_viola_treasure_discover": {
+              "challenge": "Challenges_Achievements_52_Viola_treasure_discover",
+              "displayname": "Challenges_Achievements, BFB5BAE74D3DBB42E71251A98370395E, Thief in the Night",
+              "description": "Challenges_Achievements, C6E046834D018E54C16FAF975CF72235, Open the locked treasure room in Nuada Cove.",
+              "showprogressui": "false",
+              "showcompletionui": "false",
+              "associatedstat": "stats.viola_achievements.52_viola_discover_treasure",
+              "bispartychallenge": "true",
+              "bisprogressreplicated": "true",
+              "achievementdef": "achievement'ID_Achievement_52_Viola_discover_treasure'",
+              "challengetype": "BlueprintDriven",
+              "challengetiers": [
+                {
+                  "goalvalue": "1",
+                  "notificationthreshold": "1"
+                }
+              ]
+            }
+          },
+          {
+            "challenges_achievements_53_viola_boss_defeat": {
+              "challenge": "Challenges_Achievements_53_Viola_boss_defeat",
+              "displayname": "Challenges_Achievements, 76343AE74F9849539E07E5868B3F0686, Came Back Wrong",
+              "description": "Challenges_Achievements, 161AF6F74E0E60F673E379B1C72EB5E4, Defeat all bosses in Nuada Cove and Dark Side of Elpis.",
+              "showprogressui": "false",
+              "showcompletionui": "false",
+              "associatedstat": "stats.viola_achievements.53_viola_boss_defeat",
+              "achievementdef": "achievement'ID_Achievement_53_Viola_boss_defeat'",
+              "challengetype": "ParentChallenge",
+              "challengetiers": [
+                {
+                  "goalvalue": "3",
+                  "notificationthreshold": "3"
+                }
+              ]
+            }
+          },
+          {
+            "challenges_achievements_53_viola_boss_hybridthresher": {
+              "challenge": "Challenges_Achievements_53_Viola_boss_hybridthresher",
+              "showprogressui": "false",
+              "showcompletionui": "false",
+              "associatedstat": "stats.viola_achievements.53_viola_boss_defeat.hybridthresher",
+              "bispartychallenge": "true",
+              "challengetype": "Enemy_Kill",
+              "damagetargetcharacterdef": "gbxactor'Char_ThresherHybridThresher_Worm'",
+              "challengetiers": [
+                {
+                  "goalvalue": "1",
+                  "notificationthreshold": "1"
+                }
+              ]
+            }
+          },
+          {
+            "challenges_achievements_53_viola_boss_testzero": {
+              "challenge": "Challenges_Achievements_53_Viola_boss_testzero",
+              "showprogressui": "false",
+              "showcompletionui": "false",
+              "associatedstat": "stats.viola_achievements.53_viola_boss_defeat.testzero",
+              "bispartychallenge": "true",
+              "challengetype": "Enemy_Kill",
+              "damagetargetcharacterdef": "gbxactor'Char_SoldierTestZeroMain'",
+              "challengetiers": [
+                {
+                  "goalvalue": "1",
+                  "notificationthreshold": "1"
+                }
+              ]
+            }
+          },
+          {
+            "challenges_achievements_53_viola_boss_viledave": {
+              "challenge": "Challenges_Achievements_53_Viola_boss_viledave",
+              "showprogressui": "false",
+              "showcompletionui": "false",
+              "associatedstat": "stats.viola_achievements.53_viola_boss_defeat.viledave",
+              "bispartychallenge": "true",
+              "challengetype": "Enemy_Kill",
+              "damagetargetcharacterdef": "gbxactor'Char_Leader_VileDave'",
+              "challengetiers": [
+                {
+                  "goalvalue": "1",
+                  "notificationthreshold": "1"
+                }
+              ]
+            }
+          },
+          {
+            "challenges_achievements_54_viola_missions_main": {
+              "challenge": "Challenges_Achievements_54_Viola_missions_main",
+              "displayname": "Challenges_Achievements, 55F5C64C49AECD0A7B91DD8855811E01, Reach Exceeded",
+              "description": "Challenges_Achievements, E2FD18A845229E4377DEFC87CF49A283, Complete mission \"The Rift Crisis\".",
+              "showprogressui": "false",
+              "showcompletionui": "false",
+              "bhideuntilprogressmade": "true",
+              "associatedstat": "stats.viola_achievements.54_viola_missions_main",
+              "bispartychallenge": "true",
+              "bisprogressreplicated": "true",
+              "achievementdef": "achievement'ID_Achievement_54_Viola_missions_main'",
+              "challengetype": "Mission",
+              "busecustommissionlist": "true",
+              "missiondefs": [
+                "mission'Mission_DLC_Viola'"
+              ],
+              "challengetiers": [
+                {
+                  "goalvalue": "1",
+                  "notificationthreshold": "1",
+                  "reward": {
+                    "type": "RewardDef",
+                    "value": "rewards'Challenge_Reward_GenericTier_5'"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "vc1_killbadassenemies30": {
+              "challenge": "VC1_KillBadassEnemies30",
+              "celebratorynotification": "display_data'daily_challenge_complete_notification_vc1'",
+              "associatedstat": "stats.daily_vaultcardchallenges_1.kill_daily.enemies",
+              "parent": "challenge'VCChallenge_KillEnemies30'"
+            }
+          },
+          {
+            "vc1_killenemies20": {
+              "challenge": "VC1_KillEnemies20",
+              "celebratorynotification": "display_data'daily_challenge_complete_notification_vc1'",
+              "associatedstat": "stats.daily_vaultcardchallenges_1.kill_daily.enemies",
+              "parent": "challenge'VCChallenge_KillEnemies20'"
+            }
+          },
+          {
+            "vc1_killenemies25": {
+              "challenge": "VC1_KillEnemies25",
+              "celebratorynotification": "display_data'daily_challenge_complete_notification_vc1'",
+              "associatedstat": "stats.daily_vaultcardchallenges_1.kill_daily.enemies",
+              "parent": "challenge'VCChallenge_KillEnemies25'"
+            }
+          },
+          {
+            "vc2_killbadassenemies30": {
+              "challenge": "VC2_KillBadassEnemies30",
+              "uichallengeicontype": "vc2",
+              "rewardcurrencytype": "vc2",
+              "celebratorynotification": "display_data'daily_challenge_complete_notification_vc2'",
+              "associatedstat": "stats.daily_bp2_vc.kill_daily_bp2.enemies_bp2",
+              "parent": "challenge'VCChallenge_KillEnemies30'"
+            }
+          },
+          {
+            "vc2_killenemies20": {
+              "challenge": "VC2_KillEnemies20",
+              "uichallengeicontype": "vc2",
+              "rewardcurrencytype": "vc2",
+              "celebratorynotification": "display_data'daily_challenge_complete_notification_vc2'",
+              "associatedstat": "stats.daily_bp2_vc.kill_daily_bp2.enemies_bp2",
+              "parent": "challenge'VCChallenge_KillEnemies20'"
+            }
+          },
+          {
+            "vc2_killenemies25": {
+              "challenge": "VC2_KillEnemies25",
+              "uichallengeicontype": "vc2",
+              "rewardcurrencytype": "vc2",
+              "celebratorynotification": "display_data'daily_challenge_complete_notification_vc2'",
+              "associatedstat": "stats.daily_bp2_vc.kill_daily_bp2.enemies_bp2",
+              "parent": "challenge'VCChallenge_KillEnemies25'"
+            }
+          },
+          {
+            "vc3_killbadassenemies30": {
+              "challenge": "VC3_KillBadassEnemies30",
+              "uichallengeicontype": "vc3",
+              "rewardcurrencytype": "vc3",
+              "celebratorynotification": "display_data'daily_challenge_complete_notification_vc3'",
+              "associatedstat": "stats.daily_bp3_vc.kill_daily_bp3.enemies_bp3",
+              "parent": "challenge'VCChallenge_KillEnemies30'"
+            }
+          },
+          {
+            "vc3_killenemies20": {
+              "challenge": "VC3_KillEnemies20",
+              "uichallengeicontype": "vc3",
+              "rewardcurrencytype": "vc3",
+              "celebratorynotification": "display_data'daily_challenge_complete_notification_vc3'",
+              "associatedstat": "stats.daily_bp3_vc.kill_daily_bp3.enemies_bp3",
+              "parent": "challenge'VCChallenge_KillEnemies20'"
+            }
+          },
+          {
+            "vc3_killenemies25": {
+              "challenge": "VC3_KillEnemies25",
+              "uichallengeicontype": "vc3",
+              "rewardcurrencytype": "vc3",
+              "celebratorynotification": "display_data'daily_challenge_complete_notification_vc3'",
+              "associatedstat": "stats.daily_bp3_vc.kill_daily_bp3.enemies_bp3",
+              "parent": "challenge'VCChallenge_KillEnemies25'"
+            }
+          },
+          {
+            "vc4_killbadassenemies30": {
+              "challenge": "VC4_KillBadassEnemies30",
+              "uichallengeicontype": "vc4",
+              "rewardcurrencytype": "vc4",
+              "celebratorynotification": "display_data'daily_challenge_complete_notification_vc4'",
+              "associatedstat": "stats.daily_bp4_vc.kill_daily_bp4.enemies_bp4",
+              "parent": "challenge'VCChallenge_KillEnemies30'"
+            }
+          },
+          {
+            "vc4_killenemies20": {
+              "challenge": "VC4_KillEnemies20",
+              "uichallengeicontype": "vc4",
+              "rewardcurrencytype": "vc4",
+              "celebratorynotification": "display_data'daily_challenge_complete_notification_vc4'",
+              "associatedstat": "stats.daily_bp4_vc.kill_daily_bp4.enemies_bp4",
+              "parent": "challenge'VCChallenge_KillEnemies20'"
+            }
+          },
+          {
+            "vc4_killenemies25": {
+              "challenge": "VC4_KillEnemies25",
+              "uichallengeicontype": "vc4",
+              "rewardcurrencytype": "vc4",
+              "celebratorynotification": "display_data'daily_challenge_complete_notification_vc4'",
+              "associatedstat": "stats.daily_bp4_vc.kill_daily_bp4.enemies_bp4",
+              "parent": "challenge'VCChallenge_KillEnemies25'"
+            }
+          },
+          {
+            "vc5_killbadassenemies30": {
+              "challenge": "vc5_KillBadassEnemies30",
+              "uichallengeicontype": "vc5",
+              "rewardcurrencytype": "vc5",
+              "celebratorynotification": "display_data'daily_challenge_complete_notification_vc5'",
+              "associatedstat": "stats.daily_bp5_vc.kill_daily_bp5.enemies_bp5",
+              "parent": "challenge'VCChallenge_KillEnemies30'"
+            }
+          },
+          {
+            "vc5_killenemies20": {
+              "challenge": "vc5_KillEnemies20",
+              "uichallengeicontype": "vc5",
+              "rewardcurrencytype": "vc5",
+              "celebratorynotification": "display_data'daily_challenge_complete_notification_vc5'",
+              "associatedstat": "stats.daily_bp5_vc.kill_daily_bp5.enemies_bp5",
+              "parent": "challenge'VCChallenge_KillEnemies20'"
+            }
+          },
+          {
+            "vc5_killenemies25": {
+              "challenge": "vc5_KillEnemies25",
+              "uichallengeicontype": "vc5",
+              "rewardcurrencytype": "vc5",
+              "celebratorynotification": "display_data'daily_challenge_complete_notification_vc5'",
+              "associatedstat": "stats.daily_bp5_vc.kill_daily_bp5.enemies_bp5",
+              "parent": "challenge'VCChallenge_KillEnemies25'"
+            }
+          },
+          {
+            "vcchallenge_killenemies20": {
+              "challenge": "VCChallenge_KillEnemies20",
+              "displayname": "Challenges_Daily, 8E6113CA433B948AF94FB080CB8B2058, Daily Challenge",
+              "description": "Challenges_Daily, E924E6E34C0CCAAA82EA8494DFF4952C, Kill 20 enemies",
+              "uichallengeicontype": "vc1",
+              "rewardtext": "Challenges_Daily, C322820A4E026B26F4E3A491E9EFF3D0, Acquired",
+              "rewardcurrencyamount": "1",
+              "rewardcurrencytype": "vc1",
+              "prerequisitechallenges": [
+                "challenge'vault_card_dummy_prereq_challenge'"
+              ],
+              "bunlockedfromstart": "false",
+              "challengetype": "Enemy_Kill",
+              "damagetargettags": {
+                "gameplaytags": [
+                  {
+                    "tagname": "GbxActor.Character.EnemyType"
+                  }
+                ]
+              },
+              "challengetiers": [
+                {
+                  "goalvalue": "20",
+                  "notificationthreshold": "5",
+                  "reward": {
+                    "type": "RewardDef",
+                    "value": "rewards'ChallengeReward_Daily_Small'"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "vcchallenge_killenemies25": {
+              "challenge": "VCChallenge_KillEnemies25",
+              "displayname": "Challenges_Daily, 93FE2CEB456939E2435528A8AC45FF8F, Daily Challenge",
+              "description": "Challenges_Daily, E0B89B614BB317890CF962B90DD6FC4C, Kill 25 enemies",
+              "uichallengeicontype": "vc1",
+              "rewardtext": "Challenges_Daily, 1DC3381E463A15AEB0E7338924AC0D3B, Acquired",
+              "rewardcurrencyamount": "1",
+              "rewardcurrencytype": "vc1",
+              "prerequisitechallenges": [
+                "challenge'vault_card_dummy_prereq_challenge'"
+              ],
+              "bunlockedfromstart": "false",
+              "challengetype": "Enemy_Kill",
+              "damagetargettags": {
+                "gameplaytags": [
+                  {
+                    "tagname": "GbxActor.Character.EnemyType"
+                  }
+                ]
+              },
+              "challengetiers": [
+                {
+                  "goalvalue": "25",
+                  "notificationthreshold": "5",
+                  "reward": {
+                    "type": "RewardDef",
+                    "value": "rewards'ChallengeReward_Daily_Medium'"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "vcchallenge_killenemies30": {
+              "challenge": "VCChallenge_KillEnemies30",
+              "displayname": "Challenges_Daily, 5D821C6C48FEF63CFBF8BDA727D8C18B, Daily Challenge",
+              "description": "Challenges_Daily, CEB5B9B648984A9176A1B29922A3D033, Kill 30 enemies",
+              "uichallengeicontype": "vc1",
+              "rewardtext": "Challenges_Daily, ED83EDE3478CAF5A411ADBA2B248A319, Acquired",
+              "rewardcurrencyamount": "1",
+              "rewardcurrencytype": "vc1",
+              "prerequisitechallenges": [
+                "challenge'vault_card_dummy_prereq_challenge'"
+              ],
+              "bunlockedfromstart": "false",
+              "challengetype": "Enemy_Kill",
+              "damagetargettags": {
+                "gameplaytags": [
+                  {
+                    "tagname": "GbxActor.Character.EnemyType"
+                  }
+                ]
+              },
+              "challengetiers": [
+                {
+                  "goalvalue": "30",
+                  "notificationthreshold": "5",
+                  "reward": {
+                    "type": "RewardDef",
+                    "value": "rewards'ChallengeReward_Daily_Large'"
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "entries": [
+          {
+            "challenge_collect_echo_log_dogleg_1": {
+              "challenge": "Challenge_Collect_Echo_Log_Dogleg_1",
+              "displayname": "Challenges_EchoLogs_General, 32C9A8824164F0D70DED7584C8452DE7, Echo Log ",
+              "description": "Challenges_EchoLogs_General, F672E3F44E3E051468CBFEA1ACF2F233, Collect this Echo Log",
+              "showprogressui": "false",
+              "showcompletionui": "false",
+              "associatedstat": "stats.cello_openworld.cello_collectibles.dlc2_echologs.dlc2_echolog_01",
+              "bisprogressreplicated": "true",
+              "accountwideunlockable": "unlockable'SharedProgress_Cello.Collectible_EchoLog1'",
+              "challengetype": "FactTrigger",
+              "challengetiers": [
+                {
+                  "goalvalue": "1",
+                  "notificationthreshold": "1",
+                  "reward": {
+                    "type": "Inline",
+                    "value": {
+                      "rewarddata": [
+                        {
+                          "structtype": "Asset'/Script/GbxGame.GbxRewardData_Unlockable'",
+                          "unlockabledef": "unlockable'SharedProgress_Cello.Collectible_EchoLog1'"
+                        }
+                      ],
+                      "customdata": {
+                        "structtype": "Asset'none'"
+                      },
+                      "bisunique": "false",
+                      "uniquename": "challenge_Challenge_Collect_Echo_Log_Dogleg_1_t0"
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "challenge_collect_echo_log_dogleg_2": {
+              "challenge": "Challenge_Collect_Echo_Log_Dogleg_2",
+              "displayname": "Challenges_EchoLogs_General, 62F574EA465BDBC953963A95D37B2A84, Echo Log ",
+              "description": "Challenges_EchoLogs_General, 1F37FC5B4CF75ED515AC12B44A1C88D7, Collect this Echo Log",
+              "showprogressui": "false",
+              "showcompletionui": "false",
+              "associatedstat": "stats.cello_openworld.cello_collectibles.dlc2_echologs.dlc2_echolog_02",
+              "bisprogressreplicated": "true",
+              "accountwideunlockable": "unlockable'SharedProgress_Cello.Collectible_EchoLog2'",
+              "challengetype": "FactTrigger",
+              "challengetiers": [
+                {
+                  "goalvalue": "1",
+                  "notificationthreshold": "1",
+                  "reward": {
+                    "type": "Inline",
+                    "value": {
+                      "rewarddata": [
+                        {
+                          "structtype": "Asset'/Script/GbxGame.GbxRewardData_Unlockable'",
+                          "unlockabledef": "unlockable'SharedProgress_Cello.Collectible_EchoLog2'"
+                        }
+                      ],
+                      "customdata": {
+                        "structtype": "Asset'none'"
+                      },
+                      "bisunique": "false",
+                      "uniquename": "challenge_Challenge_Collect_Echo_Log_Dogleg_2_t0"
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "challenge_collect_echo_log_dogleg_3": {
+              "challenge": "Challenge_Collect_Echo_Log_Dogleg_3",
+              "displayname": "Challenges_EchoLogs_General, E13C19A8405341728E490CB5FE9C34C0, Echo Log ",
+              "description": "Challenges_EchoLogs_General, 5CC07D594111A5FDC3CD45B67096727D, Collect this Echo Log",
+              "showprogressui": "false",
+              "showcompletionui": "false",
+              "associatedstat": "stats.cello_openworld.cello_collectibles.dlc2_echologs.dlc2_echolog_03",
+              "bisprogressreplicated": "true",
+              "accountwideunlockable": "unlockable'SharedProgress_Cello.Collectible_EchoLog3'",
+              "challengetype": "FactTrigger",
+              "challengetiers": [
+                {
+                  "goalvalue": "1",
+                  "notificationthreshold": "1",
+                  "reward": {
+                    "type": "Inline",
+                    "value": {
+                      "rewarddata": [
+                        {
+                          "structtype": "Asset'/Script/GbxGame.GbxRewardData_Unlockable'",
+                          "unlockabledef": "unlockable'SharedProgress_Cello.Collectible_EchoLog3'"
+                        }
+                      ],
+                      "customdata": {
+                        "structtype": "Asset'none'"
+                      },
+                      "bisunique": "false",
+                      "uniquename": "challenge_Challenge_Collect_Echo_Log_Dogleg_3_t0"
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "challenge_collect_echolog_auger_fallen": {
+              "challenge": "Challenge_Collect_EchoLog_Auger_Fallen",
+              "displayname": "Challenges_EchoLogs_General, 77882F0747D5C45A164D56B595FE2716, Echo Log",
+              "description": "Challenges_EchoLogs_General, 92113088431A1FD3CB9D30B2EDCE3726, Collect this Echo Log",
+              "showprogressui": "false",
+              "showcompletionui": "false",
+              "associatedstat": "stats.cello_openworld.cello_collectibles.dlc2_echologs.dlc2_echolog_04",
+              "bisprogressreplicated": "true",
+              "accountwideunlockable": "unlockable'SharedProgress_Cello.Collectible_EchoLog4'",
+              "challengetype": "FactTrigger",
+              "challengetiers": [
+                {
+                  "goalvalue": "1",
+                  "notificationthreshold": "1",
+                  "reward": {
+                    "type": "Inline",
+                    "value": {
+                      "rewarddata": [
+                        {
+                          "structtype": "Asset'/Script/GbxGame.GbxRewardData_Unlockable'",
+                          "unlockabledef": "unlockable'SharedProgress_Cello.Collectible_EchoLog4'"
+                        }
+                      ],
+                      "customdata": {
+                        "structtype": "Asset'none'"
+                      },
+                      "bisunique": "false",
+                      "uniquename": "challenge_Challenge_Collect_EchoLog_Auger_Fallen_t0"
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "challenge_collect_echolog_auger_smashed": {
+              "challenge": "Challenge_Collect_EchoLog_Auger_Smashed",
+              "displayname": "Challenges_EchoLogs_General, 34B429C34C8E5A54432369A48DEE2D83, Echo Log",
+              "description": "Challenges_EchoLogs_General, BF38157A44ECB293BFA0EF812698A32A, Collect this Echo Log",
+              "showprogressui": "false",
+              "showcompletionui": "false",
+              "associatedstat": "stats.cello_openworld.cello_collectibles.dlc2_echologs.dlc2_echolog_05",
+              "bisprogressreplicated": "true",
+              "accountwideunlockable": "unlockable'SharedProgress_Cello.Collectible_EchoLog5'",
+              "challengetype": "FactTrigger",
+              "challengetiers": [
+                {
+                  "goalvalue": "1",
+                  "notificationthreshold": "1",
+                  "reward": {
+                    "type": "Inline",
+                    "value": {
+                      "rewarddata": [
+                        {
+                          "structtype": "Asset'/Script/GbxGame.GbxRewardData_Unlockable'",
+                          "unlockabledef": "unlockable'SharedProgress_Cello.Collectible_EchoLog5'"
+                        }
+                      ],
+                      "customdata": {
+                        "structtype": "Asset'none'"
+                      },
+                      "bisunique": "false",
+                      "uniquename": "challenge_Challenge_Collect_EchoLog_Auger_Smashed_t0"
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "challenge_collect_echolog_pietro_log1": {
+              "challenge": "Challenge_Collect_EchoLog_Pietro_Log1",
+              "displayname": "Challenges_EchoLogs_Arjay, DB2D3CEF4A07D4BB87A53EA9206C7C0C, Echo Log",
+              "description": "Challenges_EchoLogs_Arjay, 8723B85A45B1DD20BA5F1BBF30BCCC72, Collect this Echo Log",
+              "showprogressui": "false",
+              "showcompletionui": "false",
+              "associatedstat": "stats.cello_openworld.cello_collectibles.dlc2_echologs.dlc2_echolog_06",
+              "bisprogressreplicated": "true",
+              "accountwideunlockable": "unlockable'SharedProgress_Cello.Collectible_EchoLog6'",
+              "challengetype": "FactTrigger",
+              "challengetiers": [
+                {
+                  "goalvalue": "1",
+                  "notificationthreshold": "1",
+                  "reward": {
+                    "type": "Inline",
+                    "value": {
+                      "rewarddata": [
+                        {
+                          "structtype": "Asset'/Script/GbxGame.GbxRewardData_Unlockable'",
+                          "unlockabledef": "unlockable'SharedProgress_Cello.Collectible_EchoLog6'"
+                        }
+                      ],
+                      "customdata": {
+                        "structtype": "Asset'none'"
+                      },
+                      "bisunique": "false",
+                      "uniquename": "challenge_Challenge_Collect_EchoLog_Pietro_Log1_t0"
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "challenge_collect_echolog_pietro_log2": {
+              "challenge": "Challenge_Collect_EchoLog_Pietro_Log2",
+              "displayname": "Challenges_EchoLogs_General, DD5D41234879191778CA368579C47BBE, Echo Log",
+              "description": "Challenges_EchoLogs_General, 84676B524D05423C99C33EA811307BB5, Collect this Echo Log",
+              "showprogressui": "false",
+              "showcompletionui": "false",
+              "associatedstat": "stats.cello_openworld.cello_collectibles.dlc2_echologs.dlc2_echolog_07",
+              "bisprogressreplicated": "true",
+              "accountwideunlockable": "unlockable'SharedProgress_Cello.Collectible_EchoLog7'",
+              "challengetype": "FactTrigger",
+              "challengetiers": [
+                {
+                  "goalvalue": "1",
+                  "notificationthreshold": "1",
+                  "reward": {
+                    "type": "Inline",
+                    "value": {
+                      "rewarddata": [
+                        {
+                          "structtype": "Asset'/Script/GbxGame.GbxRewardData_Unlockable'",
+                          "unlockabledef": "unlockable'SharedProgress_Cello.Collectible_EchoLog7'"
+                        }
+                      ],
+                      "customdata": {
+                        "structtype": "Asset'none'"
+                      },
+                      "bisunique": "false",
+                      "uniquename": "challenge_Challenge_Collect_EchoLog_Pietro_Log2_t0"
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "challenge_collect_echolog_pietro_log3": {
+              "challenge": "Challenge_Collect_EchoLog_Pietro_Log3",
+              "displayname": "Challenges_EchoLogs_General, C6C2FE3A41515B0E6C0C69AFD53B4C76, Echo Log",
+              "description": "Challenges_EchoLogs_General, 3211C68E4F380389814537BEDA6C4CC7, Collect this Echo Log",
+              "showprogressui": "false",
+              "showcompletionui": "false",
+              "associatedstat": "stats.cello_openworld.cello_collectibles.dlc2_echologs.dlc2_echolog_08",
+              "bisprogressreplicated": "true",
+              "accountwideunlockable": "unlockable'SharedProgress_Cello.Collectible_EchoLog8'",
+              "challengetype": "FactTrigger",
+              "challengetiers": [
+                {
+                  "goalvalue": "1",
+                  "notificationthreshold": "1",
+                  "reward": {
+                    "type": "Inline",
+                    "value": {
+                      "rewarddata": [
+                        {
+                          "structtype": "Asset'/Script/GbxGame.GbxRewardData_Unlockable'",
+                          "unlockabledef": "unlockable'SharedProgress_Cello.Collectible_EchoLog8'"
+                        }
+                      ],
+                      "customdata": {
+                        "structtype": "Asset'none'"
+                      },
+                      "bisunique": "false",
+                      "uniquename": "challenge_Challenge_Collect_EchoLog_Pietro_Log3_t0"
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "challenge_collect_echolog_pietro_log4": {
+              "challenge": "Challenge_Collect_EchoLog_Pietro_Log4",
+              "displayname": "Challenges_EchoLogs_General, A8CBA2844AC5F819373C9C88D723E36F, Echo Log",
+              "description": "Challenges_EchoLogs_General, 214B052B4EE72FC9958468A6472CEBD3, Collect this Echo Log",
+              "showprogressui": "false",
+              "showcompletionui": "false",
+              "associatedstat": "stats.cello_openworld.cello_collectibles.dlc2_echologs.dlc2_echolog_09",
+              "bisprogressreplicated": "true",
+              "accountwideunlockable": "unlockable'SharedProgress_Cello.Collectible_EchoLog9'",
+              "challengetype": "FactTrigger",
+              "challengetiers": [
+                {
+                  "goalvalue": "1",
+                  "notificationthreshold": "1",
+                  "reward": {
+                    "type": "Inline",
+                    "value": {
+                      "rewarddata": [
+                        {
+                          "structtype": "Asset'/Script/GbxGame.GbxRewardData_Unlockable'",
+                          "unlockabledef": "unlockable'SharedProgress_Cello.Collectible_EchoLog9'"
+                        }
+                      ],
+                      "customdata": {
+                        "structtype": "Asset'none'"
+                      },
+                      "bisunique": "false",
+                      "uniquename": "challenge_Challenge_Collect_EchoLog_Pietro_Log4_t0"
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  }
+}

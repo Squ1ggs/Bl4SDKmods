@@ -1,0 +1,1032 @@
+{
+  "missionset": {
+    "records": [
+      {
+        "entries": [
+          {
+            "missionset_main_beach": {
+              "missionset": "MissionSet_Main_Beach",
+              "generateddependencies": {
+                "dependency": [
+                  {
+                    "dependency1": {
+                      "dependency": {
+                        "dependency1": "dependency1"
+                      },
+                      "completed": "missionset'MissionSet_Main_PrisonPrologue'"
+                    }
+                  }
+                ]
+              },
+              "type": "/Script/OakGame.OakMissionSetDef"
+            }
+          },
+          {
+            "missionset_main_city1": {
+              "missionset": "MissionSet_Main_City1",
+              "generateddependencies": {
+                "dependency": [
+                  {
+                    "dependency1": {
+                      "dependency": {
+                        "dependency1": "dependency1"
+                      },
+                      "completed": "missionset'MissionSet_Main_Elpis'"
+                    }
+                  }
+                ]
+              },
+              "bchained": "true"
+            }
+          },
+          {
+            "missionset_main_city1_b": {
+              "missionset": "MissionSet_Main_City1_B",
+              "generateddependencies": {
+                "dependency": [
+                  {
+                    "dependency1": {
+                      "dependency": {
+                        "dependency1": "dependency1"
+                      },
+                      "completed": "missionset'MissionSet_Main_City1'"
+                    }
+                  }
+                ]
+              },
+              "bchained": "true",
+              "type": "/Script/OakGame.OakMissionSetDef"
+            }
+          },
+          {
+            "missionset_main_city2": {
+              "missionset": "MissionSet_Main_City2",
+              "generateddependencies": {
+                "dependency": [
+                  {
+                    "dependency1": {
+                      "dependency": {
+                        "dependency1": "dependency1"
+                      },
+                      "completed": "missionset'MissionSet_Main_City1_B'"
+                    }
+                  }
+                ]
+              },
+              "bchained": "true"
+            }
+          },
+          {
+            "missionset_main_city3": {
+              "missionset": "MissionSet_Main_City3",
+              "generateddependencies": {
+                "dependency": [
+                  {
+                    "dependency1": {
+                      "dependency": {
+                        "dependency1": "dependency1"
+                      },
+                      "completed": "missionset'MissionSet_Main_City2'"
+                    }
+                  }
+                ]
+              },
+              "bchained": "true"
+            }
+          },
+          {
+            "missionset_main_cityepilogue": {
+              "missionset": "MissionSet_Main_CityEpilogue",
+              "generateddependencies": {
+                "dependency": [
+                  {
+                    "dependency1": {
+                      "dependency": {
+                        "dependency1": "dependency1"
+                      },
+                      "completed": "missionset'MissionSet_Main_City3'"
+                    }
+                  }
+                ]
+              },
+              "bchained": "true",
+              "type": "/Script/OakGame.OakMissionSetDef"
+            }
+          },
+          {
+            "missionset_main_elpis": {
+              "missionset": "MissionSet_Main_Elpis",
+              "generateddependencies": {
+                "dependency": [
+                  {
+                    "dependency1": {
+                      "dependency": {
+                        "dependency1": "dependency1"
+                      },
+                      "completed": "missionset'MissionSet_Main_SearchForLilith'"
+                    }
+                  }
+                ]
+              },
+              "bchained": "true"
+            }
+          },
+          {
+            "missionset_main_grasslands1": {
+              "missionset": "MissionSet_Main_Grasslands1",
+              "generateddependencies": {
+                "dependency": [
+                  {
+                    "dependency1": {
+                      "dependency": {
+                        "dependency1": "dependency1"
+                      },
+                      "completed": "missionset'MissionSet_Main_Beach'"
+                    }
+                  }
+                ]
+              },
+              "bchained": "true"
+            }
+          },
+          {
+            "missionset_main_grasslands2a": {
+              "missionset": "MissionSet_Main_Grasslands2A",
+              "generateddependencies": {
+                "dependency": [
+                  {
+                    "dependency1": {
+                      "dependency": {
+                        "dependency1": "dependency1"
+                      },
+                      "completed": "missionset'MissionSet_Main_Grasslands1'"
+                    }
+                  }
+                ]
+              },
+              "bchained": "true"
+            }
+          },
+          {
+            "missionset_main_grasslands2b": {
+              "missionset": "MissionSet_Main_Grasslands2B",
+              "generateddependencies": {
+                "dependency": [
+                  {
+                    "dependency1": {
+                      "dependency": {
+                        "dependency1": "dependency1"
+                      },
+                      "completed": "missionset'MissionSet_Main_Grasslands2A'"
+                    }
+                  }
+                ]
+              },
+              "bchained": "true"
+            }
+          },
+          {
+            "missionset_main_grasslands3": {
+              "missionset": "MissionSet_Main_Grasslands3",
+              "generateddependencies": {
+                "dependency": [
+                  {
+                    "dependency1": {
+                      "dependency": {
+                        "dependency1": "dependency1"
+                      },
+                      "completed": "missionset'MissionSet_Main_Grasslands2B'"
+                    }
+                  }
+                ]
+              },
+              "bchained": "true"
+            }
+          },
+          {
+            "missionset_main_mountains1": {
+              "missionset": "MissionSet_Main_Mountains1",
+              "generateddependencies": {
+                "dependency": [
+                  {
+                    "dependency1": {
+                      "dependency": {
+                        "dependency1": "dependency1"
+                      },
+                      "completed": "missionset'MissionSet_Main_Grasslands2A'"
+                    }
+                  }
+                ]
+              },
+              "bchained": "true"
+            }
+          },
+          {
+            "missionset_main_mountains2a": {
+              "missionset": "MissionSet_Main_Mountains2A",
+              "generateddependencies": {
+                "dependency": [
+                  {
+                    "dependency1": {
+                      "dependency": {
+                        "dependency1": "dependency1"
+                      },
+                      "completed": "missionset'MissionSet_Main_Mountains1'"
+                    }
+                  }
+                ]
+              },
+              "bchained": "true"
+            }
+          },
+          {
+            "missionset_main_mountains2b": {
+              "missionset": "MissionSet_Main_Mountains2B",
+              "generateddependencies": {
+                "dependency": [
+                  {
+                    "dependency1": {
+                      "dependency": {
+                        "dependency1": "dependency1"
+                      },
+                      "completed": "missionset'MissionSet_Main_Mountains2A'"
+                    }
+                  }
+                ]
+              },
+              "bchained": "true"
+            }
+          },
+          {
+            "missionset_main_mountains3": {
+              "missionset": "MissionSet_Main_Mountains3",
+              "generateddependencies": {
+                "dependency": [
+                  {
+                    "dependency1": {
+                      "dependency": {
+                        "dependency1": "dependency1"
+                      },
+                      "completed": "missionset'MissionSet_Main_Mountains2B'"
+                    }
+                  }
+                ]
+              },
+              "bchained": "true"
+            }
+          },
+          {
+            "missionset_main_postgame": {
+              "missionset": "MissionSet_Main_PostGame",
+              "generateddependencies": {
+                "dependency": [
+                  {
+                    "dependency1": {
+                      "dependency": {
+                        "dependency1": "dependency1"
+                      },
+                      "completed": "missionset'MissionSet_Main_CityEpilogue'"
+                    }
+                  }
+                ]
+              },
+              "bchained": "true",
+              "type": "/Script/OakGame.OakMissionSetDef"
+            }
+          },
+          {
+            "missionset_main_prisonprologue": {
+              "missionset": "MissionSet_Main_PrisonPrologue"
+            }
+          },
+          {
+            "missionset_main_searchforlilith": {
+              "missionset": "MissionSet_Main_SearchForLilith",
+              "generateddependencies": {
+                "dependency": [
+                  {
+                    "dependency1": {
+                      "dependency": {
+                        "dependency1": "dependency1"
+                      },
+                      "completed": "missionset'MissionSet_Main_Grasslands3'"
+                    }
+                  },
+                  {
+                    "dependency2": {
+                      "dependency": {
+                        "dependency2": "dependency2"
+                      },
+                      "completed": "missionset'MissionSet_Main_Shatteredlands3'"
+                    }
+                  },
+                  {
+                    "dependency3": {
+                      "dependency": {
+                        "dependency3": "dependency3"
+                      },
+                      "completed": "missionset'MissionSet_Main_Mountains3'"
+                    }
+                  }
+                ]
+              },
+              "bchained": "true"
+            }
+          },
+          {
+            "missionset_main_shatteredlands1": {
+              "missionset": "MissionSet_Main_Shatteredlands1",
+              "generateddependencies": {
+                "dependency": [
+                  {
+                    "dependency1": {
+                      "dependency": {
+                        "dependency1": "dependency1"
+                      },
+                      "completed": "missionset'MissionSet_Main_Grasslands2A'"
+                    }
+                  }
+                ]
+              },
+              "bchained": "true"
+            }
+          },
+          {
+            "missionset_main_shatteredlands2": {
+              "missionset": "MissionSet_Main_Shatteredlands2",
+              "generateddependencies": {
+                "dependency": [
+                  {
+                    "dependency1": {
+                      "dependency": {
+                        "dependency1": "dependency1"
+                      },
+                      "completed": "missionset'MissionSet_Main_Shatteredlands1'"
+                    }
+                  }
+                ]
+              },
+              "bchained": "true"
+            }
+          },
+          {
+            "missionset_main_shatteredlands3": {
+              "missionset": "MissionSet_Main_Shatteredlands3",
+              "generateddependencies": {
+                "dependency": [
+                  {
+                    "dependency1": {
+                      "dependency": {
+                        "dependency1": "dependency1"
+                      },
+                      "completed": "missionset'MissionSet_Main_Shatteredlands2'"
+                    }
+                  }
+                ]
+              },
+              "bchained": "true"
+            }
+          },
+          {
+            "missionset_micro_citya": {
+              "missionset": "MissionSet_Micro_CityA",
+              "generateddependencies": {
+                "dependency": [
+                  {
+                    "dependency1": {
+                      "dependency": {
+                        "dependency1": "dependency1"
+                      },
+                      "completed": "missionset'MissionSet_Main_Elpis'"
+                    }
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "missionset_micro_cityb": {
+              "missionset": "MissionSet_Micro_CityB",
+              "generateddependencies": {
+                "dependency": [
+                  {
+                    "dependency1": {
+                      "dependency": {
+                        "dependency1": "dependency1"
+                      },
+                      "completed": "missionset'MissionSet_Main_City1_B'"
+                    }
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "missionset_micro_grasslandsa": {
+              "missionset": "MissionSet_Micro_GrasslandsA",
+              "generateddependencies": {
+                "dependency": [
+                  {
+                    "dependency1": {
+                      "dependency": {
+                        "dependency1": "dependency1"
+                      },
+                      "completed": "missionset'MissionSet_Main_Beach'"
+                    }
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "missionset_micro_grasslandsb": {
+              "missionset": "MissionSet_Micro_GrasslandsB",
+              "generateddependencies": {
+                "dependency": [
+                  {
+                    "dependency1": {
+                      "dependency": {
+                        "dependency1": "dependency1"
+                      },
+                      "completed": "missionset'MissionSet_Main_Grasslands1'"
+                    }
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "missionset_micro_grasslandsc": {
+              "missionset": "MissionSet_Micro_GrasslandsC",
+              "generateddependencies": {
+                "dependency": [
+                  {
+                    "dependency1": {
+                      "dependency": {
+                        "dependency1": "dependency1"
+                      },
+                      "completed": "missionset'MissionSet_Main_Grasslands2A'"
+                    }
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "missionset_micro_grasslandse": {
+              "missionset": "MissionSet_Micro_GrasslandsE",
+              "generateddependencies": {
+                "dependency": [
+                  {
+                    "dependency1": {
+                      "dependency": {
+                        "dependency1": "dependency1"
+                      },
+                      "completed": "missionset'MissionSet_Main_Grasslands3'"
+                    }
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "missionset_micro_mountainsa": {
+              "missionset": "MissionSet_Micro_MountainsA",
+              "generateddependencies": {
+                "dependency": [
+                  {
+                    "dependency1": {
+                      "dependency": {
+                        "dependency1": "dependency1"
+                      },
+                      "completed": "missionset'MissionSet_Main_Grasslands2A'"
+                    }
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "missionset_micro_mountainsb": {
+              "missionset": "MissionSet_Micro_MountainsB",
+              "generateddependencies": {
+                "dependency": [
+                  {
+                    "dependency1": {
+                      "dependency": {
+                        "dependency1": "dependency1"
+                      },
+                      "completed": "missionset'MissionSet_Main_Mountains2A'"
+                    }
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "missionset_micro_mountainsd": {
+              "missionset": "MissionSet_Micro_MountainsD",
+              "generateddependencies": {
+                "dependency": [
+                  {
+                    "dependency1": {
+                      "dependency": {
+                        "dependency1": "dependency1"
+                      },
+                      "completed": "missionset'MissionSet_Main_Mountains3'"
+                    }
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "missionset_micro_mountainse": {
+              "missionset": "MissionSet_Micro_MountainsE",
+              "generateddependencies": {
+                "dependency": [
+                  {
+                    "dependency1": {
+                      "dependency": {
+                        "dependency1": "dependency1"
+                      },
+                      "completed": "missionset'missionset_main_mountains3'"
+                    }
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "missionset_micro_shatteredlandsa": {
+              "missionset": "MissionSet_Micro_ShatteredlandsA",
+              "generateddependencies": {
+                "dependency": [
+                  {
+                    "dependency1": {
+                      "dependency": {
+                        "dependency1": "dependency1"
+                      },
+                      "completed": "missionset'MissionSet_Main_Grasslands2A'"
+                    }
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "missionset_micro_shatteredlandsb": {
+              "missionset": "MissionSet_Micro_ShatteredlandsB",
+              "generateddependencies": {
+                "dependency": [
+                  {
+                    "dependency1": {
+                      "dependency": {
+                        "dependency1": "dependency1"
+                      },
+                      "completed": "missionset'MissionSet_Main_Shatteredlands1'"
+                    }
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "missionset_micro_shatteredlandsd": {
+              "missionset": "MissionSet_Micro_ShatteredlandsD",
+              "generateddependencies": {
+                "dependency": [
+                  {
+                    "dependency1": {
+                      "dependency": {
+                        "dependency1": "dependency1"
+                      },
+                      "completed": "missionset'MissionSet_Main_Shatteredlands3'"
+                    }
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "missionset_side_citya": {
+              "missionset": "MissionSet_Side_CityA",
+              "generateddependencies": {
+                "dependency": [
+                  {
+                    "dependency1": {
+                      "dependency": {
+                        "dependency1": "dependency1"
+                      },
+                      "completed": "missionset'MissionSet_Main_Elpis'"
+                    }
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "missionset_side_cityb": {
+              "missionset": "MissionSet_Side_CityB",
+              "generateddependencies": {
+                "dependency": [
+                  {
+                    "dependency1": {
+                      "dependency": {
+                        "dependency1": "dependency1"
+                      },
+                      "completed": "missionset'MissionSet_Main_City1_B'"
+                    }
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "missionset_side_grasslandsa": {
+              "missionset": "MissionSet_Side_GrasslandsA",
+              "generateddependencies": {
+                "dependency": [
+                  {
+                    "dependency1": {
+                      "dependency": {
+                        "dependency1": "dependency1"
+                      },
+                      "completed": "missionset'MissionSet_Main_Beach'"
+                    }
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "missionset_side_grasslandsb": {
+              "missionset": "MissionSet_Side_GrasslandsB",
+              "generateddependencies": {
+                "dependency": [
+                  {
+                    "dependency1": {
+                      "dependency": {
+                        "dependency1": "dependency1"
+                      },
+                      "completed": "missionset'MissionSet_Main_Grasslands1'"
+                    }
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "missionset_side_grasslandse": {
+              "missionset": "MissionSet_Side_GrasslandsE",
+              "generateddependencies": {
+                "dependency": [
+                  {
+                    "dependency1": {
+                      "dependency": {
+                        "dependency1": "dependency1"
+                      },
+                      "completed": "missionset'MissionSet_Main_Grasslands3'"
+                    }
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "missionset_side_mountainsa": {
+              "missionset": "MissionSet_Side_MountainsA",
+              "generateddependencies": {
+                "dependency": [
+                  {
+                    "dependency1": {
+                      "dependency": {
+                        "dependency1": "dependency1"
+                      },
+                      "completed": "missionset'MissionSet_Main_Grasslands2A'"
+                    }
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "missionset_side_mountainsb": {
+              "missionset": "MissionSet_Side_MountainsB",
+              "generateddependencies": {
+                "dependency": [
+                  {
+                    "dependency1": {
+                      "dependency": {
+                        "dependency1": "dependency1"
+                      },
+                      "completed": "missionset'MissionSet_Main_Mountains2A'"
+                    }
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "missionset_side_mountainsc": {
+              "missionset": "MissionSet_Side_MountainsC",
+              "generateddependencies": {
+                "dependency": [
+                  {
+                    "dependency1": {
+                      "dependency": {
+                        "dependency1": "dependency1"
+                      },
+                      "completed": "missionset'MissionSet_Main_Mountains2B'"
+                    }
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "missionset_side_mountainsd": {
+              "missionset": "MissionSet_Side_MountainsD",
+              "generateddependencies": {
+                "dependency": [
+                  {
+                    "dependency1": {
+                      "dependency": {
+                        "dependency1": "dependency1"
+                      },
+                      "completed": "missionset'MissionSet_Main_Mountains3'"
+                    }
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "missionset_side_postgame": {
+              "missionset": "MissionSet_Side_PostGame",
+              "generateddependencies": {
+                "dependency": [
+                  {
+                    "dependency1": {
+                      "dependency": {
+                        "dependency1": "dependency1"
+                      },
+                      "completed": "missionset'MissionSet_Main_CityEpilogue'"
+                    }
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "missionset_side_shatteredlandsa": {
+              "missionset": "MissionSet_Side_ShatteredlandsA",
+              "generateddependencies": {
+                "dependency": [
+                  {
+                    "dependency1": {
+                      "dependency": {
+                        "dependency1": "dependency1"
+                      },
+                      "completed": "missionset'MissionSet_Main_Grasslands2A'"
+                    }
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "missionset_side_shatteredlandsb": {
+              "missionset": "MissionSet_Side_ShatteredlandsB",
+              "generateddependencies": {
+                "dependency": [
+                  {
+                    "dependency1": {
+                      "dependency": {
+                        "dependency1": "dependency1"
+                      },
+                      "completed": "missionset'MissionSet_Main_Shatteredlands1'"
+                    }
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "missionset_side_shatteredlandsc": {
+              "missionset": "MissionSet_Side_ShatteredlandsC",
+              "generateddependencies": {
+                "dependency": [
+                  {
+                    "dependency1": {
+                      "dependency": {
+                        "dependency1": "dependency1"
+                      },
+                      "completed": "missionset'MissionSet_Main_Shatteredlands2'"
+                    }
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "missionset_side_shatteredlandsd": {
+              "missionset": "MissionSet_Side_ShatteredlandsD",
+              "generateddependencies": {
+                "dependency": [
+                  {
+                    "dependency1": {
+                      "dependency": {
+                        "dependency1": "dependency1"
+                      },
+                      "completed": "missionset'MissionSet_Main_Shatteredlands3'"
+                    }
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "missionset_vault_grasslands": {
+              "missionset": "MissionSet_Vault_Grasslands",
+              "generateddependencies": {
+                "dependency": [
+                  {
+                    "dependency1": {
+                      "dependency": {
+                        "dependency1": "dependency1"
+                      },
+                      "completed": "missionset'missionset_main_beach'"
+                    }
+                  }
+                ]
+              },
+              "type": "/Script/OakGame.OakMissionSetDef"
+            }
+          },
+          {
+            "missionset_vault_mountains": {
+              "missionset": "MissionSet_Vault_Mountains",
+              "generateddependencies": {
+                "dependency": [
+                  {
+                    "dependency1": {
+                      "dependency": {
+                        "dependency1": "dependency1"
+                      },
+                      "completed": "missionset'missionset_main_grasslands2a'"
+                    }
+                  }
+                ]
+              },
+              "type": "/Script/OakGame.OakMissionSetDef"
+            }
+          },
+          {
+            "missionset_vault_shatteredlands": {
+              "missionset": "MissionSet_Vault_Shatteredlands",
+              "generateddependencies": {
+                "dependency": [
+                  {
+                    "dependency1": {
+                      "dependency": {
+                        "dependency1": "dependency1"
+                      },
+                      "completed": "missionset'missionset_main_grasslands2a'"
+                    }
+                  }
+                ]
+              },
+              "type": "/Script/OakGame.OakMissionSetDef"
+            }
+          }
+        ]
+      },
+      {
+        "entries": [
+          {
+            "missionset_main_cowbell_unlock": {
+              "missionset": "missionset_main_cowbell_Unlock",
+              "bisdlcmissionset": "true",
+              "dlc": "DLCDef'DLCDef_Cowbell'",
+              "type": "/Script/OakGame.OakMissionSetDef"
+            }
+          },
+          {
+            "missionset_main_harmonica0": {
+              "missionset": "MissionSet_Main_Harmonica0",
+              "bisdlcmissionset": "true",
+              "dlc": "DLCDef'DLCDef_Harmonica'",
+              "type": "/Script/OakGame.OakMissionSetDef"
+            }
+          },
+          {
+            "missionset_main_harmonica1": {
+              "missionset": "MissionSet_Main_Harmonica1",
+              "bisdlcmissionset": "true",
+              "dlc": "DLCDef'DLCDef_Harmonica'",
+              "generateddependencies": {
+                "dependency": [
+                  {
+                    "dependency1": {
+                      "dependency": {
+                        "dependency1": "dependency1"
+                      },
+                      "completed": "missionset'MissionSet_Main_Harmonica0'"
+                    }
+                  }
+                ]
+              },
+              "bchained": "true",
+              "type": "/Script/OakGame.OakMissionSetDef"
+            }
+          },
+          {
+            "missionset_main_harmonica2": {
+              "missionset": "MissionSet_Main_Harmonica2",
+              "bisdlcmissionset": "true",
+              "dlc": "DLCDef'DLCDef_Harmonica'",
+              "generateddependencies": {
+                "dependency": [
+                  {
+                    "dependency1": {
+                      "dependency": {
+                        "dependency1": "dependency1"
+                      },
+                      "completed": "missionset'MissionSet_Main_Harmonica1'"
+                    }
+                  }
+                ]
+              },
+              "bchained": "true",
+              "type": "/Script/OakGame.OakMissionSetDef"
+            }
+          },
+          {
+            "missionset_main_harmonica2b": {
+              "missionset": "MissionSet_Main_Harmonica2B",
+              "bisdlcmissionset": "true",
+              "dlc": "DLCDef'DLCDef_Harmonica'",
+              "generateddependencies": {
+                "dependency": [
+                  {
+                    "dependency1": {
+                      "dependency": {
+                        "dependency1": "dependency1"
+                      },
+                      "completed": "missionset'MissionSet_Main_Harmonica2'"
+                    }
+                  }
+                ]
+              },
+              "bchained": "true",
+              "type": "/Script/OakGame.OakMissionSetDef"
+            }
+          },
+          {
+            "missionset_main_harmonica3": {
+              "missionset": "MissionSet_Main_Harmonica3",
+              "bisdlcmissionset": "true",
+              "dlc": "DLCDef'DLCDef_Harmonica'",
+              "generateddependencies": {
+                "dependency": [
+                  {
+                    "dependency1": {
+                      "dependency": {
+                        "dependency1": "dependency1"
+                      },
+                      "completed": "missionset'MissionSet_Main_Harmonica2B'"
+                    }
+                  }
+                ]
+              },
+              "bchained": "true",
+              "type": "/Script/OakGame.OakMissionSetDef"
+            }
+          },
+          {
+            "missionset_main_harmonica4": {
+              "missionset": "MissionSet_Main_Harmonica4",
+              "bisdlcmissionset": "true",
+              "dlc": "DLCDef'DLCDef_Harmonica'",
+              "generateddependencies": {
+                "dependency": [
+                  {
+                    "dependency1": {
+                      "dependency": {
+                        "dependency1": "dependency1"
+                      },
+                      "completed": "missionset'MissionSet_Main_Harmonica3'"
+                    }
+                  }
+                ]
+              },
+              "bchained": "true",
+              "type": "/Script/OakGame.OakMissionSetDef"
+            }
+          }
+        ]
+      }
+    ]
+  }
+}

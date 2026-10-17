@@ -1,0 +1,22 @@
+{
+  "id": "gun_dad_ar",
+  "note": "Legendary Daedalus AR L70 — Damage must resolve",
+  "input": {
+    "itemType": "Assault Rifle",
+    "set": "dad_ar",
+    "part_names": [
+      "dad_ar.comp_05_legendary",
+      "dad_ar.part_body",
+      "dad_ar.part_barrel_01",
+      "dad_ar.part_mag_01"
+    ],
+    "level": 70
+  },
+  "expect": {
+    "item_type": "Assault Rifle",
+    "damage": 3200
+  },
+  "tolerance": {
+    "damage": { "mode": "pct", "value": 0.05 }
+  }
+}

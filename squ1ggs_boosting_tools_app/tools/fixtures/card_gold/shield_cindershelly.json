@@ -1,0 +1,35 @@
+{
+  "id": "shield_cindershelly",
+  "note": "In-game Amp Generous Cindershelly L70: ~124k Capacity, ~9939/s, +25% Capacity, Amp gun damage",
+  "input": {
+    "itemType": "Shield",
+    "type_label": "Energy Shield",
+    "set": "ord_shield",
+    "part_names": [
+      "ord_shield.comp_05_legendary_cindershelly",
+      "ord_shield.part_body_energy",
+      "ord_shield.part_unique_cindershelly",
+      "shield.part_unv_capacity_secondary",
+      "energy_shield.part_eng_amp_primary",
+      "shield.part_firmware_trickshot"
+    ],
+    "level": 70
+  },
+  "expect": {
+    "item_type": "Shield",
+    "primary_numbers": [124000, 9939, null],
+    "secondary_includes": [
+      "\\+25%\\s*Shield Capacity",
+      "\\+100%\\s*Gun Damage",
+      "drain\\s*28%"
+    ],
+    "firmware_min": 1
+  },
+  "tolerance": {
+    "primary_numbers": [
+      { "mode": "pct", "value": 0.02 },
+      { "mode": "abs", "value": 50 },
+      null
+    ]
+  }
+}

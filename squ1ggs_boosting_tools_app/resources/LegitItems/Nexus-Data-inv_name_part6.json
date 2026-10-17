@@ -1,0 +1,133 @@
+{
+  "inv_name_part": {
+    "records": [
+      {
+        "entries": [
+          {
+            "np_cannonbrawl": {
+              "inv_name_part": "NP_CannonBrawl",
+              "partname": "Uni_DAD_SG_HeartGun, 0E24201A44A94F4CC11D9BA81DA25976, Swan Song",
+              "priority": "1.000000"
+            }
+          },
+          {
+            "np_cm_ds_leg_tuba": {
+              "inv_name_part": "np_cm_ds_leg_tuba",
+              "partname": "ClassModNameParts, 83B8BD4348E687CA2E105A88D3450AB3, Living Weapon",
+              "priority": "1.000000"
+            }
+          },
+          {
+            "np_cm_exo_leg_tuba": {
+              "inv_name_part": "np_cm_exo_leg_tuba",
+              "partname": "ClassModNameParts, 4D60E4D3492A34239B30A1A79D9EE82B, Power-Puncher",
+              "priority": "1.000000"
+            }
+          },
+          {
+            "np_cm_grav_leg_tuba": {
+              "inv_name_part": "np_cm_grav_leg_tuba",
+              "partname": "ClassModNameParts, 9A31C80C4211A1A3B7545F985456E92C, Chirurgeon",
+              "priority": "1.000000"
+            }
+          },
+          {
+            "np_cm_pld_leg_tuba": {
+              "inv_name_part": "np_cm_pld_leg_tuba",
+              "partname": "ClassModNameParts, B5E8DAB34391F4716E59D7965B18AA8D, Damned",
+              "priority": "1.000000"
+            }
+          },
+          {
+            "np_cm_robo_leg_tuba": {
+              "inv_name_part": "np_cm_robo_leg_tuba",
+              "partname": "ClassModNameParts_RoboDealer, 58F9DE854E72079A4989128257E2E603, Trainer",
+              "priority": "1.000000"
+            }
+          },
+          {
+            "np_draupner": {
+              "inv_name_part": "np_Draupner",
+              "partname": "Uni_Spinning_Blade, 04D5515142D20F67FBFED0B2F927BEEE, Draupner",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_fishward": {
+              "inv_name_part": "np_fishward",
+              "partname": "Uni_MAL_SG_Kickballer, F7496C7948F3F5A840C0D0ADA920C0D1, Fishward",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_ishmael": {
+              "inv_name_part": "np_ishmael",
+              "partname": "Uni_MAL_SG_Kickballer, 3E7E97CB4BF30F3AEC19CF88380691F0, Ishmael",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_manifest": {
+              "inv_name_part": "np_manifest",
+              "partname": "Uni_MAL_SR_Katagawa, A751B05240D25F7162853197B7DE0D70, Marshall's Claw",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_ordinance": {
+              "inv_name_part": "np_Ordinance",
+              "partname": "Uni_TED_Grenade_Gadget_PredatorDrone, A76D86C24A404AE701ACC2BD6EE9105F, Ordinance",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_pocketbuddies": {
+              "inv_name_part": "np_PocketBuddies",
+              "partname": "Uni_Supernova, 9058460F47327A49A0DE4C84B3F52CE8, Little Sister",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_repkit_uni_jak_vitae": {
+              "inv_name_part": "np_repkit_uni_JAK_Vitae",
+              "partname": "RepKitNameParts, F3A2B7B94FFC764A37720BB5F6D00D19, Vitae",
+              "priority": "2.000000"
+            }
+          },
+          {
+            "np_sharkbait": {
+              "inv_name_part": "np_sharkbait",
+              "partname": "Uni_Inv_TED_SG_Anarchy, E8BF389344771D1614CC1C8E37084CD1, Sharkbait",
+              "priority": "3.000000"
+            }
+          },
+          {
+            "np_shoals": {
+              "inv_name_part": "np_Shoals",
+              "partname": "Uni_MAL_SG_Kickballer, CEB3FF464751F44206F178A7D51C0B2B, Shoals",
+              "priority": "3.000000"
+            }
+          }
+        ]
+      },
+      {
+        "entries": [
+          {
+            "np_gren_aug_mirv_swarm": {
+              "inv_name_part": "np_gren_aug_mirv_swarm",
+              "partname": "GrenadePartNames, 4992412E42E6B47FCD3D25B4F3092354, Swarming",
+              "priority": "1.500000"
+            }
+          },
+          {
+            "np_gren_aug_singularity_zerog": {
+              "inv_name_part": "np_gren_aug_singularity_zeroG",
+              "partname": "GrenadePartNames, 3F38A35F4F66D5CC22E1A0B9F13A93EC, Microgravitic",
+              "priority": "1.500000"
+            }
+          }
+        ]
+      }
+    ]
+  }
+}

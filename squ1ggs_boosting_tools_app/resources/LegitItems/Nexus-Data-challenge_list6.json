@@ -1,0 +1,167 @@
+{
+  "challenge_list": {
+    "records": [
+      {
+        "entries": [
+          {
+            "challengelist_achievements_cello": {
+              "challenge_list": "ChallengeList_Achievements_Cello",
+              "displayname": "ChallengeList_Achievements, DFD9158E4BB91B4E39B486896B573CCC, {0}|platform(default=Achievements,xbox=Achievements,playstation=Trophies,sage=Achievements)",
+              "challenges": [
+                "challenge'Challenges_Achievements_35_Cello_enemies_defeat'",
+                "challenge'Challenges_Achievements_36_Cello_boss_defeat'",
+                "challenge'Challenges_Achievements_36_Cello_boss_cat'",
+                "challenge'Challenges_Achievements_36_Cello_boss_meathead'",
+                "challenge'Challenges_Achievements_36_Cello_boss_pangolin'",
+                "challenge'Challenges_Achievements_36_Cello_boss_phalanx'",
+                "challenge'Challenges_Achievements_36_Cello_boss_splice'",
+                "challenge'Challenges_Achievements_37_Cello_missions_main'"
+              ]
+            }
+          },
+          {
+            "challengelist_achievements_harp": {
+              "challenge_list": "ChallengeList_Achievements_Harp",
+              "displayname": "ChallengeList_Achievements, DFD9158E4BB91B4E39B486896B573CCC, {0}|platform(default=Achievements,xbox=Achievements,playstation=Trophies,sage=Achievements)",
+              "challenges": [
+                "challenge'Challenges_Achievements_49_Harp_responses_all'",
+                "challenge'Challenges_Achievements_49_Harp_response_skankeyes1'",
+                "challenge'Challenges_Achievements_49_Harp_response_skankeyes2'",
+                "challenge'Challenges_Achievements_49_Harp_response_dave1'",
+                "challenge'Challenges_Achievements_49_Harp_response_dave2'",
+                "challenge'Challenges_Achievements_49_Harp_response_william1'",
+                "challenge'Challenges_Achievements_49_Harp_response_william2'",
+                "challenge'Challenges_Achievements_50_Harp_boss_defeat'",
+                "challenge'Challenges_Achievements_50_Harp_boss_skankeyes'",
+                "challenge'Challenges_Achievements_50_Harp_boss_infamousdave'",
+                "challenge'Challenges_Achievements_50_Harp_boss_maxxxsupreme'",
+                "challenge'Challenges_Achievements_50_Harp_boss_betamaxxx'",
+                "challenge'Challenges_Achievements_51_Harp_missions_main'"
+              ]
+            }
+          },
+          {
+            "challengelist_achievements_mandolin": {
+              "challenge_list": "ChallengeList_Achievements_Mandolin",
+              "displayname": "ChallengeList_Achievements, DFD9158E4BB91B4E39B486896B573CCC, {0}|platform(default=Achievements,xbox=Achievements,playstation=Trophies,sage=Achievements)",
+              "challenges": [
+                "challenge'Challenges_Achievements_46_Mandolin_coin_chest'",
+                "challenge'Challenges_Achievements_47_Mandolin_boss_defeat'",
+                "challenge'Challenges_Achievements_47_Mandolin_boss_cleaner'",
+                "challenge'Challenges_Achievements_47_Mandolin_boss_fixer'",
+                "challenge'Challenges_Achievements_47_Mandolin_boss_main'",
+                "challenge'Challenges_Achievements_48_Mandolin_missions_main'"
+              ]
+            }
+          },
+          {
+            "challengelist_achievements_viola": {
+              "challenge_list": "ChallengeList_Achievements_Viola",
+              "displayname": "ChallengeList_Achievements, 62430062414E2010A130A0929BF3B145, {0}|platform(default=Achievements,xbox=Achievements,playstation=Trophies,sage=Achievements)",
+              "challenges": [
+                "challenge'Challenges_Achievements_52_Viola_treasure_discover'",
+                "challenge'Challenges_Achievements_53_Viola_boss_defeat'",
+                "challenge'Challenges_Achievements_53_Viola_boss_hybridthresher'",
+                "challenge'Challenges_Achievements_53_Viola_boss_testzero'",
+                "challenge'Challenges_Achievements_53_Viola_boss_viledave'",
+                "challenge'Challenges_Achievements_54_Viola_missions_main'"
+              ]
+            }
+          },
+          {
+            "challengelist_echologs_cello": {
+              "challenge_list": "ChallengeList_EchoLogs_Cello",
+              "displayname": "ChallengeLists_Collectibles_Cello, CDFD3B084776DD896F2E91BB344C2D47, Echo Logs - Cello",
+              "challenges": [
+                "challenge'Challenge_Collect_Echo_Log_Dogleg_1'",
+                "challenge'Challenge_Collect_Echo_Log_Dogleg_2'",
+                "challenge'Challenge_Collect_Echo_Log_Dogleg_3'",
+                "challenge'Challenge_Collect_EchoLog_Auger_Fallen'",
+                "challenge'Challenge_Collect_EchoLog_Auger_Smashed'",
+                "challenge'Challenge_Collect_EchoLog_Pietro_Log1'",
+                "challenge'Challenge_Collect_EchoLog_Pietro_Log2'",
+                "challenge'Challenge_Collect_EchoLog_Pietro_Log3'",
+                "challenge'Challenge_Collect_EchoLog_Pietro_Log4'"
+              ]
+            }
+          },
+          {
+            "challengelist_echologs_harp": {
+              "challenge_list": "ChallengeList_EchoLogs_Harp",
+              "displayname": "ChallengeLists_Collectibles_Harp, 5C26144042334F3525621FBEA64C2C5A, Harp Echo Logs",
+              "challenges": [
+                "challenge'Challenge_Collect_BP4_EchoLog_1'",
+                "challenge'Challenge_Collect_BP4_EchoLog_2'",
+                "challenge'Challenge_Collect_BP4_EchoLog_3'",
+                "challenge'Challenge_Collect_BP4_EchoLog_4'",
+                "challenge'Challenge_Collect_BP4_EchoLog_5'"
+              ]
+            }
+          },
+          {
+            "challengelist_echologs_tuba": {
+              "challenge_list": "ChallengeList_EchoLogs_Tuba",
+              "displayname": "ChallengeLists_Collectibles_Tuba, 44D5E81E47E60528A76960AAA11679BE, Tuba Echo Logs",
+              "challenges": [
+                "challenge'Challenge_EchoLog_Tuba_1'",
+                "challenge'Challenge_EchoLog_Tuba_2'",
+                "challenge'Challenge_EchoLog_Tuba_3'",
+                "challenge'Challenge_EchoLog_Tuba_4'",
+                "challenge'Challenge_EchoLog_Tuba_5'",
+                "challenge'Challenge_EchoLog_Tuba_6'",
+                "challenge'Challenge_EchoLog_Tuba_7'"
+              ]
+            }
+          },
+          {
+            "challengelist_echologs_viola": {
+              "challenge_list": "ChallengeList_EchoLogs_Viola",
+              "displayname": "ChallengeLists_Collectibles_Tuba, CFF7DB5041670B0FCF111B917AE152EE, Viola Echo Logs",
+              "challenges": [
+                "challenge'Challenge_EchoLog_Viola_1'",
+                "challenge'Challenge_EchoLog_Viola_2'",
+                "challenge'Challenge_EchoLog_Viola_3'",
+                "challenge'Challenge_EchoLog_Viola_4'"
+              ]
+            }
+          },
+          {
+            "challengelist_mandolin_tutorials": {
+              "challenge_list": "ChallengeList_Mandolin_Tutorials",
+              "challenges": [
+                "challenge'Challenge_Mandolin_Tutorial_CoS_BadassSwitch'"
+              ]
+            }
+          },
+          {
+            "challengelist_uvh_rankup_6": {
+              "challenge_list": "ChallengeList_UVH_Rankup_6",
+              "displayname": "UVH_Rankup_6_Challenges, 4D3AEE684C3D6CDE8CB983B1B7A9A0ED, UVH Rankup 6",
+              "challenges": [
+                "challenge'Challenge_UVH_Rankup_6_Bloomreaper'"
+              ]
+            }
+          },
+          {
+            "challengelist_uvh_rankup_7": {
+              "challenge_list": "ChallengeList_UVH_Rankup_7",
+              "displayname": "UVH_Rankup_Challenge, 9345292F41AF53BA504C5FA18A480248, UVH Rankup 7",
+              "challenges": [
+                "challenge'Challenge_UVH_Rankup_7_Parent'"
+              ]
+            }
+          },
+          {
+            "vc5_challengelist_debug": {
+              "challenge_list": "vc5_ChallengeList_DEBUG",
+              "bisvaultcard": "true",
+              "challenges": [
+                "challenge'vc5_KillEnemiesWithTorgue10'"
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  }
+}

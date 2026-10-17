@@ -2,7 +2,7 @@
 
 Borderlands 4 **Python SDK** mods for the game's **`sdk_mods`** folder (Oak2 / `mods_base`).
 
-**Looking for the boosting desktop app?** → **[Squ1ggs Boosting Tools releases](https://github.com/Squ1ggs/Bl4SDKmods/releases)** (portable EXE + mod, currently **1.2.2 / 3.9.2**).
+**Looking for the boosting desktop app?** → **[Squ1ggs Boosting Tools releases](https://github.com/Squ1ggs/Bl4SDKmods/releases)** (portable EXE **1.3.41** + mod **3.10.41**).
 
 Each smaller mod ships as an **`.sdkmod`** file — a zip with one top-level folder matching the file name.
 
@@ -20,8 +20,9 @@ Each smaller mod ships as an **`.sdkmod`** file — a zip with one top-level fol
 | **mob_spawner** | Mob/IO spawn catalog. **BLImGui** tabs (Ctrl+F6 / F1 BMS). Console: `bms_*`. |
 | **p2p_teleporter** | Co-op roster + teleports (`bcst_*`). Optional **BLImGui** tab. |
 | **world_travel** | Location bookmarks + travel catalog (`bwt_*`). Optional **BLImGui** tab. |
+| **bl4_character_swapper** | Standalone native BL4 character swapping. BLImGui strongly recommended; `asw_*` console controls work without it. |
 | These above are also on the [BL Oak2 Mod DB](https://bl-sdk.github.io/oak2-mod-db/). |
-| **Squ1ggsBoostingTools** | All-in-one boosting **desktop app + mod** (**3.9.2 / EXE 1.2.2**). Download the portable EXE from [Releases](https://github.com/Squ1ggs/Bl4SDKmods/releases) — not on Mod DB. |
+| **Squ1ggsBoostingTools** | All-in-one boosting **desktop app + mod** (**3.10.41 / EXE 1.3.41**), including character swapping in its Appearance tab. Download the portable EXE from [Releases](https://github.com/Squ1ggs/Bl4SDKmods/releases) — not on Mod DB. |
 
 Mods menu + console work without BLImGui. Optional panels need a BL4-capable BLImGui already installed.
 
@@ -39,4 +40,5 @@ Do **not** unzip `.sdkmod` files for normal play.
 
 ## License
 
-MIT by default - see **`LICENSE`** in the repo root and each mod's `pyproject.toml`.
+MIT by default - see **`LICENSE`** in the repo root. Squ1ggs Boosting Tools and
+BL4 Character Swapper retain their module-specific GPL-3.0-or-later licences.

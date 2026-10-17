@@ -1,0 +1,106 @@
+{
+  "game_region": {
+    "records": [
+      {
+        "entries": [
+          {
+            "cowbell_bloodstainedhollow": {
+              "game_region": "Cowbell_BloodstainedHollow",
+              "regioninfo": "display_data'UIRegionDisplayData_Cowbell_BloodstainedHollow'",
+              "type": "/Script/OakGame.WorldRegionDef",
+              "parent": "game_region'Cowbell'"
+            }
+          },
+          {
+            "cowbell_feuermann": {
+              "game_region": "Cowbell_Feuermann",
+              "regioninfo": "display_data'UIRegionDisplayData_Cowbell_Feuermann'",
+              "priority": "500",
+              "type": "/Script/OakGame.WorldRegionDef",
+              "parent": "game_region'Cowbell'"
+            }
+          },
+          {
+            "cowbell_vaultofthedamned": {
+              "game_region": "Cowbell_VaultOfTheDamned",
+              "regioninfo": "display_data'UIRegionDisplayData_Cowbell_VaultOfTheDamned'",
+              "loadingscreendef": "loadingscreen_data'ls_VaultOfTheDamned'",
+              "priority": "0",
+              "type": "/Script/OakGame.WorldRegionDef",
+              "parent": "game_region'Cowbell'"
+            }
+          },
+          {
+            "cowbell_windsweptwastes": {
+              "game_region": "Cowbell_WindsweptWastes",
+              "regioninfo": "display_data'UIRegionDisplayData_Cowbell_WindsweptWastes'",
+              "priority": "200",
+              "type": "/Script/OakGame.WorldRegionDef",
+              "parent": "game_region'Cowbell'"
+            }
+          },
+          {
+            "harmonica_bagheerarange": {
+              "game_region": "Harmonica_BagheeraRange",
+              "regioninfo": "display_data'UIRegionDisplayData_Harmonica_BagheeraRange'",
+              "type": "/Script/OakGame.WorldRegionDef",
+              "parent": "game_region'Harmonica'"
+            }
+          },
+          {
+            "harmonica_lavafield": {
+              "game_region": "Harmonica_LavaField",
+              "regioninfo": "display_data'UIRegionDisplayData_Harmonica_LavaField'",
+              "type": "/Script/OakGame.WorldRegionDef",
+              "parent": "game_region'Harmonica'"
+            }
+          },
+          {
+            "harmonica_uppercrust": {
+              "game_region": "Harmonica_UpperCrust",
+              "regioninfo": "display_data'UIRegionDisplayData_Harmonica_UpperCrust'",
+              "type": "/Script/OakGame.WorldRegionDef",
+              "parent": "game_region'Harmonica'"
+            }
+          },
+          {
+            "raid1": {
+              "game_region": "Raid1",
+              "regioninfo": "display_data'UIRegionDisplayData_Raid1'",
+              "loadingscreendef": "loadingscreen_data'ls_thebloom'",
+              "displayname": "bp1_world_regions, 5FCC21D04C249B40D464D2AF288BBF19, Do not localize, this is never used",
+              "type": "/Script/OakGame.WorldRegionDef"
+            }
+          },
+          {
+            "raid2": {
+              "game_region": "Raid2",
+              "regioninfo": "display_data'UIRegionDisplayData_Raid2'",
+              "loadingscreendef": "loadingscreen_data'ls_lairofsubjugator'",
+              "displayname": "bp1_world_regions, C10C025A4A780F46ABBA57A470B1C8F1, Do not localize, this is never used",
+              "type": "/Script/OakGame.WorldRegionDef"
+            }
+          },
+          {
+            "tuba": {
+              "game_region": "Tuba",
+              "regioninfo": "display_data'UIRegionDisplayData_Tuba'",
+              "loadingscreendef": "loadingscreen_data'ls_research_center'",
+              "displayname": "bp1_world_regions, A7AEDD6A48B3C4C167B714A6AC27E754, Do not localize, this is never used",
+              "type": "/Script/OakGame.WorldRegionDef"
+            }
+          },
+          {
+            "viola": {
+              "game_region": "Viola",
+              "regioninfo": "display_data'UIRegionDisplayData_Viola'",
+              "loadingscreendef": "loadingscreen_data'ls_NuadaCove'",
+              "displayname": "bp1_world_regions, A7AEDD6A48B3C4C167B714A6AC27E754, Do not localize, this is never used",
+              "type": "/Script/OakGame.WorldRegionDef"
+            }
+          }
+        ]
+      }
+    ]
+  }
+}

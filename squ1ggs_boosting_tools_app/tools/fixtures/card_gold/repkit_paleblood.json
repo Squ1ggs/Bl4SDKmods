@@ -1,0 +1,19 @@
+{
+  "id": "repkit_paleblood",
+  "note": "Order legendary repair kit — heal primaries + firmware",
+  "input": {
+    "itemType": "Repkit",
+    "set": "ord_repair_kit",
+    "part_names": [
+      "ord_repair_kit.comp_05_legendary_paleblood",
+      "ord_repair_kit.part_augment_unique_paleblood",
+      "repair_kit.part_firmware_lifeblood"
+    ],
+    "level": 70
+  },
+  "expect": {
+    "item_type": "Repkit",
+    "primary_min_count": 2,
+    "firmware_min": 1
+  }
+}

@@ -1,0 +1,2175 @@
+{
+  "ui_stat": {
+    "records": [
+      {
+        "entries": [
+          {
+            "uistat_bfr_pickup_bolt": {
+              "ui_stat": "UIStat_BFR_Pickup_Bolt",
+              "displaygroup": "ui_stat_group'Text'",
+              "statlabel": {
+                "structtype": "Asset'/Script/GbxGame.StringDisplayValue'",
+                "formattext": "BFR_PIckup_Bolt, B0E9D24C49BDD8F4D30109AEDE4D4513, Not gone. Returned."
+              }
+            }
+          },
+          {
+            "uistat_io_pickup_reactorpart": {
+              "ui_stat": "UIStat_IO_Pickup_ReactorPart",
+              "displaygroup": "ui_stat_group'Text'",
+              "statlabel": {
+                "structtype": "Asset'/Script/GbxGame.StringDisplayValue'",
+                "formattext": "IO_Pickup_ReactorPart, DFA3644F489E8FEFF45F6E87CF3008C2, Without this, nothing's getting generated but sadness!"
+              },
+              "type": "/Script/GbxGame.UIStatDisplayDef"
+            }
+          },
+          {
+            "uistat_pickup_broomba": {
+              "ui_stat": "UIStat_Pickup_Broomba",
+              "type": "/Script/GbxGame.UIStatDisplayDef"
+            }
+          },
+          {
+            "uistat_pickup_efm2_creepmeat": {
+              "ui_stat": "UIStat_Pickup_EFM2_CreepMeat",
+              "displaygroup": "ui_stat_group'Text'",
+              "statlabel": {
+                "structtype": "Asset'/Script/GbxGame.StringDisplayValue'",
+                "formattext": "UIStat_Pickup_VehiclePowercore, 4124757C4454DFA596ED22A2BD3B60E0, Smells better than it tastes."
+              }
+            }
+          },
+          {
+            "uistat_pickup_efm3_emppart1": {
+              "ui_stat": "UIStat_Pickup_EFM3_EMPPart1",
+              "displaygroup": "ui_stat_group'Text'",
+              "statlabel": {
+                "structtype": "Asset'/Script/GbxGame.StringDisplayValue'",
+                "formattext": "UIStat_Pickup_VehiclePowercore, 569D6C71418A7DE253F550BE1FFCAADF, So much fun you could burst."
+              }
+            }
+          },
+          {
+            "uistat_pickup_efm3_emppart2": {
+              "ui_stat": "UIStat_Pickup_EFM3_EMPPart2",
+              "displaygroup": "ui_stat_group'Text'",
+              "statlabel": {
+                "structtype": "Asset'/Script/GbxGame.StringDisplayValue'",
+                "formattext": "UIStat_Pickup_VehiclePowercore, 99ED77B0425ECA9DBE707D89B3970D46, Surfs UP! Or Not!"
+              }
+            }
+          },
+          {
+            "uistat_pickup_efm3_emppart3": {
+              "ui_stat": "UIStat_Pickup_EFM3_EMPPart3",
+              "displaygroup": "ui_stat_group'Text'",
+              "statlabel": {
+                "structtype": "Asset'/Script/GbxGame.StringDisplayValue'",
+                "formattext": "INVDef_EFM3_EMPPickup_Parts, ADBA35C24EBD5B3962FF86869680F3F8, The weirdest and most dangerous doorbell"
+              }
+            }
+          },
+          {
+            "uistat_pickup_thesupply_shammylog": {
+              "ui_stat": "UIStat_Pickup_TheSupply_ShammyLog",
+              "displaygroup": "ui_stat_group'Text'",
+              "statlabel": {
+                "structtype": "Asset'/Script/GbxGame.StringDisplayValue'",
+                "formattext": "Pickup_ShammyLog, FACF874C4933FDF057568A8E7100D178, This ain't Shammy! Where'd he go?"
+              },
+              "type": "/Script/GbxGame.UIStatDisplayDef"
+            }
+          },
+          {
+            "uistat_pickup_towerbolt": {
+              "ui_stat": "UIStat_Pickup_TowerBolt",
+              "displaygroup": "ui_stat_group'Text'",
+              "statlabel": {
+                "structtype": "Asset'/Script/GbxGame.StringDisplayValue'",
+                "formattext": "UIStat_Pickup_VehiclePowercore, 7C95591A4A52A97CB95F29AB84F0BD69, Just some nameless grunt's busted bolt."
+              }
+            }
+          }
+        ]
+      },
+      {
+        "entries": [
+          {
+            "uistat_cannonbrawl_desc": {
+              "ui_stat": "uistat_CannonBrawl_desc",
+              "displaygroup": "ui_stat_group'Secondary'",
+              "sortingpriority": "-1.000000",
+              "staticon": "Asset'/Game/uiresources/_shared/assets/ico_ui_art_discovery/ico_misc_legendaries.ico_misc_legendaries'",
+              "statvalue": {
+                "structtype": "Asset'/Script/GbxGame.StringDisplayValue'",
+                "formattext": "Uni_BOR_SG_Convergence, 292399CB42B7E2DD4221DC80C144BA85, [rarity_legendary]Brawlshot[/rarity_legendary]  - [secondary]On Kill[/secondary] adds additional [secondary]projectiles[/secondary] fired from [primary]Cannon Burst[/primary] up to a max of [secondary]5[/secondary]",
+                "argsmap": {
+                  "pairs": {
+                    "pair2013007324": {
+                      "key": "mod",
+                      "value": {
+                        "structtype": "Asset'/Script/GbxGame.NumericDisplayValue'",
+                        "attributedef": "attribute'weapon_damage'",
+                        "attributeindex": "1"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "uistat_cannonbrawl_redtext": {
+              "ui_stat": "uistat_CannonBrawl_redtext",
+              "displaygroup": "ui_stat_group'RedText'",
+              "statvalue": {
+                "structtype": "Asset'/Script/GbxGame.StringDisplayValue'",
+                "formattext": "Uni_BOR_SG_Convergence, 8B577C854DB7E901E68A888284020387, I'm a simple man."
+              }
+            }
+          },
+          {
+            "uistat_cannonbrawl_ub_desc": {
+              "ui_stat": "uistat_CannonBrawl_UB_desc",
+              "displaygroup": "ui_stat_group'Secondary'",
+              "sortingpriority": "-1.000000",
+              "staticon": "Asset'/Game/uiresources/_shared/assets/ico_ui_art_discovery/ico_misc_legendaries.ico_misc_legendaries'",
+              "statvalue": {
+                "structtype": "Asset'/Script/GbxGame.StringDisplayValue'",
+                "formattext": "Uni_BOR_SG_Convergence, CB41120C4924D6F1A952A5A9E6850E64, [rarity_legendary]Cannonball[/rarity_legendary]  - [secondary]Underbarrel[/secondary] burst fires [secondary]explosive Cannonballs[/secondary]. [secondary]On Kill[/secondary], gain additional [secondary]Underbarrel Ammo[/secondary] up to a [secondary]Maximum[/secondary] of [secondary]{max}[/secondary] bonus [secondary]Ammo[/secondary].",
+                "argsmap": {
+                  "pairs": {
+                    "pair430384645": {
+                      "key": "max",
+                      "value": {
+                        "structtype": "Asset'/Script/GbxGame.NumericDisplayValue'",
+                        "attributedef": "attribute'att_CannonBrawl_UB_BonusCap'",
+                        "attributeindex": "1"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "uistat_cm_ds_legendary_tuba": {
+              "ui_stat": "uistat_cm_ds_legendary_tuba",
+              "displaygroup": "ui_stat_group'Text'",
+              "sortingpriority": "-1000.000000",
+              "statvalue": {
+                "structtype": "Asset'/Script/GbxGame.StringDisplayValue'",
+                "formattext": "classmod_darksiren_tuba, 478584304855C41386E448949A01BDC3, When [primary]Vex[/primary] deals [secondary]Action Skill Damage[/secondary] she has a [secondary]5% Chance[/secondary] to trigger [secondary]Kill Skills[/secondary]. This effect can only occur every [secondary]1[/secondary] second."
+              }
+            }
+          },
+          {
+            "uistat_cm_ds_legendary_tuba_redtext": {
+              "ui_stat": "uistat_cm_ds_legendary_tuba_redtext",
+              "displaygroup": "ui_stat_group'RedText'",
+              "sortingpriority": "1.000000",
+              "statvalue": {
+                "structtype": "Asset'/Script/GbxGame.StringDisplayValue'",
+                "formattext": "enhancement_uistats, E96DFD5644A163513A2150A951E9A64C, It's a peculiarity of mine."
+              }
+            }
+          },
+          {
+            "uistat_cm_exo_legendary_tuba": {
+              "ui_stat": "uistat_cm_exo_legendary_tuba",
+              "displaygroup": "ui_stat_group'Text'",
+              "sortingpriority": "-1000.000000",
+              "statvalue": {
+                "structtype": "Asset'/Script/GbxGame.StringDisplayValue'",
+                "formattext": "classmod_exosoldier_tuba, 939B16FE4156E715AA0B9D8B7FA9BD20, While [primary]Rafa[/primary] has a [secondary]Grenade[/secondary] equipped, his [secondary]Melee Attacks[/secondary] have a {0} [secondary]Chance[/secondary] to spawn a [nowrap][fire][fire_icon]Fire[/fire][/nowrap] [fire]Fissure[/fire] that deals [secondary]Ordnance Melee Damage[/secondary] equal to [primary]Rafa's[/primary] [secondary]Grenade Damage[/secondary].",
+                "argsmap": {
+                  "pairs": {
+                    "pair633932275": {
+                      "key": "0",
+                      "value": {
+                        "structtype": "Asset'/Script/GbxGame.NumericDisplayValue'",
+                        "attributedef": "attribute'Att_CM_UI_Exo_Tuba_Chance'",
+                        "bdisplayaspercentage": "true"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "uistat_cm_exo_legendary_tuba_redtext": {
+              "ui_stat": "uistat_cm_exo_legendary_tuba_redtext",
+              "displaygroup": "ui_stat_group'RedText'",
+              "sortingpriority": "1.000000",
+              "statvalue": {
+                "structtype": "Asset'/Script/GbxGame.StringDisplayValue'",
+                "formattext": "enhancement_uistats, A27A6AF840891FAB725CFFA3B2A257ED, Things have changed."
+              }
+            }
+          },
+          {
+            "uistat_cm_grav_legendary_tuba": {
+              "ui_stat": "uistat_cm_grav_legendary_tuba",
+              "displaygroup": "ui_stat_group'Text'",
+              "sortingpriority": "-1000.000000",
+              "statvalue": {
+                "structtype": "Asset'/Script/GbxGame.StringDisplayValue'",
+                "formattext": "classmod_gravitar_tuba, 398E17144020EEA6B26E4E8CCC2D4099, Whenever [primary]Harlowe[/primary] puts an enemy in [primary]Stasis[/primary] or she deals damage to an immune enemy with [primary]Stasis[/primary], she deals {0} [secondary]increased Damage[/secondary] and has {1} [secondary]Status Effect Chance[/secondary] against that enemy while it is [primary]Entangled[/primary]. If that enemy is [secondary]immune[/secondary] to [primary]Stasis[/primary], [secondary]double[/secondary] these bonuses.",
+                "argsmap": {
+                  "pairs": {
+                    "pair633932275": {
+                      "key": "0",
+                      "value": {
+                        "structtype": "Asset'/Script/GbxGame.NumericDisplayValue'",
+                        "attributedef": "attribute'Att_CM_UI_Grav_Tuba_Damage'",
+                        "bdisplayaspercentage": "true",
+                        "bdisplayplussign": "true"
+                      }
+                    },
+                    "pair2259948949": {
+                      "key": "1",
+                      "value": {
+                        "structtype": "Asset'/Script/GbxGame.NumericDisplayValue'",
+                        "attributedef": "attribute'Att_CM_UI_Grav_Tuba_SEChance'",
+                        "bdisplayaspercentage": "true",
+                        "bdisplayplussign": "true"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "uistat_cm_grav_legendary_tuba_redtext": {
+              "ui_stat": "uistat_cm_grav_legendary_tuba_redtext",
+              "displaygroup": "ui_stat_group'RedText'",
+              "sortingpriority": "1.000000",
+              "statvalue": {
+                "structtype": "Asset'/Script/GbxGame.StringDisplayValue'",
+                "formattext": "enhancement_uistats, B11599244AF0490210EC61904BF349FA, A quiet mind cureth all."
+              }
+            }
+          },
+          {
+            "uistat_cm_pld_legendary_tuba": {
+              "ui_stat": "uistat_cm_pld_legendary_tuba",
+              "displaygroup": "ui_stat_group'Text'",
+              "sortingpriority": "-1000.000000",
+              "statvalue": {
+                "structtype": "Asset'/Script/GbxGame.StringDisplayValue'",
+                "formattext": "classmod_paladin_tuba, 9BDDBCD54AA00D097E9EF7B76AA387B5, [secondary]Activating[/secondary] an [secondary]Action Skill[/secondary] or [primary]Forgeskill[/primary] causes [primary]Amon's[/primary] [secondary]Gun Shots[/secondary] have a 10% chance to cause a [primary]Pyre[/primary], dealing [nowrap][fire_icon][fire]Incendiary[/fire][/nowrap] [fire]Melee Forgeskill Damage[/fire] based on 100% of the [secondary]Damage Dealt[/secondary] for 10 seconds. Effect can only occur once a second."
+              }
+            }
+          },
+          {
+            "uistat_cm_pld_legendary_tuba_redtext": {
+              "ui_stat": "uistat_cm_pld_legendary_tuba_redtext",
+              "displaygroup": "ui_stat_group'RedText'",
+              "sortingpriority": "1.000000",
+              "statvalue": {
+                "structtype": "Asset'/Script/GbxGame.StringDisplayValue'",
+                "formattext": "enhancement_uistats, 57E71ADD4FCE81C52BFC5F9A8A5559E6, Rupture of Spatial Temporal Warp!"
+              }
+            }
+          },
+          {
+            "uistat_cm_robo_legendary_tuba": {
+              "ui_stat": "uistat_cm_robo_legendary_tuba",
+              "displaygroup": "ui_stat_group'Text'",
+              "sortingpriority": "-1000.000000",
+              "statvalue": {
+                "structtype": "Asset'/Script/GbxGame.StringDisplayValue'",
+                "formattext": "classmod_robodealer_tuba, 59040BC1429CD0C64C95FC9F84478951, [primary]C4sh[/primary] gains up to {0} increased [secondary]Gun Damage[/secondary] per [primary]Bone Totem[/primary]. The less health each [primary]Bone Totem[/primary] has, the greater the [secondary]Gun Damage[/secondary].",
+                "argsmap": {
+                  "pairs": {
+                    "pair633932275": {
+                      "key": "0",
+                      "value": {
+                        "structtype": "Asset'/Script/GbxGame.NumericDisplayValue'",
+                        "attributedef": "attribute'Att_CM_UI_Robo_Tuba_Damage'",
+                        "bdisplayaspercentage": "true",
+                        "bdisplayplussign": "true"
+                      }
+                    }
+                  }
+                }
+              },
+              "longdescription": {
+                "structtype": "Asset'/Script/GbxGame.NumericDisplayValue'"
+              }
+            }
+          },
+          {
+            "uistat_cm_robo_legendary_tuba_redtext": {
+              "ui_stat": "uistat_cm_robo_legendary_tuba_redtext",
+              "displaygroup": "ui_stat_group'RedText'",
+              "sortingpriority": "1.000000",
+              "statvalue": {
+                "structtype": "Asset'/Script/GbxGame.StringDisplayValue'",
+                "formattext": "classmod_uistats_robodealer, 977BEAEC4B2DCE4C0DAC4C9D838ED7DF, Truly skilled trainers should try to win with all their favorites."
+              }
+            }
+          },
+          {
+            "uistat_description_echolog_cello": {
+              "ui_stat": "uistat_description_echolog_Cello",
+              "displaygroup": "ui_stat_group'Text'",
+              "statvalue": {
+                "structtype": "Asset'/Script/GbxGame.StringDisplayValue'",
+                "formattext": "EchoLogDefs_General, 7FDA9C474E4E4F07BA91F3B79DF30E3B, Description not set"
+              }
+            }
+          },
+          {
+            "uistat_draupner_desc": {
+              "ui_stat": "uistat_Draupner_Desc",
+              "displaygroup": "ui_stat_group'Secondary'",
+              "staticon": "Asset'/Game/uiresources/_shared/assets/ico_ui_art_discovery/ico_misc_legendaries.ico_misc_legendaries'",
+              "statvalue": {
+                "structtype": "Asset'/Script/GbxGame.StringDisplayValue'",
+                "formattext": "Uni_Spinning_Blade, ADEDDB7F4AE565F3306039BC48CEB049, [rarity_legendary]Return Wave[/rarity_legendary]",
+                "argsmap": {
+                  "pairs": {
+                    "pair2013007324": {
+                      "key": "mod",
+                      "value": {
+                        "structtype": "Asset'/Script/GbxGame.NumericDisplayValue'",
+                        "attributedef": "attribute'Uni_BOR_HW_DiscJockey_MaxBounces'"
+                      }
+                    },
+                    "pair3703827863": {
+                      "key": "mod2",
+                      "value": {
+                        "structtype": "Asset'/Script/GbxGame.NumericDisplayValue'",
+                        "attributedef": "attribute'Uni_BOR_HW_DiscJockey_DamagePerBounce'",
+                        "bdisplayaspercentage": "true",
+                        "bdisplayplussign": "true"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "uistat_draupner_redtext": {
+              "ui_stat": "uistat_Draupner_redtext",
+              "displaygroup": "ui_stat_group'RedText'",
+              "statvalue": {
+                "structtype": "Asset'/Script/GbxGame.StringDisplayValue'",
+                "formattext": "Uni_Spinning_Blade, 53DAECDD4815F6134007F2B9BD45CB4F, Warning from the Red Morning."
+              }
+            }
+          },
+          {
+            "uistat_firmware_bruiser_1": {
+              "ui_stat": "uistat_firmware_bruiser_1",
+              "displaygroup": "ui_stat_group'Firmware'",
+              "comparisonidentifier": "fw_tuba_bruiser",
+              "statlabel": {
+                "structtype": "Asset'/Script/GbxGame.StringDisplayValue'",
+                "formattext": "firmware_uistats, C090FA3449CAE5AA3B425B96A94485EF, Bruiser"
+              },
+              "statvalue": {
+                "structtype": "Asset'/Script/GbxGame.StringDisplayValue'",
+                "formattext": "firmware_uistats, FEE6CA6C48EF48E931B91692FDDE9765, [secondary]Damage Taken[/secondary] reduced by [secondary]{mod}[/secondary]",
+                "argsmap": {
+                  "pairs": {
+                    "pair2013007324": {
+                      "key": "mod",
+                      "value": {
+                        "structtype": "Asset'/Script/GbxGame.NumericDisplayValue'",
+                        "attributedef": "attribute'Fw_bruiser1_damagetakenreduction'",
+                        "bdisplayaspercentage": "true"
+                      }
+                    }
+                  }
+                }
+              },
+              "longdescription": {
+                "structtype": "Asset'/Script/GbxGame.StringDisplayValue'"
+              }
+            }
+          },
+          {
+            "uistat_firmware_bruiser_2": {
+              "ui_stat": "uistat_firmware_bruiser_2",
+              "displaygroup": "ui_stat_group'Firmware'",
+              "comparisonidentifier": "fw_tuba_bruiser",
+              "statlabel": {
+                "structtype": "Asset'/Script/GbxGame.StringDisplayValue'",
+                "formattext": "firmware_uistats, C099A5744143E38BBDC7B59F59B0C104, Bruiser"
+              },
+              "statvalue": {
+                "structtype": "Asset'/Script/GbxGame.StringDisplayValue'",
+                "formattext": "firmware_uistats, 5B4D77E84B1587A3599B97ADA5C6BCFE, [secondary]Lifesteal[/secondary] increased by [secondary]{mod}[/secondary]",
+                "argsmap": {
+                  "pairs": {
+                    "pair2013007324": {
+                      "key": "mod",
+                      "value": {
+                        "structtype": "Asset'/Script/GbxGame.NumericDisplayValue'",
+                        "attributedef": "attribute'Fw_bruiser2_lifesteal'",
+                        "signstyle": "Positive",
+                        "bdisplayaspercentage": "true",
+                        "bdisplayplussign": "true",
+                        "floatprecision": "1"
+                      }
+                    }
+                  }
+                }
+              },
+              "longdescription": {
+                "structtype": "Asset'/Script/GbxGame.StringDisplayValue'"
+              }
+            }
+          },
+          {
+            "uistat_firmware_bruiser_3": {
+              "ui_stat": "uistat_firmware_bruiser_3",
+              "displaygroup": "ui_stat_group'Firmware'",
+              "comparisonidentifier": "fw_tuba_bruiser",
+              "statlabel": {
+                "structtype": "Asset'/Script/GbxGame.StringDisplayValue'",
+                "formattext": "firmware_uistats, 596BDB684C21550CCFDA0CB642EBD402, Bruiser"
+              },
+              "statvalue": {
+                "structtype": "Asset'/Script/GbxGame.StringDisplayValue'",
+                "formattext": "firmware_uistats, FC0DB1344B51AD18599846AF89B79883, Killing an enemy grants [secondary]{mod} Damage Dealt[/secondary] for [secondary]{mod2} seconds[/secondary].  Multiple stacks can overlap.  Max [secondary]{mod3}[/secondary] stacks.",
+                "argsmap": {
+                  "pairs": {
+                    "pair2013007324": {
+                      "key": "mod",
+                      "value": {
+                        "structtype": "Asset'/Script/GbxGame.NumericDisplayValue'",
+                        "attributedef": "attribute'Fw_bruiser3_damage'",
+                        "bdisplayaspercentage": "true",
+                        "bdisplayplussign": "true"
+                      }
+                    },
+                    "pair3703827863": {
+                      "key": "mod2",
+                      "value": {
+                        "structtype": "Asset'/Script/GbxGame.NumericDisplayValue'",
+                        "attributedef": "attribute'Fw_bruiser3_duration'",
+                        "truncateafterdigits": "0",
+                        "floatprecision": "1"
+                      }
+                    },
+                    "pair2143220209": {
+                      "key": "mod3",
+                      "value": {
+                        "structtype": "Asset'/Script/GbxGame.NumericDisplayValue'",
+                        "attributedef": "attribute'Fw_bruiser3_maxstacks'"
+                      }
+                    }
+                  }
+                }
+              },
+              "longdescription": {
+                "structtype": "Asset'/Script/GbxGame.StringDisplayValue'"
+              }
+            }
+          },
+          {
+            "uistat_fishward_desc": {
+              "ui_stat": "uistat_fishward_desc",
+              "displaygroup": "ui_stat_group'Secondary'",
+              "sortingpriority": "-1.000000",
+              "staticon": "Asset'/Game/uiresources/_shared/assets/ico_ui_art_discovery/ico_misc_legendaries.ico_misc_legendaries'",
+              "statvalue": {
+                "structtype": "Asset'/Script/GbxGame.StringDisplayValue'",
+                "formattext": "Uni_MAL_SG_Kickballer, 1723F1B443EF63B43A377297B65955F1, [rarity_legendary]Fish Fry[/rarity_legendary] - On [secondary]Kill[/secondary], increase the [secondary]Damage Dealt[/secondary] of the next [secondary]Mag[/secondary] by [secondary]{mod}[/secondary] for a [secondary]Maximum[/secondary] of [secondary]5 stacks[/secondary]",
+                "argsmap": {
+                  "pairs": {
+                    "pair2013007324": {
+                      "key": "mod",
+                      "value": {
+                        "structtype": "Asset'/Script/GbxGame.NumericDisplayValue'",
+                        "attributedef": "attribute'fishward_dmg_per_Stack'",
+                        "bdisplayaspercentage": "true",
+                        "bdisplayplussign": "true"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "uistat_fishward_red_text": {
+              "ui_stat": "uistat_fishward_red_text",
+              "displaygroup": "ui_stat_group'RedText'",
+              "statvalue": {
+                "structtype": "Asset'/Script/GbxGame.StringDisplayValue'",
+                "formattext": "Uni_JAK_AR_Rowan, 86A8F7CF4E8145D611DDD3A2A67413FB, Like shooting fish from a barrel."
+              }
+            }
+          },
+          {
+            "uistat_harmmain2_mrchewcollar": {
+              "ui_stat": "UIStat_HarmMain2_MrChewCollar",
+              "displaygroup": "ui_stat_group'Text'",
+              "statlabel": {
+                "structtype": "Asset'/Script/GbxGame.StringDisplayValue'",
+                "keygroup": "Mr. Chew's RFID enabled tracking collar. Probably connected to Fl4k's systems."
+              },
+              "statvalue": {
+                "structtype": "Asset'/Script/GbxGame.StringDisplayValue'"
+              },
+              "type": "/Script/GbxGame.UIStatDisplayDef"
+            }
+          },
+          {
+            "uistat_ishmael_desc": {
+              "ui_stat": "uistat_ishmael_desc",
+              "displaygroup": "ui_stat_group'Secondary'",
+              "sortingpriority": "-1.000000",
+              "staticon": "Asset'/Game/uiresources/_shared/assets/ico_ui_art_discovery/ico_misc_legendaries.ico_misc_legendaries'",
+              "statvalue": {
+                "structtype": "Asset'/Script/GbxGame.StringDisplayValue'",
+                "formattext": "Uni_MAL_SG_Kickballer, 4A1635B347C2D404319E4B9A7CACB05D, [rarity_legendary]Harpoon[/rarity_legendary] - [secondary]Bleeds[/secondary] the target for [secondary]{mod1} Damage[/secondary] over [secondary]{mod2} seconds[/secondary]",
+                "argsmap": {
+                  "pairs": {
+                    "pair4019983703": {
+                      "key": "mod1",
+                      "value": {
+                        "structtype": "Asset'/Script/GbxGame.NumericDisplayValue'",
+                        "attributedef": "attribute'ord_sr_ishmael_bleed_damage'"
+                      }
+                    },
+                    "pair3703827863": {
+                      "key": "mod2",
+                      "value": {
+                        "structtype": "Asset'/Script/GbxGame.NumericDisplayValue'",
+                        "attributedef": "attribute'ord_sr_ishmael_bleed_duration'"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "uistat_ishmael_red_text": {
+              "ui_stat": "uistat_ishmael_red_text",
+              "displaygroup": "ui_stat_group'RedText'",
+              "statvalue": {
+                "structtype": "Asset'/Script/GbxGame.StringDisplayValue'",
+                "formattext": "Uni_ORD_SR_Symmetry, 4DD826E146010834AF21D9974B3F8042, From hell's heart."
+              }
+            }
+          },
+          {
+            "uistat_m3_pickup_plantroot": {
+              "ui_stat": "UIStat_M3_Pickup_PlantRoot",
+              "displaygroup": "ui_stat_group'Text'",
+              "statlabel": {
+                "structtype": "Asset'/Script/GbxGame.StringDisplayValue'",
+                "formattext": "M3_Pickup_PlantRoot, 8F711D364FF19848F6E8539376CEFEB3, If you struck a match and lit this, it might take a moment to notice the flames were making you colder."
+              },
+              "type": "/Script/GbxGame.UIStatDisplayDef"
+            }
+          },
+          {
+            "uistat_manifest_desc": {
+              "ui_stat": "uistat_manifest_desc",
+              "displaygroup": "ui_stat_group'Secondary'",
+              "sortingpriority": "-1.000000",
+              "staticon": "Asset'/Game/uiresources/_shared/assets/ico_ui_art_discovery/ico_misc_legendaries.ico_misc_legendaries'",
+              "statvalue": {
+                "structtype": "Asset'/Script/GbxGame.StringDisplayValue'",
+                "formattext": "Uni_MAL_SR_Katagawa, 840F9D994EF84D903B63B3A1554EA1EB, [rarity_legendary]Commandeer[/rarity_legendary]"
+              }
+            }
+          },
+          {
+            "uistat_manifest_red_text": {
+              "ui_stat": "uistat_manifest_red_text",
+              "displaygroup": "ui_stat_group'RedText'",
+              "sortingpriority": "1.000000",
+              "statvalue": {
+                "structtype": "Asset'/Script/GbxGame.StringDisplayValue'",
+                "formattext": "Uni_MAL_SR_AshersRise, 1E0837B24AF2839EE50F74A867E4C17A, Men, you have done your full duty. "
+              }
+            }
+          },
+          {
+            "uistat_ordinance_desc": {
+              "ui_stat": "uistat_Ordinance_desc",
+              "displaygroup": "ui_stat_group'Secondary'",
+              "staticon": "Asset'/Game/uiresources/_shared/assets/ico_ui_art_discovery/ico_misc_legendaries.ico_misc_legendaries'",
+              "statvalue": {
+                "structtype": "Asset'/Script/GbxGame.StringDisplayValue'",
+                "formattext": "Uni_Spinning_Blade, 19965E32485671B89E6AA99C6F2F94BC, [rarity_legendary]Ord 25-2[/rarity_legendary]",
+                "argsmap": {
+                  "pairs": {
+                    "pair2013007324": {
+                      "key": "mod",
+                      "value": {
+                        "structtype": "Asset'/Script/GbxGame.NumericDisplayValue'",
+                        "attributedef": "attribute'grenade_uni_ShoKunai_movementspeed'",
+                        "bdisplayaspercentage": "true"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "uistat_ordinance_redtext": {
+              "ui_stat": "uistat_Ordinance_redtext",
+              "displaygroup": "ui_stat_group'RedText'",
+              "statvalue": {
+                "structtype": "Asset'/Script/GbxGame.StringDisplayValue'",
+                "formattext": "Uni_TED_Grenade_Gadget_PredatorDrone, 2DC7BB0743D684F2D9D18D9A86020CB2, No harm ever came from reading a book."
+              }
+            }
+          },
+          {
+            "uistat_pickup_spa_safecode": {
+              "ui_stat": "UIStat_Pickup_Spa_SafeCode",
+              "displaygroup": "ui_stat_group'Text'",
+              "statlabel": {
+                "structtype": "Asset'/Script/GbxGame.StringDisplayValue'",
+                "formattext": "UIStat_Pickup_VehiclePowercore, 32A8DAA5476559A7696D238B2961B00F, 1 of 5. Collect them all for a cool prize! (Proof of purchase required.)"
+              },
+              "type": "/Script/GbxGame.UIStatDisplayDef"
+            }
+          },
+          {
+            "uistat_pickup_vmuf_lytfestposter": {
+              "ui_stat": "UIStat_Pickup_VMUF_LytFestPoster",
+              "displaygroup": "ui_stat_group'Text'",
+              "statlabel": {
+                "structtype": "Asset'/Script/GbxGame.StringDisplayValue'",
+                "formattext": "UIStat_Pickup_VehiclePowercore, CDA67B9C482F32B81A1CDCBF0235C160, This festival's gonna be LYT!"
+              }
+            }
+          },
+          {
+            "uistat_pickup_vmuf_microphone": {
+              "ui_stat": "UIStat_Pickup_VMUF_Microphone",
+              "displaygroup": "ui_stat_group'Text'",
+              "statlabel": {
+                "structtype": "Asset'/Script/GbxGame.StringDisplayValue'",
+                "formattext": "UIStat_Pickup_VehiclePowercore, F13016B24730F626FE6FA3BA4C0C99A4, This is your moment."
+              }
+            }
+          },
+          {
+            "uistat_pocketbuddies_desc": {
+              "ui_stat": "uistat_PocketBuddies_desc",
+              "displaygroup": "ui_stat_group'Secondary'",
+              "sortingpriority": "-1.000000",
+              "staticon": "Asset'/Game/uiresources/_shared/assets/ico_ui_art_discovery/ico_misc_legendaries.ico_misc_legendaries'",
+              "statvalue": {
+                "structtype": "Asset'/Script/GbxGame.StringDisplayValue'",
+                "formattext": "Uni_Supernova, 1393E3E94EB953D3738B50B0ECB70B87, [rarity_legendary]Sister[/rarity_legendary] - [secondary]On Segment break[/secondary], spawn a [secondary]Kill Drone[/secondary] that fires alongside the [secondary]Vault Hunter[/secondary], mimicking their [secondary]Gun's Element[/secondary] and deals [secondary]{damage}[/secondary] of the [secondary]Gun's Damage[/secondary]",
+                "argsmap": {
+                  "pairs": {
+                    "pair3195346958": {
+                      "key": "damage",
+                      "value": {
+                        "structtype": "Asset'/Script/GbxGame.NumericDisplayValue'",
+                        "attributedef": "attribute'att_PocketBuddies_DMGScalar'",
+                        "signstyle": "Positive",
+                        "bdisplayaspercentage": "true"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "uistat_pocketbuddies_red_text": {
+              "ui_stat": "uistat_PocketBuddies_red_text",
+              "displaygroup": "ui_stat_group'RedText'",
+              "statvalue": {
+                "structtype": "Asset'/Script/GbxGame.StringDisplayValue'",
+                "formattext": "Uni_TED_ShieldBoi, 9FB3A7CC41A296A9D70BBB8BEFA07695, Unzip him, Mister B!"
+              }
+            }
+          },
+          {
+            "uistat_repkit_aug_uni_vitae": {
+              "ui_stat": "uistat_repkit_aug_uni_Vitae",
+              "displaygroup": "ui_stat_group'Secondary'",
+              "sortingpriority": "-1.000000",
+              "staticon": "Asset'/Game/uiresources/_shared/assets/ico_ui_art_discovery/ico_misc_legendaries.ico_misc_legendaries'",
+              "statvalue": {
+                "structtype": "Asset'/Script/GbxGame.StringDisplayValue'",
+                "formattext": "repair_kit_uistats, C5271A9C4E7E4609C9041DA5BD6A2FAD, [rarity_legendary]Lifeblood[/rarity_legendary] - [secondary]Heals[/secondary] for [secondary]{dmg}[/secondary] on [secondary]Critical Damage Dealt[/secondary]",
+                "argsmap": {
+                  "pairs": {
+                    "pair2747350507": {
+                      "key": "dmg",
+                      "value": {
+                        "structtype": "Asset'/Script/GbxGame.NumericDisplayValue'",
+                        "attributedef": "attribute'repair_kit_health'"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "uistat_repkit_redtext_vitae": {
+              "ui_stat": "uistat_repkit_redtext_Vitae",
+              "displaygroup": "ui_stat_group'RedText'",
+              "sortingpriority": "1.000000",
+              "statvalue": {
+                "structtype": "Asset'/Script/GbxGame.StringDisplayValue'",
+                "formattext": "Uni_Repkit_Controller, D55AC1724E16E865976998A46C86FE95, Veni Vulneravi Sanavi."
+              }
+            }
+          },
+          {
+            "uistat_sharkbait_desc": {
+              "ui_stat": "uistat_sharkbait_desc",
+              "displaygroup": "ui_stat_group'Secondary'",
+              "sortingpriority": "-1.000000",
+              "staticon": "Asset'/Game/DLC/Common/uiresources/dlc_rarity_pips/assets/ico_misc_pearl.ico_misc_pearl'",
+              "statvalue": {
+                "structtype": "Asset'/Script/GbxGame.StringDisplayValue'",
+                "formattext": "Uni_Inv_TED_SG_Anarchy, 92DC3EA7425FB909419F39A15665CEAF, [rarity_pearl]Chum the Water[/rarity_pearl] - Every [secondary]bullet[/secondary] that [secondary]hits enemies[/secondary] applies [secondary]1 stack[/secondary] of [primary]Chum[/primary].  At [secondary]{mod1} stacks[/secondary] of [primary]Chum[/primary], the [secondary]enemy[/secondary] explodes for [secondary]{mod2} Damage[/secondary].",
+                "argsmap": {
+                  "pairs": {
+                    "pair4019983703": {
+                      "key": "mod1",
+                      "value": {
+                        "structtype": "Asset'/Script/GbxGame.NumericDisplayValue'",
+                        "attributedef": "attribute'ted_sg_sharkbait_maxstacks'"
+                      }
+                    },
+                    "pair3703827863": {
+                      "key": "mod2",
+                      "value": {
+                        "structtype": "Asset'/Script/GbxGame.NumericDisplayValue'",
+                        "attributedef": "attribute'ted_sg_sharkbait_explosion'"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "uistat_sharkbait_red_text": {
+              "ui_stat": "uistat_sharkbait_red_text",
+              "displaygroup": "ui_stat_group'RedText'",
+              "statvalue": {
+                "structtype": "Asset'/Script/GbxGame.StringDisplayValue'",
+                "formattext": "Uni_Inv_TED_SG_Anarchy, 363B274E4917A699E727E8847602D231, Now, look fellas, let's be reasonable."
+              }
+            }
+          },
+          {
+            "uistat_shoals_desc": {
+              "ui_stat": "uistat_Shoals_desc",
+              "displaygroup": "ui_stat_group'Secondary'",
+              "sortingpriority": "-1.000000",
+              "staticon": "Asset'/Game/uiresources/_shared/assets/ico_ui_art_discovery/ico_misc_legendaries.ico_misc_legendaries'",
+              "statvalue": {
+                "structtype": "Asset'/Script/GbxGame.StringDisplayValue'",
+                "formattext": "Uni_MAL_SG_Kickballer, DDB989F748700B1BE2B4769ABE041EFC, [rarity_legendary]Habitual[/rarity_legendary] - [secondary]Ricochets[/secondary] deal [secondary]Splash Damage[/secondary]",
+                "argsmap": {
+                  "pairs": {
+                    "pair2624834046": {
+                      "key": "duration",
+                      "value": {
+                        "structtype": "Asset'/Script/GbxGame.NumericDisplayValue'",
+                        "attributedef": "attribute'JAK_PS_Quickdraw_duration'"
+                      }
+                    },
+                    "pair4019983703": {
+                      "key": "mod1",
+                      "value": {
+                        "structtype": "Asset'/Script/GbxGame.NumericDisplayValue'",
+                        "attributedef": "attribute'JAK_PS_Quickdraw_damage'",
+                        "bdisplayaspercentage": "true",
+                        "bdisplayplussign": "true"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "uistat_shoals_red_text": {
+              "ui_stat": "uistat_Shoals_red_text",
+              "displaygroup": "ui_stat_group'RedText'",
+              "statvalue": {
+                "structtype": "Asset'/Script/GbxGame.StringDisplayValue'",
+                "formattext": "Uni_JAK_PS_Kings_Gambit, 8269A74144A55C0E8D4B3A8E357D7233, The real voyage of discovery consists not in seeking new landscapes but in having new eyes."
+              }
+            }
+          },
+          {
+            "uistat_si_pickup_detonator": {
+              "ui_stat": "UIStat_SI_Pickup_Detonator",
+              "displaygroup": "ui_stat_group'Text'",
+              "statlabel": {
+                "structtype": "Asset'/Script/GbxGame.StringDisplayValue'",
+                "formattext": "IO_SI_Pickup_Detonator, 586DED8342E495416550108DA26696C6, Don't press that button unless you mean it!"
+              },
+              "type": "/Script/GbxGame.UIStatDisplayDef"
+            }
+          },
+          {
+            "uistat_typeline_echolog_cello": {
+              "ui_stat": "uistat_typeline_echolog_Cello",
+              "displaygroup": "ui_stat_group'TypeLine'",
+              "statvalue": {
+                "structtype": "Asset'/Script/GbxGame.StringDisplayValue'",
+                "formattext": "EchoLogDefs_General, 24A289E04E3AF74CB1B0C8AA72A0811E, ECHO Log"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "entries": [
+          {
+            "uistat_classmod_stat_actionskill_damage_and_ordnance_damage": {
+              "ui_stat": "uistat_classmod_stat_actionskill_damage_and_ordnance_damage",
+              "displaygroup": "ui_stat_group'Secondary'",
+              "sortingpriority": "1.000000",
+              "statvalue": {
+                "structtype": "Asset'/Script/GbxGame.StringDisplayValue'",
+                "formattext": "enhancement_uistats, 7E7457E04C107F2EDC601EB095B6217C, {damage} [secondary]Action Skill Damage[/secondary] and {ordnance} [secondary]Ordnance Damage[/secondary]",
+                "argsmap": {
+                  "pairs": {
+                    "pair3195346958": {
+                      "key": "damage",
+                      "value": {
+                        "structtype": "Asset'/Script/GbxGame.NumericDisplayValue'",
+                        "attributedef": "attribute'classmod_stat_actionskill_damage_hybrid'",
+                        "bdisplayaspercentage": "true",
+                        "bdisplayplussign": "true"
+                      }
+                    },
+                    "pair664554917": {
+                      "key": "ordnance",
+                      "value": {
+                        "structtype": "Asset'/Script/GbxGame.NumericDisplayValue'",
+                        "attributedef": "attribute'classmod_stat_ordnance_damage_hybrid'",
+                        "bdisplayaspercentage": "true",
+                        "bdisplayplussign": "true"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "uistat_classmod_stat_elem_resist_corrosive": {
+              "ui_stat": "uistat_classmod_stat_elem_resist_corrosive",
+              "displaygroup": "ui_stat_group'Secondary'",
+              "sortingpriority": "1.000000",
+              "statvalue": {
+                "structtype": "Asset'/Script/GbxGame.StringDisplayValue'",
+                "formattext": "enhancement_uistats, 7E5C1EEE4088092494538785CF9E5311, {damage} Corrosive Resistance",
+                "argsmap": {
+                  "pairs": {
+                    "pair3195346958": {
+                      "key": "damage",
+                      "value": {
+                        "structtype": "Asset'/Script/GbxGame.NumericDisplayValue'",
+                        "attributedef": "attribute'classmod_stat_elem_resist'",
+                        "signstyle": "OppositeSign",
+                        "bdisplayaspercentage": "true",
+                        "bdisplayplussign": "true"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "uistat_classmod_stat_elem_resist_cryo": {
+              "ui_stat": "uistat_classmod_stat_elem_resist_cryo",
+              "displaygroup": "ui_stat_group'Secondary'",
+              "sortingpriority": "1.000000",
+              "statvalue": {
+                "structtype": "Asset'/Script/GbxGame.StringDisplayValue'",
+                "formattext": "enhancement_uistats, C513B15147C3519C511D89A0946083A0, {damage} Cryo Resistance",
+                "argsmap": {
+                  "pairs": {
+                    "pair3195346958": {
+                      "key": "damage",
+                      "value": {
+                        "structtype": "Asset'/Script/GbxGame.NumericDisplayValue'",
+                        "attributedef": "attribute'classmod_stat_elem_resist'",
+                        "signstyle": "OppositeSign",
+                        "bdisplayaspercentage": "true",
+                        "bdisplayplussign": "true"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "uistat_classmod_stat_elem_resist_fire": {
+              "ui_stat": "uistat_classmod_stat_elem_resist_fire",
+              "displaygroup": "ui_stat_group'Secondary'",
+              "sortingpriority": "1.000000",
+              "statvalue": {
+                "structtype": "Asset'/Script/GbxGame.StringDisplayValue'",
+                "formattext": "enhancement_uistats, 04E43FCF44A2775821FD30B6FDF3261A, {damage} Fire Resistance",
+                "argsmap": {
+                  "pairs": {
+                    "pair3195346958": {
+                      "key": "damage",
+                      "value": {
+                        "structtype": "Asset'/Script/GbxGame.NumericDisplayValue'",
+                        "attributedef": "attribute'classmod_stat_elem_resist'",
+                        "signstyle": "OppositeSign",
+                        "bdisplayaspercentage": "true",
+                        "bdisplayplussign": "true"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "uistat_classmod_stat_elem_resist_radiation": {
+              "ui_stat": "uistat_classmod_stat_elem_resist_radiation",
+              "displaygroup": "ui_stat_group'Secondary'",
+              "sortingpriority": "1.000000",
+              "statvalue": {
+                "structtype": "Asset'/Script/GbxGame.StringDisplayValue'",
+                "formattext": "enhancement_uistats, A61F4C304EBB4D1126D53FB831F54466, {damage} Radiation Resistance",
+                "argsmap": {
+                  "pairs": {
+                    "pair3195346958": {
+                      "key": "damage",
+                      "value": {
+                        "structtype": "Asset'/Script/GbxGame.NumericDisplayValue'",
+                        "attributedef": "attribute'classmod_stat_elem_resist'",
+                        "signstyle": "OppositeSign",
+                        "bdisplayaspercentage": "true",
+                        "bdisplayplussign": "true"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "uistat_classmod_stat_elem_resist_shock": {
+              "ui_stat": "uistat_classmod_stat_elem_resist_shock",
+              "displaygroup": "ui_stat_group'Secondary'",
+              "sortingpriority": "1.000000",
+              "statvalue": {
+                "structtype": "Asset'/Script/GbxGame.StringDisplayValue'",
+                "formattext": "enhancement_uistats, 7E50B819480B72C7DE813687464BBACD, {damage} Shock Resistance",
+                "argsmap": {
+                  "pairs": {
+                    "pair3195346958": {
+                      "key": "damage",
+                      "value": {
+                        "structtype": "Asset'/Script/GbxGame.NumericDisplayValue'",
+                        "attributedef": "attribute'classmod_stat_elem_resist'",
+                        "signstyle": "OppositeSign",
+                        "bdisplayaspercentage": "true",
+                        "bdisplayplussign": "true"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "uistat_classmod_stat_heavy_damage": {
+              "ui_stat": "uistat_classmod_stat_heavy_damage",
+              "displaygroup": "ui_stat_group'Secondary'",
+              "sortingpriority": "1.000000",
+              "statvalue": {
+                "structtype": "Asset'/Script/GbxGame.StringDisplayValue'",
+                "formattext": "enhancement_uistats, 3BE74B144448A3A5B82406B1DA1F8A14, {damage} Heavy Ordnance Damage",
+                "argsmap": {
+                  "pairs": {
+                    "pair3195346958": {
+                      "key": "damage",
+                      "value": {
+                        "structtype": "Asset'/Script/GbxGame.NumericDisplayValue'",
+                        "attributedef": "attribute'classmod_stat_heavy_damage'",
+                        "bdisplayaspercentage": "true",
+                        "bdisplayplussign": "true"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "uistat_classmod_stat_mag_size": {
+              "ui_stat": "uistat_classmod_stat_mag_size",
+              "displaygroup": "ui_stat_group'Secondary'",
+              "sortingpriority": "1.000000",
+              "statvalue": {
+                "structtype": "Asset'/Script/GbxGame.StringDisplayValue'",
+                "formattext": "enhancement_uistats, A0BB851D467E5DF911A509BBAAF9C863, {damage} Mag Size",
+                "argsmap": {
+                  "pairs": {
+                    "pair3195346958": {
+                      "key": "damage",
+                      "value": {
+                        "structtype": "Asset'/Script/GbxGame.NumericDisplayValue'",
+                        "attributedef": "attribute'classmod_stat_mag_size'",
+                        "bdisplayaspercentage": "true",
+                        "bdisplayplussign": "true"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "uistat_classmod_stat_reload_speed_and_fire_rate": {
+              "ui_stat": "uistat_classmod_stat_reload_speed_and_fire_rate",
+              "displaygroup": "ui_stat_group'Secondary'",
+              "sortingpriority": "1.000000",
+              "statvalue": {
+                "structtype": "Asset'/Script/GbxGame.StringDisplayValue'",
+                "formattext": "enhancement_uistats, ECD1D391464C908604B4C4B97BD24DD2, {reload} [secondary]Reload Speed[/secondary] and {fire_rate} [secondary]Fire Rate[/secondary]",
+                "argsmap": {
+                  "pairs": {
+                    "pair1701417698": {
+                      "key": "reload",
+                      "value": {
+                        "structtype": "Asset'/Script/GbxGame.NumericDisplayValue'",
+                        "attributedef": "attribute'classmod_stat_reload_speed_hybrid'",
+                        "signstyle": "OppositeSign",
+                        "bdisplayaspercentage": "true",
+                        "bdisplayplussign": "true",
+                        "bcalculatewithreductionmath": "true"
+                      }
+                    },
+                    "pair168696461": {
+                      "key": "fire_rate",
+                      "value": {
+                        "structtype": "Asset'/Script/GbxGame.NumericDisplayValue'",
+                        "attributedef": "attribute'classmod_stat_fire_rate_hybrid'",
+                        "bdisplayaspercentage": "true",
+                        "bdisplayplussign": "true"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "uistat_classmod_stat_shield_regen_delay": {
+              "ui_stat": "uistat_classmod_stat_shield_regen_delay",
+              "displaygroup": "ui_stat_group'Secondary'",
+              "sortingpriority": "1.000000",
+              "statvalue": {
+                "structtype": "Asset'/Script/GbxGame.StringDisplayValue'",
+                "formattext": "enhancement_uistats, 49851F1347143EA0A7250ABB61B97492, {damage} Energy Shield Regen Delay",
+                "argsmap": {
+                  "pairs": {
+                    "pair3195346958": {
+                      "key": "damage",
+                      "value": {
+                        "structtype": "Asset'/Script/GbxGame.NumericDisplayValue'",
+                        "attributedef": "attribute'classmod_stat_shield_regen_delay'",
+                        "signstyle": "OppositeSign",
+                        "bdisplayaspercentage": "true",
+                        "bdisplayplussign": "true"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "uistat_classmod_stat_statuseffect_damage_and_chance": {
+              "ui_stat": "uistat_classmod_stat_statuseffect_damage_and_chance",
+              "displaygroup": "ui_stat_group'Secondary'",
+              "sortingpriority": "1.000000",
+              "statvalue": {
+                "structtype": "Asset'/Script/GbxGame.StringDisplayValue'",
+                "formattext": "enhancement_uistats, 3D95A5724041F855E6CEA78078D95AD1, {damage} [secondary]Status Effect Damage[/secondary] and {chance} [secondary]Status Effect Chance[/secondary]",
+                "argsmap": {
+                  "pairs": {
+                    "pair3195346958": {
+                      "key": "damage",
+                      "value": {
+                        "structtype": "Asset'/Script/GbxGame.NumericDisplayValue'",
+                        "attributedef": "attribute'classmod_stat_statuseffect_damage_hybrid'",
+                        "bdisplayaspercentage": "true",
+                        "bdisplayplussign": "true"
+                      }
+                    },
+                    "pair1534583640": {
+                      "key": "chance",
+                      "value": {
+                        "structtype": "Asset'/Script/GbxGame.NumericDisplayValue'",
+                        "attributedef": "attribute'classmod_stat_statuseffect_chance_hybrid'",
+                        "bdisplayaspercentage": "true",
+                        "bdisplayplussign": "true"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "uistat_classmod_stat_weapon_accuracy": {
+              "ui_stat": "uistat_classmod_stat_weapon_accuracy",
+              "displaygroup": "ui_stat_group'Secondary'",
+              "sortingpriority": "1.000000",
+              "statvalue": {
+                "structtype": "Asset'/Script/GbxGame.StringDisplayValue'",
+                "formattext": "enhancement_uistats, 8E1B0432476CF4B86C50D6AAEBAACD5A, {damage} Weapon Accuracy",
+                "argsmap": {
+                  "pairs": {
+                    "pair3195346958": {
+                      "key": "damage",
+                      "value": {
+                        "structtype": "Asset'/Script/GbxGame.NumericDisplayValue'",
+                        "attributedef": "attribute'classmod_stat_weapon_accuracy'",
+                        "signstyle": "Positive",
+                        "bdisplayaspercentage": "true",
+                        "bdisplayplussign": "true"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "uistat_classmod_stat_weapon_charge_speed": {
+              "ui_stat": "uistat_classmod_stat_weapon_charge_speed",
+              "displaygroup": "ui_stat_group'Secondary'",
+              "sortingpriority": "1.000000",
+              "statvalue": {
+                "structtype": "Asset'/Script/GbxGame.StringDisplayValue'",
+                "formattext": "enhancement_uistats, 84E327184B651217B83B01B80338B66F, {damage} Weapon Charge Speed",
+                "argsmap": {
+                  "pairs": {
+                    "pair3195346958": {
+                      "key": "damage",
+                      "value": {
+                        "structtype": "Asset'/Script/GbxGame.NumericDisplayValue'",
+                        "attributedef": "attribute'classmod_stat_weapon_charge_speed'",
+                        "signstyle": "OppositeSign",
+                        "bdisplayaspercentage": "true",
+                        "bdisplayplussign": "true"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "uistat_classmod_stat_weapon_damage_and_melee_damage": {
+              "ui_stat": "uistat_classmod_stat_weapon_damage_and_melee_damage",
+              "displaygroup": "ui_stat_group'Secondary'",
+              "sortingpriority": "1.000000",
+              "statvalue": {
+                "structtype": "Asset'/Script/GbxGame.StringDisplayValue'",
+                "formattext": "enhancement_uistats, 3C4BBEE942DE29E62E9E119042ACB9C5, {damage} [secondary]Gun Damage[/secondary] and {melee} [secondary]Melee Damage[/secondary]",
+                "argsmap": {
+                  "pairs": {
+                    "pair3195346958": {
+                      "key": "damage",
+                      "value": {
+                        "structtype": "Asset'/Script/GbxGame.NumericDisplayValue'",
+                        "attributedef": "attribute'classmod_stat_weapon_damage_hybrid'",
+                        "bdisplayaspercentage": "true",
+                        "bdisplayplussign": "true"
+                      }
+                    },
+                    "pair3545937888": {
+                      "key": "melee",
+                      "value": {
+                        "structtype": "Asset'/Script/GbxGame.NumericDisplayValue'",
+                        "attributedef": "attribute'classmod_stat_melee_damage_hybrid'",
+                        "bdisplayaspercentage": "true",
+                        "bdisplayplussign": "true"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "uistat_classmod_stat_weapon_splash_radius": {
+              "ui_stat": "uistat_classmod_stat_weapon_splash_radius",
+              "displaygroup": "ui_stat_group'Secondary'",
+              "sortingpriority": "1.000000",
+              "statvalue": {
+                "structtype": "Asset'/Script/GbxGame.StringDisplayValue'",
+                "formattext": "enhancement_uistats, 9ED227324C5D1592C221759CE20FA369, {damage} Weapon Splash Radius",
+                "argsmap": {
+                  "pairs": {
+                    "pair3195346958": {
+                      "key": "damage",
+                      "value": {
+                        "structtype": "Asset'/Script/GbxGame.NumericDisplayValue'",
+                        "attributedef": "attribute'classmod_stat_weapon_splash_radius'",
+                        "bdisplayaspercentage": "true",
+                        "bdisplayplussign": "true"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "uistat_cm_ds_skill_test_blue": {
+              "ui_stat": "uistat_cm_ds_skill_test_blue",
+              "displaygroup": "ui_stat_group'Primary'",
+              "sortingpriority": "1.000000",
+              "statvalue": {
+                "structtype": "Asset'/Script/GbxGame.StringDisplayValue'",
+                "formattext": "enhancement_uistats, BD654F324B402792D5653DA8FCBC001D, Test text for Dark Siren blue test tree"
+              }
+            }
+          },
+          {
+            "uistat_cm_ds_skill_test_green": {
+              "ui_stat": "uistat_cm_ds_skill_test_green",
+              "displaygroup": "ui_stat_group'Primary'",
+              "sortingpriority": "1.000000",
+              "statvalue": {
+                "structtype": "Asset'/Script/GbxGame.StringDisplayValue'",
+                "formattext": "enhancement_uistats, B874E41046AEF163DAC632B273E2481F, Test text for Dark Siren green test tree"
+              }
+            }
+          },
+          {
+            "uistat_cm_ds_skill_test_red": {
+              "ui_stat": "uistat_cm_ds_skill_test_red",
+              "displaygroup": "ui_stat_group'Primary'",
+              "sortingpriority": "1.000000",
+              "statvalue": {
+                "structtype": "Asset'/Script/GbxGame.StringDisplayValue'",
+                "formattext": "enhancement_uistats, 73446610495E914D6BAE6193DA6AAA50, Test text for Dark Siren red test tree"
+              }
+            }
+          },
+          {
+            "uistat_cm_exo_legendary_filantropo": {
+              "ui_stat": "uistat_cm_exo_legendary_filantropo",
+              "displaygroup": "ui_stat_group'Text'",
+              "sortingpriority": "-1000.000000",
+              "statvalue": {
+                "structtype": "Asset'/Script/GbxGame.StringDisplayValue'",
+                "formattext": "enhancement_uistats, 133B10E2415566F6BB512A9581756B2E, On Action Skill Retrigger [primary]spawn a free grenade[/primary]. If you have a [secondary]Grenade[/secondary] equipped, [primary]spawn a copy of that grenade[/primary] instead."
+              }
+            }
+          },
+          {
+            "uistat_cm_exo_legendary_filantropo_redtext": {
+              "ui_stat": "uistat_cm_exo_legendary_filantropo_redtext",
+              "displaygroup": "ui_stat_group'RedText'",
+              "sortingpriority": "1.000000",
+              "statvalue": {
+                "structtype": "Asset'/Script/GbxGame.StringDisplayValue'",
+                "formattext": "enhancement_uistats, CDB123244EEE242299892DB1FA3F6A22, Mientras doy, recibo."
+              }
+            }
+          },
+          {
+            "uistat_cm_exo_skill_test_blue": {
+              "ui_stat": "uistat_cm_exo_skill_test_blue",
+              "displaygroup": "ui_stat_group'Primary'",
+              "sortingpriority": "1.000000",
+              "statvalue": {
+                "structtype": "Asset'/Script/GbxGame.StringDisplayValue'",
+                "formattext": "enhancement_uistats, 71C92690499999CFA1BED28292624B9B, Test text for Exo Soldier blue test tree"
+              }
+            }
+          },
+          {
+            "uistat_cm_exo_skill_test_green": {
+              "ui_stat": "uistat_cm_exo_skill_test_green",
+              "displaygroup": "ui_stat_group'Primary'",
+              "sortingpriority": "1.000000",
+              "statvalue": {
+                "structtype": "Asset'/Script/GbxGame.StringDisplayValue'",
+                "formattext": "enhancement_uistats, 4D59FF33469BD4ABB41293B625390D3B, Test text for Exo Soldier green test tree"
+              }
+            }
+          },
+          {
+            "uistat_cm_exo_skill_test_red": {
+              "ui_stat": "uistat_cm_exo_skill_test_red",
+              "displaygroup": "ui_stat_group'Primary'",
+              "sortingpriority": "1.000000",
+              "statvalue": {
+                "structtype": "Asset'/Script/GbxGame.StringDisplayValue'",
+                "formattext": "enhancement_uistats, 4ABE7D8D4DD5E860939BE4903785454B, Test text for Exo Soldier red test tree"
+              }
+            }
+          },
+          {
+            "uistat_cm_grav_skill_test_blue": {
+              "ui_stat": "uistat_cm_grav_skill_test_blue",
+              "displaygroup": "ui_stat_group'Primary'",
+              "sortingpriority": "1.000000",
+              "statvalue": {
+                "structtype": "Asset'/Script/GbxGame.StringDisplayValue'",
+                "formattext": "enhancement_uistats, 5D4772F84CAB0810EB4DA4AA8C6CADED, Test text for Gravitar blue test tree"
+              }
+            }
+          },
+          {
+            "uistat_cm_grav_skill_test_green": {
+              "ui_stat": "uistat_cm_grav_skill_test_green",
+              "displaygroup": "ui_stat_group'Primary'",
+              "sortingpriority": "1.000000",
+              "statvalue": {
+                "structtype": "Asset'/Script/GbxGame.StringDisplayValue'",
+                "formattext": "enhancement_uistats, 36460FAE457EC6740C797E9B48BCBAF9, Test text for Gravitar green test tree"
+              }
+            }
+          },
+          {
+            "uistat_cm_grav_skill_test_red": {
+              "ui_stat": "uistat_cm_grav_skill_test_red",
+              "displaygroup": "ui_stat_group'Primary'",
+              "sortingpriority": "1.000000",
+              "statvalue": {
+                "structtype": "Asset'/Script/GbxGame.StringDisplayValue'",
+                "formattext": "enhancement_uistats, 9D888735421D7E276BD42DB959E34B7F, Test text for Gravitar red test tree"
+              }
+            }
+          },
+          {
+            "uistat_cm_pal_skill_test_blue": {
+              "ui_stat": "uistat_cm_pal_skill_test_blue",
+              "displaygroup": "ui_stat_group'Primary'",
+              "sortingpriority": "1.000000",
+              "statvalue": {
+                "structtype": "Asset'/Script/GbxGame.StringDisplayValue'",
+                "formattext": "enhancement_uistats, 8A0BF3C34E80A6F7101F9ABD1626A5BA, Test text for Paladin blue test tree"
+              }
+            }
+          },
+          {
+            "uistat_cm_pal_skill_test_green": {
+              "ui_stat": "uistat_cm_pal_skill_test_green",
+              "displaygroup": "ui_stat_group'Primary'",
+              "sortingpriority": "1.000000",
+              "statvalue": {
+                "structtype": "Asset'/Script/GbxGame.StringDisplayValue'"
+              }
+            }
+          },
+          {
+            "uistat_cm_pal_skill_test_red": {
+              "ui_stat": "uistat_cm_pal_skill_test_red",
+              "displaygroup": "ui_stat_group'Primary'",
+              "sortingpriority": "1.000000",
+              "statvalue": {
+                "structtype": "Asset'/Script/GbxGame.StringDisplayValue'",
+                "formattext": "enhancement_uistats, 6505906D4BE66483CFE8039C062588EE, Test text for Paladin red test tree"
+              }
+            }
+          },
+          {
+            "uistat_corrosive": {
+              "ui_stat": "uistat_corrosive",
+              "statlabel": {
+                "structtype": "Asset'/Script/GbxGame.StringDisplayValue'",
+                "formattext": "weapon_uistats, 9D84A82648AEBBADB599AE805EC2FC7F, [Corrosive]Corrosive[/Corrosive]"
+              },
+              "statvalue": {
+                "structtype": "Asset'/Script/GbxGame.StringDisplayValue'",
+                "formattext": "weapon_uistats, CAE19BF34CC8AE6240F996ABAE316D17, [Corrosive]Corrosive[/Corrosive]"
+              }
+            }
+          },
+          {
+            "uistat_damage_and_projectile_count_assault": {
+              "ui_stat": "uistat_damage_and_projectile_count_assault",
+              "displaygroup": "ui_stat_group'Primary'",
+              "displaycondition": {
+                "attributedef": "attribute'weapon_projectile_per_shot'",
+                "comparetype": "GreaterThan",
+                "comparevalue": "1.000000"
+              },
+              "compareattribute": "attribute'weapon_damage_per_shot'",
+              "staticon": "Asset'/Game/uiresources/_shared/assets/ico_ui_art_weapon_big/ico_ui_art_assault_big.ico_ui_art_assault_big'",
+              "statlabel": {
+                "structtype": "Asset'/Script/GbxGame.StringDisplayValue'",
+                "formattext": "weapon_uistats, 61F7199B48BAE028AF0007B5B6A74DAC, Damage"
+              },
+              "statvalue": {
+                "structtype": "Asset'/Script/GbxGame.StringDisplayValue'",
+                "formattext": "weapon_uistats, AF573E4531EA48B187FACD7EA491DD94, {dmg} x {proj}",
+                "argsmap": {
+                  "pairs": {
+                    "pair2747350507": {
+                      "key": "dmg",
+                      "value": {
+                        "structtype": "Asset'/Script/GbxGame.NumericDisplayValue'",
+                        "attributedef": "attribute'weapon_damage'",
+                        "roundingmode": "RoundToInt",
+                        "formattext": "weapon_uistats, D19D9120C1D745D081A7382C50C2DF32, $VALUE$"
+                      }
+                    },
+                    "pair2679271687": {
+                      "key": "proj",
+                      "value": {
+                        "structtype": "Asset'/Script/GbxGame.NumericDisplayValue'",
+                        "attributedef": "attribute'weapon_projectile_per_shot'",
+                        "formattext": "weapon_uistats, 48057FBC79FA44C196C2339342E688D3, $VALUE$"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "uistat_damage_and_projectile_count_pistol": {
+              "ui_stat": "uistat_damage_and_projectile_count_pistol",
+              "displaygroup": "ui_stat_group'Primary'",
+              "displaycondition": {
+                "attributedef": "attribute'weapon_projectile_per_shot'",
+                "comparetype": "GreaterThan",
+                "comparevalue": "1.000000"
+              },
+              "compareattribute": "attribute'weapon_damage_per_shot'",
+              "staticon": "Asset'/Game/uiresources/_shared/assets/ico_ui_art_weapon_big/ico_ui_art_pistol_big.ico_ui_art_pistol_big'",
+              "statlabel": {
+                "structtype": "Asset'/Script/GbxGame.StringDisplayValue'",
+                "formattext": "weapon_uistats, C69374314A9D027F2726C18073AF12FB, Damage"
+              },
+              "statvalue": {
+                "structtype": "Asset'/Script/GbxGame.StringDisplayValue'",
+                "formattext": "weapon_uistats, 86294660EB854FEBBC4C8069DD4E9E64, {dmg} x {proj}",
+                "argsmap": {
+                  "pairs": {
+                    "pair2747350507": {
+                      "key": "dmg",
+                      "value": {
+                        "structtype": "Asset'/Script/GbxGame.NumericDisplayValue'",
+                        "attributedef": "attribute'weapon_damage'",
+                        "roundingmode": "RoundToInt",
+                        "formattext": "weapon_uistats, 86808E4A8DA84E1581C7186917C8FE34, $VALUE$"
+                      }
+                    },
+                    "pair2679271687": {
+                      "key": "proj",
+                      "value": {
+                        "structtype": "Asset'/Script/GbxGame.NumericDisplayValue'",
+                        "attributedef": "attribute'weapon_projectile_per_shot'",
+                        "formattext": "weapon_uistats, ECEC4F60AD494377BEA005ADB50DEDE5, $VALUE$"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "uistat_damage_and_projectile_count_shotgun": {
+              "ui_stat": "uistat_damage_and_projectile_count_shotgun",
+              "displaygroup": "ui_stat_group'Primary'",
+              "displaycondition": {
+                "attributedef": "attribute'weapon_projectile_per_shot'",
+                "comparetype": "GreaterThan",
+                "comparevalue": "1.000000"
+              },
+              "compareattribute": "attribute'weapon_damage_per_shot'",
+              "staticon": "Asset'/Game/uiresources/_shared/assets/ico_ui_art_weapon_big/ico_ui_art_shotgun_big.ico_ui_art_shotgun_big'",
+              "statlabel": {
+                "structtype": "Asset'/Script/GbxGame.StringDisplayValue'",
+                "formattext": "weapon_uistats, 61B6CA614EBBF8EB576C12ABFDF274E9, Damage"
+              },
+              "statvalue": {
+                "structtype": "Asset'/Script/GbxGame.StringDisplayValue'",
+                "formattext": "weapon_uistats, F49E795111E5447B9D2E4B1ED25622DD, {dmg} x {proj}",
+                "argsmap": {
+                  "pairs": {
+                    "pair2747350507": {
+                      "key": "dmg",
+                      "value": {
+                        "structtype": "Asset'/Script/GbxGame.NumericDisplayValue'",
+                        "attributedef": "attribute'weapon_damage'",
+                        "roundingmode": "RoundToInt",
+                        "formattext": "weapon_uistats, 2F5462605D824B12A179105290266C70, $VALUE$"
+                      }
+                    },
+                    "pair2679271687": {
+                      "key": "proj",
+                      "value": {
+                        "structtype": "Asset'/Script/GbxGame.NumericDisplayValue'",
+                        "attributedef": "attribute'weapon_projectile_per_shot'",
+                        "formattext": "weapon_uistats, D13FD4366B13499FADD773765C984F92, $VALUE$"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "uistat_damage_and_projectile_count_smg": {
+              "ui_stat": "uistat_damage_and_projectile_count_smg",
+              "displaygroup": "ui_stat_group'Primary'",
+              "displaycondition": {
+                "attributedef": "attribute'weapon_projectile_per_shot'",
+                "comparetype": "GreaterThan",
+                "comparevalue": "1.000000"
+              },
+              "compareattribute": "attribute'weapon_damage_per_shot'",
+              "staticon": "Asset'/Game/uiresources/_shared/assets/ico_ui_art_weapon_big/ico_ui_art_smg_big.ico_ui_art_smg_big'",
+              "statlabel": {
+                "structtype": "Asset'/Script/GbxGame.StringDisplayValue'",
+                "formattext": "weapon_uistats, C6956D8B4098F4C743A3BD84554CA991, Damage"
+              },
+              "statvalue": {
+                "structtype": "Asset'/Script/GbxGame.StringDisplayValue'",
+                "formattext": "weapon_uistats, B92041B6548D4E349E8509AB5408F104, {dmg} x {proj}",
+                "argsmap": {
+                  "pairs": {
+                    "pair2747350507": {
+                      "key": "dmg",
+                      "value": {
+                        "structtype": "Asset'/Script/GbxGame.NumericDisplayValue'",
+                        "attributedef": "attribute'weapon_damage'",
+                        "roundingmode": "RoundToInt",
+                        "formattext": "weapon_uistats, 4C2711CBED11420EB44280EA53241160, $VALUE$"
+                      }
+                    },
+                    "pair2679271687": {
+                      "key": "proj",
+                      "value": {
+                        "structtype": "Asset'/Script/GbxGame.NumericDisplayValue'",
+                        "attributedef": "attribute'weapon_projectile_per_shot'",
+                        "formattext": "weapon_uistats, 3E2B52F2D6F543C58B7B92687E843000, $VALUE$"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "uistat_damage_and_projectile_count_sniper": {
+              "ui_stat": "uistat_damage_and_projectile_count_sniper",
+              "displaygroup": "ui_stat_group'Primary'",
+              "displaycondition": {
+                "attributedef": "attribute'weapon_projectile_per_shot'",
+                "comparetype": "GreaterThan",
+                "comparevalue": "1.000000"
+              },
+              "compareattribute": "attribute'weapon_damage_per_shot'",
+              "staticon": "Asset'/Game/uiresources/_shared/assets/ico_ui_art_weapon_big/ico_ui_art_sniper_big.ico_ui_art_sniper_big'",
+              "statlabel": {
+                "structtype": "Asset'/Script/GbxGame.StringDisplayValue'",
+                "formattext": "weapon_uistats, 4257149543B1119F91D6E6A312AC22D6, Damage"
+              },
+              "statvalue": {
+                "structtype": "Asset'/Script/GbxGame.StringDisplayValue'",
+                "formattext": "weapon_uistats, E5CAB380571042CB9F6BF3BB0A3C4A4B, {dmg} x {proj}",
+                "argsmap": {
+                  "pairs": {
+                    "pair2747350507": {
+                      "key": "dmg",
+                      "value": {
+                        "structtype": "Asset'/Script/GbxGame.NumericDisplayValue'",
+                        "attributedef": "attribute'weapon_damage'",
+                        "roundingmode": "RoundToInt",
+                        "formattext": "weapon_uistats, 73E4B839B1AD4170A0F7ACC6FCF046F1, $VALUE$"
+                      }
+                    },
+                    "pair2679271687": {
+                      "key": "proj",
+                      "value": {
+                        "structtype": "Asset'/Script/GbxGame.NumericDisplayValue'",
+                        "attributedef": "attribute'weapon_projectile_per_shot'",
+                        "formattext": "weapon_uistats, CD277C2D03254276BD36945859AA5503, $VALUE$"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "uistat_damage_assault": {
+              "ui_stat": "uistat_damage_assault",
+              "displaygroup": "ui_stat_group'Primary'",
+              "displaycondition": {
+                "attributedef": "attribute'weapon_projectile_per_shot'",
+                "comparetype": "LessOrEqual",
+                "comparevalue": "1.000000"
+              },
+              "compareattribute": "attribute'weapon_damage_per_shot'",
+              "staticon": "Asset'/Game/uiresources/_shared/assets/ico_ui_art_weapon_big/ico_ui_art_assault_big.ico_ui_art_assault_big'",
+              "statlabel": {
+                "structtype": "Asset'/Script/GbxGame.StringDisplayValue'",
+                "formattext": "weapon_uistats, 574CC5524411AE05C0185EB88919BB75, Damage"
+              },
+              "statvalue": {
+                "structtype": "Asset'/Script/GbxGame.NumericDisplayValue'",
+                "attributedef": "attribute'weapon_damage'",
+                "roundingmode": "RoundToInt",
+                "formattext": "weapon_uistats, 7B984953631D4C7E85DE359CB28D91DB, $VALUE$"
+              }
+            }
+          },
+          {
+            "uistat_damage_pistol": {
+              "ui_stat": "uistat_damage_pistol",
+              "displaygroup": "ui_stat_group'Primary'",
+              "displaycondition": {
+                "attributedef": "attribute'weapon_projectile_per_shot'",
+                "comparetype": "LessOrEqual",
+                "comparevalue": "1.000000"
+              },
+              "compareattribute": "attribute'weapon_damage_per_shot'",
+              "staticon": "Asset'/Game/uiresources/_shared/assets/ico_ui_art_weapon_big/ico_ui_art_pistol_big.ico_ui_art_pistol_big'",
+              "statlabel": {
+                "structtype": "Asset'/Script/GbxGame.StringDisplayValue'",
+                "formattext": "weapon_uistats, 9B259E924171144444CCE9B5FB65D40F, Damage"
+              },
+              "statvalue": {
+                "structtype": "Asset'/Script/GbxGame.NumericDisplayValue'",
+                "attributedef": "attribute'weapon_damage'",
+                "roundingmode": "RoundToInt",
+                "formattext": "weapon_uistats, CE96ABCCAFEC40798B8E85B037D5AD42, $VALUE$"
+              }
+            }
+          },
+          {
+            "uistat_damage_shotgun": {
+              "ui_stat": "uistat_damage_shotgun",
+              "displaygroup": "ui_stat_group'Primary'",
+              "displaycondition": {
+                "attributedef": "attribute'weapon_projectile_per_shot'",
+                "comparetype": "LessOrEqual",
+                "comparevalue": "1.000000"
+              },
+              "compareattribute": "attribute'weapon_damage_per_shot'",
+              "staticon": "Asset'/Game/uiresources/_shared/assets/ico_ui_art_weapon_big/ico_ui_art_shotgun_big.ico_ui_art_shotgun_big'",
+              "statlabel": {
+                "structtype": "Asset'/Script/GbxGame.StringDisplayValue'",
+                "formattext": "weapon_uistats, 1A4BDDC24BAA64380D0F59A95C32D1C4, Damage"
+              },
+              "statvalue": {
+                "structtype": "Asset'/Script/GbxGame.NumericDisplayValue'",
+                "attributedef": "attribute'weapon_damage'",
+                "roundingmode": "RoundToInt",
+                "formattext": "weapon_uistats, DDB096DEB570449A923A7B82F6A6C536, $VALUE$"
+              }
+            }
+          },
+          {
+            "uistat_damage_smg": {
+              "ui_stat": "uistat_damage_smg",
+              "displaygroup": "ui_stat_group'Primary'",
+              "displaycondition": {
+                "attributedef": "attribute'weapon_projectile_per_shot'",
+                "comparetype": "LessOrEqual",
+                "comparevalue": "1.000000"
+              },
+              "compareattribute": "attribute'weapon_damage_per_shot'",
+              "staticon": "Asset'/Game/uiresources/_shared/assets/ico_ui_art_weapon_big/ico_ui_art_smg_big.ico_ui_art_smg_big'",
+              "statlabel": {
+                "structtype": "Asset'/Script/GbxGame.StringDisplayValue'",
+                "formattext": "weapon_uistats, 1A07275B4F127ACB769F79A971DF23C5, Damage"
+              },
+              "statvalue": {
+                "structtype": "Asset'/Script/GbxGame.NumericDisplayValue'",
+                "attributedef": "attribute'weapon_damage'",
+                "roundingmode": "RoundToInt",
+                "formattext": "weapon_uistats, 677C40D3594147CC90622310F733FE2E, $VALUE$"
+              }
+            }
+          },
+          {
+            "uistat_damage_sniper": {
+              "ui_stat": "uistat_damage_sniper",
+              "displaygroup": "ui_stat_group'Primary'",
+              "displaycondition": {
+                "attributedef": "attribute'weapon_projectile_per_shot'",
+                "comparetype": "LessOrEqual",
+                "comparevalue": "1.000000"
+              },
+              "compareattribute": "attribute'weapon_damage_per_shot'",
+              "staticon": "Asset'/Game/uiresources/_shared/assets/ico_ui_art_weapon_big/ico_ui_art_sniper_big.ico_ui_art_sniper_big'",
+              "statlabel": {
+                "structtype": "Asset'/Script/GbxGame.StringDisplayValue'",
+                "formattext": "weapon_uistats, F93B79B04698D3865DDBD38E84D6674A, Damage"
+              },
+              "statvalue": {
+                "structtype": "Asset'/Script/GbxGame.NumericDisplayValue'",
+                "attributedef": "attribute'weapon_damage'",
+                "roundingmode": "RoundToInt",
+                "formattext": "weapon_uistats, 6A6AA64AB6014713A1496B667DE3F9B5, $VALUE$"
+              }
+            }
+          },
+          {
+            "uistat_elpis_ozkit": {
+              "ui_stat": "UIStat_Elpis_OzKit",
+              "displaygroup": "ui_stat_group'Text'",
+              "statlabel": {
+                "structtype": "Asset'/Script/GbxGame.StringDisplayValue'",
+                "formattext": "Elpis_InventoryDefs, 16E156934C09A1BE0650AC91337D6D12, Don't mind the lingering hint of Psycho breath."
+              }
+            }
+          },
+          {
+            "uistat_grenade_gadget_cooldown": {
+              "ui_stat": "uistat_grenade_gadget_cooldown",
+              "displaygroup": "ui_stat_group'Primary'",
+              "compareattribute": "attribute'Gadget_Cooldown'",
+              "staticon": "Asset'/Game/uiresources/_shared/assets/ico_ui_art_item_stats/ico_ui_art_item_cooldown.ico_ui_art_item_cooldown'",
+              "statlabel": {
+                "structtype": "Asset'/Script/GbxGame.StringDisplayValue'",
+                "formattext": "grenade_gadget_uistats, 3257800B4BF29202D83A2A8917156AB7, Cooldown"
+              },
+              "statvalue": {
+                "structtype": "Asset'/Script/GbxGame.NumericDisplayValue'",
+                "attributedef": "attribute'Gadget_Cooldown'",
+                "buseformattext": "true",
+                "formattext": "grenade_gadget_uistats, B949D99B46CC26EB16EC738E432434BC, $VALUE$s"
+              }
+            }
+          },
+          {
+            "uistat_grenade_gadget_critical_damage": {
+              "ui_stat": "uistat_grenade_gadget_critical_damage",
+              "displaygroup": "ui_stat_group'Secondary'",
+              "sortingpriority": "0.100000",
+              "compareattribute": "attribute'grenade_gadget_crit_damage'",
+              "staticon": "Asset'/Game/uiresources/_shared/assets/ico_ui_art_item_stats/ico_ui_art_wpn_scndry_crit_hit_dmg.ico_ui_art_wpn_scndry_crit_hit_dmg'",
+              "statlabel": {
+                "structtype": "Asset'/Script/GbxGame.StringDisplayValue'",
+                "formattext": "grenade_gadget_uistats, 6206A0944731EE02FC318CA1E953CB71, Critical Damage"
+              },
+              "statvalue": {
+                "structtype": "Asset'/Script/GbxGame.NumericDisplayValue'",
+                "attributedef": "attribute'grenade_gadget_radius'",
+                "bdisplayaspercentage": "true",
+                "bdisplayplussign": "true"
+              }
+            }
+          },
+          {
+            "uistat_grenade_payload_mirv_aug_swarm": {
+              "ui_stat": "uistat_grenade_payload_mirv_aug_swarm",
+              "displaygroup": "ui_stat_group'Secondary'",
+              "sortingpriority": "0.200000",
+              "staticon": "Asset'/Game/uiresources/_shared/assets/ico_ui_art_item_augments/grenades/ico_grenade_aug_mirv_swarm.ico_grenade_aug_mirv_swarm'",
+              "statvalue": {
+                "structtype": "Asset'/Script/GbxGame.StringDisplayValue'",
+                "formattext": "grenade_gadget_uistats, FCA3D7C649406AD84C082BA34ADD82C3, [secondary]Swarm Augment[/secondary] - MIRV Grenades freeze in place and home in on nearby targets"
+              }
+            }
+          },
+          {
+            "uistat_grenade_payload_singularity_aug_zero_g": {
+              "ui_stat": "uistat_grenade_payload_singularity_aug_zero_g",
+              "displaygroup": "ui_stat_group'Secondary'",
+              "sortingpriority": "0.200000",
+              "staticon": "Asset'/Game/uiresources/_shared/assets/ico_ui_art_item_augments/grenades/ico_grenade_aug_singularity_zero_g.ico_grenade_aug_singularity_zero_g'",
+              "statvalue": {
+                "structtype": "Asset'/Script/GbxGame.StringDisplayValue'",
+                "formattext": "grenade_gadget_uistats, 1BABA5C849CFEA0ED53BE7AF9405BC1A, [secondary]Zero G Augment[/secondary] - Lifts enemies off the ground and slams them them down dealing Damage"
+              }
+            }
+          },
+          {
+            "uistat_has_firmware": {
+              "ui_stat": "uistat_has_firmware",
+              "displaygroup": "ui_stat_group'firmware'",
+              "statvalue": {
+                "structtype": "Asset'/Script/GbxGame.BooleanDisplayValue'",
+                "attributedef": "attribute'has_firmware'",
+                "comparetype": "NotEqual"
+              }
+            }
+          },
+          {
+            "uistat_heavy_dps_headline": {
+              "ui_stat": "uistat_heavy_dps_headline",
+              "displaygroup": "ui_stat_group'Headline'",
+              "sortingpriority": "0.100000",
+              "compareattribute": "attribute'weapon_dps_estimate'",
+              "statlabel": {
+                "structtype": "Asset'/Script/GbxGame.StringDisplayValue'",
+                "formattext": "weapon_uistats, 2B9F88FD48D728F7D195D59141816B72, DPS"
+              },
+              "statvalue": {
+                "structtype": "Asset'/Script/GbxGame.NumericDisplayValue'",
+                "attributedef": "attribute'weapon_dps_estimate'",
+                "roundingmode": "RoundToInt",
+                "formattext": "weapon_uistats, B091FB26418B4D5AB2CE6A9E4166BEE1, $VALUE$"
+              }
+            }
+          },
+          {
+            "uistat_lp_hyp_shield_amount": {
+              "ui_stat": "uistat_lp_hyp_shield_amount",
+              "displaygroup": "ui_stat_group'Secondary'",
+              "statlabel": {
+                "structtype": "Asset'/Script/GbxGame.StringDisplayValue'",
+                "formattext": "weapon_uistats, 2B746BE3482B57BACFEF16B37CC9BE7E, Gun Shield Capacity:"
+              },
+              "statvalue": {
+                "structtype": "Asset'/Script/GbxGame.NumericDisplayValue'",
+                "attributedef": "attribute'weapon_shield_capacity'"
+              }
+            }
+          },
+          {
+            "uistat_manu_ted": {
+              "ui_stat": "uistat_manu_ted",
+              "displaygroup": "ui_stat_group'Secondary'",
+              "sortingpriority": "10.000000",
+              "staticon": "Asset'/Game/uiresources/_shared/assets/ico_ui_art_item_augments/guns/ico_tediore_behavior_delivery_default.ico_tediore_behavior_delivery_default'",
+              "statvalue": {
+                "structtype": "Asset'/Script/GbxGame.StringDisplayValue'",
+                "formattext": "weapon_uistats, E73EBC174A6056ACD852868F457DDE68, [tediore_icon] [secondary]Tediore[/secondary] - [secondary]Throws Gun[/secondary] on [secondary]Reload[/secondary]"
+              }
+            }
+          },
+          {
+            "uistat_manu_ted_default": {
+              "ui_stat": "uistat_manu_ted_default",
+              "displaygroup": "ui_stat_group'Secondary'",
+              "displaycondition": {
+                "attributedef": "attribute'uistat_cond_ted_default'",
+                "comparevalue": "1.000000"
+              },
+              "sortingpriority": "10.000000",
+              "staticon": "Asset'/Game/uiresources/_shared/assets/ico_ui_art_item_augments/guns/ico_tediore_behavior_delivery_default.ico_tediore_behavior_delivery_default'",
+              "statvalue": {
+                "structtype": "Asset'/Script/GbxGame.StringDisplayValue'",
+                "formattext": "weapon_uistats, 3F46C1F6405712C8E6236E824B9D682A, [tediore_icon] [secondary]Tediore[/secondary] - Throws [secondary]Gun[/secondary] on [secondary]Reload[/secondary]"
+              }
+            }
+          },
+          {
+            "uistat_manu_ted_default_homing": {
+              "ui_stat": "uistat_manu_ted_default_homing",
+              "displaygroup": "ui_stat_group'Secondary'",
+              "displaycondition": {
+                "attributedef": "attribute'uistat_cond_ted_default_homing'",
+                "comparevalue": "1.000000"
+              },
+              "sortingpriority": "10.000000",
+              "staticon": "Asset'/Game/uiresources/_shared/assets/ico_ui_art_item_augments/guns/ico_tediore_behavior_delivery_homing.ico_tediore_behavior_delivery_homing'",
+              "statvalue": {
+                "structtype": "Asset'/Script/GbxGame.StringDisplayValue'",
+                "formattext": "weapon_uistats, 70D548B24518661EA9B468BF7EA9C942, [tediore_icon] [secondary]Tediore[/secondary] - [secondary]Homing[/secondary] - [secondary]Thrown Gun homes in[/secondary] on nearby [secondary]enemies[/secondary]"
+              }
+            }
+          },
+          {
+            "uistat_manu_ted_default_javelin": {
+              "ui_stat": "uistat_manu_ted_default_javelin",
+              "displaygroup": "ui_stat_group'Secondary'",
+              "displaycondition": {
+                "attributedef": "attribute'uistat_cond_ted_default_javelin'",
+                "comparevalue": "1.000000"
+              },
+              "sortingpriority": "10.000000",
+              "staticon": "Asset'/Game/uiresources/_shared/assets/ico_ui_art_item_augments/guns/ico_universal_licensed_parts_tediore_javelin.ico_universal_licensed_parts_tediore_javelin'",
+              "statvalue": {
+                "structtype": "Asset'/Script/GbxGame.StringDisplayValue'",
+                "formattext": "weapon_uistats, B31B9CF3479980DD93C1C694D695C1BA, [tediore_icon] [secondary]Tediore[/secondary] - [secondary]Javelin[/secondary] - [secondary]Thrown Gun[/secondary] is [secondary]propelled[/secondary] forward at high speed "
+              }
+            }
+          },
+          {
+            "uistat_manu_ted_default_legs": {
+              "ui_stat": "uistat_manu_ted_default_legs",
+              "displaygroup": "ui_stat_group'Secondary'",
+              "displaycondition": {
+                "attributedef": "attribute'uistat_cond_ted_default_legs'",
+                "comparevalue": "1.000000"
+              },
+              "sortingpriority": "10.000000",
+              "staticon": "Asset'/Game/uiresources/_shared/assets/ico_ui_art_item_augments/guns/ico_universal_licensed_parts_tediore_legs.ico_universal_licensed_parts_tediore_legs'",
+              "statvalue": {
+                "structtype": "Asset'/Script/GbxGame.StringDisplayValue'",
+                "formattext": "weapon_uistats, C94410C04E47DAE907378EA817222D20, [tediore_icon] [secondary]Tediore[/secondary] - [secondary]Legs[/secondary] - [secondary]Thrown Gun[/secondary] has [secondary]legs[/secondary] and runs toward [secondary]enemies[/secondary]"
+              }
+            }
+          },
+          {
+            "uistat_missilecone": {
+              "ui_stat": "UIStat_MissileCone",
+              "displaygroup": "ui_stat_group'Text'",
+              "statlabel": {
+                "structtype": "Asset'/Script/GbxGame.StringDisplayValue'",
+                "formattext": "UIStat_Pickup_VehiclePowercore, D36B2AE0480F971C51F6F28B4805E4F7, Everyone knows the cone is the most delicious part of any missile."
+              }
+            }
+          },
+          {
+            "uistat_missilelaunchsystem": {
+              "ui_stat": "UIStat_MissileLaunchSystem",
+              "displaygroup": "ui_stat_group'Text'",
+              "statlabel": {
+                "structtype": "Asset'/Script/GbxGame.StringDisplayValue'",
+                "formattext": "UIStat_Pickup_VehiclePowercore, 031F4AA04677879C80763C994CF194CE, It makes missiles go whoosh."
+              }
+            }
+          },
+          {
+            "uistat_missilemiddle": {
+              "ui_stat": "UIStat_MissileMiddle",
+              "displaygroup": "ui_stat_group'Text'",
+              "statlabel": {
+                "structtype": "Asset'/Script/GbxGame.StringDisplayValue'",
+                "formattext": "UIStat_Pickup_VehiclePowercore, E7B33C5B40549828EEF698841DF9F4A4, Unlike sausage casings, you can't eat this one unless you hate your teeth and love the taste of blood."
+              }
+            }
+          },
+          {
+            "uistat_pickup_giftbag": {
+              "ui_stat": "UIStat_Pickup_GiftBag",
+              "displaygroup": "ui_stat_group'Text'",
+              "statlabel": {
+                "structtype": "Asset'/Script/GbxGame.StringDisplayValue'",
+                "formattext": "UIStat_Pickup_VehiclePowercore, 5ADFCB27448B16393707D88A91EF6AA3, It's the thought that counts right? Good, because this thing is super empty."
+              }
+            }
+          },
+          {
+            "uistat_pickup_glidepack_0": {
+              "ui_stat": "UIStat_Pickup_GlidePack_0",
+              "displaygroup": "ui_stat_group'Text'",
+              "statlabel": {
+                "structtype": "Asset'/Script/GbxGame.StringDisplayValue'",
+                "formattext": "UIStat_Pickup_VehiclePowercore, 598A995D4DA399592495058488C8FBB2, Once you glide, you will have glid."
+              }
+            }
+          },
+          {
+            "uistat_pickup_missiontemp": {
+              "ui_stat": "UIStat_Pickup_MissionTemp",
+              "displaygroup": "ui_stat_group'Text'",
+              "statlabel": {
+                "structtype": "Asset'/Script/GbxGame.StringDisplayValue'",
+                "formattext": "ExamplePickups, 9230C34042ED4567FAC0928B37CFD7D3, Split by design, the Vault's Guardian never bothered to hide them."
+              }
+            }
+          },
+          {
+            "uistat_pickup_thebossdrive": {
+              "ui_stat": "UIStat_Pickup_TheBossDrive",
+              "displaygroup": "ui_stat_group'Text'",
+              "statlabel": {
+                "structtype": "Asset'/Script/GbxGame.StringDisplayValue'",
+                "formattext": "IO_Pickup_TheBossDrive, 7DA9C1D0494727218514A79A89FA06B2, New convenient travel size!"
+              }
+            }
+          },
+          {
+            "uistat_pickup_yartlc_trashbag": {
+              "ui_stat": "UIStat_Pickup_YARTLC_Trashbag",
+              "displaygroup": "ui_stat_group'Text'",
+              "statlabel": {
+                "structtype": "Asset'/Script/GbxGame.StringDisplayValue'",
+                "formattext": "UIStat_Pickup_VehiclePowercore, F588EFD0489A3FD43B4C8E8719EB1FF8, \"If you see the garbage on the road, kill it.\""
+              }
+            }
+          },
+          {
+            "uistat_pickup_yatlc_trashcan": {
+              "ui_stat": "UIStat_Pickup_YATLC_Trashcan",
+              "displaygroup": "ui_stat_group'Text'",
+              "statlabel": {
+                "structtype": "Asset'/Script/GbxGame.StringDisplayValue'",
+                "formattext": "UIStat_Pickup_VehiclePowercore, F10067834627FF37814EACB2D02A7630, \"Mold steel into a trash can. The empty space makes it useful.\""
+              }
+            }
+          },
+          {
+            "uistat_pickup_yatlc_trashcanlid": {
+              "ui_stat": "UIStat_Pickup_YATLC_TrashcanLid",
+              "displaygroup": "ui_stat_group'Text'",
+              "statlabel": {
+                "structtype": "Asset'/Script/GbxGame.StringDisplayValue'",
+                "formattext": "UIStat_Pickup_VehiclePowercore, DAB278E54E2D25B0527576B6FDE8100E, \"I fear not the man who has balanced 10,000 lids once, but the one who has balanced one lid 10,000 times.\""
+              }
+            }
+          },
+          {
+            "uistat_projectiles_per_shot": {
+              "ui_stat": "uistat_projectiles_per_shot",
+              "displaygroup": "ui_stat_group'Primary'",
+              "compareattribute": "attribute'weapon_projectile_per_shot'",
+              "statvalue": {
+                "structtype": "Asset'/Script/GbxGame.NumericDisplayValue'",
+                "attributedef": "attribute'weapon_projectile_per_shot'"
+              }
+            }
+          },
+          {
+            "uistat_repkit_duration": {
+              "ui_stat": "uistat_repkit_duration",
+              "displaygroup": "ui_stat_group'Primary'",
+              "sortingpriority": "0.300000",
+              "compareattribute": "attribute'repair_kit_duration'",
+              "staticon": "Asset'/Game/uiresources/_shared/assets/ico_ui_art_item_stats/ico_ui_art_item_duration.ico_ui_art_item_duration'",
+              "statlabel": {
+                "structtype": "Asset'/Script/GbxGame.StringDisplayValue'",
+                "formattext": "repair_kit_uistats, AD9B5A3C49B90FCACA1F8DA61C876C34, Duration"
+              },
+              "statvalue": {
+                "structtype": "Asset'/Script/GbxGame.NumericDisplayValue'",
+                "attributedef": "attribute'repair_kit_duration'",
+                "buseformattext": "true",
+                "formattext": "repair_kit_uistats, A0D462664B1BCCC3059F9F994D1B3D88, $VALUE$s"
+              }
+            }
+          },
+          {
+            "uistat_repkit_healthpersecond": {
+              "ui_stat": "uistat_repkit_healthpersecond",
+              "displaygroup": "ui_stat_group'Headline'",
+              "sortingpriority": "0.050000",
+              "compareattribute": "attribute'calc_repair_kit_healthpersecond'",
+              "staticon": "Asset'/Game/uiresources/healthbar/assets/ui_art_asset/icon_health.icon_health'",
+              "statlabel": {
+                "structtype": "Asset'/Script/GbxGame.StringDisplayValue'",
+                "formattext": "repair_kit_uistats, EB77EC544E845288D36F14981EB14789, Health Per Second"
+              },
+              "statvalue": {
+                "structtype": "Asset'/Script/GbxGame.NumericDisplayValue'",
+                "attributedef": "attribute'calc_repair_kit_healthpersecond'",
+                "roundingmode": "RoundToInt",
+                "buseformattext": "true",
+                "formattext": "repair_kit_uistats, 40A1AD5946288860CE139B8D8B664900, $VALUE$"
+              }
+            }
+          },
+          {
+            "uistat_rocketmonsters_catchtainerpickup": {
+              "ui_stat": "UIStat_RocketMonsters_CatchtainerPickup",
+              "displaygroup": "ui_stat_group'Text'",
+              "statlabel": {
+                "structtype": "Asset'/Script/GbxGame.StringDisplayValue'",
+                "formattext": "InvDef_RocketMonsters_CatchtainerPickup, 3C6C38924D38092600F9C9AF6EE448B2, There's got to be better uses for this technology, but, this is way more fun."
+              },
+              "type": "/Script/GbxGame.UIStatDisplayDef"
+            }
+          },
+          {
+            "uistat_sl1_pickup_toy": {
+              "ui_stat": "UIStat_SL1_Pickup_Toy",
+              "displaygroup": "ui_stat_group'Text'",
+              "statlabel": {
+                "structtype": "Asset'/Script/GbxGame.StringDisplayValue'",
+                "formattext": "SL1_Pickup_Toy, 279B83BC489EA31FA84A3E9F324714FB, Let's not even talk about the smell."
+              }
+            }
+          },
+          {
+            "uistat_terminal_cooldown": {
+              "ui_stat": "uistat_terminal_cooldown",
+              "displaygroup": "ui_stat_group'Primary'",
+              "compareattribute": "attribute'Gadget_Cooldown'",
+              "bbiggerisbetter": "false",
+              "staticon": "Asset'/Game/uiresources/item_card/assets/gadgets/shared/ui_art_gadget_primary_cooldown.ui_art_gadget_primary_cooldown'",
+              "statlabel": {
+                "structtype": "Asset'/Script/GbxGame.StringDisplayValue'",
+                "formattext": "terminal_uistats, 67E1BAFA4E794D4A2A2A428FADBD4543, Cooldown:"
+              },
+              "statvalue": {
+                "structtype": "Asset'/Script/GbxGame.NumericDisplayValue'",
+                "attributedef": "attribute'Gadget_Cooldown'",
+                "buseformattext": "true",
+                "formattext": "terminal_uistats, D11788E943F4C5404E6A6DB37D6274A7, $VALUE$s"
+              }
+            }
+          },
+          {
+            "uistat_turret_cooldown": {
+              "ui_stat": "uistat_turret_cooldown",
+              "displaygroup": "ui_stat_group'Primary'",
+              "compareattribute": "attribute'Gadget_Cooldown'",
+              "bbiggerisbetter": "false",
+              "staticon": "Asset'/Game/uiresources/_shared/assets/ico_ui_art_item_stats/ico_ui_art_item_cooldown.ico_ui_art_item_cooldown'",
+              "statlabel": {
+                "structtype": "Asset'/Script/GbxGame.StringDisplayValue'",
+                "formattext": "turret_uistats, 8BCFFD5B4C3D53921130E89CDF3CD371, Cooldown:"
+              },
+              "statvalue": {
+                "structtype": "Asset'/Script/GbxGame.NumericDisplayValue'",
+                "attributedef": "attribute'Gadget_Cooldown'",
+                "buseformattext": "true",
+                "formattext": "turret_uistats, 51F86BC244ECCC561386DD8A5FF6607E, $VALUE$s"
+              }
+            }
+          },
+          {
+            "uistat_typeline_crawlervehiclepart": {
+              "ui_stat": "uistat_typeline_crawlervehiclepart",
+              "displaygroup": "ui_stat_group'TypeLine'",
+              "statvalue": {
+                "structtype": "Asset'/Script/GbxGame.StringDisplayValue'",
+                "formattext": "Pickups_Crawler_VehicleParts, 229047B249D52515DEAEDAA9CAFA96AF, Vehicle Paintjob"
+              },
+              "type": "/Script/GbxGame.UIStatDisplayDef"
+            }
+          }
+        ]
+      },
+      {
+        "entries": [
+          {
+            "uistat_pickup_fueltank": {
+              "ui_stat": "UIStat_Pickup_FuelTank",
+              "displaygroup": "ui_stat_group'Text'",
+              "statlabel": {
+                "structtype": "Asset'/Script/GbxGame.StringDisplayValue'",
+                "formattext": "UIStat_Pickup_VehiclePowercore, A30681444866F35193DED39CEF7A0826, Grade A boom juice!"
+              }
+            }
+          },
+          {
+            "uistat_pickup_ignitionsource": {
+              "ui_stat": "UIStat_Pickup_IgnitionSource",
+              "displaygroup": "ui_stat_group'Text'",
+              "statlabel": {
+                "structtype": "Asset'/Script/GbxGame.StringDisplayValue'",
+                "formattext": "UIStat_Pickup_VehiclePowercore, 3947CC534AB2D7EEA2EB6B81C5988E98, This is sure to light some fires!"
+              }
+            }
+          }
+        ]
+      }
+    ]
+  }
+}

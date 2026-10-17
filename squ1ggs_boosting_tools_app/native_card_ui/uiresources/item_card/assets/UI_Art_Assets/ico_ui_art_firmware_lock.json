@@ -1,0 +1,37 @@
+[
+  {
+    "Type": "Texture2D",
+    "Name": "ico_ui_art_firmware_lock",
+    "Flags": "RF_Public | RF_Standalone | RF_WasLoaded | RF_LoadCompleted",
+    "Class": "UScriptClass'Texture2D'",
+    "Package": "/Game/uiresources/item_card/assets/UI_Art_Assets/ico_ui_art_firmware_lock",
+    "Properties": {
+      "ImportedSize": {
+        "X": 41,
+        "Y": 46
+      },
+      "LightingGuid": "4E4CAB82-43F6D344-F2957ABD-4FE4EED7",
+      "CompressionSettings": "TextureCompressionSettings::TC_BC7",
+      "LODGroup": "TextureGroup::TEXTUREGROUP_UI",
+      "SRGB": false
+    },
+    "SizeX": 44,
+    "SizeY": 48,
+    "PackedData": 1,
+    "PixelFormat": "PF_BC7",
+    "FirstMipToSerialize": 0,
+    "Mips": [
+      {
+        "BulkData": {
+          "BulkDataFlags": "BULKDATA_SingleUse | BULKDATA_ForceInlinePayload",
+          "ElementCount": 2112,
+          "SizeOnDisk": 2112,
+          "OffsetInFile": "0x76"
+        },
+        "SizeX": 44,
+        "SizeY": 48,
+        "SizeZ": 1
+      }
+    ]
+  }
+]

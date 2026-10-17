@@ -1,0 +1,3519 @@
+{
+  "globals": {
+    "records": [
+      {
+        "entries": [
+          {
+            "def_globals_matchmaking": {
+              "globals": "def_globals_matchmaking",
+              "regionsettings": {
+                "pingstart": "100",
+                "expansiondelta": "50",
+                "maxping": "250"
+              },
+              "structtype": "Asset'/Script/OakGame.OakMatchmakingGlobals'"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "stat_collection": {
+    "records": [
+      {
+        "entries": [
+          {
+            "dlc_challenge": {
+              "stat_collection": "dlc_challenge",
+              "root": "1",
+              "stats": [
+                {
+                  "uvh_7": "uvh_7"
+                },
+                {
+                  "kill_thol": "kill_thol"
+                },
+                {
+                  "kill_subjugator": "kill_subjugator"
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "entries": [
+          {
+            "tuba_collectibles": {
+              "stat_collection": "Tuba_collectibles",
+              "stats": [
+                {
+                  "tuba_echologs": "tuba_echologs"
+                }
+              ]
+            }
+          },
+          {
+            "tuba_echologs": {
+              "stat_collection": "tuba_echologs",
+              "stats": [
+                {
+                  "tuba_echolog_1": "tuba_echolog_1"
+                },
+                {
+                  "tuba_echolog_2": "tuba_echolog_2"
+                },
+                {
+                  "tuba_echolog_3": "tuba_echolog_3"
+                },
+                {
+                  "tuba_echolog_4": "tuba_echolog_4"
+                },
+                {
+                  "tuba_echolog_5": "tuba_echolog_5"
+                },
+                {
+                  "tuba_echolog_6": "tuba_echolog_6"
+                },
+                {
+                  "tuba_echolog_7": "tuba_echolog_7"
+                }
+              ]
+            }
+          },
+          {
+            "tuba_openworld": {
+              "stat_collection": "Tuba_openworld",
+              "root": "1",
+              "stats": [
+                {
+                  "tuba_collectibles": "Tuba_collectibles"
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "impact_response": {
+    "records": [
+      {
+        "entries": [
+          {
+            "goreimpactresponse_global_splatter": {
+              "impact_response": "GoreImpactResponse_Global_Splatter",
+              "structtype": "Asset'/Script/GbxGame.ImpactResponseEffect'"
+            }
+          },
+          {
+            "grassboss_projectileexplosion": {
+              "impact_response": "Grassboss_ProjectileExplosion",
+              "structtype": "Asset'/Script/GbxGame.ImpactResponseEffect'"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "inv_aspect": {
+    "records": [
+      {
+        "entries": [
+          {
+            "add_consecutivehits_weapondamage": {
+              "inv_aspect": "Add_ConsecutiveHits_WeaponDamage",
+              "augment": {
+                "structtype": "Asset'/Script/OakGame.InventoryAugmentDef'",
+                "conditionalattributeeffects": [
+                  {
+                    "attributetomodify": "attribute'weapon_damage'",
+                    "modifiervalue": {
+                      "constant": "0.010000",
+                      "datatablevalue": {
+                        "datatable": "gbx_ue_data_table'Anoint_Balance'",
+                        "rowname": "ConsecutiveHits_WeaponDamage",
+                        "columnname": "MaxValue_110_2D75E0C54D3035BFCEB34FA1EF7A9743"
+                      }
+                    }
+                  }
+                ],
+                "tag": "ConsecutiveHits_WeaponDamage",
+                "duration": "0.000000",
+                "resettable": "true",
+                "executemostpowerfuloftag": "true"
+              },
+              "anointedscales": [
+                {
+                  "min": "0.250000",
+                  "max": "1.000000"
+                }
+              ],
+              "parent": "inv_aspect'Anointment_Base'"
+            }
+          },
+          {
+            "add_gadgetused_damage_grenade": {
+              "inv_aspect": "Add_GadgetUsed_Damage_Grenade",
+              "augment": {
+                "structtype": "Asset'/Script/OakGame.InventoryAugmentDef'",
+                "conditionalattributeeffects": [
+                  {
+                    "attributetomodify": "attribute'damage_dealt_multiplier'",
+                    "modifiervalue": {
+                      "constant": "0.250000",
+                      "datatablevalue": {
+                        "datatable": "gbx_ue_data_table'none'"
+                      }
+                    }
+                  }
+                ],
+                "conditionname": "throw_grenade",
+                "tag": "GadgetUsed_Damage_Grenade",
+                "duration": {
+                  "constant": "10.000000",
+                  "datatablevalue": {
+                    "datatable": "gbx_ue_data_table'none'"
+                  }
+                },
+                "resettable": "true",
+                "executemostpowerfuloftag": "true"
+              },
+              "anointedscales": [
+                {
+                  "min": "0.250000",
+                  "max": "1.000000"
+                }
+              ],
+              "parent": "inv_aspect'Anointment_Base'"
+            }
+          },
+          {
+            "add_gadgetused_damage_heavyweapon": {
+              "inv_aspect": "Add_GadgetUsed_Damage_HeavyWeapon",
+              "augment": {
+                "structtype": "Asset'/Script/OakGame.InventoryAugmentDef'",
+                "conditionalattributeeffects": [
+                  {
+                    "attributetomodify": "attribute'damage_dealt_multiplier'",
+                    "modifiervalue": {
+                      "constant": "0.250000"
+                    }
+                  }
+                ],
+                "conditionname": "heavy_weapon_activated",
+                "tag": "GadgetUsed_Damage_HeavyWeapon",
+                "duration": "10.000000",
+                "resettable": "true",
+                "executemostpowerfuloftag": "true"
+              },
+              "anointedscales": [
+                {
+                  "min": "0.250000",
+                  "max": "1.000000"
+                }
+              ],
+              "parent": "inv_aspect'Anointment_Base'"
+            }
+          },
+          {
+            "add_grenadethrown_criticaldamage": {
+              "inv_aspect": "Add_GrenadeThrown_CriticalDamage",
+              "augment": {
+                "structtype": "Asset'/Script/OakGame.InventoryAugmentDef_ShotModifier'",
+                "shotmodifier": {
+                  "structtype": "Asset'/Script/GbxWeapon.ShotModifierData'",
+                  "conditionalmodifiers": [
+                    {
+                      "structtype": "Asset'/Script/GbxGame.DamageModifierCriticalDef'",
+                      "additionalcriticalmultiplier": {
+                        "datatablevalue": {
+                          "datatable": "gbx_ue_data_table'Anoint_Balance'",
+                          "rowname": "GrenadeThrown_CriticalDamage",
+                          "columnname": "MaxValue_110_2D75E0C54D3035BFCEB34FA1EF7A9743"
+                        }
+                      },
+                      "damagetypefilter": {
+                        "filtermode": "MustMatch",
+                        "filters": [
+                          "damagetype'Corrosive'",
+                          "damagetype'Cryo'",
+                          "damagetype'Fire'",
+                          "damagetype'Normal'",
+                          "damagetype'Radiation'"
+                        ]
+                      },
+                      "criticalfilter": "MustBeAnyCritical"
+                    }
+                  ]
+                },
+                "executebehavioronly": "true",
+                "conditionname": "throw_grenade",
+                "tag": "GrenadeThrown_CriticalDamage",
+                "executemostpowerfuloftag": "true"
+              },
+              "anointedscales": [
+                {
+                  "min": "0.250000",
+                  "max": "1.000000"
+                }
+              ],
+              "parent": "inv_aspect'Anointment_Base'"
+            }
+          },
+          {
+            "add_gunkill_movespeedreloadspeed": {
+              "inv_aspect": "Add_GunKill_MoveSpeedReloadSpeed",
+              "augment": {
+                "structtype": "Asset'/Script/OakGame.InventoryAugmentDef'",
+                "conditionalattributeeffects": [
+                  {
+                    "attributetomodify": "attribute'ground_speed_scale'",
+                    "modifiervalue": {
+                      "datatablevalue": {
+                        "datatable": "gbx_ue_data_table'Anoint_Balance'",
+                        "rowname": "GunKill_MoveSpeedReloadSpeed_Move",
+                        "columnname": "MaxValue_110_2D75E0C54D3035BFCEB34FA1EF7A9743"
+                      }
+                    }
+                  },
+                  {
+                    "attributetomodify": "attribute'weapon_reload_time'",
+                    "modifiervalue": {
+                      "datatablevalue": {
+                        "datatable": "gbx_ue_data_table'Anoint_Balance'",
+                        "rowname": "GunKill_MoveSpeedReloadSpeed_Reload",
+                        "columnname": "MaxValue_110_2D75E0C54D3035BFCEB34FA1EF7A9743"
+                      }
+                    }
+                  }
+                ],
+                "conditionname": "bullet_kill",
+                "tag": "GunKill_MoveSpeedReloadSpeed",
+                "duration": "10.000000",
+                "executemostpowerfuloftag": "true"
+              },
+              "anointedscales": [
+                {
+                  "min": "0.250000",
+                  "max": "1.000000"
+                }
+              ],
+              "parent": "inv_aspect'Anointment_Base'"
+            }
+          },
+          {
+            "add_healthfull_splashdamagesplashradius": {
+              "inv_aspect": "Add_HealthFull_SplashDamageSplashRadius",
+              "augment": {
+                "structtype": "Asset'/Script/OakGame.InventoryAugmentDef'",
+                "conditionalattributeeffects": [
+                  {
+                    "attributetomodify": "attribute'caused_radius_damage_damage_multiplier'",
+                    "modifiervalue": {
+                      "datatablevalue": {
+                        "datatable": "gbx_ue_data_table'Anoint_Balance'",
+                        "rowname": "HealthFull_SplashDamageSplashRadius",
+                        "columnname": "MaxValue_110_2D75E0C54D3035BFCEB34FA1EF7A9743"
+                      }
+                    }
+                  },
+                  {
+                    "attributetomodify": "attribute'caused_radius_damage_radius_multiplier'",
+                    "modifiervalue": {
+                      "datatablevalue": {
+                        "datatable": "gbx_ue_data_table'Anoint_Balance'",
+                        "rowname": "HealthFull_SplashDamageSplashRadius",
+                        "columnname": "MaxValue_110_2D75E0C54D3035BFCEB34FA1EF7A9743"
+                      }
+                    }
+                  }
+                ],
+                "conditionname": "health_full",
+                "removalconditionname": "health_not_full",
+                "tag": "HealthFull_SplashDamageSplashRadius",
+                "duration": {
+                  "constant": "0.000000",
+                  "datatablevalue": {
+                    "datatable": "gbx_ue_data_table'none'"
+                  }
+                },
+                "executemostpowerfuloftag": "true"
+              },
+              "anointedscales": [
+                {
+                  "min": "0.250000",
+                  "max": "1.000000"
+                }
+              ],
+              "parent": "inv_aspect'Anointment_Base'"
+            }
+          },
+          {
+            "add_heavyweaponequipped_specifcelementdamage": {
+              "inv_aspect": "Add_HeavyWeaponEquipped_SpecifcElementDamage",
+              "structtype": "Asset'/Script/GbxGame.InventoryAspect'"
+            }
+          },
+          {
+            "add_shieldbreak_criticaldamage": {
+              "inv_aspect": "Add_ShieldBreak_CriticalDamage",
+              "augment": {
+                "structtype": "Asset'/Script/OakGame.InventoryAugmentDef_ShotModifier'",
+                "conditionalattributeeffects": [
+                  {
+                    "attributetomodify": "attribute'caused_damage_critical_hit_multiplier'",
+                    "modifiervalue": {
+                      "datatablevalue": {
+                        "datatable": "gbx_ue_data_table'Anoint_Balance'",
+                        "rowname": "ShieldBreak_CritDamage",
+                        "columnname": "MaxValue_110_2D75E0C54D3035BFCEB34FA1EF7A9743"
+                      }
+                    }
+                  }
+                ],
+                "conditionname": "shield_empty",
+                "tag": "ShieldBreak_CritDamage"
+              },
+              "anointedscales": [
+                {
+                  "min": "0.250000",
+                  "max": "1.000000"
+                }
+              ],
+              "parent": "inv_aspect'Anointment_Base'"
+            }
+          },
+          {
+            "augment_invincibility": {
+              "inv_aspect": "augment_invincibility",
+              "structtype": "Asset'/Script/OakGame.InventoryAugmentAspect'",
+              "augment": {
+                "structtype": "Asset'/Script/OakGame.InventoryAugmentDef_Invincible'",
+                "conditionname": "instant",
+                "duration": "4.000000"
+              }
+            }
+          },
+          {
+            "augment_universal_speed": {
+              "inv_aspect": "augment_universal_speed",
+              "structtype": "Asset'/Script/OakGame.ShieldUniversalTriggerAspect'",
+              "passiveaugmentdef": {
+                "structtype": "Asset'/Script/OakGame.InventoryAugmentDef'",
+                "equippedattributeeffects": [
+                  {
+                    "attributetomodify": "attribute'health_resource_active_regeneration_rate'",
+                    "modifiertype": "PostAdd",
+                    "modifiervalue": {
+                      "constant": "17.000000"
+                    }
+                  }
+                ]
+              },
+              "ondamagedaugmentdef": {
+                "structtype": "Asset'/Script/OakGame.InventoryAugmentDef'",
+                "equippedattributeeffects": [
+                  {
+                    "attributetomodify": "attribute'ground_speed_scale'",
+                    "modifiertype": "ScaleSimple",
+                    "modifiervalue": {
+                      "constant": "15.000000"
+                    }
+                  }
+                ]
+              },
+              "ondamagedaugmentduration": "4.000000"
+            }
+          },
+          {
+            "behavior_anointed_health_regen": {
+              "inv_aspect": "behavior_anointed_health_regen",
+              "parent": "inv_aspect'Anointment_Base'",
+              "augment": {
+                "structtype": "Asset'/Script/OakGame.InventoryAugmentDef'",
+                "conditionname": "execution_end",
+                "duration": "5.0",
+                "conditionalattributeeffects": [
+                  {
+                    "attributetomodify": "attribute'health_resource_active_regeneration_rate'",
+                    "modifiertype": "PostAdd"
+                  }
+                ]
+              },
+              "debug_mayhemlevel": "5",
+              "generation": "2",
+              "anointedscales": [
+                {
+                  "min": "1.0",
+                  "max": "1.5"
+                },
+                {
+                  "min": "1.0",
+                  "max": "1.7"
+                },
+                {
+                  "min": "1.1",
+                  "max": "1.75"
+                },
+                {
+                  "min": "1.2",
+                  "max": "1.8"
+                },
+                {
+                  "min": "1.4",
+                  "max": "1.8"
+                },
+                {
+                  "min": "1.5",
+                  "max": "2.0"
+                }
+              ]
+            }
+          },
+          {
+            "behavior_anointed_movement_speed": {
+              "inv_aspect": "behavior_anointed_movement_speed",
+              "parent": "inv_aspect'Anointment_Base'",
+              "augment": {
+                "structtype": "Asset'/Script/OakGame.InventoryAugmentDef'",
+                "conditionname": "execution_end",
+                "duration": "5.0",
+                "tag": "anoint_move",
+                "executemostpowerfuloftag": "true",
+                "conditionalattributeeffects": [
+                  {
+                    "attributetomodify": "attribute'ground_speed_scale'",
+                    "modifiertype": "ScaleSimple"
+                  }
+                ]
+              },
+              "debug_mayhemlevel": "4",
+              "anointedscales": [
+                {
+                  "min": "1.0",
+                  "max": "1.5"
+                },
+                {
+                  "min": "1.0",
+                  "max": "1.7"
+                },
+                {
+                  "min": "1.1",
+                  "max": "1.75"
+                },
+                {
+                  "min": "1.2",
+                  "max": "1.8"
+                },
+                {
+                  "min": "1.4",
+                  "max": "1.8"
+                },
+                {
+                  "min": "1.5",
+                  "max": "2.0"
+                }
+              ]
+            }
+          },
+          {
+            "behavior_anointed_weapon_damage": {
+              "inv_aspect": "behavior_anointed_weapon_damage",
+              "augment": {
+                "structtype": "Asset'/Script/OakGame.InventoryAugmentDef'",
+                "conditionalattributeeffects": [
+                  {
+                    "attributetomodify": "attribute'weapon_damage'",
+                    "modifiertype": "ScaleMultiply"
+                  }
+                ],
+                "condition": "attribute'health_less_than_30'"
+              },
+              "anointedscales": [
+                {
+                  "min": "3.000000",
+                  "max": "3.500000"
+                },
+                {
+                  "min": "3.000000",
+                  "max": "3.700000"
+                },
+                {
+                  "min": "4.100000",
+                  "max": "4.750000"
+                },
+                {
+                  "min": "4.200000",
+                  "max": "4.800000"
+                },
+                {
+                  "min": "5.400000",
+                  "max": "5.800000"
+                },
+                {
+                  "min": "7.500000",
+                  "max": "9.000000"
+                }
+              ],
+              "debug_mayhemlevel": "6",
+              "parent": "inv_aspect'Anointment_Base'"
+            }
+          },
+          {
+            "behavior_buff_power_barrier": {
+              "inv_aspect": "behavior_buff_power_barrier",
+              "augment": {
+                "structtype": "Asset'/Script/OakGame.InventoryAugmentDef'",
+                "equippedattributeeffects": [
+                  {
+                    "attributetomodify": "attribute'terminal_gadget_barrier_health'",
+                    "modifiervalue": {
+                      "datatablevalue": {
+                        "datatable": "gbx_ue_data_table'Terminal_Augment'",
+                        "rowname": "BarrierHealth",
+                        "columnname": "Custom_19_439B5B664C3D9C4216DB259AD8433F7D"
+                      }
+                    }
+                  }
+                ]
+              },
+              "structtype": "Asset'/Script/OakGame.InventoryAugmentAspect'"
+            }
+          },
+          {
+            "behavior_buff_power_combat": {
+              "inv_aspect": "behavior_buff_power_combat",
+              "augmentdef": {
+                "structtype": "Asset'/Script/OakGame.InventoryAugmentDef'",
+                "equippedattributeeffects": [
+                  {
+                    "attributetomodify": "attribute'terminal_gadget_combat_potency'",
+                    "modifiervalue": {
+                      "datatablevalue": {
+                        "datatable": "gbx_ue_data_table'Terminal_Augment'",
+                        "rowname": "CombatPower",
+                        "columnname": "Potency_16_BBBE55E24FD1C90646DC759E2BB1B639"
+                      }
+                    }
+                  }
+                ]
+              },
+              "structtype": "Asset'/Script/OakGame.TerminalBehaviorAspect'"
+            }
+          },
+          {
+            "behavior_buff_power_health": {
+              "inv_aspect": "behavior_buff_power_health",
+              "augmentdef": {
+                "structtype": "Asset'/Script/OakGame.InventoryAugmentDef'",
+                "equippedattributeeffects": [
+                  {
+                    "attributetomodify": "attribute'terminal_gadget_heal_potency'",
+                    "modifiertype": "ScaleMultiply",
+                    "modifiervalue": {
+                      "constant": "1.250000",
+                      "datatablevalue": {
+                        "datatable": "gbx_ue_data_table'Terminal_Augment'",
+                        "rowname": "HealingPower",
+                        "columnname": "Potency_16_BBBE55E24FD1C90646DC759E2BB1B639"
+                      }
+                    }
+                  }
+                ]
+              },
+              "structtype": "Asset'/Script/OakGame.TerminalBehaviorAspect'"
+            }
+          },
+          {
+            "behavior_damage_increase": {
+              "inv_aspect": "behavior_damage_increase",
+              "structtype": "Asset'/Script/OakGame.TerminalBehaviorAspect'",
+              "augmentdef": {
+                "structtype": "Asset'/Script/OakGame.InventoryAugmentDef'",
+                "equippedattributeeffects": [
+                  {
+                    "attributetomodify": "attribute'damage_dealt_multiplier'",
+                    "modifiertype": "ScaleSimple",
+                    "modifiervalue": {
+                      "datatablevalue": {
+                        "datatable": "gbx_ue_data_table'Terminal_Augment'",
+                        "rowname": "CombatPower",
+                        "columnname": "Potency"
+                      }
+                    }
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "behavior_delayed_gratification": {
+              "inv_aspect": "behavior_delayed_gratification",
+              "structtype": "Asset'/Script/OakGame.TerminalBehaviorAspect'",
+              "executiontype": "OnDeploy",
+              "terminalbehaviordef": {
+                "structtype": "Asset'/Script/OakGame.TerminalBehaviorDef'",
+                "terminalbehavior": "ScalePassive",
+                "floatparams": [
+                  "0.200000",
+                  "0.200000"
+                ]
+              }
+            }
+          },
+          {
+            "behavior_healing_power": {
+              "inv_aspect": "behavior_healing_power",
+              "parent": "inv_aspect'inv_attr_effects'",
+              "attributeeffects": [
+                {
+                  "attributetomodify": "attribute'terminal_gadget_heal_potency'",
+                  "modifiervalue": {
+                    "datatablevalue": {
+                      "datatable": "gbx_ue_data_table'Terminal_Augment'",
+                      "rowname": "HealingPower",
+                      "columnname": "Potency_16_BBBE55E24FD1C90646DC759E2BB1B639"
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "behavior_health_decay": {
+              "inv_aspect": "behavior_health_decay",
+              "structtype": "Asset'/Script/OakGame.TerminalBehaviorAspect'",
+              "augmentdef": {
+                "structtype": "Asset'/Script/OakGame.InventoryAugmentDef'",
+                "equippedattributeeffects": [
+                  {
+                    "attributetomodify": "attribute'ai_01_health_resource_active_regeneration_rate'",
+                    "modifiertype": "PostAdd",
+                    "modifiervalue": {
+                      "constant": "-2.000000"
+                    }
+                  },
+                  {
+                    "attributetomodify": "attribute'ai_02_health_resource_active_regeneration_rate'",
+                    "modifiertype": "PostAdd",
+                    "modifiervalue": {
+                      "constant": "-2.000000"
+                    }
+                  },
+                  {
+                    "attributetomodify": "attribute'ai_03_health_resource_active_regeneration_rate'",
+                    "modifiertype": "PostAdd",
+                    "modifiervalue": {
+                      "constant": "-2.000000"
+                    }
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "behavior_leech_seed_health": {
+              "inv_aspect": "behavior_leech_seed_health",
+              "augmentdef": {
+                "structtype": "Asset'/Script/OakGame.InventoryAugmentDef_AttributeModifier'",
+                "modifierattributeeffects": [
+                  {
+                    "attributetomodify": "attribute'health_resource_active_regeneration_rate'",
+                    "modifiertype": "ScaleMultiply",
+                    "modifiervalue": {
+                      "constant": "2.000000",
+                      "datatablevalue": {
+                        "datatable": "gbx_ue_data_table'none'"
+                      }
+                    }
+                  }
+                ],
+                "modifierscale": "0.500000",
+                "maxnumberofmodifications": "5",
+                "equippedattributeeffects": [
+                  {
+                    "attributetomodify": "attribute'terminal_aug_healing_leechseed'",
+                    "modifiertype": "OverrideBaseValue",
+                    "modifiervalue": {
+                      "constant": "1.000000",
+                      "datatablevalue": {
+                        "datatable": "gbx_ue_data_table'none'"
+                      }
+                    }
+                  }
+                ],
+                "conditionname": "enemy_enter_terminal_aoe",
+                "removalconditionname": "enemy_leave_terminal_aoe",
+                "executebehavioronly": "true"
+              },
+              "structtype": "Asset'/Script/OakGame.TerminalBehaviorAspect'"
+            }
+          },
+          {
+            "behavior_reload_speed": {
+              "inv_aspect": "behavior_reload_speed",
+              "augment": {
+                "structtype": "Asset'/Script/OakGame.InventoryAugmentDef_AttributeModifier'",
+                "modifierattributeeffects": [
+                  {
+                    "attributetomodify": "attribute'weapon_reload_time'",
+                    "modifiertype": "ScaleMultiply",
+                    "modifiervalue": {
+                      "constant": "-0.333300",
+                      "datatablevalue": {
+                        "datatable": "gbx_ue_data_table'none'"
+                      }
+                    }
+                  }
+                ],
+                "modifiercontext": "Weapon",
+                "equipconditionname": "weapon_changed"
+              },
+              "structtype": "Asset'/Script/OakGame.InventoryAugmentAspect'"
+            }
+          },
+          {
+            "behavior_reverb_nova_on_ground_slam": {
+              "inv_aspect": "behavior_reverb_nova_on_ground_slam",
+              "augmentdef": {
+                "structtype": "Asset'/Script/OakGame.InventoryAugmentDef_ActorScript'",
+                "conditionappliedscript": "Asset'/Game/Gear/Gadgets/Terminals/Script_NovaBlastEnemiesInRadius.Script_NovaBlastEnemiesInRadius_C'",
+                "conditionname": "ground_slam",
+                "executebehavioronly": "true"
+              },
+              "structtype": "Asset'/Script/OakGame.TerminalBehaviorAspect'"
+            }
+          },
+          {
+            "behavior_speed_boost": {
+              "inv_aspect": "behavior_speed_boost",
+              "structtype": "Asset'/Script/OakGame.TerminalBehaviorAspect'",
+              "augmentdef": {
+                "structtype": "Asset'/Script/OakGame.InventoryAugmentDef'",
+                "equippedattributeeffects": [
+                  {
+                    "attributetomodify": "attribute'ground_speed_scale'",
+                    "modifiertype": "ScaleSimple",
+                    "modifiervalue": {
+                      "constant": "1.25"
+                    }
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "bodymag_invpartvalue": {
+              "inv_aspect": "BodyMag_InvPartValue",
+              "usemodeattributeeffects": [
+                {
+                  "usemodebitmask": "2",
+                  "attributeeffects": [
+                    {
+                      "attributetomodify": "attribute'weapon_part_reload_value'",
+                      "modifiertype": "OverrideBaseValue",
+                      "modifiervalue": {
+                        "constant": "6.000000",
+                        "datatablevalue": {
+                          "datatable": "gbx_ue_data_table'none'"
+                        }
+                      }
+                    }
+                  ]
+                }
+              ],
+              "binstigatoreffects": "true",
+              "comparisiontag": "Body_Mag",
+              "selectionpriority": "Medium",
+              "structtype": "Asset'/Script/GbxWeapon.WeaponAttributeEffectAspect'"
+            }
+          },
+          {
+            "bor_hw_fire_projectile_charge": {
+              "inv_aspect": "bor_hw_fire_projectile_charge",
+              "behavior": {
+                "crosshair": "crosshair'crosshair_disc'",
+                "damage_source": "",
+                "impact_force": "",
+                "ai_burst_time": "",
+                "ai_use_burst_time": "",
+                "recoil": "recoil'HW_Borg_Barrel_01'",
+                "firefeedback": "feedback'FBData_WeaponFire_AR_VeryStrong'"
+              },
+              "parent": "inv_aspect'hw_fire_projectile_charge'"
+            }
+          },
+          {
+            "borg_cannibal_augment": {
+              "inv_aspect": "borg_cannibal_augment",
+              "augment": {
+                "structtype": "Asset'/Script/OakGame.BorgWeaponAugmentDef_KillTracker'",
+                "condition": {
+                  "externalattribute": "attribute'ai_is_order'"
+                },
+                "augment": {
+                  "structtype": "Asset'/Script/OakGame.BorgWeaponAugmentDef_InventoryAugment'",
+                  "inventoryaugment": {
+                    "structtype": "Asset'/Script/OakGame.InventoryAugmentDef_ShotModifier'",
+                    "shotmodifier": {
+                      "structtype": "Asset'/Script/GbxWeapon.ShotModifierData'",
+                      "conditionalmodifiers": [
+                        {
+                          "structtype": "Asset'/Script/GbxGame.DamageModifierValueDef'",
+                          "damagevalue": {
+                            "constant": "0.500000",
+                            "datatablevalue": {
+                              "datatable": "gbx_ue_data_table'none'"
+                            },
+                            "attribute": "attribute'weapon_borg_energy'",
+                            "postscale": "0.500000"
+                          },
+                          "defendercondition": "attribute'ai_is_order'",
+                          "defendercontext": "DamagedActor"
+                        }
+                      ]
+                    }
+                  }
+                },
+                "killtoenergyformula": {
+                  "datatablevalue": {
+                    "datatable": "gbx_ue_data_table'none'"
+                  },
+                  "attribute": "attribute'weapon_borg_cannibal_kill_to_energy'"
+                },
+                "identifier": "Cannibal"
+              },
+              "structtype": "Asset'/Script/OakGame.WeaponBorgAugmentAspect'"
+            }
+          },
+          {
+            "borg_edging_lord_augment": {
+              "inv_aspect": "borg_edging_lord_augment",
+              "augment": {
+                "structtype": "Asset'/Script/OakGame.BorgWeaponAugmentDef_InventoryAugment'",
+                "inventoryaugment": {
+                  "structtype": "Asset'/Script/OakGame.InventoryAugmentDef_ShotModifier'",
+                  "shotmodifier": {
+                    "structtype": "Asset'/Script/GbxWeapon.ShotModifierData'",
+                    "conditionalmodifiers": [
+                      {
+                        "structtype": "Asset'/Script/GbxGame.DamageModifierValueDef'",
+                        "damagevalue": {
+                          "datatablevalue": {
+                            "datatable": "gbx_ue_data_table'none'"
+                          },
+                          "attribute": "attribute'weapon_borg_edgelord_ammo_or_heat'"
+                        }
+                      }
+                    ]
+                  }
+                },
+                "identifier": "EdgingLord"
+              },
+              "structtype": "Asset'/Script/OakGame.WeaponBorgAugmentAspect'"
+            }
+          },
+          {
+            "borg_elemental_leech_augment": {
+              "inv_aspect": "borg_elemental_leech_augment",
+              "augment": {
+                "structtype": "Asset'/Script/OakGame.BorgWeaponAugmentDef_ElementalLeech'",
+                "damagepercent": {
+                  "constant": "0.375000",
+                  "datatablevalue": {
+                    "datatable": "gbx_ue_data_table'none'"
+                  }
+                },
+                "identifier": "ElementalLeech"
+              },
+              "structtype": "Asset'/Script/OakGame.WeaponBorgAugmentAspect'"
+            }
+          },
+          {
+            "borg_headhunter_augment": {
+              "inv_aspect": "borg_headhunter_augment",
+              "augment": {
+                "structtype": "Asset'/Script/OakGame.BorgWeaponAugmentDef_KillTracker'",
+                "condition": {
+                  "externalattribute": "attribute'ai_is_badass'"
+                },
+                "augment": {
+                  "structtype": "Asset'/Script/OakGame.BorgWeaponAugmentDef_Attribute'",
+                  "attributeeffects": [
+                    {
+                      "attributetomodify": "attribute'weapon_fire_rate'",
+                      "modifiervalue": {
+                        "datatablevalue": {
+                          "datatable": "gbx_ue_data_table'none'"
+                        },
+                        "attribute": "attribute'weapon_borg_energy'",
+                        "postscale": "0.500000"
+                      }
+                    },
+                    {
+                      "attributetomodify": "attribute'weapon_reload_time'",
+                      "modifiervalue": {
+                        "datatablevalue": {
+                          "datatable": "gbx_ue_data_table'none'"
+                        },
+                        "attribute": "attribute'weapon_borg_energy'",
+                        "postscale": "-0.500000"
+                      }
+                    },
+                    {
+                      "attributetomodify": "attribute'weapon_accuracy_impulse'",
+                      "modifiervalue": {
+                        "datatablevalue": {
+                          "datatable": "gbx_ue_data_table'none'"
+                        },
+                        "attribute": "attribute'weapon_borg_energy'",
+                        "postscale": "-0.500000"
+                      }
+                    }
+                  ]
+                },
+                "killtoenergyformula": {
+                  "datatablevalue": {
+                    "datatable": "gbx_ue_data_table'none'"
+                  },
+                  "attribute": "attribute'weapon_borg_headhunter_kill_to_energy'"
+                },
+                "identifier": "Headhunter"
+              },
+              "structtype": "Asset'/Script/OakGame.WeaponBorgAugmentAspect'"
+            }
+          },
+          {
+            "borg_incite_augment": {
+              "inv_aspect": "borg_incite_augment",
+              "augment": {
+                "structtype": "Asset'/Script/OakGame.BorgWeaponAugmentDef_InventoryAugment'",
+                "inventoryaugment": {
+                  "structtype": "Asset'/Script/OakGame.InventoryAugmentDef_Damage'",
+                  "damagedata": "damagedata'WeaponRadial'",
+                  "damageoverride": {
+                    "datatablevalue": {
+                      "datatable": "gbx_ue_data_table'none'"
+                    },
+                    "attribute": "attribute'weapon_borg_calc_incite_damage'"
+                  },
+                  "damagesourceoverride": {
+                    "data": [
+                      {
+                        "dmgsrc_projectile": "damagesource'DmgSrc_Projectile'"
+                      }
+                    ]
+                  },
+                  "sourceeffectoverride": {
+                    "handle": "impact_effect_collection'Explosion_Nova'"
+                  },
+                  "impactforceoverride": {
+                    "selection": "Preset",
+                    "preset": "Medium(~3Meters)"
+                  },
+                  "radius": {
+                    "constant": "500.000000",
+                    "datatablevalue": {
+                      "datatable": "gbx_ue_data_table'none'"
+                    }
+                  },
+                  "targettype": "Enemy",
+                  "conditionname": "bullet_kill"
+                },
+                "identifier": "Incite"
+              },
+              "structtype": "Asset'/Script/OakGame.WeaponBorgAugmentAspect'"
+            }
+          },
+          {
+            "class_mod_dark_siren_basic": {
+              "inv_aspect": "class_mod_dark_siren_basic",
+              "structtype": "Asset'/Script/OakGame.ClassModPassivesAspect'",
+              "passives": [
+                {
+                  "progressgraph": "progress_graph'dark_siren_action_skills_progress'",
+                  "nodename": "action_skill_0"
+                },
+                {
+                  "progressgraph": "progress_graph'dark_siren_action_skills_progress'",
+                  "nodename": "action_skill_2"
+                }
+              ],
+              "points": "6"
+            }
+          },
+          {
+            "class_mod_dark_siren_punch": {
+              "inv_aspect": "class_mod_dark_siren_punch",
+              "structtype": "Asset'/Script/OakGame.ClassModPassivesAspect'",
+              "passives": [
+                {
+                  "progressgraph": "progress_graph'dark_siren_action_skills_progress'",
+                  "nodename": "action_skill_0"
+                }
+              ],
+              "points": "4"
+            }
+          },
+          {
+            "class_mod_exo_soldier_basic": {
+              "inv_aspect": "class_mod_exo_soldier_basic",
+              "structtype": "Asset'/Script/OakGame.ClassModPassivesAspect'",
+              "passives": [
+                {
+                  "progressgraph": "progress_graph'progress_graph_exo_action_skills'",
+                  "nodename": "action_skill_0"
+                }
+              ],
+              "points": "3"
+            }
+          },
+          {
+            "class_mod_exo_soldier_rare": {
+              "inv_aspect": "class_mod_exo_soldier_rare",
+              "structtype": "Asset'/Script/OakGame.ClassModPassivesAspect'",
+              "passives": [
+                {
+                  "progressgraph": "progress_graph'progress_graph_exo_action_skills'",
+                  "nodename": "action_skill_0"
+                },
+                {
+                  "progressgraph": "progress_graph'progress_graph_exo_action_skills'",
+                  "nodename": "action_skill_1"
+                },
+                {
+                  "progressgraph": "progress_graph'progress_graph_exo_action_skills'",
+                  "nodename": "action_skill_2"
+                }
+              ],
+              "points": "6"
+            }
+          },
+          {
+            "grenade_payload_damage_amp": {
+              "inv_aspect": "grenade_payload_damage_amp",
+              "behavior": {
+                "structtype": "Asset'/Script/OakGame.GrenadeBehaviorDef_PayloadDamageAmp'",
+                "damageampstatuseffect": "Asset'/Game/Gear/GrenadeGadgets/_Shared/_Design/StatusEffect_DamageAmp.StatusEffect_DamageAmp'",
+                "damageampduration": {
+                  "constant": "10.000000",
+                  "datatablevalue": {
+                    "datatable": "gbx_ue_data_table'none'"
+                  }
+                },
+                "safetyduration": {
+                  "constant": "15.000000",
+                  "datatablevalue": {
+                    "datatable": "gbx_ue_data_table'none'"
+                  }
+                }
+              },
+              "structtype": "Asset'/Script/OakGame.GrenadeBehaviorAspect'",
+              "class": "grenade_behavior"
+            }
+          },
+          {
+            "grenade_payload_lingering_radiation": {
+              "inv_aspect": "grenade_payload_lingering_radiation",
+              "behavior": {
+                "duration": "",
+                "audioactiveloop": "audio_event'Gear_Grenades.Gear_Grenade_Linger_Rad_Radius_Lp'",
+                "findtargetinterval": {
+                  "constant": "0.500000"
+                },
+                "findtargetdistance": {
+                  "constant": "1000.000000"
+                },
+                "findtargetdistancebinding": "MaxDistance",
+                "spawndelay": {
+                  "constant": "0.250000"
+                }
+              },
+              "class": "grenade_behavior",
+              "parent": "inv_aspect'grenade_payload_lingering'"
+            }
+          },
+          {
+            "iron_sight": {
+              "inv_aspect": "iron_sight",
+              "usemodebitmask": "3",
+              "behavior": {
+                "structtype": "Asset'/Script/OakGame.WeaponBehaviorDef_OakZoom'",
+                "behaviorclass": "Asset'/Script/OakGame.WeaponBehavior_OakZoom'"
+              },
+              "structtype": "Asset'/Script/GbxWeapon.WeaponUseModeBehaviorAspect'",
+              "class": "use_mode_behavior"
+            }
+          },
+          {
+            "mal_hw_fire_projectile_charge": {
+              "inv_aspect": "mal_hw_fire_projectile_charge",
+              "behavior": {
+                "crosshair": "crosshair'crosshair_rocket'",
+                "damage_source": "",
+                "impact_force": "",
+                "ai_burst_time": "",
+                "ai_use_burst_time": "",
+                "recoil": "recoil'HW_MAL_Barrel_01'",
+                "firefeedback": "feedback'FBData_WeaponFire_AR_VeryStrong'"
+              },
+              "parent": "inv_aspect'hw_fire_projectile_charge'"
+            }
+          },
+          {
+            "maliwan_secondary_sonic": {
+              "inv_aspect": "maliwan_secondary_sonic",
+              "usemodebitmask": "2",
+              "impacteffect": "impact_effect'Bullet'",
+              "damagetype": "damagetype'Sonic'",
+              "selectionpriority": "High",
+              "parent": "inv_aspect'weapon_damage_type'"
+            }
+          },
+          {
+            "maliwan_secondary_sonic_material": {
+              "inv_aspect": "maliwan_secondary_sonic_material",
+              "usemodebitmask": "2",
+              "vectorparameters": [
+                {
+                  "name": "E_Elemental_Color",
+                  "value": {
+                    "r": "2.000000",
+                    "g": "0.500000",
+                    "b": "2.000000"
+                  }
+                }
+              ],
+              "parent": "inv_aspect'weapon_element_material'"
+            }
+          },
+          {
+            "remove_second_use_mode": {
+              "inv_aspect": "remove_second_use_mode",
+              "usemodebitmask": "2",
+              "usemodetag": "underbarrel",
+              "bremoveusemodes": "true",
+              "selectionpriority": "Ultra",
+              "structtype": "Asset'/Script/GbxWeapon.WeaponUseModeAspect'"
+            }
+          },
+          {
+            "repair_kit_augment": {
+              "inv_aspect": "repair_kit_augment",
+              "structtype": "Asset'/Script/OakGame.RepairKitAugmentAspect'",
+              "class": "repair_kit_augment",
+              "augment": {
+                "class": "augment"
+              }
+            }
+          },
+          {
+            "repair_kit_curative": {
+              "inv_aspect": "repair_kit_curative",
+              "structtype": "Asset'/Script/OakGame.RepairKitCurativeAspect'",
+              "class": "repair_kit_curative"
+            }
+          },
+          {
+            "repair_kit_inv_augment": {
+              "inv_aspect": "repair_kit_inv_augment",
+              "structtype": "Asset'/Script/OakGame.InventoryAugmentAspect'"
+            }
+          },
+          {
+            "shd_aug_eng_emerging": {
+              "inv_aspect": "shd_aug_eng_emerging",
+              "augment": {
+                "structtype": "Asset'/Script/OakGame.InventoryAugmentDef_DurationVariance'",
+                "totalduration": {
+                  "constant": "15.000000",
+                  "datatablevalue": {
+                    "datatable": "gbx_ue_data_table'none'"
+                  }
+                },
+                "timesegment": {
+                  "constant": "3.000000",
+                  "datatablevalue": {
+                    "datatable": "gbx_ue_data_table'none'"
+                  }
+                },
+                "deltapersegment": {
+                  "constant": "0.200000",
+                  "datatablevalue": {
+                    "datatable": "gbx_ue_data_table'none'"
+                  }
+                },
+                "conditionalattributeeffects": [
+                  {
+                    "attributetomodify": "attribute'shield_resource_idle_regen_rate'",
+                    "modifiervalue": {
+                      "datatablevalue": {
+                        "datatable": "gbx_ue_data_table'none'"
+                      },
+                      "attribute": "attribute'shield_eng_emerging_value_rate'"
+                    }
+                  },
+                  {
+                    "attributetomodify": "attribute'shield_resource_idle_regen_delay'",
+                    "modifiervalue": {
+                      "datatablevalue": {
+                        "datatable": "gbx_ue_data_table'none'"
+                      },
+                      "attribute": "attribute'shield_eng_emerging_value_delay'"
+                    }
+                  }
+                ],
+                "conditionname": "shield_not_full",
+                "removalconditionname": "shield_full",
+                "tag": "eng_emerging",
+                "duration": {
+                  "constant": "0.000000",
+                  "datatablevalue": {
+                    "datatable": "gbx_ue_data_table'none'"
+                  }
+                }
+              },
+              "structtype": "Asset'/Script/OakGame.InventoryAugmentAspect'"
+            }
+          },
+          {
+            "shield_charge_do_damage": {
+              "inv_aspect": "shield_charge_do_damage",
+              "resourcepool": "resourcepool'Shield_Charge'",
+              "meterfillcondition": "DoDamage",
+              "damagedonemultiplier": "0.200000",
+              "chargeresetduration": "8.000000",
+              "structtype": "Asset'/Script/OakGame.ShieldChargeTriggerAspect'",
+              "class": "shield_charge_trigger"
+            }
+          },
+          {
+            "shield_charge_do_damage_set_resource": {
+              "inv_aspect": "shield_charge_do_damage_set_resource",
+              "attributeeffects": [
+                {
+                  "attributetomodify": "attribute'shield_charge_capacity'",
+                  "modifiertype": "OverrideBaseValue",
+                  "modifiervalue": {
+                    "datatablevalue": {
+                      "datatable": "gbx_ue_data_table'none'"
+                    },
+                    "attribute": "attribute'calc_charge_trigger_do_damage'"
+                  }
+                }
+              ],
+              "augment": {
+                "structtype": "Asset'/Script/OakGame.InventoryAugmentDef'",
+                "conditionalattributeeffects": [
+                  {
+                    "attributetomodify": "attribute'weapon_zoom_duration'",
+                    "modifiervalue": {
+                      "constant": "-0.300000",
+                      "datatablevalue": {
+                        "datatable": "gbx_ue_data_table'none'"
+                      },
+                      "attribute": "attribute'shield_unv_utility_value'"
+                    }
+                  },
+                  {
+                    "attributetomodify": "attribute'weapon_equip_time'",
+                    "modifiervalue": {
+                      "constant": "-0.300000",
+                      "datatablevalue": {
+                        "datatable": "gbx_ue_data_table'none'"
+                      },
+                      "attribute": "attribute'shield_unv_utility_value'"
+                    }
+                  },
+                  {
+                    "attributetomodify": "attribute'weapon_instigator_switch_mode_time_scale'",
+                    "modifiervalue": {
+                      "constant": "-0.300000",
+                      "datatablevalue": {
+                        "datatable": "gbx_ue_data_table'none'"
+                      },
+                      "attribute": "attribute'shield_unv_utility_value'"
+                    }
+                  },
+                  {
+                    "attributetomodify": "attribute'weapon_put_down_time'",
+                    "modifiervalue": {
+                      "constant": "-0.300000",
+                      "datatablevalue": {
+                        "datatable": "gbx_ue_data_table'none'"
+                      },
+                      "attribute": "attribute'shield_unv_utility_value'"
+                    }
+                  },
+                  {
+                    "attributetomodify": "attribute'ground_speed_scale'",
+                    "modifiervalue": {
+                      "constant": "0.100000",
+                      "datatablevalue": {
+                        "datatable": "gbx_ue_data_table'none'"
+                      },
+                      "attribute": "attribute'shield_unv_utility_value_movespeed'"
+                    }
+                  }
+                ],
+                "conditionname": "shield_is_empty",
+                "tag": "unv_utility"
+              },
+              "parent": "inv_aspect'inv_attr_effects'"
+            }
+          },
+          {
+            "shield_charge_kill_enemy": {
+              "inv_aspect": "shield_charge_kill_enemy",
+              "resourcepool": "resourcepool'Shield_Charge'",
+              "meterfillcondition": "KillEnemy",
+              "chargegainedforkills": "5.000000",
+              "chargeresetduration": "8.000000",
+              "structtype": "Asset'/Script/OakGame.ShieldChargeTriggerAspect'",
+              "class": "shield_charge_trigger"
+            }
+          },
+          {
+            "shield_charge_take_damage": {
+              "inv_aspect": "shield_charge_take_damage",
+              "resourcepool": "resourcepool'Shield_Charge'",
+              "damagetakenmultiplier": "0.350000",
+              "chargeresetduration": "8.000000",
+              "structtype": "Asset'/Script/OakGame.ShieldChargeTriggerAspect'",
+              "class": "shield_charge_trigger"
+            }
+          },
+          {
+            "shield_charge_take_damage_set_resource": {
+              "inv_aspect": "shield_charge_take_damage_set_resource",
+              "structtype": "Asset'/Script/GbxGame.InventoryAspect'",
+              "attributeeffects": [
+                {
+                  "attributetomodify": "attribute'shield_charge_capacity'",
+                  "modifiertype": "OverrideBaseValue",
+                  "modifiervalue": {
+                    "datatablevalue": {
+                      "datatable": "gbx_ue_data_table'none'"
+                    },
+                    "attribute": "attribute'calc_charge_trigger_take_damage'"
+                  }
+                }
+              ],
+              "augment": {
+                "structtype": "Asset'/Script/OakGame.InventoryAugmentDef'",
+                "conditionalattributeeffects": [
+                  {
+                    "attributetomodify": "attribute'weapon_zoom_duration'",
+                    "modifiervalue": {
+                      "constant": "-0.300000",
+                      "datatablevalue": {
+                        "datatable": "gbx_ue_data_table'none'"
+                      },
+                      "attribute": "attribute'shield_unv_utility_value'"
+                    }
+                  },
+                  {
+                    "attributetomodify": "attribute'weapon_equip_time'",
+                    "modifiervalue": {
+                      "constant": "-0.300000",
+                      "datatablevalue": {
+                        "datatable": "gbx_ue_data_table'none'"
+                      },
+                      "attribute": "attribute'shield_unv_utility_value'"
+                    }
+                  },
+                  {
+                    "attributetomodify": "attribute'weapon_instigator_switch_mode_time_scale'",
+                    "modifiervalue": {
+                      "constant": "-0.300000",
+                      "datatablevalue": {
+                        "datatable": "gbx_ue_data_table'none'"
+                      },
+                      "attribute": "attribute'shield_unv_utility_value'"
+                    }
+                  },
+                  {
+                    "attributetomodify": "attribute'weapon_put_down_time'",
+                    "modifiervalue": {
+                      "constant": "-0.300000",
+                      "datatablevalue": {
+                        "datatable": "gbx_ue_data_table'none'"
+                      },
+                      "attribute": "attribute'shield_unv_utility_value'"
+                    }
+                  },
+                  {
+                    "attributetomodify": "attribute'ground_speed_scale'",
+                    "modifiervalue": {
+                      "constant": "0.100000",
+                      "datatablevalue": {
+                        "datatable": "gbx_ue_data_table'none'"
+                      },
+                      "attribute": "attribute'shield_unv_utility_value_movespeed'"
+                    }
+                  }
+                ],
+                "conditionname": "shield_is_empty",
+                "tag": "unv_utility"
+              },
+              "parent": "inv_aspect'inv_attr_effects'"
+            }
+          },
+          {
+            "stat_group_health": {
+              "inv_aspect": "stat_group_health",
+              "structtype": "Asset'/Script/OakGame.ClassModStatGroupAspect'",
+              "statattributeeffects": [
+                {
+                  "attributetomodify": "attribute'health_resource_active_regeneration_rate'",
+                  "modifiertype": "PostAdd",
+                  "modifiervalue": {
+                    "constant": "9.000000"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "stat_group_speed": {
+              "inv_aspect": "stat_group_speed",
+              "structtype": "Asset'/Script/OakGame.ClassModStatGroupAspect'",
+              "statattributeeffects": [
+                {
+                  "attributetomodify": "attribute'ground_speed_scale'",
+                  "modifiertype": "ScaleSimple",
+                  "modifiervalue": {
+                    "constant": "8.000000"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "turret_augment_elemental_power": {
+              "inv_aspect": "turret_augment_elemental_power",
+              "attributeeffects": [
+                {
+                  "attributetomodify": "attribute'caused_status_effect_damage_modifier'",
+                  "modifiertype": "ScaleMultiply",
+                  "modifiervalue": {
+                    "constant": "1.500000"
+                  }
+                },
+                {
+                  "attributetomodify": "attribute'caused_status_effect_chance_modifier'",
+                  "modifiertype": "ScaleMultiply",
+                  "modifiervalue": {
+                    "constant": "2.000000"
+                  }
+                },
+                {
+                  "attributetomodify": "attribute'caused_status_effect_charge_modifier'",
+                  "modifiertype": "ScaleMultiply",
+                  "modifiervalue": {
+                    "constant": "2.000000"
+                  }
+                }
+              ],
+              "parent": "inv_aspect'inst_attr_effects'"
+            }
+          }
+        ]
+      },
+      {
+        "entries": [
+          {
+            "brute_facelaser_fireprojectile": {
+              "inv_aspect": "Brute_FaceLaser_FireProjectile",
+              "behavior": {
+                "lightprojectile": "light_projectile'LightProj_Brute_FaceLaser'",
+                "firerate": {
+                  "constant": "8.000000"
+                },
+                "automaticburstcount": "16",
+                "burstfiredelay": "5.000000",
+                "firesockets": [
+                  "FaceLaser_L",
+                  "FaceLaser_R"
+                ],
+                "aiaccuracy": {
+                  "datatablevalue": {
+                    "datatable": "gbx_ue_data_table'Table_Brute_FaceLaser_Balance'",
+                    "rowname": "FaceLaser",
+                    "columnname": "AI_Accuracy_33_D3C350EA449BFAA6F271BF84E3777958"
+                  }
+                },
+                "aiprojectilespeed": {
+                  "constant": "1.000000",
+                  "datatablevalue": {
+                    "datatable": "gbx_ue_data_table'none'",
+                    "rowname": "None",
+                    "columnname": "None"
+                  }
+                }
+              },
+              "parent": "inv_aspect'fire_projectile'"
+            }
+          },
+          {
+            "gunship_maingun_fireprojectile": {
+              "inv_aspect": "GunShip_MainGun_FireProjectile",
+              "behavior": {
+                "lightprojectile": "light_projectile'LightProj_GunShip_MainGun'",
+                "firerate": {
+                  "constant": "8.000000"
+                },
+                "automaticburstcount": "16",
+                "burstfiredelay": "5.000000",
+                "firesockets": [
+                  "MainGun_L",
+                  "MainGun_R"
+                ],
+                "aiaccuracy": {
+                  "datatablevalue": {
+                    "datatable": "gbx_ue_data_table'Table_GunShip_MainGun_Balance'",
+                    "rowname": "MainGun",
+                    "columnname": "AI_Accuracy_33_D3C350EA449BFAA6F271BF84E3777958"
+                  }
+                },
+                "aiprojectilespeed": {
+                  "constant": "1.000000",
+                  "datatablevalue": {
+                    "datatable": "gbx_ue_data_table'none'",
+                    "rowname": "None",
+                    "columnname": "None"
+                  }
+                }
+              },
+              "parent": "inv_aspect'fire_projectile'",
+              "structtype": "Asset'/Script/GbxGame.InventoryAspect'"
+            }
+          },
+          {
+            "meathead_chaingun_fire_projectile": {
+              "inv_aspect": "meathead_chaingun_fire_projectile",
+              "behavior": {
+                "lightprojectile": "light_projectile'lp_meathead_chaingun'",
+                "impact_force": "small"
+              },
+              "parent": "inv_aspect'fire_projectile'"
+            }
+          },
+          {
+            "meathead_rocket_fire_projectile": {
+              "inv_aspect": "meathead_rocket_fire_projectile",
+              "behavior": {
+                "lightprojectile": "light_projectile'lp_meathead_rocket'",
+                "impact_force": "small"
+              },
+              "parent": "inv_aspect'fire_projectile'"
+            }
+          },
+          {
+            "ripperturret_chaingun_fire_projectile": {
+              "inv_aspect": "RipperTurret_chaingun_fire_projectile",
+              "behavior": {
+                "lightprojectile": "light_projectile'lp_meathead_chaingun'",
+                "impact_force": "small"
+              },
+              "parent": "inv_aspect'fire_projectile'",
+              "structtype": "Asset'/Script/GbxGame.InventoryAspect'"
+            }
+          },
+          {
+            "splicespiderjumbo_rocket_fire_projectile": {
+              "inv_aspect": "SpliceSpiderJumbo_rocket_fire_projectile",
+              "behavior": {
+                "aimaxdesiredrange": {
+                  "datatablevalue": {
+                    "datatable": "gbx_ue_data_table'Table_SpliceSpiderJumbo_Weapon_Balance'",
+                    "rowname": "Rocket"
+                  }
+                },
+                "aimindesiredrange": {
+                  "datatablevalue": {
+                    "datatable": "gbx_ue_data_table'Table_SpliceSpiderJumbo_Weapon_Balance'",
+                    "rowname": "Rocket"
+                  }
+                },
+                "aiburstcount": {
+                  "datatablevalue": {
+                    "datatable": "gbx_ue_data_table'Table_SpliceSpiderJumbo_Weapon_Balance'",
+                    "rowname": "None",
+                    "columnname": "None"
+                  }
+                },
+                "aiburstdelay": {
+                  "datatablevalue": {
+                    "datatable": "gbx_ue_data_table'Table_SpliceSpiderJumbo_Weapon_Balance'",
+                    "rowname": "Rocket",
+                    "columnname": "BurstTime_Value_19_3271459048CFCB819A268B9824FEC3FE"
+                  },
+                  "constant": "1.000000"
+                },
+                "aiaccuracy": {
+                  "datatablevalue": {
+                    "datatable": "gbx_ue_data_table'Table_SpliceSpiderJumbo_Weapon_Balance'",
+                    "rowname": "Rocket",
+                    "columnname": "AI_Accuracy_33_D3C350EA449BFAA6F271BF84E3777958"
+                  }
+                },
+                "aiprojectilespeed": {
+                  "datatablevalue": {
+                    "datatable": "gbx_ue_data_table'Table_SpliceSpiderJumbo_Weapon_Balance'",
+                    "rowname": "Rocket"
+                  }
+                },
+                "lightprojectile": "light_projectile'LightProj_SpliceSpider_Turret_Rocket'",
+                "firerate": {
+                  "datatablevalue": {
+                    "datatable": "gbx_ue_data_table'Table_SpliceSpiderJumbo_Weapon_Balance'",
+                    "rowname": "Rocket",
+                    "columnname": "FireRate_Value"
+                  }
+                },
+                "damage": {
+                  "attribute": "attribute'SpliceSpiderJumbo_rocket_damage_formula'"
+                },
+                "damageradius": {
+                  "datatablevalue": {
+                    "datatable": "gbx_ue_data_table'Table_SpliceSpiderJumbo_Weapon_Balance'",
+                    "rowname": "Rocket",
+                    "columnname": "Radius_Value"
+                  }
+                },
+                "spread": {
+                  "datatablevalue": {
+                    "datatable": "gbx_ue_data_table'Table_SpliceSpiderJumbo_Weapon_Balance'",
+                    "rowname": "Rocket",
+                    "columnname": "Spread_Value"
+                  }
+                },
+                "accuracyimpulse": {
+                  "constant": "0.250000"
+                },
+                "aipreferredrange": {
+                  "constant": "3000.000000"
+                },
+                "aibursttime": {
+                  "constant": "1.000000",
+                  "datatablevalue": {
+                    "datatable": "gbx_ue_data_table'Table_SpliceSpiderJumbo_Weapon_Balance'",
+                    "rowname": "Rocket",
+                    "columnname": "BurstCount_Value_27_BCCD780541CF9CCE5F49FCAFABB30B4D"
+                  }
+                }
+              },
+              "structtype": "Asset'/Script/GbxGame.InventoryAspect'",
+              "parent": "inv_aspect'fire_projectile'"
+            }
+          }
+        ]
+      },
+      {
+        "entries": [
+          {
+            "dahlmech_chaingun_fire_projectile": {
+              "inv_aspect": "DahlMech_chaingun_fire_projectile",
+              "behavior": {
+                "lightprojectile": "light_projectile'lp_dahlmech_chaingun'"
+              },
+              "structtype": "Asset'/Script/GbxGame.InventoryAspect'",
+              "parent": "inv_aspect'fire_projectile'"
+            }
+          },
+          {
+            "dahlmech_emp_fire_projectile": {
+              "inv_aspect": "DahlMech_EMP_fire_projectile",
+              "behavior": {
+                "lightprojectile": "light_projectile'lp_dahlmech_EMPGun'"
+              },
+              "structtype": "Asset'/Script/GbxGame.InventoryAspect'",
+              "parent": "inv_aspect'fire_projectile'"
+            }
+          },
+          {
+            "dahlmech_energygun_fire_projectile": {
+              "inv_aspect": "DahlMech_energygun_fire_projectile",
+              "behavior": {
+                "lightprojectile": "light_projectile'lp_dahlmech_energygun'"
+              },
+              "structtype": "Asset'/Script/GbxGame.InventoryAspect'",
+              "parent": "inv_aspect'fire_projectile'"
+            }
+          },
+          {
+            "dahlmech_grenadelauncher_fire_projectile": {
+              "inv_aspect": "DahlMech_grenadelauncher_fire_projectile",
+              "behavior": {
+                "lightprojectile": "light_projectile'lp_dahlmech_grenadelauncher'"
+              },
+              "structtype": "Asset'/Script/GbxGame.InventoryAspect'",
+              "parent": "inv_aspect'fire_projectile'"
+            }
+          },
+          {
+            "dahlturret_chaingun_fire_projectile": {
+              "inv_aspect": "DahlTurret_chaingun_fire_projectile",
+              "behavior": {
+                "lightprojectile": "light_projectile'lp_meathead_chaingun'",
+                "impact_force": "small"
+              },
+              "parent": "inv_aspect'fire_projectile'",
+              "structtype": "Asset'/Script/GbxGame.InventoryAspect'"
+            }
+          },
+          {
+            "firmware_bruiser": {
+              "inv_aspect": "firmware_bruiser",
+              "firmware": "firmware'fw_tuba_bruiser'",
+              "structtype": "Asset'/Script/OakGame.FirmwareAspect'"
+            }
+          },
+          {
+            "ripperturret_rocket_fire_projectile": {
+              "inv_aspect": "ripperTurret_rocket_fire_projectile",
+              "behavior": {
+                "lightprojectile": "light_projectile'lp_meathead_rocket'",
+                "impact_force": "small"
+              },
+              "parent": "inv_aspect'fire_projectile'",
+              "structtype": "Asset'/Script/GbxGame.InventoryAspect'"
+            }
+          },
+          {
+            "splicearm_launcher_fire_projectile": {
+              "inv_aspect": "SpliceArm_Launcher_fire_projectile",
+              "behavior": {
+                "lightprojectile": "light_projectile'lp_SpliceArm_Launcher'"
+              },
+              "structtype": "Asset'/Script/GbxGame.InventoryAspect'",
+              "parent": "inv_aspect'fire_projectile'"
+            }
+          },
+          {
+            "tedioreglider_rocketlauncher_fire_projectile": {
+              "inv_aspect": "TedioreGlider_RocketLauncher_fire_projectile",
+              "behavior": {
+                "firesockets": [
+                  "BodyRocket01",
+                  "BodyRocket02",
+                  "BodyRocket01",
+                  "BodyRocket02"
+                ],
+                "aimaxdesiredrange": {
+                  "datatablevalue": {
+                    "datatable": "gbx_ue_data_table'Table_TedioreArmy_Weapon_Balance'",
+                    "rowname": "Rocket"
+                  }
+                },
+                "aimindesiredrange": {
+                  "datatablevalue": {
+                    "datatable": "gbx_ue_data_table'Table_TedioreArmy_Weapon_Balance'",
+                    "rowname": "Rocket"
+                  }
+                },
+                "aiburstcount": {
+                  "datatablevalue": {
+                    "datatable": "gbx_ue_data_table'Table_TedioreArmy_Weapon_Balance'",
+                    "rowname": "Rocket",
+                    "columnname": "BurstCount_Value_27_BCCD780541CF9CCE5F49FCAFABB30B4D"
+                  }
+                },
+                "aiburstdelay": {
+                  "datatablevalue": {
+                    "datatable": "gbx_ue_data_table'Table_TedioreArmy_Weapon_Balance'",
+                    "rowname": "Rocket",
+                    "columnname": "BurstDelay_Value_11_C0E505764E41BF4C090EA6950E1E950C"
+                  }
+                },
+                "aiaccuracy": {
+                  "datatablevalue": {
+                    "datatable": "gbx_ue_data_table'Table_TedioreArmy_Weapon_Balance'",
+                    "rowname": "Rocket",
+                    "columnname": "AI_Accuracy_33_D3C350EA449BFAA6F271BF84E3777958"
+                  }
+                },
+                "aiprojectilespeed": {
+                  "datatablevalue": {
+                    "datatable": "gbx_ue_data_table'Table_TedioreArmy_Weapon_Balance'",
+                    "rowname": "Rocket"
+                  }
+                },
+                "lightprojectile": "light_projectile'LightProj_TedioreGlider_RocketShot'",
+                "firerate": {
+                  "datatablevalue": {
+                    "datatable": "gbx_ue_data_table'Table_TedioreArmy_Weapon_Balance'",
+                    "rowname": "Rocket",
+                    "columnname": "FireRate_Value"
+                  }
+                },
+                "spread": {
+                  "datatablevalue": {
+                    "datatable": "gbx_ue_data_table'Table_TedioreArmy_Weapon_Balance'",
+                    "rowname": "Rocket",
+                    "columnname": "Spread_Value"
+                  }
+                },
+                "busebursttime": "true",
+                "aibursttime": {
+                  "constant": "1.000000",
+                  "datatablevalue": {
+                    "datatable": "gbx_ue_data_table'Table_TedioreArmy_Weapon_Balance'",
+                    "rowname": "Rocket",
+                    "columnname": "BurstTime_Value_19_3271459048CFCB819A268B9824FEC3FE"
+                  }
+                }
+              },
+              "structtype": "Asset'/Script/GbxGame.InventoryAspect'",
+              "parent": "inv_aspect'fire_projectile'"
+            }
+          },
+          {
+            "tedioreturret_gatemission4_fire_projectile": {
+              "inv_aspect": "TedioreTurret_GateMission4_fire_projectile",
+              "behavior": {
+                "firesockets": [
+                  "Rocket_Barrel01",
+                  "Rocket_Barrel02",
+                  "Rocket_Barrel03",
+                  "Rocket_Barrel04"
+                ],
+                "aimaxdesiredrange": {
+                  "datatablevalue": {
+                    "datatable": "gbx_ue_data_table'Table_TedioreArmy_Weapon_Balance'",
+                    "rowname": "Mission4Gate"
+                  }
+                },
+                "aimindesiredrange": {
+                  "datatablevalue": {
+                    "datatable": "gbx_ue_data_table'Table_TedioreArmy_Weapon_Balance'",
+                    "rowname": "Mission4Gate"
+                  }
+                },
+                "aiburstcount": {
+                  "datatablevalue": {
+                    "datatable": "gbx_ue_data_table'Table_TedioreArmy_Weapon_Balance'",
+                    "rowname": "Mission4Gate",
+                    "columnname": "BurstCount_Value_27_BCCD780541CF9CCE5F49FCAFABB30B4D"
+                  }
+                },
+                "aiburstdelay": {
+                  "datatablevalue": {
+                    "datatable": "gbx_ue_data_table'Table_TedioreArmy_Weapon_Balance'",
+                    "rowname": "Mission4Gate",
+                    "columnname": "BurstDelay_Value_11_C0E505764E41BF4C090EA6950E1E950C"
+                  }
+                },
+                "aiaccuracy": {
+                  "datatablevalue": {
+                    "datatable": "gbx_ue_data_table'Table_TedioreArmy_Weapon_Balance'",
+                    "rowname": "Mission4Gate",
+                    "columnname": "AI_Accuracy_33_D3C350EA449BFAA6F271BF84E3777958"
+                  }
+                },
+                "aiprojectilespeed": {
+                  "datatablevalue": {
+                    "datatable": "gbx_ue_data_table'Table_TedioreArmy_Weapon_Balance'",
+                    "rowname": "Mission4Gate"
+                  }
+                },
+                "lightprojectile": "light_projectile'LightProj_Tediore_RocketShot'",
+                "firerate": {
+                  "datatablevalue": {
+                    "datatable": "gbx_ue_data_table'Table_TedioreArmy_Weapon_Balance'",
+                    "rowname": "Rocket",
+                    "columnname": "FireRate_Value"
+                  }
+                },
+                "spread": {
+                  "datatablevalue": {
+                    "datatable": "gbx_ue_data_table'Table_TedioreArmy_Weapon_Balance'",
+                    "rowname": "Rocket",
+                    "columnname": "Spread_Value"
+                  }
+                },
+                "busebursttime": "true",
+                "aibursttime": {
+                  "constant": "1.000000",
+                  "datatablevalue": {
+                    "datatable": "gbx_ue_data_table'Table_TedioreArmy_Weapon_Balance'",
+                    "rowname": "Mission4Gate",
+                    "columnname": "BurstTime_Value_19_3271459048CFCB819A268B9824FEC3FE"
+                  }
+                }
+              },
+              "structtype": "Asset'/Script/GbxGame.InventoryAspect'",
+              "parent": "inv_aspect'fire_projectile'"
+            }
+          },
+          {
+            "tedioreturret_mg_fire_projectile": {
+              "inv_aspect": "TedioreTurret_MG_fire_projectile",
+              "behavior": {
+                "firesockets": [
+                  "TedMG_Barrel01"
+                ],
+                "aimaxdesiredrange": {
+                  "datatablevalue": {
+                    "datatable": "gbx_ue_data_table'Table_TedioreArmy_Weapon_Balance'",
+                    "rowname": "Chaingun"
+                  }
+                },
+                "aimindesiredrange": {
+                  "datatablevalue": {
+                    "datatable": "gbx_ue_data_table'Table_TedioreArmy_Weapon_Balance'",
+                    "rowname": "Chaingun"
+                  }
+                },
+                "aiburstcount": {
+                  "datatablevalue": {
+                    "datatable": "gbx_ue_data_table'Table_TedioreArmy_Weapon_Balance'",
+                    "rowname": "Chaingun",
+                    "columnname": "BurstCount_Value_27_BCCD780541CF9CCE5F49FCAFABB30B4D"
+                  }
+                },
+                "aiburstdelay": {
+                  "datatablevalue": {
+                    "datatable": "gbx_ue_data_table'Table_TedioreArmy_Weapon_Balance'",
+                    "rowname": "Chaingun",
+                    "columnname": "BurstDelay_Value_11_C0E505764E41BF4C090EA6950E1E950C"
+                  }
+                },
+                "aiaccuracy": {
+                  "datatablevalue": {
+                    "datatable": "gbx_ue_data_table'Table_TedioreArmy_Weapon_Balance'",
+                    "rowname": "Chaingun",
+                    "columnname": "AI_Accuracy_33_D3C350EA449BFAA6F271BF84E3777958"
+                  }
+                },
+                "aiprojectilespeed": {
+                  "datatablevalue": {
+                    "datatable": "gbx_ue_data_table'Table_TedioreArmy_Weapon_Balance'",
+                    "rowname": "Chaingun"
+                  }
+                },
+                "lightprojectile": "light_projectile'LightProj_TedioreTurret_MGShot'",
+                "damage": {
+                  "attribute": "attribute'TedioreTurret_MG_damage_formula'"
+                },
+                "damageradius": {
+                  "datatablevalue": {
+                    "datatable": "gbx_ue_data_table'Table_TedioreArmy_Weapon_Balance'",
+                    "rowname": "Chaingun",
+                    "columnname": "Radius_Value_18_1920F6C448DA257A1D8260974B1AB71E"
+                  }
+                },
+                "spread": {
+                  "datatablevalue": {
+                    "datatable": "gbx_ue_data_table'Table_TedioreArmy_Weapon_Balance'",
+                    "rowname": "Chaingun",
+                    "columnname": "Spread_Value_6_3B1BCC764DC2F3CFBE8BA9B93EFEDAC7"
+                  }
+                },
+                "accuracyimpulse": {
+                  "constant": "0.150000"
+                }
+              },
+              "structtype": "Asset'/Script/GbxGame.InventoryAspect'",
+              "parent": "inv_aspect'fire_projectile'"
+            }
+          },
+          {
+            "tedioreturret_microplasticsmg_fire_projectile": {
+              "inv_aspect": "TedioreTurret_MicroplasticsMG_fire_projectile",
+              "behavior": {
+                "firesockets": [
+                  "TedMG_Barrel01"
+                ],
+                "aimaxdesiredrange": {
+                  "datatablevalue": {
+                    "datatable": "gbx_ue_data_table'Table_TedioreArmy_Weapon_Balance'",
+                    "rowname": "Chaingun"
+                  }
+                },
+                "aimindesiredrange": {
+                  "datatablevalue": {
+                    "datatable": "gbx_ue_data_table'Table_TedioreArmy_Weapon_Balance'",
+                    "rowname": "Chaingun"
+                  }
+                },
+                "aiburstcount": {
+                  "datatablevalue": {
+                    "datatable": "gbx_ue_data_table'Table_TedioreArmy_Weapon_Balance'",
+                    "rowname": "Chaingun",
+                    "columnname": "BurstCount_Value_27_BCCD780541CF9CCE5F49FCAFABB30B4D"
+                  }
+                },
+                "aiburstdelay": {
+                  "datatablevalue": {
+                    "datatable": "gbx_ue_data_table'Table_TedioreArmy_Weapon_Balance'",
+                    "rowname": "Chaingun",
+                    "columnname": "BurstDelay_Value_11_C0E505764E41BF4C090EA6950E1E950C"
+                  }
+                },
+                "aiaccuracy": {
+                  "datatablevalue": {
+                    "datatable": "gbx_ue_data_table'Table_TedioreArmy_Weapon_Balance'",
+                    "rowname": "Chaingun",
+                    "columnname": "AI_Accuracy_33_D3C350EA449BFAA6F271BF84E3777958"
+                  }
+                },
+                "aiprojectilespeed": {
+                  "datatablevalue": {
+                    "datatable": "gbx_ue_data_table'Table_TedioreArmy_Weapon_Balance'",
+                    "rowname": "Chaingun"
+                  }
+                },
+                "lightprojectile": "light_projectile'LightProj_TedioreTurret_MGShot'",
+                "damage": {
+                  "attribute": "attribute'TedioreTurret_RapidLaser_damage_formula'"
+                },
+                "damageradius": {
+                  "datatablevalue": {
+                    "datatable": "gbx_ue_data_table'Table_TedioreArmy_Weapon_Balance'",
+                    "rowname": "Chaingun",
+                    "columnname": "Radius_Value_18_1920F6C448DA257A1D8260974B1AB71E"
+                  }
+                },
+                "spread": {
+                  "datatablevalue": {
+                    "datatable": "gbx_ue_data_table'Table_TedioreArmy_Weapon_Balance'",
+                    "rowname": "Chaingun",
+                    "columnname": "Spread_Value_6_3B1BCC764DC2F3CFBE8BA9B93EFEDAC7"
+                  }
+                },
+                "accuracyimpulse": {
+                  "constant": "0.150000"
+                }
+              },
+              "structtype": "Asset'/Script/GbxGame.InventoryAspect'",
+              "parent": "inv_aspect'fire_projectile'"
+            }
+          },
+          {
+            "tedioreturret_rapidlaser_fire_projectile": {
+              "inv_aspect": "TedioreTurret_RapidLaser_fire_projectile",
+              "behavior": {
+                "firesockets": [
+                  "TedMG_Barrel01"
+                ],
+                "aimaxdesiredrange": {
+                  "datatablevalue": {
+                    "datatable": "gbx_ue_data_table'Table_TedioreArmy_Weapon_Balance'",
+                    "rowname": "Chaingun"
+                  }
+                },
+                "aimindesiredrange": {
+                  "datatablevalue": {
+                    "datatable": "gbx_ue_data_table'Table_TedioreArmy_Weapon_Balance'",
+                    "rowname": "Chaingun"
+                  }
+                },
+                "aiburstcount": {
+                  "datatablevalue": {
+                    "datatable": "gbx_ue_data_table'Table_TedioreArmy_Weapon_Balance'",
+                    "rowname": "Chaingun",
+                    "columnname": "BurstCount_Value_27_BCCD780541CF9CCE5F49FCAFABB30B4D"
+                  }
+                },
+                "aiburstdelay": {
+                  "datatablevalue": {
+                    "datatable": "gbx_ue_data_table'Table_TedioreArmy_Weapon_Balance'",
+                    "rowname": "Chaingun",
+                    "columnname": "BurstDelay_Value_11_C0E505764E41BF4C090EA6950E1E950C"
+                  }
+                },
+                "aiaccuracy": {
+                  "datatablevalue": {
+                    "datatable": "gbx_ue_data_table'Table_TedioreArmy_Weapon_Balance'",
+                    "rowname": "Chaingun",
+                    "columnname": "AI_Accuracy_33_D3C350EA449BFAA6F271BF84E3777958"
+                  }
+                },
+                "aiprojectilespeed": {
+                  "datatablevalue": {
+                    "datatable": "gbx_ue_data_table'Table_TedioreArmy_Weapon_Balance'",
+                    "rowname": "Chaingun"
+                  }
+                },
+                "lightprojectile": "light_projectile'LightProj_TedioreTurret_MGShot'",
+                "firerate": {
+                  "datatablevalue": {
+                    "datatable": "gbx_ue_data_table'Table_TedioreArmy_Weapon_Balance'",
+                    "rowname": "Chaingun",
+                    "columnname": "FireRate_Value_4_0FDA894643A413A9EDF878963787EB6C"
+                  }
+                },
+                "damage": {
+                  "attribute": "attribute'TedioreTurret_RapidLaser_damage_formula'"
+                },
+                "damageradius": {
+                  "datatablevalue": {
+                    "datatable": "gbx_ue_data_table'Table_TedioreArmy_Weapon_Balance'",
+                    "rowname": "Chaingun",
+                    "columnname": "Radius_Value_18_1920F6C448DA257A1D8260974B1AB71E"
+                  }
+                },
+                "spread": {
+                  "datatablevalue": {
+                    "datatable": "gbx_ue_data_table'Table_TedioreArmy_Weapon_Balance'",
+                    "rowname": "Chaingun",
+                    "columnname": "Spread_Value_6_3B1BCC764DC2F3CFBE8BA9B93EFEDAC7"
+                  }
+                },
+                "accuracyimpulse": {
+                  "constant": "0.150000"
+                },
+                "aipreferredrange": {
+                  "constant": "0.000000",
+                  "datatablevalue": {
+                    "datatable": "gbx_ue_data_table'Table_TedioreArmy_Weapon_Balance'",
+                    "rowname": "Chaingun",
+                    "columnname": "PreferredRange_37_AE50D09343AC6F6407D69EA999A75DBD"
+                  }
+                }
+              },
+              "structtype": "Asset'/Script/GbxGame.InventoryAspect'",
+              "parent": "inv_aspect'fire_projectile'"
+            }
+          },
+          {
+            "tedioreturret_rocketlauncher_fire_projectile": {
+              "inv_aspect": "TedioreTurret_RocketLauncher_fire_projectile",
+              "behavior": {
+                "firesockets": [
+                  "TedRocket_Barrel01",
+                  "TedRocket_Barrel02",
+                  "TedRocket_Barrel03",
+                  "TedRocket_Barrel04"
+                ],
+                "aimaxdesiredrange": {
+                  "datatablevalue": {
+                    "datatable": "gbx_ue_data_table'Table_TedioreArmy_Weapon_Balance'",
+                    "rowname": "Rocket"
+                  }
+                },
+                "aimindesiredrange": {
+                  "datatablevalue": {
+                    "datatable": "gbx_ue_data_table'Table_TedioreArmy_Weapon_Balance'",
+                    "rowname": "Rocket"
+                  }
+                },
+                "aiburstcount": {
+                  "datatablevalue": {
+                    "datatable": "gbx_ue_data_table'Table_TedioreArmy_Weapon_Balance'",
+                    "rowname": "Rocket",
+                    "columnname": "BurstCount_Value_27_BCCD780541CF9CCE5F49FCAFABB30B4D"
+                  }
+                },
+                "aiburstdelay": {
+                  "datatablevalue": {
+                    "datatable": "gbx_ue_data_table'Table_TedioreArmy_Weapon_Balance'",
+                    "rowname": "Rocket",
+                    "columnname": "BurstDelay_Value_11_C0E505764E41BF4C090EA6950E1E950C"
+                  }
+                },
+                "aiaccuracy": {
+                  "datatablevalue": {
+                    "datatable": "gbx_ue_data_table'Table_TedioreArmy_Weapon_Balance'",
+                    "rowname": "Rocket",
+                    "columnname": "AI_Accuracy_33_D3C350EA449BFAA6F271BF84E3777958"
+                  }
+                },
+                "aiprojectilespeed": {
+                  "datatablevalue": {
+                    "datatable": "gbx_ue_data_table'Table_TedioreArmy_Weapon_Balance'",
+                    "rowname": "Rocket"
+                  }
+                },
+                "lightprojectile": "light_projectile'LightProj_Tediore_RocketShot'",
+                "firerate": {
+                  "datatablevalue": {
+                    "datatable": "gbx_ue_data_table'Table_TedioreArmy_Weapon_Balance'",
+                    "rowname": "Rocket",
+                    "columnname": "FireRate_Value"
+                  }
+                },
+                "spread": {
+                  "datatablevalue": {
+                    "datatable": "gbx_ue_data_table'Table_TedioreArmy_Weapon_Balance'",
+                    "rowname": "Rocket",
+                    "columnname": "Spread_Value"
+                  }
+                },
+                "busebursttime": "true",
+                "aipreferredrange": {
+                  "datatablevalue": {
+                    "datatable": "gbx_ue_data_table'Table_TedioreArmy_Weapon_Balance'",
+                    "rowname": "Rocket",
+                    "columnname": "PreferredRange_37_AE50D09343AC6F6407D69EA999A75DBD"
+                  }
+                },
+                "aibursttime": {
+                  "constant": "1.000000",
+                  "datatablevalue": {
+                    "datatable": "gbx_ue_data_table'Table_TedioreArmy_Weapon_Balance'",
+                    "rowname": "Rocket",
+                    "columnname": "BurstTime_Value_19_3271459048CFCB819A268B9824FEC3FE"
+                  }
+                }
+              },
+              "structtype": "Asset'/Script/GbxGame.InventoryAspect'",
+              "parent": "inv_aspect'fire_projectile'"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "skill_state_machine": {
+    "__deps": [
+      "register",
+      "state"
+    ],
+    "records": [
+      {
+        "entries": [
+          {
+            "sm_exodus": {
+              "skill_state_machine": "SM_Exodus",
+              "mode": "Child",
+              "parentstates": [
+                "skill_state_machine'SM_DurationCooldown.SMS_Active'"
+              ]
+            }
+          },
+          {
+            "sm_pld_as_scourge": {
+              "skill_state_machine": "SM_PLD_AS_Scourge",
+              "startingstate": "skill_state_machine'SM_PLD_AS_Scourge.S_Cooldown'",
+              "statedef": "skill_state'S_General_Slotted'",
+              "debugcommands": [
+                {
+                  "command": "ResetCooldown",
+                  "condition": {
+                    "structtype": "Asset'/Script/GbxGame.GbxSkillStateCondition_StateMachineState'",
+                    "statedef": "skill_state_machine'SM_PLD_AS_Scourge.S_Cooldown'"
+                  },
+                  "actions": [
+                    {
+                      "structtype": "Asset'/Script/GbxGame.GbxSkillStateMachineStateAction_ResourcePool'",
+                      "pooldef": "resourcepool'ResourcePool_Paladin_ActionSkill_Scourge_Cooldown'",
+                      "poolop": "Fill"
+                    }
+                  ]
+                }
+              ]
+            },
+            "__dep_entries": [
+              {
+                "depTableName": "register",
+                "depTableId": 6,
+                "depIndex": 0,
+                "r_activating_success": {
+                  "register": "R_Activating_Success"
+                }
+              },
+              {
+                "depTableName": "register",
+                "depTableId": 6,
+                "depIndex": 0,
+                "r_deactivating_success": {
+                  "register": "R_Deactivating_Success"
+                }
+              },
+              {
+                "depTableName": "register",
+                "depTableId": 6,
+                "depIndex": 0,
+                "r_death": {
+                  "register": "R_Death"
+                }
+              },
+              {
+                "depTableName": "register",
+                "depTableId": 6,
+                "depIndex": 0,
+                "r_readied_asb_pressed": {
+                  "register": "R_Readied_ASB_Pressed"
+                }
+              },
+              {
+                "depTableName": "state",
+                "depTableId": 7,
+                "depIndex": 1,
+                "s_activating": {
+                  "state": "S_Activating",
+                  "linkedskillstate": "skill_state'SS_PLD_AS_Scourge_Activating'",
+                  "transitions": [
+                    {
+                      "transitionname": "Activation_Success",
+                      "state": "skill_state_machine'SM_PLD_AS_Scourge.s_active'",
+                      "registers": [
+                        "skill_state_machine'SM_PLD_AS_Scourge.R_Activating_Success'"
+                      ]
+                    }
+                  ]
+                }
+              },
+              {
+                "depTableName": "state",
+                "depTableId": 7,
+                "depIndex": 1,
+                "s_active": {
+                  "state": "s_active",
+                  "linkedskillstate": "skill_state'SS_PLD_AS_Scourge_Active'",
+                  "transitions": [
+                    {
+                      "transitionname": "Duration_Ended",
+                      "state": "skill_state_machine'SM_PLD_AS_Scourge.S_Deactivating'",
+                      "condition": {
+                        "structtype": "Asset'/Script/GbxGame.GbxSkillStateConditionData_ResourcePool'",
+                        "pooldef": "resourcepool'ResourcePool_Paladin_ActionSkill_Scourge_Duration'"
+                      }
+                    },
+                    {
+                      "transitionname": "ForceEnd",
+                      "state": "skill_state_machine'SM_PLD_AS_Scourge.S_Deactivating'",
+                      "condition": {
+                        "structtype": "Asset'/Script/GbxGame.GbxSkillStateConditionData_ConditionDef'",
+                        "conditiondef": "skill_state_condition'SkillStateCond_ShouldForceEnd'"
+                      }
+                    }
+                  ]
+                }
+              },
+              {
+                "depTableName": "state",
+                "depTableId": 7,
+                "depIndex": 1,
+                "s_cooldown": {
+                  "state": "S_Cooldown",
+                  "linkedskillstate": "skill_state'SS_PLD_AS_Scourge_Cooldown'",
+                  "skillstatedata": {
+                    "skillstateoperations": [
+                      {
+                        "stateop": "AddScoped",
+                        "state": "skill_state'S_General_Cooldown'"
+                      }
+                    ]
+                  },
+                  "transitions": [
+                    {
+                      "transitionname": "Cooldown Complete",
+                      "state": "skill_state_machine'SM_PLD_AS_Scourge.S_Readied'",
+                      "condition": {
+                        "structtype": "Asset'/Script/GbxGame.GbxSkillStateConditionData_ResourcePool'",
+                        "pooldef": "resourcepool'ResourcePool_Paladin_ActionSkill_Scourge_Cooldown'",
+                        "poolstate": "Filled"
+                      }
+                    }
+                  ],
+                  "endregisterpolicy": "Reset"
+                }
+              },
+              {
+                "depTableName": "state",
+                "depTableId": 7,
+                "depIndex": 1,
+                "s_deactivating": {
+                  "state": "S_Deactivating",
+                  "linkedskillstate": "skill_state'SS_PLD_AS_Scourge_Deactivating'",
+                  "transitions": [
+                    {
+                      "transitionname": "Deactivating_Success",
+                      "state": "skill_state_machine'SM_PLD_AS_Scourge.S_Cooldown'",
+                      "registers": [
+                        "skill_state_machine'SM_PLD_AS_Scourge.R_Deactivating_Success'"
+                      ]
+                    }
+                  ]
+                }
+              },
+              {
+                "depTableName": "state",
+                "depTableId": 7,
+                "depIndex": 1,
+                "s_readied": {
+                  "state": "S_Readied",
+                  "linkedskillstate": "skill_state'SS_PLD_AS_Scourge_Readied'",
+                  "transitions": [
+                    {
+                      "transitionname": "Button Pressed",
+                      "state": "skill_state_machine'SM_PLD_AS_Scourge.S_Activating'",
+                      "registers": [
+                        "skill_state_machine'SM_PLD_AS_Scourge.R_Readied_ASB_Pressed'"
+                      ]
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "sm_pld_as_warforge": {
+              "skill_state_machine": "SM_PLD_AS_Warforge",
+              "startingstate": "skill_state_machine'SM_PLD_AS_Warforge.S_Cooldown'",
+              "statedef": "skill_state'S_General_Slotted'",
+              "debugcommands": [
+                {
+                  "command": "ResetCooldown",
+                  "condition": {
+                    "structtype": "Asset'/Script/GbxGame.GbxSkillStateConditionData_Constant'"
+                  },
+                  "actions": [
+                    {
+                      "structtype": "Asset'/Script/OakGame.GbxSkillStateMachineStateAction_AddRemoveCharges'",
+                      "amount": {
+                        "constant": "3.000000",
+                        "datatablevalue": {
+                          "datatable": "gbx_ue_data_table'DataTable_Paladin_ActionSkill_Warforge'",
+                          "rowname": "Warforge_Charges",
+                          "columnname": "Value_2_D970BF0B44895FECDFE922A2D420BFF2"
+                        }
+                      },
+                      "componentid": {
+                        "a": "1403556228",
+                        "b": "1271305127",
+                        "c": "1535145634",
+                        "d": "1712391695"
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            "__dep_entries": [
+              {
+                "depTableName": "register",
+                "depTableId": 6,
+                "depIndex": 0,
+                "r_activated_failure": {
+                  "register": "R_Activated_Failure"
+                }
+              },
+              {
+                "depTableName": "register",
+                "depTableId": 6,
+                "depIndex": 0,
+                "r_activated_success": {
+                  "register": "R_Activated_Success"
+                }
+              },
+              {
+                "depTableName": "register",
+                "depTableId": 6,
+                "depIndex": 0,
+                "r_activating_failure": {
+                  "register": "R_Activating_Failure"
+                }
+              },
+              {
+                "depTableName": "register",
+                "depTableId": 6,
+                "depIndex": 0,
+                "r_activating_success": {
+                  "register": "R_Activating_Success"
+                }
+              },
+              {
+                "depTableName": "register",
+                "depTableId": 6,
+                "depIndex": 0,
+                "r_deactivating_success": {
+                  "register": "R_Deactivating_Success"
+                }
+              },
+              {
+                "depTableName": "register",
+                "depTableId": 6,
+                "depIndex": 0,
+                "r_paused": {
+                  "register": "R_Paused"
+                }
+              },
+              {
+                "depTableName": "register",
+                "depTableId": 6,
+                "depIndex": 0,
+                "r_readied_asb_pressed": {
+                  "register": "R_Readied_ASB_Pressed"
+                }
+              },
+              {
+                "depTableName": "state",
+                "depTableId": 7,
+                "depIndex": 1,
+                "s_activated": {
+                  "state": "S_Activated",
+                  "linkedskillstate": "skill_state'SS_PLD_AS_Warforge_Activated'",
+                  "transitions": [
+                    {
+                      "transitionname": "Activated Success",
+                      "state": "skill_state_machine'SM_PLD_AS_Warforge.S_Deactivating'",
+                      "registers": [
+                        "skill_state_machine'SM_PLD_AS_Warforge.R_Activated_Success'"
+                      ]
+                    },
+                    {
+                      "transitionname": "Activated Failure",
+                      "state": "skill_state_machine'SM_PLD_AS_Warforge.S_Deactivating'",
+                      "registers": [
+                        "skill_state_machine'SM_PLD_AS_Warforge.R_Activated_Failure'"
+                      ]
+                    }
+                  ]
+                }
+              },
+              {
+                "depTableName": "state",
+                "depTableId": 7,
+                "depIndex": 1,
+                "s_activating": {
+                  "state": "S_Activating",
+                  "linkedskillstate": "skill_state'SS_PLD_AS_Warforge_Activating'",
+                  "transitions": [
+                    {
+                      "transitionname": "Activation Success",
+                      "state": "skill_state_machine'SM_PLD_AS_Warforge.S_Activated'",
+                      "registers": [
+                        "skill_state_machine'SM_PLD_AS_Warforge.R_Activating_Success'"
+                      ]
+                    },
+                    {
+                      "transitionname": "Activation Failure",
+                      "state": "skill_state_machine'SM_PLD_AS_Warforge.S_Deactivating'",
+                      "registers": [
+                        "skill_state_machine'SM_PLD_AS_Warforge.R_Activating_Failure'"
+                      ]
+                    },
+                    {
+                      "transitionname": "ForceEnd",
+                      "state": "skill_state_machine'SM_PLD_AS_Warforge.S_Deactivating'",
+                      "condition": {
+                        "structtype": "Asset'/Script/GbxGame.GbxSkillStateConditionData_ConditionDef'",
+                        "conditiondef": "skill_state_condition'SkillStateCond_ShouldForceEnd'"
+                      }
+                    }
+                  ]
+                }
+              },
+              {
+                "depTableName": "state",
+                "depTableId": 7,
+                "depIndex": 1,
+                "s_cooldown": {
+                  "state": "S_Cooldown",
+                  "linkedskillstate": "skill_state'SS_PLD_AS_Warforge_Cooldown'",
+                  "skillstatedata": {
+                    "skillstateoperations": [
+                      {
+                        "stateop": "AddScoped",
+                        "state": "skill_state'S_General_Cooldown'"
+                      }
+                    ]
+                  },
+                  "transitions": [
+                    {
+                      "transitionname": "Has Charges",
+                      "state": "skill_state_machine'SM_PLD_AS_Warforge.S_Readied'",
+                      "condition": {
+                        "structtype": "Asset'/Script/GbxGame.GbxSkillStateConditionData_Comparison'",
+                        "comparison": {
+                          "lhs": {
+                            "type": "SkillParam",
+                            "value": "Asset'/Game/PlayerCharacters/Paladin/ActionSkills/Cybernetics/Data/Param_Paladin_ActionSkill_Warforge.Param_Paladin_ActionSkill_Warforge'"
+                          },
+                          "rhs": {
+                            "type": "GbxValue",
+                            "value": {
+                              "value": {
+                                "type": "Bool",
+                                "value": "true"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              },
+              {
+                "depTableName": "state",
+                "depTableId": 7,
+                "depIndex": 1,
+                "s_deactivating": {
+                  "state": "S_Deactivating",
+                  "linkedskillstate": "skill_state'SS_PLD_AS_Warforge_Deactivating'",
+                  "transitions": [
+                    {
+                      "transitionname": "Deactivating_Success",
+                      "state": "skill_state_machine'SM_PLD_AS_Warforge.S_Cooldown'",
+                      "registers": [
+                        "skill_state_machine'SM_PLD_AS_Warforge.R_Deactivating_Success'"
+                      ]
+                    }
+                  ]
+                }
+              },
+              {
+                "depTableName": "state",
+                "depTableId": 7,
+                "depIndex": 1,
+                "s_paused": {
+                  "state": "S_Paused",
+                  "linkedskillstate": "skill_state'SS_PLD_AS_Warforge_Paused'",
+                  "transitions": [
+                    {
+                      "transitionname": "Unpaused",
+                      "state": "skill_state_machine'SM_PLD_AS_Warforge.S_Cooldown'",
+                      "condition": {
+                        "structtype": "Asset'/Script/GbxGame.GbxSkillStateConditionData_Constant'"
+                      }
+                    }
+                  ]
+                }
+              },
+              {
+                "depTableName": "state",
+                "depTableId": 7,
+                "depIndex": 1,
+                "s_readied": {
+                  "state": "S_Readied",
+                  "linkedskillstate": "skill_state'SS_PLD_AS_Warforge_Readied'",
+                  "transitions": [
+                    {
+                      "transitionname": "Out of Charges",
+                      "state": "skill_state_machine'SM_PLD_AS_Warforge.S_Cooldown'",
+                      "condition": {
+                        "structtype": "Asset'/Script/GbxGame.GbxSkillStateConditionData_Comparison'",
+                        "comparison": {
+                          "lhs": {
+                            "type": "SkillParam",
+                            "value": "Asset'/Game/PlayerCharacters/Paladin/ActionSkills/Cybernetics/Data/Param_Paladin_ActionSkill_Warforge.Param_Paladin_ActionSkill_Warforge'"
+                          },
+                          "rhs": {
+                            "type": "GbxValue",
+                            "value": {
+                              "value": {
+                                "type": "Bool"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "transitionname": "Button Pressed",
+                      "state": "skill_state_machine'SM_PLD_AS_Warforge.S_Activating'",
+                      "registers": [
+                        "skill_state_machine'SM_PLD_AS_Warforge.R_Readied_ASB_Pressed'"
+                      ]
+                    }
+                  ],
+                  "startregisterpolicy": "Reset"
+                }
+              }
+            ]
+          },
+          {
+            "sm_srn_as_phaseavatar": {
+              "skill_state_machine": "SM_SRN_AS_PhaseAvatar",
+              "startingstate": "skill_state_machine'SM_SRN_AS_PhaseAvatar.S_Cooldown'",
+              "statedef": "skill_state'S_General_Slotted'",
+              "managedregisters": [
+                {
+                  "condition": {
+                    "structtype": "Asset'/Script/OakGame.GbxSkillStateConditionData_FFYL'",
+                    "bisinstate": "false",
+                    "states": [
+                      "Healthy"
+                    ]
+                  },
+                  "registerdef": "skill_state_machine'SM_SRN_AS_PhaseAvatar.R_Paused'"
+                }
+              ],
+              "globaltransitions": [
+                {
+                  "transitionname": "Skill Paused",
+                  "registers": [
+                    "skill_state_machine'SM_SRN_AS_PhaseAvatar.R_Paused'"
+                  ],
+                  "default": {
+                    "state": "skill_state_machine'SM_SRN_AS_PhaseAvatar.S_Paused'"
+                  }
+                }
+              ],
+              "debugcommands": [
+                {
+                  "command": "ResetCooldown",
+                  "condition": {
+                    "structtype": "Asset'/Script/GbxGame.GbxSkillStateCondition_StateMachineState'",
+                    "statedef": "skill_state_machine'SM_SRN_AS_PhaseAvatar.S_Cooldown'"
+                  },
+                  "actions": [
+                    {
+                      "structtype": "Asset'/Script/GbxGame.GbxSkillStateMachineStateAction_ResourcePool'",
+                      "pooldef": "resourcepool'ResourcePool_DarkSiren_ActionSkill_PhaseAvatar_Cooldown'",
+                      "poolop": "Fill"
+                    },
+                    {
+                      "structtype": "Asset'/Script/GbxGame.GbxSkillStateMachineStateAction_ResourcePool'",
+                      "pooldef": "resourcepool'ResourcePool_DarkSiren_ActionSkill_PhaseAvatar_PhaseBlast_Cooldown'",
+                      "poolop": "Fill"
+                    }
+                  ]
+                }
+              ]
+            },
+            "__dep_entries": [
+              {
+                "depTableName": "register",
+                "depTableId": 6,
+                "depIndex": 0,
+                "r_activating_success": {
+                  "register": "R_Activating_Success"
+                }
+              },
+              {
+                "depTableName": "register",
+                "depTableId": 6,
+                "depIndex": 0,
+                "r_deactivating_success": {
+                  "register": "R_Deactivating_Success"
+                }
+              },
+              {
+                "depTableName": "register",
+                "depTableId": 6,
+                "depIndex": 0,
+                "r_paused": {
+                  "register": "R_Paused"
+                }
+              },
+              {
+                "depTableName": "register",
+                "depTableId": 6,
+                "depIndex": 0,
+                "r_readied_asb_pressed": {
+                  "register": "R_Readied_ASB_Pressed"
+                }
+              },
+              {
+                "depTableName": "state",
+                "depTableId": 7,
+                "depIndex": 1,
+                "s_activated": {
+                  "state": "S_Activated",
+                  "linkedskillstate": "skill_state'SS_SRN_AS_PhaseAvatar_Active'",
+                  "transitions": [
+                    {
+                      "transitionname": "Duration_Ended",
+                      "state": "skill_state_machine'SM_SRN_AS_PhaseAvatar.S_Deactivating'",
+                      "condition": {
+                        "structtype": "Asset'/Script/GbxGame.GbxSkillStateConditionData_ResourcePool'",
+                        "pooldef": "resourcepool'ResourcePool_DarkSiren_ActionSkill_PhaseAvatar_Duration'"
+                      }
+                    }
+                  ]
+                }
+              },
+              {
+                "depTableName": "state",
+                "depTableId": 7,
+                "depIndex": 1,
+                "s_activating": {
+                  "state": "S_Activating",
+                  "linkedskillstate": "skill_state'SS_SRN_AS_PhaseAvatar_Activating'",
+                  "transitions": [
+                    {
+                      "transitionname": "Activation_Success",
+                      "state": "skill_state_machine'SM_SRN_AS_PhaseAvatar.S_Activated'",
+                      "registers": [
+                        "skill_state_machine'SM_SRN_AS_PhaseAvatar.R_Activating_Success'"
+                      ]
+                    }
+                  ]
+                }
+              },
+              {
+                "depTableName": "state",
+                "depTableId": 7,
+                "depIndex": 1,
+                "s_cooldown": {
+                  "state": "S_Cooldown",
+                  "linkedskillstate": "skill_state'SS_SRN_AS_PhaseAvatar_Cooldown'",
+                  "skillstatedata": {
+                    "skillstateoperations": [
+                      {
+                        "stateop": "AddScoped",
+                        "state": "skill_state'S_General_Cooldown'"
+                      }
+                    ]
+                  },
+                  "transitions": [
+                    {
+                      "transitionname": "Cooldown Complete",
+                      "state": "skill_state_machine'SM_SRN_AS_PhaseAvatar.S_Readied'",
+                      "condition": {
+                        "structtype": "Asset'/Script/GbxGame.GbxSkillStateConditionData_ResourcePool'",
+                        "pooldef": "resourcepool'ResourcePool_DarkSiren_ActionSkill_PhaseAvatar_Cooldown'",
+                        "poolstate": "Filled"
+                      }
+                    }
+                  ],
+                  "endregisterpolicy": "Reset"
+                }
+              },
+              {
+                "depTableName": "state",
+                "depTableId": 7,
+                "depIndex": 1,
+                "s_deactivating": {
+                  "state": "S_Deactivating",
+                  "linkedskillstate": "skill_state'SS_SRN_AS_PhaseAvatar_Deactivating'",
+                  "transitions": [
+                    {
+                      "transitionname": "Deactivating_Success",
+                      "state": "skill_state_machine'SM_SRN_AS_PhaseAvatar.S_Cooldown'",
+                      "registers": [
+                        "skill_state_machine'SM_SRN_AS_PhaseAvatar.R_Deactivating_Success'"
+                      ]
+                    }
+                  ]
+                }
+              },
+              {
+                "depTableName": "state",
+                "depTableId": 7,
+                "depIndex": 1,
+                "s_paused": {
+                  "state": "S_Paused",
+                  "linkedskillstate": "skill_state'SS_SRN_AS_PhaseAvatar_Paused'",
+                  "transitions": [
+                    {
+                      "transitionname": "Unpaused",
+                      "state": "skill_state_machine'SM_SRN_AS_PhaseAvatar.S_Cooldown'",
+                      "condition": {
+                        "structtype": "Asset'/Script/GbxGame.GbxSkillStateConditionData_Constant'"
+                      }
+                    }
+                  ]
+                }
+              },
+              {
+                "depTableName": "state",
+                "depTableId": 7,
+                "depIndex": 1,
+                "s_readied": {
+                  "state": "S_Readied",
+                  "linkedskillstate": "skill_state'SS_SRN_AS_PhaseAvatar_Readied'",
+                  "transitions": [
+                    {
+                      "transitionname": "Button Pressed",
+                      "state": "skill_state_machine'SM_SRN_AS_PhaseAvatar.S_Activating'",
+                      "registers": [
+                        "skill_state_machine'SM_SRN_AS_PhaseAvatar.R_Readied_ASB_Pressed'"
+                      ]
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "sm_srn_as_phaseshard": {
+              "skill_state_machine": "SM_SRN_AS_PhaseShard",
+              "startingstate": "skill_state_machine'SM_SRN_AS_PhaseShard.S_Cooldown'",
+              "statedef": "skill_state'S_General_Slotted'",
+              "debugcommands": [
+                {
+                  "command": "ResetCooldown",
+                  "condition": {
+                    "structtype": "Asset'/Script/GbxGame.GbxSkillStateConditionData_Constant'"
+                  },
+                  "actions": [
+                    {
+                      "structtype": "Asset'/Script/OakGame.GbxSkillStateMachineStateAction_AddRemoveCharges'",
+                      "amount": {
+                        "constant": "3.000000",
+                        "datatablevalue": {
+                          "datatable": "gbx_ue_data_table'DataTable_DarkSiren_ActionSkill_PhaseShard'",
+                          "rowname": "PhaseShard_Charges",
+                          "columnname": "Value_2_D970BF0B44895FECDFE922A2D420BFF2"
+                        }
+                      },
+                      "componentid": {
+                        "a": "-729576347",
+                        "b": "1272190651",
+                        "c": "913178024",
+                        "d": "-1044666062"
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            "__dep_entries": [
+              {
+                "depTableName": "register",
+                "depTableId": 6,
+                "depIndex": 0,
+                "r_activated_failure": {
+                  "register": "R_Activated_Failure"
+                }
+              },
+              {
+                "depTableName": "register",
+                "depTableId": 6,
+                "depIndex": 0,
+                "r_activated_success": {
+                  "register": "R_Activated_Success"
+                }
+              },
+              {
+                "depTableName": "register",
+                "depTableId": 6,
+                "depIndex": 0,
+                "r_activating_canceled": {
+                  "register": "R_Activating_Canceled"
+                }
+              },
+              {
+                "depTableName": "register",
+                "depTableId": 6,
+                "depIndex": 0,
+                "r_activating_failure": {
+                  "register": "R_Activating_Failure"
+                }
+              },
+              {
+                "depTableName": "register",
+                "depTableId": 6,
+                "depIndex": 0,
+                "r_activating_success": {
+                  "register": "R_Activating_Success"
+                }
+              },
+              {
+                "depTableName": "register",
+                "depTableId": 6,
+                "depIndex": 0,
+                "r_deactivating_success": {
+                  "register": "R_Deactivating_Success"
+                }
+              },
+              {
+                "depTableName": "register",
+                "depTableId": 6,
+                "depIndex": 0,
+                "r_paused": {
+                  "register": "R_Paused"
+                }
+              },
+              {
+                "depTableName": "register",
+                "depTableId": 6,
+                "depIndex": 0,
+                "r_readied_asb_pressed": {
+                  "register": "R_Readied_ASB_Pressed"
+                }
+              },
+              {
+                "depTableName": "state",
+                "depTableId": 7,
+                "depIndex": 1,
+                "s_activated": {
+                  "state": "S_Activated",
+                  "linkedskillstate": "skill_state'SS_SRN_AS_PhaseShard_Activated'",
+                  "transitions": [
+                    {
+                      "transitionname": "Activated Success",
+                      "state": "skill_state_machine'SM_SRN_AS_PhaseShard.S_Cooldown'",
+                      "registers": [
+                        "skill_state_machine'SM_SRN_AS_PhaseShard.R_Activated_Success'"
+                      ]
+                    },
+                    {
+                      "transitionname": "Activated Failure",
+                      "state": "skill_state_machine'SM_SRN_AS_PhaseShard.S_Cooldown'",
+                      "registers": [
+                        "skill_state_machine'SM_SRN_AS_PhaseShard.R_Activated_Failure'"
+                      ]
+                    }
+                  ]
+                }
+              },
+              {
+                "depTableName": "state",
+                "depTableId": 7,
+                "depIndex": 1,
+                "s_activating": {
+                  "state": "S_Activating",
+                  "linkedskillstate": "skill_state'SS_SRN_AS_PhaseShard_Activating'",
+                  "transitions": [
+                    {
+                      "transitionname": "Activation Success",
+                      "state": "skill_state_machine'SM_SRN_AS_PhaseShard.S_Activated'",
+                      "registers": [
+                        "skill_state_machine'SM_SRN_AS_PhaseShard.R_Activating_Success'"
+                      ]
+                    },
+                    {
+                      "transitionname": "Activation Failure",
+                      "state": "skill_state_machine'SM_SRN_AS_PhaseShard.S_Cooldown'",
+                      "registers": [
+                        "skill_state_machine'SM_SRN_AS_PhaseShard.R_Activating_Failure'"
+                      ]
+                    },
+                    {
+                      "transitionname": "Activation Canceled",
+                      "state": "skill_state_machine'SM_SRN_AS_PhaseShard.S_Cooldown'",
+                      "registers": [
+                        "skill_state_machine'SM_SRN_AS_PhaseShard.R_Activating_Canceled'"
+                      ]
+                    }
+                  ]
+                }
+              },
+              {
+                "depTableName": "state",
+                "depTableId": 7,
+                "depIndex": 1,
+                "s_cooldown": {
+                  "state": "S_Cooldown",
+                  "linkedskillstate": "skill_state'SS_SRN_AS_PhaseShard_Cooldown'",
+                  "skillstatedata": {
+                    "skillstateoperations": [
+                      {
+                        "stateop": "AddScoped",
+                        "state": "skill_state'S_General_Cooldown'"
+                      }
+                    ]
+                  },
+                  "transitions": [
+                    {
+                      "transitionname": "Has Charges",
+                      "state": "skill_state_machine'SM_SRN_AS_PhaseShard.S_Readied'",
+                      "condition": {
+                        "structtype": "Asset'/Script/GbxGame.GbxSkillStateConditionData_Comparison'",
+                        "comparison": {
+                          "lhs": {
+                            "type": "SkillParam"
+                          },
+                          "rhs": {
+                            "type": "GbxValue",
+                            "value": {
+                              "value": {
+                                "type": "Bool",
+                                "value": "true"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              },
+              {
+                "depTableName": "state",
+                "depTableId": 7,
+                "depIndex": 1,
+                "s_deactivating": {
+                  "state": "S_Deactivating",
+                  "linkedskillstate": "skill_state'SS_SRN_AS_PhaseShard_Deactivating'",
+                  "transitions": [
+                    {
+                      "transitionname": "Out of Charges",
+                      "state": "skill_state_machine'SM_SRN_AS_PhaseShard.S_Cooldown'",
+                      "condition": {
+                        "structtype": "Asset'/Script/GbxGame.GbxSkillStateConditionData_Comparison'",
+                        "comparison": {
+                          "lhs": {
+                            "type": "SkillParam"
+                          },
+                          "rhs": {
+                            "type": "GbxValue",
+                            "value": {
+                              "value": {
+                                "type": "Bool"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "transitionname": "Has Charges",
+                      "state": "skill_state_machine'SM_SRN_AS_PhaseShard.S_Activating'",
+                      "condition": {
+                        "structtype": "Asset'/Script/GbxGame.GbxSkillStateConditionData_Comparison'",
+                        "comparison": {
+                          "lhs": {
+                            "type": "SkillParam"
+                          },
+                          "rhs": {
+                            "type": "GbxValue",
+                            "value": {
+                              "value": {
+                                "type": "Bool",
+                                "value": "true"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  ],
+                  "startregisterpolicy": "Reset"
+                }
+              },
+              {
+                "depTableName": "state",
+                "depTableId": 7,
+                "depIndex": 1,
+                "s_paused": {
+                  "state": "S_Paused",
+                  "linkedskillstate": "skill_state'SS_SRN_AS_PhaseShard_Paused'",
+                  "transitions": [
+                    {
+                      "transitionname": "Unpaused",
+                      "state": "skill_state_machine'SM_SRN_AS_PhaseShard.S_Cooldown'",
+                      "condition": {
+                        "structtype": "Asset'/Script/GbxGame.GbxSkillStateConditionData_Constant'"
+                      }
+                    }
+                  ]
+                }
+              },
+              {
+                "depTableName": "state",
+                "depTableId": 7,
+                "depIndex": 1,
+                "s_readied": {
+                  "state": "S_Readied",
+                  "linkedskillstate": "skill_state'SS_SRN_AS_PhaseShard_Readied'",
+                  "transitions": [
+                    {
+                      "transitionname": "Out of Charges",
+                      "state": "skill_state_machine'SM_SRN_AS_PhaseShard.S_Cooldown'",
+                      "condition": {
+                        "structtype": "Asset'/Script/GbxGame.GbxSkillStateConditionData_Comparison'",
+                        "comparison": {
+                          "lhs": {
+                            "type": "SkillParam"
+                          },
+                          "rhs": {
+                            "type": "GbxValue",
+                            "value": {
+                              "value": {
+                                "type": "Bool"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "transitionname": "Button Pressed",
+                      "state": "skill_state_machine'SM_SRN_AS_PhaseShard.S_Activating'",
+                      "registers": [
+                        "skill_state_machine'SM_SRN_AS_PhaseShard.R_Readied_ASB_Pressed'"
+                      ]
+                    }
+                  ],
+                  "startregisterpolicy": "Reset"
+                }
+              }
+            ]
+          },
+          {
+            "sm_trait_overdrive": {
+              "skill_state_machine": "SM_Trait_Overdrive",
+              "startingstate": "skill_state_machine'SM_Trait_Overdrive.S_Ready'",
+              "statedef": "skill_state'S_General_Slotted'"
+            },
+            "__dep_entries": [
+              {
+                "depTableName": "register",
+                "depTableId": 6,
+                "depIndex": 0,
+                "r_actionskillactive_ended": {
+                  "register": "R_ActionSkillActive_Ended"
+                }
+              },
+              {
+                "depTableName": "register",
+                "depTableId": 6,
+                "depIndex": 0,
+                "r_paused": {
+                  "register": "R_Paused"
+                }
+              },
+              {
+                "depTableName": "register",
+                "depTableId": 6,
+                "depIndex": 0,
+                "r_ready_skillactivated": {
+                  "register": "R_Ready_SkillActivated"
+                }
+              },
+              {
+                "depTableName": "state",
+                "depTableId": 7,
+                "depIndex": 1,
+                "s_actionskillactive": {
+                  "state": "s_actionSkillActive",
+                  "linkedskillstate": "skill_state'SS_Exo_Overdrive_ActionSkillActive'",
+                  "skillstatedata": {
+                    "skillstateoperations": [
+                      {
+                        "stateop": "Remove",
+                        "state": "skill_state'SS_Exo_Overdrive_DurationACtive'"
+                      },
+                      {
+                        "state": "skill_state'SS_Exo_Overdrive_Active'"
+                      }
+                    ]
+                  },
+                  "transitions": [
+                    {
+                      "transitionname": "Action Skill Ended",
+                      "state": "skill_state_machine'SM_Trait_Overdrive.s_active'",
+                      "registers": [
+                        "skill_state_machine'SM_Trait_Overdrive.R_ActionSkillActive_Ended'"
+                      ]
+                    }
+                  ],
+                  "startregisterpolicy": "Reset",
+                  "endregisterpolicy": "Reset"
+                }
+              },
+              {
+                "depTableName": "state",
+                "depTableId": 7,
+                "depIndex": 1,
+                "s_active": {
+                  "state": "s_active",
+                  "linkedskillstate": "skill_state'SS_Exo_Overdrive_Active'",
+                  "skillstatedata": {
+                    "binheritpreviousskillstates": "false",
+                    "skillstateoperations": [
+                      {
+                        "state": "skill_state'SS_Exo_Overdrive_DurationACtive'"
+                      }
+                    ]
+                  },
+                  "transitions": [
+                    {
+                      "transitionname": "Duration Depleted",
+                      "state": "skill_state_machine'SM_Trait_Overdrive.S_Ready'",
+                      "condition": {
+                        "structtype": "Asset'/Script/GbxGame.GbxSkillStateConditionData_ResourcePool'",
+                        "pooldef": "resourcepool'Pool_Exo_Overdrive_Duration'"
+                      }
+                    },
+                    {
+                      "transitionname": "Action Skill Activated",
+                      "state": "skill_state_machine'SM_Trait_Overdrive.s_actionSkillActive'",
+                      "registers": [
+                        "skill_state_machine'SM_Trait_Overdrive.R_Ready_SkillActivated'"
+                      ],
+                      "transitionactions": [
+                        {
+                          "structtype": "Asset'/Script/GbxGame.GbxSkillStateMachineStateAction_ResourcePool'",
+                          "pooldef": "resourcepool'Pool_Exo_Overdrive_Duration'",
+                          "poolop": "Fill"
+                        }
+                      ]
+                    }
+                  ],
+                  "startregisterpolicy": "Reset",
+                  "endregisterpolicy": "Reset"
+                }
+              },
+              {
+                "depTableName": "state",
+                "depTableId": 7,
+                "depIndex": 1,
+                "s_paused": {
+                  "state": "S_Paused"
+                }
+              },
+              {
+                "depTableName": "state",
+                "depTableId": 7,
+                "depIndex": 1,
+                "s_ready": {
+                  "state": "S_Ready",
+                  "linkedskillstate": "skill_state'SS_Exo_Overdrive_Ready'",
+                  "skillstatedata": {
+                    "binheritpreviousskillstates": "false",
+                    "skillstateoperations": [
+                      {
+                        "stateop": "Remove",
+                        "state": "skill_state'SS_Exo_Overdrive_DurationACtive'"
+                      }
+                    ]
+                  },
+                  "transitions": [
+                    {
+                      "transitionname": "Action Skill Activated",
+                      "state": "skill_state_machine'SM_Trait_Overdrive.s_actionSkillActive'",
+                      "registers": [
+                        "skill_state_machine'SM_Trait_Overdrive.R_Ready_SkillActivated'"
+                      ],
+                      "transitionactions": [
+                        {
+                          "structtype": "Asset'/Script/GbxGame.GbxSkillStateMachineStateAction_ResourcePool'",
+                          "pooldef": "resourcepool'Pool_Exo_Overdrive_Duration'",
+                          "poolop": "Fill"
+                        }
+                      ]
+                    },
+                    {
+                      "transitionname": "Has Duration",
+                      "state": "skill_state_machine'SM_Trait_Overdrive.s_active'",
+                      "condition": {
+                        "structtype": "Asset'/Script/GbxGame.GbxSkillStateConditionData_ResourcePool'",
+                        "pooldef": "resourcepool'Pool_Exo_Overdrive_Duration'",
+                        "evalmode": "GreaterThanEqual",
+                        "value": "0.010000",
+                        "baspercent": "true"
+                      }
+                    }
+                  ],
+                  "startregisterpolicy": "Reset",
+                  "endregisterpolicy": "Reset"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "entries": [
+          {
+            "sm_passiveskill": {
+              "skill_state_machine": "SM_PassiveSkill",
+              "startingstate": "skill_state_machine'SM_PassiveSkill.SMS_PassiveSkill_Inactive'",
+              "condition": {
+                "structtype": "Asset'/Script/GbxGame.GbxSkillStateConditionData_ConditionDef'",
+                "conditiondef": "skill_state_condition'SkillStateCond_IsActionSkillEnabled'"
+              },
+              "statedef": "skill_state'S_General_Slotted'"
+            },
+            "__dep_entries": [
+              {
+                "depTableName": "register",
+                "depTableId": 6,
+                "depIndex": 0,
+                "r_activateskill": {
+                  "register": "R_ActivateSkill"
+                }
+              },
+              {
+                "depTableName": "register",
+                "depTableId": 6,
+                "depIndex": 0,
+                "r_deactivateskill": {
+                  "register": "R_DeactivateSkill"
+                }
+              },
+              {
+                "depTableName": "state",
+                "depTableId": 7,
+                "depIndex": 1,
+                "sms_passiveskill_active": {
+                  "state": "SMS_PassiveSkill_Active",
+                  "linkedskillstate": "skill_state'S_General_Active'",
+                  "transitions": [
+                    {
+                      "transitionname": "Deactivate Skill",
+                      "state": "skill_state_machine'SM_PassiveSkill.SMS_PassiveSkill_Inactive'",
+                      "registers": [
+                        "skill_state_machine'SM_PassiveSkill.R_DeactivateSkill'"
+                      ]
+                    },
+                    {
+                      "transitionname": "Duration Ended",
+                      "state": "skill_state_machine'SM_PassiveSkill.SMS_PassiveSkill_Inactive'",
+                      "condition": {
+                        "structtype": "Asset'/Script/GbxGame.GbxSkillStateConditionData_ResourcePoolAlias'",
+                        "poolalias": "skill_alias'Alias_DurationPool'"
+                      }
+                    }
+                  ],
+                  "startregisterpolicy": "Reset"
+                }
+              },
+              {
+                "depTableName": "state",
+                "depTableId": 7,
+                "depIndex": 1,
+                "sms_passiveskill_inactive": {
+                  "state": "SMS_PassiveSkill_Inactive",
+                  "linkedskillstate": "skill_state'S_General_Ready'",
+                  "transitions": [
+                    {
+                      "transitionname": "Activate Skill",
+                      "state": "skill_state_machine'SM_PassiveSkill.SMS_PassiveSkill_Active'",
+                      "registers": [
+                        "skill_state_machine'SM_PassiveSkill.R_ActivateSkill'"
+                      ]
+                    },
+                    {
+                      "transitionname": "Start Duration",
+                      "state": "skill_state_machine'SM_PassiveSkill.SMS_PassiveSkill_Active'",
+                      "condition": {
+                        "structtype": "Asset'/Script/GbxGame.GbxSkillStateConditionData_ResourcePoolAlias'",
+                        "poolalias": "skill_alias'Alias_DurationPool'",
+                        "binvertcondition": "true"
+                      }
+                    }
+                  ],
+                  "startregisterpolicy": "Reset"
+                }
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "camera_behavior": {
+    "records": [
+      {
+        "entries": [
+          {
+            "anchor_to_socket": {
+              "camera_behavior": "anchor_to_socket",
+              "structtype": "Asset'/Script/GbxGame.CameraModeBehavior_AnchorToSocket'",
+              "bsetlocation": "true",
+              "bsetrotation": "true"
+            }
+          },
+          {
+            "fov": {
+              "camera_behavior": "fov",
+              "structtype": "Asset'/Script/GbxGame.CameraModeBehavior_FOV'",
+              "fov": "70.000000"
+            }
+          },
+          {
+            "offset_to_socket": {
+              "camera_behavior": "offset_to_socket",
+              "structtype": "Asset'/Script/GbxGame.CameraModeBehavior_OffsetToSocket'",
+              "bsetlocation": "true",
+              "bsetrotation": "true"
+            }
+          }
+        ]
+      }
+    ]
+  }
+}

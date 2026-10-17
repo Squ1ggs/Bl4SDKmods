@@ -1,0 +1,795 @@
+{
+  "uitooltipdata": {
+    "records": [
+      {
+        "entries": [
+          {
+            "1corpohackertooltips_passives": {
+              "uitooltipdata": "1CorpoHackerTooltips_Passives",
+              "stats": "",
+              "header": "tooltips_passives, 29373A1E431803FF4B3B0E967168F6B6, Passive Skill - Corphacker",
+              "subheader": "tooltips_skills, C58CE8A14EC170F69EF1A4A6781FD9D7, Passive",
+              "parent": "uitooltipdata'tooltip_passive'"
+            }
+          },
+          {
+            "_tooltip_corpohacker_augments": {
+              "uitooltipdata": "_tooltip_CorpoHacker_augments",
+              "notifytext": "corpohacker_ui_skills, C4E8939949843434D1EC7BB911B86784, Equip Augment to Activate",
+              "header": "corpohacker_ui_skills, 994F8E13484DC70DC39E12AFAE95BF06, Nothing",
+              "subheader": "corpohacker_ui_skills, 355269124E76C0808E3F01A4C6F9CED2, Augment",
+              "body": "corpohacker_ui_skills, DA8FC22C473A3B23FD13E8B0601B115C, This augment does nothing",
+              "type": "/Script/OakGame.OakUISkillTooltipDataDef",
+              "parent": "uitooltipdata'tooltip_augment'"
+            }
+          },
+          {
+            "_tooltip_corpohacker_augments_manifestation": {
+              "uitooltipdata": "_tooltip_CorpoHacker_augments_Manifestation",
+              "notifytext": "corpohacker_ui_skills, C5E471A64EB5F06AB678799B69D2AD0B, Equip Augment to Activate",
+              "header": "corpohacker_ui_skills, B5094FB34F1C51DEFF96D19086C205CE, Nothing",
+              "subheader": "corpohacker_ui_skills, C3398F8C46EAEB85FBD992A3892EE244, Augment",
+              "body": "corpohacker_ui_skills, 270AF91246374D8145EFDFAE96E18F9C, This augment does nothing",
+              "type": "/Script/OakGame.OakUISkillTooltipDataDef",
+              "parent": "uitooltipdata'_tooltip_CorpoHacker_augments'"
+            }
+          },
+          {
+            "_tooltip_corpohacker_capstones": {
+              "uitooltipdata": "_tooltip_CorpoHacker_capstones",
+              "notifytext": "corpohacker_ui_skills, 325DA6C5498FB781D915E88D94FDCD6F, Equip Augment to Activate",
+              "header": "corpohacker_ui_skills, E015583842DE9BF05F769E85F0D900E8, Nothing",
+              "subheader": "corpohacker_ui_skills, 7146D8A24A9830A9326D54A1960D48EB, Capstone",
+              "body": "corpohacker_ui_skills, 9677DA6A4342487473F618989D82F8CB, This capstone does nothing",
+              "type": "/Script/OakGame.OakUISkillTooltipDataDef",
+              "parent": "uitooltipdata'tooltip_capstone'"
+            }
+          },
+          {
+            "_tooltip_corpohacker_capstones_manifestation": {
+              "uitooltipdata": "_tooltip_CorpoHacker_capstones_Manifestation",
+              "notifytext": "corpohacker_ui_skills, 398902E447AAB239F277C18CF3686BD1, Equip Augment to Activate",
+              "header": "corpohacker_ui_skills, 8D24A7424368001FD4CF43ACF6928F18, Nothing",
+              "subheader": "corpohacker_ui_skills, F5D4258C4F9986B206BC3791FD68BCA6, Capstone",
+              "body": "corpohacker_ui_skills, 605DA28245E1CBF79E95FFAF6D11949A, This capstone does nothing.",
+              "type": "/Script/OakGame.OakUISkillTooltipDataDef",
+              "parent": "uitooltipdata'_tooltip_CorpoHacker_capstones'"
+            }
+          },
+          {
+            "robodealertooltipspassive": {
+              "uitooltipdata": "RoboDealerTooltipsPassive",
+              "header": "tooltips_passives, 54306AB04029A9B2817160A649858D53, Passive Skill - Robodealer Temp",
+              "parent": "uitooltipdata'tooltip_passive'"
+            }
+          },
+          {
+            "tooltip_ch_passive_23_zeroday": {
+              "uitooltipdata": "Tooltip_CH_Passive_23_ZeroDay",
+              "header": "tooltips_passives, C825C63045A2E79BD63FAD8D0D3A1498, Zero Day",
+              "body": "tooltips_passives, 0645C1D24670C9765996F29BB183BA18, Enemies infected by [primary]Loveless's Contagion[/primary] [secondary]Explode[/secondary] when they die, dealing [nowrap][corrosive_icon][corrosive]Corrosive[/corrosive][/nowrap] [corrosive]Ordnance Damage[/corrosive].",
+              "parent": "uitooltipdata'CorpoHackerTooltips_Passives'",
+              "stats": [
+                {
+                  "structtype": "Asset'/Script/GbxGame.StringDisplayValue'",
+                  "formattext": "Corpohacker_Passives_Contagion_UI, 9455A5074B6075102A4BDD9217E9D6BA, [secondary]Corrosive Explosion Damage:[/secondary] {0} {grade}",
+                  "argsmap": {
+                    "pairs": {
+                      "pair633932275": {
+                        "key": "0",
+                        "value": {
+                          "structtype": "Asset'/Script/GbxGame.NumericDisplayValue'",
+                          "attributedef": "attribute'Calc_CH_UI_Passive_23_ZeroDay_Damage'",
+                          "bshowstatmodifier": "true"
+                        }
+                      },
+                      "pair2259948949": {
+                        "key": "1",
+                        "value": {
+                          "structtype": "Asset'/Script/GbxGame.NumericDisplayValue'",
+                          "keygroup": "grade",
+                          "displaycondition": {
+                            "attributedef": "attribute'SkillGrade_CH_23_ZeroDay'"
+                          },
+                          "attributedef": "attribute'Calc_CH_UI_Passive_23_ZeroDay_Damage_NoGrade'",
+                          "bdisplayplussign": "true"
+                        }
+                      },
+                      "pair3052137813": {
+                        "key": "2",
+                        "value": {
+                          "structtype": "Asset'/Script/GbxGame.NumericDisplayValue'",
+                          "keygroup": "grade",
+                          "displaycondition": {
+                            "attributedef": "attribute'SkillGrade_CH_23_ZeroDay'",
+                            "comparetype": "GreaterThan"
+                          },
+                          "attributedef": "attribute'Calc_CH_UI_Passive_23_ZeroDay_DamagePerGrade'",
+                          "bdisplayplussign": "true"
+                        }
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "tooltip_ch_passive_52_montage": {
+              "uitooltipdata": "Tooltip_CH_Passive_52_Montage",
+              "stats": [
+                {
+                  "structtype": "Asset'/Script/GbxGame.StringDisplayValue'",
+                  "formattext": "Corpohacker_Passives_VPN_UI, B5B984B24EB1D1820350168D98C9DDA1, [secondary]Stealth Duration:[/secondary] {0}",
+                  "argsmap": {
+                    "pairs": {
+                      "pair2271591783": "",
+                      "pair633932275": {
+                        "key": "0",
+                        "value": {
+                          "structtype": "Asset'/Script/GbxGame.NumericDisplayValue'",
+                          "attributedef": "attribute'Att_Calc_Corpohacker_PSV_52_Montage_StealthDuration'"
+                        }
+                      }
+                    }
+                  }
+                }
+              ],
+              "header": "tooltips_passives, BC67D5ED428F2ACC2CA4B0A7989BC211, Montage",
+              "subheader": "tooltips_skills, B1310C1445F4839C1F898893F1C01FCE, Passive",
+              "body": "tooltips_passives, 8796C65A4FACB04E6078A3AE5ACA332B, [primary]Loveless[/primary] now enters [secondary]Stealth[/secondary] for a [secondary]Duration[/secondary] when she kills an enemy with a [secondary]Sniper Rifle[/secondary].",
+              "parent": "uitooltipdata'_tooltip_CH_passives'"
+            }
+          },
+          {
+            "tooltip_corpohacker_actionskill_contagion_augment_explosiveshuriken": {
+              "uitooltipdata": "ToolTip_Corpohacker_ActionSkill_Contagion_Augment_ExplosiveShuriken",
+              "notifytext": "Corpohacker_ActionSkill_Contagion, DA0C7305443A5D2968B13892BD2E054A, Equip Augment to Activate",
+              "header": "Corpohacker_ActionSkill_Contagion, 06DF5509403BA41BC71E96A6742881CD, Explosive Shuriken",
+              "subheader": "Corpohacker_ActionSkill_Contagion, EE9BAACB4B0F326F51D532B1E380345E, Augment",
+              "body": "Corpohacker_ActionSkill_Contagion, 4B73417E4EC48580CBFA85ACEA8FCF5D, Your Shuriken now explodes on contact, dealing higher Corrosive Damage in a large area. Your Executable does 25% more damage.",
+              "type": "/Script/OakGame.OakUISkillTooltipDataDef"
+            }
+          },
+          {
+            "tooltip_robo_passive_00_addsleightofhandcharges": {
+              "uitooltipdata": "Tooltip_Robo_Passive_00_AddSleightOfHandCharges",
+              "stats": "",
+              "header": "tooltips_passives, 3333FB2D47057B78F3CAF08ABC10E8E1, Add Sleight of Hand Charges",
+              "body": "tooltips_passives, 6925154549C3760C0EE2F4BA7A05224F, Every point in this skill adds a charge to Sleight of Hand",
+              "parent": "uitooltipdata'RoboDealerTooltipsPassive'"
+            }
+          },
+          {
+            "tooltip_robo_passive_00_dummy": {
+              "uitooltipdata": "Tooltip_Robo_Passive_00_Dummy",
+              "stats": [
+                {
+                  "structtype": "Asset'/Script/GbxGame.StringDisplayValue'",
+                  "formattext": "RoboDealer_Passives_Shared, 95FEAA744455FA055FFE7E832A08E607, Protip: Put points in me to unlock things",
+                  "argsmap": {
+                    "pairs": {
+                      "pair2271591783": {
+                        "key": "value",
+                        "value": {
+                          "structtype": "Asset'/Script/GbxGame.NumericDisplayValue'",
+                          "bdisplayaspercentage": "true",
+                          "bdisplaypercentasfloat": "true",
+                          "bdisplayplussign": "true",
+                          "floatprecision": "2"
+                        }
+                      }
+                    }
+                  }
+                }
+              ],
+              "header": "tooltips_passives, 367580614CB356A2C6508AA0FFA60DB3, Robodealer Dummy Skill",
+              "parent": "uitooltipdata'RoboDealerTooltipsPassive'"
+            }
+          },
+          {
+            "tooltip_robo_passive_00_extraaugment": {
+              "uitooltipdata": "Tooltip_Robo_Passive_00_ExtraAugment",
+              "header": "tooltips_passives, D732DD8F45B8E5141B655180264DDFAB, Extra Augment",
+              "body": "tooltips_passives, C843DB91428EC45D746069A3E5C11326, C4sh gains an [secondary]Additional Augment Slot[/secondary].",
+              "parent": "uitooltipdata'RoboDealerTooltipsPassive'"
+            }
+          },
+          {
+            "tooltip_robo_passive_00_forcebadass": {
+              "uitooltipdata": "Tooltip_Robo_Passive_00_ForceBadass",
+              "header": "tooltips_passives, E8012F5D4B145FBF9B089CB6C01478C8, Force Badass",
+              "body": "tooltips_passives, 38DCF8DE41511A86B3B83992A170E1FC, Put a point in this skill to force doll to always be a badass",
+              "parent": "uitooltipdata'RoboDealerTooltipsPassive'"
+            }
+          },
+          {
+            "tooltip_robo_passive_00_forcecard": {
+              "uitooltipdata": "Tooltip_Robo_Passive_00_ForceCard",
+              "stats": [
+                {
+                  "structtype": "Asset'/Script/GbxGame.StringDisplayValue'",
+                  "formattext": "RoboDealer_Passives_Shared, 58372AF6420998526928049EBF2EC30E, [secondary]Forced Card:[/secondary] {CARD}",
+                  "argsmap": {
+                    "pairs": {
+                      "pair2271591783": {
+                        "key": "value",
+                        "value": {
+                          "structtype": "Asset'/Script/GbxGame.StringDisplayValue'",
+                          "keygroup": "CARD",
+                          "displaycondition": {
+                            "attributedef": "attribute'Att_Robo_SkillGrade_00_ForceCard'"
+                          },
+                          "formattext": "RoboDealer_Passives_Shared, A6916B964E80A97E984350A8AD1558F9, [radiation]N/A[/radiation]"
+                        }
+                      },
+                      "pair4153944773": {
+                        "key": "magicmissile",
+                        "value": {
+                          "structtype": "Asset'/Script/GbxGame.StringDisplayValue'",
+                          "keygroup": "CARD",
+                          "displaycondition": {
+                            "attributedef": "attribute'Att_Robo_SkillGrade_00_ForceCard'",
+                            "comparevalue": "1.000000"
+                          },
+                          "formattext": "RoboDealer_Passives_Shared, 8F8CF45D4344A608ED87E2A8FBA539DC, Magic Missile (Base)"
+                        }
+                      },
+                      "pair1553827180": {
+                        "key": "fireball",
+                        "value": {
+                          "structtype": "Asset'/Script/GbxGame.StringDisplayValue'",
+                          "keygroup": "CARD",
+                          "displaycondition": {
+                            "attributedef": "attribute'Att_Robo_SkillGrade_00_ForceCard'",
+                            "comparevalue": "2.000000"
+                          },
+                          "formattext": "RoboDealer_Passives_Shared, 30C3CEB946AC4DF4CE2B12AA65042A3B, Fireball (Base)"
+                        }
+                      },
+                      "pair2042596847": {
+                        "key": "bolt",
+                        "value": {
+                          "structtype": "Asset'/Script/GbxGame.StringDisplayValue'",
+                          "keygroup": "CARD",
+                          "displaycondition": {
+                            "attributedef": "attribute'Att_Robo_SkillGrade_00_ForceCard'",
+                            "comparevalue": "3.000000"
+                          },
+                          "formattext": "RoboDealer_Passives_Shared, EADEC9F84BCE6FC8D0F12086B051F764, Bolt (Augment 1)"
+                        }
+                      },
+                      "pair1251772673": {
+                        "key": "acidspray",
+                        "value": {
+                          "structtype": "Asset'/Script/GbxGame.StringDisplayValue'",
+                          "keygroup": "CARD",
+                          "displaycondition": {
+                            "attributedef": "attribute'Att_Robo_SkillGrade_00_ForceCard'",
+                            "comparevalue": "4.000000"
+                          },
+                          "formattext": "RoboDealer_Passives_Shared, 3C6F8A3344F54041EDBD179C1F4E7A46, Acid Spray (Augment 2)"
+                        }
+                      },
+                      "pair209664696": {
+                        "key": "radiation",
+                        "value": {
+                          "structtype": "Asset'/Script/GbxGame.StringDisplayValue'",
+                          "keygroup": "CARD",
+                          "displaycondition": {
+                            "attributedef": "attribute'Att_Robo_SkillGrade_00_ForceCard'",
+                            "comparevalue": "5.000000"
+                          },
+                          "formattext": "RoboDealer_Passives_Shared, 8F2EE3604707AF3FE0DDC5874252EFAD, Black Hole (Augment 3)"
+                        }
+                      },
+                      "pair2574785288": {
+                        "key": "lifesteal",
+                        "value": {
+                          "structtype": "Asset'/Script/GbxGame.StringDisplayValue'",
+                          "keygroup": "CARD",
+                          "displaycondition": {
+                            "attributedef": "attribute'Att_Robo_SkillGrade_00_ForceCard'",
+                            "comparevalue": "6.000000"
+                          },
+                          "formattext": "RoboDealer_Passives_Shared, B9A13E0A4EA28032C438B98E951C5D39, Vampiric Touch (Augment 4)"
+                        }
+                      },
+                      "pair244243966": {
+                        "key": "colorspray",
+                        "value": {
+                          "structtype": "Asset'/Script/GbxGame.StringDisplayValue'",
+                          "keygroup": "CARD",
+                          "displaycondition": {
+                            "attributedef": "attribute'Att_Robo_SkillGrade_00_ForceCard'",
+                            "comparevalue": "7.000000"
+                          },
+                          "formattext": "RoboDealer_Passives_Shared, 85F77EE1448F1FDE7B332799539C5651, Color Spray (Augment 5)"
+                        }
+                      },
+                      "pair3554190920": {
+                        "key": "cryo",
+                        "value": {
+                          "structtype": "Asset'/Script/GbxGame.StringDisplayValue'",
+                          "keygroup": "CARD",
+                          "displaycondition": {
+                            "attributedef": "attribute'Att_Robo_SkillGrade_00_ForceCard'",
+                            "comparevalue": "8.000000"
+                          },
+                          "formattext": "RoboDealer_Passives_Shared, 649F89A74A1BCEB1353FCE8F5DDD5E3C, Freezing Shards (Augment 6)"
+                        }
+                      },
+                      "pair343556158": {
+                        "key": "nuke",
+                        "value": {
+                          "structtype": "Asset'/Script/GbxGame.StringDisplayValue'",
+                          "keygroup": "CARD",
+                          "displaycondition": {
+                            "attributedef": "attribute'Att_Robo_SkillGrade_00_ForceCard'",
+                            "comparevalue": "9.000000"
+                          },
+                          "formattext": "RoboDealer_Passives_Shared, E1707F15459115A23A46CC82EDFD9165, Bone Shards (Augment 7)"
+                        }
+                      },
+                      "pair1039621362": {
+                        "key": "ballfirelightning",
+                        "value": {
+                          "structtype": "Asset'/Script/GbxGame.StringDisplayValue'",
+                          "keygroup": "CARD",
+                          "displaycondition": {
+                            "attributedef": "attribute'Att_Robo_SkillGrade_00_ForceCard'",
+                            "comparevalue": "10.000000"
+                          },
+                          "formattext": "RoboDealer_Passives_Shared, EF0979964F487DF990E2E48DD041C64B, Ball of Fire and Lightning (Augment 8)"
+                        }
+                      }
+                    }
+                  }
+                }
+              ],
+              "header": "tooltips_passives, 1313F4814DA6739FCD5713807E773009, Force Card",
+              "body": "tooltips_passives, 4B444F0F4D241CFC0DD96A81FD152353, Put points in this skill to force draw a card. If the card doesn't work right, slot the associated augment.",
+              "parent": "uitooltipdata'RoboDealerTooltipsPassive'"
+            }
+          },
+          {
+            "tooltip_robo_passive_00_forcedieroll": {
+              "uitooltipdata": "Tooltip_Robo_Passive_00_ForceDieRoll",
+              "stats": [
+                {
+                  "structtype": "Asset'/Script/GbxGame.StringDisplayValue'",
+                  "formattext": "RoboDealer_Passives_Shared, 912874284B4D0F82BAA8C18C724F2CAD, [secondary]Forced Totem:[/secondary] {CARD}",
+                  "argsmap": {
+                    "pairs": {
+                      "pair2271591783": {
+                        "key": "value",
+                        "value": {
+                          "structtype": "Asset'/Script/GbxGame.StringDisplayValue'",
+                          "keygroup": "CARD",
+                          "displaycondition": {
+                            "attributedef": "attribute'Att_Robo_SkillGrade_00_ForceDieRoll'"
+                          },
+                          "formattext": "RoboDealer_Passives_Shared, 93B58AE34AF14D611C034FB7291B264B, [radiation]N/A[/radiation]"
+                        }
+                      },
+                      "pair304168370": {
+                        "key": "roll1",
+                        "value": {
+                          "structtype": "Asset'/Script/GbxGame.StringDisplayValue'",
+                          "keygroup": "CARD",
+                          "displaycondition": {
+                            "attributedef": "attribute'Att_Robo_SkillGrade_00_ForceDieRoll'",
+                            "comparevalue": "1.000000"
+                          },
+                          "formattext": "RoboDealer_Passives_Shared, 0180BD304AC9CD21133260AF49056D2E, [fire]Put at least 2 points into the skill[/fire]"
+                        }
+                      },
+                      "pair561956210": {
+                        "key": "roll2",
+                        "value": {
+                          "structtype": "Asset'/Script/GbxGame.StringDisplayValue'",
+                          "keygroup": "CARD",
+                          "displaycondition": {
+                            "attributedef": "attribute'Att_Robo_SkillGrade_00_ForceDieRoll'",
+                            "comparevalue": "2.000000"
+                          },
+                          "formattext": "RoboDealer_Passives_Shared, EE25986B4ADC5693B7071A9AD84C6FAA, [fire]Debuff[/fire] Draining Totem [flavor](Default)[/flavor]"
+                        }
+                      },
+                      "pair2181290260": {
+                        "key": "roll3",
+                        "value": {
+                          "structtype": "Asset'/Script/GbxGame.StringDisplayValue'",
+                          "keygroup": "CARD",
+                          "displaycondition": {
+                            "attributedef": "attribute'Att_Robo_SkillGrade_00_ForceDieRoll'",
+                            "comparevalue": "3.000000"
+                          },
+                          "formattext": "RoboDealer_Passives_Shared, E10278674FD8C7FD1AF134B061963DE8, [corrosive]Buff[/corrosive] Arcane Totem [flavor](Augment3 )[/flavor]"
+                        }
+                      },
+                      "pair2514023727": {
+                        "key": "roll4",
+                        "value": {
+                          "structtype": "Asset'/Script/GbxGame.StringDisplayValue'",
+                          "keygroup": "CARD",
+                          "displaycondition": {
+                            "attributedef": "attribute'Att_Robo_SkillGrade_00_ForceDieRoll'",
+                            "comparevalue": "4.000000"
+                          },
+                          "formattext": "RoboDealer_Passives_Shared, B0D58C04410ADAC7E3BA1CA070CF5453, [cryo]Stationary[/cryo] Mortar Totem [flavor](Base)[/flavor]"
+                        }
+                      },
+                      "pair916842825": {
+                        "key": "roll5",
+                        "value": {
+                          "structtype": "Asset'/Script/GbxGame.StringDisplayValue'",
+                          "keygroup": "CARD",
+                          "displaycondition": {
+                            "attributedef": "attribute'Att_Robo_SkillGrade_00_ForceDieRoll'",
+                            "comparevalue": "5.000000"
+                          },
+                          "formattext": "RoboDealer_Passives_Shared, 49CE4B8146A6D79668CF3E824947A528, [cryo]Stationary[/cryo] Lightning Bolt Totem [flavor](Augment 2)[/flavor]"
+                        }
+                      },
+                      "pair100274569": {
+                        "key": "roll6",
+                        "value": {
+                          "structtype": "Asset'/Script/GbxGame.StringDisplayValue'",
+                          "keygroup": "CARD",
+                          "displaycondition": {
+                            "attributedef": "attribute'Att_Robo_SkillGrade_00_ForceDieRoll'",
+                            "comparevalue": "6.000000"
+                          },
+                          "formattext": "RoboDealer_Passives_Shared, AD02EA86404FB3729763C0B037088EF6, [fire]Debuff[/fire] Flame Totem [flavor](Augment 8)[/flavor]"
+                        }
+                      },
+                      "pair2793868783": {
+                        "key": "roll7",
+                        "value": {
+                          "structtype": "Asset'/Script/GbxGame.StringDisplayValue'",
+                          "keygroup": "CARD",
+                          "displaycondition": {
+                            "attributedef": "attribute'Att_Robo_SkillGrade_00_ForceDieRoll'",
+                            "comparevalue": "7.000000"
+                          },
+                          "formattext": "RoboDealer_Passives_Shared, B3ADFA2447660CDC3CA75AA926F20E47, [corrosive]Buff[/corrosive] Protector Totem [flavor](Augment 1)[/flavor]"
+                        }
+                      },
+                      "pair709642751": {
+                        "key": "roll8",
+                        "value": {
+                          "structtype": "Asset'/Script/GbxGame.StringDisplayValue'",
+                          "keygroup": "CARD",
+                          "displaycondition": {
+                            "attributedef": "attribute'Att_Robo_SkillGrade_00_ForceDieRoll'",
+                            "comparevalue": "8.000000"
+                          },
+                          "formattext": "RoboDealer_Passives_Shared, 758A8FD240B7755067F5859AB2BF6EC5, [fire]Debuff[/fire] Frozen Totem [flavor](Augment 7)[/flavor]"
+                        }
+                      },
+                      "pair2301711769": {
+                        "key": "roll9",
+                        "value": {
+                          "structtype": "Asset'/Script/GbxGame.StringDisplayValue'",
+                          "keygroup": "CARD",
+                          "displaycondition": {
+                            "attributedef": "attribute'Att_Robo_SkillGrade_00_ForceDieRoll'",
+                            "comparevalue": "9.000000"
+                          },
+                          "formattext": "RoboDealer_Passives_Shared, 7C8A0F8744A50EA7AC394E8755BFBFE3, [corrosive]Buff[/corrosive] Tough Totem [flavor](Augment 6)[/flavor]"
+                        }
+                      },
+                      "pair2358482775": {
+                        "key": "roll10",
+                        "value": {
+                          "structtype": "Asset'/Script/GbxGame.StringDisplayValue'",
+                          "keygroup": "CARD",
+                          "displaycondition": {
+                            "attributedef": "attribute'Att_Robo_SkillGrade_00_ForceDieRoll'",
+                            "comparevalue": "10.000000"
+                          },
+                          "formattext": "RoboDealer_Passives_Shared, 0395773842BEFF6107699BABA4C66AAD, [corrosive]Buff[/corrosive] Angry Totem [flavor](Base)[/flavor]"
+                        }
+                      },
+                      "pair804162353": {
+                        "key": "roll11",
+                        "value": {
+                          "structtype": "Asset'/Script/GbxGame.StringDisplayValue'",
+                          "keygroup": "CARD",
+                          "displaycondition": {
+                            "attributedef": "attribute'Att_Robo_SkillGrade_00_ForceDieRoll'",
+                            "comparevalue": "11.000000"
+                          },
+                          "formattext": "RoboDealer_Passives_Shared, 43EA3888487D544D6F431AB704CCD643, [cryo]Stationary[/cryo] Angry Totem [flavor](Base)[/flavor]"
+                        }
+                      },
+                      "pair481391601": {
+                        "key": "roll12",
+                        "value": {
+                          "structtype": "Asset'/Script/GbxGame.StringDisplayValue'",
+                          "keygroup": "CARD",
+                          "displaycondition": {
+                            "attributedef": "attribute'Att_Robo_SkillGrade_00_ForceDieRoll'",
+                            "comparevalue": "12.000000"
+                          },
+                          "formattext": "RoboDealer_Passives_Shared, 3A732CD84C0998B279EB5DB8BBD2BD0F, [cryo]Stationary[/cryo] Chaos Totem [flavor](Augment 4)[/flavor]"
+                        }
+                      }
+                    }
+                  }
+                }
+              ],
+              "header": "tooltips_passives, 9F4157D245B429BE6DDB10BEEC6CBB47, Force Die Roll",
+              "body": "tooltips_passives, 59DE435944BB65642A27A29FC62A3976, Put points in this skill to force a die roll. Number of points in the skill equals the roll of the dice.[newline][newline]If something doesn't work right with a totem or it doesn't spawn, slot the associated augment.",
+              "parent": "uitooltipdata'RoboDealerTooltipsPassive'"
+            }
+          },
+          {
+            "tooltip_robo_passive_00_forcewindfall": {
+              "uitooltipdata": "Tooltip_Robo_Passive_00_ForceWindfall",
+              "header": "tooltips_passives, ECD1FAC54714AB3F1D324DA699A38478, Force Windfall",
+              "body": "tooltips_passives, 97FADE2F421A2B3A3370FCBE7EDA63B4, Slot this to force windfall whenever it would try to active",
+              "parent": "uitooltipdata'RoboDealerTooltipsPassive'"
+            }
+          }
+        ]
+      },
+      {
+        "entries": [
+          {
+            "_tooltip_exo_passives_0": {
+              "uitooltipdata": "_tooltip_exo_passives_0",
+              "header": "tooltips_passives, 9B313CD1E325487BA33251DE66858032, Exo Passive Skill - Temp",
+              "type": "Asset'/Script/OakGame.OakUISkillTooltipDataDef'",
+              "parent": "uitooltipdata'tooltip_passive'"
+            }
+          }
+        ]
+      },
+      {
+        "entries": [
+          {
+            "tooltip_augment_grav_exodus_entanglement": {
+              "uitooltipdata": "tooltip_augment_grav_exodus_entanglement",
+              "header": "tooltips_augments, 2E5BBCAE49F322B6F226B185F53D3759, Entanglement",
+              "type": "Asset'/Script/OakGame.OakUISkillTooltipDataDef'",
+              "parent": "uitooltipdata'_tooltip_augments_grav_exodus'",
+              "stats": [
+                {
+                  "structtype": "Asset'/Script/GbxGame.NumericDisplayValue'",
+                  "attributedef": "attribute'att_ui_grav_exodus_entangled_damageShared'",
+                  "bdisplayaspercentage": "true",
+                  "buseformattext": "true",
+                  "formattext": "Grav_Exodus2_UI, 52DCCB3947D667E6AEA7AE929D101B7A, [secondary]Damage Shared:[/secondary] $VALUE$ of damage taken"
+                },
+                {
+                  "structtype": "Asset'/Script/GbxGame.NumericDisplayValue'",
+                  "attributedef": "attribute'att_ui_grav_exodus_entangled_duration'",
+                  "buseformattext": "true",
+                  "formattext": "Grav_Exodus2_UI, FB80F4BE48E3FBF13A2156A9AB28CDEF, [secondary]Duration:[/secondary] $VALUE$ seconds"
+                }
+              ]
+            }
+          },
+          {
+            "tooltip_darksiren_actionskill_phaseshard_augment_mediumarmor": {
+              "uitooltipdata": "Tooltip_DarkSiren_ActionSkill_PhaseShard_Augment_MediumArmor",
+              "header": "tooltips_augments, 3F35CB7042554854270D2D842007DE8A, Coven",
+              "body": "tooltips_passives, 7FDBAFAC4E374145C816ED83DF6B0007, [primary]Reapers[/primary] grant [primary]Vex[/primary] and her [primary]Minions[/primary] [secondary]Health Regeneration[/secondary] for a [secondary]Duration[/secondary]. [newline][newline][primary]Specters[/primary] grant [primary]Vex[/primary] and her [primary]Minions[/primary] [secondary]Critical Hit Chance[/secondary] for a [secondary]Duration[/secondary].[newline][newline]Both effects can stack 3 times.",
+              "type": "/Script/OakGame.OakUISkillTooltipDataDef",
+              "parent": "uitooltipdata'tooltip_augment'"
+            }
+          },
+          {
+            "tooltip_ds_p_compoundingdisease": {
+              "uitooltipdata": "ToolTip_DS_P_CompoundingDisease",
+              "header": "tooltips_passives, 312D17554EB10A8E8941C1ACE9DE78B8, Compounding Disease",
+              "body": "tooltips_passives, 261B60324A30300E1039B7AF4E9013D6, [secondary]Kill Skill.[/secondary] Gain a stack of [secondary]Phase Link[/secondary], granting [primary]Vex[/primary] and her [secondary]Minions[/secondary] increased [secondary]Status Effect Damage[/secondary] and [secondary]Status Effect Application Chance[/secondary]. Stacks up to 3 times.[newline][newline][secondary]Phase Link[/secondary] bonuses are [secondary]doubled[/secondary] while [secondary]Action Skill is active[/secondary].",
+              "type": "/Script/OakGame.OakUISkillTooltipDataDef",
+              "parent": "uitooltipdata'tooltip_passive'"
+            }
+          },
+          {
+            "tooltip_ds_p_constantcompanion": {
+              "uitooltipdata": "ToolTip_DS_P_ConstantCompanion",
+              "header": "tooltips_passives, 35FAB31A4E306402656419BC8F39D0CE, Constant Companion",
+              "body": "tooltips_passives, 9160745241D3CA97687581B668A96C1F, Kill Skill. If [primary]Vex[/primary] or her Minions kill an enemy, partially restore the [secondary]Duration[/secondary] of Spirit Companion, or reduce its cooldown (if on cooldown).",
+              "type": "/Script/OakGame.OakUISkillTooltipDataDef",
+              "parent": "uitooltipdata'tooltip_passive'"
+            }
+          },
+          {
+            "tooltip_ds_p_elementalfiend": {
+              "uitooltipdata": "ToolTip_DS_P_ElementalFiend",
+              "header": "tooltips_passives, ABA5EDA84FBB874197CE4FA79CBE1360, Elemental Fiends",
+              "body": "tooltips_passives, B272971846644EC57302979CBA8917D6, Gain increased [nowrap][elemental_icon][secondary]Elemental[/secondary][/nowrap][secondary] Damage[/secondary].",
+              "type": "/Script/OakGame.OakUISkillTooltipDataDef",
+              "parent": "uitooltipdata'tooltip_passive'"
+            }
+          },
+          {
+            "tooltip_ds_p_hunttheweak": {
+              "uitooltipdata": "ToolTip_DS_P_HuntTheWeak",
+              "header": "tooltips_passives, 9864D58A43AC4E019681138823593B7B, Hunt The Weak",
+              "body": "tooltips_passives, 58D563C94D737CFF64676195A22E94AE, [secondary]Kill Skill.[/secondary]When [primary]Vex[/primary] or her [secondary]Minions[/secondary] kill a [primary]Bleeding[/primary] enemy, they gain [secondary]Movement Speed[/secondary] and [secondary]Fire Rate[/secondary] for a [secondary]Duration[/secondary].[newline][newline]This effect can stack 3 times.",
+              "type": "/Script/OakGame.OakUISkillTooltipDataDef",
+              "parent": "uitooltipdata'tooltip_passive'"
+            }
+          },
+          {
+            "tooltip_ds_p_killlaoverkill": {
+              "uitooltipdata": "ToolTip_DS_P_KillLaOverKill",
+              "header": "tooltips_passives, 078775254E480DB260C40E960948AD09, Kill La Overkill",
+              "body": "tooltips_passives, 25C51A0F4F69A6A0A163BFA6758F2494, The threshold needed to [secondary]Overkill[/secondary] is lowered, and your [secondary]Overkill Skills[/secondary] gain [secondary]increased Damage[/secondary] and [secondary]Effects[/secondary].[newline][newline][flavor]\"La Vie Est Drole!\"[/flavor]",
+              "type": "/Script/OakGame.OakUISkillTooltipDataDef",
+              "parent": "uitooltipdata'tooltip_passive'"
+            }
+          },
+          {
+            "tooltip_ds_p_overcast": {
+              "uitooltipdata": "ToolTip_DS_P_Overcast",
+              "header": "tooltips_passives, 7D698C5849FAB4234C35E8BAE641F70B, Overcast",
+              "body": "tooltips_passives, 7978978C4DCE5D02CFF2A8B280009401, Overkill Skill. Gain dramatically increased Action Skill Damage and Action Skill Cooldown Rate for a [secondary]Duration[/secondary].",
+              "type": "/Script/OakGame.OakUISkillTooltipDataDef",
+              "parent": "uitooltipdata'tooltip_passive'"
+            }
+          },
+          {
+            "tooltip_ds_p_overshot": {
+              "uitooltipdata": "ToolTip_DS_P_Overshot",
+              "header": "tooltips_passives, D18D14E24B7608D0225ECCA36DD1E261, Overshot",
+              "body": "tooltips_passives, 6269C85A45CA0AA0D80D0EA369886FC3, [secondary]Overkill Skill.[/secondary] [primary]Vex[/primary] gains dramatically increased [secondary]Gun Damage[/secondary] for a [secondary]Duration[/secondary].",
+              "type": "/Script/OakGame.OakUISkillTooltipDataDef",
+              "parent": "uitooltipdata'tooltip_passive'"
+            }
+          },
+          {
+            "tooltip_ds_p_phasehands": {
+              "uitooltipdata": "ToolTip_DS_P_PhaseHands",
+              "header": "tooltips_passives, B99BAB924E088A9B02AB688E00454202, Phase Hands",
+              "body": "tooltips_passives, 6CA53B3B4A89EA7B1AC407A3CA9D0F91, [secondary]Kill Skill.[/secondary] Gain a stack of [secondary]Phase Link[/secondary], granting [secondary]Fire Rate[/secondary] to [primary]Vex[/primary]. Stacks up to 3 times.[newline][newline][secondary]Phase Link[/secondary] bonuses are [secondary]doubled[/secondary] while [secondary]Action Skill is active[/secondary].",
+              "parent": "uitooltipdata'tooltip_passive'"
+            }
+          },
+          {
+            "tooltip_ds_p_physicks": {
+              "uitooltipdata": "ToolTip_DS_P_Physicks",
+              "stats": [
+                {
+                  "structtype": "Asset'/Script/GbxGame.StringDisplayValue'",
+                  "formattext": "DarkSiren_Passives_Death, EFD367694B67C577EBF45E9D8E1CB6FC, [secondary]Stat:[/secondary] [secondary]{value}[/secondary] per point",
+                  "argsmap": {
+                    "pairs": {
+                      "pair2271591783": {
+                        "key": "value",
+                        "value": {
+                          "structtype": "Asset'/Script/GbxGame.NumericDisplayValue'",
+                          "attributedef": "attribute'Att_Calc_DS_P_Physicks_KineticDamage_Tooltip'",
+                          "bdisplayaspercentage": "true",
+                          "bdisplaypercentasfloat": "true",
+                          "bdisplayplussign": "true",
+                          "floatprecision": "2"
+                        }
+                      }
+                    }
+                  }
+                }
+              ],
+              "header": "tooltips_passives, B39173254C515CCDAF53CDBB5B2ABAD5, Physicks",
+              "body": "tooltips_passives, 0EA6C56B4EE8CA48D4D128BEE28630EC, Increased [nowrap][kinetic_icon][kinetic]Kinetic[/kinetic][/nowrap][kinetic] Damage[/kinetic]",
+              "type": "/Script/OakGame.OakUISkillTooltipDataDef",
+              "parent": "uitooltipdata'tooltip_passive'"
+            }
+          },
+          {
+            "tooltip_ds_p_psionicbane": {
+              "uitooltipdata": "ToolTip_DS_P_PsionicBane",
+              "stats": [
+                {
+                  "structtype": "Asset'/Script/GbxGame.StringDisplayValue'",
+                  "formattext": "DarkSiren_Passives_Death, AE77AFF04D967FA2151949A3AFA6974E, [secondary]Max Stacks:[/secondary] {value}",
+                  "argsmap": {
+                    "pairs": {
+                      "pair2271591783": {
+                        "key": "value",
+                        "value": {
+                          "structtype": "Asset'/Script/GbxGame.NumericDisplayValue'",
+                          "attributedef": "attribute'Att_Calc_DS_P_PsionicBane_Max_Stacks'",
+                          "roundingmode": "RoundToInt",
+                          "bdisplayaspercentage": "false",
+                          "bdisplaypercentasfloat": "true",
+                          "bdisplayplussign": "false",
+                          "floatprecision": "2"
+                        }
+                      }
+                    }
+                  }
+                }
+              ],
+              "header": "tooltips_passives, A11F25A8482E2D5DAABA3389F6104459, Psionic Bane",
+              "body": "tooltips_passives, 4A32381B4785C85F664980A70AFA7DC7, Dealing [secondary]Action Skill Damage[/secondary] to enemies causes them to take [secondary]increased Damage[/secondary] from all sources for a [secondary]Duration[/secondary].",
+              "type": "/Script/OakGame.OakUISkillTooltipDataDef",
+              "parent": "uitooltipdata'tooltip_passive'"
+            }
+          },
+          {
+            "tooltip_ds_p_resolutefiends": {
+              "uitooltipdata": "ToolTip_DS_P_ResoluteFiends",
+              "header": "tooltips_passives, B40C2DFD4DCD994F1CFABC925D6819D5, Resolute Fiends",
+              "body": "tooltips_passives, 2488F5294993D6898158EFB937FDE702, [primary]Vex[/primary] and her [primary]Minion(s)[/primary] gain increased [secondary]Overshield Capacity[/secondary] and [secondary]Overshield Duration[/secondary].",
+              "type": "/Script/OakGame.OakUISkillTooltipDataDef",
+              "parent": "uitooltipdata'tooltip_passive'"
+            }
+          },
+          {
+            "tooltip_ds_p_shadowfiends": {
+              "uitooltipdata": "ToolTip_DS_P_ShadowFiends",
+              "header": "tooltips_passives, F2A58384476BD42FD3206295D4E031A3, Shadow Fiends",
+              "body": "tooltips_passives, CC8C03764E7E26159536BD9D16E276FF, [secondary]Rep Kit[/secondary] healing [secondary]also applies[/secondary] to [primary]Vex's[/primary] [primary]Minions's[/primary]. [newline][newline][primary]Runic Medicine[/primary] now also applies to [primary]Vex's[/primary] [primary]Minions's[/primary].",
+              "type": "/Script/OakGame.OakUISkillTooltipDataDef",
+              "parent": "uitooltipdata'tooltip_passive'"
+            }
+          },
+          {
+            "tooltip_ds_p_spiritcompanion": {
+              "uitooltipdata": "ToolTip_DS_P_SpiritCompanion",
+              "header": "tooltips_passives, 6993C77844B0A2F9CB4DDEA6C5261B5D, Spirit Companion",
+              "body": "tooltips_passives, ADE7576B49C8B14D05086F9262615941, Kill Skill. Chance to spawn a Elemental Remnant Minion that seeks out nearby enemies for a [secondary]Duration[/secondary], dealing Elemental Damage on impact before seeking a new enemy. Elemental Damage Type is based on [primary]Vex's[/primary] currently equipped Weapon.",
+              "type": "/Script/OakGame.OakUISkillTooltipDataDef",
+              "parent": "uitooltipdata'tooltip_passive'"
+            }
+          },
+          {
+            "tooltip_ds_p_therending": {
+              "uitooltipdata": "ToolTip_DS_P_TheRending",
+              "header": "tooltips_passives, BADD743A420B02CF345B95A073DCB929, The Rending",
+              "body": "tooltips_passives, EF3BF3DD4D3E33F34D8AA89156E7567F, [primary]Vex[/primary] and her [primary]Minion(s)[/primary] deals increased [secondary] Damage[/secondary] to enemies above [secondary]66.6% HP[/secondary].",
+              "type": "/Script/OakGame.OakUISkillTooltipDataDef",
+              "parent": "uitooltipdata'tooltip_passive'"
+            }
+          },
+          {
+            "tooltip_ds_p_vengefulspirits": {
+              "uitooltipdata": "ToolTip_DS_P_VengefulSpirits",
+              "header": "tooltips_passives, 864F805749FC3CAEA320E399F0B4B9A8, Vengeful Spirits",
+              "body": "tooltips_passives, 3C6D961F48968729A9B051AC59EC9E1C, Minions have a chance on being hit to gain 90% Damage Reduction for a [secondary]Duration[/secondary]. When this triggers, a Vengeful Remnant will seek out their attacker, dealing [nowrap][kinetic_icon][kinetic]Kinetic[/kinetic][/nowrap][kinetic] Ordnance Damage[/kinetic], dealing bonus damage based on their Maximum Health.",
+              "parent": "uitooltipdata'tooltip_passive'"
+            }
+          }
+        ]
+      },
+      {
+        "entries": [
+          {
+            "tooltip_darksiren_trait_phaseshroud": {
+              "uitooltipdata": "ToolTip_DarkSiren_Trait_Phaseshroud",
+              "header": "DarkSiren_Trait_Phaseshroud, EADA828948500F78D76B359FC17D07E2, Phasebane",
+              "subheader": "DarkSiren_Trait_Phaseshroud, 3C6E1EB14E929E1EFF311885047DDB96, Vault Hunter Trait",
+              "body": "DarkSiren_Trait_Phaseshroud, 434478B54842F779674180A97405309C, [boldtext]Phasebane[/boldtext] grants the Siren increased [boldtext]Skill Damage[/boldtext] the more full her [boldtext]Bane Meter[/boldtext]. [primary]Bane[/primary] drains rapidly if she has not gained [primary]Bane[/primary] recently, and all [primary]Bane[/primary] is [boldtext]lost[/boldtext] immediately on entering [boldtext]FFYL[/boldtext].[newline][newline][boldtext]Kill Skill.[/boldtext] The Siren steals the souls of the dead, gaining [primary]Bane[/primary].",
+              "type": "/Script/OakGame.OakUISkillTooltipDataDef"
+            }
+          },
+          {
+            "tooltip_pld_p_invigoration": {
+              "uitooltipdata": "ToolTip_PLD_P_Invigoration",
+              "header": "tooltips_passives, 249AAA3C458C361CA6C300B56039F20D, Invigoration",
+              "body": "tooltips_passives, FEF010B440EF5784BD4E119903FB4EA0, [secondary]Kill Skill.[/secondary] Restore a percentage of [primary]Amon's[/primary] [secondary]Maximum Health[/secondary].",
+              "type": "/Script/OakGame.OakUISkillTooltipDataDef",
+              "parent": "uitooltipdata'tooltip_passive'"
+            }
+          },
+          {
+            "tooltip_pld_p_quickcharge": {
+              "uitooltipdata": "ToolTip_PLD_P_QuickCharge",
+              "header": "tooltips_passives, 53A4F0A14724A9B5F16EE58818484490, Quick Charge",
+              "body": "tooltips_passives, 6F6F7A284A526F675C30C7BCB1700589, TBD",
+              "type": "/Script/OakGame.OakUISkillTooltipDataDef",
+              "parent": "uitooltipdata'tooltip_passive'"
+            }
+          }
+        ]
+      }
+    ]
+  }
+}

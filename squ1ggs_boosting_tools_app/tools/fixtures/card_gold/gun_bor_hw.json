@@ -1,0 +1,21 @@
+{
+  "id": "gun_bor_hw",
+  "note": "Legendary Borg heavy L70 — Damage must resolve",
+  "input": {
+    "itemType": "Heavy Weapon",
+    "set": "bor_hw",
+    "part_names": [
+      "bor_hw.comp_05_legendary",
+      "bor_hw.part_body",
+      "bor_hw.part_barrel_01"
+    ],
+    "level": 70
+  },
+  "expect": {
+    "item_type": "Heavy Weapon",
+    "damage": 22754
+  },
+  "tolerance": {
+    "damage": { "mode": "pct", "value": 0.05 }
+  }
+}

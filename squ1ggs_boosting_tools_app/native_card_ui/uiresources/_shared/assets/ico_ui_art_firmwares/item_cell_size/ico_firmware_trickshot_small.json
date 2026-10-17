@@ -1,0 +1,37 @@
+[
+  {
+    "Type": "Texture2D",
+    "Name": "ico_firmware_trickshot_small",
+    "Flags": "RF_Public | RF_Standalone | RF_WasLoaded | RF_LoadCompleted",
+    "Class": "UScriptClass'Texture2D'",
+    "Package": "/Game/uiresources/_shared/assets/ico_ui_art_firmwares/item_cell_size/ico_firmware_trickshot_small",
+    "Properties": {
+      "ImportedSize": {
+        "X": 59,
+        "Y": 50
+      },
+      "LightingGuid": "D4A5E6CE-4AEC89C2-6AFF72B4-9CC8FB94",
+      "CompressionSettings": "TextureCompressionSettings::TC_BC7",
+      "LODGroup": "TextureGroup::TEXTUREGROUP_UI",
+      "SRGB": false
+    },
+    "SizeX": 60,
+    "SizeY": 52,
+    "PackedData": 1,
+    "PixelFormat": "PF_BC7",
+    "FirstMipToSerialize": 0,
+    "Mips": [
+      {
+        "BulkData": {
+          "BulkDataFlags": "BULKDATA_SingleUse | BULKDATA_ForceInlinePayload",
+          "ElementCount": 3120,
+          "SizeOnDisk": 3120,
+          "OffsetInFile": "0x76"
+        },
+        "SizeX": 60,
+        "SizeY": 52,
+        "SizeZ": 1
+      }
+    ]
+  }
+]

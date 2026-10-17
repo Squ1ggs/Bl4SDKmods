@@ -1,0 +1,112 @@
+/* Rendering-engine differences. Original game styles remain untouched.
+ * Cohtml custom elements participate as blocks. Chromium defaults them inline.
+ */
+gbx-component, rarity-pips, elemental-damagetype, firmware-segments { display: block; }
+/* Live slideout is a fixed 73rem inspect panel — offline cards must grow with firmware / perks. */
+.item_card_slideout {
+  height: auto !important;
+  min-height: 0 !important;
+}
+.item_card {
+  position: relative !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  overflow: visible !important;
+}
+.item_card_element1, .item_card_element2 {
+  width: 100%;
+  height: 100%;
+}
+.tooltip_text_shadow, .tooltip_text_shadow * {
+  -webkit-text-stroke-width: 0 !important;
+  paint-order: stroke fill;
+  text-shadow: -1px -1px 0 #031019, 1px -1px 0 #031019, -1px 1px 0 #031019, 1px 1px 0 #031019;
+}
+.item_card_manufacturer_bkg {
+  height: auto;
+  align-self: stretch;
+}
+.extended-passives .item_card_class_mod_passive_bkg {
+  flex-wrap: wrap;
+  gap: .5rem;
+  align-content: flex-start;
+  min-height: 0;
+  /* Do not let a huge modded skill wall collapse icon boxes to 0. */
+  max-height: none;
+}
+.extended-passives .item_card_class_mod_wrapper {
+  flex: 0 0 calc(33.333% - .5rem);
+  min-width: 9rem;
+  box-sizing: border-box;
+}
+.extended-passives .item_card_class_mod_inner_wrapper {
+  flex: 0 0 auto;
+  min-width: 8.5rem;
+  height: 7rem;
+}
+.extended-passives .item_card_passive_icon_container {
+  flex: 0 0 5rem;
+  width: 5rem;
+  height: 5rem;
+}
+.extended-passives .item_card_class_mod_icon_spec {
+  width: 3.5rem !important;
+  height: 3.5rem !important;
+  flex-shrink: 0;
+  background-size: contain !important;
+  background-repeat: no-repeat !important;
+  background-position: center !important;
+}
+widget-item-card {
+  transform: none !important;
+  position: relative !important;
+  display: block !important;
+  top: auto !important;
+  left: auto !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  box-sizing: border-box;
+}
+.tooltip_container,
+.item_card_tooltip {
+  opacity: 1 !important;
+  visibility: visible !important;
+  transform: none !important;
+  position: relative !important;
+  top: auto !important;
+  left: auto !important;
+  right: auto !important;
+  bottom: auto !important;
+}
+.item_card_wrapper,
+#def_item_card_hud .item_card_wrapper {
+  transform: none !important;
+}
+.item_card_rarity_fui,
+.item_card_abbr_rarity_fui {
+  left: 0 !important;
+  right: 0 !important;
+}
+.item_card_rarity_gradient {
+  left: 0 !important;
+  right: 0 !important;
+  width: auto !important;
+  max-width: 100% !important;
+}
+.item_card_secondary_stats_augments,
+.item_card_secondary_section {
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+.temp_itemcard_augment_value,
+.item_card_secondary_stat_enhance_text {
+  color: #c5d0d4 !important;
+}
+/* Classmod perk glyphs: leave oakgame colour-matrix filters alone (oakgame colour-matrix). */
+.item_card_class_mod_icon_spec,
+.class_mod_icon,
+.item_inspect_class_mod_icon_spec {
+  background-size: contain !important;
+  background-repeat: no-repeat !important;
+  background-position: center !important;
+}

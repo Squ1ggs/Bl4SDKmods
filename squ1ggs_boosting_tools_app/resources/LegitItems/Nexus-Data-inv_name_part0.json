@@ -1,0 +1,327 @@
+{
+  "inv_name_part": {
+    "records": [
+      {
+        "entries": [
+          {
+            "np_shield_manu_bor_common": {
+              "inv_name_part": "np_shield_manu_bor_common",
+              "partname": "ShieldPartNames, D450282848C351C042DB64BBE51C736B, Scab",
+              "priority": "1.000000"
+            }
+          },
+          {
+            "np_shield_manu_bor_epic": {
+              "inv_name_part": "np_shield_manu_bor_epic",
+              "partname": "ShieldPartNames, A8144D0A4499B9B0E271F8968D9D04DB, Scar",
+              "priority": "1.000000",
+              "minrarity": "rarity'04_epic'",
+              "maxrarity": "rarity'04_epic'",
+              "requiredmanufacturer": "manufacturer'Borg'"
+            }
+          },
+          {
+            "np_shield_manu_bor_rare": {
+              "inv_name_part": "np_shield_manu_bor_rare",
+              "partname": "ShieldPartNames, B433B0BC42F3B1C422A76891F758A06A, Crust",
+              "priority": "1.000000",
+              "minrarity": "rarity'03_rare'",
+              "maxrarity": "rarity'03_rare'",
+              "requiredmanufacturer": "manufacturer'Borg'"
+            }
+          },
+          {
+            "np_shield_manu_bor_uncommon": {
+              "inv_name_part": "np_shield_manu_bor_uncommon",
+              "partname": "ShieldPartNames, 119B4E754FFBD3E354568DB29EADCABD, Callus",
+              "priority": "1.000000",
+              "minrarity": "rarity'02_uncommon'",
+              "maxrarity": "rarity'02_uncommon'",
+              "requiredmanufacturer": "manufacturer'Borg'"
+            }
+          },
+          {
+            "np_shield_manu_dad_common": {
+              "inv_name_part": "np_shield_manu_dad_common",
+              "partname": "ShieldPartNames, 405B7810462FA3EA6EC4319BDBCDF8B7, Cover",
+              "priority": "1.000000",
+              "minrarity": "rarity'01_common'",
+              "maxrarity": "rarity'01_common'",
+              "requiredmanufacturer": "manufacturer'Daedalus'"
+            }
+          },
+          {
+            "np_shield_manu_dad_epic": {
+              "inv_name_part": "np_shield_manu_dad_epic",
+              "partname": "ShieldPartNames, 47F990D5A8954FB3856F7FED34DB5F75, Bunker",
+              "priority": "1.000000",
+              "minrarity": "rarity'04_epic'",
+              "maxrarity": "rarity'04_epic'",
+              "requiredmanufacturer": "manufacturer'Daedalus'"
+            }
+          },
+          {
+            "np_shield_manu_dad_rare": {
+              "inv_name_part": "np_shield_manu_dad_rare",
+              "partname": "ShieldPartNames, 1435D48FC09A465DB4FD38741F086150, Pillbox",
+              "priority": "1.000000",
+              "minrarity": "rarity'03_rare'",
+              "maxrarity": "rarity'03_rare'",
+              "requiredmanufacturer": "manufacturer'Daedalus'"
+            }
+          },
+          {
+            "np_shield_manu_dad_uncommon": {
+              "inv_name_part": "np_shield_manu_dad_uncommon",
+              "partname": "ShieldPartNames, 45FB9A40852143769204C43B662E2208, Foxhole",
+              "priority": "1.000000",
+              "minrarity": "rarity'02_uncommon'",
+              "maxrarity": "rarity'02_uncommon'",
+              "requiredmanufacturer": "manufacturer'Daedalus'"
+            }
+          },
+          {
+            "np_shield_manu_jak_common": {
+              "inv_name_part": "np_shield_manu_jak_common",
+              "partname": "ShieldPartNames, C2A5F09045065177CFBF81B3EEEDAA0B, Stein",
+              "priority": "1.000000",
+              "minrarity": "rarity'01_common'",
+              "maxrarity": "rarity'01_common'",
+              "requiredmanufacturer": "manufacturer'Jakobs'"
+            }
+          },
+          {
+            "np_shield_manu_jak_epic": {
+              "inv_name_part": "np_shield_manu_jak_epic",
+              "partname": "ShieldPartNames, 268C81E31EBC48E2983661913D5634A0, Cask",
+              "priority": "1.000000",
+              "minrarity": "rarity'04_epic'",
+              "maxrarity": "rarity'04_epic'",
+              "requiredmanufacturer": "manufacturer'Jakobs'"
+            }
+          },
+          {
+            "np_shield_manu_jak_rare": {
+              "inv_name_part": "np_shield_manu_jak_rare",
+              "partname": "ShieldPartNames, 404635881DF843F48D6C5003E9550652, Barrel",
+              "priority": "1.000000",
+              "minrarity": "rarity'03_rare'",
+              "maxrarity": "rarity'03_rare'",
+              "requiredmanufacturer": "manufacturer'Jakobs'"
+            }
+          },
+          {
+            "np_shield_manu_jak_uncommon": {
+              "inv_name_part": "np_shield_manu_jak_uncommon",
+              "partname": "ShieldPartNames, BD6F9021016548E3BED84FDCBAF71316, Hogshead",
+              "priority": "1.000000",
+              "minrarity": "rarity'02_uncommon'",
+              "maxrarity": "rarity'02_uncommon'",
+              "requiredmanufacturer": "manufacturer'Jakobs'"
+            }
+          },
+          {
+            "np_shield_manu_mal_common": {
+              "inv_name_part": "np_shield_manu_mal_common",
+              "partname": "ShieldPartNames, 973A8AB74151C4837ED1C7B453465ED1, Gate",
+              "priority": "1.000000",
+              "minrarity": "rarity'01_common'",
+              "maxrarity": "rarity'01_common'",
+              "requiredmanufacturer": "manufacturer'Maliwan'"
+            }
+          },
+          {
+            "np_shield_manu_mal_epic": {
+              "inv_name_part": "np_shield_manu_mal_epic",
+              "partname": "ShieldPartNames, AB656FC27410451F8807101AFCF75CA4, Stanchion",
+              "priority": "1.000000",
+              "minrarity": "rarity'04_epic'",
+              "maxrarity": "rarity'04_epic'",
+              "requiredmanufacturer": "manufacturer'Maliwan'"
+            }
+          },
+          {
+            "np_shield_manu_mal_rare": {
+              "inv_name_part": "np_shield_manu_mal_rare",
+              "partname": "ShieldPartNames, D45BC6AD942444BBA23B4A08D80193D7, Cullis",
+              "priority": "1.000000",
+              "minrarity": "rarity'03_rare'",
+              "maxrarity": "rarity'03_rare'",
+              "requiredmanufacturer": "manufacturer'Maliwan'"
+            }
+          },
+          {
+            "np_shield_manu_mal_uncommon": {
+              "inv_name_part": "np_shield_manu_mal_uncommon",
+              "partname": "ShieldPartNames, 62F1C8539AC14A55AD2AFDAAFDEA8A70, Fence",
+              "priority": "1.000000",
+              "minrarity": "rarity'02_uncommon'",
+              "maxrarity": "rarity'02_uncommon'",
+              "requiredmanufacturer": "manufacturer'Maliwan'"
+            }
+          },
+          {
+            "np_shield_manu_ord_common": {
+              "inv_name_part": "np_shield_manu_ord_common",
+              "partname": "ShieldPartNames, 4704054241B998A6B23DED9EAEAC4C91, Alembic",
+              "priority": "1.000000",
+              "minrarity": "rarity'01_common'",
+              "maxrarity": "rarity'01_common'",
+              "requiredmanufacturer": "manufacturer'Order'"
+            }
+          },
+          {
+            "np_shield_manu_ord_epic": {
+              "inv_name_part": "np_shield_manu_ord_epic",
+              "partname": "ShieldPartNames, B5DE893205614848BAE19EF0C991FCD4, Regulus",
+              "priority": "1.000000",
+              "minrarity": "rarity'04_epic'",
+              "maxrarity": "rarity'04_epic'",
+              "requiredmanufacturer": "manufacturer'Order'"
+            }
+          },
+          {
+            "np_shield_manu_ord_rare": {
+              "inv_name_part": "np_shield_manu_ord_rare",
+              "partname": "ShieldPartNames, 6FC4A76541FC48D29401CA9002882516, Retort",
+              "priority": "1.000000",
+              "minrarity": "rarity'03_rare'",
+              "maxrarity": "rarity'03_rare'",
+              "requiredmanufacturer": "manufacturer'Order'"
+            }
+          },
+          {
+            "np_shield_manu_ord_uncommon": {
+              "inv_name_part": "np_shield_manu_ord_uncommon",
+              "partname": "ShieldPartNames, FE7D4CDDE9434CC69FD04B35E2B3763A, Bezoar",
+              "priority": "1.000000",
+              "minrarity": "rarity'02_uncommon'",
+              "maxrarity": "rarity'02_uncommon'",
+              "requiredmanufacturer": "manufacturer'Order'"
+            }
+          },
+          {
+            "np_shield_manu_ted_common": {
+              "inv_name_part": "np_shield_manu_ted_common",
+              "partname": "ShieldPartNames, 6E91F3C547D31C8E6903FDAB24B44627, Treatment",
+              "priority": "1.000000",
+              "minrarity": "rarity'01_common'",
+              "maxrarity": "rarity'01_common'",
+              "requiredmanufacturer": "manufacturer'Tediore'"
+            }
+          },
+          {
+            "np_shield_manu_ted_epic": {
+              "inv_name_part": "np_shield_manu_ted_epic",
+              "partname": "ShieldPartNames, AFF7939CACFE428FB05013AA45409DE9, Laminate",
+              "priority": "1.000000",
+              "minrarity": "rarity'04_epic'",
+              "maxrarity": "rarity'04_epic'",
+              "requiredmanufacturer": "manufacturer'Tediore'"
+            }
+          },
+          {
+            "np_shield_manu_ted_rare": {
+              "inv_name_part": "np_shield_manu_ted_rare",
+              "partname": "ShieldPartNames, 122BE8ED48C84C8BB2CB83323CD75CDF, Casing",
+              "priority": "1.000000",
+              "minrarity": "rarity'03_rare'",
+              "maxrarity": "rarity'03_rare'",
+              "requiredmanufacturer": "manufacturer'Tediore'"
+            }
+          },
+          {
+            "np_shield_manu_ted_uncommon": {
+              "inv_name_part": "np_shield_manu_ted_uncommon",
+              "partname": "ShieldPartNames, F2C11E0D060D4E1AA0081AD645943F91, Coating",
+              "priority": "1.000000",
+              "minrarity": "rarity'02_uncommon'",
+              "maxrarity": "rarity'02_uncommon'",
+              "requiredmanufacturer": "manufacturer'Tediore'"
+            }
+          },
+          {
+            "np_shield_manu_tor_common": {
+              "inv_name_part": "np_shield_manu_tor_common",
+              "partname": "ShieldPartNames, 8663499D49BCEA32589E999780093974, Protection",
+              "priority": "1.000000",
+              "minrarity": "rarity'01_common'",
+              "maxrarity": "rarity'01_common'",
+              "requiredmanufacturer": "manufacturer'Torgue'"
+            }
+          },
+          {
+            "np_shield_manu_tor_epic": {
+              "inv_name_part": "np_shield_manu_tor_epic",
+              "partname": "ShieldPartNames, 3F0300903D1C405881CF1BA2BF7C8CCA, Prophylactic",
+              "priority": "1.000000",
+              "minrarity": "rarity'04_epic'",
+              "maxrarity": "rarity'04_epic'",
+              "requiredmanufacturer": "manufacturer'Torgue'"
+            }
+          },
+          {
+            "np_shield_manu_tor_rare": {
+              "inv_name_part": "np_shield_manu_tor_rare",
+              "partname": "ShieldPartNames, C1A10832F12A4E99A79FD9D56589C2D2, Jimmy Cap",
+              "priority": "1.000000",
+              "minrarity": "rarity'03_rare'",
+              "maxrarity": "rarity'03_rare'",
+              "requiredmanufacturer": "manufacturer'Torgue'"
+            }
+          },
+          {
+            "np_shield_manu_tor_uncommon": {
+              "inv_name_part": "np_shield_manu_tor_uncommon",
+              "partname": "ShieldPartNames, B9EC10F66DDC455F9183FF6248B21B6B, Rubber",
+              "priority": "1.000000",
+              "minrarity": "rarity'02_uncommon'",
+              "maxrarity": "rarity'02_uncommon'",
+              "requiredmanufacturer": "manufacturer'Torgue'"
+            }
+          },
+          {
+            "np_shield_manu_vla_common": {
+              "inv_name_part": "np_shield_manu_vla_common",
+              "partname": "ShieldPartNames, FB3DEC3141A41D1E0EBE86B34A62644B, Eggiweg",
+              "priority": "1.000000",
+              "minrarity": "rarity'01_common'",
+              "maxrarity": "rarity'01_common'",
+              "requiredmanufacturer": "manufacturer'Vladof'"
+            }
+          },
+          {
+            "np_shield_manu_vla_epic": {
+              "inv_name_part": "np_shield_manu_vla_epic",
+              "partname": "ShieldPartNames, 8C224D0CCF834702AB99B1FEDA869FBB, Domy",
+              "priority": "1.000000",
+              "minrarity": "rarity'04_epic'",
+              "maxrarity": "rarity'04_epic'",
+              "requiredmanufacturer": "manufacturer'Vladof'"
+            }
+          },
+          {
+            "np_shield_manu_vla_rare": {
+              "inv_name_part": "np_shield_manu_vla_rare",
+              "partname": "ShieldPartNames, 1060935C035540B3A27300B9D8AACB43, Nagaveet",
+              "priority": "1.000000",
+              "minrarity": "rarity'03_rare'",
+              "maxrarity": "rarity'03_rare'",
+              "requiredmanufacturer": "manufacturer'Vladof'"
+            }
+          },
+          {
+            "np_shield_manu_vla_uncommon": {
+              "inv_name_part": "np_shield_manu_vla_uncommon",
+              "partname": "ShieldPartNames, F83991C6430A4F32A3B492EB3C0F2EB1, Broony",
+              "priority": "1.000000",
+              "minrarity": "rarity'02_uncommon'",
+              "maxrarity": "rarity'02_uncommon'",
+              "requiredmanufacturer": "manufacturer'Vladof'"
+            }
+          }
+        ]
+      }
+    ]
+  }
+}

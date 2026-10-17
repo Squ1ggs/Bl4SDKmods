@@ -1,0 +1,91 @@
+{
+  "game_region": {
+    "records": [
+      {
+        "entries": [
+          {
+            "banjo": {
+              "game_region": "Banjo",
+              "regioninfo": "display_data'UIRegionDisplayData_Banjo'",
+              "loadingscreendef": "loadingscreen_data'ls_ministryofculture'",
+              "displayname": "bp1_world_regions, C1F2ECF84B1DBE88A2DE2D98652A4BFE, Do not localize, this is never used",
+              "type": "/Script/OakGame.WorldRegionDef"
+            }
+          },
+          {
+            "cello": {
+              "game_region": "Cello",
+              "regioninfo": "display_data'UIRegionDisplayData_Cello'",
+              "loadingscreendef": "loadingscreen_data'ls_heartofthemountain'",
+              "displayname": "bp1_world_regions, DA03EC9849B8875C131CC0952AA45BA3, Do not localize, this is never used",
+              "type": "/Script/OakGame.WorldRegionDef"
+            }
+          },
+          {
+            "cowbell_speakeasy": {
+              "game_region": "Cowbell_Speakeasy",
+              "regioninfo": "display_data'UIRegionDisplayData_Cowbell_Speakeasy'",
+              "type": "/Script/OakGame.WorldRegionDef",
+              "isenabledinuifact": "missions.missionset_main_cowbell.mission_main_cowbell1.final.findmancubus_endstate",
+              "bnotconnectedtootherregions": "true",
+              "parent": "game_region'Cowbell'"
+            }
+          },
+          {
+            "harp": {
+              "game_region": "Harp",
+              "regioninfo": "display_data'UIRegionDisplayData_Harp'",
+              "loadingscreendef": "loadingscreen_data'ls_thetoxicscowl'",
+              "displayname": "bp1_world_regions, A7AEDD6A48B3C4C167B714A6AC27E754, Do not localize, this is never used",
+              "type": "/Script/OakGame.WorldRegionDef"
+            }
+          },
+          {
+            "mandolin": {
+              "game_region": "Mandolin",
+              "regioninfo": "display_data'UIRegionDisplayData_Mandolin'",
+              "loadingscreendef": "loadingscreen_data'ls_privatedick'",
+              "displayname": "bp1_world_regions, A7AEDD6A48B3C4C167B714A6AC27E754, Do not localize, this is never used",
+              "type": "/Script/OakGame.WorldRegionDef"
+            }
+          },
+          {
+            "mandolin_cos": {
+              "game_region": "Mandolin_CoS",
+              "regioninfo": "display_data'UIRegionDisplayData_Mandolin_CoS'",
+              "loadingscreendef": "loadingscreen_data'ls_circleofslaughter'",
+              "parent": "game_region'Mandolin'"
+            }
+          },
+          {
+            "mandolin_privatedick": {
+              "game_region": "Mandolin_PrivateDick",
+              "regioninfo": "display_data'UIRegionDisplayData_Mandolin_PrivateDick'",
+              "parent": "game_region'Mandolin'"
+            }
+          },
+          {
+            "viola_elpisvile": {
+              "game_region": "Viola_ElpisVile",
+              "regioninfo": "display_data'UIRegionDisplayData_Viola_ElpisVile'",
+              "loadingscreendef": "loadingscreen_data'ls_elpis'",
+              "zonehandle": "map'Viola_ElpisVile_P.Zone_ElpisVile_Start'",
+              "parent": "game_region'Viola'"
+            }
+          },
+          {
+            "viola_elpisvile_phase": {
+              "game_region": "Viola_ElpisVile_Phase",
+              "regioninfo": "display_data'UIRegionDisplayData_Viola_ElpisVile'",
+              "loadingscreendef": "loadingscreen_data'ls_elpis'",
+              "zonehandle": "map'Viola_ElpisVile_P.Zone_ElpisVile_Phase'",
+              "displayname": "bp5_world_regions, A8B6B101401D89E28155A0AD2BBE95C8, Do not localize, this is never used",
+              "type": "/Script/OakGame.WorldRegionDef",
+              "parent": "game_region'Viola'"
+            }
+          }
+        ]
+      }
+    ]
+  }
+}

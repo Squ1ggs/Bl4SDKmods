@@ -1,0 +1,37 @@
+[
+  {
+    "Type": "Texture2D",
+    "Name": "ico_firmware_rubberband_man_small",
+    "Flags": "RF_Public | RF_Standalone | RF_WasLoaded | RF_LoadCompleted",
+    "Class": "UScriptClass'Texture2D'",
+    "Package": "/Game/uiresources/_shared/assets/ico_ui_art_firmwares/item_cell_size/ico_firmware_rubberband_man_small",
+    "Properties": {
+      "ImportedSize": {
+        "X": 59,
+        "Y": 50
+      },
+      "LightingGuid": "7B0998D5-48DA4176-2B294EB7-1719611E",
+      "CompressionSettings": "TextureCompressionSettings::TC_BC7",
+      "LODGroup": "TextureGroup::TEXTUREGROUP_UI",
+      "SRGB": false
+    },
+    "SizeX": 60,
+    "SizeY": 52,
+    "PackedData": 1,
+    "PixelFormat": "PF_BC7",
+    "FirstMipToSerialize": 0,
+    "Mips": [
+      {
+        "BulkData": {
+          "BulkDataFlags": "BULKDATA_SingleUse | BULKDATA_ForceInlinePayload",
+          "ElementCount": 3120,
+          "SizeOnDisk": 3120,
+          "OffsetInFile": "0x76"
+        },
+        "SizeX": 60,
+        "SizeY": 52,
+        "SizeZ": 1
+      }
+    ]
+  }
+]

@@ -1,0 +1,17 @@
+{
+  "__copyright": {
+    "author": "Cr4nkSt4r",
+    "github": "https://github.com/Cr4nkSt4r/Borderlands-4.NcsParser"
+  },
+  "inv": {
+    "__deps": [
+      "inv_comp",
+      "barrel",
+      "payload",
+      "foregrip",
+      "grip",
+      "tediore_secondary_acc"
+    ],
+    "records": []
+  }
+}

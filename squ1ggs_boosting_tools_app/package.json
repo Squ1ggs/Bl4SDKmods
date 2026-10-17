@@ -1,0 +1,121 @@
+{
+  "name": "squ1ggs-boosting-tools-app",
+  "version": "1.3.41",
+  "private": true,
+  "description": "Desktop control panel for Squ1ggs Boosting Tools (Borderlands 4 SDK mod).",
+  "author": "RDPSqu1ggs",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "check": "node --check main.js && node --check preload.js && node --check lib/bridge.js && node --check lib/status.js && node --check lib/game_paths.js && node --check lib/sdkmod_install.js && node --check lib/oak2_sdk.js && node --check lib/app_settings.js && node --check lib/list_favorites.js && node --check lib/serial_sources.js && node --check lib/bl4_save_bay.js && node --check lib/serial_codec.js && node --check lib/item_analysis.js && node --check lib/image_item_match.js && node --check lib/update_check.js && node --check lib/github_update.js && node --check renderer/i18n.js && node --check renderer/app.js && node --check renderer/editor/js/sqbt_editor_bridge.js",
+    "sync:sdkmod": "python sync_sdkmod.py",
+    "smoke:card-assets": "node tools/smoke_card_pack_assets.js --source-only",
+    "smoke:card-regressions": "node tools/smoke_card_regressions.js",
+    "smoke:card-gold": "node tools/card_gold_harness.js",
+    "smoke:item-workflow": "node tools/item_workflow_harness.js",
+    "smoke:image-builder": "node tools/image_builder_handoff_harness.js",
+    "smoke:curated-builds": "node tools/curated_builds_harness.js",
+    "smoke:manifest": "python tools/native_runtime_check.py",
+    "smoke:card-assets:packed": "node tools/smoke_card_pack_assets.js --packed",
+    "smoke:release:packed": "node tools/native_packed_release.js",
+    "prepack": "npm run sync:sdkmod && npm run check && npm run smoke:black-market && npm run smoke:map-reveal && npm run smoke:manifest && npm run smoke:give-progress && npm run smoke:workflow-ui && npm run smoke:card-assets && npm run smoke:card-regressions && npm run smoke:card-gold && npm run smoke:card-rarity && npm run smoke:item-workflow && npm run smoke:image-builder && npm run smoke:picture-card && npm run smoke:curated-builds && npm run smoke:release && python tools/clean_release_runtime_artifacts.py",
+    "pack": "electron-builder --dir --publish never && npm run smoke:card-assets:packed && npm run check:native && npm run smoke:release:packed",
+    "pack:zip": "electron-builder --win zip --publish never -c.win.artifactName=Squ1ggsBoostingTools-Portable-v${version}.${ext}",
+    "pack:sdkmod": "npm run sync:sdkmod && python tools/pack_sdkmod.py",
+    "dist:portable": "npm run pack && npm run pack:zip",
+    "dist:win": "npm run smoke:card-assets && electron-builder --win nsis --publish never && npm run smoke:card-assets:packed",
+    "smoke:release": "node tools/native_release_boundary.js && node tools/setup_runtime_check.js && node tools/setup_auto_install_check.js",
+    "smoke:card-rarity": "node tools/card_rarity_matrix.js",
+    "smoke:picture-card": "node tools/picture_card_accuracy.js",
+    "smoke:give-progress": "node tools/give_everything_progress_ui.js",
+    "smoke:workflow-ui": "node tools/workflow_poll_toggle_ui.js && python tools/home_button_routes.py",
+    "smoke:map-reveal": "python tools/map_reveal_runtime.py",
+    "smoke:black-market": "python tools/black_market_runtime.py",
+    "check:native": "node tools/native_release_boundary.js && python tools/native_runtime_check.py && python tools/startup_runtime_check.py"
+  },
+  "build": {
+    "appId": "com.squ1ggs.boostingtools",
+    "productName": "Squ1ggs Boosting Tools",
+    "executableName": "Squ1ggsBoostingTools",
+    "artifactName": "Squ1ggsBoostingTools-Setup-v${version}.${ext}",
+    "directories": {
+      "output": "../dist_squ1ggs_boosting_tools_native_bl4_1.3.41_mod3.10.41",
+      "buildResources": "build"
+    },
+    "icon": "build/icon.ico",
+    "files": [
+      "main.js",
+      "preload.js",
+      "package.json",
+      "native_card_protocol.js",
+      "native_card_adapter.js",
+      "native_card_model.js",
+      "native_card_compat.css",
+      "native_item_card.js",
+      "nexus_card_stats.js",
+      "lib/**/*",
+      "renderer/**/*",
+      "build/icon.png",
+      "build/icon.ico"
+    ],
+    "asarUnpack": [
+      "node_modules/tesseract.js/**/*",
+      "node_modules/tesseract.js-core/**/*",
+      "node_modules/@tesseract.js-data/eng/**/*"
+    ],
+    "extraResources": [
+      {
+        "from": "resources/Squ1ggsBoostingTools",
+        "to": "sdkmod/Squ1ggsBoostingTools"
+      },
+      {
+        "from": "native_card_ui",
+        "to": "native_card_ui"
+      },
+      {
+        "from": "resources/LegitItems",
+        "to": "LegitItems"
+      },
+      {
+        "from": "resources/Squ1ggsBoostingTools/README.md",
+        "to": "README.md"
+      },
+      {
+        "from": "resources/Squ1ggsBoostingTools/CREDITS.md",
+        "to": "CREDITS.md"
+      },
+      {
+        "from": "resources/Squ1ggsBoostingTools/LICENSE",
+        "to": "LICENSE"
+      }
+    ],
+    "win": {
+      "icon": "build/icon.ico",
+      "signExecutable": false,
+      "target": [
+        "dir",
+        "nsis"
+      ]
+    },
+    "disableAsarIntegrity": true,
+    "nsis": {
+      "oneClick": false,
+      "perMachine": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "Squ1ggs Boosting Tools",
+      "include": "build/install-sdkmod.nsh"
+    }
+  },
+  "devDependencies": {
+    "electron": "^37.2.0",
+    "electron-builder": "^26.15.3",
+    "qrcode": "^1.5.4"
+  },
+  "dependencies": {
+    "@tesseract.js-data/eng": "^1.0.0",
+    "pngjs": "^7.0.0",
+    "tesseract.js": "^7.0.0"
+  }
+}

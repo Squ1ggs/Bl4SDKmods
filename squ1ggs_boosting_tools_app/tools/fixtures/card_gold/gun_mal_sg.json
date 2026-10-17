@@ -1,0 +1,24 @@
+{
+  "id": "gun_mal_sg",
+  "note": "Legendary Maliwan shotgun L70",
+  "input": {
+    "itemType": "Shotgun",
+    "set": "mal_sg",
+    "part_names": [
+      "mal_sg.comp_05_legendary",
+      "mal_sg.part_body",
+      "mal_sg.part_barrel_01",
+      "mal_sg.part_mag_01"
+    ],
+    "level": 70
+  },
+  "expect": {
+    "item_type": "Shotgun",
+    "damage": 24154,
+    "dps": 14639
+  },
+  "tolerance": {
+    "damage": { "mode": "pct", "value": 0.03 },
+    "dps": { "mode": "pct", "value": 0.05 }
+  }
+}

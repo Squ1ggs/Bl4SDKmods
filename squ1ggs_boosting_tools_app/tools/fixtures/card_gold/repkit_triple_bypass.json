@@ -1,0 +1,25 @@
+{
+  "id": "repkit_triple_bypass",
+  "note": "In-game Mini Triple Bypass L70 — heal ~28442 (Order×Legendary). Nexus wrongly pointed Unique_AdrenalinePump (0.25×); offline ~30338 within ~7%.",
+  "input": {
+    "itemType": "Repkit",
+    "set": "ord_repair_kit",
+    "part_names": [
+      "ord_repair_kit.comp_05_legendary_triplebypass",
+      "ord_repair_kit.part_augment_unique_triplebypass",
+      "ord_repair_kit.part_ord",
+      "repair_kit.part_aug_u_askill_cooldown_on_use",
+      "repair_kit.part_firmware_rubberband_man"
+    ],
+    "level": 70
+  },
+  "expect": {
+    "item_type": "Repkit",
+    "headline": 30338,
+    "primary_min_count": 2,
+    "firmware_min": 1
+  },
+  "tolerance": {
+    "headline": { "mode": "pct", "value": 0.02 }
+  }
+}

@@ -1,0 +1,733 @@
+{
+  "progress_graph": {
+    "records": [
+      {
+        "entries": [
+          {
+            "echonav_upgrades": {
+              "progress_graph": "echonav_upgrades",
+              "pointpool": "progress_point_pool'EchoTokenProgressPoints'",
+              "nodes": {
+                "pairs": {
+                  "pair797845235": {
+                    "key": "EchoNav_Swim_01_of_04",
+                    "value": {
+                      "alias": "Swimming Upgrade - Oxygen Cost Reduction I",
+                      "maxprogresspoints": "1",
+                      "busemaxprogresspointsasactivationcost": "true",
+                      "itemdata": {
+                        "structtype": "Asset'/Script/GbxGame.GbxUnlockableItemData_ModifyAttributes'",
+                        "attributemodifiers": [
+                          {
+                            "attribute": "attribute'oxygen_consumption_rate_scalar'",
+                            "modifiertype": "ScaleMultiply",
+                            "attributeinit": {
+                              "constant": "0.500000"
+                            }
+                          }
+                        ]
+                      },
+                      "condition": {
+                        "structtype": "Asset'/Script/GbxGame.GbxUnlockConditionData_GroupUnlocked'",
+                        "grouprefname": "EchoNav_Swim_Upgrades"
+                      },
+                      "displaydata": "display_data'3CEntry'"
+                    }
+                  },
+                  "pair1102471431": {
+                    "key": "EchoNav_Swim_02_of_04",
+                    "value": {
+                      "alias": "Swimming Upgrade - +Regen Speed",
+                      "maxprogresspoints": "1",
+                      "busemaxprogresspointsasactivationcost": "true",
+                      "itemdata": {
+                        "structtype": "Asset'/Script/GbxGame.GbxUnlockableItemData_ModifyAttributes'",
+                        "attributemodifiers": [
+                          {
+                            "attribute": "attribute'oxygen_regeneration_rate_scalar'",
+                            "modifiertype": "ScaleMultiply",
+                            "attributeinit": {
+                              "constant": "2.000000"
+                            }
+                          },
+                          {
+                            "attribute": "attribute'oxygen_resource_on_idle_regen'",
+                            "modifiertype": "ScaleMultiply",
+                            "attributeinit": {
+                              "constant": "2.000000"
+                            }
+                          }
+                        ]
+                      },
+                      "condition": {
+                        "structtype": "Asset'/Script/GbxGame.GbxUnlockConditionData_CompositeAnd'",
+                        "andconditions": [
+                          {
+                            "structtype": "Asset'/Script/GbxGame.GbxUnlockConditionData_GroupUnlocked'",
+                            "grouprefname": "Echo Nav Upgrades - Swimming"
+                          },
+                          {
+                            "structtype": "Asset'/Script/GbxGame.GbxUnlockConditionData_NodeActivated'",
+                            "noderefname": "Swimming Upgrade - Oxygen Cost Reduction I"
+                          }
+                        ]
+                      },
+                      "displaydata": "display_data'3CEntry'"
+                    }
+                  },
+                  "pair3684675154": {
+                    "key": "EchoNav_Swim_03_of_04",
+                    "value": {
+                      "alias": "Swimming Upgrade - Oxygen Cost Reduction II",
+                      "maxprogresspoints": "2",
+                      "busemaxprogresspointsasactivationcost": "true",
+                      "itemdata": {
+                        "structtype": "Asset'/Script/GbxGame.GbxUnlockableItemData_ModifyAttributes'",
+                        "attributemodifiers": [
+                          {
+                            "attribute": "attribute'oxygen_consumption_rate_scalar'",
+                            "modifiertype": "ScaleMultiply",
+                            "attributeinit": {
+                              "constant": "0.500000"
+                            }
+                          }
+                        ]
+                      },
+                      "condition": {
+                        "structtype": "Asset'/Script/GbxGame.GbxUnlockConditionData_CompositeAnd'",
+                        "andconditions": [
+                          {
+                            "structtype": "Asset'/Script/GbxGame.GbxUnlockConditionData_GroupUnlocked'",
+                            "grouprefname": "Echo Nav Upgrades - Swimming"
+                          },
+                          {
+                            "structtype": "Asset'/Script/GbxGame.GbxUnlockConditionData_NodeActivated'",
+                            "noderefname": "Swimming Upgrade - +Regen Speed"
+                          }
+                        ]
+                      },
+                      "displaydata": "display_data'3CEntry'"
+                    }
+                  },
+                  "pair3926005": {
+                    "key": "EchoNav_Swim_04_of_04",
+                    "value": {
+                      "alias": "Swimming Upgrade - ++Regen Speed",
+                      "maxprogresspoints": "2",
+                      "busemaxprogresspointsasactivationcost": "true",
+                      "itemdata": {
+                        "structtype": "Asset'/Script/GbxGame.GbxUnlockableItemData_ModifyAttributes'",
+                        "attributemodifiers": [
+                          {
+                            "attribute": "attribute'oxygen_regeneration_rate_scalar'",
+                            "modifiertype": "ScaleMultiply",
+                            "attributeinit": {
+                              "constant": "2.000000"
+                            }
+                          },
+                          {
+                            "attribute": "attribute'oxygen_resource_on_idle_regen'",
+                            "modifiertype": "ScaleMultiply",
+                            "attributeinit": {
+                              "constant": "2.000000"
+                            }
+                          }
+                        ]
+                      },
+                      "condition": {
+                        "structtype": "Asset'/Script/GbxGame.GbxUnlockConditionData_CompositeAnd'",
+                        "andconditions": [
+                          {
+                            "structtype": "Asset'/Script/GbxGame.GbxUnlockConditionData_GroupUnlocked'",
+                            "grouprefname": "Echo Nav Upgrades - Swimming"
+                          },
+                          {
+                            "structtype": "Asset'/Script/GbxGame.GbxUnlockConditionData_NodeActivated'",
+                            "noderefname": "Swimming Upgrade - Oxygen Cost Reduction II"
+                          }
+                        ]
+                      },
+                      "displaydata": "display_data'3CEntry'"
+                    }
+                  },
+                  "pair2511798395": {
+                    "key": "EchoNav_Dash_01_of_04",
+                    "value": {
+                      "alias": "Dash Upgrade 1 - Distance Increase",
+                      "maxprogresspoints": "1",
+                      "busemaxprogresspointsasactivationcost": "true",
+                      "itemdata": {
+                        "structtype": "Asset'/Script/GbxGame.GbxUnlockableItemData_ModifyAttributes'",
+                        "attributemodifiers": [
+                          {
+                            "attribute": "attribute'dash_speed'",
+                            "modifiertype": "ScaleMultiply",
+                            "attributeinit": {
+                              "constant": "2.000000"
+                            }
+                          }
+                        ]
+                      },
+                      "condition": {
+                        "structtype": "Asset'/Script/OakGame.GbxUnlockConditionData_MovementGrant'",
+                        "movementtype": "GameType4"
+                      },
+                      "displaydata": "display_data'3CEntry'"
+                    }
+                  },
+                  "pair4220471183": {
+                    "key": "EchoNav_Dash_02_of_04",
+                    "value": {
+                      "alias": "Dash Upgrade 2 - Cost Reduction",
+                      "maxprogresspoints": "2",
+                      "busemaxprogresspointsasactivationcost": "true",
+                      "itemdata": {
+                        "structtype": "Asset'/Script/GbxGame.GbxUnlockableItemData_ModifyAttributes'",
+                        "attributemodifiers": [
+                          {
+                            "attribute": "attribute'vault_power_cost_dash'",
+                            "modifiertype": "ScaleMultiply",
+                            "attributeinit": {
+                              "constant": "0.500000"
+                            }
+                          }
+                        ]
+                      },
+                      "condition": {
+                        "structtype": "Asset'/Script/GbxGame.GbxUnlockConditionData_CompositeAnd'",
+                        "andconditions": [
+                          {
+                            "structtype": "Asset'/Script/OakGame.GbxUnlockConditionData_MovementGrant'",
+                            "movementtype": "GameType4"
+                          },
+                          {
+                            "structtype": "Asset'/Script/GbxGame.GbxUnlockConditionData_NodeActivated'",
+                            "noderefname": "Dash Upgrade 1 - Distance Increase"
+                          }
+                        ]
+                      },
+                      "displaydata": "display_data'3CEntry'"
+                    }
+                  },
+                  "pair1638303962": {
+                    "key": "EchoNav_Dash_03_of_04",
+                    "value": {
+                      "alias": "Dash Upgrade 3 - Cost Reduction",
+                      "maxprogresspoints": "2",
+                      "busemaxprogresspointsasactivationcost": "true",
+                      "itemdata": {
+                        "structtype": "Asset'/Script/GbxGame.GbxUnlockableItemData_ModifyAttributes'",
+                        "attributemodifiers": [
+                          {
+                            "attribute": "attribute'vault_power_cost_dash'",
+                            "modifiertype": "ScaleMultiply",
+                            "attributeinit": {
+                              "constant": "0.500000"
+                            }
+                          }
+                        ]
+                      },
+                      "condition": {
+                        "structtype": "Asset'/Script/GbxGame.GbxUnlockConditionData_CompositeAnd'",
+                        "andconditions": [
+                          {
+                            "structtype": "Asset'/Script/OakGame.GbxUnlockConditionData_MovementGrant'",
+                            "movementtype": "GameType4"
+                          },
+                          {
+                            "structtype": "Asset'/Script/GbxGame.GbxUnlockConditionData_NodeActivated'",
+                            "noderefname": "Dash Upgrade 2 - Cost Reduction"
+                          }
+                        ]
+                      },
+                      "displaydata": "display_data'3CEntry'"
+                    }
+                  },
+                  "pair3120742781": {
+                    "key": "EchoNav_Dash_04_of_04",
+                    "value": {
+                      "alias": "Dash Upgrade 4 - Distance Increase",
+                      "maxprogresspoints": "3",
+                      "busemaxprogresspointsasactivationcost": "true",
+                      "itemdata": {
+                        "structtype": "Asset'/Script/GbxGame.GbxUnlockableItemData_ModifyAttributes'",
+                        "attributemodifiers": [
+                          {
+                            "attribute": "attribute'dash_speed'",
+                            "modifiertype": "ScaleMultiply",
+                            "attributeinit": {
+                              "constant": "2.000000"
+                            }
+                          }
+                        ]
+                      },
+                      "condition": {
+                        "structtype": "Asset'/Script/GbxGame.GbxUnlockConditionData_CompositeAnd'",
+                        "andconditions": [
+                          {
+                            "structtype": "Asset'/Script/OakGame.GbxUnlockConditionData_MovementGrant'",
+                            "movementtype": "GameType4"
+                          },
+                          {
+                            "structtype": "Asset'/Script/GbxGame.GbxUnlockConditionData_NodeActivated'",
+                            "noderefname": "Dash Upgrade 3 - Cost Reduction"
+                          }
+                        ]
+                      },
+                      "displaydata": "display_data'3CEntry'"
+                    }
+                  },
+                  "pair94681569": {
+                    "key": "EchoNav_Grapple_01_of_02",
+                    "value": {
+                      "alias": "Grapple Upgrade 1 - Cost Reduction",
+                      "maxprogresspoints": "1",
+                      "busemaxprogresspointsasactivationcost": "true",
+                      "itemdata": {
+                        "structtype": "Asset'/Script/GbxGame.GbxUnlockableItemData_ModifyAttributes'",
+                        "attributemodifiers": [
+                          {
+                            "attribute": "attribute'vault_power_cost_grapple'",
+                            "modifiertype": "ScaleMultiply",
+                            "attributeinit": {
+                              "constant": "0.500000"
+                            }
+                          }
+                        ]
+                      },
+                      "condition": {
+                        "structtype": "Asset'/Script/OakGame.GbxUnlockConditionData_MovementGrant'",
+                        "movementtype": "GameType3"
+                      },
+                      "displaydata": "display_data'3CEntry'"
+                    }
+                  },
+                  "pair1805450773": {
+                    "key": "EchoNav_Grapple_02_of_02",
+                    "value": {
+                      "alias": "Grapple Upgrade 2 - Cost Reduction",
+                      "maxprogresspoints": "2",
+                      "busemaxprogresspointsasactivationcost": "true",
+                      "itemdata": {
+                        "structtype": "Asset'/Script/GbxGame.GbxUnlockableItemData_ModifyAttributes'",
+                        "attributemodifiers": [
+                          {
+                            "attribute": "attribute'vault_power_cost_grapple'",
+                            "modifiertype": "ScaleMultiply",
+                            "attributeinit": {
+                              "constant": "0.500000"
+                            }
+                          }
+                        ]
+                      },
+                      "condition": {
+                        "structtype": "Asset'/Script/GbxGame.GbxUnlockConditionData_CompositeAnd'",
+                        "andconditions": [
+                          {
+                            "structtype": "Asset'/Script/OakGame.GbxUnlockConditionData_MovementGrant'",
+                            "movementtype": "GameType3"
+                          },
+                          {
+                            "structtype": "Asset'/Script/GbxGame.GbxUnlockConditionData_NodeActivated'",
+                            "noderefname": "Grapple Upgrade 1 - Cost Reduction"
+                          }
+                        ]
+                      },
+                      "displaydata": "display_data'3CEntry'"
+                    }
+                  },
+                  "pair1550250165": {
+                    "key": "EchoNav_ButtSlam_01_of_05",
+                    "value": {
+                      "alias": "ButtSlam Upgrade 1 - Cost Reduction",
+                      "maxprogresspoints": "1",
+                      "busemaxprogresspointsasactivationcost": "true",
+                      "itemdata": {
+                        "structtype": "Asset'/Script/GbxGame.GbxUnlockableItemData_ModifyAttributes'",
+                        "attributemodifiers": [
+                          {
+                            "attribute": "attribute'vault_power_cost_ground_slam'",
+                            "modifiertype": "ScaleMultiply",
+                            "attributeinit": {
+                              "constant": "0.500000"
+                            }
+                          }
+                        ]
+                      },
+                      "displaydata": "display_data'3CEntry'"
+                    }
+                  },
+                  "pair845068097": {
+                    "key": "EchoNav_ButtSlam_02_of_05",
+                    "value": {
+                      "alias": "ButtSlam Upgrade 2 - Increased Damage",
+                      "maxprogresspoints": "2",
+                      "busemaxprogresspointsasactivationcost": "true",
+                      "itemdata": {
+                        "structtype": "Asset'/Script/GbxGame.GbxUnlockableItemData_ModifyAttributes'",
+                        "attributemodifiers": [
+                          {
+                            "attribute": "attribute'ground_slam_damage'",
+                            "attributeinit": {
+                              "constant": "25.000000"
+                            }
+                          }
+                        ]
+                      },
+                      "condition": {
+                        "structtype": "Asset'/Script/GbxGame.GbxUnlockConditionData_NodeActivated'",
+                        "noderefname": "ButtSlam Upgrade 1 - Cost Reduction"
+                      },
+                      "displaydata": "display_data'3CEntry'"
+                    }
+                  },
+                  "pair2826401812": {
+                    "key": "EchoNav_ButtSlam_03_of_05",
+                    "value": {
+                      "alias": "ButtSlam Upgrade 3 - Increased AOE Range",
+                      "maxprogresspoints": "2",
+                      "busemaxprogresspointsasactivationcost": "true",
+                      "itemdata": {
+                        "structtype": "Asset'/Script/GbxGame.GbxUnlockableItemData_ModifyAttributes'",
+                        "attributemodifiers": [
+                          {
+                            "attribute": "attribute'ground_slam_range'",
+                            "attributeinit": {
+                              "constant": "112.000000"
+                            }
+                          }
+                        ]
+                      },
+                      "condition": {
+                        "structtype": "Asset'/Script/GbxGame.GbxUnlockConditionData_NodeActivated'",
+                        "noderefname": "ButtSlam Upgrade 2 - Increased Damage"
+                      },
+                      "displaydata": "display_data'3CEntry'"
+                    }
+                  },
+                  "pair1943220659": {
+                    "key": "EchoNav_ButtSlam_04_of_05",
+                    "value": {
+                      "alias": "ButtSlam Upgrade 4 - Cost Reduction (Free)",
+                      "maxprogresspoints": "3",
+                      "busemaxprogresspointsasactivationcost": "true",
+                      "itemdata": {
+                        "structtype": "Asset'/Script/GbxGame.GbxUnlockableItemData_ModifyAttributes'",
+                        "attributemodifiers": [
+                          {
+                            "attribute": "attribute'vault_power_cost_ground_slam'",
+                            "modifiertype": "ScaleMultiply"
+                          }
+                        ]
+                      },
+                      "condition": {
+                        "structtype": "Asset'/Script/GbxGame.GbxUnlockConditionData_NodeActivated'",
+                        "noderefname": "ButtSlam Upgrade 3 - Increased AOE Range"
+                      },
+                      "displaydata": "display_data'3CEntry'"
+                    }
+                  },
+                  "pair1170325626": {
+                    "key": "EchoNav_Glide_01_of_04",
+                    "value": {
+                      "alias": "Glide Upgrade 1 - Cost Reduction",
+                      "maxprogresspoints": "1",
+                      "busemaxprogresspointsasactivationcost": "true",
+                      "itemdata": {
+                        "structtype": "Asset'/Script/GbxGame.GbxUnlockableItemData_ModifyAttributes'",
+                        "attributemodifiers": [
+                          {
+                            "attribute": "attribute'vault_power_cost_glide'",
+                            "modifiertype": "ScaleMultiply",
+                            "attributeinit": {
+                              "constant": "0.500000"
+                            }
+                          }
+                        ]
+                      },
+                      "condition": {
+                        "structtype": "Asset'/Script/OakGame.GbxUnlockConditionData_MovementGrant'",
+                        "movementtype": "GameType2"
+                      },
+                      "displaydata": "display_data'3CEntry'"
+                    }
+                  },
+                  "pair737773454": {
+                    "key": "EchoNav_Glide_02_of_04",
+                    "value": {
+                      "alias": "Glide Upgrade 2 - Glide Speed",
+                      "maxprogresspoints": "2",
+                      "busemaxprogresspointsasactivationcost": "true",
+                      "itemdata": {
+                        "structtype": "Asset'/Script/GbxGame.GbxUnlockableItemData_ModifyAttributes'",
+                        "attributemodifiers": [
+                          {
+                            "attribute": "attribute'gliding_speed_boost'",
+                            "attributeinit": {
+                              "constant": "500.000000"
+                            }
+                          }
+                        ]
+                      },
+                      "condition": {
+                        "structtype": "Asset'/Script/GbxGame.GbxUnlockConditionData_CompositeAnd'",
+                        "andconditions": [
+                          {
+                            "structtype": "Asset'/Script/OakGame.GbxUnlockConditionData_MovementGrant'",
+                            "movementtype": "GameType2"
+                          },
+                          {
+                            "structtype": "Asset'/Script/GbxGame.GbxUnlockConditionData_NodeActivated'",
+                            "noderefname": "Glide Upgrade 1 - Cost Reduction"
+                          }
+                        ]
+                      },
+                      "displaydata": "display_data'3CEntry'"
+                    }
+                  },
+                  "pair2983217371": {
+                    "key": "EchoNav_Glide_03_of_04",
+                    "value": {
+                      "alias": "Glide Upgrade 3 - Cost Reduction",
+                      "maxprogresspoints": "2",
+                      "busemaxprogresspointsasactivationcost": "true",
+                      "itemdata": {
+                        "structtype": "Asset'/Script/GbxGame.GbxUnlockableItemData_ModifyAttributes'",
+                        "attributemodifiers": [
+                          {
+                            "attribute": "attribute'vault_power_cost_glide'",
+                            "modifiertype": "ScaleMultiply",
+                            "attributeinit": {
+                              "constant": "0.500000"
+                            }
+                          }
+                        ]
+                      },
+                      "condition": {
+                        "structtype": "Asset'/Script/GbxGame.GbxUnlockConditionData_CompositeAnd'",
+                        "andconditions": [
+                          {
+                            "structtype": "Asset'/Script/OakGame.GbxUnlockConditionData_MovementGrant'",
+                            "movementtype": "GameType2"
+                          },
+                          {
+                            "structtype": "Asset'/Script/GbxGame.GbxUnlockConditionData_NodeActivated'",
+                            "noderefname": "Glide Upgrade 2 - Glide Speed"
+                          }
+                        ]
+                      },
+                      "displaydata": "display_data'3CEntry'"
+                    }
+                  },
+                  "pair1785987452": {
+                    "key": "EchoNav_Glide_04_of_04",
+                    "value": {
+                      "alias": "Glide Upgrade 4 - Air Control",
+                      "maxprogresspoints": "3",
+                      "busemaxprogresspointsasactivationcost": "true",
+                      "itemdata": {
+                        "structtype": "Asset'/Script/GbxGame.GbxUnlockableItemData_ModifyAttributes'",
+                        "attributemodifiers": [
+                          {
+                            "attribute": "attribute'gliding_air_control'",
+                            "attributeinit": {
+                              "constant": "0.400000"
+                            }
+                          }
+                        ]
+                      },
+                      "condition": {
+                        "structtype": "Asset'/Script/GbxGame.GbxUnlockConditionData_CompositeAnd'",
+                        "andconditions": [
+                          {
+                            "structtype": "Asset'/Script/OakGame.GbxUnlockConditionData_MovementGrant'",
+                            "movementtype": "GameType2"
+                          },
+                          {
+                            "structtype": "Asset'/Script/GbxGame.GbxUnlockConditionData_NodeActivated'",
+                            "noderefname": "Glide Upgrade 3 - Cost Reduction"
+                          }
+                        ]
+                      },
+                      "displaydata": "display_data'3CEntry'"
+                    }
+                  }
+                }
+              },
+              "groups": {
+                "pairs": {
+                  "pair3049449364": {
+                    "key": "EchoNav_Swim_Upgrades",
+                    "value": {
+                      "alias": "Echo Nav Upgrades - Swimming",
+                      "nodes": [
+                        "Swimming Upgrade - Oxygen Cost Reduction I",
+                        "Swimming Upgrade - +Regen Speed",
+                        "Swimming Upgrade - Oxygen Cost Reduction II",
+                        "Swimming Upgrade - ++Regen Speed"
+                      ],
+                      "condition": {
+                        "structtype": "Asset'/Script/OakGame.GbxUnlockConditionData_MovementGrant'"
+                      },
+                      "displaydata": "display_data'3CEntry'"
+                    }
+                  },
+                  "pair268157212": {
+                    "key": "EchoNav_Dash_Upgrades",
+                    "value": {
+                      "alias": "Echo Nav Upgraades - Dash",
+                      "nodes": [
+                        "Dash Upgrade 1 - Distance Increase",
+                        "Dash Upgrade 2 - Cost Reduction",
+                        "Dash Upgrade 3 - Cost Reduction",
+                        "Dash Upgrade 4 - Distance Increase"
+                      ],
+                      "condition": {
+                        "structtype": "Asset'/Script/OakGame.GbxUnlockConditionData_MovementGrant'",
+                        "movementtype": "GameType4"
+                      },
+                      "displaydata": "display_data'3CEntry'"
+                    }
+                  },
+                  "pair726550747": {
+                    "key": "EchoNav_Grapple_Upgrades",
+                    "value": {
+                      "nodes": [
+                        "Grapple Upgrade 1 - Cost Reduction",
+                        "Grapple Upgrade 2 - Cost Reduction"
+                      ],
+                      "condition": {
+                        "structtype": "Asset'/Script/OakGame.GbxUnlockConditionData_MovementGrant'",
+                        "movementtype": "GameType3"
+                      },
+                      "displaydata": "display_data'3CEntry'"
+                    }
+                  },
+                  "pair1700212148": {
+                    "key": "EchoNav_ButtSlam_Upgrades",
+                    "value": {
+                      "nodes": [
+                        "ButtSlam Upgrade 1 - Cost Reduction",
+                        "ButtSlam Upgrade 2 - Increased Damage",
+                        "ButtSlam Upgrade 3 - Increased AOE Range",
+                        "ButtSlam Upgrade 4 - Cost Reduction (Free)"
+                      ],
+                      "displaydata": "display_data'3CEntry'"
+                    }
+                  },
+                  "pair3750560029": {
+                    "key": "EchoNav_Glide_Upgrades",
+                    "value": {
+                      "nodes": [
+                        "Glide Upgrade 1 - Cost Reduction",
+                        "Glide Upgrade 2 - Glide Speed",
+                        "Glide Upgrade 3 - Cost Reduction",
+                        "Glide Upgrade 4 - Air Control"
+                      ],
+                      "condition": {
+                        "structtype": "Asset'/Script/OakGame.GbxUnlockConditionData_MovementGrant'",
+                        "movementtype": "GameType2"
+                      },
+                      "displaydata": "display_data'3CEntry'"
+                    }
+                  }
+                }
+              },
+              "bdeactivatenodeswhenlocked": "true",
+              "displaydata": "display_data'3CEntry'"
+            }
+          }
+        ]
+      },
+      {
+        "entries": [
+          {
+            "progress_graph_exo_traits": {
+              "progress_graph": "progress_graph_exo_traits",
+              "graphtype": "GroupNodeActivation",
+              "nodes": {
+                "pairs": {
+                  "pair3627249593": {
+                    "key": "node_00",
+                    "value": {
+                      "alias": "Trait",
+                      "itemdata": {
+                        "structtype": "Asset'/Script/GbxGame.GbxUnlockableItemData_Skill'",
+                        "skill": "skill'Trait_Exo_OverdriveSM'"
+                      }
+                    }
+                  }
+                }
+              },
+              "groups": {
+                "pairs": {
+                  "pair1407302845": {
+                    "key": "group_00",
+                    "value": {
+                      "nodes": [
+                        "Trait"
+                      ],
+                      "maxnodescanbeactiveatonetime": {
+                        "constant": "1.000000",
+                        "datatablevalue": {
+                          "datatable": "gbx_ue_data_table'none'"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "progress_graph_passives_template": {
+              "progress_graph": "progress_graph_passives_template",
+              "groups": {
+                "pairs": {
+                  "pair1404254702": {
+                    "key": "tier_1"
+                  },
+                  "pair1626128686": {
+                    "key": "tier_2",
+                    "value": {
+                      "condition": {
+                        "structtype": "Asset'/Script/GbxGame.GbxUnlockConditionData_GroupProgressPointsSpent'",
+                        "grouprefnames": [
+                          "tier_1"
+                        ],
+                        "progresspoints": {
+                          "datatablevalue": {
+                            "datatable": "gbx_ue_data_table'progress_graph_unlock_schedule'",
+                            "rowname": "Tier_2"
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "pair3281116488": {
+                    "key": "tier_3",
+                    "value": {
+                      "condition": {
+                        "structtype": "Asset'/Script/GbxGame.GbxUnlockConditionData_GroupProgressPointsSpent'",
+                        "grouprefnames": [
+                          "tier_1",
+                          "tier_2"
+                        ],
+                        "progresspoints": {
+                          "datatablevalue": {
+                            "datatable": "gbx_ue_data_table'progress_graph_unlock_schedule'",
+                            "rowname": "Tier_3"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "id": "enhancement_firmware",
+  "note": "Enhancement with firmware — stays Enhancement, paints firmware rows",
+  "input": {
+    "itemType": "Enhancement",
+    "set": "enhancement",
+    "part_names": [
+      "enhancement.part_body_01_common",
+      "enhancement.part_firmware_get_throwin"
+    ],
+    "level": 70
+  },
+  "expect": {
+    "item_type": "Enhancement",
+    "firmware_min": 1
+  }
+}

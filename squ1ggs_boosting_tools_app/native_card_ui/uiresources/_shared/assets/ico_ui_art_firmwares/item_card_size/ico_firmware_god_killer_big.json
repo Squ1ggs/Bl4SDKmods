@@ -1,0 +1,37 @@
+[
+  {
+    "Type": "Texture2D",
+    "Name": "ico_firmware_god_killer_big",
+    "Flags": "RF_Public | RF_Standalone | RF_WasLoaded | RF_LoadCompleted",
+    "Class": "UScriptClass'Texture2D'",
+    "Package": "/Game/uiresources/_shared/assets/ico_ui_art_firmwares/item_card_size/ico_firmware_god_killer_big",
+    "Properties": {
+      "ImportedSize": {
+        "X": 136,
+        "Y": 118
+      },
+      "LightingGuid": "2702B687-4BC22BCB-DEB30899-B407B767",
+      "CompressionSettings": "TextureCompressionSettings::TC_BC7",
+      "LODGroup": "TextureGroup::TEXTUREGROUP_UI",
+      "SRGB": false
+    },
+    "SizeX": 136,
+    "SizeY": 120,
+    "PackedData": 1,
+    "PixelFormat": "PF_BC7",
+    "FirstMipToSerialize": 0,
+    "Mips": [
+      {
+        "BulkData": {
+          "BulkDataFlags": "BULKDATA_SingleUse | BULKDATA_ForceInlinePayload",
+          "ElementCount": 16320,
+          "SizeOnDisk": 16320,
+          "OffsetInFile": "0x76"
+        },
+        "SizeX": 136,
+        "SizeY": 120,
+        "SizeZ": 1
+      }
+    ]
+  }
+]
