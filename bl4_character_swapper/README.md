@@ -1,6 +1,6 @@
 # BL4 Character Swapper
 
-Created by **RDPSqu1ggs** Â· [original repository](https://github.com/Squ1ggs/Bl4SDKmods).
+Created by **RDPSqu1ggs** · [original repository](https://github.com/Squ1ggs/Bl4SDKmods).
 
 Version **0.1.3** supports **Borderlands 4 only**. This is a standalone SDK mod: neither the Squ1ggs Boosting Tools EXE nor its SDK mod is required.
 
