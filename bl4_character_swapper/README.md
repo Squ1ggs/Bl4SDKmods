@@ -1,8 +1,8 @@
 # BL4 Character Swapper
 
-Created by **RDPSqu1ggs** · [original repository](https://github.com/Squ1ggs/Bl4SDKmods).
+Created by **RDPSqu1ggs** Â· [original repository](https://github.com/Squ1ggs/Bl4SDKmods).
 
-Version **0.1.2** supports **Borderlands 4 only**. This is a standalone SDK mod: neither the Squ1ggs Boosting Tools EXE nor its SDK mod is required.
+Version **0.1.3** supports **Borderlands 4 only**. This is a standalone SDK mod: neither the Squ1ggs Boosting Tools EXE nor its SDK mod is required.
 
 **BLImGui is strongly recommended** for the searchable F10 character picker, character groups, target selection and preview/apply/restore controls. Console-only use remains supported.
 
@@ -27,13 +27,13 @@ Inspected download SHA-256: `20f85a7386bf057fee2c6084e910daee8bfb09df8cb22af4627
 
 With official BLImGui, **F10** opens the Appearance window. With a compatible custom tab menu, it opens the **Appearance** tab. Without BLImGui, the mod still enables and can be controlled from the BL4 SDK console:
 
-- `asw_help` — show the full command list.
-- `asw_list [search]` — search the full native BL4 character catalog.
-- `asw_players` — list yourself and lobby players by target index.
-- `asw_preview <name or code>` — spawn a preview beside you (host authority required).
-- `asw_apply <name or code>` — apply a model to yourself.
-- `asw_apply <name or code> --player INDEX` — host applies it to one lobby player.
-- `asw_restore [--player INDEX]`, `asw_restore_all`, and `asw_clear` — restore appearances or remove unworn previews.
+- `asw_help` â€” show the full command list.
+- `asw_list [search]` â€” search the full native BL4 character catalog.
+- `asw_players` â€” list yourself and lobby players by target index.
+- `asw_preview <name or code>` â€” spawn a preview beside you (host authority required).
+- `asw_apply <name or code>` â€” apply a model to yourself.
+- `asw_apply <name or code> --player INDEX` â€” host applies it to one lobby player.
+- `asw_restore [--player INDEX]`, `asw_restore_all`, and `asw_clear` â€” restore appearances or remove unworn previews.
 
 The picker contains 1,649 native definitions, including Vex, Rafa, Amon, Harlowe, C4SH and Loveless. Models load on demand; entries may fail if their content is unavailable or their definition cannot produce a usable appearance. Catalog inclusion does not mean every model has passed an in-game test. `asw_players` refreshes as the lobby changes, so check indexes before targeting another player.
 
@@ -54,3 +54,9 @@ Appearance code and integration: **RDPSqu1ggs**, GPL-3.0-or-later. See `LICENSE`
 ## Optional character packs
 
 An add-on imports `Model`, `register_model` and `unregister_model` from `bl4_character_swapper`, then registers a unique `pack:` key, display name, source-game group, author, game-thread spawn callback, and optional game-thread tick callback. Add-ons must provide their own models, materials, animation and lifecycle handling; no foreign-game pack is bundled here.
+
+## Current validation
+
+There are a lot of characters and bosses, so not all have been fully tested. Further testing and regular updates are planned. Characters retain their own animations, which may stay in idle while you move.
+
+Moxxi preview and attachment are confirmed in-game. See RELEASE_NOTES.md for known issues.

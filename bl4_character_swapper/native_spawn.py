@@ -33,6 +33,8 @@ class NativeSpawn:
         self.definition = None
         self.direct_source = None
         self.finished = False
+        self.phase = "package loading"
+        self.saw_actor = False
         self.message = "Loading selected character."
 
     def _fire(self, pawn, world):
@@ -93,29 +95,35 @@ class NativeSpawn:
         if component is None:
             raise RuntimeError("The temporary character spawner has no spawn component.")
         self.component = WeakPointer(component)
-        for target in (spawner, component):
-            for field in ("bInfinite", "bUnlimitedSpawns", "bAllowRespawn", "bRespawnEnabled"):
-                try:
-                    if hasattr(target, field):
-                        setattr(target, field, False)
-                except Exception:
-                    pass
-            for field in ("MaxAliveActors", "MaxSpawnCount", "NumActorsToSpawn", "SpawnCount"):
-                try:
-                    if hasattr(target, field):
-                        setattr(target, field, 1)
-                except Exception:
-                    pass
-        # This helper is for ONE appearance. Never apply the full spawner's
-        # unlimited-cap/respawn overrides to a cosmetic source.
+        # Match the EXE single-spawn initialization. These similarly named
+        # fields are not a documented one-shot API: changing counters or
+        # respawn gates before ResetSpawner can prevent the initial spawn.
+        # Ownership, stopping after the first actor, and cancel() bound this
+        # request without changing native defaults or global spawn budgets.
         for name in ("SetSpawnerEnabled", "SetSpawnPointEnabled"):
             attach._call_quiet(component, name, True)
-        component.PushActorDef("Squ1ggsAppearance", definition, True)
+        component.PushActorDef("SSP", definition, True)
         try:
             component.ResetSpawner(True)
         except TypeError:
             component.ResetSpawner()
         self.message = "Waiting for the selected native character to appear."
+        self.phase = "native spawner"
+        # Give native streaming its full budget after synchronous package work.
+        self.deadline = time.monotonic() + 25.0
+
+    def _timeout_message(self):
+        stage = "model rendering" if self.saw_actor else self.phase
+        counts = []
+        component = self.component() if self.component else None
+        for name in ("GetNumAliveActors", "GetNumSpawnedActors", "GetNumDeadActors", "GetNumTotalActors"):
+            try:
+                counts.append(str(int(getattr(component, name)(0))))
+            except Exception:
+                counts.append("?")
+        return (f"Character {self.code} timed out during {stage} "
+                f"(alive/spawned/dead/total={ '/'.join(counts) }). "
+                "Your current appearance was kept. Content availability is unconfirmed.")
 
     def step(self, world):
         """Return an actor only from this owned helper; keep it until render-ready."""
@@ -125,8 +133,9 @@ class NativeSpawn:
         if str(world) != self.world or pawn is None:
             raise RuntimeError("Character loading cancelled because the session changed.")
         if time.monotonic() >= self.deadline:
-            raise RuntimeError("The selected character did not load. Its content or DLC may be unavailable here.")
+            raise RuntimeError(self._timeout_message())
         if self.direct_source is not None:
+            self.saw_actor = True
             return self.direct_source()
         if self.spawner is None:
             package = next(self.packages, None)
@@ -151,6 +160,7 @@ class NativeSpawn:
         for extra in actors[1:]:
             attach._call_quiet(extra, "K2_DestroyActor")
         if actors:
+            self.saw_actor = True
             attach._call_quiet(component, "SetSpawnerEnabled", False)
             attach._call_quiet(component, "SetSpawnPointEnabled", False)
             return actors[0]

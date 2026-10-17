@@ -603,6 +603,11 @@ class Controller:
                     if str(comp) not in existing:
                         visible, hidden = attach._component_visible(comp)
                         state.parts.append((WeakPointer(comp), visible, hidden, getattr(comp, "VisibilityBasedAnimTickOption", None)))
+                    # Camera changes can reset this on the hidden pose driver.
+                    try:
+                        comp.VisibilityBasedAnimTickOption = 0
+                    except Exception:
+                        pass
                     attach._call_quiet(comp, "SetVisibility", False, False)
                     attach._call_quiet(comp, "SetHiddenInGame", True, False)
             if self.pending:

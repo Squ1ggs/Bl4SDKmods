@@ -16,7 +16,7 @@ _BLIMGUI = None
 _BLIMGUI_MODE = ""
 _WINDOW_OWNED = False
 _WINDOW_DRAW = None
-VERSION = "0.1.2"
+VERSION = "0.1.3"
 BLIMGUI_DOWNLOAD = "https://github.com/juso40/blimgui/raw/ff5be35f41d69f28056befdd1bfb8caddae5892b/blimgui.zip"
 BLIMGUI_PAGE = "https://bl-sdk.github.io/oak2-mod-db/mods/blimgui/"
 

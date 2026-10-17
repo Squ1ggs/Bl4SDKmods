@@ -13,7 +13,7 @@ _keep_respawn = True
 def draw():
     global _search, _model, _owner, _group, _follow_pose, _keep_respawn
     from imgui_bundle import imgui
-    imgui.text("BL4 Character Swapper · 0.1.2")
+    imgui.text("BL4 Character Swapper · 0.1.3")
     imgui.text_disabled("Created by RDPSqu1ggs · github.com/Squ1ggs/Bl4SDKmods")
     imgui.text_disabled("Standalone SDK mod · also included in Squ1ggs Boosting Tools")
     choices = CONTROLLER.choices()
