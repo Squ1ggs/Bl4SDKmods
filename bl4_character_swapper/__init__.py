@@ -16,7 +16,9 @@ _BLIMGUI = None
 _BLIMGUI_MODE = ""
 _WINDOW_OWNED = False
 _WINDOW_DRAW = None
-VERSION = "0.1.3"
+VERSION = "0.2.8"
+VEHICLE_PACKS_ENABLED = False
+_CONSOLE_CHOICES = []
 BLIMGUI_DOWNLOAD = "https://github.com/juso40/blimgui/raw/ff5be35f41d69f28056befdd1bfb8caddae5892b/blimgui.zip"
 BLIMGUI_PAGE = "https://bl-sdk.github.io/oak2-mod-db/mods/blimgui/"
 
@@ -26,6 +28,7 @@ def _log(message: str) -> None:
 
 def _tick(*_args):
     CONTROLLER.tick()
+    SDK_MENU.update_status()
 
 def on_enable():
     sqbt = sys.modules.get("Squ1ggsBoostingTools.dev_tools")
@@ -33,8 +36,9 @@ def on_enable():
                             getattr(sqbt, "_appearance_pending", {}).get("code")):
         raise RuntimeError("Restore SQBT's current appearance before enabling the standalone swapper.")
     CONTROLLER.acquire("standalone")
+    SDK_MENU.refresh()
     _try_register_blimgui()
-    _log(f"{VERSION} enabled. BLImGui is strongly recommended for the character picker; use F10 or type asw_help in the SDK console. Also included in Squ1ggs Boosting Tools.")
+    _log(f"{VERSION} enabled. BLImGui is strongly recommended for the character picker; use F10 or type bl4cs_help in the SDK console. Also included in Squ1ggs Boosting Tools.")
 
 
 def _try_register_blimgui() -> bool:
@@ -59,7 +63,7 @@ def _try_register_blimgui() -> bool:
     except Exception as exc:
         _BLIMGUI = None
         _BLIMGUI_MODE = ""
-        _log(f"BLImGui UI unavailable ({exc}); console commands remain available. BLImGui is strongly recommended: {BLIMGUI_PAGE} — type asw_help.")
+        _log(f"BLImGui UI unavailable ({exc}); console commands remain available. BLImGui is strongly recommended: {BLIMGUI_PAGE} — type bl4cs_help.")
         return False
 
 def _owns_window():
@@ -93,7 +97,7 @@ def on_disable():
 def open_ui():
     global _WINDOW_OWNED, _WINDOW_DRAW
     if _BLIMGUI is None and not _try_register_blimgui():
-        _log(f"BLImGui is strongly recommended for the character picker: {BLIMGUI_DOWNLOAD}. SDK console controls work without it; type asw_help.")
+        _log(f"BLImGui is strongly recommended for the character picker: {BLIMGUI_DOWNLOAD}. SDK console controls work without it; type bl4cs_help.")
         return
     try:
         if _BLIMGUI_MODE == "tabs":
@@ -111,7 +115,7 @@ def open_ui():
             _WINDOW_DRAW = draw
             _WINDOW_OWNED = True
     except Exception as exc:
-        _log(f"Could not open the BLImGui tab: {exc}. Use asw_help for console controls.")
+        _log(f"Could not open the BLImGui tab: {exc}. Use bl4cs_help for console controls.")
 
 
 def _query_models(query: str):
@@ -120,46 +124,78 @@ def _query_models(query: str):
     if not needle:
         return choices
     exact = [row for row in choices if needle in (row["key"].casefold(), row["name"].casefold())]
-    return exact or [row for row in choices if needle in row["key"].casefold() or needle in row["name"].casefold()]
+    return exact or [row for row in choices if all(token in (row['key'] + ' ' + row['name']).casefold()
+                                                  for token in needle.split())]
+
+
+def _show_console_choices(matches, page=1):
+    global _CONSOLE_CHOICES
+    pages = max(1, (len(matches) + 19) // 20)
+    if not 1 <= page <= pages:
+        _log(f'Choose a page from 1 to {pages}; the previous numbered selection is unchanged.')
+        return
+    _CONSOLE_CHOICES = [row['key'] for row in matches]
+    _log(f'{len(matches)} characters; page {page}/{pages}. Use bl4cs NUMBER or bl4cs_preview NUMBER.')
+    for index in range((page - 1) * 20, min(page * 20, len(matches))):
+        row = matches[index]
+        suffix = ' [preview only]' if not row.get('apply_enabled', True) else ''
+        _log(f"  {index + 1}: {row['name']} [{row['group']}]{suffix} — {row['key']}")
+    if pages > 1:
+        _log('More results: repeat bl4cs_list SEARCH --page NUMBER, or narrow your search.')
 
 
 def _resolve_model(query: str) -> str | None:
+    number = query.strip().removeprefix('#')
+    if number.isdecimal():
+        index = int(number) - 1
+        if not 0 <= index < len(_CONSOLE_CHOICES):
+            _log('Run bl4cs_list NAME first, then use one of its displayed numbers.')
+            return None
+        key = _CONSOLE_CHOICES[index]
+        if not any(row['key'] == key for row in CONTROLLER.choices()):
+            _log('That character is no longer available. Run bl4cs_list again.')
+            return None
+        return key
     matches = _query_models(query)
     if len(matches) == 1:
         return matches[0]["key"]
     if not matches:
-        _log(f"No native actor matches {query!r}. Run asw_list to see catalog choices.")
+        _log(f"No native actor matches {query!r}. Run bl4cs_list to see catalog choices.")
         return None
-    _log(f"{len(matches)} actors match {query!r}; use a more specific name:")
-    for row in matches[:20]:
-        _log(f"  {row['key']} — {row['name']} [{row['group']}]")
+    _log(f"More than one character matches {query!r}; choose a number:")
+    _show_console_choices(matches)
     return None
 
 
 def _target_for_index(index: int):
     players = list(CONTROLLER.players)
     if index < 0 or index >= len(players):
-        _log(f"Player index {index} is unavailable. Run asw_players to refresh and list targets.")
+        _log(f"Player index {index} is unavailable. Run bl4cs_players to refresh and list targets.")
         return None
     return players[index]
 
 
-@command("asw_help", description="Show BL4 Character Swapper controls (BLImGui is optional).")
-def asw_help(_args: Namespace) -> None:
+@command("bl4cs_help", description="Show BL4 Character Swapper controls (BLImGui is optional).")
+def bl4cs_help(_args: Namespace) -> None:
     for line in (
         "BL4 Character Swapper — works standalone with SDK console controls.",
+        "Quick start: bl4cs_list moxxi -> bl4cs 1 -> bl4cs_restore. No BLImGui required.",
+        "  bl4cs <name or NUMBER>           Swap yourself; ambiguous names show numbered choices.",
+        "  bl4cs_preview <name or NUMBER>   Preview before applying.",
+        "  bl4cs_status                     Show the current operation/result.",
         "BLImGui is strongly recommended: F10 opens a searchable character picker, preview/apply/restore controls and player selection.",
         f"Official BL4 BLImGui download (1.1, Python 3.14 x64): {BLIMGUI_DOWNLOAD}",
         f"Install instructions / future SDK updates: {BLIMGUI_PAGE}",
         "Created and maintained by RDPSqu1ggs — github.com/Squ1ggs/Bl4SDKmods",
-        "  asw_list [search]              Search the native BL4 character catalog.",
-        "  asw_players                    List local player and lobby target indexes.",
-        "  asw_preview <name or code>     Spawn a preview beside you (host required).",
-        "  asw_apply <name or code>       Apply to yourself.",
-        "  asw_apply <name or code> --player INDEX   Apply to a lobby player (host).",
-        "  asw_restore [--player INDEX]   Restore yourself or a lobby player.",
-        "  asw_restore_all                Restore every changed appearance.",
-        "  asw_clear                      Remove unworn previews.",
+        "  bl4cs_list [search]              Search the native BL4 character catalog.",
+        "  bl4cs_players                    List local player and lobby target indexes.",
+        "  bl4cs_preview <name or code>     Spawn a preview beside you (host required).",
+        "  bl4cs_apply <name or code>       Apply to yourself.",
+        "  bl4cs_apply <name or code> --player INDEX   Apply to a lobby player (host).",
+        "  bl4cs_restore [--player INDEX]   Restore yourself or a lobby player.",
+        "  bl4cs_restore_all                Restore every changed appearance.",
+        "  bl4cs_clear                      Remove unworn previews.",
+        "  bl4cs_packs                      Show installed packs and file errors.",
         "F10 supports official BLImGui windows and compatible custom tab menus. Without BLImGui, use the commands above.",
         "Also included in Squ1ggs Boosting Tools: use its Appearance tab without installing this standalone mod or BLImGui.",
         "SDK console, BLImGui and the matching SQBT EXE share one appearance service when used together.",
@@ -167,25 +203,25 @@ def asw_help(_args: Namespace) -> None:
         _log(line)
 
 
-@command("asw_list", description="Search the native Borderlands 4 character catalog by name or code.")
-def asw_list(args: Namespace) -> None:
+@command("bl4cs_list", description="Search the native Borderlands 4 character catalog by name or code.")
+def bl4cs_list(args: Namespace) -> None:
     matches = _query_models(" ".join(args.search or []))
     if not matches:
+        _CONSOLE_CHOICES.clear()
         _log("No native characters match that search. Try a shorter name or an exact actor code.")
         return
-    _log(f"Native catalog choices: {len(matches)} (showing up to 50; unloaded content is resolved on demand)")
-    for index, row in enumerate(matches[:50]):
-        _log(f"  {index}: {row['key']} — {row['name']} [{row['group']}]")
+    _show_console_choices(matches, getattr(args, 'page', 1))
 
 
-asw_list.add_argument("search", nargs="*", help="Optional name or actor-code filter.")
+bl4cs_list.add_argument("search", nargs="*", help="Optional name or actor-code filter.")
+bl4cs_list.add_argument('--page', type=int, default=1, help='Show another page of 20 numbered results.')
 
 
-@command("asw_players", description="List the local player and current lobby player indexes.")
-def asw_players(_args: Namespace) -> None:
+@command("bl4cs_players", description="List the local player and current lobby player indexes.")
+def bl4cs_players(_args: Namespace) -> None:
     players = list(CONTROLLER.players)
     if not players:
-        _log("No player pawns are ready yet. Load into a map and retry asw_players.")
+        _log("No player pawns are ready yet. Load into a map and retry bl4cs_players.")
         return
     _log("Appearance targets (indexes refresh as the lobby changes):")
     for index, row in enumerate(players):
@@ -199,8 +235,8 @@ def _cmd_preview(args: Namespace) -> None:
         _log(f"Queued preview for {key}." if accepted else CONTROLLER.status)
 
 
-asw_preview = command("asw_preview", description="Load and preview a native character beside you. Host authority is required.")(_cmd_preview)
-asw_preview.add_argument("model", nargs="+", help="Unique actor display name or code from asw_list.")
+bl4cs_preview = command("bl4cs_preview", description="Load and preview a native character beside you. Host authority is required.")(_cmd_preview)
+bl4cs_preview.add_argument("model", nargs="+", help="Unique actor display name or code from bl4cs_list.")
 
 
 def _cmd_apply(args: Namespace) -> None:
@@ -211,9 +247,28 @@ def _cmd_apply(args: Namespace) -> None:
         _log(f"Queued {key} for player {args.player} ({target['name']})." if accepted else CONTROLLER.status)
 
 
-asw_apply = command("asw_apply", description="Load and apply a native character to yourself or a lobby player (host required to spawn).")(_cmd_apply)
-asw_apply.add_argument("model", nargs="+", help="Unique actor display name or code from asw_list.")
-asw_apply.add_argument("--player", type=int, default=0, help="Target index from asw_players; 0 is local player.")
+bl4cs_apply = command("bl4cs_apply", description="Load and apply a native character to yourself or a lobby player (host required to spawn).")(_cmd_apply)
+bl4cs_apply.add_argument("model", nargs="+", help="Unique actor display name or code from bl4cs_list.")
+bl4cs_apply.add_argument("--player", type=int, default=0, help="Target index from bl4cs_players; 0 is local player.")
+
+
+@command('bl4cs', description='Quick character swap: bl4cs NAME or bl4cs NUMBER from the last search. No arguments shows help.')
+def bl4cs(args: Namespace):
+    if not args.model:
+        bl4cs_help(args)
+        return
+    _cmd_apply(args)
+
+
+bl4cs.add_argument('model', nargs='*', help='Character name, code or number from bl4cs_list.')
+bl4cs.add_argument('--player', type=int, default=0, help='Optional target index from bl4cs_players.')
+
+
+@command('bl4cs_status', description='Show the latest character operation and result.')
+def bl4cs_status(_args: Namespace):
+    _log(CONTROLLER.status)
+    operation = getattr(CONTROLLER, 'operation', {})
+    _log(f"Operation: {operation.get('state', 'idle')} — {operation.get('message', '')}")
 
 
 def _cmd_restore(args: Namespace) -> None:
@@ -223,22 +278,42 @@ def _cmd_restore(args: Namespace) -> None:
         _log(f"Queued restore for {target['name']}." if accepted else CONTROLLER.status)
 
 
-asw_restore = command("asw_restore", description="Restore yourself or one lobby player's original appearance.")(_cmd_restore)
-asw_restore.add_argument("--player", type=int, default=0, help="Target index from asw_players; 0 is local player.")
+bl4cs_restore = command("bl4cs_restore", description="Restore yourself or one lobby player's original appearance.")(_cmd_restore)
+bl4cs_restore.add_argument("--player", type=int, default=0, help="Target index from bl4cs_players; 0 is local player.")
 
 
-@command("asw_restore_all", description="Restore every appearance changed by the standalone swapper.")
-def asw_restore_all(_args: Namespace) -> None:
+@command("bl4cs_restore_all", description="Restore every appearance changed by the standalone swapper.")
+def bl4cs_restore_all(_args: Namespace) -> None:
     CONTROLLER.request("restore_all")
     _log("Queued restore for all changed players.")
 
 
-@command("asw_clear", description="Remove unworn character previews created by the standalone swapper.")
-def asw_clear(_args: Namespace) -> None:
+@command("bl4cs_clear", description="Remove unworn character previews created by the standalone swapper.")
+def bl4cs_clear(_args: Namespace) -> None:
     CONTROLLER.request("clear")
     _log("Queued removal of unworn previews.")
 
+@command('bl4cs_packs', description='List installed optional Appearance packs and any file errors.')
+def bl4cs_packs(_args: Namespace):
+    import json
+    from .packs.manager import status
+    _log(json.dumps(status(), ensure_ascii=False))
+
+
+# Keep existing console scripts working; all displayed help uses the product name.
+for _suffix in ('', '_help', '_list', '_players', '_preview', '_apply', '_restore',
+                '_restore_all', '_clear', '_packs', '_status'):
+    _canonical = globals()['bl4cs' + _suffix]
+    _parser = getattr(_canonical, 'parser', None)
+    globals()['asw' + _suffix] = command(
+        'asw' + _suffix, parents=[_parser] if _parser is not None else [],
+        add_help=False, description='Compatibility alias for bl4cs' + _suffix)(_canonical)
+
+
+from .sdk_menu import CharacterMenu
+SDK_MENU = CharacterMenu(CONTROLLER, _log)
+
 MOD = build_mod(name="BL4 Character Swapper", author="RDPSqu1ggs", version=VERSION,
-          description=f"Standalone BL4 character swaps; no boosting tool required. BLImGui is strongly recommended for the F10 character picker: {BLIMGUI_PAGE} . Console-only controls: asw_help. Supports official BLImGui windows and compatible custom tabs. Also included in Squ1ggs Boosting Tools' Appearance tab; separate standalone/BLImGui installation is unnecessary for EXE users. Multiplayer validation pending.",
+          description=f"Standalone BL4 character swaps; no boosting tool required. BLImGui is strongly recommended for the F10 character picker: {BLIMGUI_PAGE} . Console-only controls: bl4cs_help. Supports official BLImGui windows and compatible custom tabs. Also included in Squ1ggs Boosting Tools' Appearance tab; separate standalone/BLImGui installation is unnecessary for EXE users. Multiplayer validation pending.",
           supported_games=Game.BL4, coop_support=CoopSupport.Unknown,
-          keybinds=[open_ui], on_enable=on_enable, on_disable=on_disable)
+          options=SDK_MENU.options, keybinds=[open_ui], on_enable=on_enable, on_disable=on_disable)

@@ -1,62 +1,93 @@
 # BL4 Character Swapper
 
-Created by **RDPSqu1ggs** · [original repository](https://github.com/Squ1ggs/Bl4SDKmods).
+By **RDPSqu1ggs** | [Source code](https://github.com/Squ1ggs/Bl4SDKmods)
 
-Version **0.1.3** supports **Borderlands 4 only**. This is a standalone SDK mod: neither the Squ1ggs Boosting Tools EXE nor its SDK mod is required.
+Swap your appearance to a BL4 NPC, enemy, boss or Vault Hunter. Preview a character,
+apply it to yourself, or restore your original appearance. Hosts can also select
+a lobby player.
 
-**BLImGui is strongly recommended** for the searchable F10 character picker, character groups, target selection and preview/apply/restore controls. Console-only use remains supported.
+Version **0.2.8** requires the BL4 Python SDK and runs without Squ1ggs Boosting
+Tools. This download is for BL4 characters. Vehicle controls are not included.
 
-**Already using Squ1ggs Boosting Tools?** Character swapping is included in the tool's **Appearance** tab. You do not need this separate mod or BLImGui for the desktop interface. Matching releases share the same appearance core when installed together.
+## Install
 
-## Recommended BLImGui download
+1. Install the [BL4 Python SDK](https://bl-sdk.github.io/oak2-mod-db/).
+2. Put `bl4_character_swapper.sdkmod` directly in `sdk_mods`. Keep its filename
+   and remove any duplicate loose copy of the mod.
+3. Restart BL4, load into a map and enable **BL4 Character Swapper**.
 
-Use the official **juso / smugg BLImGui 1.1** package:
+Character swapping is already included in SQBT's Appearance tab, so you only need
+one of them. If both are installed, disable one and restart.
 
-- [Fixed official BLImGui 1.1 download](https://github.com/juso40/blimgui/raw/ff5be35f41d69f28056befdd1bfb8caddae5892b/blimgui.zip)
-- [Official BL4 SDK database page and installation instructions](https://bl-sdk.github.io/oak2-mod-db/mods/blimgui/)
+## Use the SDK Mods menu
 
-The linked archive was inspected on 2026-10-17: it explicitly supports BL4 (`Game.Oak2`) and contains the Python 3.14 x64 ImGui Bundle and pydantic-core binaries used by the current SDK. The swapper supports its window API and compatible custom BLImGui tab APIs. This compatibility inspection is not proof of an in-game character swap.
+BLImGui isn't required. Open the SDK console, type `mods`, select **BL4 Character
+Swapper**, and open its options.
 
-Extract the archive so **`sdk_mods/blimgui/__init__.py`** exists, with its `dist64` folder beside it. Keep the supplied dependencies together; there is no separate pip/Python installation step. Restart BL4, enable the swapper and press **F10**. Do not nest it as `sdk_mods/blimgui/blimgui`.
+- Choose **Refresh characters and players**.
+- Set **Change appearance for** to yourself or a lobby player.
+- Open **Browse characters**, then a category, page and character.
+- Choose **Preview this character** or **Apply this character**.
 
-If another window is already using official BLImGui, close it before opening Appearance. The swapper does not take over or close another mod's window. If an SDK update changes Python versions, use the official database page to check for a matching updated BLImGui build.
+Wait for a preview to finish before applying. Restore, remove previews and check
+status from the same menu. Refresh the player list if someone joins or leaves.
 
-Inspected download SHA-256: `20f85a7386bf057fee2c6084e910daee8bfb09df8cb22af4627a0bc7a4bc18b4`.
+## Console shortcuts
 
-## Controls
+```text
+bl4cs_list moxxi
+bl4cs_preview 1
+bl4cs 1
+bl4cs_status
+bl4cs_restore
+```
 
-With official BLImGui, **F10** opens the Appearance window. With a compatible custom tab menu, it opens the **Appearance** tab. Without BLImGui, the mod still enables and can be controlled from the BL4 SDK console:
+You can also type `bl4cs Moxxi` directly. If several characters match, the mod
+shows numbered choices. Numbers refer to your most recent search results.
 
-- `asw_help` â€” show the full command list.
-- `asw_list [search]` â€” search the full native BL4 character catalog.
-- `asw_players` â€” list yourself and lobby players by target index.
-- `asw_preview <name or code>` â€” spawn a preview beside you (host authority required).
-- `asw_apply <name or code>` â€” apply a model to yourself.
-- `asw_apply <name or code> --player INDEX` â€” host applies it to one lobby player.
-- `asw_restore [--player INDEX]`, `asw_restore_all`, and `asw_clear` â€” restore appearances or remove unworn previews.
+For more results, repeat your search with `--page`, for example
+`bl4cs_list boss --page 2`. Use `bl4cs_players` to list lobby targets, then
+`bl4cs 1 --player 1` to apply your selected character to that player.
+`bl4cs_clear` removes previews; `bl4cs_help` lists all commands. Older `asw`
+commands remain available as aliases.
 
-The picker contains 1,649 native definitions, including Vex, Rafa, Amon, Harlowe, C4SH and Loveless. Models load on demand; entries may fail if their content is unavailable or their definition cannot produce a usable appearance. Catalog inclusion does not mean every model has passed an in-game test. `asw_players` refreshes as the lobby changes, so check indexes before targeting another player.
+## Optional BLImGui picker
 
-## Installation
+BLImGui is strongly recommended if you prefer a searchable F10 window.
+The SDK Mods menu and console commands work without it.
 
-Install the [BL4 Python SDK](https://bl-sdk.github.io/oak2-mod-db/), then place **`bl4_character_swapper.sdkmod`** in `sdk_mods` and enable **BL4 Character Swapper**. Keep that filename: the SDK requires it to match the package inside. BLImGui is optional but strongly recommended. The matching SQBT release shares this appearance controller. Mismatched runtime versions require a game restart; older SQBT appearance controllers must be restored before use. Install only one copy of the standalone package; remove earlier development archives or duplicate loose copies before restarting. Do not install a separate system Python or use `pip` for BLImGui; retain the dependencies supplied inside its `dist64` folder.
+- [BLImGui installation and downloads](https://bl-sdk.github.io/oak2-mod-db/mods/blimgui/)
+- [Pinned BLImGui 1.1 download](https://github.com/juso40/blimgui/raw/ff5be35f41d69f28056befdd1bfb8caddae5892b/blimgui.zip)
 
-The mod queues game changes onto BL4's game-thread tick. The UI reads cached choices and queues actions; the console commands use the same controller.
+Extract it so `sdk_mods/blimgui/__init__.py` and its `dist64` folder exist.
+Keep the bundled dependencies together, restart BL4 and press **F10**. If another
+mod is using the BLImGui window, close that window first.
 
-## Current limits
+## Known limits
 
-Host authority is required to create previews and change another lobby player's appearance. Selected-player replication, map travel, respawn restoration and disabled-mod cleanup still need live multiplayer validation. Different skeletons keep the source character's existing animation; weapon/aim retargeting is unfinished. Vehicle swaps and foreign-game characters are outside this release. This standalone package contains code and catalogue metadata, no ripped meshes, textures, PAKs or boosting functions.
+Not every character or boss has been tested. Some entries need DLC or may fail
+to spawn; Vex failed in an earlier test. Moxxi preview and attachment worked in
+that test, but this does not establish that the whole catalog works.
 
-## Authorship and licence
+Characters use their own animations, which may stay idle while you move.
+Gun holding, aiming, custom first-person arms and vehicle seating are unfinished.
+Multiplayer visibility, respawn and map travel need more testing. Creating
+previews and changing another player's appearance require the host.
 
-Appearance code and integration: **RDPSqu1ggs**, GPL-3.0-or-later. See `LICENSE`, `COPYING` and `provenance.json` for source notices. BL4 assets belong to Gearbox / 2K. SDK and optional BLImGui dependencies retain their authors' licences.
+Separate character packs are optional and are not included in this download.
 
 ## Optional character packs
 
-An add-on imports `Model`, `register_model` and `unregister_model` from `bl4_character_swapper`, then registers a unique `pack:` key, display name, source-game group, author, game-thread spawn callback, and optional game-thread tick callback. Add-ons must provide their own models, materials, animation and lifecycle handling; no foreign-game pack is bundled here.
+Separately installed character packs appear in the picker. Packs marked
+**preview only** cannot be applied. The standalone download contains code and
+catalog data, not character meshes, textures or game archives.
 
-## Current validation
+Pack manifests go in `sdk_mods/appearance_packs/<id>/pack.json`. Restart BL4 after
+adding or removing a pack. Pack authors can use `Model`, `register_model` and
+`unregister_model` to register their own characters. See the source for the API.
 
-There are a lot of characters and bosses, so not all have been fully tested. Further testing and regular updates are planned. Characters retain their own animations, which may stay in idle while you move.
+## Licence
 
-Moxxi preview and attachment are confirmed in-game. See RELEASE_NOTES.md for known issues.
+Code by **RDPSqu1ggs**, licensed under **GPL-3.0-or-later**. See `LICENSE`, `COPYING`
+and `provenance.json`. BL4 assets belong to their respective owners. The SDK and
+BLImGui retain their own licences.

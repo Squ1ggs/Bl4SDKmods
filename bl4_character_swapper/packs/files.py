@@ -1,0 +1,2 @@
+"""Files included in the shared runtime fingerprint."""
+SHARED_FILES = ('packs/__init__.py', 'packs/catalog.py', 'packs/companion_pak.py', 'packs/dev_tools.py', 'packs/engine.py', 'packs/imported_materials.py', 'packs/imported_models.py', 'packs/imported_effects.py', 'packs/imported_namespaces.py', 'packs/imported_package_loader.py', 'packs/imported_vehicles.py', 'packs/imported_weapons.py', 'packs/manager.py', 'packs/registry.py', 'packs/ui.py', 'packs/vehicle_catalog.py', 'packs/vehicle_engine.py')

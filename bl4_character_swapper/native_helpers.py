@@ -107,3 +107,23 @@ def _spawn_actor_deferred(
         except Exception:
             pass
         return None
+
+
+def _preview_spawn_transform(pawn, *, z_offset=0.0):
+    """Place previews in the camera's horizontal view in either camera mode."""
+    import math
+    controller = getattr(pawn, 'Controller', None)
+    camera = getattr(controller, 'PlayerCameraManager', None)
+    rotation = camera.GetCameraRotation() if camera is not None else (
+        controller.GetControlRotation() if controller is not None else pawn.K2_GetActorRotation())
+    origin = camera.GetCameraLocation() if camera is not None else pawn.K2_GetActorLocation()
+    location = pawn.K2_GetActorLocation()
+    yaw = math.radians(float(rotation.Yaw))
+    transform = unrealsdk.make_struct('Transform')
+    transform.Translation.X = float(origin.X) + math.cos(yaw) * 350
+    transform.Translation.Y = float(origin.Y) + math.sin(yaw) * 350
+    transform.Translation.Z = float(location.Z) + float(z_offset)
+    transform.Rotation.Z = math.sin((yaw + math.pi) / 2)
+    transform.Rotation.W = math.cos((yaw + math.pi) / 2)
+    transform.Scale3D.X = transform.Scale3D.Y = transform.Scale3D.Z = 1
+    return transform

@@ -1,0 +1,63 @@
+{
+  "imported_models.py": {
+    "source": "imported_models.py",
+    "source_sha256": "fa864f02c4bac2342df5421e06bc670c56fffbd11539afa510a97862c1ca547d",
+    "output_sha256": "3e6536050b2963e5f21b0d834ed28633d200a6151d11d605dece6a5e66c4bf8c"
+  },
+  "imported_weapons.py": {
+    "source": "imported_weapons.py",
+    "source_sha256": "14e458c4a8db8df889f6833c11af8fcc99032e02f530e64e077f693cc94f75a9",
+    "output_sha256": "912933b1e5f1b2512e8858abe9c7b8a34dbe5535c05ef8edaff46ff40ab94251"
+  },
+  "imported_materials.py": {
+    "source": "imported_materials.py",
+    "source_sha256": "612c8d8cc2e6370794bb411f7872740dd895c347f62c5b216df61445ee8e3490",
+    "output_sha256": "30f6f5229164c4c5344149132a12391c7f37eb85c1afe8ecb738cadd3103d162"
+  },
+  "imported_package_loader.py": {
+    "source": "imported_package_loader.py",
+    "source_sha256": "9a40a36fecb5e22f792d412bf1675e9247cc741105022286b773e07e6842d9e2",
+    "output_sha256": "f11cb2be7b739b1978d8d1e32edf8c7b379b0d7f8a015da34e4287e80b05c681"
+  },
+  "imported_namespaces.py": {
+    "source": "imported_namespaces.py",
+    "source_sha256": "7dcec322c608ddefc67cadd0384ed753915dd9244e3f73d66001f96cb2304b29",
+    "output_sha256": "0405ae4c788b7dac780652400e64e7b1239f888cb7983bae8073ecbc619dde3e"
+  },
+  "vehicle_catalog.py": {
+    "source": "vehicle_catalog.py",
+    "source_sha256": "74cc6eeb6b6a546114870554a13f00861e3b572415b34250db0a99a81f42ffb8",
+    "output_sha256": "74cc6eeb6b6a546114870554a13f00861e3b572415b34250db0a99a81f42ffb8"
+  },
+  "imported_vehicles.py": {
+    "source": "imported_vehicles.py",
+    "source_sha256": "410a8b031e9a9dcf677614137309db1079e14e380065a5e0643670b3884eeccf",
+    "output_sha256": "f61d70a60698174795cc1df15d1a6bf9a4c9ba652b4258fda37949c8a6acea32"
+  },
+  "vehicle_engine.py": {
+    "source": "embedded_bvm/engine.py",
+    "functions": [
+      "_get_driven_vehicle_actor_from_pawn",
+      "_get_player_state",
+      "_looks_like_vehicle_actor",
+      "_make_oak_vehicle_def_ptr",
+      "_object_identity",
+      "_object_type_text",
+      "_personal_vehicle_state_roots",
+      "_request_personal_vehicle",
+      "_resolve_oak_vehicle_movement_from_vehicle_actor",
+      "_resolve_relative",
+      "_resolved_def_instance",
+      "_spawn_personal_vehicle_for_pc",
+      "_try_call_ue_variants",
+      "_try_execute_console_line",
+      "_try_unlock_unlockable",
+      "_try_unlock_vehicle_for_spawn",
+      "_unlock_token_for_vehicle",
+      "_vehicle_definition_instances",
+      "_write_personal_vehicle_def"
+    ],
+    "source_sha256": "bec7d232cac8472767916fb10be1e3917311e3c001822a4aed855f274f9cafb5",
+    "output_sha256": "1f4cd9511211b32cbee3ac010308ee3a5f12ca9f8705c15d9fb0c385a36aa7ed"
+  }
+}

@@ -44,13 +44,7 @@ class NativeSpawn:
         gs = getattr(helpers, "ClassDefaultObject", None)
         if gs is None:
             raise RuntimeError("The SDK cannot access native character spawning in this session.")
-        location, forward = pawn.K2_GetActorLocation(), pawn.GetActorForwardVector()
-        transform = unrealsdk.make_struct("Transform")
-        transform.Rotation.W = 1.0
-        transform.Scale3D.X = transform.Scale3D.Y = transform.Scale3D.Z = 1.0
-        transform.Translation.X = float(location.X) + float(forward.X) * 350.0
-        transform.Translation.Y = float(location.Y) + float(forward.Y) * 350.0
-        transform.Translation.Z = float(location.Z)
+        transform = native._preview_spawn_transform(pawn)
         actor_class = resolve._class_for_actor_name(self.code) if not resolve._mesh_already_streamed() else None
         if actor_class is not None:
             for template in (getattr(actor_class, "ClassDefaultObject", None), actor_class,

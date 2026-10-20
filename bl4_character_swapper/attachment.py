@@ -117,6 +117,81 @@ def _appearance_mesh_ready(actor: Any, mesh: Any) -> bool:
             return False
     return True
 
+def _passivate_worn_shell(shell: Any, source_mesh: Any | None = None) -> None:
+    """Stop AI / capsule movement / root-motion travel; leave mesh anim ticking for pose."""
+    if shell is None:
+        return
+    # OakCharacter actor tick can integrate root motion even with movement off —
+    # that is what made Apply look like "they walk off" then restore the hunter.
+    _call_quiet(shell, "SetActorTickEnabled", False)
+    _call_quiet(shell, "SetActorEnableCollision", False)
+    controller = getattr(shell, "Controller", None)
+    if controller is not None:
+        _call_quiet(getattr(controller, "BrainComponent", None), "StopLogic", "Cosmetic appearance")
+        _call_quiet(controller, "StopMovement")
+        _call_quiet(controller, "SetActorTickEnabled", False)
+        if not _call_quiet(controller, "UnPossess"):
+            _call_quiet(shell, "DetachFromControllerPendingDestroy")
+    try:
+        if hasattr(shell, "AutoPossessAI"):
+            shell.AutoPossessAI = 0
+    except Exception:
+        pass
+    movement = getattr(shell, "CharacterMovement", None)
+    _call_quiet(movement, "StopMovementImmediately")
+    _call_quiet(movement, "DisableMovement")
+    _call_quiet(movement, "SetComponentTickEnabled", False)
+    mesh = source_mesh
+    if mesh is None:
+        try:
+            from . import native_helpers as oak
+
+            mesh = oak._actor_mesh(shell)
+        except Exception:
+            mesh = None
+    if mesh is not None:
+        try:
+            mesh.VisibilityBasedAnimTickOption = 0
+            mesh.bPauseAnims = False
+            mesh.bNoSkeletonUpdate = False
+        except Exception:
+            pass
+        _call_quiet(mesh, "SetComponentTickEnabled", True)
+        try:
+            instance = mesh.GetAnimInstance()
+            # IgnoreRootMotion — pose keeps cooking; travel stays on the player capsule.
+            _call_quiet(instance, "SetRootMotionMode", 1)
+        except Exception:
+            pass
+
+
+def _pin_worn_shell_to_pawn(pawn: Any, shell: Any, source_mesh: Any | None = None) -> bool:
+    """Attach shell to player root at 0,0,0 relative and keep it passive."""
+    root = getattr(pawn, "RootComponent", None)
+    if root is None or shell is None:
+        return False
+    _passivate_worn_shell(shell, source_mesh)
+    if not _call_quiet(shell, "K2_AttachToComponent", root, "None", 2, 2, 1, False):
+        return False
+    zero = unrealsdk.make_struct("Vector", X=0.0, Y=0.0, Z=0.0)
+    shell_root = getattr(shell, "RootComponent", None)
+    if shell_root is not None:
+        if not _call_quiet(shell_root, "K2_SetRelativeLocation", zero, False, False):
+            try:
+                shell_root.RelativeLocation = zero
+            except Exception:
+                pass
+    here, there = _actor_location(pawn), _actor_location(shell)
+    try:
+        if here is None or there is None:
+            return False
+        if (float(here.X) - float(there.X)) ** 2 + (float(here.Y) - float(there.Y)) ** 2 > 100 ** 2:
+            return False
+    except Exception:
+        return False
+    return True
+
+
 def _apply_worn_source_appearance_legacy(
     pawn: Any,
     player_mesh: Any,
@@ -132,21 +207,7 @@ def _apply_worn_source_appearance_legacy(
     root = getattr(pawn, "RootComponent", None)
     if root is None:
         raise RuntimeError("The local player has no root component to carry the model.")
-    controller = getattr(source, "Controller", None)
-    if not _call_quiet(controller, "UnPossess"):
-        _call_quiet(source, "DetachFromControllerPendingDestroy")
-    _call_quiet(source, "SetActorEnableCollision", False)
-    movement = getattr(source, "CharacterMovement", None)
-    _call_quiet(movement, "StopMovementImmediately")
-    _call_quiet(movement, "DisableMovement")
-    if not _call_quiet(source, "K2_AttachToComponent", root, "None", 2, 2, 1, False):
-        raise RuntimeError("The selected model could not be attached to the local player.")
-    here, there = _actor_location(pawn), _actor_location(source)
-    try:
-        offset = abs(float(here.X) - float(there.X)) + abs(float(here.Y) - float(there.Y))
-    except Exception:
-        offset = 0.0
-    if offset > 100.0:
+    if not _pin_worn_shell_to_pawn(pawn, source, source_mesh):
         _call_quiet(source, "K2_DetachFromActor", 1, 1, 1)
         raise RuntimeError("The selected model did not stay on the local player.")
     source_skel = getattr(source_asset, "Skeleton", None)
@@ -160,6 +221,7 @@ def _apply_worn_source_appearance_legacy(
         extras.append({"comp": comp, "asset": None, "materials": [],
                        "visible": visible, "hidden": hidden,
                        "tick_option": getattr(comp, "VisibilityBasedAnimTickOption", None)})
+    # Mesh anim stays on for pose; actor/AI/movement stay off (see _passivate_worn_shell).
     leader = False
     from .animation import compatible_bones
     if shared_skeleton or (follow_player_pose and compatible_bones(source_mesh, player_mesh)):
@@ -186,10 +248,11 @@ def _apply_worn_source_appearance_legacy(
         "source_label": _actor_label(source), "source_code": requested,
         "extras": extras, "scope": "local",
         "animation_driver": "legacy_local",
+        "root_relative_xyz": [0.0, 0.0, 0.0],
     }
     _appearance_states[str(pawn)] = _appearance_shell
     _appearance_runtime_log(
         f"legacy local swap — {getattr(source_asset, 'Name', source_asset)}; "
-        f"{len(extras)} player parts hidden; source animation left unchanged"
+        f"{len(extras)} player parts hidden; source passive (no root-motion travel)"
     )
     return f"Local appearance applied from {_actor_label(source)} using the original attachment method."
