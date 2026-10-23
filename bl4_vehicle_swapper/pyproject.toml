@@ -1,0 +1,16 @@
+[project]
+name = "bl4_vehicle_swapper"
+version = "0.1.2"
+authors = [{ name = "RDPSqu1ggs" }]
+description = "BL4 vehicle visual swaps. No cars are included. An installed car pack appears in the list. Native driving stays the same."
+
+[project.urls]
+Repository = "https://github.com/Squ1ggs/Bl4SDKmods"
+
+[tool.sdkmod]
+name = "BL4 Vehicle Swapper"
+version = "0.1.2"
+license = { name = "GPL3", url = "https://choosealicense.com/licenses/gpl-3.0/" }
+supported_games = ["BL4"]
+coop_support = "Unknown"
+download = "https://github.com/Squ1ggs/Bl4SDKmods/releases/download/bl4-vehicle-swapper-v0.1.2/bl4_vehicle_swapper.sdkmod"
