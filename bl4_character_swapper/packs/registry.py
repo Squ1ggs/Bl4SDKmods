@@ -108,15 +108,23 @@ def validate(data, folder, root, *, verify=True):
     category = 'ImportedCharacters' if data['kind'] == 'character' else 'ImportedVehicles'
     if not isinstance(namespace, str) or not re.fullmatch(r'/Game/' + category + r'/[A-Za-z][A-Za-z0-9_]{0,79}/', namespace):
         raise ValueError('Invalid asset namespace')
-    paths = [model.get('actor_class', ''), model.get('mesh', ''), *model.get('animations', {}).values()]
+    paths = [model.get('actor_class', ''), model.get('mesh', '')]
     for key in ('slot_textures', 'slot_normals', 'slot_packed'):
         paths.extend(model.get(key, {}).values())
-    for extension in model.get('animation_extensions', []):
-        paths.extend(extension.get('animations', {}).values())
     if model.get('skeleton'):
         paths.append(model['skeleton'])
     if any(not isinstance(p, str) or not p.startswith(namespace) or '..' in p or '\\' in p or ':' in p for p in paths):
         raise ValueError('Asset paths escape the pack namespace')
+    animation_paths=list(model.get('animations',{}).values())
+    approved_roots=[namespace]
+    for extension in model.get('animation_extensions',[]):
+        animation_paths.extend(extension.get('animations',{}).values())
+        if extension.get('shared') is True and data['kind']=='character':
+            for family in ('DriverSeats','MissingImportMotion'):
+                approved_roots.append('/Game/ImportedCharacters/'+family+'/'+pack_id+'/')
+    if any(not isinstance(p,str) or not any(p.startswith(prefix) for prefix in approved_roots)
+           or '..' in p or '\\' in p or ':' in p for p in animation_paths):
+        raise ValueError('Animation paths escape the pack namespace or its declared shared extensions')
     files = archives(model)
     for name, digest in files.items():
         path = root / 'OakGame/Content/Paks' / name
@@ -161,7 +169,7 @@ def validate(data, folder, root, *, verify=True):
 def discover(root=None):
     global _packs, _errors
     root = Path(root) if root is not None else game_root()
-    found, errors, claims = {}, [], {}
+    found, errors, claims, blocked = {}, [], {}, set()
     if root is not None:
         for path in sorted((root / 'sdk_mods/appearance_packs').glob('*/pack.json')):
             try:
@@ -169,12 +177,25 @@ def discover(root=None):
                     raise ValueError('Pack manifest is too large')
                 pack = validate(json.loads(path.read_text(encoding='utf-8')), path.parent, root)
                 # Reject both conflicting packs rather than choosing by scan order.
-                chunk_ids = {re.match(r'pakchunk(\d+)', name).group(1)
-                             for name in archives(pack['model']) if re.match(r'pakchunk(\d+)', name)}
-                keys = {pack['namespace'], *('chunk:' + n for n in chunk_ids)}
-                conflict = {claims[key] for key in keys if key in claims}
-                for key in keys:
-                    claims.setdefault(key, pack['id'])
+                keys={pack['namespace']:(None,False)}
+                model=pack['model']
+                for row in (model,*model.get('animation_extensions',[])):
+                    files={row['pak']:row['sha256'],**row.get('containers',{})}
+                    signature=tuple(sorted(files.items()))
+                    shared=row is not model and row.get('shared') is True
+                    for name in files:
+                        match=re.match(r'pakchunk(\d+)',name)
+                        if match:keys['chunk:'+match.group(1)]=(signature,shared)
+                conflict=set()
+                for key,(signature,shared) in keys.items():
+                    previous=claims.get(key)
+                    if key in blocked or (previous is not None
+                            and not (shared and previous[2] and signature==previous[1])):
+                        blocked.add(key)
+                        conflict.update(previous[0] if previous else ())
+                        conflict.add(pack['id'])
+                    if previous is None:claims[key]=({pack['id']},signature,shared)
+                    else:previous[0].add(pack['id'])
                 if conflict:
                     for other in conflict:
                         found.pop(other, None)

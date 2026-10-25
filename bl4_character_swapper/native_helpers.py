@@ -109,6 +109,13 @@ def _spawn_actor_deferred(
         return None
 
 
+def _isolated_spawn_transform(pawn, *, z_offset=0.0):
+    """Spawn the cosmetic away from the wearer so its first tick cannot start a fight."""
+    transform = _preview_spawn_transform(pawn, z_offset=z_offset)
+    transform.Translation.X = float(transform.Translation.X) + 30000.0
+    return transform
+
+
 def _preview_spawn_transform(pawn, *, z_offset=0.0):
     """Place previews in the camera's horizontal view in either camera mode."""
     import math

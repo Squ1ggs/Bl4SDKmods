@@ -1,0 +1,496 @@
+{
+  "Char_NPC_Amara": {
+    "enabled": true,
+    "mesh_skeleton": "/Game/AI/NPC/_Unique/Amara/Model/Rig/SK_Amara_Skeleton.SK_Amara_Skeleton",
+    "animation": "/Game/ImportedCharacters/NativeAmaraSeat/AN_Amara_Seated.AN_Amara_Seated",
+    "archives": {
+      "pakchunk1313-NativeAmaraSeat_P.pak": "4e26b6584eaa770d325feb3ab651f0ec571724c5d51f58ab2eac80e1b706b831",
+      "pakchunk1313-NativeAmaraSeat_P.utoc": "0962125c713dfd5792027477c401c714f104c4e1f43d1e9edf5042b006352bd8",
+      "pakchunk1313-NativeAmaraSeat_P.ucas": "d030645728c08a9ed2f614365b36665d2cb314c2b71028fd23a9b36f6bb4b6a2"
+    },
+    "native_track_remap_sha256": "9d3400f41627af44e05b4941802204adf5b5747ea8e6d9a4aebad4b22471ea4d",
+    "validation": "original_native_skeleton_indices_checked_live_pose_pending",
+    "vehicle_seat_anchors": {
+      "forza_mer_amgone_21_22f36239": {
+        "hip_shell_cm": [
+          33,
+          -15,
+          43
+        ],
+        "clip_hip_component_cm": [
+          8.641862869,
+          -2.193712473,
+          0.069818258
+        ]
+      }
+    }
+  },
+  "native_shared_male": {
+    "enabled": true,
+    "mesh_skeleton": "/Game/AI/NPC/_Gestalt/_Shared/Model/Rig/SK_GNPC_M_Skeleton.SK_GNPC_M_Skeleton",
+    "animation": "/Game/ImportedCharacters/NativeHumanSeat/AN_Human_Seated.AN_Human_Seated",
+    "archives": {
+      "pakchunk1315-NativeHumanSeat_P.pak": "edb5d538e4d75f0963d5fb82d94698396105007c2d04f321df6ab51516e6a454",
+      "pakchunk1315-NativeHumanSeat_P.utoc": "1d9c0db2d9eadc8c666d1162b99dfcd6cfa6a8f4a2e521814fdc86ea7a8ca181",
+      "pakchunk1315-NativeHumanSeat_P.ucas": "195ae0780b0c37d25d68eeee73ad3becc9167d5b11a45f21bca278ae28045d3f"
+    },
+    "native_track_remap_sha256": "1056a714f2095711d2fc459512f69c9f21ae2753d4d29fe797109985ae09bebb",
+    "validation": "exact_native_rig_and_cooked_indices_checked_live_pose_pending"
+  },
+  "SK_GunToterFemale_Skeleton_e93ba1b2": {
+    "enabled": true,
+    "mesh_skeleton": "/Game/AI/ArmyBandit/GunToter/_Shared/Model/Rig/SK_GunToterFemale_Skeleton.SK_GunToterFemale_Skeleton",
+    "archives": {
+      "pakchunk1323-NativeHumanoidMotion_P.pak": "8996acb652e394aec08aa9be430ad8bbf163051941c17d50e1196bd8724d007d",
+      "pakchunk1323-NativeHumanoidMotion_P.utoc": "8499f06d9c968e433af9cb5c6f1e4d2237a11b17d5226c58cf6bf8e17ff2e1c9",
+      "pakchunk1323-NativeHumanoidMotion_P.ucas": "32d0ac8df8bd16b944a6dd35d4facca11db676e7fc81fbc15124643b99f21c10"
+    },
+    "animation": "/Game/ImportedCharacters/NativeCharacterMotion/SK_GunToterFemale_Skeleton_e93ba1b2/AN_SK_GunToterFemale_Skeleton_e93ba1b2_Player_Seated.AN_SK_GunToterFemale_Skeleton_e93ba1b2_Player_Seated",
+    "animation_root": "/Game/ImportedCharacters/NativeCharacterMotion/SK_GunToterFemale_Skeleton_e93ba1b2/",
+    "scope": "own_rig_offline_candidate_no_cabin_or_game_certification",
+    "hip_component_cm": [
+      0.0,
+      7.859645822626965e-15,
+      122.00010681152344
+    ],
+    "clip_hip_component_cm": [
+      0.0,
+      7.859645822626965e-15,
+      122.00010681152344
+    ],
+    "hip_bone": "Hips",
+    "seat_style": "extended_legs"
+  },
+  "SK_PsychoFemale_Skeleton_8f4c1e1a": {
+    "enabled": true,
+    "mesh_skeleton": "/Game/AI/ArmyBandit/Psycho/_Shared/Model/Rig/SK_PsychoFemale_Skeleton.SK_PsychoFemale_Skeleton",
+    "archives": {
+      "pakchunk1323-NativeHumanoidMotion_P.pak": "8996acb652e394aec08aa9be430ad8bbf163051941c17d50e1196bd8724d007d",
+      "pakchunk1323-NativeHumanoidMotion_P.utoc": "8499f06d9c968e433af9cb5c6f1e4d2237a11b17d5226c58cf6bf8e17ff2e1c9",
+      "pakchunk1323-NativeHumanoidMotion_P.ucas": "32d0ac8df8bd16b944a6dd35d4facca11db676e7fc81fbc15124643b99f21c10"
+    },
+    "animation": "/Game/ImportedCharacters/NativeCharacterMotion/SK_PsychoFemale_Skeleton_8f4c1e1a/AN_SK_PsychoFemale_Skeleton_8f4c1e1a_Player_Seated.AN_SK_PsychoFemale_Skeleton_8f4c1e1a_Player_Seated",
+    "animation_root": "/Game/ImportedCharacters/NativeCharacterMotion/SK_PsychoFemale_Skeleton_8f4c1e1a/",
+    "scope": "own_rig_offline_candidate_no_cabin_or_game_certification",
+    "hip_component_cm": [
+      0.0,
+      7.867812914304391e-15,
+      122.13348388671875
+    ],
+    "clip_hip_component_cm": [
+      0.0,
+      7.867812914304391e-15,
+      122.13348388671875
+    ],
+    "hip_bone": "Hips",
+    "seat_style": "extended_legs"
+  },
+  "SK_Leader_Skeleton_0fc32278": {
+    "enabled": true,
+    "mesh_skeleton": "/Game/AI/ArmyOrder/Leader/_Shared/Model/Rig/SK_Leader_Skeleton.SK_Leader_Skeleton",
+    "archives": {
+      "pakchunk1323-NativeHumanoidMotion_P.pak": "8996acb652e394aec08aa9be430ad8bbf163051941c17d50e1196bd8724d007d",
+      "pakchunk1323-NativeHumanoidMotion_P.utoc": "8499f06d9c968e433af9cb5c6f1e4d2237a11b17d5226c58cf6bf8e17ff2e1c9",
+      "pakchunk1323-NativeHumanoidMotion_P.ucas": "32d0ac8df8bd16b944a6dd35d4facca11db676e7fc81fbc15124643b99f21c10"
+    },
+    "animation": "/Game/ImportedCharacters/NativeCharacterMotion/SK_Leader_Skeleton_0fc32278/AN_SK_Leader_Skeleton_0fc32278_Player_Seated.AN_SK_Leader_Skeleton_0fc32278_Player_Seated",
+    "animation_root": "/Game/ImportedCharacters/NativeCharacterMotion/SK_Leader_Skeleton_0fc32278/",
+    "scope": "own_rig_offline_candidate_no_cabin_or_game_certification",
+    "hip_component_cm": [
+      9.91456604661979e-23,
+      1.2714692986621687e-14,
+      118.45126342773438
+    ],
+    "clip_hip_component_cm": [
+      9.91456604661979e-23,
+      1.2714692986621687e-14,
+      118.45126342773438
+    ],
+    "hip_bone": "Hips",
+    "seat_style": "extended_legs"
+  },
+  "SK_GNPC_F_Skeleton_b5198d6c": {
+    "enabled": true,
+    "mesh_skeleton": "/Game/AI/NPC/_Gestalt/_Shared/Model/Rig/SK_GNPC_F_Skeleton.SK_GNPC_F_Skeleton",
+    "archives": {
+      "pakchunk1323-NativeHumanoidMotion_P.pak": "8996acb652e394aec08aa9be430ad8bbf163051941c17d50e1196bd8724d007d",
+      "pakchunk1323-NativeHumanoidMotion_P.utoc": "8499f06d9c968e433af9cb5c6f1e4d2237a11b17d5226c58cf6bf8e17ff2e1c9",
+      "pakchunk1323-NativeHumanoidMotion_P.ucas": "32d0ac8df8bd16b944a6dd35d4facca11db676e7fc81fbc15124643b99f21c10"
+    },
+    "animation": "/Game/ImportedCharacters/NativeCharacterMotion/SK_GNPC_F_Skeleton_b5198d6c/AN_SK_GNPC_F_Skeleton_b5198d6c_Player_Seated.AN_SK_GNPC_F_Skeleton_b5198d6c_Player_Seated",
+    "animation_root": "/Game/ImportedCharacters/NativeCharacterMotion/SK_GNPC_F_Skeleton_b5198d6c/",
+    "scope": "own_rig_offline_candidate_no_cabin_or_game_certification",
+    "hip_component_cm": [
+      0.0,
+      3.762703310820209e-15,
+      108.95636749267578
+    ],
+    "clip_hip_component_cm": [
+      0.0,
+      3.762703310820209e-15,
+      108.95636749267578
+    ],
+    "hip_bone": "Hips",
+    "seat_style": "extended_legs"
+  },
+  "SK_BoltInventor_Skeleton_b8c4d3a0": {
+    "enabled": true,
+    "mesh_skeleton": "/Game/AI/NPC/_Unique/BoltInventor/Model/Rig/SK_BoltInventor_Skeleton.SK_BoltInventor_Skeleton",
+    "archives": {
+      "pakchunk1323-NativeHumanoidMotion_P.pak": "8996acb652e394aec08aa9be430ad8bbf163051941c17d50e1196bd8724d007d",
+      "pakchunk1323-NativeHumanoidMotion_P.utoc": "8499f06d9c968e433af9cb5c6f1e4d2237a11b17d5226c58cf6bf8e17ff2e1c9",
+      "pakchunk1323-NativeHumanoidMotion_P.ucas": "32d0ac8df8bd16b944a6dd35d4facca11db676e7fc81fbc15124643b99f21c10"
+    },
+    "animation": "/Game/ImportedCharacters/NativeCharacterMotion/SK_BoltInventor_Skeleton_b8c4d3a0/AN_SK_BoltInventor_Skeleton_b8c4d3a0_Player_Seated.AN_SK_BoltInventor_Skeleton_b8c4d3a0_Player_Seated",
+    "animation_root": "/Game/ImportedCharacters/NativeCharacterMotion/SK_BoltInventor_Skeleton_b8c4d3a0/",
+    "scope": "own_rig_offline_candidate_no_cabin_or_game_certification",
+    "hip_component_cm": [
+      0.0,
+      6.469180253336829e-15,
+      105.64972686767578
+    ],
+    "clip_hip_component_cm": [
+      0.0,
+      6.469180253336829e-15,
+      105.64972686767578
+    ],
+    "hip_bone": "Hips",
+    "seat_style": "extended_legs"
+  },
+  "SK_BuddyNudge_Skeleton_5c7fb282": {
+    "enabled": true,
+    "mesh_skeleton": "/Game/AI/NPC/_Unique/BuddyNudge/Model/Rig/SK_BuddyNudge_Skeleton.SK_BuddyNudge_Skeleton",
+    "archives": {
+      "pakchunk1323-NativeHumanoidMotion_P.pak": "8996acb652e394aec08aa9be430ad8bbf163051941c17d50e1196bd8724d007d",
+      "pakchunk1323-NativeHumanoidMotion_P.utoc": "8499f06d9c968e433af9cb5c6f1e4d2237a11b17d5226c58cf6bf8e17ff2e1c9",
+      "pakchunk1323-NativeHumanoidMotion_P.ucas": "32d0ac8df8bd16b944a6dd35d4facca11db676e7fc81fbc15124643b99f21c10"
+    },
+    "animation": "/Game/ImportedCharacters/NativeCharacterMotion/SK_BuddyNudge_Skeleton_5c7fb282/AN_SK_BuddyNudge_Skeleton_5c7fb282_Player_Seated.AN_SK_BuddyNudge_Skeleton_5c7fb282_Player_Seated",
+    "animation_root": "/Game/ImportedCharacters/NativeCharacterMotion/SK_BuddyNudge_Skeleton_5c7fb282/",
+    "scope": "own_rig_offline_candidate_no_cabin_or_game_certification",
+    "hip_component_cm": [
+      0.0,
+      6.993347958020313e-15,
+      114.21003723144531
+    ],
+    "clip_hip_component_cm": [
+      0.0,
+      6.993347958020313e-15,
+      114.21003723144531
+    ],
+    "hip_bone": "Hips",
+    "seat_style": "extended_legs"
+  },
+  "SK_FallenAristocrat_Skeleton_ee694a70": {
+    "enabled": true,
+    "mesh_skeleton": "/Game/AI/NPC/_Unique/FallenAristocrat/Model/Rig/SK_FallenAristocrat_Skeleton.SK_FallenAristocrat_Skeleton",
+    "archives": {
+      "pakchunk1323-NativeHumanoidMotion_P.pak": "8996acb652e394aec08aa9be430ad8bbf163051941c17d50e1196bd8724d007d",
+      "pakchunk1323-NativeHumanoidMotion_P.utoc": "8499f06d9c968e433af9cb5c6f1e4d2237a11b17d5226c58cf6bf8e17ff2e1c9",
+      "pakchunk1323-NativeHumanoidMotion_P.ucas": "32d0ac8df8bd16b944a6dd35d4facca11db676e7fc81fbc15124643b99f21c10"
+    },
+    "animation": "/Game/ImportedCharacters/NativeCharacterMotion/SK_FallenAristocrat_Skeleton_ee694a70/AN_SK_FallenAristocrat_Skeleton_ee694a70_Player_Seated.AN_SK_FallenAristocrat_Skeleton_ee694a70_Player_Seated",
+    "animation_root": "/Game/ImportedCharacters/NativeCharacterMotion/SK_FallenAristocrat_Skeleton_ee694a70/",
+    "scope": "own_rig_offline_candidate_no_cabin_or_game_certification",
+    "hip_component_cm": [
+      -7.666262697079765e-30,
+      3.882261164292206e-15,
+      122.7551498413086
+    ],
+    "clip_hip_component_cm": [
+      -7.666262697079765e-30,
+      3.882261164292206e-15,
+      122.7551498413086
+    ],
+    "hip_bone": "Hips",
+    "seat_style": "extended_legs"
+  },
+  "SK_IslandGuide_Skeleton_ec190424": {
+    "enabled": true,
+    "mesh_skeleton": "/Game/AI/NPC/_Unique/IslandGuide/Model/Rig/SK_IslandGuide_Skeleton.SK_IslandGuide_Skeleton",
+    "archives": {
+      "pakchunk1323-NativeHumanoidMotion_P.pak": "8996acb652e394aec08aa9be430ad8bbf163051941c17d50e1196bd8724d007d",
+      "pakchunk1323-NativeHumanoidMotion_P.utoc": "8499f06d9c968e433af9cb5c6f1e4d2237a11b17d5226c58cf6bf8e17ff2e1c9",
+      "pakchunk1323-NativeHumanoidMotion_P.ucas": "32d0ac8df8bd16b944a6dd35d4facca11db676e7fc81fbc15124643b99f21c10"
+    },
+    "animation": "/Game/ImportedCharacters/NativeCharacterMotion/SK_IslandGuide_Skeleton_ec190424/AN_SK_IslandGuide_Skeleton_ec190424_Player_Seated.AN_SK_IslandGuide_Skeleton_ec190424_Player_Seated",
+    "animation_root": "/Game/ImportedCharacters/NativeCharacterMotion/SK_IslandGuide_Skeleton_ec190424/",
+    "scope": "own_rig_offline_candidate_no_cabin_or_game_certification",
+    "hip_component_cm": [
+      1.0568922746548296e-29,
+      -2.8866544029247654e-15,
+      93.61945343017578
+    ],
+    "clip_hip_component_cm": [
+      1.0568922746548296e-29,
+      -2.8866544029247654e-15,
+      93.61945343017578
+    ],
+    "hip_bone": "Hips",
+    "seat_style": "extended_legs"
+  },
+  "SK_Lilith_Skeleton_0d51890b": {
+    "enabled": true,
+    "mesh_skeleton": "/Game/AI/NPC/_Unique/Lilith/Model/Rig/SK_Lilith_Skeleton.SK_Lilith_Skeleton",
+    "archives": {
+      "pakchunk1323-NativeHumanoidMotion_P.pak": "8996acb652e394aec08aa9be430ad8bbf163051941c17d50e1196bd8724d007d",
+      "pakchunk1323-NativeHumanoidMotion_P.utoc": "8499f06d9c968e433af9cb5c6f1e4d2237a11b17d5226c58cf6bf8e17ff2e1c9",
+      "pakchunk1323-NativeHumanoidMotion_P.ucas": "32d0ac8df8bd16b944a6dd35d4facca11db676e7fc81fbc15124643b99f21c10"
+    },
+    "animation": "/Game/ImportedCharacters/NativeCharacterMotion/SK_Lilith_Skeleton_0d51890b/AN_SK_Lilith_Skeleton_0d51890b_Player_Seated.AN_SK_Lilith_Skeleton_0d51890b_Player_Seated",
+    "animation_root": "/Game/ImportedCharacters/NativeCharacterMotion/SK_Lilith_Skeleton_0d51890b/",
+    "scope": "own_rig_offline_candidate_no_cabin_or_game_certification",
+    "hip_component_cm": [
+      0.0,
+      3.81882432577349e-15,
+      105.56742858886719
+    ],
+    "clip_hip_component_cm": [
+      0.0,
+      3.81882432577349e-15,
+      105.56742858886719
+    ],
+    "hip_bone": "Hips",
+    "seat_style": "extended_legs"
+  },
+  "SK_PrisonBuddy_Skeleton_2f52a633": {
+    "enabled": true,
+    "mesh_skeleton": "/Game/AI/NPC/_Unique/PrisonBuddy/Model/Rig/SK_PrisonBuddy_Skeleton.SK_PrisonBuddy_Skeleton",
+    "archives": {
+      "pakchunk1323-NativeHumanoidMotion_P.pak": "8996acb652e394aec08aa9be430ad8bbf163051941c17d50e1196bd8724d007d",
+      "pakchunk1323-NativeHumanoidMotion_P.utoc": "8499f06d9c968e433af9cb5c6f1e4d2237a11b17d5226c58cf6bf8e17ff2e1c9",
+      "pakchunk1323-NativeHumanoidMotion_P.ucas": "32d0ac8df8bd16b944a6dd35d4facca11db676e7fc81fbc15124643b99f21c10"
+    },
+    "animation": "/Game/ImportedCharacters/NativeCharacterMotion/SK_PrisonBuddy_Skeleton_2f52a633/AN_SK_PrisonBuddy_Skeleton_2f52a633_Player_Seated.AN_SK_PrisonBuddy_Skeleton_2f52a633_Player_Seated",
+    "animation_root": "/Game/ImportedCharacters/NativeCharacterMotion/SK_PrisonBuddy_Skeleton_2f52a633/",
+    "scope": "own_rig_offline_candidate_no_cabin_or_game_certification",
+    "hip_component_cm": [
+      1.3965554486413156e-29,
+      -2.4005003722437517e-16,
+      104.05888366699219
+    ],
+    "clip_hip_component_cm": [
+      1.3965554486413156e-29,
+      -2.4005003722437517e-16,
+      104.05888366699219
+    ],
+    "hip_bone": "Hips",
+    "seat_style": "extended_legs"
+  },
+  "SK_Zane_Skeleton_7f19c6fb": {
+    "enabled": true,
+    "mesh_skeleton": "/Game/AI/NPC/_Unique/Zane/Model/Rig/SK_Zane_Skeleton.SK_Zane_Skeleton",
+    "archives": {
+      "pakchunk1323-NativeHumanoidMotion_P.pak": "8996acb652e394aec08aa9be430ad8bbf163051941c17d50e1196bd8724d007d",
+      "pakchunk1323-NativeHumanoidMotion_P.utoc": "8499f06d9c968e433af9cb5c6f1e4d2237a11b17d5226c58cf6bf8e17ff2e1c9",
+      "pakchunk1323-NativeHumanoidMotion_P.ucas": "32d0ac8df8bd16b944a6dd35d4facca11db676e7fc81fbc15124643b99f21c10"
+    },
+    "animation": "/Game/ImportedCharacters/NativeCharacterMotion/SK_Zane_Skeleton_7f19c6fb/AN_SK_Zane_Skeleton_7f19c6fb_Player_Seated.AN_SK_Zane_Skeleton_7f19c6fb_Player_Seated",
+    "animation_root": "/Game/ImportedCharacters/NativeCharacterMotion/SK_Zane_Skeleton_7f19c6fb/",
+    "scope": "own_rig_offline_candidate_no_cabin_or_game_certification",
+    "hip_component_cm": [
+      -1.855577925132814e-15,
+      6.225231376395801e-15,
+      101.66574096679688
+    ],
+    "clip_hip_component_cm": [
+      -1.855577925132814e-15,
+      6.225231376395801e-15,
+      101.66574096679688
+    ],
+    "hip_bone": "Hips",
+    "seat_style": "extended_legs"
+  },
+  "SK_Leader_MercenaryDay_Skeleton_b8592506": {
+    "enabled": true,
+    "mesh_skeleton": "/Game/DLC/Banjo/AI/ArmyOrder/Leader/_Unique/MercenaryDay/Model/Rig/SK_Leader_MercenaryDay_Skeleton.SK_Leader_MercenaryDay_Skeleton",
+    "archives": {
+      "pakchunk1323-NativeHumanoidMotion_P.pak": "8996acb652e394aec08aa9be430ad8bbf163051941c17d50e1196bd8724d007d",
+      "pakchunk1323-NativeHumanoidMotion_P.utoc": "8499f06d9c968e433af9cb5c6f1e4d2237a11b17d5226c58cf6bf8e17ff2e1c9",
+      "pakchunk1323-NativeHumanoidMotion_P.ucas": "32d0ac8df8bd16b944a6dd35d4facca11db676e7fc81fbc15124643b99f21c10"
+    },
+    "animation": "/Game/ImportedCharacters/NativeCharacterMotion/SK_Leader_MercenaryDay_Skeleton_b8592506/AN_SK_Leader_MercenaryDay_Skeleton_b8592506_Player_Seated.AN_SK_Leader_MercenaryDay_Skeleton_b8592506_Player_Seated",
+    "animation_root": "/Game/ImportedCharacters/NativeCharacterMotion/SK_Leader_MercenaryDay_Skeleton_b8592506/",
+    "scope": "own_rig_offline_candidate_no_cabin_or_game_certification",
+    "hip_component_cm": [
+      9.91456604661979e-23,
+      1.2714692986621687e-14,
+      118.45126342773438
+    ],
+    "clip_hip_component_cm": [
+      9.91456604661979e-23,
+      1.2714692986621687e-14,
+      118.45126342773438
+    ],
+    "hip_bone": "Hips",
+    "seat_style": "extended_legs"
+  },
+  "SK_ScavOutlaw_Skeleton_5f470aac": {
+    "enabled": true,
+    "mesh_skeleton": "/Game/DLC/Cowbell/AI/ArmyScav/ScavOutlaw/_Shared/Model/Rig/SK_ScavOutlaw_Skeleton.SK_ScavOutlaw_Skeleton",
+    "archives": {
+      "pakchunk1323-NativeHumanoidMotion_P.pak": "8996acb652e394aec08aa9be430ad8bbf163051941c17d50e1196bd8724d007d",
+      "pakchunk1323-NativeHumanoidMotion_P.utoc": "8499f06d9c968e433af9cb5c6f1e4d2237a11b17d5226c58cf6bf8e17ff2e1c9",
+      "pakchunk1323-NativeHumanoidMotion_P.ucas": "32d0ac8df8bd16b944a6dd35d4facca11db676e7fc81fbc15124643b99f21c10"
+    },
+    "animation": "/Game/ImportedCharacters/NativeCharacterMotion/SK_ScavOutlaw_Skeleton_5f470aac/AN_SK_ScavOutlaw_Skeleton_5f470aac_Player_Seated.AN_SK_ScavOutlaw_Skeleton_5f470aac_Player_Seated",
+    "animation_root": "/Game/ImportedCharacters/NativeCharacterMotion/SK_ScavOutlaw_Skeleton_5f470aac/",
+    "scope": "own_rig_offline_candidate_no_cabin_or_game_certification",
+    "hip_component_cm": [
+      0.0,
+      1.2826026997208792e-14,
+      155.394775390625
+    ],
+    "clip_hip_component_cm": [
+      0.0,
+      1.2826026997208792e-14,
+      155.394775390625
+    ],
+    "hip_bone": "Hips",
+    "seat_style": "extended_legs"
+  },
+  "SK_DahlKid_Skeleton_9d64731d": {
+    "enabled": true,
+    "mesh_skeleton": "/Game/DLC/Cowbell/AI/NPC/_Unique/DahlKid/Model/Rig/SK_DahlKid_Skeleton.SK_DahlKid_Skeleton",
+    "archives": {
+      "pakchunk1323-NativeHumanoidMotion_P.pak": "8996acb652e394aec08aa9be430ad8bbf163051941c17d50e1196bd8724d007d",
+      "pakchunk1323-NativeHumanoidMotion_P.utoc": "8499f06d9c968e433af9cb5c6f1e4d2237a11b17d5226c58cf6bf8e17ff2e1c9",
+      "pakchunk1323-NativeHumanoidMotion_P.ucas": "32d0ac8df8bd16b944a6dd35d4facca11db676e7fc81fbc15124643b99f21c10"
+    },
+    "animation": "/Game/ImportedCharacters/NativeCharacterMotion/SK_DahlKid_Skeleton_9d64731d/AN_SK_DahlKid_Skeleton_9d64731d_Player_Seated.AN_SK_DahlKid_Skeleton_9d64731d_Player_Seated",
+    "animation_root": "/Game/ImportedCharacters/NativeCharacterMotion/SK_DahlKid_Skeleton_9d64731d/",
+    "scope": "own_rig_offline_candidate_no_cabin_or_game_certification",
+    "hip_component_cm": [
+      -1.1820232970584724e-14,
+      1.955246386212096e-16,
+      65.23485565185547
+    ],
+    "clip_hip_component_cm": [
+      -1.1820232970584724e-14,
+      1.955246386212096e-16,
+      65.23485565185547
+    ],
+    "hip_bone": "Hips",
+    "seat_style": "extended_legs"
+  },
+  "SK_Tediore_Soldier_Skeleton_d3b1e0e4": {
+    "enabled": true,
+    "mesh_skeleton": "/Game/DLC/Harmonica/AI/ArmyTediore/Infantry/_Shared/Model/Rig/SK_Tediore_Soldier_Skeleton.SK_Tediore_Soldier_Skeleton",
+    "archives": {
+      "pakchunk1323-NativeHumanoidMotion_P.pak": "8996acb652e394aec08aa9be430ad8bbf163051941c17d50e1196bd8724d007d",
+      "pakchunk1323-NativeHumanoidMotion_P.utoc": "8499f06d9c968e433af9cb5c6f1e4d2237a11b17d5226c58cf6bf8e17ff2e1c9",
+      "pakchunk1323-NativeHumanoidMotion_P.ucas": "32d0ac8df8bd16b944a6dd35d4facca11db676e7fc81fbc15124643b99f21c10"
+    },
+    "animation": "/Game/ImportedCharacters/NativeCharacterMotion/SK_Tediore_Soldier_Skeleton_d3b1e0e4/AN_SK_Tediore_Soldier_Skeleton_d3b1e0e4_Player_Seated.AN_SK_Tediore_Soldier_Skeleton_d3b1e0e4_Player_Seated",
+    "animation_root": "/Game/ImportedCharacters/NativeCharacterMotion/SK_Tediore_Soldier_Skeleton_d3b1e0e4/",
+    "scope": "own_rig_offline_candidate_no_cabin_or_game_certification",
+    "hip_component_cm": [
+      1.5501647622033804e-29,
+      -2.66453165921035e-16,
+      116.82150268554688
+    ],
+    "clip_hip_component_cm": [
+      1.5501647622033804e-29,
+      -2.66453165921035e-16,
+      116.82150268554688
+    ],
+    "hip_bone": "Hips",
+    "seat_style": "extended_legs"
+  },
+  "SK_Fl4k_Skeleton_1c4996dc": {
+    "enabled": true,
+    "mesh_skeleton": "/Game/DLC/Harmonica/AI/NPC/_Unique/Fl4k/Model/Rig/SK_Fl4k_Skeleton.SK_Fl4k_Skeleton",
+    "archives": {
+      "pakchunk1323-NativeHumanoidMotion_P.pak": "8996acb652e394aec08aa9be430ad8bbf163051941c17d50e1196bd8724d007d",
+      "pakchunk1323-NativeHumanoidMotion_P.utoc": "8499f06d9c968e433af9cb5c6f1e4d2237a11b17d5226c58cf6bf8e17ff2e1c9",
+      "pakchunk1323-NativeHumanoidMotion_P.ucas": "32d0ac8df8bd16b944a6dd35d4facca11db676e7fc81fbc15124643b99f21c10"
+    },
+    "animation": "/Game/ImportedCharacters/NativeCharacterMotion/SK_Fl4k_Skeleton_1c4996dc/AN_SK_Fl4k_Skeleton_1c4996dc_Player_Seated.AN_SK_Fl4k_Skeleton_1c4996dc_Player_Seated",
+    "animation_root": "/Game/ImportedCharacters/NativeCharacterMotion/SK_Fl4k_Skeleton_1c4996dc/",
+    "scope": "own_rig_offline_candidate_no_cabin_or_game_certification",
+    "hip_component_cm": [
+      5.829929252604337e-16,
+      0.0,
+      115.45043182373047
+    ],
+    "clip_hip_component_cm": [
+      5.829929252604337e-16,
+      0.0,
+      115.45043182373047
+    ],
+    "hip_bone": "Hips",
+    "seat_style": "extended_legs"
+  },
+  "SK_MaxxxSupreme_Skeleton_4fe52f7b": {
+    "enabled": true,
+    "mesh_skeleton": "/Game/DLC/Harp/AI/ArmyBandit/Guntoter/_Shared/Model/Rig/SK_MaxxxSupreme_Skeleton.SK_MaxxxSupreme_Skeleton",
+    "archives": {
+      "pakchunk1323-NativeHumanoidMotion_P.pak": "8996acb652e394aec08aa9be430ad8bbf163051941c17d50e1196bd8724d007d",
+      "pakchunk1323-NativeHumanoidMotion_P.utoc": "8499f06d9c968e433af9cb5c6f1e4d2237a11b17d5226c58cf6bf8e17ff2e1c9",
+      "pakchunk1323-NativeHumanoidMotion_P.ucas": "32d0ac8df8bd16b944a6dd35d4facca11db676e7fc81fbc15124643b99f21c10"
+    },
+    "animation": "/Game/ImportedCharacters/NativeCharacterMotion/SK_MaxxxSupreme_Skeleton_4fe52f7b/AN_SK_MaxxxSupreme_Skeleton_4fe52f7b_Player_Seated.AN_SK_MaxxxSupreme_Skeleton_4fe52f7b_Player_Seated",
+    "animation_root": "/Game/ImportedCharacters/NativeCharacterMotion/SK_MaxxxSupreme_Skeleton_4fe52f7b/",
+    "scope": "own_rig_offline_candidate_no_cabin_or_game_certification",
+    "hip_component_cm": [
+      -7.135250709491285e-31,
+      3.0043371901493376e-17,
+      71.67327880859375
+    ],
+    "clip_hip_component_cm": [
+      -7.135250709491285e-31,
+      3.0043371901493376e-17,
+      71.67327880859375
+    ],
+    "hip_bone": "Hips",
+    "seat_style": "extended_legs"
+  },
+  "SK_VileDave_Skeleton_39db2b4f": {
+    "enabled": true,
+    "mesh_skeleton": "/Game/DLC/Viola/AI/ArmyOrder/Leader/_Unique/VileDave/Model/Rig/SK_VileDave_Skeleton.SK_VileDave_Skeleton",
+    "archives": {
+      "pakchunk1323-NativeHumanoidMotion_P.pak": "8996acb652e394aec08aa9be430ad8bbf163051941c17d50e1196bd8724d007d",
+      "pakchunk1323-NativeHumanoidMotion_P.utoc": "8499f06d9c968e433af9cb5c6f1e4d2237a11b17d5226c58cf6bf8e17ff2e1c9",
+      "pakchunk1323-NativeHumanoidMotion_P.ucas": "32d0ac8df8bd16b944a6dd35d4facca11db676e7fc81fbc15124643b99f21c10"
+    },
+    "animation": "/Game/ImportedCharacters/NativeCharacterMotion/SK_VileDave_Skeleton_39db2b4f/AN_SK_VileDave_Skeleton_39db2b4f_Player_Seated.AN_SK_VileDave_Skeleton_39db2b4f_Player_Seated",
+    "animation_root": "/Game/ImportedCharacters/NativeCharacterMotion/SK_VileDave_Skeleton_39db2b4f/",
+    "scope": "own_rig_offline_candidate_no_cabin_or_game_certification",
+    "hip_component_cm": [
+      0.0,
+      -4.201568233209844e-16,
+      141.0997314453125
+    ],
+    "clip_hip_component_cm": [
+      0.0,
+      -4.201568233209844e-16,
+      141.0997314453125
+    ],
+    "hip_bone": "Hips",
+    "seat_style": "extended_legs"
+  },
+  "Moxxi": {
+    "enabled": true,
+    "mesh_skeleton": "/Game/AI/NPC/_Unique/Moxxi/Model/Rig/SK_Moxxi_Skeleton.SK_Moxxi_Skeleton",
+    "archives": {
+      "pakchunk1323-NativeHumanoidMotion_P.pak": "8996acb652e394aec08aa9be430ad8bbf163051941c17d50e1196bd8724d007d",
+      "pakchunk1323-NativeHumanoidMotion_P.utoc": "8499f06d9c968e433af9cb5c6f1e4d2237a11b17d5226c58cf6bf8e17ff2e1c9",
+      "pakchunk1323-NativeHumanoidMotion_P.ucas": "32d0ac8df8bd16b944a6dd35d4facca11db676e7fc81fbc15124643b99f21c10"
+    },
+    "animation": "/Game/ImportedCharacters/NativeCharacterMotion/Moxxi/AN_Moxxi_Player_Seated.AN_Moxxi_Player_Seated",
+    "animation_root": "/Game/ImportedCharacters/NativeCharacterMotion/Moxxi/",
+    "scope": "own_rig_offline_candidate_no_cabin_or_game_certification",
+    "hip_component_cm": [
+      0.0,
+      2.482772682410562e-16,
+      102.94202423095703
+    ],
+    "clip_hip_component_cm": [
+      0.0,
+      2.482772682410562e-16,
+      102.94202423095703
+    ],
+    "hip_bone": "Hips",
+    "seat_style": "extended_legs"
+  }
+}

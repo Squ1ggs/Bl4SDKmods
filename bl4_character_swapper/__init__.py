@@ -16,7 +16,7 @@ _BLIMGUI = None
 _BLIMGUI_MODE = ""
 _WINDOW_OWNED = False
 _WINDOW_DRAW = None
-VERSION = "0.2.8"
+VERSION = "0.2.13"
 VEHICLE_PACKS_ENABLED = False
 _CONSOLE_CHOICES = []
 BLIMGUI_DOWNLOAD = "https://github.com/juso40/blimgui/raw/ff5be35f41d69f28056befdd1bfb8caddae5892b/blimgui.zip"
@@ -63,7 +63,7 @@ def _try_register_blimgui() -> bool:
     except Exception as exc:
         _BLIMGUI = None
         _BLIMGUI_MODE = ""
-        _log(f"BLImGui UI unavailable ({exc}); console commands remain available. BLImGui is strongly recommended: {BLIMGUI_PAGE} — type bl4cs_help.")
+        _log(f"BLImGui UI unavailable ({exc}); console commands remain available. BLImGui is strongly recommended: {BLIMGUI_PAGE} â€” type bl4cs_help.")
         return False
 
 def _owns_window():
@@ -92,6 +92,11 @@ def on_disable():
     _BLIMGUI_MODE = ""
     _WINDOW_OWNED = False
     _WINDOW_DRAW = None
+
+@keybind("Toggle first / third person", key="F9")
+def toggle_camera():
+    CONTROLLER.request("toggle_camera")
+
 
 @keybind("Open BL4 Character Swapper", key="F10")
 def open_ui():
@@ -139,7 +144,7 @@ def _show_console_choices(matches, page=1):
     for index in range((page - 1) * 20, min(page * 20, len(matches))):
         row = matches[index]
         suffix = ' [preview only]' if not row.get('apply_enabled', True) else ''
-        _log(f"  {index + 1}: {row['name']} [{row['group']}]{suffix} — {row['key']}")
+        _log(f"  {index + 1}: {row['name']} [{row['group']}]{suffix} â€” {row['key']}")
     if pages > 1:
         _log('More results: repeat bl4cs_list SEARCH --page NUMBER, or narrow your search.')
 
@@ -178,7 +183,7 @@ def _target_for_index(index: int):
 @command("bl4cs_help", description="Show BL4 Character Swapper controls (BLImGui is optional).")
 def bl4cs_help(_args: Namespace) -> None:
     for line in (
-        "BL4 Character Swapper — works standalone with SDK console controls.",
+        "BL4 Character Swapper â€” works standalone with SDK console controls.",
         "Quick start: bl4cs_list moxxi -> bl4cs 1 -> bl4cs_restore. No BLImGui required.",
         "  bl4cs <name or NUMBER>           Swap yourself; ambiguous names show numbered choices.",
         "  bl4cs_preview <name or NUMBER>   Preview before applying.",
@@ -186,7 +191,7 @@ def bl4cs_help(_args: Namespace) -> None:
         "BLImGui is strongly recommended: F10 opens a searchable character picker, preview/apply/restore controls and player selection.",
         f"Official BL4 BLImGui download (1.1, Python 3.14 x64): {BLIMGUI_DOWNLOAD}",
         f"Install instructions / future SDK updates: {BLIMGUI_PAGE}",
-        "Created and maintained by RDPSqu1ggs — github.com/Squ1ggs/Bl4SDKmods",
+        "Created and maintained by RDPSqu1ggs â€” github.com/Squ1ggs/Bl4SDKmods",
         "  bl4cs_list [search]              Search the native BL4 character catalog.",
         "  bl4cs_players                    List local player and lobby target indexes.",
         "  bl4cs_preview <name or code>     Spawn a preview beside you (host required).",
@@ -196,7 +201,7 @@ def bl4cs_help(_args: Namespace) -> None:
         "  bl4cs_restore_all                Restore every changed appearance.",
         "  bl4cs_clear                      Remove unworn previews.",
         "  bl4cs_packs                      Show installed packs and file errors.",
-        "F10 supports official BLImGui windows and compatible custom tab menus. Without BLImGui, use the commands above.",
+        "F9 switches first/third person. F10 supports official BLImGui windows and compatible custom tab menus. Without BLImGui, use the commands above.",
         "Also included in Squ1ggs Boosting Tools: use its Appearance tab without installing this standalone mod or BLImGui.",
         "SDK console, BLImGui and the matching SQBT EXE share one appearance service when used together.",
     ):
@@ -268,7 +273,16 @@ bl4cs.add_argument('--player', type=int, default=0, help='Optional target index 
 def bl4cs_status(_args: Namespace):
     _log(CONTROLLER.status)
     operation = getattr(CONTROLLER, 'operation', {})
-    _log(f"Operation: {operation.get('state', 'idle')} — {operation.get('message', '')}")
+    _log(f"Operation: {operation.get('state', 'idle')} â€” {operation.get('message', '')}")
+
+
+    for owner, worn in CONTROLLER.worn.items():
+        state = worn.visibility_state
+        source = worn.source()
+        _log(f"Animation {owner} / {worn.model}: {state.get('animation_status', 'pack driver')}; "
+             f"cosmetic owner={getattr(source, 'Owner', None)}; wearer={worn.pawn()}; "
+             f"motion={state.get('native_motion_observation', {})}; "
+             f"error={state.get('native_motion_error') or state.get('native_stock_motion_unavailable') or ''}")
 
 
 def _cmd_restore(args: Namespace) -> None:
@@ -316,4 +330,4 @@ SDK_MENU = CharacterMenu(CONTROLLER, _log)
 MOD = build_mod(name="BL4 Character Swapper", author="RDPSqu1ggs", version=VERSION,
           description=f"Standalone BL4 character swaps; no boosting tool required. BLImGui is strongly recommended for the F10 character picker: {BLIMGUI_PAGE} . Console-only controls: bl4cs_help. Supports official BLImGui windows and compatible custom tabs. Also included in Squ1ggs Boosting Tools' Appearance tab; separate standalone/BLImGui installation is unnecessary for EXE users. Multiplayer validation pending.",
           supported_games=Game.BL4, coop_support=CoopSupport.Unknown,
-          options=SDK_MENU.options, keybinds=[open_ui], on_enable=on_enable, on_disable=on_disable)
+          options=SDK_MENU.options, keybinds=[open_ui, toggle_camera], on_enable=on_enable, on_disable=on_disable)

@@ -1,0 +1,799 @@
+{
+  "native_amara_player_motion": {
+    "enabled": true,
+    "mesh_skeleton": "/Game/AI/NPC/_Unique/Amara/Model/Rig/SK_Amara_Skeleton.SK_Amara_Skeleton",
+    "archives": {
+      "pakchunk1317-NativeAmaraMotion_P.pak": "8deb4af15fc64e6eba5f075010b16f9aa25a8de7a7eb4a0bfbaed97b934bde61",
+      "pakchunk1317-NativeAmaraMotion_P.utoc": "903fa78c5a599de23abb0375e765ccacada39d2ff97cff3df2de2d3c90bcd603",
+      "pakchunk1317-NativeAmaraMotion_P.ucas": "165c0e1bcf514a8e95c73448556df3c8951c5d06045b55264cb243a111351828"
+    },
+    "scope": "local_native_fullbody_run_sprint_no_guest_replication",
+    "clips": {
+      "run": {
+        "animation": "/Game/ImportedCharacters/NativeAmaraMotion/AN_Amara_Player_Run.AN_Amara_Player_Run",
+        "speed_cm_s": 470.0000000000015
+      },
+      "sprint": {
+        "animation": "/Game/ImportedCharacters/NativeAmaraMotion/AN_Amara_Player_Sprint.AN_Amara_Player_Sprint",
+        "speed_cm_s": 719.9999999999006
+      },
+      "airborne": {
+        "animation": "/Game/ImportedCharacters/NativeAmaraAirborne/AN_Amara_Player_Airborne.AN_Amara_Player_Airborne",
+        "duration_seconds": 1.3333333333333333
+      },
+      "air_hold": {
+        "animation": "/Game/ImportedCharacters/NativeAmaraAirborne/AN_Amara_Player_Air_Hold.AN_Amara_Player_Air_Hold",
+        "duration_seconds": 0.03333333333333333
+      }
+    },
+    "local_slot_motion_enabled": true,
+    "local_weapon_preview_enabled": true,
+    "local_airborne_motion_enabled": true,
+    "airborne_animation_root": "/Game/ImportedCharacters/NativeAmaraAirborne/",
+    "airborne_archives": {
+      "pakchunk1321-NativeAmaraAirborne_P.pak": "11d314df496cc437846c309325afed4a3effb7085a9448470611b6ec02308382",
+      "pakchunk1321-NativeAmaraAirborne_P.utoc": "1d487c6c03ef8851ad152c37deb3dd713e97ad396b2c6a54521a74c7f759d8ad",
+      "pakchunk1321-NativeAmaraAirborne_P.ucas": "aad0d012b5c2f8929a85d77163c42e27131305c0b41d6587ec568beda2ff3a12"
+    }
+  },
+  "SK_GunToterFemale_Skeleton_e93ba1b2": {
+    "enabled": true,
+    "mesh_skeleton": "/Game/AI/ArmyBandit/GunToter/_Shared/Model/Rig/SK_GunToterFemale_Skeleton.SK_GunToterFemale_Skeleton",
+    "archives": {
+      "pakchunk1323-NativeHumanoidMotion_P.pak": "8996acb652e394aec08aa9be430ad8bbf163051941c17d50e1196bd8724d007d",
+      "pakchunk1323-NativeHumanoidMotion_P.utoc": "8499f06d9c968e433af9cb5c6f1e4d2237a11b17d5226c58cf6bf8e17ff2e1c9",
+      "pakchunk1323-NativeHumanoidMotion_P.ucas": "32d0ac8df8bd16b944a6dd35d4facca11db676e7fc81fbc15124643b99f21c10"
+    },
+    "animation_root": "/Game/ImportedCharacters/NativeCharacterMotion/SK_GunToterFemale_Skeleton_e93ba1b2/",
+    "airborne_animation_root": "/Game/ImportedCharacters/NativeCharacterMotion/SK_GunToterFemale_Skeleton_e93ba1b2/",
+    "airborne_archives": {
+      "pakchunk1323-NativeHumanoidMotion_P.pak": "8996acb652e394aec08aa9be430ad8bbf163051941c17d50e1196bd8724d007d",
+      "pakchunk1323-NativeHumanoidMotion_P.utoc": "8499f06d9c968e433af9cb5c6f1e4d2237a11b17d5226c58cf6bf8e17ff2e1c9",
+      "pakchunk1323-NativeHumanoidMotion_P.ucas": "32d0ac8df8bd16b944a6dd35d4facca11db676e7fc81fbc15124643b99f21c10"
+    },
+    "local_slot_motion_enabled": true,
+    "local_airborne_motion_enabled": true,
+    "scope": "local_native_fullbody_not_guest_verified",
+    "clips": {
+      "run": {
+        "animation": "/Game/ImportedCharacters/NativeCharacterMotion/SK_GunToterFemale_Skeleton_e93ba1b2/AN_SK_GunToterFemale_Skeleton_e93ba1b2_Player_Run.AN_SK_GunToterFemale_Skeleton_e93ba1b2_Player_Run",
+        "speed_cm_s": 470.0000000000015
+      },
+      "sprint": {
+        "animation": "/Game/ImportedCharacters/NativeCharacterMotion/SK_GunToterFemale_Skeleton_e93ba1b2/AN_SK_GunToterFemale_Skeleton_e93ba1b2_Player_Sprint.AN_SK_GunToterFemale_Skeleton_e93ba1b2_Player_Sprint",
+        "speed_cm_s": 719.9999999999006
+      },
+      "airborne": {
+        "animation": "/Game/ImportedCharacters/NativeCharacterMotion/SK_GunToterFemale_Skeleton_e93ba1b2/AN_SK_GunToterFemale_Skeleton_e93ba1b2_Player_Airborne.AN_SK_GunToterFemale_Skeleton_e93ba1b2_Player_Airborne",
+        "duration_seconds": 1.3333333333333333
+      },
+      "air_hold": {
+        "animation": "/Game/ImportedCharacters/NativeCharacterMotion/SK_GunToterFemale_Skeleton_e93ba1b2/AN_SK_GunToterFemale_Skeleton_e93ba1b2_Player_Air_Hold.AN_SK_GunToterFemale_Skeleton_e93ba1b2_Player_Air_Hold",
+        "duration_seconds": 0.03333333333333333
+      }
+    },
+    "local_weapon_preview_enabled": true
+  },
+  "SK_PsychoFemale_Skeleton_8f4c1e1a": {
+    "enabled": true,
+    "mesh_skeleton": "/Game/AI/ArmyBandit/Psycho/_Shared/Model/Rig/SK_PsychoFemale_Skeleton.SK_PsychoFemale_Skeleton",
+    "archives": {
+      "pakchunk1323-NativeHumanoidMotion_P.pak": "8996acb652e394aec08aa9be430ad8bbf163051941c17d50e1196bd8724d007d",
+      "pakchunk1323-NativeHumanoidMotion_P.utoc": "8499f06d9c968e433af9cb5c6f1e4d2237a11b17d5226c58cf6bf8e17ff2e1c9",
+      "pakchunk1323-NativeHumanoidMotion_P.ucas": "32d0ac8df8bd16b944a6dd35d4facca11db676e7fc81fbc15124643b99f21c10"
+    },
+    "animation_root": "/Game/ImportedCharacters/NativeCharacterMotion/SK_PsychoFemale_Skeleton_8f4c1e1a/",
+    "airborne_animation_root": "/Game/ImportedCharacters/NativeCharacterMotion/SK_PsychoFemale_Skeleton_8f4c1e1a/",
+    "airborne_archives": {
+      "pakchunk1323-NativeHumanoidMotion_P.pak": "8996acb652e394aec08aa9be430ad8bbf163051941c17d50e1196bd8724d007d",
+      "pakchunk1323-NativeHumanoidMotion_P.utoc": "8499f06d9c968e433af9cb5c6f1e4d2237a11b17d5226c58cf6bf8e17ff2e1c9",
+      "pakchunk1323-NativeHumanoidMotion_P.ucas": "32d0ac8df8bd16b944a6dd35d4facca11db676e7fc81fbc15124643b99f21c10"
+    },
+    "local_slot_motion_enabled": true,
+    "local_airborne_motion_enabled": true,
+    "scope": "local_native_fullbody_not_guest_verified",
+    "clips": {
+      "run": {
+        "animation": "/Game/ImportedCharacters/NativeCharacterMotion/SK_PsychoFemale_Skeleton_8f4c1e1a/AN_SK_PsychoFemale_Skeleton_8f4c1e1a_Player_Run.AN_SK_PsychoFemale_Skeleton_8f4c1e1a_Player_Run",
+        "speed_cm_s": 470.0000000000015
+      },
+      "sprint": {
+        "animation": "/Game/ImportedCharacters/NativeCharacterMotion/SK_PsychoFemale_Skeleton_8f4c1e1a/AN_SK_PsychoFemale_Skeleton_8f4c1e1a_Player_Sprint.AN_SK_PsychoFemale_Skeleton_8f4c1e1a_Player_Sprint",
+        "speed_cm_s": 719.9999999999006
+      },
+      "airborne": {
+        "animation": "/Game/ImportedCharacters/NativeCharacterMotion/SK_PsychoFemale_Skeleton_8f4c1e1a/AN_SK_PsychoFemale_Skeleton_8f4c1e1a_Player_Airborne.AN_SK_PsychoFemale_Skeleton_8f4c1e1a_Player_Airborne",
+        "duration_seconds": 1.3333333333333333
+      },
+      "air_hold": {
+        "animation": "/Game/ImportedCharacters/NativeCharacterMotion/SK_PsychoFemale_Skeleton_8f4c1e1a/AN_SK_PsychoFemale_Skeleton_8f4c1e1a_Player_Air_Hold.AN_SK_PsychoFemale_Skeleton_8f4c1e1a_Player_Air_Hold",
+        "duration_seconds": 0.03333333333333333
+      }
+    },
+    "local_weapon_preview_enabled": true
+  },
+  "SK_Leader_Skeleton_0fc32278": {
+    "enabled": true,
+    "mesh_skeleton": "/Game/AI/ArmyOrder/Leader/_Shared/Model/Rig/SK_Leader_Skeleton.SK_Leader_Skeleton",
+    "archives": {
+      "pakchunk1323-NativeHumanoidMotion_P.pak": "8996acb652e394aec08aa9be430ad8bbf163051941c17d50e1196bd8724d007d",
+      "pakchunk1323-NativeHumanoidMotion_P.utoc": "8499f06d9c968e433af9cb5c6f1e4d2237a11b17d5226c58cf6bf8e17ff2e1c9",
+      "pakchunk1323-NativeHumanoidMotion_P.ucas": "32d0ac8df8bd16b944a6dd35d4facca11db676e7fc81fbc15124643b99f21c10"
+    },
+    "animation_root": "/Game/ImportedCharacters/NativeCharacterMotion/SK_Leader_Skeleton_0fc32278/",
+    "airborne_animation_root": "/Game/ImportedCharacters/NativeCharacterMotion/SK_Leader_Skeleton_0fc32278/",
+    "airborne_archives": {
+      "pakchunk1323-NativeHumanoidMotion_P.pak": "8996acb652e394aec08aa9be430ad8bbf163051941c17d50e1196bd8724d007d",
+      "pakchunk1323-NativeHumanoidMotion_P.utoc": "8499f06d9c968e433af9cb5c6f1e4d2237a11b17d5226c58cf6bf8e17ff2e1c9",
+      "pakchunk1323-NativeHumanoidMotion_P.ucas": "32d0ac8df8bd16b944a6dd35d4facca11db676e7fc81fbc15124643b99f21c10"
+    },
+    "local_slot_motion_enabled": true,
+    "local_airborne_motion_enabled": true,
+    "scope": "local_native_fullbody_not_guest_verified",
+    "clips": {
+      "run": {
+        "animation": "/Game/ImportedCharacters/NativeCharacterMotion/SK_Leader_Skeleton_0fc32278/AN_SK_Leader_Skeleton_0fc32278_Player_Run.AN_SK_Leader_Skeleton_0fc32278_Player_Run",
+        "speed_cm_s": 470.0000000000015
+      },
+      "sprint": {
+        "animation": "/Game/ImportedCharacters/NativeCharacterMotion/SK_Leader_Skeleton_0fc32278/AN_SK_Leader_Skeleton_0fc32278_Player_Sprint.AN_SK_Leader_Skeleton_0fc32278_Player_Sprint",
+        "speed_cm_s": 719.9999999999006
+      },
+      "airborne": {
+        "animation": "/Game/ImportedCharacters/NativeCharacterMotion/SK_Leader_Skeleton_0fc32278/AN_SK_Leader_Skeleton_0fc32278_Player_Airborne.AN_SK_Leader_Skeleton_0fc32278_Player_Airborne",
+        "duration_seconds": 1.3333333333333333
+      },
+      "air_hold": {
+        "animation": "/Game/ImportedCharacters/NativeCharacterMotion/SK_Leader_Skeleton_0fc32278/AN_SK_Leader_Skeleton_0fc32278_Player_Air_Hold.AN_SK_Leader_Skeleton_0fc32278_Player_Air_Hold",
+        "duration_seconds": 0.03333333333333333
+      }
+    },
+    "local_weapon_preview_enabled": true
+  },
+  "SK_GNPC_F_Skeleton_b5198d6c": {
+    "enabled": true,
+    "mesh_skeleton": "/Game/AI/NPC/_Gestalt/_Shared/Model/Rig/SK_GNPC_F_Skeleton.SK_GNPC_F_Skeleton",
+    "archives": {
+      "pakchunk1323-NativeHumanoidMotion_P.pak": "8996acb652e394aec08aa9be430ad8bbf163051941c17d50e1196bd8724d007d",
+      "pakchunk1323-NativeHumanoidMotion_P.utoc": "8499f06d9c968e433af9cb5c6f1e4d2237a11b17d5226c58cf6bf8e17ff2e1c9",
+      "pakchunk1323-NativeHumanoidMotion_P.ucas": "32d0ac8df8bd16b944a6dd35d4facca11db676e7fc81fbc15124643b99f21c10"
+    },
+    "animation_root": "/Game/ImportedCharacters/NativeCharacterMotion/SK_GNPC_F_Skeleton_b5198d6c/",
+    "airborne_animation_root": "/Game/ImportedCharacters/NativeCharacterMotion/SK_GNPC_F_Skeleton_b5198d6c/",
+    "airborne_archives": {
+      "pakchunk1323-NativeHumanoidMotion_P.pak": "8996acb652e394aec08aa9be430ad8bbf163051941c17d50e1196bd8724d007d",
+      "pakchunk1323-NativeHumanoidMotion_P.utoc": "8499f06d9c968e433af9cb5c6f1e4d2237a11b17d5226c58cf6bf8e17ff2e1c9",
+      "pakchunk1323-NativeHumanoidMotion_P.ucas": "32d0ac8df8bd16b944a6dd35d4facca11db676e7fc81fbc15124643b99f21c10"
+    },
+    "local_slot_motion_enabled": true,
+    "local_airborne_motion_enabled": true,
+    "scope": "local_native_fullbody_not_guest_verified",
+    "clips": {
+      "run": {
+        "animation": "/Game/ImportedCharacters/NativeCharacterMotion/SK_GNPC_F_Skeleton_b5198d6c/AN_SK_GNPC_F_Skeleton_b5198d6c_Player_Run.AN_SK_GNPC_F_Skeleton_b5198d6c_Player_Run",
+        "speed_cm_s": 470.0000000000015
+      },
+      "sprint": {
+        "animation": "/Game/ImportedCharacters/NativeCharacterMotion/SK_GNPC_F_Skeleton_b5198d6c/AN_SK_GNPC_F_Skeleton_b5198d6c_Player_Sprint.AN_SK_GNPC_F_Skeleton_b5198d6c_Player_Sprint",
+        "speed_cm_s": 719.9999999999006
+      },
+      "airborne": {
+        "animation": "/Game/ImportedCharacters/NativeCharacterMotion/SK_GNPC_F_Skeleton_b5198d6c/AN_SK_GNPC_F_Skeleton_b5198d6c_Player_Airborne.AN_SK_GNPC_F_Skeleton_b5198d6c_Player_Airborne",
+        "duration_seconds": 1.3333333333333333
+      },
+      "air_hold": {
+        "animation": "/Game/ImportedCharacters/NativeCharacterMotion/SK_GNPC_F_Skeleton_b5198d6c/AN_SK_GNPC_F_Skeleton_b5198d6c_Player_Air_Hold.AN_SK_GNPC_F_Skeleton_b5198d6c_Player_Air_Hold",
+        "duration_seconds": 0.03333333333333333
+      }
+    },
+    "local_weapon_preview_enabled": true
+  },
+  "SK_GNPC_M_Skeleton_7df2aca4": {
+    "enabled": true,
+    "mesh_skeleton": "/Game/AI/NPC/_Gestalt/_Shared/Model/Rig/SK_GNPC_M_Skeleton.SK_GNPC_M_Skeleton",
+    "archives": {
+      "pakchunk1323-NativeHumanoidMotion_P.pak": "8996acb652e394aec08aa9be430ad8bbf163051941c17d50e1196bd8724d007d",
+      "pakchunk1323-NativeHumanoidMotion_P.utoc": "8499f06d9c968e433af9cb5c6f1e4d2237a11b17d5226c58cf6bf8e17ff2e1c9",
+      "pakchunk1323-NativeHumanoidMotion_P.ucas": "32d0ac8df8bd16b944a6dd35d4facca11db676e7fc81fbc15124643b99f21c10"
+    },
+    "animation_root": "/Game/ImportedCharacters/NativeCharacterMotion/SK_GNPC_M_Skeleton_7df2aca4/",
+    "airborne_animation_root": "/Game/ImportedCharacters/NativeCharacterMotion/SK_GNPC_M_Skeleton_7df2aca4/",
+    "airborne_archives": {
+      "pakchunk1323-NativeHumanoidMotion_P.pak": "8996acb652e394aec08aa9be430ad8bbf163051941c17d50e1196bd8724d007d",
+      "pakchunk1323-NativeHumanoidMotion_P.utoc": "8499f06d9c968e433af9cb5c6f1e4d2237a11b17d5226c58cf6bf8e17ff2e1c9",
+      "pakchunk1323-NativeHumanoidMotion_P.ucas": "32d0ac8df8bd16b944a6dd35d4facca11db676e7fc81fbc15124643b99f21c10"
+    },
+    "local_slot_motion_enabled": true,
+    "local_airborne_motion_enabled": true,
+    "scope": "local_native_fullbody_not_guest_verified",
+    "clips": {
+      "run": {
+        "animation": "/Game/ImportedCharacters/NativeCharacterMotion/SK_GNPC_M_Skeleton_7df2aca4/AN_SK_GNPC_M_Skeleton_7df2aca4_Player_Run.AN_SK_GNPC_M_Skeleton_7df2aca4_Player_Run",
+        "speed_cm_s": 470.0000000000015
+      },
+      "sprint": {
+        "animation": "/Game/ImportedCharacters/NativeCharacterMotion/SK_GNPC_M_Skeleton_7df2aca4/AN_SK_GNPC_M_Skeleton_7df2aca4_Player_Sprint.AN_SK_GNPC_M_Skeleton_7df2aca4_Player_Sprint",
+        "speed_cm_s": 719.9999999999006
+      },
+      "airborne": {
+        "animation": "/Game/ImportedCharacters/NativeCharacterMotion/SK_GNPC_M_Skeleton_7df2aca4/AN_SK_GNPC_M_Skeleton_7df2aca4_Player_Airborne.AN_SK_GNPC_M_Skeleton_7df2aca4_Player_Airborne",
+        "duration_seconds": 1.3333333333333333
+      },
+      "air_hold": {
+        "animation": "/Game/ImportedCharacters/NativeCharacterMotion/SK_GNPC_M_Skeleton_7df2aca4/AN_SK_GNPC_M_Skeleton_7df2aca4_Player_Air_Hold.AN_SK_GNPC_M_Skeleton_7df2aca4_Player_Air_Hold",
+        "duration_seconds": 0.03333333333333333
+      }
+    },
+    "local_weapon_preview_enabled": true
+  },
+  "SK_BoltInventor_Skeleton_b8c4d3a0": {
+    "enabled": true,
+    "mesh_skeleton": "/Game/AI/NPC/_Unique/BoltInventor/Model/Rig/SK_BoltInventor_Skeleton.SK_BoltInventor_Skeleton",
+    "archives": {
+      "pakchunk1323-NativeHumanoidMotion_P.pak": "8996acb652e394aec08aa9be430ad8bbf163051941c17d50e1196bd8724d007d",
+      "pakchunk1323-NativeHumanoidMotion_P.utoc": "8499f06d9c968e433af9cb5c6f1e4d2237a11b17d5226c58cf6bf8e17ff2e1c9",
+      "pakchunk1323-NativeHumanoidMotion_P.ucas": "32d0ac8df8bd16b944a6dd35d4facca11db676e7fc81fbc15124643b99f21c10"
+    },
+    "animation_root": "/Game/ImportedCharacters/NativeCharacterMotion/SK_BoltInventor_Skeleton_b8c4d3a0/",
+    "airborne_animation_root": "/Game/ImportedCharacters/NativeCharacterMotion/SK_BoltInventor_Skeleton_b8c4d3a0/",
+    "airborne_archives": {
+      "pakchunk1323-NativeHumanoidMotion_P.pak": "8996acb652e394aec08aa9be430ad8bbf163051941c17d50e1196bd8724d007d",
+      "pakchunk1323-NativeHumanoidMotion_P.utoc": "8499f06d9c968e433af9cb5c6f1e4d2237a11b17d5226c58cf6bf8e17ff2e1c9",
+      "pakchunk1323-NativeHumanoidMotion_P.ucas": "32d0ac8df8bd16b944a6dd35d4facca11db676e7fc81fbc15124643b99f21c10"
+    },
+    "local_slot_motion_enabled": true,
+    "local_airborne_motion_enabled": true,
+    "scope": "local_native_fullbody_not_guest_verified",
+    "clips": {
+      "run": {
+        "animation": "/Game/ImportedCharacters/NativeCharacterMotion/SK_BoltInventor_Skeleton_b8c4d3a0/AN_SK_BoltInventor_Skeleton_b8c4d3a0_Player_Run.AN_SK_BoltInventor_Skeleton_b8c4d3a0_Player_Run",
+        "speed_cm_s": 470.0000000000015
+      },
+      "sprint": {
+        "animation": "/Game/ImportedCharacters/NativeCharacterMotion/SK_BoltInventor_Skeleton_b8c4d3a0/AN_SK_BoltInventor_Skeleton_b8c4d3a0_Player_Sprint.AN_SK_BoltInventor_Skeleton_b8c4d3a0_Player_Sprint",
+        "speed_cm_s": 719.9999999999006
+      },
+      "airborne": {
+        "animation": "/Game/ImportedCharacters/NativeCharacterMotion/SK_BoltInventor_Skeleton_b8c4d3a0/AN_SK_BoltInventor_Skeleton_b8c4d3a0_Player_Airborne.AN_SK_BoltInventor_Skeleton_b8c4d3a0_Player_Airborne",
+        "duration_seconds": 1.3333333333333333
+      },
+      "air_hold": {
+        "animation": "/Game/ImportedCharacters/NativeCharacterMotion/SK_BoltInventor_Skeleton_b8c4d3a0/AN_SK_BoltInventor_Skeleton_b8c4d3a0_Player_Air_Hold.AN_SK_BoltInventor_Skeleton_b8c4d3a0_Player_Air_Hold",
+        "duration_seconds": 0.03333333333333333
+      }
+    },
+    "local_weapon_preview_enabled": true
+  },
+  "SK_BuddyNudge_Skeleton_5c7fb282": {
+    "enabled": true,
+    "mesh_skeleton": "/Game/AI/NPC/_Unique/BuddyNudge/Model/Rig/SK_BuddyNudge_Skeleton.SK_BuddyNudge_Skeleton",
+    "archives": {
+      "pakchunk1323-NativeHumanoidMotion_P.pak": "8996acb652e394aec08aa9be430ad8bbf163051941c17d50e1196bd8724d007d",
+      "pakchunk1323-NativeHumanoidMotion_P.utoc": "8499f06d9c968e433af9cb5c6f1e4d2237a11b17d5226c58cf6bf8e17ff2e1c9",
+      "pakchunk1323-NativeHumanoidMotion_P.ucas": "32d0ac8df8bd16b944a6dd35d4facca11db676e7fc81fbc15124643b99f21c10"
+    },
+    "animation_root": "/Game/ImportedCharacters/NativeCharacterMotion/SK_BuddyNudge_Skeleton_5c7fb282/",
+    "airborne_animation_root": "/Game/ImportedCharacters/NativeCharacterMotion/SK_BuddyNudge_Skeleton_5c7fb282/",
+    "airborne_archives": {
+      "pakchunk1323-NativeHumanoidMotion_P.pak": "8996acb652e394aec08aa9be430ad8bbf163051941c17d50e1196bd8724d007d",
+      "pakchunk1323-NativeHumanoidMotion_P.utoc": "8499f06d9c968e433af9cb5c6f1e4d2237a11b17d5226c58cf6bf8e17ff2e1c9",
+      "pakchunk1323-NativeHumanoidMotion_P.ucas": "32d0ac8df8bd16b944a6dd35d4facca11db676e7fc81fbc15124643b99f21c10"
+    },
+    "local_slot_motion_enabled": true,
+    "local_airborne_motion_enabled": true,
+    "scope": "local_native_fullbody_not_guest_verified",
+    "clips": {
+      "run": {
+        "animation": "/Game/ImportedCharacters/NativeCharacterMotion/SK_BuddyNudge_Skeleton_5c7fb282/AN_SK_BuddyNudge_Skeleton_5c7fb282_Player_Run.AN_SK_BuddyNudge_Skeleton_5c7fb282_Player_Run",
+        "speed_cm_s": 470.0000000000015
+      },
+      "sprint": {
+        "animation": "/Game/ImportedCharacters/NativeCharacterMotion/SK_BuddyNudge_Skeleton_5c7fb282/AN_SK_BuddyNudge_Skeleton_5c7fb282_Player_Sprint.AN_SK_BuddyNudge_Skeleton_5c7fb282_Player_Sprint",
+        "speed_cm_s": 719.9999999999006
+      },
+      "airborne": {
+        "animation": "/Game/ImportedCharacters/NativeCharacterMotion/SK_BuddyNudge_Skeleton_5c7fb282/AN_SK_BuddyNudge_Skeleton_5c7fb282_Player_Airborne.AN_SK_BuddyNudge_Skeleton_5c7fb282_Player_Airborne",
+        "duration_seconds": 1.3333333333333333
+      },
+      "air_hold": {
+        "animation": "/Game/ImportedCharacters/NativeCharacterMotion/SK_BuddyNudge_Skeleton_5c7fb282/AN_SK_BuddyNudge_Skeleton_5c7fb282_Player_Air_Hold.AN_SK_BuddyNudge_Skeleton_5c7fb282_Player_Air_Hold",
+        "duration_seconds": 0.03333333333333333
+      }
+    },
+    "local_weapon_preview_enabled": true
+  },
+  "SK_FallenAristocrat_Skeleton_ee694a70": {
+    "enabled": true,
+    "mesh_skeleton": "/Game/AI/NPC/_Unique/FallenAristocrat/Model/Rig/SK_FallenAristocrat_Skeleton.SK_FallenAristocrat_Skeleton",
+    "archives": {
+      "pakchunk1323-NativeHumanoidMotion_P.pak": "8996acb652e394aec08aa9be430ad8bbf163051941c17d50e1196bd8724d007d",
+      "pakchunk1323-NativeHumanoidMotion_P.utoc": "8499f06d9c968e433af9cb5c6f1e4d2237a11b17d5226c58cf6bf8e17ff2e1c9",
+      "pakchunk1323-NativeHumanoidMotion_P.ucas": "32d0ac8df8bd16b944a6dd35d4facca11db676e7fc81fbc15124643b99f21c10"
+    },
+    "animation_root": "/Game/ImportedCharacters/NativeCharacterMotion/SK_FallenAristocrat_Skeleton_ee694a70/",
+    "airborne_animation_root": "/Game/ImportedCharacters/NativeCharacterMotion/SK_FallenAristocrat_Skeleton_ee694a70/",
+    "airborne_archives": {
+      "pakchunk1323-NativeHumanoidMotion_P.pak": "8996acb652e394aec08aa9be430ad8bbf163051941c17d50e1196bd8724d007d",
+      "pakchunk1323-NativeHumanoidMotion_P.utoc": "8499f06d9c968e433af9cb5c6f1e4d2237a11b17d5226c58cf6bf8e17ff2e1c9",
+      "pakchunk1323-NativeHumanoidMotion_P.ucas": "32d0ac8df8bd16b944a6dd35d4facca11db676e7fc81fbc15124643b99f21c10"
+    },
+    "local_slot_motion_enabled": true,
+    "local_airborne_motion_enabled": true,
+    "scope": "local_native_fullbody_not_guest_verified",
+    "clips": {
+      "run": {
+        "animation": "/Game/ImportedCharacters/NativeCharacterMotion/SK_FallenAristocrat_Skeleton_ee694a70/AN_SK_FallenAristocrat_Skeleton_ee694a70_Player_Run.AN_SK_FallenAristocrat_Skeleton_ee694a70_Player_Run",
+        "speed_cm_s": 470.0000000000015
+      },
+      "sprint": {
+        "animation": "/Game/ImportedCharacters/NativeCharacterMotion/SK_FallenAristocrat_Skeleton_ee694a70/AN_SK_FallenAristocrat_Skeleton_ee694a70_Player_Sprint.AN_SK_FallenAristocrat_Skeleton_ee694a70_Player_Sprint",
+        "speed_cm_s": 719.9999999999006
+      },
+      "airborne": {
+        "animation": "/Game/ImportedCharacters/NativeCharacterMotion/SK_FallenAristocrat_Skeleton_ee694a70/AN_SK_FallenAristocrat_Skeleton_ee694a70_Player_Airborne.AN_SK_FallenAristocrat_Skeleton_ee694a70_Player_Airborne",
+        "duration_seconds": 1.3333333333333333
+      },
+      "air_hold": {
+        "animation": "/Game/ImportedCharacters/NativeCharacterMotion/SK_FallenAristocrat_Skeleton_ee694a70/AN_SK_FallenAristocrat_Skeleton_ee694a70_Player_Air_Hold.AN_SK_FallenAristocrat_Skeleton_ee694a70_Player_Air_Hold",
+        "duration_seconds": 0.03333333333333333
+      }
+    },
+    "local_weapon_preview_enabled": true
+  },
+  "SK_IslandGuide_Skeleton_ec190424": {
+    "enabled": true,
+    "mesh_skeleton": "/Game/AI/NPC/_Unique/IslandGuide/Model/Rig/SK_IslandGuide_Skeleton.SK_IslandGuide_Skeleton",
+    "archives": {
+      "pakchunk1323-NativeHumanoidMotion_P.pak": "8996acb652e394aec08aa9be430ad8bbf163051941c17d50e1196bd8724d007d",
+      "pakchunk1323-NativeHumanoidMotion_P.utoc": "8499f06d9c968e433af9cb5c6f1e4d2237a11b17d5226c58cf6bf8e17ff2e1c9",
+      "pakchunk1323-NativeHumanoidMotion_P.ucas": "32d0ac8df8bd16b944a6dd35d4facca11db676e7fc81fbc15124643b99f21c10"
+    },
+    "animation_root": "/Game/ImportedCharacters/NativeCharacterMotion/SK_IslandGuide_Skeleton_ec190424/",
+    "airborne_animation_root": "/Game/ImportedCharacters/NativeCharacterMotion/SK_IslandGuide_Skeleton_ec190424/",
+    "airborne_archives": {
+      "pakchunk1323-NativeHumanoidMotion_P.pak": "8996acb652e394aec08aa9be430ad8bbf163051941c17d50e1196bd8724d007d",
+      "pakchunk1323-NativeHumanoidMotion_P.utoc": "8499f06d9c968e433af9cb5c6f1e4d2237a11b17d5226c58cf6bf8e17ff2e1c9",
+      "pakchunk1323-NativeHumanoidMotion_P.ucas": "32d0ac8df8bd16b944a6dd35d4facca11db676e7fc81fbc15124643b99f21c10"
+    },
+    "local_slot_motion_enabled": true,
+    "local_airborne_motion_enabled": true,
+    "scope": "local_native_fullbody_not_guest_verified",
+    "clips": {
+      "run": {
+        "animation": "/Game/ImportedCharacters/NativeCharacterMotion/SK_IslandGuide_Skeleton_ec190424/AN_SK_IslandGuide_Skeleton_ec190424_Player_Run.AN_SK_IslandGuide_Skeleton_ec190424_Player_Run",
+        "speed_cm_s": 470.0000000000015
+      },
+      "sprint": {
+        "animation": "/Game/ImportedCharacters/NativeCharacterMotion/SK_IslandGuide_Skeleton_ec190424/AN_SK_IslandGuide_Skeleton_ec190424_Player_Sprint.AN_SK_IslandGuide_Skeleton_ec190424_Player_Sprint",
+        "speed_cm_s": 719.9999999999006
+      },
+      "airborne": {
+        "animation": "/Game/ImportedCharacters/NativeCharacterMotion/SK_IslandGuide_Skeleton_ec190424/AN_SK_IslandGuide_Skeleton_ec190424_Player_Airborne.AN_SK_IslandGuide_Skeleton_ec190424_Player_Airborne",
+        "duration_seconds": 1.3333333333333333
+      },
+      "air_hold": {
+        "animation": "/Game/ImportedCharacters/NativeCharacterMotion/SK_IslandGuide_Skeleton_ec190424/AN_SK_IslandGuide_Skeleton_ec190424_Player_Air_Hold.AN_SK_IslandGuide_Skeleton_ec190424_Player_Air_Hold",
+        "duration_seconds": 0.03333333333333333
+      }
+    },
+    "local_weapon_preview_enabled": true
+  },
+  "SK_Lilith_Skeleton_0d51890b": {
+    "enabled": true,
+    "mesh_skeleton": "/Game/AI/NPC/_Unique/Lilith/Model/Rig/SK_Lilith_Skeleton.SK_Lilith_Skeleton",
+    "archives": {
+      "pakchunk1323-NativeHumanoidMotion_P.pak": "8996acb652e394aec08aa9be430ad8bbf163051941c17d50e1196bd8724d007d",
+      "pakchunk1323-NativeHumanoidMotion_P.utoc": "8499f06d9c968e433af9cb5c6f1e4d2237a11b17d5226c58cf6bf8e17ff2e1c9",
+      "pakchunk1323-NativeHumanoidMotion_P.ucas": "32d0ac8df8bd16b944a6dd35d4facca11db676e7fc81fbc15124643b99f21c10"
+    },
+    "animation_root": "/Game/ImportedCharacters/NativeCharacterMotion/SK_Lilith_Skeleton_0d51890b/",
+    "airborne_animation_root": "/Game/ImportedCharacters/NativeCharacterMotion/SK_Lilith_Skeleton_0d51890b/",
+    "airborne_archives": {
+      "pakchunk1323-NativeHumanoidMotion_P.pak": "8996acb652e394aec08aa9be430ad8bbf163051941c17d50e1196bd8724d007d",
+      "pakchunk1323-NativeHumanoidMotion_P.utoc": "8499f06d9c968e433af9cb5c6f1e4d2237a11b17d5226c58cf6bf8e17ff2e1c9",
+      "pakchunk1323-NativeHumanoidMotion_P.ucas": "32d0ac8df8bd16b944a6dd35d4facca11db676e7fc81fbc15124643b99f21c10"
+    },
+    "local_slot_motion_enabled": true,
+    "local_airborne_motion_enabled": true,
+    "scope": "local_native_fullbody_not_guest_verified",
+    "clips": {
+      "run": {
+        "animation": "/Game/ImportedCharacters/NativeCharacterMotion/SK_Lilith_Skeleton_0d51890b/AN_SK_Lilith_Skeleton_0d51890b_Player_Run.AN_SK_Lilith_Skeleton_0d51890b_Player_Run",
+        "speed_cm_s": 470.0000000000015
+      },
+      "sprint": {
+        "animation": "/Game/ImportedCharacters/NativeCharacterMotion/SK_Lilith_Skeleton_0d51890b/AN_SK_Lilith_Skeleton_0d51890b_Player_Sprint.AN_SK_Lilith_Skeleton_0d51890b_Player_Sprint",
+        "speed_cm_s": 719.9999999999006
+      },
+      "airborne": {
+        "animation": "/Game/ImportedCharacters/NativeCharacterMotion/SK_Lilith_Skeleton_0d51890b/AN_SK_Lilith_Skeleton_0d51890b_Player_Airborne.AN_SK_Lilith_Skeleton_0d51890b_Player_Airborne",
+        "duration_seconds": 1.3333333333333333
+      },
+      "air_hold": {
+        "animation": "/Game/ImportedCharacters/NativeCharacterMotion/SK_Lilith_Skeleton_0d51890b/AN_SK_Lilith_Skeleton_0d51890b_Player_Air_Hold.AN_SK_Lilith_Skeleton_0d51890b_Player_Air_Hold",
+        "duration_seconds": 0.03333333333333333
+      }
+    },
+    "local_weapon_preview_enabled": true
+  },
+  "SK_PrisonBuddy_Skeleton_2f52a633": {
+    "enabled": true,
+    "mesh_skeleton": "/Game/AI/NPC/_Unique/PrisonBuddy/Model/Rig/SK_PrisonBuddy_Skeleton.SK_PrisonBuddy_Skeleton",
+    "archives": {
+      "pakchunk1323-NativeHumanoidMotion_P.pak": "8996acb652e394aec08aa9be430ad8bbf163051941c17d50e1196bd8724d007d",
+      "pakchunk1323-NativeHumanoidMotion_P.utoc": "8499f06d9c968e433af9cb5c6f1e4d2237a11b17d5226c58cf6bf8e17ff2e1c9",
+      "pakchunk1323-NativeHumanoidMotion_P.ucas": "32d0ac8df8bd16b944a6dd35d4facca11db676e7fc81fbc15124643b99f21c10"
+    },
+    "animation_root": "/Game/ImportedCharacters/NativeCharacterMotion/SK_PrisonBuddy_Skeleton_2f52a633/",
+    "airborne_animation_root": "/Game/ImportedCharacters/NativeCharacterMotion/SK_PrisonBuddy_Skeleton_2f52a633/",
+    "airborne_archives": {
+      "pakchunk1323-NativeHumanoidMotion_P.pak": "8996acb652e394aec08aa9be430ad8bbf163051941c17d50e1196bd8724d007d",
+      "pakchunk1323-NativeHumanoidMotion_P.utoc": "8499f06d9c968e433af9cb5c6f1e4d2237a11b17d5226c58cf6bf8e17ff2e1c9",
+      "pakchunk1323-NativeHumanoidMotion_P.ucas": "32d0ac8df8bd16b944a6dd35d4facca11db676e7fc81fbc15124643b99f21c10"
+    },
+    "local_slot_motion_enabled": true,
+    "local_airborne_motion_enabled": true,
+    "scope": "local_native_fullbody_not_guest_verified",
+    "clips": {
+      "run": {
+        "animation": "/Game/ImportedCharacters/NativeCharacterMotion/SK_PrisonBuddy_Skeleton_2f52a633/AN_SK_PrisonBuddy_Skeleton_2f52a633_Player_Run.AN_SK_PrisonBuddy_Skeleton_2f52a633_Player_Run",
+        "speed_cm_s": 470.0000000000015
+      },
+      "sprint": {
+        "animation": "/Game/ImportedCharacters/NativeCharacterMotion/SK_PrisonBuddy_Skeleton_2f52a633/AN_SK_PrisonBuddy_Skeleton_2f52a633_Player_Sprint.AN_SK_PrisonBuddy_Skeleton_2f52a633_Player_Sprint",
+        "speed_cm_s": 719.9999999999006
+      },
+      "airborne": {
+        "animation": "/Game/ImportedCharacters/NativeCharacterMotion/SK_PrisonBuddy_Skeleton_2f52a633/AN_SK_PrisonBuddy_Skeleton_2f52a633_Player_Airborne.AN_SK_PrisonBuddy_Skeleton_2f52a633_Player_Airborne",
+        "duration_seconds": 1.3333333333333333
+      },
+      "air_hold": {
+        "animation": "/Game/ImportedCharacters/NativeCharacterMotion/SK_PrisonBuddy_Skeleton_2f52a633/AN_SK_PrisonBuddy_Skeleton_2f52a633_Player_Air_Hold.AN_SK_PrisonBuddy_Skeleton_2f52a633_Player_Air_Hold",
+        "duration_seconds": 0.03333333333333333
+      }
+    },
+    "local_weapon_preview_enabled": true
+  },
+  "SK_Zane_Skeleton_7f19c6fb": {
+    "enabled": true,
+    "mesh_skeleton": "/Game/AI/NPC/_Unique/Zane/Model/Rig/SK_Zane_Skeleton.SK_Zane_Skeleton",
+    "archives": {
+      "pakchunk1323-NativeHumanoidMotion_P.pak": "8996acb652e394aec08aa9be430ad8bbf163051941c17d50e1196bd8724d007d",
+      "pakchunk1323-NativeHumanoidMotion_P.utoc": "8499f06d9c968e433af9cb5c6f1e4d2237a11b17d5226c58cf6bf8e17ff2e1c9",
+      "pakchunk1323-NativeHumanoidMotion_P.ucas": "32d0ac8df8bd16b944a6dd35d4facca11db676e7fc81fbc15124643b99f21c10"
+    },
+    "animation_root": "/Game/ImportedCharacters/NativeCharacterMotion/SK_Zane_Skeleton_7f19c6fb/",
+    "airborne_animation_root": "/Game/ImportedCharacters/NativeCharacterMotion/SK_Zane_Skeleton_7f19c6fb/",
+    "airborne_archives": {
+      "pakchunk1323-NativeHumanoidMotion_P.pak": "8996acb652e394aec08aa9be430ad8bbf163051941c17d50e1196bd8724d007d",
+      "pakchunk1323-NativeHumanoidMotion_P.utoc": "8499f06d9c968e433af9cb5c6f1e4d2237a11b17d5226c58cf6bf8e17ff2e1c9",
+      "pakchunk1323-NativeHumanoidMotion_P.ucas": "32d0ac8df8bd16b944a6dd35d4facca11db676e7fc81fbc15124643b99f21c10"
+    },
+    "local_slot_motion_enabled": true,
+    "local_airborne_motion_enabled": true,
+    "scope": "local_native_fullbody_not_guest_verified",
+    "clips": {
+      "run": {
+        "animation": "/Game/ImportedCharacters/NativeCharacterMotion/SK_Zane_Skeleton_7f19c6fb/AN_SK_Zane_Skeleton_7f19c6fb_Player_Run.AN_SK_Zane_Skeleton_7f19c6fb_Player_Run",
+        "speed_cm_s": 470.0000000000015
+      },
+      "sprint": {
+        "animation": "/Game/ImportedCharacters/NativeCharacterMotion/SK_Zane_Skeleton_7f19c6fb/AN_SK_Zane_Skeleton_7f19c6fb_Player_Sprint.AN_SK_Zane_Skeleton_7f19c6fb_Player_Sprint",
+        "speed_cm_s": 719.9999999999006
+      },
+      "airborne": {
+        "animation": "/Game/ImportedCharacters/NativeCharacterMotion/SK_Zane_Skeleton_7f19c6fb/AN_SK_Zane_Skeleton_7f19c6fb_Player_Airborne.AN_SK_Zane_Skeleton_7f19c6fb_Player_Airborne",
+        "duration_seconds": 1.3333333333333333
+      },
+      "air_hold": {
+        "animation": "/Game/ImportedCharacters/NativeCharacterMotion/SK_Zane_Skeleton_7f19c6fb/AN_SK_Zane_Skeleton_7f19c6fb_Player_Air_Hold.AN_SK_Zane_Skeleton_7f19c6fb_Player_Air_Hold",
+        "duration_seconds": 0.03333333333333333
+      }
+    },
+    "local_weapon_preview_enabled": true
+  },
+  "SK_Leader_MercenaryDay_Skeleton_b8592506": {
+    "enabled": true,
+    "mesh_skeleton": "/Game/DLC/Banjo/AI/ArmyOrder/Leader/_Unique/MercenaryDay/Model/Rig/SK_Leader_MercenaryDay_Skeleton.SK_Leader_MercenaryDay_Skeleton",
+    "archives": {
+      "pakchunk1323-NativeHumanoidMotion_P.pak": "8996acb652e394aec08aa9be430ad8bbf163051941c17d50e1196bd8724d007d",
+      "pakchunk1323-NativeHumanoidMotion_P.utoc": "8499f06d9c968e433af9cb5c6f1e4d2237a11b17d5226c58cf6bf8e17ff2e1c9",
+      "pakchunk1323-NativeHumanoidMotion_P.ucas": "32d0ac8df8bd16b944a6dd35d4facca11db676e7fc81fbc15124643b99f21c10"
+    },
+    "animation_root": "/Game/ImportedCharacters/NativeCharacterMotion/SK_Leader_MercenaryDay_Skeleton_b8592506/",
+    "airborne_animation_root": "/Game/ImportedCharacters/NativeCharacterMotion/SK_Leader_MercenaryDay_Skeleton_b8592506/",
+    "airborne_archives": {
+      "pakchunk1323-NativeHumanoidMotion_P.pak": "8996acb652e394aec08aa9be430ad8bbf163051941c17d50e1196bd8724d007d",
+      "pakchunk1323-NativeHumanoidMotion_P.utoc": "8499f06d9c968e433af9cb5c6f1e4d2237a11b17d5226c58cf6bf8e17ff2e1c9",
+      "pakchunk1323-NativeHumanoidMotion_P.ucas": "32d0ac8df8bd16b944a6dd35d4facca11db676e7fc81fbc15124643b99f21c10"
+    },
+    "local_slot_motion_enabled": true,
+    "local_airborne_motion_enabled": true,
+    "scope": "local_native_fullbody_not_guest_verified",
+    "clips": {
+      "run": {
+        "animation": "/Game/ImportedCharacters/NativeCharacterMotion/SK_Leader_MercenaryDay_Skeleton_b8592506/AN_SK_Leader_MercenaryDay_Skeleton_b8592506_Player_Run.AN_SK_Leader_MercenaryDay_Skeleton_b8592506_Player_Run",
+        "speed_cm_s": 470.0000000000015
+      },
+      "sprint": {
+        "animation": "/Game/ImportedCharacters/NativeCharacterMotion/SK_Leader_MercenaryDay_Skeleton_b8592506/AN_SK_Leader_MercenaryDay_Skeleton_b8592506_Player_Sprint.AN_SK_Leader_MercenaryDay_Skeleton_b8592506_Player_Sprint",
+        "speed_cm_s": 719.9999999999006
+      },
+      "airborne": {
+        "animation": "/Game/ImportedCharacters/NativeCharacterMotion/SK_Leader_MercenaryDay_Skeleton_b8592506/AN_SK_Leader_MercenaryDay_Skeleton_b8592506_Player_Airborne.AN_SK_Leader_MercenaryDay_Skeleton_b8592506_Player_Airborne",
+        "duration_seconds": 1.3333333333333333
+      },
+      "air_hold": {
+        "animation": "/Game/ImportedCharacters/NativeCharacterMotion/SK_Leader_MercenaryDay_Skeleton_b8592506/AN_SK_Leader_MercenaryDay_Skeleton_b8592506_Player_Air_Hold.AN_SK_Leader_MercenaryDay_Skeleton_b8592506_Player_Air_Hold",
+        "duration_seconds": 0.03333333333333333
+      }
+    },
+    "local_weapon_preview_enabled": true
+  },
+  "SK_ScavOutlaw_Skeleton_5f470aac": {
+    "enabled": true,
+    "mesh_skeleton": "/Game/DLC/Cowbell/AI/ArmyScav/ScavOutlaw/_Shared/Model/Rig/SK_ScavOutlaw_Skeleton.SK_ScavOutlaw_Skeleton",
+    "archives": {
+      "pakchunk1323-NativeHumanoidMotion_P.pak": "8996acb652e394aec08aa9be430ad8bbf163051941c17d50e1196bd8724d007d",
+      "pakchunk1323-NativeHumanoidMotion_P.utoc": "8499f06d9c968e433af9cb5c6f1e4d2237a11b17d5226c58cf6bf8e17ff2e1c9",
+      "pakchunk1323-NativeHumanoidMotion_P.ucas": "32d0ac8df8bd16b944a6dd35d4facca11db676e7fc81fbc15124643b99f21c10"
+    },
+    "animation_root": "/Game/ImportedCharacters/NativeCharacterMotion/SK_ScavOutlaw_Skeleton_5f470aac/",
+    "airborne_animation_root": "/Game/ImportedCharacters/NativeCharacterMotion/SK_ScavOutlaw_Skeleton_5f470aac/",
+    "airborne_archives": {
+      "pakchunk1323-NativeHumanoidMotion_P.pak": "8996acb652e394aec08aa9be430ad8bbf163051941c17d50e1196bd8724d007d",
+      "pakchunk1323-NativeHumanoidMotion_P.utoc": "8499f06d9c968e433af9cb5c6f1e4d2237a11b17d5226c58cf6bf8e17ff2e1c9",
+      "pakchunk1323-NativeHumanoidMotion_P.ucas": "32d0ac8df8bd16b944a6dd35d4facca11db676e7fc81fbc15124643b99f21c10"
+    },
+    "local_slot_motion_enabled": true,
+    "local_airborne_motion_enabled": true,
+    "scope": "local_native_fullbody_not_guest_verified",
+    "clips": {
+      "run": {
+        "animation": "/Game/ImportedCharacters/NativeCharacterMotion/SK_ScavOutlaw_Skeleton_5f470aac/AN_SK_ScavOutlaw_Skeleton_5f470aac_Player_Run.AN_SK_ScavOutlaw_Skeleton_5f470aac_Player_Run",
+        "speed_cm_s": 470.0000000000015
+      },
+      "sprint": {
+        "animation": "/Game/ImportedCharacters/NativeCharacterMotion/SK_ScavOutlaw_Skeleton_5f470aac/AN_SK_ScavOutlaw_Skeleton_5f470aac_Player_Sprint.AN_SK_ScavOutlaw_Skeleton_5f470aac_Player_Sprint",
+        "speed_cm_s": 719.9999999999006
+      },
+      "airborne": {
+        "animation": "/Game/ImportedCharacters/NativeCharacterMotion/SK_ScavOutlaw_Skeleton_5f470aac/AN_SK_ScavOutlaw_Skeleton_5f470aac_Player_Airborne.AN_SK_ScavOutlaw_Skeleton_5f470aac_Player_Airborne",
+        "duration_seconds": 1.3333333333333333
+      },
+      "air_hold": {
+        "animation": "/Game/ImportedCharacters/NativeCharacterMotion/SK_ScavOutlaw_Skeleton_5f470aac/AN_SK_ScavOutlaw_Skeleton_5f470aac_Player_Air_Hold.AN_SK_ScavOutlaw_Skeleton_5f470aac_Player_Air_Hold",
+        "duration_seconds": 0.03333333333333333
+      }
+    },
+    "local_weapon_preview_enabled": true
+  },
+  "SK_DahlKid_Skeleton_9d64731d": {
+    "enabled": true,
+    "mesh_skeleton": "/Game/DLC/Cowbell/AI/NPC/_Unique/DahlKid/Model/Rig/SK_DahlKid_Skeleton.SK_DahlKid_Skeleton",
+    "archives": {
+      "pakchunk1323-NativeHumanoidMotion_P.pak": "8996acb652e394aec08aa9be430ad8bbf163051941c17d50e1196bd8724d007d",
+      "pakchunk1323-NativeHumanoidMotion_P.utoc": "8499f06d9c968e433af9cb5c6f1e4d2237a11b17d5226c58cf6bf8e17ff2e1c9",
+      "pakchunk1323-NativeHumanoidMotion_P.ucas": "32d0ac8df8bd16b944a6dd35d4facca11db676e7fc81fbc15124643b99f21c10"
+    },
+    "animation_root": "/Game/ImportedCharacters/NativeCharacterMotion/SK_DahlKid_Skeleton_9d64731d/",
+    "airborne_animation_root": "/Game/ImportedCharacters/NativeCharacterMotion/SK_DahlKid_Skeleton_9d64731d/",
+    "airborne_archives": {
+      "pakchunk1323-NativeHumanoidMotion_P.pak": "8996acb652e394aec08aa9be430ad8bbf163051941c17d50e1196bd8724d007d",
+      "pakchunk1323-NativeHumanoidMotion_P.utoc": "8499f06d9c968e433af9cb5c6f1e4d2237a11b17d5226c58cf6bf8e17ff2e1c9",
+      "pakchunk1323-NativeHumanoidMotion_P.ucas": "32d0ac8df8bd16b944a6dd35d4facca11db676e7fc81fbc15124643b99f21c10"
+    },
+    "local_slot_motion_enabled": true,
+    "local_airborne_motion_enabled": true,
+    "scope": "local_native_fullbody_not_guest_verified",
+    "clips": {
+      "run": {
+        "animation": "/Game/ImportedCharacters/NativeCharacterMotion/SK_DahlKid_Skeleton_9d64731d/AN_SK_DahlKid_Skeleton_9d64731d_Player_Run.AN_SK_DahlKid_Skeleton_9d64731d_Player_Run",
+        "speed_cm_s": 470.0000000000015
+      },
+      "sprint": {
+        "animation": "/Game/ImportedCharacters/NativeCharacterMotion/SK_DahlKid_Skeleton_9d64731d/AN_SK_DahlKid_Skeleton_9d64731d_Player_Sprint.AN_SK_DahlKid_Skeleton_9d64731d_Player_Sprint",
+        "speed_cm_s": 719.9999999999006
+      },
+      "airborne": {
+        "animation": "/Game/ImportedCharacters/NativeCharacterMotion/SK_DahlKid_Skeleton_9d64731d/AN_SK_DahlKid_Skeleton_9d64731d_Player_Airborne.AN_SK_DahlKid_Skeleton_9d64731d_Player_Airborne",
+        "duration_seconds": 1.3333333333333333
+      },
+      "air_hold": {
+        "animation": "/Game/ImportedCharacters/NativeCharacterMotion/SK_DahlKid_Skeleton_9d64731d/AN_SK_DahlKid_Skeleton_9d64731d_Player_Air_Hold.AN_SK_DahlKid_Skeleton_9d64731d_Player_Air_Hold",
+        "duration_seconds": 0.03333333333333333
+      }
+    },
+    "local_weapon_preview_enabled": true
+  },
+  "SK_Tediore_Soldier_Skeleton_d3b1e0e4": {
+    "enabled": true,
+    "mesh_skeleton": "/Game/DLC/Harmonica/AI/ArmyTediore/Infantry/_Shared/Model/Rig/SK_Tediore_Soldier_Skeleton.SK_Tediore_Soldier_Skeleton",
+    "archives": {
+      "pakchunk1323-NativeHumanoidMotion_P.pak": "8996acb652e394aec08aa9be430ad8bbf163051941c17d50e1196bd8724d007d",
+      "pakchunk1323-NativeHumanoidMotion_P.utoc": "8499f06d9c968e433af9cb5c6f1e4d2237a11b17d5226c58cf6bf8e17ff2e1c9",
+      "pakchunk1323-NativeHumanoidMotion_P.ucas": "32d0ac8df8bd16b944a6dd35d4facca11db676e7fc81fbc15124643b99f21c10"
+    },
+    "animation_root": "/Game/ImportedCharacters/NativeCharacterMotion/SK_Tediore_Soldier_Skeleton_d3b1e0e4/",
+    "airborne_animation_root": "/Game/ImportedCharacters/NativeCharacterMotion/SK_Tediore_Soldier_Skeleton_d3b1e0e4/",
+    "airborne_archives": {
+      "pakchunk1323-NativeHumanoidMotion_P.pak": "8996acb652e394aec08aa9be430ad8bbf163051941c17d50e1196bd8724d007d",
+      "pakchunk1323-NativeHumanoidMotion_P.utoc": "8499f06d9c968e433af9cb5c6f1e4d2237a11b17d5226c58cf6bf8e17ff2e1c9",
+      "pakchunk1323-NativeHumanoidMotion_P.ucas": "32d0ac8df8bd16b944a6dd35d4facca11db676e7fc81fbc15124643b99f21c10"
+    },
+    "local_slot_motion_enabled": true,
+    "local_airborne_motion_enabled": true,
+    "scope": "local_native_fullbody_not_guest_verified",
+    "clips": {
+      "run": {
+        "animation": "/Game/ImportedCharacters/NativeCharacterMotion/SK_Tediore_Soldier_Skeleton_d3b1e0e4/AN_SK_Tediore_Soldier_Skeleton_d3b1e0e4_Player_Run.AN_SK_Tediore_Soldier_Skeleton_d3b1e0e4_Player_Run",
+        "speed_cm_s": 470.0000000000015
+      },
+      "sprint": {
+        "animation": "/Game/ImportedCharacters/NativeCharacterMotion/SK_Tediore_Soldier_Skeleton_d3b1e0e4/AN_SK_Tediore_Soldier_Skeleton_d3b1e0e4_Player_Sprint.AN_SK_Tediore_Soldier_Skeleton_d3b1e0e4_Player_Sprint",
+        "speed_cm_s": 719.9999999999006
+      },
+      "airborne": {
+        "animation": "/Game/ImportedCharacters/NativeCharacterMotion/SK_Tediore_Soldier_Skeleton_d3b1e0e4/AN_SK_Tediore_Soldier_Skeleton_d3b1e0e4_Player_Airborne.AN_SK_Tediore_Soldier_Skeleton_d3b1e0e4_Player_Airborne",
+        "duration_seconds": 1.3333333333333333
+      },
+      "air_hold": {
+        "animation": "/Game/ImportedCharacters/NativeCharacterMotion/SK_Tediore_Soldier_Skeleton_d3b1e0e4/AN_SK_Tediore_Soldier_Skeleton_d3b1e0e4_Player_Air_Hold.AN_SK_Tediore_Soldier_Skeleton_d3b1e0e4_Player_Air_Hold",
+        "duration_seconds": 0.03333333333333333
+      }
+    },
+    "local_weapon_preview_enabled": true
+  },
+  "SK_Fl4k_Skeleton_1c4996dc": {
+    "enabled": true,
+    "mesh_skeleton": "/Game/DLC/Harmonica/AI/NPC/_Unique/Fl4k/Model/Rig/SK_Fl4k_Skeleton.SK_Fl4k_Skeleton",
+    "archives": {
+      "pakchunk1323-NativeHumanoidMotion_P.pak": "8996acb652e394aec08aa9be430ad8bbf163051941c17d50e1196bd8724d007d",
+      "pakchunk1323-NativeHumanoidMotion_P.utoc": "8499f06d9c968e433af9cb5c6f1e4d2237a11b17d5226c58cf6bf8e17ff2e1c9",
+      "pakchunk1323-NativeHumanoidMotion_P.ucas": "32d0ac8df8bd16b944a6dd35d4facca11db676e7fc81fbc15124643b99f21c10"
+    },
+    "animation_root": "/Game/ImportedCharacters/NativeCharacterMotion/SK_Fl4k_Skeleton_1c4996dc/",
+    "airborne_animation_root": "/Game/ImportedCharacters/NativeCharacterMotion/SK_Fl4k_Skeleton_1c4996dc/",
+    "airborne_archives": {
+      "pakchunk1323-NativeHumanoidMotion_P.pak": "8996acb652e394aec08aa9be430ad8bbf163051941c17d50e1196bd8724d007d",
+      "pakchunk1323-NativeHumanoidMotion_P.utoc": "8499f06d9c968e433af9cb5c6f1e4d2237a11b17d5226c58cf6bf8e17ff2e1c9",
+      "pakchunk1323-NativeHumanoidMotion_P.ucas": "32d0ac8df8bd16b944a6dd35d4facca11db676e7fc81fbc15124643b99f21c10"
+    },
+    "local_slot_motion_enabled": true,
+    "local_airborne_motion_enabled": true,
+    "scope": "local_native_fullbody_not_guest_verified",
+    "clips": {
+      "run": {
+        "animation": "/Game/ImportedCharacters/NativeCharacterMotion/SK_Fl4k_Skeleton_1c4996dc/AN_SK_Fl4k_Skeleton_1c4996dc_Player_Run.AN_SK_Fl4k_Skeleton_1c4996dc_Player_Run",
+        "speed_cm_s": 470.0000000000015
+      },
+      "sprint": {
+        "animation": "/Game/ImportedCharacters/NativeCharacterMotion/SK_Fl4k_Skeleton_1c4996dc/AN_SK_Fl4k_Skeleton_1c4996dc_Player_Sprint.AN_SK_Fl4k_Skeleton_1c4996dc_Player_Sprint",
+        "speed_cm_s": 719.9999999999006
+      },
+      "airborne": {
+        "animation": "/Game/ImportedCharacters/NativeCharacterMotion/SK_Fl4k_Skeleton_1c4996dc/AN_SK_Fl4k_Skeleton_1c4996dc_Player_Airborne.AN_SK_Fl4k_Skeleton_1c4996dc_Player_Airborne",
+        "duration_seconds": 1.3333333333333333
+      },
+      "air_hold": {
+        "animation": "/Game/ImportedCharacters/NativeCharacterMotion/SK_Fl4k_Skeleton_1c4996dc/AN_SK_Fl4k_Skeleton_1c4996dc_Player_Air_Hold.AN_SK_Fl4k_Skeleton_1c4996dc_Player_Air_Hold",
+        "duration_seconds": 0.03333333333333333
+      }
+    },
+    "local_weapon_preview_enabled": true
+  },
+  "SK_MaxxxSupreme_Skeleton_4fe52f7b": {
+    "enabled": true,
+    "mesh_skeleton": "/Game/DLC/Harp/AI/ArmyBandit/Guntoter/_Shared/Model/Rig/SK_MaxxxSupreme_Skeleton.SK_MaxxxSupreme_Skeleton",
+    "archives": {
+      "pakchunk1323-NativeHumanoidMotion_P.pak": "8996acb652e394aec08aa9be430ad8bbf163051941c17d50e1196bd8724d007d",
+      "pakchunk1323-NativeHumanoidMotion_P.utoc": "8499f06d9c968e433af9cb5c6f1e4d2237a11b17d5226c58cf6bf8e17ff2e1c9",
+      "pakchunk1323-NativeHumanoidMotion_P.ucas": "32d0ac8df8bd16b944a6dd35d4facca11db676e7fc81fbc15124643b99f21c10"
+    },
+    "animation_root": "/Game/ImportedCharacters/NativeCharacterMotion/SK_MaxxxSupreme_Skeleton_4fe52f7b/",
+    "airborne_animation_root": "/Game/ImportedCharacters/NativeCharacterMotion/SK_MaxxxSupreme_Skeleton_4fe52f7b/",
+    "airborne_archives": {
+      "pakchunk1323-NativeHumanoidMotion_P.pak": "8996acb652e394aec08aa9be430ad8bbf163051941c17d50e1196bd8724d007d",
+      "pakchunk1323-NativeHumanoidMotion_P.utoc": "8499f06d9c968e433af9cb5c6f1e4d2237a11b17d5226c58cf6bf8e17ff2e1c9",
+      "pakchunk1323-NativeHumanoidMotion_P.ucas": "32d0ac8df8bd16b944a6dd35d4facca11db676e7fc81fbc15124643b99f21c10"
+    },
+    "local_slot_motion_enabled": true,
+    "local_airborne_motion_enabled": true,
+    "scope": "local_native_fullbody_not_guest_verified",
+    "clips": {
+      "run": {
+        "animation": "/Game/ImportedCharacters/NativeCharacterMotion/SK_MaxxxSupreme_Skeleton_4fe52f7b/AN_SK_MaxxxSupreme_Skeleton_4fe52f7b_Player_Run.AN_SK_MaxxxSupreme_Skeleton_4fe52f7b_Player_Run",
+        "speed_cm_s": 470.0000000000015
+      },
+      "sprint": {
+        "animation": "/Game/ImportedCharacters/NativeCharacterMotion/SK_MaxxxSupreme_Skeleton_4fe52f7b/AN_SK_MaxxxSupreme_Skeleton_4fe52f7b_Player_Sprint.AN_SK_MaxxxSupreme_Skeleton_4fe52f7b_Player_Sprint",
+        "speed_cm_s": 719.9999999999006
+      },
+      "airborne": {
+        "animation": "/Game/ImportedCharacters/NativeCharacterMotion/SK_MaxxxSupreme_Skeleton_4fe52f7b/AN_SK_MaxxxSupreme_Skeleton_4fe52f7b_Player_Airborne.AN_SK_MaxxxSupreme_Skeleton_4fe52f7b_Player_Airborne",
+        "duration_seconds": 1.3333333333333333
+      },
+      "air_hold": {
+        "animation": "/Game/ImportedCharacters/NativeCharacterMotion/SK_MaxxxSupreme_Skeleton_4fe52f7b/AN_SK_MaxxxSupreme_Skeleton_4fe52f7b_Player_Air_Hold.AN_SK_MaxxxSupreme_Skeleton_4fe52f7b_Player_Air_Hold",
+        "duration_seconds": 0.03333333333333333
+      }
+    },
+    "local_weapon_preview_enabled": true
+  },
+  "SK_VileDave_Skeleton_39db2b4f": {
+    "enabled": true,
+    "mesh_skeleton": "/Game/DLC/Viola/AI/ArmyOrder/Leader/_Unique/VileDave/Model/Rig/SK_VileDave_Skeleton.SK_VileDave_Skeleton",
+    "archives": {
+      "pakchunk1323-NativeHumanoidMotion_P.pak": "8996acb652e394aec08aa9be430ad8bbf163051941c17d50e1196bd8724d007d",
+      "pakchunk1323-NativeHumanoidMotion_P.utoc": "8499f06d9c968e433af9cb5c6f1e4d2237a11b17d5226c58cf6bf8e17ff2e1c9",
+      "pakchunk1323-NativeHumanoidMotion_P.ucas": "32d0ac8df8bd16b944a6dd35d4facca11db676e7fc81fbc15124643b99f21c10"
+    },
+    "animation_root": "/Game/ImportedCharacters/NativeCharacterMotion/SK_VileDave_Skeleton_39db2b4f/",
+    "airborne_animation_root": "/Game/ImportedCharacters/NativeCharacterMotion/SK_VileDave_Skeleton_39db2b4f/",
+    "airborne_archives": {
+      "pakchunk1323-NativeHumanoidMotion_P.pak": "8996acb652e394aec08aa9be430ad8bbf163051941c17d50e1196bd8724d007d",
+      "pakchunk1323-NativeHumanoidMotion_P.utoc": "8499f06d9c968e433af9cb5c6f1e4d2237a11b17d5226c58cf6bf8e17ff2e1c9",
+      "pakchunk1323-NativeHumanoidMotion_P.ucas": "32d0ac8df8bd16b944a6dd35d4facca11db676e7fc81fbc15124643b99f21c10"
+    },
+    "local_slot_motion_enabled": true,
+    "local_airborne_motion_enabled": true,
+    "scope": "local_native_fullbody_not_guest_verified",
+    "clips": {
+      "run": {
+        "animation": "/Game/ImportedCharacters/NativeCharacterMotion/SK_VileDave_Skeleton_39db2b4f/AN_SK_VileDave_Skeleton_39db2b4f_Player_Run.AN_SK_VileDave_Skeleton_39db2b4f_Player_Run",
+        "speed_cm_s": 470.0000000000015
+      },
+      "sprint": {
+        "animation": "/Game/ImportedCharacters/NativeCharacterMotion/SK_VileDave_Skeleton_39db2b4f/AN_SK_VileDave_Skeleton_39db2b4f_Player_Sprint.AN_SK_VileDave_Skeleton_39db2b4f_Player_Sprint",
+        "speed_cm_s": 719.9999999999006
+      },
+      "airborne": {
+        "animation": "/Game/ImportedCharacters/NativeCharacterMotion/SK_VileDave_Skeleton_39db2b4f/AN_SK_VileDave_Skeleton_39db2b4f_Player_Airborne.AN_SK_VileDave_Skeleton_39db2b4f_Player_Airborne",
+        "duration_seconds": 1.3333333333333333
+      },
+      "air_hold": {
+        "animation": "/Game/ImportedCharacters/NativeCharacterMotion/SK_VileDave_Skeleton_39db2b4f/AN_SK_VileDave_Skeleton_39db2b4f_Player_Air_Hold.AN_SK_VileDave_Skeleton_39db2b4f_Player_Air_Hold",
+        "duration_seconds": 0.03333333333333333
+      }
+    },
+    "local_weapon_preview_enabled": true
+  },
+  "Moxxi": {
+    "enabled": true,
+    "mesh_skeleton": "/Game/AI/NPC/_Unique/Moxxi/Model/Rig/SK_Moxxi_Skeleton.SK_Moxxi_Skeleton",
+    "archives": {
+      "pakchunk1323-NativeHumanoidMotion_P.pak": "8996acb652e394aec08aa9be430ad8bbf163051941c17d50e1196bd8724d007d",
+      "pakchunk1323-NativeHumanoidMotion_P.utoc": "8499f06d9c968e433af9cb5c6f1e4d2237a11b17d5226c58cf6bf8e17ff2e1c9",
+      "pakchunk1323-NativeHumanoidMotion_P.ucas": "32d0ac8df8bd16b944a6dd35d4facca11db676e7fc81fbc15124643b99f21c10"
+    },
+    "animation_root": "/Game/ImportedCharacters/NativeCharacterMotion/Moxxi/",
+    "airborne_animation_root": "/Game/ImportedCharacters/NativeCharacterMotion/Moxxi/",
+    "airborne_archives": {
+      "pakchunk1323-NativeHumanoidMotion_P.pak": "8996acb652e394aec08aa9be430ad8bbf163051941c17d50e1196bd8724d007d",
+      "pakchunk1323-NativeHumanoidMotion_P.utoc": "8499f06d9c968e433af9cb5c6f1e4d2237a11b17d5226c58cf6bf8e17ff2e1c9",
+      "pakchunk1323-NativeHumanoidMotion_P.ucas": "32d0ac8df8bd16b944a6dd35d4facca11db676e7fc81fbc15124643b99f21c10"
+    },
+    "local_slot_motion_enabled": true,
+    "local_airborne_motion_enabled": true,
+    "scope": "local_native_fullbody_not_guest_verified",
+    "clips": {
+      "run": {
+        "animation": "/Game/ImportedCharacters/NativeCharacterMotion/Moxxi/AN_Moxxi_Player_Run.AN_Moxxi_Player_Run",
+        "speed_cm_s": 470.0000000000015
+      },
+      "sprint": {
+        "animation": "/Game/ImportedCharacters/NativeCharacterMotion/Moxxi/AN_Moxxi_Player_Sprint.AN_Moxxi_Player_Sprint",
+        "speed_cm_s": 719.9999999999006
+      },
+      "airborne": {
+        "animation": "/Game/ImportedCharacters/NativeCharacterMotion/Moxxi/AN_Moxxi_Player_Airborne.AN_Moxxi_Player_Airborne",
+        "duration_seconds": 1.3333333333333333
+      },
+      "air_hold": {
+        "animation": "/Game/ImportedCharacters/NativeCharacterMotion/Moxxi/AN_Moxxi_Player_Air_Hold.AN_Moxxi_Player_Air_Hold",
+        "duration_seconds": 0.03333333333333333
+      }
+    },
+    "local_weapon_preview_enabled": true
+  }
+}

@@ -1,6 +1,6 @@
 [project]
 name = "bl4_character_swapper"
-version = "0.2.8"
+version = "0.2.13"
 authors = [{ name = "RDPSqu1ggs" }]
 description = "BL4 character swapping with optional separately installed Appearance packs, SDK console controls and a BLImGui picker. No game assets bundled. Also included in Squ1ggs Boosting Tools."
 
@@ -10,9 +10,9 @@ Repository = "https://github.com/Squ1ggs/Bl4SDKmods"
 
 [tool.sdkmod]
 name = "BL4 Character Swapper"
-version = "0.2.8"
+version = "0.2.13"
 license = { name = "GPL3", url = "https://choosealicense.com/licenses/gpl-3.0/" }
 supported_games = ["BL4"]
 coop_support = "Unknown"
-download = "https://github.com/Squ1ggs/Bl4SDKmods/releases/download/bl4-character-swapper-v0.2.8/bl4_character_swapper.sdkmod"
+download = "https://github.com/Squ1ggs/Bl4SDKmods/releases/download/bl4-character-swapper-v0.2.13/bl4_character_swapper.sdkmod"
 

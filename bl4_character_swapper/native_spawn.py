@@ -56,6 +56,7 @@ class NativeSpawn:
                                                      source=template, class_name=self.code)
                 if actor is not None:
                     self.direct_source = WeakPointer(actor)
+                    self._quiet(actor, pawn)
                     self.message = "Waiting for the native character template to render."
                     return
         # Keep both paths used by the EXE: the live native type and its
@@ -101,6 +102,8 @@ class NativeSpawn:
             component.ResetSpawner(True)
         except TypeError:
             component.ResetSpawner()
+        for actor in alive(component):
+            self._quiet(actor, pawn)
         self.message = "Waiting for the selected native character to appear."
         self.phase = "native spawner"
         # Give native streaming its full budget after synchronous package work.
@@ -130,7 +133,9 @@ class NativeSpawn:
             raise RuntimeError(self._timeout_message())
         if self.direct_source is not None:
             self.saw_actor = True
-            return self.direct_source()
+            actor = self.direct_source()
+            self._quiet(actor, pawn)
+            return actor
         if self.spawner is None:
             package = next(self.packages, None)
             if package is not None:
@@ -157,8 +162,21 @@ class NativeSpawn:
             self.saw_actor = True
             attach._call_quiet(component, "SetSpawnerEnabled", False)
             attach._call_quiet(component, "SetSpawnPointEnabled", False)
+            self._quiet(actors[0], pawn)
             return actors[0]
         return None
+
+    def _quiet(self, actor, pawn=None):
+        """A spawned boss is a real enemy until this runs. Shut combat down immediately."""
+        if actor is None:
+            return
+        try:
+            from .appearance_visibility import make_cosmetic_combat_passive
+            wearer = pawn if pawn is not None else (self.pawn() if hasattr(self, 'pawn') else None)
+            make_cosmetic_combat_passive(actor, trusted_cosmetic=True, wearer=wearer)
+        except Exception:
+            pass
+        attach._call_quiet(actor, "SetActorEnableCollision", False)
 
     def detach(self):
         """Transfer the helper's lifetime with its actor, without destroying it."""

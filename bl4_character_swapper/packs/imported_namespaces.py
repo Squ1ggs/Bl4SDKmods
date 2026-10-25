@@ -20,7 +20,13 @@ def valid_record(record, row):
            or not isinstance(value, str) or not _HASH.fullmatch(value) for name, value in archives.items()):
         return False
     paths = [row.get('actor_class', ''), row.get('mesh', ''),
-             *row.get('animations', {}).values(), *row.get('slot_textures', {}).values()]
+             *row.get('slot_textures', {}).values()]
+    # Shared animation assets have separate receipts; this record grants only
+    # its own namespace and must not be invalidated by a seated-clip reference.
+    animations=list(row.get('animations', {}).values())
+    if any(not isinstance(path,str) or not path.startswith('/Game/ImportedCharacters/')
+           or '..' in path or '\\' in path or ':' in path for path in animations):
+        return False
     if row.get('skeleton'):
         paths.append(row['skeleton'])
     return bool(paths) and all(isinstance(path, str) and path.startswith(namespace)

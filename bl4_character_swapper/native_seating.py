@@ -2,6 +2,60 @@
 from pathlib import Path
 import hashlib
 import json
+import re
+
+
+def support_config(module_file, name):
+    """Read packaged configuration with SDK zip support; assets stay external."""
+    package = Path(module_file).parent
+    roots = []
+    try:
+        from mods_base import MODS_DIR
+        roots.extend(Path(MODS_DIR) / item for item in ('appearance_runtime', 'Squ1ggsBoostingTools'))
+    except ImportError:
+        pass
+    roots.append(package.parent)
+    document = None
+    try:
+        from mods_base import open_in_mod_dir
+        with open_in_mod_dir(package / 'data' / name) as stream:
+            document = json.load(stream)
+    except (ImportError, OSError, FileNotFoundError):
+        pass
+    if document is None:
+        for root in roots:
+            config = root / 'data' / name
+            if config.is_file():
+                document = json.loads(config.read_text(encoding='utf-8'))
+                break
+    asset_root = next((root for root in roots if (root / 'assets/native_character_animations').is_dir()), roots[-1])
+    return asset_root, document or {}
+
+
+def require_motion_support(mesh):
+    """Fail before hiding the original body if its declared support is absent."""
+    skeleton = _path(mesh.GetSkinnedAsset().Skeleton)
+    required = {}
+    asset_root = None
+    for name in ('native_motion_animations.json', 'native_seat_animations.json'):
+        root, rows = support_config(__file__, name)
+        for row in rows.values():
+            if row.get('enabled') is True and row.get('mesh_skeleton') == skeleton:
+                asset_root = root
+                required.update(row.get('archives', {}))
+                required.update(row.get('airborne_archives', {}))
+    if not required:
+        return
+    from mods_base import MODS_DIR
+    game_paks = Path(MODS_DIR).parent / 'OakGame/Content/Paks'
+    for name, expected in required.items():
+        if Path(name).name != name:
+            raise ValueError('Invalid animation support filename')
+        for folder in (asset_root / 'assets/native_character_animations', game_paks):
+            path = folder / name
+            if not path.is_file() or hashlib.sha256(path.read_bytes()).hexdigest() != expected:
+                raise RuntimeError('Animation support is missing or outdated: ' + name +
+                    '. Close BL4, extract the complete Character Swapper ZIP into the game folder containing OakGame and sdk_mods, then restart. Original appearance kept.')
 
 
 def _path(value):
@@ -15,12 +69,9 @@ def _path(value):
 def definition(mesh, state):
     if 'native_seat_definition' in state:return state['native_seat_definition']
     state['native_seat_definition'] = None
-    root = Path(__file__).parent.parent
-    config = root/'data/native_seat_animations.json'
-    if not config.is_file():return None
     try:
+        root, rows = support_config(__file__, 'native_seat_animations.json')
         skeleton = _path(mesh.GetSkinnedAsset().Skeleton)
-        rows = json.loads(config.read_text(encoding='utf-8'))
         for row in rows.values():
             if row.get('enabled') is not True or row.get('mesh_skeleton') != skeleton:continue
             archives = row.get('archives',{})
@@ -29,7 +80,11 @@ def definition(mesh, state):
             if any(Path(name).name!=name or not (folder/name).is_file() or
                    hashlib.sha256((folder/name).read_bytes()).hexdigest()!=digest for name,digest in archives.items()):continue
             path = row.get('animation','')
-            if not path.startswith('/Game/ImportedCharacters/NativeAmaraSeat/') or '..' in path:continue
+            legacy=path.startswith(('/Game/ImportedCharacters/NativeAmaraSeat/',
+                                    '/Game/ImportedCharacters/NativeHumanSeat/',
+                                    '/Game/ImportedCharacters/NativeGunToterSeat/'))
+            generic=bool(re.fullmatch(r'/Game/ImportedCharacters/NativeCharacterMotion/[A-Za-z0-9_-]{1,64}/[A-Za-z0-9_]+\.[A-Za-z0-9_]+',path))
+            if not (legacy or generic) or '..' in path:continue
             state['native_seat_definition'] = row
             return row
     except Exception as exc:

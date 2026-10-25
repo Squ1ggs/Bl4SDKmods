@@ -1,0 +1,401 @@
+{
+  "meshes": {
+    "/Game/ImportedCharacters/AmaraBL3/SK_AmaraBL3.SK_AmaraBL3": {
+      "head": "Head",
+      "model": "amara_bl3",
+      "body_arm_bones": [
+        "L_Upperarm",
+        "R_Upperarm"
+      ],
+      "pelvis": "Hips"
+    },
+    "/Game/ImportedCharacters/ArbiterHalo3/SK_ArbiterHalo3.SK_ArbiterHalo3": {
+      "head": "head",
+      "model": "arbiter_halo3",
+      "body_arm_bones": [
+        "l_upperarm",
+        "r_upperarm"
+      ],
+      "pelvis": "pelvis"
+    },
+    "/Game/ImportedCharacters/AthenaTPS/SK_AthenaTPS.SK_AthenaTPS": {
+      "head": "Head",
+      "model": "athena_tps",
+      "body_arm_bones": [
+        "L_Upperarm",
+        "R_Upperarm"
+      ],
+      "pelvis": "Hips"
+    },
+    "/Game/ImportedCharacters/AureliaTPS/SK_AureliaTPS.SK_AureliaTPS": {
+      "head": "Head",
+      "model": "aurelia_tps",
+      "body_arm_bones": [
+        "L_Upperarm",
+        "R_Upperarm"
+      ],
+      "pelvis": "Hips"
+    },
+    "/Game/ImportedCharacters/AxtonBL2/SK_AxtonBL2.SK_AxtonBL2": {
+      "head": "Head",
+      "model": "axton_bl2",
+      "body_arm_bones": [
+        "L_Upperarm",
+        "R_Upperarm"
+      ],
+      "pelvis": "Hips"
+    },
+    "/Game/ImportedCharacters/BrickBL1/SK_BrickBL1.SK_BrickBL1": {
+      "head": "Bip01_Head",
+      "model": "brick_bl1",
+      "body_arm_bones": [
+        "Bip01_L_UpperArm",
+        "Bip01_R_UpperArm"
+      ],
+      "pelvis": "Bip01_Spine"
+    },
+    "/Game/ImportedCharacters/BuzzKH3/SK_BuzzKH3.SK_BuzzKH3": {
+      "head": "atama",
+      "model": "buzz_kh3",
+      "body_arm_bones": [
+        "L_ude1",
+        "R_ude1"
+      ],
+      "pelvis": "koshi"
+    },
+    "/Game/ImportedCharacters/CloudKH2OriginalRig/SK_CloudKH2.SK_CloudKH2": {
+      "head": "kh2_src_163",
+      "model": "cloud_kh2",
+      "body_arm_bones": [
+        "kh2_src_120",
+        "kh2_src_207"
+      ],
+      "first_person_weapon_policy": "hide_known_unsupported",
+      "weapon_policy_reason": "Original sword pose and legs-only locomotion; no reviewed firearm hold or authored native-bound weapon arms.",
+      "pelvis": "kh2_src_003"
+    },
+    "/Game/ImportedCharacters/MayaBL3NPCReview/SK_MayaBL3NPCReview.SK_MayaBL3NPCReview": {
+      "head": "Head",
+      "model": "custom_maya_bl3_npc_review",
+      "body_arm_bones": [
+        "L_Upperarm",
+        "R_Upperarm"
+      ],
+      "pelvis": "Hips"
+    },
+    "/Game/ImportedCharacters/FL4KBL3/SK_FL4KBL3.SK_FL4KBL3": {
+      "head": "Head",
+      "model": "fl4k_bl3",
+      "body_arm_bones": [
+        "L_Upperarm",
+        "R_Upperarm"
+      ],
+      "pelvis": "Hips",
+      "first_person_hide_bones": [
+        "R_CoatCollar",
+        "R_Upperarm_Coat"
+      ]
+    },
+    "/Game/ImportedCharacters/GaigeBL2/SK_GaigeBL2.SK_GaigeBL2": {
+      "head": "Head",
+      "model": "gaige_bl2",
+      "body_arm_bones": [
+        "L_Upperarm",
+        "R_Upperarm"
+      ],
+      "pelvis": "Hips"
+    },
+    "/Game/ImportedCharacters/JackSparrowKH3/SK_JackSparrowKH3.SK_JackSparrowKH3": {
+      "head": "atama",
+      "model": "jack_sparrow_kh3",
+      "body_arm_bones": [
+        "L_ude1",
+        "R_ude1"
+      ],
+      "pelvis": "koshi"
+    },
+    "/Game/ImportedCharacters/KriegBL2/SK_KriegBL2.SK_KriegBL2": {
+      "head": "Head",
+      "model": "krieg_bl2",
+      "body_arm_bones": [
+        "L_Upperarm",
+        "R_Upperarm"
+      ],
+      "pelvis": "Hips"
+    },
+    "/Game/ImportedCharacters/LilithBL1/SK_LilithBL1.SK_LilithBL1": {
+      "head": "Bip01_Head",
+      "model": "lilith_bl1",
+      "body_arm_bones": [
+        "Bip01_L_UpperArm",
+        "Bip01_R_UpperArm"
+      ],
+      "pelvis": "Bip01_Spine"
+    },
+    "/Game/ImportedCharacters/MasterChiefHalo3/SK_MasterChiefHalo3.SK_MasterChiefHalo3": {
+      "head": "head",
+      "model": "masterchief_halo3",
+      "body_arm_bones": [
+        "l_upperarm",
+        "r_upperarm"
+      ],
+      "viewmodel_offset_cm": [
+        -2,
+        0,
+        -3
+      ],
+      "pelvis": "pelvis"
+    },
+    "/Game/ImportedCharacters/MayaBL2/SK_MayaBL2.SK_MayaBL2": {
+      "head": "Head",
+      "model": "maya_bl2",
+      "body_arm_bones": [
+        "L_Upperarm",
+        "R_Upperarm"
+      ],
+      "pelvis": "Hips"
+    },
+    "/Game/ImportedCharacters/MickeyKH3/SK_MickeyKH3.SK_MickeyKH3": {
+      "head": "atama",
+      "model": "mickey_kh3",
+      "eye_bones": [
+        "L_eye",
+        "R_eye"
+      ],
+      "body_arm_bones": [
+        "L_ude1",
+        "R_ude1"
+      ],
+      "first_person_weapon_policy": "hide_known_unsupported",
+      "weapon_policy_reason": "No usable firearm hold or authored first-person weapon arms; original melee accessory is separate.",
+      "pelvis": "koshi"
+    },
+    "/Game/ImportedCharacters/MordecaiBL1/SK_MordecaiBL1.SK_MordecaiBL1": {
+      "head": "Bip01_Head",
+      "model": "mordecai_bl1",
+      "body_arm_bones": [
+        "Bip01_L_UpperArm",
+        "Bip01_R_UpperArm"
+      ],
+      "pelvis": "Bip01_Spine"
+    },
+    "/Game/ImportedCharacters/MozeBL3/SK_MozeBL3.SK_MozeBL3": {
+      "head": "Head",
+      "model": "moze_bl3",
+      "body_arm_bones": [
+        "L_Upperarm",
+        "R_Upperarm"
+      ],
+      "pelvis": "Hips"
+    },
+    "/Game/ImportedCharacters/NeoshadowKH3/SK_NeoshadowKH3.SK_NeoshadowKH3": {
+      "head": "atama",
+      "model": "neoshadow_kh3",
+      "body_arm_bones": [
+        "L_ude1",
+        "R_ude1"
+      ],
+      "pelvis": "koshi1"
+    },
+    "/Game/ImportedCharacters/NishaTPS/SK_NishaTPS.SK_NishaTPS": {
+      "head": "Head",
+      "model": "nisha_tps",
+      "body_arm_bones": [
+        "L_Upperarm",
+        "R_Upperarm"
+      ],
+      "pelvis": "Hips"
+    },
+    "/Game/ImportedCharacters/ODSTMCC/SK_ODSTMCC.SK_ODSTMCC": {
+      "head": "head",
+      "model": "odst_mcc_campaign",
+      "body_arm_bones": [
+        "l_upperarm",
+        "r_upperarm"
+      ],
+      "pelvis": "pelvis"
+    },
+    "/Game/ImportedCharacters/RolandBL1/SK_RolandBL1.SK_RolandBL1": {
+      "head": "Bip01_Head",
+      "model": "roland_bl1",
+      "body_arm_bones": [
+        "Bip01_L_UpperArm",
+        "Bip01_R_UpperArm"
+      ],
+      "pelvis": "Bip01_Spine"
+    },
+    "/Game/ImportedCharacters/SalvadorBL2/SK_SalvadorBL2.SK_SalvadorBL2": {
+      "head": "Head",
+      "model": "salvador_bl2",
+      "body_arm_bones": [
+        "L_Upperarm",
+        "R_Upperarm"
+      ],
+      "pelvis": "Hips"
+    },
+    "/Game/ImportedCharacters/SephirothKH2OriginalRig/SK_SephirothKH2.SK_SephirothKH2": {
+      "head": "kh2_src_228",
+      "model": "sephiroth_kh2",
+      "first_person_run_hide_bones": [
+        "kh2_src_382"
+      ],
+      "body_arm_bones": [
+        "kh2_src_171",
+        "kh2_src_297"
+      ],
+      "first_person_weapon_policy": "hide_known_unsupported",
+      "weapon_policy_reason": "No usable firearm hold or authored first-person weapon arms; original melee accessory is separate.",
+      "pelvis": "kh2_src_003"
+    },
+    "/Game/ImportedCharacters/ShadowKH3/SK_ShadowKH3.SK_ShadowKH3": {
+      "head": "atama",
+      "model": "shadow_kh3",
+      "body_arm_bones": [
+        "L_ude1",
+        "R_ude1"
+      ],
+      "pelvis": "koshi"
+    },
+    "/Game/ImportedCharacters/SoldierKH3/SK_SoldierKH3.SK_SoldierKH3": {
+      "head": "atama",
+      "model": "soldier_kh3",
+      "body_arm_bones": [
+        "L_ude1",
+        "R_ude1"
+      ],
+      "pelvis": "koshi"
+    },
+    "/Game/ImportedCharacters/Sora/SK_Sora.SK_Sora": {
+      "head": "atama",
+      "model": "sora",
+      "eye_bones": [
+        "L_eye",
+        "R_eye"
+      ],
+      "body_arm_bones": [
+        "L_ude1",
+        "R_ude1"
+      ],
+      "first_person_weapon_policy": "hide_known_unsupported",
+      "weapon_policy_reason": "No usable firearm hold or authored first-person weapon arms; original melee accessory is separate.",
+      "pelvis": "koshi"
+    },
+    "/Game/ImportedCharacters/StitchKH3/SK_StitchKH3.SK_StitchKH3": {
+      "head": "atama",
+      "model": "stitch_kh3",
+      "eye_bones": [
+        "G_eye"
+      ],
+      "body_arm_bones": [
+        "L_ude1",
+        "R_ude1"
+      ],
+      "first_person_weapon_policy": "hide_known_unsupported",
+      "weapon_policy_reason": "Use original Stitch pose with native gun and arms hidden, as requested.",
+      "pelvis": "koshi"
+    },
+    "/Game/ImportedCharacters/TimothyTPS/SK_TimothyTPS.SK_TimothyTPS": {
+      "head": "Head",
+      "model": "timothy_tps",
+      "body_arm_bones": [
+        "L_Upperarm",
+        "R_Upperarm"
+      ],
+      "pelvis": "Hips"
+    },
+    "/Game/ImportedCharacters/VanitasKH3/SK_VanitasKH3.SK_VanitasKH3": {
+      "head": "atama",
+      "model": "vanitas_kh3",
+      "body_arm_bones": [
+        "L_ude1",
+        "R_ude1"
+      ],
+      "pelvis": "koshi"
+    },
+    "/Game/ImportedCharacters/WilhelmTPS/SK_WilhelmTPS.SK_WilhelmTPS": {
+      "head": "Head",
+      "model": "wilhelm_tps",
+      "body_arm_bones": [
+        "L_Upperarm",
+        "R_Upperarm"
+      ],
+      "pelvis": "Hips"
+    },
+    "/Game/ImportedCharacters/WoodyKH3/SK_WoodyKH3.SK_WoodyKH3": {
+      "head": "atama",
+      "model": "woody_kh3",
+      "body_arm_bones": [
+        "L_ude1",
+        "R_ude1"
+      ],
+      "pelvis": "koshi"
+    },
+    "/Game/ImportedCharacters/ZaneBL3/SK_ZaneBL3.SK_ZaneBL3": {
+      "head": "Head",
+      "model": "zane_bl3",
+      "body_arm_bones": [
+        "L_Upperarm",
+        "R_Upperarm"
+      ],
+      "pelvis": "Hips"
+    },
+    "/Game/ImportedCharacters/ZeroBL2/SK_ZeroBL2.SK_ZeroBL2": {
+      "head": "Head",
+      "model": "zero_bl2",
+      "body_arm_bones": [
+        "L_Upperarm",
+        "R_Upperarm"
+      ],
+      "pelvis": "Hips"
+    },
+    "/Game/ImportedCharacters/ViviKH2OriginalRig/SK_ViviKH2.SK_ViviKH2": {
+      "model": "vivi_kh2",
+      "head": "kh2_src_057",
+      "eye_local_offset": [
+        -0.10243745780933515,
+        -0.08021309283462973,
+        0.00034085635439956417
+      ],
+      "first_person_weapon_policy": "hide_known_unsupported",
+      "weapon_policy_reason": "No usable firearm hold or authored first-person weapon arms; original melee accessory is separate.",
+      "first_person_hide_bones": [
+        "kh2_src_144"
+      ],
+      "pelvis": "kh2_src_124"
+    },
+    "/Game/ImportedCharacters/MickeyBlackCoatKH2OriginalRig/SK_MickeyBlackCoatKH2.SK_MickeyBlackCoatKH2": {
+      "model": "mickey_black_coat_kh2",
+      "head": "kh2_src_093",
+      "eye_local_offset": [
+        -0.14765560460890145,
+        -0.024041250798590732,
+        -0.0010558638626841786
+      ],
+      "first_person_weapon_policy": "hide_known_unsupported",
+      "weapon_policy_reason": "No usable firearm hold or authored first-person weapon arms; original melee accessory is separate.",
+      "pelvis": "kh2_src_003"
+    },
+    "/Game/ImportedCharacters/CardboardGuardian/SK_CardboardGuardian.SK_CardboardGuardian": {
+      "model": "cardboard_guardian",
+      "head": "Head",
+      "pelvis": "Hips",
+      "eye_bones": [
+        "Eye_L",
+        "Eye_R"
+      ],
+      "first_person_weapon_policy": "hide_known_unsupported",
+      "weapon_policy_reason": "Original cardboard character has no authored native firearm or first-person weapon grip."
+    },
+    "/Game/ImportedCharacters/ScrapRobot/SK_ScrapRobot.SK_ScrapRobot": {
+      "model": "scrap_robot",
+      "head": "Head",
+      "pelvis": "Hips",
+      "eye_bones": [
+        "Eye_L",
+        "Eye_R"
+      ],
+      "first_person_weapon_policy": "hide_known_unsupported",
+      "weapon_policy_reason": "Original service robot has no authored native firearm or first-person weapon grip."
+    }
+  }
+}

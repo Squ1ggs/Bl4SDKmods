@@ -15,6 +15,7 @@ _pack_cache: dict[str, tuple[int, int, str]] = {}
 _packages: dict[str, Any] = {}
 _actors: dict[str, tuple[Any, str]] = {}
 _animation_state: dict[str, tuple[str, str]] = {}
+_animation_errors: dict[str, str] = {}
 _material_state: dict[str, str] = {}
 _material_retry_after: dict[str, float] = {}
 _peer_body_masks: dict[str, dict[str, Any]] = {}
@@ -56,6 +57,10 @@ def live_actors() -> list[tuple[Any, str]]:
 
 
 def _forget_actor(key: str) -> None:
+    if 'native_weapon_hidden:'+key in _packages:
+        from . import imported_weapons
+        imported_weapons.restore_native_display(key)
+    _packages.pop('aim_until:'+key,None)
     _clear_owner_view(key)
     if "cosmetic_effect:" + key in _packages:
         from . import imported_effects
@@ -81,6 +86,10 @@ def _prepare_materials(actor: Any, model_id: str) -> None:
     from . import engine as oak
     key = str(actor)
     component = oak._actor_mesh(actor)
+    # Imported low characters must not receive projected terrain decals.
+    # Apply before the material-cache early return so live policy changes stick.
+    if models()[model_id].get('receives_world_decals') is False:
+        component.SetReceivesDecals(False)
     def material_stamp():
         return (str(component), tuple(str(component.GetMaterial(index))
                     for index in range(int(component.GetNumMaterials()))))
@@ -143,10 +152,10 @@ def _load(kind: str, path: str) -> Any:
     package = path.split(".", 1)[0]
     # A Python UObject wrapper does not keep its Unreal allocation alive.
     # Retry a missing object even when its package was loaded earlier.
-    loaded = unrealsdk.load_package(package)
-    if loaded is None:
-        from .imported_package_loader import load_package
-        loaded = load_package(package)
+    # This build's SDK overload has an incompatible package-path ABI.
+    # Route missing approved assets directly through the audited FPackagePath loader.
+    from .imported_package_loader import load_package
+    loaded = load_package(package)
     _packages[package] = loaded
     try:
         return _retain_imported_asset(unrealsdk.find_object(kind, path), path)
@@ -265,6 +274,8 @@ def _align_capsule_ground(actor: Any, component: Any, row: dict) -> None:
     vehicles = sys.modules.get(__package__ + '.imported_vehicles')
     seated = getattr(vehicles, '_driver_visual', None)
     if seated and seated['component']() == component:
+        # Seat fitting owns this component until exit. The idle ground-height
+        # repair must not undo it on the next character presentation tick.
         return
     parent = actor.GetAttachParentActor()
     own_half_height = float(actor.CapsuleComponent.GetScaledCapsuleHalfHeight())
@@ -404,8 +415,11 @@ def animation_for_motion(speed: float, falling: bool, crouched: bool = False) ->
 
 def _clear_owner_view(actor_key: str) -> None:
     saved = _packages.pop("owner_view:" + actor_key, None)
-    if not isinstance(saved, dict) or not saved.get("hidden_actor_added"):
+    if not isinstance(saved, dict):
         return
+    from ..appearance_visibility import restore_owner_camera_view
+    restore_owner_camera_view(saved)
+    if not saved.get('hidden_actor_added'): return
     controller = saved.get("controller")
     controller = controller() if controller is not None else None
     if controller is not None:
@@ -459,15 +473,12 @@ def _prepare_owner_view(actor: Any) -> None:
     camera, origin = pcm.GetCameraLocation(), pawn.K2_GetActorLocation()
     first_person = mode == "Default" and math.hypot(float(camera.X-origin.X),float(camera.Y-origin.Y))<90
     if state is not None:
-        state["first_person_body_mask"] = False
-    entries = [entry for entry in list(pc.HiddenActors) if entry is not None]
-    present = any(str(entry)==str(actor) for entry in entries)
-    if first_person and not present:
-        pc.HiddenActors = [*entries,actor]
-        saved["hidden_actor_added"] = True
-    elif not first_person and saved["hidden_actor_added"]:
-        pc.HiddenActors = [entry for entry in entries if str(entry)!=str(actor)]
+        state["first_person_body_mask"] = first_person
+    if saved.get('hidden_actor_added'):
+        pc.HiddenActors = [entry for entry in list(pc.HiddenActors) if entry is not None and str(entry)!=str(actor)]
         saved["hidden_actor_added"] = False
+    from ..appearance_visibility import prepare_owner_camera_view
+    prepare_owner_camera_view(saved,pc,pawn,actor,component)
     # Keep the native animated viewmodel when older swaps hid all player parts.
     for extra in (state or {}).get("extras", ()):
         original = extra.get("comp")
@@ -504,16 +515,30 @@ def _animate(actor: Any, model_id: str) -> None:
         return
     fallback_mode = animation_for_motion(speed, falling)
     candidates = [mode, fallback_mode]
+    if parent is not None and animations.get('seated'):
+        from ..animation import _player_is_driving
+        if _player_is_driving(parent, oak._actor_mesh(parent)):
+            candidates = ['seated']
     # Packs with only one verified ground-motion clip should keep moving at
     # both walking and sprinting speeds instead of returning to a still idle.
-    if fallback_mode in ('walk', 'run'):
+    if candidates != ['seated'] and fallback_mode in ('walk', 'run'):
         candidates.append('walk' if fallback_mode == 'run' else 'run')
     selected_mode = next((value for value in candidates if value in animations), 'idle')
+    if row.get('display_animation') in animations and candidates != ['seated']:
+        selected_mode = row['display_animation']
+    aim_mode=row.get('aim_animation')
+    if aim_mode in animations and candidates != ['seated']:
+        zoom=getattr(motion,'ZoomState',None)
+        aiming=bool(getattr(motion,'bIsFiring',False) or getattr(zoom,'bWantsToZoom',False)
+                    or getattr(zoom,'bPendingZoom',False) or int(getattr(zoom,'State',0) or 0)!=0)
+        now=time.monotonic();key='aim_until:'+str(actor)
+        if aiming:_packages[key]=now+.2
+        if aiming or now<float(_packages.get(key,0)):selected_mode=aim_mode
     path = animations.get(selected_mode)
     if not path:
         return
     source_speed = float(row.get('animation_speeds_cm_s', {}).get(selected_mode, 0))
-    rate = max(.25, min(4.0, speed / source_speed)) if source_speed > 0 and speed >= 10 else 1.0
+    rate = max(.25, min(4.0, speed / source_speed)) if selected_mode != 'seated' and source_speed > 0 and speed >= 10 else 1.0
     set_rate = getattr(component, 'SetPlayRate', None)
     if callable(set_rate):
         set_rate(rate)
@@ -526,7 +551,8 @@ def _animate(actor: Any, model_id: str) -> None:
     asset = _load("AnimSequence", path)
     mesh = oak._mesh_asset_for_kind(component)
     if asset is None or mesh is None or str(asset.Skeleton) != str(mesh.Skeleton):
-        return
+        raise RuntimeError('Character animation is missing or uses the wrong skeleton: ' + path +
+                           '. Reinstall the complete matching character pack and restart BL4.')
     component.PlayAnimation(asset, selected_mode != "jump")
     if callable(set_rate):
         set_rate(rate)
@@ -581,7 +607,9 @@ def tick() -> None:
             _restore_peer_body_mask(key)
         try:
             _animate(actor, model_id)
+            _animation_errors.pop(key, None)
         except Exception as exc:
+            _animation_errors[key] = str(exc)
             if now >= _packages.get('animation_report:' + key, 0):
                 _packages['animation_report:' + key] = now + 10
                 from . import imported_materials
@@ -594,7 +622,7 @@ def tick() -> None:
                 _packages['effect_retry:' + key] = now + 10
                 from . import imported_materials
                 imported_materials._save_report('imported_effect_last', {'ok': False, 'actor': key, 'message': str(exc)})
-        if (models()[model_id].get("weapon_bone") or "cosmetic_weapon:" + key in _packages) and now >= _packages.get("weapon_retry:"+key,0):
+        if (models()[model_id].get("weapon_bone") or models()[model_id].get('hide_native_weapon_display') or "cosmetic_weapon:" + key in _packages) and now >= _packages.get("weapon_retry:"+key,0):
             try:
                 from . import imported_weapons
                 imported_weapons.prepare(actor,models()[model_id])
@@ -617,3 +645,4 @@ def clear_previews() -> int:
             count += 1
         _forget_actor(key)
     return count
+

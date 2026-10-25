@@ -39,13 +39,13 @@ def _component_visible(component: Any) -> tuple[bool, bool]:
         pass
     return visible, hidden
 
-def _set_component_visible(component: Any, visible: bool, hidden: bool = False) -> None:
+def _set_component_visible(component: Any, visible: bool, hidden: bool = False, *, propagate: bool = True) -> None:
     try:
-        component.SetVisibility(bool(visible), True)
+        component.SetVisibility(bool(visible), propagate)
     except Exception:
         pass
     try:
-        component.SetHiddenInGame(bool(hidden), True)
+        component.SetHiddenInGame(bool(hidden), propagate)
     except Exception:
         pass
 
@@ -92,7 +92,8 @@ def _appearance_skeletal_components(actor: Any) -> list[Any]:
         if not callable(fn):
             continue
         try:
-            return [c for c in list(fn(cls) or []) if c is not None]
+            return [c for c in list(fn(cls) or []) if c is not None
+                    and not {'SQBT_LocalWeaponArms','SQBT_HeadShadow'}.intersection(str(tag) for tag in (getattr(c,'ComponentTags',()) or ()))]
         except Exception:
             continue
     return []
@@ -121,6 +122,8 @@ def _passivate_worn_shell(shell: Any, source_mesh: Any | None = None) -> None:
     """Stop AI / capsule movement / root-motion travel; leave mesh anim ticking for pose."""
     if shell is None:
         return
+    from .appearance_visibility import make_cosmetic_combat_passive
+    make_cosmetic_combat_passive(shell, trusted_cosmetic=True)
     # OakCharacter actor tick can integrate root motion even with movement off —
     # that is what made Apply look like "they walk off" then restore the hunter.
     _call_quiet(shell, "SetActorTickEnabled", False)
@@ -238,8 +241,11 @@ def _apply_worn_source_appearance_legacy(
             comp.VisibilityBasedAnimTickOption = 0
         except Exception:
             pass
-        _call_quiet(comp, "SetVisibility", False, False)
-        _call_quiet(comp, "SetHiddenInGame", True, False)
+        _call_quiet(comp, "SetVisibility", True, False)
+        _call_quiet(comp, "SetHiddenInGame", False, False)
+        _call_quiet(comp, "SetOwnerNoSee", True)
+    from .appearance_visibility import hold_local_visual
+    hold_local_visual(source, [row["comp"] for row in extras])
     _appearance_shell = {
         "mode": "worn_source_actor", "shell": source,
         "source_mesh": source_mesh if leader else None,

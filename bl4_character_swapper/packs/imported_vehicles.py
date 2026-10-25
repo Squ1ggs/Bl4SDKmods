@@ -44,7 +44,7 @@ def choice() -> dict:
                      if key in vehicles()
                      and value in _HOST_VEHICLE_IDS}
             _choice = {'enabled': saved.get('enabled') is True, 'id': vehicle_id,
-                       'host_vehicle_defs': hosts,
+                       'host_vehicle_defs': hosts, 'driver_anchors': saved.get('driver_anchors', {}) if isinstance(saved.get('driver_anchors', {}), dict) else {},
                        'vehicle_heights': {key: float(value) for key, value in saved.get('vehicle_heights', {}).items()
                            if key in vehicles() and type(value) in (int, float) and math.isfinite(value) and abs(value) <= 200},
                        'driver_offsets': {key: _vector(value, 200) for key, value in saved.get('driver_offsets', {}).items()
@@ -63,7 +63,7 @@ def _save_choice(enabled: bool, vehicle_id: str = 'warthog_fh6', host_vehicle_de
         hosts[vehicle_id] = host_vehicle_def
     saved = {'enabled': enabled, 'id': vehicle_id, 'host_vehicle_defs': hosts,
              'vehicle_heights': choice().get('vehicle_heights', {}),
-             'driver_offsets': choice().get('driver_offsets', {})}
+             'driver_offsets': choice().get('driver_offsets', {}), 'driver_anchors': choice().get('driver_anchors', {})}
     path = state_path()
     temporary = path.with_suffix('.tmp')
     temporary.write_text(json.dumps(saved, indent=2), encoding='utf-8')
@@ -471,9 +471,9 @@ def check(vehicle_id: str = 'warthog_fh6') -> dict:
     drivable = row.get('scope') == 'chaos_wheeled_candidate'
     result = {'ok': True, 'name': row['name'], 'game_verified': row.get('game_verified', False),
             'saved_choice': choice(),
-            'scope': ('candidate Chaos wheel conversion on native host vehicle; in-game driving unverified'
-                      if drivable else 'visual shell using native hover handling; static wheels, no turret gameplay'),
-            'message': 'Actor and mesh loaded; live appearance and attachment remain to be checked.'}
+            'scope': ('Visual swap using native vehicle controls'
+                      if drivable else 'Visual swap; native driving and handling stay the same'),
+            'message': 'Vehicle appearance is ready.'}
     if _state and _state.get('id') == vehicle_id:
         actor = _state['actor']()
         if actor is not None:
@@ -488,7 +488,7 @@ def check(vehicle_id: str = 'warthog_fh6') -> dict:
 def _prepare_materials(actor: Any, row: dict, *, component: Any = None):
     """Yield after each slot so vehicle texture binding can be spread across ticks."""
     appearance_colors = row.get('appearance_colors', {})
-    if not row.get('slot_textures') and not appearance_colors:
+    if not row.get('slot_textures') and not appearance_colors and not row.get('slot_color_overrides'):
         # Preserve cooked source materials when neither imported maps nor tint
         # colors were explicitly supplied.
         return
@@ -560,6 +560,13 @@ def _prepare_materials(actor: Any, row: dict, *, component: Any = None):
         path = next(iter(matches),'')
         tint = next((value for key, value in appearance_colors.items()
                      if _material_slot_key(key) == normalized_name), None)
+        override = [value for key,value in row.get('slot_color_overrides',{}).items()
+                    if _material_slot_key(key)==normalized_name]
+        if len(override)>1 and any(value!=override[0] for value in override[1:]):
+            raise RuntimeError('Ambiguous vehicle lamp colours for '+name)
+        if override:
+            path=''
+            tint=override[0]
         finish = _wheel_finish(name) if not path else None
         if finish is not None:
             # Placeholder wheel maps must not paint the rim as tire rubber.
@@ -1076,12 +1083,10 @@ def fit(vehicle_id, *, vehicle_height=0, driver_height=0):
 
 def _hip_height(mesh):
     try:
-        for index in range(min(512, int(mesh.GetNumBones()))):
-            bone = mesh.GetBoneName(index)
-            name = str(bone).casefold()
-            if name in ('hip', 'hips', 'pelvis') or name.endswith(('_hips', '_pelvis')):
-                height = float(mesh.GetSocketLocation(bone).Z)
-                return height if math.isfinite(height) else None
+        bone=_driver_pelvis_bone(mesh)
+        if bone is not None:
+            height = float(mesh.GetSocketLocation(bone).Z)
+            return height if math.isfinite(height) else None
     except Exception:
         pass
     return None
@@ -1092,6 +1097,18 @@ def _restore_driver_visual() -> bool:
     if _driver_visual is None:
         return True
     saved = _driver_visual
+    baseline=saved.get('native_baseline')
+    if baseline:
+        pawn=baseline['pawn']()
+        if pawn is not None:
+            try:
+                current=[float(getattr(pawn.GetBaseTranslationOffset(),a)) for a in 'XYZ']
+                if all(abs(a-b)<.01 for a,b in zip(current,baseline['applied'])):
+                    import unrealsdk
+                    pawn.CacheInitialMeshOffset(
+                        unrealsdk.make_struct('Vector',**dict(zip('XYZ',baseline['original']))),
+                        unrealsdk.make_struct('Rotator',**dict(zip(('Pitch','Yaw','Roll'),baseline['rotation']))))
+            except Exception:return False
     component = saved['component']()
     if component is not None:
         try:
@@ -1110,6 +1127,17 @@ def _set_driver_location(component: Any, xyz: list) -> None:
     import unrealsdk
     component.K2_SetRelativeLocation(unrealsdk.make_struct('Vector', **dict(zip('XYZ', xyz))),
                                     False, unrealsdk.make_struct('HitResult'), True)
+
+
+def _remember_standard_driver():
+    """Retain only this controller's on-foot character before vehicle possession."""
+    global _standard_driver_cache
+    from .dev_tools import _gameplay_pc
+    from unrealsdk.unreal import WeakPointer
+    pc = _gameplay_pc()
+    pawn = getattr(pc, 'Pawn', None)
+    if pc is not None and pawn is not None and getattr(pawn, 'CharacterMovement', None) is not None and getattr(pawn, 'VehicleMesh', None) is None:
+        _standard_driver_cache = (WeakPointer(pc), WeakPointer(pawn))
 
 
 def _driver_character(pawn):
@@ -1136,6 +1164,12 @@ def _driver_character(pawn):
         if pc is not None and state.get('owner_key')==owner_key and candidate is not pawn and getattr(candidate,'CharacterMovement',None) is not None:
             retained[str(candidate)]=candidate
     if len(retained)==1:return next(iter(retained.values()))
+    cached = globals().get('_standard_driver_cache')
+    if cached and pc is not None and cached[0]() == pc:
+        candidate = cached[1]()
+        if candidate is not None and getattr(candidate, 'CharacterMovement', None) is not None:
+            if str(candidate.GetAttachParentActor()) == str(pawn):
+                return candidate
     return None
 
 
@@ -1176,6 +1210,14 @@ def _native_driver_anchor(pawn, component):
         state=worn.visibility_state
         definition=state.get('native_seat_definition') or {}
         anchor=definition.get('vehicle_seat_anchors',{}).get(_state['id'])
+        if anchor is None and definition.get('clip_hip_component_cm') is not None:
+            # A new exact-rig seat uses the car's measured cabin target, but
+            # still waits for that clip's evaluated pelvis before fitting.
+            target=choice().get('driver_anchors',{}).get(_state['id'])
+            if target is None:target=vehicles().get(_state['id'],{}).get('driver_hip_anchor_cm')
+            if target is not None:
+                anchor={'hip_shell_cm':target,
+                        'clip_hip_component_cm':definition['clip_hip_component_cm']}
         if anchor is None:return False,None
         try:
             saved=state.get('native_seat_clip')
@@ -1199,6 +1241,69 @@ def _native_driver_anchor(pawn, component):
             return True,None
     return False,None
 
+def _cabin_driver_anchor(pawn, component):
+    """Anchor the evaluated visible pelvis to this car, independent of body size."""
+    anchor = choice().get('driver_anchors', {}).get(_state['id'])
+    if anchor is None:
+        anchor = vehicles().get(_state['id'], {}).get('driver_hip_anchor_cm')
+    if anchor is None:return False,None
+    try:
+        target = _vector(anchor, 200)
+        bone = _driver_pelvis_bone(component)
+        if bone is None:raise ValueError('Driver has no measured pelvis bone; cabin fit skipped')
+        from . import engine as oak
+        shell = oak._actor_mesh(_state['actor']())
+        owner = component.GetOwner()
+        location = _driver_anchor_location(target, shell.GetSocketTransform('', 0),
+            owner.RootComponent.GetSocketTransform('', 0), component.RelativeLocation,
+            component.GetSocketLocation(bone))
+        _state.pop('driver_fit_error', None)
+        return True,location
+    except Exception as exc:
+        _state['driver_fit_error'] = str(exc)
+        return True,None
+
+
+def _fit_native_driver(pawn, component, location=None):
+    """Fit the cosmetic car to the stock rider; never relocate native hand IK."""
+    global _driver_visual
+    if _driver_visual is not None:
+        # Undo the earlier body-offset approach once, then wait for its bone
+        # cache to evaluate at the restored native movement baseline.
+        _restore_driver_visual()
+        return
+    from . import engine as oak
+    from unrealsdk.unreal import WeakPointer
+    anchor=choice().get('driver_anchors',{}).get(_state['id'])
+    if anchor is None:anchor=vehicles().get(_state['id'],{}).get('driver_hip_anchor_cm')
+    if anchor is None:return
+    shell=oak._actor_mesh(_state['actor']())
+    parent=shell.GetAttachParent()
+    if parent is None:raise ValueError('Vehicle shell has no attachment parent for native seat fitting')
+    bone=_driver_pelvis_bone(component)
+    if bone is None:raise ValueError('Stock driver pelvis is unavailable')
+    current=[float(getattr(shell.RelativeLocation,a)) for a in 'XYZ']
+    saved=_state.get('native_shell_fit')
+    if saved and saved['component']()==shell:
+        if any(abs(a-b)>.01 for a,b in zip(current,saved['applied'])):return
+    else:
+        saved={'component':WeakPointer(shell),'original':list(current),'applied':list(current)}
+        _state['native_shell_fit']=saved
+    # The body-fit solver returns the correction towards the shell. Apply its
+    # opposite to the shell so the stock body, steering IK and camera stay put.
+    towards=_driver_anchor_location(_vector(anchor,200),shell.GetSocketTransform('',0),
+        parent.GetSocketTransform('',0),shell.RelativeLocation,component.GetSocketLocation(bone))
+    fitted=[2*a-b for a,b in zip(current,towards)]
+    if any(not math.isfinite(a) or abs(a)>300 for a in fitted):raise ValueError('Native shell seat correction is outside bounds')
+    _set_driver_location(shell,fitted)
+    saved['applied']=fitted
+    observations=globals().setdefault('_native_fit_observations',{})
+    error=math.dist(current,fitted);previous=observations.get(_state['id'],{})
+    observations[_state['id']]={'strategy':'move_shell_keep_native_body_and_IK',
+        'last_error_before_cm':error,'smallest_error_cm':min(error,previous.get('smallest_error_cm',error)),
+        'samples':previous.get('samples',0)+1,'shell_original':saved['original'],'shell_applied':list(fitted)}
+
+
 def _sync_driver_visual() -> None:
     global _driver_visual
     vehicle_ref = _state.get('vehicle') if _state and not _state.get('restoring') else None
@@ -1218,7 +1323,32 @@ def _sync_driver_visual() -> None:
     if component is None:
         _restore_driver_visual()
         return
+    # Drop the on-foot run correction before this fit snapshots the mesh.
+    try:
+        from ..appearance_visibility import release_fp_body_anchor
+        import sys
+        service = sys.modules.get('_squ1ggs_native_appearance_service_v1')
+        controller = getattr(service, 'controller', None)
+        for worn in getattr(controller, 'worn', {}).values():
+            if worn.source() is not None and worn.visibility_state is not None:
+                release_fp_body_anchor(worn.visibility_state, component)
+    except Exception:
+        pass
+    if (callable(getattr(pawn,'GetBaseTranslationOffset',None)) and component==oak._actor_mesh(pawn)
+            and (choice().get('driver_anchors',{}).get(_state['id']) is not None
+                 or vehicles().get(_state['id'],{}).get('driver_hip_anchor_cm') is not None)):
+        _fit_native_driver(pawn,component)
+        return
+    saved_shell=_state.pop('native_shell_fit',None)
+    if saved_shell:
+        shell=saved_shell['component']()
+        if shell is not None:
+            xyz=[float(getattr(shell.RelativeLocation,a)) for a in 'XYZ']
+            if all(abs(a-b)<.01 for a,b in zip(xyz,saved_shell['applied'])):
+                _set_driver_location(shell,saved_shell['original'])
     anchored, location = _native_driver_anchor(pawn, component)
+    if not anchored:
+        anchored, location = _cabin_driver_anchor(pawn, component)
     if anchored:
         if location is None:
             _restore_driver_visual()
@@ -1254,3 +1384,20 @@ def _sync_driver_visual() -> None:
     applied = [a+b for a, b in zip(original, delta)]
     _driver_visual = {'component': WeakPointer(component), 'original': original, 'applied': applied}
     _set_driver_location(component, applied)
+
+def _driver_pelvis_bone(mesh):
+    """Use reviewed imported anatomy, including rigs with numbered bone names."""
+    from . import imported_models
+    from . import engine as oak
+    asset=oak._mesh_asset_for_kind(mesh)
+    path=str(asset).split("'")[1] if "'" in str(asset) else str(asset)
+    row=next((r for r in imported_models.models().values() if r.get('mesh')==path),{})
+    mapped=row.get('driver_pelvis_bone')
+    if not mapped:
+        try:
+            from .. import appearance_visibility
+            mapped=appearance_visibility._camera_anatomy(mesh).get('pelvis')
+        except (ImportError,AttributeError):pass
+    if mapped and int(mesh.GetBoneIndex(mapped))>=0:return mapped
+    return next((mesh.GetBoneName(i) for i in range(min(1024,int(mesh.GetNumBones())))
+                 if str(mesh.GetBoneName(i)).casefold() in ('hips','hip','pelvis','koshi','b_pelvis')),None)

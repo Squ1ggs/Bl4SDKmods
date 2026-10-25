@@ -71,16 +71,174 @@ def tick_driver(state: dict[str, Any]) -> bool:
     pawn, shell = state.get("pawn"), state.get("shell")
     # A worn actor has no independent travel. Restoring walking mode/velocity
     # here made both native movement and client prediction move the cosmetic.
-    _call(shell, "SetActorTickEnabled", False)
     movement = getattr(shell, "CharacterMovement", None)
-    _call(movement, "StopMovementImmediately")
-    _call(movement, "DisableMovement")
+    controlled_follow = (state.get('network_follow_trial') is True
+                        and state.get('passive_locomotion_trial') is True
+                        and shell is not pawn and shell.GetAttachParentActor() is None
+                        and str(getattr(shell, 'Owner', None)) == str(pawn)
+                        and getattr(shell, 'Controller', None) is None)
+    cache_tick = (controlled_follow and state.get('native_actor_cache_trial') is True
+                  and float(getattr(shell,'AnimRootMotionTranslationScale',1.0)) == 0.0)
+    _call(shell, 'SetActorTickEnabled', cache_tick)
+    if not controlled_follow:
+        _call(movement, "StopMovementImmediately")
+        _call(movement, "DisableMovement")
     _call(movement, "SetComponentTickEnabled", False)
     mesh = state.get('render_mesh') or getattr(shell, 'Mesh', None)
     leader = state.get('player_mesh') or getattr(pawn, 'Mesh', None)
     if mesh is None or leader is None:
         return False
-    return bind_animation_inputs(state, pawn, shell, mesh, leader)
+    # An attached local body keeps its own graph. That graph reads movement
+    # velocity, and DisableMovement above clears it, so a walk never starts.
+    # Copy the player's velocity only. The movement component stays unticked
+    # so the cosmetic actor cannot travel on its own.
+    if state.get('scope') != 'lobby' and shell is not None and pawn is not None and shell is not pawn and movement is not None:
+        try:
+            parent = shell.GetAttachParentActor()
+        except Exception:
+            parent = None
+        if parent is not None and str(parent) == str(pawn) and not _player_is_driving(pawn, leader):
+            player_movement = getattr(pawn, 'CharacterMovement', None)
+            if player_movement is not None:
+                try:
+                    velocity = pawn.GetVelocity()
+                    _write(movement, 'Velocity', velocity)
+                    for name in ('Acceleration', 'AnalogInputModifier'):
+                        value = getattr(player_movement, name, None)
+                        if value is not None:
+                            _write(movement, name, value)
+                except Exception:
+                    pass
+    if state.get('network_follow_trial') is True:
+        unbind_animation_inputs(mesh)
+        bound = True
+    else:
+        bound = bind_animation_inputs(state, pawn, shell, mesh, leader)
+    if state.get('passive_locomotion_trial') is True:
+        # Animation inputs only: never permit either movement simulation tick.
+        allow_active = state.get('network_follow_trial') is True and state.get('active_native_motion_trial') is True
+        if (movement is None or (movement.IsActive() and not allow_active) or movement.IsComponentTickEnabled()
+                or (shell.IsActorTickEnabled() and not cache_tick) or (str(shell.GetAttachParentActor()) != str(pawn)
+                    and not (state.get('network_follow_trial') is True and shell.GetAttachParentActor() is None and str(getattr(shell,'Owner',None)) == str(pawn)))):
+            return False
+        if not _player_is_driving(pawn,leader):
+            velocity = pawn.GetVelocity()
+            movement.Velocity = velocity
+            if controlled_follow:
+                # Grounded native graphs also inspect acceleration and analog
+                # intent. Velocity alone left them easing through walk starts.
+                player_movement = getattr(pawn, 'CharacterMovement', None)
+                for name in ('Acceleration', 'AnalogInputModifier'):
+                    value = getattr(player_movement, name, None)
+                    if value is not None:
+                        _write(movement, name, value)
+    return bound
+
+
+def _restore_attached_native_driver(state):
+    # Keep the snapshot until every native notification and restore succeeds.
+    # A failed ChangeNavType must not strand an active cosmetic driver with no
+    # restore data, particularly while the wearer is entering a vehicle.
+    saved = state.get('native_attached_driver')
+    if saved is None:return
+    import unrealsdk
+    actor,movement=saved['actor'](),saved['movement']()
+    if actor is None or movement is None:
+        state.pop('native_attached_driver',None)
+        return
+    movement.SetComponentTickEnabled(False)
+    movement.StopMovementImmediately()
+    library=unrealsdk.find_class('GbxCharacterFunctionLibrary').ClassDefaultObject
+    library.ChangeNavType(actor,saved['nav'])
+    movement.MaxSimulationIterations=saved['iterations']
+    previous=saved['cached']
+    movement.CachedAnimInstance=previous() if previous else None
+    movement.SetMovementMode(saved['mode'],0)
+    if saved['active']:movement.Activate(False)
+    else:movement.Deactivate()
+    movement.SetIsReplicated(saved['replicates'])
+    movement.SetComponentTickEnabled(saved['tick'])
+    actor.AnimRootMotionTranslationScale=saved['root_scale']
+    actor.SetActorTickEnabled(saved['actor_tick'])
+    actor.ForceNetUpdate()
+    state.pop('native_attached_driver',None)
+    state.pop('attached_native_restore_error',None)
+
+
+def _hold_attached_native_driver(state,pawn,actor):
+    if (actor is pawn or str(getattr(actor,'Owner',None))!=str(pawn)
+            or str(actor.GetAttachParentActor())!=str(pawn)
+            or getattr(actor,'Controller',None) is not None):return False
+    import unrealsdk
+    root=actor.RootComponent
+    zero=unrealsdk.make_struct('Vector',X=0.,Y=0.,Z=0.)
+    try:
+        root.K2_SetRelativeLocation(NewLocation=zero,bSweep=False,
+            SweepHitResult=unrealsdk.make_struct('HitResult'),bTeleport=True)
+        root.K2_SetRelativeRotation(NewRotation=unrealsdk.make_struct('Rotator',Pitch=0.,Yaw=0.,Roll=0.),
+            bSweep=False,SweepHitResult=unrealsdk.make_struct('HitResult'),bTeleport=True)
+    except Exception as exc:
+        state['attached_native_error']=str(exc)
+        return False
+    return True
+
+
+def _update_attached_native_driver(state,pawn,actor,mesh):
+    """Opt-in native updates on an attached cosmetic, with no server physics loop."""
+    import unrealsdk
+    from unrealsdk.unreal import WeakPointer
+    if not pawn.HasAuthority() or not _hold_attached_native_driver(state,pawn,actor):
+        _restore_attached_native_driver(state)
+        return 'attached_native_unavailable'
+    movement=actor.CharacterMovement
+    saved=state.get('native_attached_driver')
+    if saved is None:
+        cached=movement.CachedAnimInstance
+        saved={'actor':WeakPointer(actor),'movement':WeakPointer(movement),
+            'iterations':movement.MaxSimulationIterations,'nav':movement.ReplicatedNavType,
+            'mode':int(movement.MovementMode),'tick':movement.IsComponentTickEnabled(),
+            'active':movement.IsActive(),'replicates':movement.bReplicates,
+            'actor_tick':actor.IsActorTickEnabled(),'root_scale':float(actor.AnimRootMotionTranslationScale),
+            'cached':WeakPointer(cached) if cached is not None else None}
+        state['native_attached_driver']=saved
+        unrealsdk.find_class('GbxCharacterFunctionLibrary').ClassDefaultObject.ChangeNavType(actor,4)
+    movement.MaxSimulationIterations=0
+    actor.AnimRootMotionTranslationScale=0.
+    movement.SetIsReplicated(True)
+    movement.Activate(False)
+    instance=mesh.GetAnimInstance()
+    if instance is not None and str(instance.GetOwningActor())==str(actor):
+        movement.CachedAnimInstance=instance
+    velocity=pawn.GetVelocity()
+    movement.Velocity=velocity
+    mode=int(pawn.CharacterMovement.MovementMode)
+    if int(movement.MovementMode)!=mode:movement.SetMovementMode(mode,0)
+    speed=(float(velocity.X)**2+float(velocity.Y)**2)**.5
+    direction=unrealsdk.make_struct('Vector',X=float(velocity.X)/speed if speed>2 else 0.,
+        Y=float(velocity.Y)/speed if speed>2 else 0.,Z=0.)
+    movement.ConsumeInputVector()
+    movement.AddInputVector(direction,True)
+    actor.SetActorTickEnabled(True)
+    movement.SetComponentTickEnabled(True)
+    return 'attached_native_update'
+
+
+def _arm_player_gun_graph(state, mesh):
+    """Keep gun-pose graphs eligible while idle. Hidden-gun imports stay hidden."""
+    from .appearance_visibility import _camera_anatomy
+    from .native_weapon import body_holds_gun
+    if mesh is None or not body_holds_gun(mesh) or _camera_anatomy(mesh).get('first_person_weapon_policy') == 'hide_known_unsupported':
+        return False
+    row = state.get('native_motion_definition')
+    if not row:
+        from . import native_motion
+        row = native_motion.definition(mesh, state)
+    if not row:
+        return False
+    if row.get('local_weapon_preview_enabled') is not True and row.get('source') != 'game_native':
+        return False
+    state['native_weapon_trial'] = True
+    return True
 
 
 def update_worn_animation(state, pawn, shell, mesh, leader, *, lobby=False):
@@ -97,11 +255,66 @@ def update_worn_animation(state, pawn, shell, mesh, leader, *, lobby=False):
         if leader is None:
             restore_seated_pose(state)
             return 'unavailable'
-    from . import native_seating
-    seated = native_seating.update(state, mesh, _player_is_driving(pawn, leader))
+    from . import native_seating, native_motion
+    driving = _player_is_driving(pawn, leader)
+    motion_enabled=state.get('native_motion_trial') is True
+    if 'native_motion_trial' not in state:
+        lookup=getattr(native_motion,'definition',None)
+        configured=lookup(mesh,state) if callable(lookup) else None
+        motion_enabled=configured is not None and configured.get('local_slot_motion_enabled') is True
+    if driving or motion_enabled:
+        # Nav restoration may recreate the native graph. Complete it before
+        # a seat or locomotion clip takes ownership of a single-node instance.
+        if state.get('lobby_visibility', {}).get('root_motion_translation_scale') is not None:
+            from .appearance_visibility import restore_native_animation_cache
+            try:
+                restore_native_animation_cache(state, shell, shell.CharacterMovement)
+            except Exception as exc:
+                state['native_cache_restore_error'] = type(exc).__name__ + ': ' + str(exc)
+                return 'seat_handoff_waiting' if driving else 'native_motion_handoff_waiting'
+    if state.get('native_frame_driver') or state.get('native_frame_motion_trial') is True:
+        from . import native_frame_motion
+        try:
+            frame_status = native_frame_motion.update(state,pawn,shell,mesh,driving)
+        except Exception as exc:
+            state['native_frame_motion_error']=type(exc).__name__+': '+str(exc)
+            try: native_frame_motion.restore(state)
+            except Exception as failure:
+                state['native_frame_restore_error']=type(failure).__name__+': '+str(failure)
+                return 'seat_handoff_waiting' if driving else 'native_frame_restore_waiting'
+            frame_status = 'native_frame_unavailable'
+        if frame_status:
+            unbind_animation_inputs(mesh)
+            return frame_status
+    if driving:
+        native_motion.restore(state)
+        try:
+            _restore_attached_native_driver(state)
+        except Exception as exc:
+            state['attached_native_restore_error']=type(exc).__name__+': '+str(exc)
+            return 'seat_handoff_waiting'
+    seated = native_seating.update(state, mesh, driving)
     if seated:
         unbind_animation_inputs(mesh)
         return seated
+    if state.get('attached_native_motion_trial') is True and not driving:
+        unbind_animation_inputs(mesh)
+        try:
+            return _update_attached_native_driver(state,pawn,shell,mesh)
+        except Exception as exc:
+            state['attached_native_error']=type(exc).__name__+': '+str(exc)
+            _restore_attached_native_driver(state)
+            return 'attached_native_unavailable'
+    _restore_attached_native_driver(state)
+    motion = native_motion.update(state, pawn, shell, mesh, driving)
+    if motion:
+        # The full-body clip only runs above the slow-walk gate. The graph
+        # keeps idle gun-hold, and these scalars follow the player.
+        if _arm_player_gun_graph(state, mesh) or state.get('native_weapon_trial') is True:
+            bind_animation_inputs(state, pawn, shell, mesh, leader)
+        else:
+            unbind_animation_inputs(mesh)
+        return motion
     try:
         mesh_asset = mesh.GetSkinnedAsset()
         leader_asset = leader.GetSkinnedAsset()
@@ -129,8 +342,14 @@ def update_worn_animation(state, pawn, shell, mesh, leader, *, lobby=False):
             if not _call(mesh, "SetLeaderPoseComponent", leader, True, False):
                 saved["driver"] = driver = "source_locomotion"
     if driver == "source_locomotion":
+        if _arm_player_gun_graph(state, mesh):
+            bind_animation_inputs(state, pawn, shell, mesh, leader)
         updated = tick_driver({"pawn": pawn, "shell": shell, 'render_mesh': mesh, 'player_mesh': leader,
-                               "animation_driver": driver, "scope": "lobby" if lobby else "local"})
+                               "animation_driver": driver, "scope": "lobby" if lobby else "local",
+                               'passive_locomotion_trial':state.get('passive_locomotion_trial',False),
+                               'network_follow_trial':state.get('network_follow_trial',False),
+                               'active_native_motion_trial':state.get('active_native_motion_trial',False),
+                               'native_actor_cache_trial':state.get('native_actor_cache_trial',False)})
         if not updated:
             return "unavailable"
     # Undo old mesh-tilt trials. A lowered crouch is not a vehicle animation.
@@ -140,7 +359,12 @@ def update_worn_animation(state, pawn, shell, mesh, leader, *, lobby=False):
 
 
 def restore_worn_animation(state):
-    from . import native_seating
+    if state.get('native_frame_driver'):
+        from . import native_frame_motion
+        native_frame_motion.restore(state)
+    _restore_attached_native_driver(state)
+    from . import native_seating, native_motion
+    native_motion.restore(state)
     native_seating.restore(state)
     restore_seated_pose(state)
     saved = state.pop('native_animation', None)
@@ -186,13 +410,38 @@ def _animation_input_post_update(instance, *_):
         pawn, shell = route['pawn'](), route['shell']()
         mesh, leader = route['mesh'](), route['leader']()
         if (route['instance']() is None or pawn is None or shell is None or mesh is None or leader is None
-                or str(shell.GetAttachParentActor()) != str(pawn)
+                or (str(shell.GetAttachParentActor()) != str(pawn) and not
+                    (route.get('network_follow_trial') is True and shell.GetAttachParentActor() is None and str(getattr(shell,'Owner',None)) == str(pawn)))
                 or str(mesh.GetAnimInstance()) != str(instance)):
             routes.pop(str(instance), None)
             return
         player = leader.GetAnimInstance()
+        state = route.get('state')
         if player is not None and str(player) != str(instance):
             route['copies'] += _copy_animation_inputs(player, instance)
+            from . import native_weapon
+            if state is not None and state.get('native_weapon_trial') is True:
+                native_weapon.sync_combat_inputs(state, player, instance)
+            from .packs.imported_weapons import _local_first_person
+            if state is not None and state.get('hide_wearer_arms'):
+                if _local_first_person(pawn):
+                    native_weapon.hide_viewmodel_arms(state, pawn)
+                    native_weapon._set_hand_gun_visible(state, False)
+                    if native_weapon._player_is_aiming(pawn):
+                        native_weapon._show_player_guns(state.get('native_weapon_preview'))
+                else:
+                    native_weapon.release_viewmodel_arms(state)
+                    native_weapon._show_player_guns(state.get('native_weapon_preview'))
+            elif state is not None and _local_first_person(pawn) and native_weapon._player_is_aiming(pawn):
+                native_weapon.release_viewmodel_arms(state)
+                native_weapon._show_player_guns(state.get('native_weapon_preview'))
+                native_weapon._set_hand_gun_visible(state, False)
+            elif state is not None and state.get('viewmodel_arms') is not None:
+                native_weapon.hide_viewmodel_arms(state, pawn)
+                native_weapon.show_swapped_arms(shell, mesh)
+                preview = state.get('native_weapon_preview')
+                if preview is not None:
+                    native_weapon._hide_player_guns(preview, pawn)
             route['updates'] += 1
     except Exception:
         routes.pop(str(instance), None)
@@ -237,6 +486,8 @@ def bind_animation_inputs(state, pawn, shell, mesh, leader):
                      'mesh': WeakPointer(mesh), 'leader': WeakPointer(leader), 'updates': 0, 'copies': 0}
             routes[str(instance)] = route
         state['animation_input_route'] = str(instance)
+        route['state'] = state
+        route['network_follow_trial'] = state.get('network_follow_trial') is True
         return True
     except Exception:
         return False
@@ -420,7 +671,7 @@ def sync_vehicle_inputs(state, pawn, source, actor_mesh):
     except Exception:
         restore_vehicle_inputs(state)
         return False
-    # Cosmetics without a driving pin are incompatible — do not claim success.
+    # Cosmetics without a driving pin are incompatible â€” do not claim success.
     if not driving or instance is None or not hasattr(instance, "bIsDriving"):
         restore_vehicle_inputs(state)
         return False

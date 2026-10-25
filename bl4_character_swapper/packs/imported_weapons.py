@@ -88,6 +88,8 @@ def clear(actor: Any, saved: dict) -> None:
     if native is not None and saved.get("suppressed_native",False):
         native.SetVisibility(saved["visible"],False)
         native.SetHiddenInGame(saved["hidden"],False)
+    if native is not None and 'native_cast_shadow' in saved:
+        native.SetCastShadow(saved['native_cast_shadow'])
     cosmetic = saved["component"]()
     if cosmetic is not None:
         cosmetic.SetLeaderPoseComponent(None,True,False)
@@ -103,8 +105,8 @@ def _local_first_person(pawn: Any) -> bool:
     manager = _player_camera_manager(pc)
     if (_actor_camera_mode(manager, pawn) or "Default") != "Default":
         return False
-    camera, origin = manager.GetCameraLocation(), pawn.K2_GetActorLocation()
-    return math.hypot(float(camera.X) - float(origin.X), float(camera.Y) - float(origin.Y)) < 90
+    target=getattr(getattr(manager,'ViewTarget',None),'target',None)
+    return target is None or str(target)==str(pawn)
 
 
 def prepare(actor: Any, row: dict, *, preview: bool = False) -> None:
@@ -114,6 +116,10 @@ def prepare(actor: Any, row: dict, *, preview: bool = False) -> None:
     key = "cosmetic_weapon:" + str(actor)
     saved = imported_models._packages.get(key)
     pawn = actor.GetAttachParentActor()
+    if hold_native_display(actor,pawn,bool(row.get('hide_native_weapon_display'))):
+        if saved is not None:
+            clear(actor,saved);imported_models._packages.pop(key,None)
+        return
     # A preview becomes worn when attached to a player. Its old preview flag
     # must not bypass the worn-model feature gate or leave two gun renderers.
     preview = pawn is None and (preview or bool(saved and saved.get("preview")))
@@ -121,6 +127,7 @@ def prepare(actor: Any, row: dict, *, preview: bool = False) -> None:
         from .dev_tools import _gameplay_pc
         pawn = _gameplay_pc().Pawn
     body = oak._actor_mesh(actor)
+    local_fp = pawn is not None and not preview and _local_first_person(pawn)
     bone = row.get("weapon_bone")
     if pawn is None or not bone or (not preview and not row.get("weapon_preview_enabled",True)) or not body.DoesSocketExist(bone):
         if saved is not None:
@@ -168,6 +175,18 @@ def prepare(actor: Any, row: dict, *, preview: bool = False) -> None:
     if component is None:
         imported_models._packages.pop(key,None)
         return
+    if saved.get('attachment_body')!=str(body):
+        if not component.K2_AttachToComponent(body,bone,2,2,2,False):return
+        saved['attachment_body']=str(body)
+        saved.pop('socket_adjustment',None)
+    # Exactly one visible gun in first person: the gameplay weapon remains
+    # native; this display is for third person and the full-body shadow only.
+    component.SetVisibility(not local_fp,False)
+    component.SetHiddenInGame(local_fp,False)
+    component.SetCastHiddenShadow(True)
+    component.SetCastShadow(True)
+    if 'native_cast_shadow' not in saved:saved['native_cast_shadow']=bool(native.CastShadow)
+    native.SetCastShadow(False)
     offset = row.get("weapon_socket_offset_cm", (0.0, 0.0, 0.0))
     rotation = row.get("weapon_socket_rotation_degrees", {})
     adjustment = (tuple(float(value) for value in offset),
@@ -196,3 +215,49 @@ def prepare(actor: Any, row: dict, *, preview: bool = False) -> None:
             native.SetVisibility(False if suppress else saved["visible"], False)
             native.SetHiddenInGame(True if suppress else saved["hidden"], False)
             saved["suppressed_native"] = suppress
+
+def _native_display_records():
+    import sys
+    from types import SimpleNamespace
+    name='_sqbt_native_weapon_display_v1'
+    if name not in sys.modules:sys.modules[name]=SimpleNamespace(records={})
+    return sys.modules[name].records
+
+def restore_native_display(actor_key: str) -> None:
+    from . import imported_models
+    imported_models._packages.pop('native_weapon_hidden:'+actor_key,None)
+    for part in _native_display_records().pop(actor_key,[]):
+        component=part['component']()
+        if component is None:continue
+        component.SetRenderInMainPass(part['main_pass'])
+        component.SetOwnerNoSee(part['owner_no_see'])
+        component.SetVisibility(part['visible'],False)
+        component.SetHiddenInGame(part['hidden'],False)
+        if part['tick'] is not None:component.VisibilityBasedAnimTickOption=part['tick']
+
+def hold_native_display(actor, pawn, enabled):
+    """A source dual-gun pose replaces native weapon rendering, in either camera."""
+    from . import imported_models
+    import unrealsdk
+    key=str(actor)
+    if not enabled or pawn is None:
+        restore_native_display(key)
+        return False
+    imported_models._packages['native_weapon_hidden:'+key]=True
+    record=_native_display_records().setdefault(key,[])
+    components=[c for c in pawn.K2_GetComponentsByClass(unrealsdk.find_class('SkeletalMeshComponent'))
+                if str(getattr(c,'Name',''))=='FirstPersonArms']
+    for world in _native_weapon_meshes(pawn):
+        components.extend(world.GetOwner().K2_GetComponentsByClass(unrealsdk.find_class('SkeletalMeshComponent')))
+    known={str(p['component']()) for p in record}
+    for component in {str(c):c for c in components}.values():
+        if str(component) not in known:
+            record.append({'component':WeakPointer(component),'visible':bool(component.bVisible),
+                           'hidden':bool(component.bHiddenInGame),'main_pass':bool(component.bRenderInMainPass),
+                           'owner_no_see':bool(component.bOwnerNoSee),'tick':getattr(component,'VisibilityBasedAnimTickOption',None)})
+            known.add(str(component))
+        component.SetRenderInMainPass(False)
+        component.SetOwnerNoSee(True)
+        component.SetVisibility(False,False);component.SetHiddenInGame(True,False)
+        if hasattr(component,'VisibilityBasedAnimTickOption'):component.VisibilityBasedAnimTickOption=0
+    return True

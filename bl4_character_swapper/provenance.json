@@ -4,9 +4,9 @@
   "files": [
     {
       "source": "Squ1ggsBoostingTools\\dev_tools.py",
-      "source_sha256": "e9a4394b27e8f0ee72ade490149844fc793545bb712648c275834e564d90f82f",
+      "source_sha256": "61194444b1d179fa7b5cd9a141322889fc413613fd362b40acae25ac39ffcc82",
       "output": "attachment.py",
-      "output_sha256": "5f91a148420270a6a6c238a4c006b0a2517c22e50c5470fb5b264b9348d7dc56",
+      "output_sha256": "52f267a746bd6146114c80baa9cb794969da339fb47269c5993ef271f4240d2d",
       "functions": [
         "_call_quiet",
         "_component_visible",
@@ -24,9 +24,9 @@
     },
     {
       "source": "Squ1ggsBoostingTools\\embedded_oak\\engine.py",
-      "source_sha256": "10bdf43a25bac6cb7d3e0309ec75ccbcde04fc0f1aee7a18be5937a5228e5617",
+      "source_sha256": "6ed537e4748338aacab561c89c015f8acc101c19f18d29649a109331f14c895f",
       "output": "native_helpers.py",
-      "output_sha256": "75a5cfc6130a6ec2ef1c89c947b73edb9419d73d7f69959b9860b91f76260403",
+      "output_sha256": "f7e937ce22af6eef14553cebdff4adc83e16e93890a0cf60eb170f0964bd8fe8",
       "functions": [
         "_unwrap",
         "_actor_mesh",
@@ -39,7 +39,7 @@
     },
     {
       "source": "Squ1ggsBoostingTools\\embedded_oak\\engine.py",
-      "source_sha256": "10bdf43a25bac6cb7d3e0309ec75ccbcde04fc0f1aee7a18be5937a5228e5617",
+      "source_sha256": "6ed537e4748338aacab561c89c015f8acc101c19f18d29649a109331f14c895f",
       "output": "native_resolution.py",
       "output_sha256": "31d3d0019e11d65a3999a260f85bd405472f108faa5bace9dc86613c68eb5785",
       "functions": [
@@ -70,12 +70,12 @@
     },
     {
       "source": "Squ1ggsBoostingTools/appearance_visibility.py",
-      "source_sha256": "0f769f3757dbec3e254311368258130f8bcfaa1075e8f54fbe1c6036fa27cdbb",
+      "source_sha256": "d4398b92e64a510e5d5aa8e270339eeec4a1f3f6f046aa87ca4ec53fd273e096",
       "output": "appearance_visibility.py",
-      "output_sha256": "92ed5188671d669a51e8e89960236f097e6424a78198009872756c8f98738a27",
+      "output_sha256": "84b92359e9083c239a783935d110b720e73daa7f3ce50ea3750f0653c40a89ce",
       "functions": [],
-      "previous_output_sha256": "68971012d07762b83a8876f0dca30f1507a3b0cdb9598f94a73b6a275b04fc0b",
-      "maintenance_note": "Current maintained appearance repairs; source extraction provenance retained, output subsequently patched and tested."
+      "previous_output_sha256": "c34d252840d75d80b90461bfc8f3d7d555306ebfd67c669e37e81fad64c7be32",
+      "maintenance_note": "A worn enemy uses the wearer's Gbx team. Friendlies drop that body as a target. The body stays targetable so allies do not retarget the wearer."
     },
     {
       "source": "Squ1ggsBoostingTools/embedded_bms/data/squ1ggs_actor_catalog.json",
@@ -100,12 +100,12 @@
     },
     {
       "source": "Squ1ggsBoostingTools/appearance_animation.py",
-      "source_sha256": "96e0c8b293b95ac595ba395e95ee2ffda677a3fef5e4a64e310b51de59e8ca23",
+      "source_sha256": "4b41f1bdad0f4e35b64ce891a0f154998c83dbe7babc3bf0bf94e98ee956ef30",
       "output": "animation.py",
-      "output_sha256": "a44b5a07a9bf1347b56d3c8335d218b3d5b41517a16c6f9bc2a5a9dee425e15a",
+      "output_sha256": "e48c94273dcb0c73938cd5bad2df66915a71450e70c93fb4e9a378c884bbbd30",
       "functions": [],
-      "previous_output_sha256": "96e0c8b293b95ac595ba395e95ee2ffda677a3fef5e4a64e310b51de59e8ca23",
-      "maintenance_note": "Current maintained appearance repairs; source extraction provenance retained, output subsequently patched and tested."
+      "previous_output_sha256": "1f329343a1aab5fd62a74293118fa5bd915de5bfa7812ce9a0710c2b48e91151",
+      "maintenance_note": "Gun-hold scalars follow the player while the character graph stays in charge below the walk gate."
     },
     {
       "source": "Squ1ggsBoostingTools/LICENSE",
@@ -113,6 +113,28 @@
       "output": "LICENSE",
       "output_sha256": "4d67f7ccd0aaf2dde13708c7b24cde7f5d8dbfc4c3639d1c868a9d39d0ed492b",
       "functions": []
+    },
+    {
+      "source": "native_eye_camera.py (new appearance runtime module)",
+      "output": "native_eye_camera.py",
+      "output_sha256": "b16ef435a979dd467ccd3f050c134b84b89d991c5e19721878ee220ff1ae0126",
+      "functions": [
+        "hold",
+        "release"
+      ],
+      "notes": "Independent native post-update camera; exact-build gate. Game validation pending."
+    },
+    {
+      "source": "native_fp_arms.py (new appearance runtime module)",
+      "output": "native_fp_arms.py",
+      "functions": [
+        "arm_parts",
+        "hold",
+        "release"
+      ],
+      "notes": "Authored native-bind weapon arms. Exact source_mesh is selected before modular parts. Accepted geometry unchanged.",
+      "output_sha256": "d654f8226e670ff5a19719c13822df9496a2b78c9ad11fdd6860839c49634ec0",
+      "previous_output_sha256": "adc3bbf904daaf215eb44a83db3db17f127dcd1107c77f5ed059fd9d6cb588be"
     }
   ],
   "local_test_version": "0.2.4"

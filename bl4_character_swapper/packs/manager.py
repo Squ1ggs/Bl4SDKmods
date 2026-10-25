@@ -17,7 +17,8 @@ _runtime_errors = []
 def _vehicles_enabled():
     """Standalone entry opts out; embedded SQBT keeps its vehicle service."""
     package = sys.modules.get(__package__.rsplit('.', 1)[0])
-    return getattr(package, 'VEHICLE_PACKS_ENABLED', True)
+    service=sys.modules.get('_squ1ggs_native_appearance_service_v1')
+    return bool(getattr(package, 'VEHICLE_PACKS_ENABLED', True) or getattr(service,'vehicle_clients',set()))
 
 
 def _shared():
@@ -39,7 +40,8 @@ def activate(controller):
         if key.startswith('pack:installed:'):
             controller.unregister_model(key)
     for row in installed:
-        if row['kind'] != 'character' or row['model'].get('effect_only'):
+        if (row['kind'] != 'character' or row['model'].get('effect_only')
+                or row['id'] in ('custom_cortana_halo3','custom_spiderman_classic','custom_spiderman_2099','noble_six_haloreach')):
             continue
         model_id = row['id']
         def spawn(model_id=model_id):
@@ -203,6 +205,16 @@ def cleanup():
         imported_models.clear_previews()
         for key in list(imported_models._actors):
             imported_models._forget_actor(key)
+
+
+def restore_vehicle():
+    """Release only vehicle visuals when a vehicle frontend is disabled."""
+    shared=_shared()
+    if shared is not None:return shared.restore_vehicle()
+    with _lock:_requests.clear()
+    from . import imported_vehicles
+    imported_vehicles._requests.clear()
+    imported_vehicles.restore()
 
 
 def status():

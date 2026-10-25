@@ -85,13 +85,28 @@ class Controller:
             manager.activate(self)
             hooks = unrealsdk.hooks
             kind = getattr(hooks.Type, "POST_UNCONDITIONAL", hooks.Type.POST)
-            path, key = "/Script/GbxUIUMG.GbxUIUMGTickWidget:BP_TickWidget", "squ1ggs.native_appearance.v1"
-            callback = lambda *_: self.tick()
+            key = "squ1ggs.native_appearance.v1"
+            path = "/Script/GbxUIUMG.GbxUIUMGTickWidget:BP_TickWidget"
+            callback = lambda *_: self._tick_unpaused()
             if not hooks.add_hook(path, kind, key, callback):
-                raise RuntimeError("BL4's appearance game-thread tick could not be registered.")
+                raise RuntimeError(
+                    "BL4's appearance game-thread tick could not be registered "
+                    "(" + path + "). Restart BL4 after updating the game, PythonSDK, "
+                    "and both Character/Vehicle Swapper mods. If it persists, share "
+                    "the SDK log and installed versions; a conflicting hook or "
+                    "incompatible game/SDK version may be responsible."
+                )
             self.hook = (path, kind, key, callback)
             self.enabled = True
         self.clients.add(client)
+
+    def _tick_unpaused(self):
+        pc = self._pc()
+        if pc is not None:
+            library = unrealsdk.find_class('GameplayStatics')
+            if library is not None and library.ClassDefaultObject.IsGamePaused(pc):
+                return
+        self.tick()
 
     def release(self, client):
         self.clients.discard(client)
@@ -193,7 +208,7 @@ class Controller:
         self.models.pop(key, None)
 
     def request(self, action: str, *, model: str = "", owner: str = "self", options=None):
-        if action not in ("preview", "apply", "restore", "restore_all", "clear"):
+        if action not in ("preview", "apply", "restore", "restore_all", "clear", "toggle_camera"):
             raise ValueError("Unknown appearance action")
         if action == 'apply' and model in self.models and not self.models[model].apply_enabled:
             self.status = 'This pack is preview-only; applying it has not been validated.'
@@ -275,6 +290,21 @@ class Controller:
             mesh = native._actor_mesh(actor)
             if mesh is None or native._mesh_asset_for_kind(mesh) is None:
                 return False
+            for state in self.worn.values():
+                if state.source() is None or str(state.source()) != str(actor):
+                    continue
+                saved = state.visibility_state.get('native_motion_clip', {})
+                if 'proxy' not in saved or saved.get('proxy_visible') is not True:
+                    continue
+                proxy = saved['proxy']()
+                if (proxy is None or saved['mesh']() is None
+                        or str(saved['mesh']()) != str(mesh)
+                        or str(proxy.GetOwner()) != str(actor)
+                        or str(proxy.GetAttachParent()) != str(mesh.GetAttachParent())
+                        or str(native._mesh_asset_for_kind(proxy)) != str(native._mesh_asset_for_kind(mesh))):
+                    return False
+                visible, hidden = attach._component_visible(proxy)
+                return visible and not hidden and int(proxy.GetNumBones()) > 0
             visible, hidden = attach._component_visible(mesh)
             return visible and not hidden and int(mesh.GetNumBones()) > 0
         except Exception:
@@ -355,9 +385,10 @@ class Controller:
         return actor
 
     def _make_passive(self, actor):
+        from .appearance_visibility import make_cosmetic_combat_passive
+        make_cosmetic_combat_passive(actor, trusted_cosmetic=True)
         # OakCharacter's actor tick can integrate animation/root movement even
         # with its CharacterMovement component disabled. Mesh ticks remain on.
-        attach._call_quiet(actor, "SetActorTickEnabled", False)
         controller = getattr(actor, "Controller", None)
         if controller is not None:
             attach._call_quiet(getattr(controller, "BrainComponent", None), "StopLogic", "Cosmetic appearance")
@@ -371,9 +402,45 @@ class Controller:
         if not attach._call_quiet(controller, "UnPossess"):
             attach._call_quiet(actor, "DetachFromControllerPendingDestroy")
         movement = getattr(actor, "CharacterMovement", None)
-        attach._call_quiet(movement, "StopMovementImmediately")
-        attach._call_quiet(movement, "DisableMovement")
-        attach._call_quiet(movement, "SetComponentTickEnabled", False)
+        attached_motion = any((state.visibility_state.get('native_attached_driver')
+            or state.visibility_state.get('native_frame_driver',{}).get('phase') == 'active')
+            and state.source() is not None and str(state.source())==str(actor)
+            and state.pawn() is not None and str(actor.GetAttachParentActor())==str(state.pawn())
+            and not state.visibility_state.get('native_seat_clip')
+            for state in self.worn.values())
+        controlled_follow = any(
+            state.visibility_state.get('network_follow_trial') is True
+            and state.visibility_state.get('passive_locomotion_trial') is True
+            and state.source() is not None and str(state.source()) == str(actor)
+            and state.pawn() is not None and str(state.pawn()) != str(actor)
+            and str(getattr(actor, 'Owner', None)) == str(state.pawn())
+            and actor.GetAttachParentActor() is None
+            for state in self.worn.values())
+        cache_tick = (controlled_follow and float(getattr(actor,'AnimRootMotionTranslationScale',1.0)) == 0.0
+            and any(state.visibility_state.get('native_actor_cache_trial') is True
+                    and not state.visibility_state.get('native_seat_clip')
+                    and not state.visibility_state.get('native_motion_clip')
+                    and state.source() is not None and str(state.source()) == str(actor)
+                    for state in self.worn.values()))
+        worn_on_player = False
+        try:
+            parent = actor.GetAttachParentActor()
+            worn_on_player = parent is not None and str(parent) != str(actor) and bool(parent.IsPlayerControlled())
+        except Exception:
+            worn_on_player = False
+        # A worn body can still walk and aim while its actor tick is on.
+        # The mesh keeps animating. The player attachment owns travel.
+        if worn_on_player:
+            attach._call_quiet(actor, 'SetActorTickEnabled', False)
+            attach._call_quiet(movement, "StopMovementImmediately")
+            attach._call_quiet(movement, "DisableMovement")
+            attach._call_quiet(movement, "SetComponentTickEnabled", False)
+        else:
+            attach._call_quiet(actor,'SetActorTickEnabled',cache_tick or attached_motion)
+            if not controlled_follow and not attached_motion:
+                attach._call_quiet(movement, "StopMovementImmediately")
+                attach._call_quiet(movement, "DisableMovement")
+            attach._call_quiet(movement, "SetComponentTickEnabled", attached_motion)
 
         mesh = native._actor_mesh(actor)
         if mesh is not None:
@@ -411,6 +478,32 @@ class Controller:
             cache[str(actor)] = now + .5
             self._visual_scan_after = cache
 
+    def _sync_network_follow(self, state, pawn, source):
+        """Follow only this exact owned native cosmetic; never move a player."""
+        self.last_binding_observation={'follow_initializing':True,'model':state.model,'pawn':str(pawn),'saved_pawn':str(state.pawn()),
+            'source':str(source),'saved_source':str(state.source()),'owner':str(getattr(source,'Owner',None)),
+            'controller':str(getattr(source,'Controller',None)),'authority':bool(pawn.HasAuthority())}
+        if (not state.model.startswith('Char_') or state.pawn() is None or state.source() is None
+                or str(state.pawn()) != str(pawn) or str(state.source()) != str(source) or str(source)==str(pawn)
+                or not pawn.HasAuthority() or str(getattr(source,'Owner',None)) != str(pawn)
+                or getattr(source,'Controller',None) is not None):
+            return False
+        parent = source.GetAttachParentActor()
+        if parent is not None:
+            if str(parent) != str(pawn): return False
+            try: source.K2_DetachFromActor(1,1,1)
+            except Exception as exc:
+                self.last_binding_observation['detach_error']=str(exc)
+                return False
+        try:
+            source.K2_SetActorLocation(NewLocation=pawn.K2_GetActorLocation(),bSweep=False,
+                SweepHitResult=unrealsdk.make_struct('HitResult'),bTeleport=True)
+            source.K2_SetActorRotation(NewRotation=pawn.K2_GetActorRotation(),bTeleportPhysics=True)
+            return True
+        except Exception as exc:
+            self.last_binding_observation = {'network_follow_error':str(exc),'source':str(source)}
+            return False
+
     def _source_is_bound(self, source, pawn):
         """Observe only our cosmetic source; restore instead of chasing a loose NPC."""
         self.last_binding_observation = {
@@ -426,7 +519,10 @@ class Controller:
         if callable(parent):
             try:
                 if str(parent()) != str(pawn):
-                    return False
+                    follows = parent() is None and str(getattr(source,'Owner',None)) == str(pawn) and any(
+                        state.source() is not None and state.pawn() is not None and str(state.source()) == str(source) and str(state.pawn()) == str(pawn) and state.visibility_state.get('network_follow_trial') is True
+                        for state in self.worn.values())
+                    if not follows: return False
             except Exception:
                 return False
         source_location = getattr(source, "K2_GetActorLocation", None)
@@ -455,6 +551,9 @@ class Controller:
         source_asset, player_asset = native._mesh_asset_for_kind(source_mesh), native._mesh_asset_for_kind(player_mesh)
         if player_asset is None:
             raise RuntimeError("The original player mesh is not available for restoration.")
+        if not (key.startswith('pack:') or key.startswith('Char_Imported')):
+            from .native_seating import require_motion_support
+            require_motion_support(source_mesh)
         # Restore an existing wearer after validating the replacement. Preserve
         # the same source actor when the user reapplies it.
         old = self.worn.get(owner)
@@ -474,8 +573,14 @@ class Controller:
             state = attach._appearance_shell
             if not self._source_is_bound(actor, pawn):
                 raise RuntimeError("The model did not stay attached to your player; original appearance restored.")
-            if not state.get("extras") or any(visible and not hidden for visible, hidden in
-                    (attach._component_visible(row["comp"]) for row in state["extras"])):
+            # The local-only SDK picker does not enable lobby replication.
+            # Animation/weapon ownership must not depend on that optional mode.
+            from .appearance_visibility import prepare_local_cosmetic_owner
+            prepare_local_cosmetic_owner(state, pawn, actor)
+            if not state.get("extras") or any(
+                    not bool(getattr(comp, 'bOwnerNoSee', False)) and visible and not hidden
+                    for comp, visible, hidden in (
+                        (row["comp"], *attach._component_visible(row["comp"])) for row in state["extras"])):
                 raise RuntimeError("The original body could not be hidden cleanly; its appearance was restored.")
             set_shadow_visibility(state, [row["comp"] for row in state["extras"]], False)
             set_shadow_visibility(state, [source_mesh], True, group="replacement")
@@ -485,18 +590,25 @@ class Controller:
             if options.get('hide_original_for_lobby') and pawn.HasAuthority() and not authority:
                 raise RuntimeError('The replacement could not enable lobby attachment replication. Original appearance restored.')
             if authority:
-                attach._call_quiet(pawn, "SetActorHiddenInGame", True)
-                if not bool(getattr(pawn, 'bHidden', False)):
-                    raise RuntimeError('The selected player body could not be hidden for the lobby. Original appearance restored.')
+                from .appearance_visibility import prepare_original_body_visibility
+                if not prepare_original_body_visibility(state,pawn,[row['comp'] for row in state['extras']]):
+                    raise RuntimeError('Original body visibility could not replicate; appearance restored.')
+                # Hiding the parent actor suppresses its attached native shell
+                # on remote viewers. Hide only the original body components.
+                attach._call_quiet(pawn, "SetActorHiddenInGame", False)
+                if bool(getattr(pawn, 'bHidden', False)):
+                    raise RuntimeError('The selected player actor could not remain visible for the lobby. Original appearance restored.')
                 attach._call_quiet(pawn, "ForceNetUpdate")
                 attach._call_quiet(actor, 'SetActorHiddenInGame', False)
                 attach._set_component_visible(source_mesh, True, False)
                 attach._call_quiet(actor, 'FlushNetDormancy')
                 attach._call_quiet(actor, 'ForceNetUpdate')
-                message += ' Lobby attachment and original-body hiding enabled.'
+                message += ' Lobby attachment and original body component hiding enabled.'
             self.worn[owner] = Wear(owner, WeakPointer(pawn), WeakPointer(actor), key, parts,
                                     WeakPointer(source_mesh) if state.get("source_mesh") is not None else None,
-                                    hidden, authority, {name: state[name] for name in ("lobby_visibility", "shadow_visibility") if name in state}, options)
+                                    hidden, authority, {name: state[name] for name in ("lobby_visibility", "shadow_visibility", "original_body_visibility", "local_cosmetic_owner") if name in state}, options)
+            if authority and key.startswith('Char_') and not key.startswith('Char_Imported'):
+                self.worn[owner].visibility_state.update(getattr(self,'_native_motion_session',{}))
             self.desired[owner] = (key, options)
             self.status = message
             self.operation.update(state="applied", code=key, owner=owner, message=message)
@@ -508,6 +620,8 @@ class Controller:
                 if row.get("tick_option") is not None:
                     row["comp"].VisibilityBasedAnimTickOption = row["tick_option"]
             restore_lobby_visibility(state)
+            from .appearance_visibility import restore_local_cosmetic_owner
+            restore_local_cosmetic_owner(state)
             if 'hidden' in locals():
                 attach._call_quiet(pawn, "SetActorHiddenInGame", hidden)
                 attach._call_quiet(pawn, "ForceNetUpdate")
@@ -523,14 +637,26 @@ class Controller:
             self.desired.pop(owner, None)
             self.options.pop(owner, None)
             self.retries.pop(owner, None)
-        state = self.worn.pop(owner, None)
+        # Restore may fail during a native mode transition. Retain ownership
+        # and its snapshots until cleanup succeeds so it remains retryable.
+        state = self.worn.get(owner)
         if state is None:
             return
         pawn, source = state.pawn(), state.source()
+        if (state.visibility_state.get('native_weapon_preview') or state.visibility_state.get('native_weapon_pose')
+                or state.visibility_state.get('viewmodel_arms')):
+            from . import native_weapon
+            native_weapon.restore(state.visibility_state)
+            pose = state.visibility_state.pop('native_weapon_pose', None)
+            if pose is not None:
+                native_weapon._restore_combat_inputs(pose)
+            native_weapon.release_viewmodel_arms(state.visibility_state)
         from .animation import restore_vehicle_inputs, restore_worn_animation
         restore_vehicle_inputs(state.visibility_state)
         restore_worn_animation(state.visibility_state)
         restore_lobby_visibility(state.visibility_state)
+        from .appearance_visibility import restore_local_cosmetic_owner
+        restore_local_cosmetic_owner(state.visibility_state)
         if pawn is not None and state.hide_changed:
             attach._call_quiet(pawn, "SetActorHiddenInGame", state.pawn_hidden)
             attach._call_quiet(pawn, "ForceNetUpdate")
@@ -549,7 +675,38 @@ class Controller:
             attach._call_quiet(source, "K2_DetachFromActor", 1, 1, 1)
             if destroy_source:
                 self._destroy_source(source)
+        self.worn.pop(owner, None)
         self.status = "Original appearance restored."
+
+    def _restore_injured_wearer(self, owner, state):
+        """Never leave an NPC cosmetic alive across the player's downed state."""
+        try:
+            self.restore(owner, forget=True)
+        except Exception as exc:
+            # A failed cosmetic cleanup must not strand the player invisible
+            # or leave the source NPC available for revival/AI possession.
+            from .appearance_visibility import restore_owner_camera_view
+            try:
+                restore_owner_camera_view(state.visibility_state)
+            except Exception:
+                pass
+            for reference, visible, hidden, tick_option in state.parts:
+                component = reference()
+                if component is not None:
+                    attach._set_component_visible(component, visible, hidden)
+            pawn, source = state.pawn(), state.source()
+            if pawn is not None:
+                attach._call_quiet(pawn, 'SetActorHiddenInGame', state.pawn_hidden)
+            if source is not None:
+                self._make_passive(source)
+                self._destroy_source(source)
+            self.worn.pop(owner, None)
+            logging.error('[Squ1ggs Appearance] Downed cleanup: ' + str(exc))
+        finally:
+            self.desired.pop(owner, None)
+            self.options.pop(owner, None)
+            self.retries.pop(owner, None)
+        self.status = 'Original appearance restored while downed. Reapply the cosmetic after recovery.'
 
     def set_invisible(self, enabled):
         if not enabled:
@@ -597,7 +754,31 @@ class Controller:
                 "scope": "local", "lobby_verified": False, "invisible": self.invisible,
                 "targets": [{"owner": key, "source_code": wear.model} for key, wear in list(self.worn.items())]}
 
+    def _toggle_camera(self):
+        """Switch the local native view on the game thread."""
+        pc = self._pc()
+        pawn = getattr(pc, 'Pawn', None)
+        camera = getattr(pc, 'PlayerCameraManager', None)
+        if pawn is None or camera is None:
+            raise RuntimeError('Load a character into a map first.')
+        mode = str(camera.GetActorCameraMode(pawn) or 'Default')
+        if mode not in ('Default', 'ThirdPerson'):
+            raise RuntimeError('Leave the current camera mode before switching views.')
+        wanted = 'ThirdPerson' if mode == 'Default' else 'Default'
+        camera.SetActorCameraMode(pawn, wanted, 'Default', .15, False, False)
+        if str(camera.GetActorCameraMode(pawn)) != wanted:
+            transition = getattr(pc, 'CameraTransition', None)
+            if callable(transition):
+                transition(wanted, 'Default', .15, False, False)
+        if str(camera.GetActorCameraMode(pawn)) != wanted:
+            raise RuntimeError('The camera could not switch views.')
+        self.status = 'Third-person view.' if wanted == 'ThirdPerson' else 'First-person view.'
+
     def _execute(self, action, key, owner):
+        if action == 'toggle_camera':
+            self._toggle_camera()
+            self.operation.update(state='complete', message=self.status)
+            return
         if action == "restore_all":
             self._cancel_loading()
             with self.lock:
@@ -670,6 +851,26 @@ class Controller:
     def tick(self):
         if not self.enabled:
             return
+        for state in tuple(self.worn.values()):
+            if state.visibility_state.get('native_frame_driver'):
+                from . import native_frame_motion
+                saved = state.visibility_state['native_frame_driver']
+                if time.monotonic()-saved['heartbeat'] > .25:
+                    state.visibility_state['native_frame_motion_error']='PostPhysics heartbeat lost'
+                    try: native_frame_motion.restore(state.visibility_state)
+                    except Exception as exc:
+                        state.visibility_state['native_frame_restore_error']=str(exc)
+            if state.visibility_state.get('native_attached_driver'):
+                from .animation import _hold_attached_native_driver
+                pawn,source=state.pawn(),state.source()
+                if pawn is not None and source is not None:
+                    _hold_attached_native_driver(state.visibility_state,pawn,source)
+            if state.visibility_state.get('network_follow_trial') is True:
+                pawn,source=state.pawn(),state.source()
+                if pawn is not None and source is not None:
+                    if not self._sync_network_follow(state,pawn,source):
+                        self.restore(state.owner)
+                        self.status = 'Native network follow failed; original appearance restored.'
         now = time.monotonic()
         if now - self.last_tick < .05:
             return
@@ -719,9 +920,10 @@ class Controller:
                     self._apply(state.model, owner, source)
                     continue
                 self._make_passive(source)
-                if owner == 'self':
-                    from .appearance_visibility import prepare_owner_camera_view
-                    prepare_owner_camera_view(state.visibility_state, self._pc(), pawn, source)
+                injured = getattr(pawn, 'IsInjured', None)
+                if callable(injured) and injured():
+                    self._restore_injured_wearer(owner, state)
+                    continue
                 if not self._source_is_bound(source, pawn):
                     if owner == "self":
                         self.set_invisible(False)
@@ -731,8 +933,8 @@ class Controller:
                     continue
                 if self.invisible and owner == "self":
                     continue
-                if state.hide_changed and not bool(getattr(pawn, 'bHidden', False)):
-                    attach._call_quiet(pawn, 'SetActorHiddenInGame', True)
+                if state.hide_changed and bool(getattr(pawn, 'bHidden', False)):
+                    attach._call_quiet(pawn, 'SetActorHiddenInGame', False)
                     attach._call_quiet(pawn, 'ForceNetUpdate')
                 # Restore a hidden shell on vehicle exit before deciding that
                 # its body failed. Never hide a wearer behind an unusable model.
@@ -747,13 +949,46 @@ class Controller:
                     state.visibility_state['animation_status'] = update_worn_animation(
                         state.visibility_state, pawn, source, mesh, native._actor_mesh(pawn),
                         lobby=bool(state.hide_changed))
+                    from .appearance_visibility import _make_shell_intangible
+                    _make_shell_intangible(source)
+                    problem = state.visibility_state.get('native_motion_error') or state.visibility_state.get('native_seat_error')
+                    if problem:
+                        self.restore(owner, forget=True)
+                        self.status = 'Character animation unavailable: ' + str(problem) + ' Original appearance restored.'
+                        self.operation.update(state='failed', message=self.status)
+                        continue
+                motion_state = state.visibility_state.get('native_motion_clip', {})
+                motion_proxy = motion_state.get('proxy') if motion_state.get('proxy_visible') else None
+                motion_proxy = motion_proxy() if motion_proxy else None
+                if owner == 'self':
+                    from .appearance_visibility import prepare_owner_camera_view
+                    prepare_owner_camera_view(state.visibility_state, self._pc(), pawn, source, motion_proxy or mesh)
+                if (not (state.model.startswith('pack:') or state.model.startswith('Char_Imported'))
+                        and (state.visibility_state.get('native_weapon_trial') is True
+                             or 'native_weapon_trial' not in state.visibility_state
+                             or state.visibility_state.get('native_weapon_preview'))):
+                    from . import native_weapon
+                    from .animation import _player_is_driving
+                    state.visibility_state['native_weapon_status'] = native_weapon.update(
+                        state.visibility_state, pawn, source, mesh,
+                        _player_is_driving(pawn, native._actor_mesh(pawn)))
                 if not self._ready(source):
                     self.restore(owner, forget=not state.options.get("keep_on_respawn", True))
                     self.status = "Replacement unavailable; original body restored."
                     continue
                 if state.hide_changed:
+                    from .appearance_visibility import prepare_original_body_visibility
+                    if not prepare_original_body_visibility(state.visibility_state,pawn,list(attach._appearance_skeletal_components(pawn))):
+                        self.restore(owner)
+                        self.status = 'Original body visibility replication lost; appearance restored.'
+                        continue
                     state.visibility_state.update(shell=source, render_mesh=mesh, pawn=pawn)
                     if not prepare_lobby_visibility(state.visibility_state):
+                        self.last_binding_observation.update(
+                            lobby_visibility_stage=state.visibility_state.get('lobby_visibility_stage'),
+                            lobby_visibility_error=state.visibility_state.get('lobby_visibility_error'),
+                            native_seat_active=bool(state.visibility_state.get('native_seat_clip')),
+                            native_seat_error=state.visibility_state.get('native_seat_error'))
                         self.restore(owner)
                         self.status = 'Lobby attachment replication was lost; original appearance restored.'
                         self.operation.update(state='failed', message=self.status)
@@ -770,10 +1005,16 @@ class Controller:
                         comp.VisibilityBasedAnimTickOption = 0
                     except Exception:
                         pass
+                    if not state.hide_changed:
+                        from .appearance_visibility import hold_local_visual
+                        hold_local_visual(source, [comp])
+                        continue
                     attach._call_quiet(comp, "SetVisibility", False, False)
                     attach._call_quiet(comp, "SetHiddenInGame", True, False)
                 set_shadow_visibility(state.visibility_state, [ref() for ref, *_ in state.parts], False)
                 set_shadow_visibility(state.visibility_state, [mesh], True, group="replacement")
+                if motion_proxy is not None:
+                    attach._call_quiet(motion_proxy, 'SetCastShadow', True)
             if self.pending:
                 key, owner, reference, deadline, target_key = self.pending
                 actor = reference()
@@ -819,6 +1060,15 @@ class Controller:
                 manager.tick()
             except Exception as exc:
                 logging.error('[Squ1ggs Appearance packs] ' + str(exc))
+            from .packs import imported_models
+            for owner, worn in list(self.worn.items()):
+                if not worn.model.startswith('pack:'):
+                    continue
+                problem = getattr(imported_models, '_animation_errors', {}).get(str(worn.source()))
+                if problem:
+                    self.restore(owner, forget=True)
+                    self.status = str(problem) + ' Original appearance restored.'
+                    self.operation.update(state='failed', message=self.status)
             for callback in callbacks:
                 callback()
             with self.lock:
@@ -855,7 +1105,11 @@ class Controller:
 REGISTRY_KEY = "_squ1ggs_native_appearance_service_v1"
 _digest = hashlib.sha256()
 for _relative in ("runtime.py", "native_spawn.py", "native_helpers.py", "native_resolution.py", "attachment.py",
-                  "appearance_visibility.py", "animation.py", "data/bl4_characters.json"):
+                  "appearance_visibility.py", "animation.py", "native_frame_motion.py", "data/bl4_characters.json",
+                  "native_eye_camera.py", "native_fp_arms.py", "native_seating.py", "native_motion.py",
+                  "native_stock_motion.py", "native_weapon.py", "data/camera_anatomy.json",
+                  "data/native_motion_animations.json", "data/native_seat_animations.json", "data/native_stock_motion_animations.json",
+                  "data/native_first_person_arms.json", "native_build.py", "data/native_build_reference.json"):
     with open_in_mod_dir(Path(__file__).parent / _relative, binary=True) as _stream:
         _digest.update(_relative.encode("utf-8") + b"\0" + _stream.read())
 from .packs.files import SHARED_FILES

@@ -1,0 +1,2241 @@
+{
+  "schema_version": 1,
+  "definitions": [
+    {
+      "mesh": "/Game/ImportedCharacters/FirstPersonArms/Batch/BethShoulder/SK_BethShoulder_FirstPersonArms.SK_BethShoulder_FirstPersonArms",
+      "native_bind_verified": true,
+      "bone_count": 234,
+      "material_slots": [
+        {
+          "source_part": "SKPart_NPC_F_Arm_L_LowerArm_01",
+          "source_slot": 0
+        },
+        {
+          "source_part": "SKPart_NPC_F_Arm_L_LowerArm_02",
+          "source_slot": 0
+        },
+        {
+          "source_part": "SKPart_NPC_F_Arm_L_LowerArm_03",
+          "source_slot": 0
+        },
+        {
+          "source_part": "SKPart_NPC_F_Arm_L_LowerArm_04",
+          "source_slot": 0
+        },
+        {
+          "source_part": "SKPart_NPC_F_Arm_L_LowerArm_Fingers",
+          "source_slot": 0
+        },
+        {
+          "source_part": "SKPart_NPC_F_Arm_L_UpperArm_Bicep",
+          "source_slot": 0
+        },
+        {
+          "source_part": "SKPart_NPC_F_Arm_L_UpperArm_Shoulder",
+          "source_slot": 0
+        },
+        {
+          "source_part": "SKPart_TRA_F_Mech_RightCap",
+          "source_slot": 0
+        },
+        {
+          "source_part": "SKPart_TRA_F_01_Shirt_Glove",
+          "source_slot": 0
+        },
+        {
+          "source_part": "SKPart_TRA_F_Mech_RightArm",
+          "source_slot": 0
+        }
+      ],
+      "shoulder_morphs": {
+        "SQBT_Shoulder_L_X": {
+          "side": "L",
+          "axis": 0,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_L_Y": {
+          "side": "L",
+          "axis": 1,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_L_Z": {
+          "side": "L",
+          "axis": 2,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_R_X": {
+          "side": "R",
+          "axis": 0,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_R_Y": {
+          "side": "R",
+          "axis": 1,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_R_Z": {
+          "side": "R",
+          "axis": 2,
+          "unit_cm": 100.0
+        }
+      },
+      "shoulder_join_experimental": true,
+      "source_parts": [
+        "SKPart_NPC_F_Arm_L_LowerArm_01",
+        "SKPart_NPC_F_Arm_L_LowerArm_02",
+        "SKPart_NPC_F_Arm_L_LowerArm_03",
+        "SKPart_NPC_F_Arm_L_LowerArm_04",
+        "SKPart_NPC_F_Arm_L_LowerArm_Fingers",
+        "SKPart_NPC_F_Arm_L_UpperArm_Bicep",
+        "SKPart_NPC_F_Arm_L_UpperArm_Shoulder",
+        "SKPart_TRA_F_Mech_RightCap",
+        "SKPart_TRA_F_01_Shirt_Glove",
+        "SKPart_TRA_F_Mech_RightArm"
+      ]
+    },
+    {
+      "mesh": "/Game/ImportedCharacters/FirstPersonArms/Batch/SK_AthenaTPS/SK_SK_AthenaTPS_FirstPersonArms.SK_SK_AthenaTPS_FirstPersonArms",
+      "native_bind_verified": true,
+      "bone_count": 234,
+      "material_slots": [
+        {
+          "source_index": 0
+        }
+      ],
+      "shoulder_morphs": {
+        "SQBT_Shoulder_L_X": {
+          "side": "L",
+          "axis": 0,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_L_Y": {
+          "side": "L",
+          "axis": 1,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_L_Z": {
+          "side": "L",
+          "axis": 2,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_R_X": {
+          "side": "R",
+          "axis": 0,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_R_Y": {
+          "side": "R",
+          "axis": 1,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_R_Z": {
+          "side": "R",
+          "axis": 2,
+          "unit_cm": 100.0
+        }
+      },
+      "shoulder_join_experimental": true,
+      "source_mesh": "/Game/ImportedCharacters/AthenaTPS/SK_AthenaTPS.SK_AthenaTPS"
+    },
+    {
+      "mesh": "/Game/ImportedCharacters/FirstPersonArms/Batch/SK_AureliaTPS/SK_SK_AureliaTPS_FirstPersonArms.SK_SK_AureliaTPS_FirstPersonArms",
+      "native_bind_verified": true,
+      "bone_count": 234,
+      "material_slots": [
+        {
+          "source_index": 0
+        }
+      ],
+      "shoulder_morphs": {
+        "SQBT_Shoulder_L_X": {
+          "side": "L",
+          "axis": 0,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_L_Y": {
+          "side": "L",
+          "axis": 1,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_L_Z": {
+          "side": "L",
+          "axis": 2,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_R_X": {
+          "side": "R",
+          "axis": 0,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_R_Y": {
+          "side": "R",
+          "axis": 1,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_R_Z": {
+          "side": "R",
+          "axis": 2,
+          "unit_cm": 100.0
+        }
+      },
+      "shoulder_join_experimental": true,
+      "source_mesh": "/Game/ImportedCharacters/AureliaTPS/SK_AureliaTPS.SK_AureliaTPS"
+    },
+    {
+      "mesh": "/Game/ImportedCharacters/FirstPersonArms/Batch/SK_AxtonBL2/SK_SK_AxtonBL2_FirstPersonArms.SK_SK_AxtonBL2_FirstPersonArms",
+      "native_bind_verified": true,
+      "bone_count": 234,
+      "material_slots": [
+        {
+          "source_index": 0
+        }
+      ],
+      "shoulder_morphs": {
+        "SQBT_Shoulder_L_X": {
+          "side": "L",
+          "axis": 0,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_L_Y": {
+          "side": "L",
+          "axis": 1,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_L_Z": {
+          "side": "L",
+          "axis": 2,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_R_X": {
+          "side": "R",
+          "axis": 0,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_R_Y": {
+          "side": "R",
+          "axis": 1,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_R_Z": {
+          "side": "R",
+          "axis": 2,
+          "unit_cm": 100.0
+        }
+      },
+      "shoulder_join_experimental": true,
+      "source_mesh": "/Game/ImportedCharacters/AxtonBL2/SK_AxtonBL2.SK_AxtonBL2"
+    },
+    {
+      "mesh": "/Game/ImportedCharacters/FirstPersonArms/Batch/SK_BigBoss/SK_SK_BigBoss_FirstPersonArms.SK_SK_BigBoss_FirstPersonArms",
+      "native_bind_verified": true,
+      "bone_count": 234,
+      "material_slots": [
+        {
+          "source_index": 1
+        },
+        {
+          "source_index": 3
+        },
+        {
+          "source_index": 4
+        }
+      ],
+      "shoulder_morphs": {
+        "SQBT_Shoulder_L_X": {
+          "side": "L",
+          "axis": 0,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_L_Y": {
+          "side": "L",
+          "axis": 1,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_L_Z": {
+          "side": "L",
+          "axis": 2,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_R_X": {
+          "side": "R",
+          "axis": 0,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_R_Y": {
+          "side": "R",
+          "axis": 1,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_R_Z": {
+          "side": "R",
+          "axis": 2,
+          "unit_cm": 100.0
+        }
+      },
+      "shoulder_join_experimental": true,
+      "source_mesh": "/Game/DLC/Raid2/AI/Bosses/GrassBoss/_Shared/Model/Rig/SK_BigBoss.SK_BigBoss"
+    },
+    {
+      "mesh": "/Game/ImportedCharacters/FirstPersonArms/Batch/SK_BoltInventor/SK_SK_BoltInventor_FirstPersonArms.SK_SK_BoltInventor_FirstPersonArms",
+      "native_bind_verified": true,
+      "bone_count": 234,
+      "material_slots": [
+        {
+          "source_index": 6
+        },
+        {
+          "source_index": 7
+        },
+        {
+          "source_index": 8
+        }
+      ],
+      "shoulder_morphs": {
+        "SQBT_Shoulder_L_X": {
+          "side": "L",
+          "axis": 0,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_L_Y": {
+          "side": "L",
+          "axis": 1,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_L_Z": {
+          "side": "L",
+          "axis": 2,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_R_X": {
+          "side": "R",
+          "axis": 0,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_R_Y": {
+          "side": "R",
+          "axis": 1,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_R_Z": {
+          "side": "R",
+          "axis": 2,
+          "unit_cm": 100.0
+        }
+      },
+      "shoulder_join_experimental": true,
+      "source_mesh": "/Game/AI/NPC/_Unique/BoltInventor/Model/Rig/SK_BoltInventor.SK_BoltInventor"
+    },
+    {
+      "mesh": "/Game/ImportedCharacters/FirstPersonArms/Batch/SK_BuddyNudge/SK_SK_BuddyNudge_FirstPersonArms.SK_SK_BuddyNudge_FirstPersonArms",
+      "native_bind_verified": true,
+      "bone_count": 234,
+      "material_slots": [
+        {
+          "source_index": 2
+        },
+        {
+          "source_index": 5
+        }
+      ],
+      "shoulder_morphs": {
+        "SQBT_Shoulder_L_X": {
+          "side": "L",
+          "axis": 0,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_L_Y": {
+          "side": "L",
+          "axis": 1,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_L_Z": {
+          "side": "L",
+          "axis": 2,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_R_X": {
+          "side": "R",
+          "axis": 0,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_R_Y": {
+          "side": "R",
+          "axis": 1,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_R_Z": {
+          "side": "R",
+          "axis": 2,
+          "unit_cm": 100.0
+        }
+      },
+      "shoulder_join_experimental": true,
+      "source_mesh": "/Game/AI/NPC/_Unique/BuddyNudge/Model/Rig/SK_BuddyNudge.SK_BuddyNudge"
+    },
+    {
+      "mesh": "/Game/ImportedCharacters/FirstPersonArms/Batch/SK_BuddyScrap/SK_SK_BuddyScrap_FirstPersonArms.SK_SK_BuddyScrap_FirstPersonArms",
+      "native_bind_verified": true,
+      "bone_count": 234,
+      "material_slots": [
+        {
+          "source_index": 0
+        },
+        {
+          "source_index": 1
+        },
+        {
+          "source_index": 7
+        }
+      ],
+      "shoulder_morphs": {
+        "SQBT_Shoulder_L_X": {
+          "side": "L",
+          "axis": 0,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_L_Y": {
+          "side": "L",
+          "axis": 1,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_L_Z": {
+          "side": "L",
+          "axis": 2,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_R_X": {
+          "side": "R",
+          "axis": 0,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_R_Y": {
+          "side": "R",
+          "axis": 1,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_R_Z": {
+          "side": "R",
+          "axis": 2,
+          "unit_cm": 100.0
+        }
+      },
+      "shoulder_join_experimental": true,
+      "source_mesh": "/Game/AI/NPC/_Unique/BuddyScrap/Model/Rig/SK_BuddyScrap.SK_BuddyScrap"
+    },
+    {
+      "mesh": "/Game/ImportedCharacters/FirstPersonArms/Batch/SK_Claptrap/SK_SK_Claptrap_FirstPersonArms.SK_SK_Claptrap_FirstPersonArms",
+      "native_bind_verified": true,
+      "bone_count": 234,
+      "material_slots": [
+        {
+          "source_index": 0
+        }
+      ],
+      "shoulder_morphs": {
+        "SQBT_Shoulder_L_X": {
+          "side": "L",
+          "axis": 0,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_L_Y": {
+          "side": "L",
+          "axis": 1,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_L_Z": {
+          "side": "L",
+          "axis": 2,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_R_X": {
+          "side": "R",
+          "axis": 0,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_R_Y": {
+          "side": "R",
+          "axis": 1,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_R_Z": {
+          "side": "R",
+          "axis": 2,
+          "unit_cm": 100.0
+        }
+      },
+      "shoulder_join_experimental": true,
+      "source_mesh": "/Game/AI/NPC/_Unique/Claptrap/Model/Rig/SK_Claptrap.SK_Claptrap"
+    },
+    {
+      "mesh": "/Game/ImportedCharacters/FirstPersonArms/Batch/SK_ClaptrapTPS/SK_SK_ClaptrapTPS_FirstPersonArms.SK_SK_ClaptrapTPS_FirstPersonArms",
+      "native_bind_verified": true,
+      "bone_count": 234,
+      "material_slots": [
+        {
+          "source_index": 0
+        }
+      ],
+      "shoulder_morphs": {
+        "SQBT_Shoulder_L_X": {
+          "side": "L",
+          "axis": 0,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_L_Y": {
+          "side": "L",
+          "axis": 1,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_L_Z": {
+          "side": "L",
+          "axis": 2,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_R_X": {
+          "side": "R",
+          "axis": 0,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_R_Y": {
+          "side": "R",
+          "axis": 1,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_R_Z": {
+          "side": "R",
+          "axis": 2,
+          "unit_cm": 100.0
+        }
+      },
+      "shoulder_join_experimental": true,
+      "source_mesh": "/Game/ImportedCharacters/ClaptrapTPS/SK_ClaptrapTPS.SK_ClaptrapTPS"
+    },
+    {
+      "mesh": "/Game/ImportedCharacters/FirstPersonArms/Batch/SK_CortanaHalo3/SK_SK_CortanaHalo3_FirstPersonArms.SK_SK_CortanaHalo3_FirstPersonArms",
+      "native_bind_verified": true,
+      "bone_count": 234,
+      "material_slots": [
+        {
+          "source_index": 0
+        }
+      ],
+      "shoulder_morphs": {
+        "SQBT_Shoulder_L_X": {
+          "side": "L",
+          "axis": 0,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_L_Y": {
+          "side": "L",
+          "axis": 1,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_L_Z": {
+          "side": "L",
+          "axis": 2,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_R_X": {
+          "side": "R",
+          "axis": 0,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_R_Y": {
+          "side": "R",
+          "axis": 1,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_R_Z": {
+          "side": "R",
+          "axis": 2,
+          "unit_cm": 100.0
+        }
+      },
+      "shoulder_join_experimental": true,
+      "source_mesh": "/Game/ImportedCharacters/CortanaHalo3/SK_CortanaHalo3.SK_CortanaHalo3"
+    },
+    {
+      "mesh": "/Game/ImportedCharacters/FirstPersonArms/Batch/SK_DahlKid/SK_SK_DahlKid_FirstPersonArms.SK_SK_DahlKid_FirstPersonArms",
+      "native_bind_verified": true,
+      "bone_count": 234,
+      "material_slots": [
+        {
+          "source_index": 0
+        },
+        {
+          "source_index": 1
+        },
+        {
+          "source_index": 2
+        }
+      ],
+      "shoulder_morphs": {
+        "SQBT_Shoulder_L_X": {
+          "side": "L",
+          "axis": 0,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_L_Y": {
+          "side": "L",
+          "axis": 1,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_L_Z": {
+          "side": "L",
+          "axis": 2,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_R_X": {
+          "side": "R",
+          "axis": 0,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_R_Y": {
+          "side": "R",
+          "axis": 1,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_R_Z": {
+          "side": "R",
+          "axis": 2,
+          "unit_cm": 100.0
+        }
+      },
+      "shoulder_join_experimental": true,
+      "source_mesh": "/Game/DLC/Cowbell/AI/NPC/_Unique/DahlKid/Model/Rig/SK_DahlKid.SK_DahlKid"
+    },
+    {
+      "mesh": "/Game/ImportedCharacters/FirstPersonArms/Batch/SK_DigiZane/SK_SK_DigiZane_FirstPersonArms.SK_SK_DigiZane_FirstPersonArms",
+      "native_bind_verified": true,
+      "bone_count": 234,
+      "material_slots": [
+        {
+          "source_index": 0
+        }
+      ],
+      "shoulder_morphs": {
+        "SQBT_Shoulder_L_X": {
+          "side": "L",
+          "axis": 0,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_L_Y": {
+          "side": "L",
+          "axis": 1,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_L_Z": {
+          "side": "L",
+          "axis": 2,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_R_X": {
+          "side": "R",
+          "axis": 0,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_R_Y": {
+          "side": "R",
+          "axis": 1,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_R_Z": {
+          "side": "R",
+          "axis": 2,
+          "unit_cm": 100.0
+        }
+      },
+      "shoulder_join_experimental": true,
+      "source_mesh": "/Game/AI/NPC/_Unique/Zane/Model/Rig/SK_DigiZane.SK_DigiZane"
+    },
+    {
+      "mesh": "/Game/ImportedCharacters/FirstPersonArms/Batch/SK_Echo4/SK_SK_Echo4_FirstPersonArms.SK_SK_Echo4_FirstPersonArms",
+      "native_bind_verified": true,
+      "bone_count": 234,
+      "material_slots": [
+        {
+          "source_index": 0
+        }
+      ],
+      "shoulder_morphs": {
+        "SQBT_Shoulder_L_X": {
+          "side": "L",
+          "axis": 0,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_L_Y": {
+          "side": "L",
+          "axis": 1,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_L_Z": {
+          "side": "L",
+          "axis": 2,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_R_X": {
+          "side": "R",
+          "axis": 0,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_R_Y": {
+          "side": "R",
+          "axis": 1,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_R_Z": {
+          "side": "R",
+          "axis": 2,
+          "unit_cm": 100.0
+        }
+      },
+      "shoulder_join_experimental": true,
+      "source_mesh": "/Game/AI/NPC/_Unique/Echo4/Model/Rig/SK_Echo4.SK_Echo4"
+    },
+    {
+      "mesh": "/Game/ImportedCharacters/FirstPersonArms/Batch/SK_FallenAristocrat/SK_SK_FallenAristocrat_FirstPersonArms.SK_SK_FallenAristocrat_FirstPersonArms",
+      "native_bind_verified": true,
+      "bone_count": 234,
+      "material_slots": [
+        {
+          "source_index": 4
+        },
+        {
+          "source_index": 5
+        },
+        {
+          "source_index": 6
+        }
+      ],
+      "shoulder_morphs": {
+        "SQBT_Shoulder_L_X": {
+          "side": "L",
+          "axis": 0,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_L_Y": {
+          "side": "L",
+          "axis": 1,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_L_Z": {
+          "side": "L",
+          "axis": 2,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_R_X": {
+          "side": "R",
+          "axis": 0,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_R_Y": {
+          "side": "R",
+          "axis": 1,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_R_Z": {
+          "side": "R",
+          "axis": 2,
+          "unit_cm": 100.0
+        }
+      },
+      "shoulder_join_experimental": true,
+      "source_mesh": "/Game/AI/NPC/_Unique/FallenAristocrat/Model/Rig/SK_FallenAristocrat.SK_FallenAristocrat"
+    },
+    {
+      "mesh": "/Game/ImportedCharacters/FirstPersonArms/Batch/SK_Fl4k/SK_SK_Fl4k_FirstPersonArms.SK_SK_Fl4k_FirstPersonArms",
+      "native_bind_verified": true,
+      "bone_count": 234,
+      "material_slots": [
+        {
+          "source_index": 0
+        },
+        {
+          "source_index": 1
+        }
+      ],
+      "shoulder_morphs": {
+        "SQBT_Shoulder_L_X": {
+          "side": "L",
+          "axis": 0,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_L_Y": {
+          "side": "L",
+          "axis": 1,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_L_Z": {
+          "side": "L",
+          "axis": 2,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_R_X": {
+          "side": "R",
+          "axis": 0,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_R_Y": {
+          "side": "R",
+          "axis": 1,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_R_Z": {
+          "side": "R",
+          "axis": 2,
+          "unit_cm": 100.0
+        }
+      },
+      "shoulder_join_experimental": true,
+      "source_mesh": "/Game/DLC/Harmonica/AI/NPC/_Unique/Fl4k/Model/Rig/SK_Fl4k.SK_Fl4k"
+    },
+    {
+      "mesh": "/Game/ImportedCharacters/FirstPersonArms/Batch/SK_Guard_Grass/SK_SK_Guard_Grass_FirstPersonArms.SK_SK_Guard_Grass_FirstPersonArms",
+      "native_bind_verified": true,
+      "bone_count": 234,
+      "material_slots": [
+        {
+          "source_index": 1
+        },
+        {
+          "source_index": 2
+        },
+        {
+          "source_index": 3
+        },
+        {
+          "source_index": 4
+        }
+      ],
+      "shoulder_morphs": {
+        "SQBT_Shoulder_L_X": {
+          "side": "L",
+          "axis": 0,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_L_Y": {
+          "side": "L",
+          "axis": 1,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_L_Z": {
+          "side": "L",
+          "axis": 2,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_R_X": {
+          "side": "R",
+          "axis": 0,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_R_Y": {
+          "side": "R",
+          "axis": 1,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_R_Z": {
+          "side": "R",
+          "axis": 2,
+          "unit_cm": 100.0
+        }
+      },
+      "shoulder_join_experimental": true,
+      "source_mesh": "/Game/AI/Bosses/Guardian/GrassGuard/Model/Rig/SK_Guard_Grass.SK_Guard_Grass"
+    },
+    {
+      "mesh": "/Game/ImportedCharacters/FirstPersonArms/Batch/SK_Guard_Mount/SK_SK_Guard_Mount_FirstPersonArms.SK_SK_Guard_Mount_FirstPersonArms",
+      "native_bind_verified": true,
+      "bone_count": 234,
+      "material_slots": [
+        {
+          "source_index": 0
+        },
+        {
+          "source_index": 1
+        },
+        {
+          "source_index": 3
+        },
+        {
+          "source_index": 4
+        }
+      ],
+      "shoulder_morphs": {
+        "SQBT_Shoulder_L_X": {
+          "side": "L",
+          "axis": 0,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_L_Y": {
+          "side": "L",
+          "axis": 1,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_L_Z": {
+          "side": "L",
+          "axis": 2,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_R_X": {
+          "side": "R",
+          "axis": 0,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_R_Y": {
+          "side": "R",
+          "axis": 1,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_R_Z": {
+          "side": "R",
+          "axis": 2,
+          "unit_cm": 100.0
+        }
+      },
+      "shoulder_join_experimental": true,
+      "source_mesh": "/Game/AI/Bosses/Guardian/MountGuard/Model/Rig/SK_Guard_Mount.SK_Guard_Mount"
+    },
+    {
+      "mesh": "/Game/ImportedCharacters/FirstPersonArms/Batch/SK_Guard_Shatter/SK_SK_Guard_Shatter_FirstPersonArms.SK_SK_Guard_Shatter_FirstPersonArms",
+      "native_bind_verified": true,
+      "bone_count": 234,
+      "material_slots": [
+        {
+          "source_index": 0
+        },
+        {
+          "source_index": 1
+        }
+      ],
+      "shoulder_morphs": {
+        "SQBT_Shoulder_L_X": {
+          "side": "L",
+          "axis": 0,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_L_Y": {
+          "side": "L",
+          "axis": 1,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_L_Z": {
+          "side": "L",
+          "axis": 2,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_R_X": {
+          "side": "R",
+          "axis": 0,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_R_Y": {
+          "side": "R",
+          "axis": 1,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_R_Z": {
+          "side": "R",
+          "axis": 2,
+          "unit_cm": 100.0
+        }
+      },
+      "shoulder_join_experimental": true,
+      "source_mesh": "/Game/AI/Bosses/Guardian/ShatterGuard/Model/Rig/SK_Guard_Shatter.SK_Guard_Shatter"
+    },
+    {
+      "mesh": "/Game/ImportedCharacters/FirstPersonArms/Batch/SK_Guard_Tk/SK_SK_Guard_Tk_FirstPersonArms.SK_SK_Guard_Tk_FirstPersonArms",
+      "native_bind_verified": true,
+      "bone_count": 234,
+      "material_slots": [
+        {
+          "source_index": 0
+        },
+        {
+          "source_index": 1
+        }
+      ],
+      "shoulder_morphs": {
+        "SQBT_Shoulder_L_X": {
+          "side": "L",
+          "axis": 0,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_L_Y": {
+          "side": "L",
+          "axis": 1,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_L_Z": {
+          "side": "L",
+          "axis": 2,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_R_X": {
+          "side": "R",
+          "axis": 0,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_R_Y": {
+          "side": "R",
+          "axis": 1,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_R_Z": {
+          "side": "R",
+          "axis": 2,
+          "unit_cm": 100.0
+        }
+      },
+      "shoulder_join_experimental": true,
+      "source_mesh": "/Game/AI/Bosses/Guardian/TkGuard/Model/Rig/SK_Guard_Tk.SK_Guard_Tk"
+    },
+    {
+      "mesh": "/Game/ImportedCharacters/FirstPersonArms/Batch/SK_Harmony/SK_SK_Harmony_FirstPersonArms.SK_SK_Harmony_FirstPersonArms",
+      "native_bind_verified": true,
+      "bone_count": 234,
+      "material_slots": [
+        {
+          "source_index": 7
+        }
+      ],
+      "shoulder_morphs": {
+        "SQBT_Shoulder_L_X": {
+          "side": "L",
+          "axis": 0,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_L_Y": {
+          "side": "L",
+          "axis": 1,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_L_Z": {
+          "side": "L",
+          "axis": 2,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_R_X": {
+          "side": "R",
+          "axis": 0,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_R_Y": {
+          "side": "R",
+          "axis": 1,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_R_Z": {
+          "side": "R",
+          "axis": 2,
+          "unit_cm": 100.0
+        }
+      },
+      "shoulder_join_experimental": true,
+      "source_mesh": "/Game/DLC/Harmonica/AI/Bosses/Harmony/Model/Rig/SK_Harmony.SK_Harmony"
+    },
+    {
+      "mesh": "/Game/ImportedCharacters/FirstPersonArms/Batch/SK_KriegBL2/SK_SK_KriegBL2_FirstPersonArms.SK_SK_KriegBL2_FirstPersonArms",
+      "native_bind_verified": true,
+      "bone_count": 234,
+      "material_slots": [
+        {
+          "source_index": 0
+        }
+      ],
+      "shoulder_morphs": {
+        "SQBT_Shoulder_L_X": {
+          "side": "L",
+          "axis": 0,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_L_Y": {
+          "side": "L",
+          "axis": 1,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_L_Z": {
+          "side": "L",
+          "axis": 2,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_R_X": {
+          "side": "R",
+          "axis": 0,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_R_Y": {
+          "side": "R",
+          "axis": 1,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_R_Z": {
+          "side": "R",
+          "axis": 2,
+          "unit_cm": 100.0
+        }
+      },
+      "shoulder_join_experimental": true,
+      "source_mesh": "/Game/ImportedCharacters/KriegBL2/SK_KriegBL2.SK_KriegBL2"
+    },
+    {
+      "mesh": "/Game/ImportedCharacters/FirstPersonArms/Batch/SK_Mancubus/SK_SK_Mancubus_FirstPersonArms.SK_SK_Mancubus_FirstPersonArms",
+      "native_bind_verified": true,
+      "bone_count": 234,
+      "material_slots": [
+        {
+          "source_index": 0
+        }
+      ],
+      "shoulder_morphs": {
+        "SQBT_Shoulder_L_X": {
+          "side": "L",
+          "axis": 0,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_L_Y": {
+          "side": "L",
+          "axis": 1,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_L_Z": {
+          "side": "L",
+          "axis": 2,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_R_X": {
+          "side": "R",
+          "axis": 0,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_R_Y": {
+          "side": "R",
+          "axis": 1,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_R_Z": {
+          "side": "R",
+          "axis": 2,
+          "unit_cm": 100.0
+        }
+      },
+      "shoulder_join_experimental": true,
+      "source_mesh": "/Game/DLC/Cowbell/AI/NPC/_Unique/Mancubus/Model/Rig/SK_Mancubus.SK_Mancubus"
+    },
+    {
+      "mesh": "/Game/ImportedCharacters/FirstPersonArms/Batch/SK_MayaBL2/SK_SK_MayaBL2_FirstPersonArms.SK_SK_MayaBL2_FirstPersonArms",
+      "native_bind_verified": true,
+      "bone_count": 234,
+      "material_slots": [
+        {
+          "source_index": 0
+        }
+      ],
+      "shoulder_morphs": {
+        "SQBT_Shoulder_L_X": {
+          "side": "L",
+          "axis": 0,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_L_Y": {
+          "side": "L",
+          "axis": 1,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_L_Z": {
+          "side": "L",
+          "axis": 2,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_R_X": {
+          "side": "R",
+          "axis": 0,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_R_Y": {
+          "side": "R",
+          "axis": 1,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_R_Z": {
+          "side": "R",
+          "axis": 2,
+          "unit_cm": 100.0
+        }
+      },
+      "shoulder_join_experimental": true,
+      "source_mesh": "/Game/ImportedCharacters/MayaBL2/SK_MayaBL2.SK_MayaBL2"
+    },
+    {
+      "mesh": "/Game/ImportedCharacters/FirstPersonArms/Batch/SK_MayaBL3NPCReview/SK_SK_MayaBL3NPCReview_FirstPersonArms.SK_SK_MayaBL3NPCReview_FirstPersonArms",
+      "native_bind_verified": true,
+      "bone_count": 234,
+      "material_slots": [
+        {
+          "source_index": 0
+        }
+      ],
+      "shoulder_morphs": {
+        "SQBT_Shoulder_L_X": {
+          "side": "L",
+          "axis": 0,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_L_Y": {
+          "side": "L",
+          "axis": 1,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_L_Z": {
+          "side": "L",
+          "axis": 2,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_R_X": {
+          "side": "R",
+          "axis": 0,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_R_Y": {
+          "side": "R",
+          "axis": 1,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_R_Z": {
+          "side": "R",
+          "axis": 2,
+          "unit_cm": 100.0
+        }
+      },
+      "shoulder_join_experimental": true,
+      "source_mesh": "/Game/ImportedCharacters/MayaBL3NPCReview/SK_MayaBL3NPCReview.SK_MayaBL3NPCReview"
+    },
+    {
+      "mesh": "/Game/ImportedCharacters/FirstPersonArms/Batch/SK_MordecaiBL1/SK_SK_MordecaiBL1_FirstPersonArms.SK_SK_MordecaiBL1_FirstPersonArms",
+      "native_bind_verified": true,
+      "bone_count": 234,
+      "material_slots": [
+        {
+          "source_index": 0
+        }
+      ],
+      "shoulder_morphs": {
+        "SQBT_Shoulder_L_X": {
+          "side": "L",
+          "axis": 0,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_L_Y": {
+          "side": "L",
+          "axis": 1,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_L_Z": {
+          "side": "L",
+          "axis": 2,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_R_X": {
+          "side": "R",
+          "axis": 0,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_R_Y": {
+          "side": "R",
+          "axis": 1,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_R_Z": {
+          "side": "R",
+          "axis": 2,
+          "unit_cm": 100.0
+        }
+      },
+      "shoulder_join_experimental": true,
+      "source_mesh": "/Game/ImportedCharacters/MordecaiBL1/SK_MordecaiBL1.SK_MordecaiBL1"
+    },
+    {
+      "mesh": "/Game/ImportedCharacters/FirstPersonArms/Batch/SK_Moxxi/SK_SK_Moxxi_FirstPersonArms.SK_SK_Moxxi_FirstPersonArms",
+      "native_bind_verified": true,
+      "bone_count": 234,
+      "material_slots": [
+        {
+          "source_index": 4
+        },
+        {
+          "source_index": 5
+        }
+      ],
+      "shoulder_morphs": {
+        "SQBT_Shoulder_L_X": {
+          "side": "L",
+          "axis": 0,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_L_Y": {
+          "side": "L",
+          "axis": 1,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_L_Z": {
+          "side": "L",
+          "axis": 2,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_R_X": {
+          "side": "R",
+          "axis": 0,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_R_Y": {
+          "side": "R",
+          "axis": 1,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_R_Z": {
+          "side": "R",
+          "axis": 2,
+          "unit_cm": 100.0
+        }
+      },
+      "shoulder_join_experimental": true,
+      "source_mesh": "/Game/AI/NPC/_Unique/Moxxi/Model/Rig/SK_Moxxi.SK_Moxxi"
+    },
+    {
+      "mesh": "/Game/ImportedCharacters/FirstPersonArms/Batch/SK_MozeBL3/SK_SK_MozeBL3_FirstPersonArms.SK_SK_MozeBL3_FirstPersonArms",
+      "native_bind_verified": true,
+      "bone_count": 234,
+      "material_slots": [
+        {
+          "source_index": 0,
+          "source_material": "MI_Char_GunnerArms"
+        },
+        {
+          "hidden": true,
+          "source_material": "M_FX_Gunner_Watch_Background"
+        }
+      ],
+      "shoulder_morphs": {
+        "SQBT_Shoulder_L_X": {
+          "side": "L",
+          "axis": 0,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_L_Y": {
+          "side": "L",
+          "axis": 1,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_L_Z": {
+          "side": "L",
+          "axis": 2,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_R_X": {
+          "side": "R",
+          "axis": 0,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_R_Y": {
+          "side": "R",
+          "axis": 1,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_R_Z": {
+          "side": "R",
+          "axis": 2,
+          "unit_cm": 100.0
+        }
+      },
+      "shoulder_join_experimental": true,
+      "source_mesh": "/Game/ImportedCharacters/MozeBL3/SK_MozeBL3.SK_MozeBL3"
+    },
+    {
+      "mesh": "/Game/ImportedCharacters/FirstPersonArms/Batch/SK_ODSTMCC/SK_SK_ODSTMCC_FirstPersonArms.SK_SK_ODSTMCC_FirstPersonArms",
+      "native_bind_verified": true,
+      "bone_count": 234,
+      "material_slots": [
+        {
+          "source_index": 0
+        }
+      ],
+      "shoulder_morphs": {
+        "SQBT_Shoulder_L_X": {
+          "side": "L",
+          "axis": 0,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_L_Y": {
+          "side": "L",
+          "axis": 1,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_L_Z": {
+          "side": "L",
+          "axis": 2,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_R_X": {
+          "side": "R",
+          "axis": 0,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_R_Y": {
+          "side": "R",
+          "axis": 1,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_R_Z": {
+          "side": "R",
+          "axis": 2,
+          "unit_cm": 100.0
+        }
+      },
+      "shoulder_join_experimental": true,
+      "source_mesh": "/Game/ImportedCharacters/ODSTMCC/SK_ODSTMCC.SK_ODSTMCC"
+    },
+    {
+      "mesh": "/Game/ImportedCharacters/FirstPersonArms/Batch/SK_SalvadorBL2/SK_SK_SalvadorBL2_FirstPersonArms.SK_SK_SalvadorBL2_FirstPersonArms",
+      "native_bind_verified": true,
+      "bone_count": 234,
+      "material_slots": [
+        {
+          "source_index": 0
+        }
+      ],
+      "shoulder_morphs": {
+        "SQBT_Shoulder_L_X": {
+          "side": "L",
+          "axis": 0,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_L_Y": {
+          "side": "L",
+          "axis": 1,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_L_Z": {
+          "side": "L",
+          "axis": 2,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_R_X": {
+          "side": "R",
+          "axis": 0,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_R_Y": {
+          "side": "R",
+          "axis": 1,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_R_Z": {
+          "side": "R",
+          "axis": 2,
+          "unit_cm": 100.0
+        }
+      },
+      "shoulder_join_experimental": true,
+      "source_mesh": "/Game/ImportedCharacters/SalvadorBL2/SK_SalvadorBL2.SK_SalvadorBL2"
+    },
+    {
+      "mesh": "/Game/ImportedCharacters/FirstPersonArms/Batch/SK_ShatterBoss/SK_SK_ShatterBoss_FirstPersonArms.SK_SK_ShatterBoss_FirstPersonArms",
+      "native_bind_verified": true,
+      "bone_count": 234,
+      "material_slots": [
+        {
+          "source_index": 0
+        },
+        {
+          "source_index": 2
+        },
+        {
+          "source_index": 3
+        },
+        {
+          "source_index": 5
+        },
+        {
+          "source_index": 10
+        }
+      ],
+      "shoulder_morphs": {
+        "SQBT_Shoulder_L_X": {
+          "side": "L",
+          "axis": 0,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_L_Y": {
+          "side": "L",
+          "axis": 1,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_L_Z": {
+          "side": "L",
+          "axis": 2,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_R_X": {
+          "side": "R",
+          "axis": 0,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_R_Y": {
+          "side": "R",
+          "axis": 1,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_R_Z": {
+          "side": "R",
+          "axis": 2,
+          "unit_cm": 100.0
+        }
+      },
+      "shoulder_join_experimental": true,
+      "source_mesh": "/Game/AI/Bosses/ShatterBoss/Model/Rig/SK_ShatterBoss.SK_ShatterBoss"
+    },
+    {
+      "mesh": "/Game/ImportedCharacters/FirstPersonArms/Batch/SK_ShatterBoss_Main/SK_SK_ShatterBoss_Main_FirstPersonArms.SK_SK_ShatterBoss_Main_FirstPersonArms",
+      "native_bind_verified": true,
+      "bone_count": 234,
+      "material_slots": [
+        {
+          "source_index": 2
+        },
+        {
+          "source_index": 3
+        },
+        {
+          "source_index": 4
+        },
+        {
+          "source_index": 8
+        },
+        {
+          "source_index": 9
+        }
+      ],
+      "shoulder_morphs": {
+        "SQBT_Shoulder_L_X": {
+          "side": "L",
+          "axis": 0,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_L_Y": {
+          "side": "L",
+          "axis": 1,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_L_Z": {
+          "side": "L",
+          "axis": 2,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_R_X": {
+          "side": "R",
+          "axis": 0,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_R_Y": {
+          "side": "R",
+          "axis": 1,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_R_Z": {
+          "side": "R",
+          "axis": 2,
+          "unit_cm": 100.0
+        }
+      },
+      "shoulder_join_experimental": true,
+      "source_mesh": "/Game/AI/Bosses/ShatterBoss/Model/Rig/SK_ShatterBoss_Main.SK_ShatterBoss_Main"
+    },
+    {
+      "mesh": "/Game/ImportedCharacters/FirstPersonArms/Batch/SK_TimeKeeper_HumanForm/SK_SK_TimeKeeper_HumanForm_FirstPersonArms.SK_SK_TimeKeeper_HumanForm_FirstPersonArms",
+      "native_bind_verified": true,
+      "bone_count": 234,
+      "material_slots": [
+        {
+          "source_index": 3
+        },
+        {
+          "source_index": 4
+        },
+        {
+          "source_index": 5
+        }
+      ],
+      "shoulder_morphs": {
+        "SQBT_Shoulder_L_X": {
+          "side": "L",
+          "axis": 0,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_L_Y": {
+          "side": "L",
+          "axis": 1,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_L_Z": {
+          "side": "L",
+          "axis": 2,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_R_X": {
+          "side": "R",
+          "axis": 0,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_R_Y": {
+          "side": "R",
+          "axis": 1,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_R_Z": {
+          "side": "R",
+          "axis": 2,
+          "unit_cm": 100.0
+        }
+      },
+      "shoulder_join_experimental": true,
+      "source_mesh": "/Game/AI/Bosses/TKBoss/Model/Rig/SK_TimeKeeper_HumanForm.SK_TimeKeeper_HumanForm"
+    },
+    {
+      "mesh": "/Game/ImportedCharacters/FirstPersonArms/Batch/SK_WilhelmTPS/SK_SK_WilhelmTPS_FirstPersonArms.SK_SK_WilhelmTPS_FirstPersonArms",
+      "native_bind_verified": true,
+      "bone_count": 234,
+      "material_slots": [
+        {
+          "source_index": 0
+        }
+      ],
+      "shoulder_morphs": {
+        "SQBT_Shoulder_L_X": {
+          "side": "L",
+          "axis": 0,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_L_Y": {
+          "side": "L",
+          "axis": 1,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_L_Z": {
+          "side": "L",
+          "axis": 2,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_R_X": {
+          "side": "R",
+          "axis": 0,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_R_Y": {
+          "side": "R",
+          "axis": 1,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_R_Z": {
+          "side": "R",
+          "axis": 2,
+          "unit_cm": 100.0
+        }
+      },
+      "shoulder_join_experimental": true,
+      "source_mesh": "/Game/ImportedCharacters/WilhelmTPS/SK_WilhelmTPS.SK_WilhelmTPS"
+    },
+    {
+      "mesh": "/Game/ImportedCharacters/FirstPersonArms/Batch/SK_Zane/SK_SK_Zane_FirstPersonArms.SK_SK_Zane_FirstPersonArms",
+      "native_bind_verified": true,
+      "bone_count": 234,
+      "material_slots": [
+        {
+          "source_index": 2
+        },
+        {
+          "source_index": 3
+        },
+        {
+          "source_index": 6
+        },
+        {
+          "source_index": 9
+        }
+      ],
+      "shoulder_morphs": {
+        "SQBT_Shoulder_L_X": {
+          "side": "L",
+          "axis": 0,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_L_Y": {
+          "side": "L",
+          "axis": 1,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_L_Z": {
+          "side": "L",
+          "axis": 2,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_R_X": {
+          "side": "R",
+          "axis": 0,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_R_Y": {
+          "side": "R",
+          "axis": 1,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_R_Z": {
+          "side": "R",
+          "axis": 2,
+          "unit_cm": 100.0
+        }
+      },
+      "shoulder_join_experimental": true,
+      "source_mesh": "/Game/AI/NPC/_Unique/Zane/Model/Rig/SK_Zane.SK_Zane"
+    },
+    {
+      "mesh": "/Game/ImportedCharacters/FirstPersonArms/Batch/SK_ZeroBL2/SK_SK_ZeroBL2_FirstPersonArms.SK_SK_ZeroBL2_FirstPersonArms",
+      "native_bind_verified": true,
+      "bone_count": 234,
+      "material_slots": [
+        {
+          "source_index": 0
+        }
+      ],
+      "shoulder_morphs": {
+        "SQBT_Shoulder_L_X": {
+          "side": "L",
+          "axis": 0,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_L_Y": {
+          "side": "L",
+          "axis": 1,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_L_Z": {
+          "side": "L",
+          "axis": 2,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_R_X": {
+          "side": "R",
+          "axis": 0,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_R_Y": {
+          "side": "R",
+          "axis": 1,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_R_Z": {
+          "side": "R",
+          "axis": 2,
+          "unit_cm": 100.0
+        }
+      },
+      "shoulder_join_experimental": true,
+      "source_mesh": "/Game/ImportedCharacters/ZeroBL2/SK_ZeroBL2.SK_ZeroBL2"
+    },
+    {
+      "mesh": "/Game/ImportedCharacters/FirstPersonArms/HunterGripV2/SK_ArbiterHalo3/SK_SK_ArbiterHalo3.SK_SK_ArbiterHalo3",
+      "native_bind_verified": true,
+      "bone_count": 234,
+      "material_slots": [
+        {
+          "source_index": 0
+        }
+      ],
+      "shoulder_morphs": {
+        "SQBT_Shoulder_L_X": {
+          "side": "L",
+          "axis": 0,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_L_Y": {
+          "side": "L",
+          "axis": 1,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_L_Z": {
+          "side": "L",
+          "axis": 2,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_R_X": {
+          "side": "R",
+          "axis": 0,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_R_Y": {
+          "side": "R",
+          "axis": 1,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_R_Z": {
+          "side": "R",
+          "axis": 2,
+          "unit_cm": 100.0
+        }
+      },
+      "shoulder_join_experimental": true,
+      "source_mesh": "/Game/ImportedCharacters/ArbiterHalo3/SK_ArbiterHalo3.SK_ArbiterHalo3"
+    },
+    {
+      "mesh": "/Game/ImportedCharacters/FirstPersonArms/HunterGripV2/SK_BrickBL1/SK_SK_BrickBL1.SK_SK_BrickBL1",
+      "native_bind_verified": true,
+      "bone_count": 234,
+      "material_slots": [
+        {
+          "source_index": 0
+        }
+      ],
+      "shoulder_morphs": {
+        "SQBT_Shoulder_L_X": {
+          "side": "L",
+          "axis": 0,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_L_Y": {
+          "side": "L",
+          "axis": 1,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_L_Z": {
+          "side": "L",
+          "axis": 2,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_R_X": {
+          "side": "R",
+          "axis": 0,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_R_Y": {
+          "side": "R",
+          "axis": 1,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_R_Z": {
+          "side": "R",
+          "axis": 2,
+          "unit_cm": 100.0
+        }
+      },
+      "shoulder_join_experimental": true,
+      "source_mesh": "/Game/ImportedCharacters/BrickBL1/SK_BrickBL1.SK_BrickBL1"
+    },
+    {
+      "mesh": "/Game/ImportedCharacters/FirstPersonArms/HunterGripV2/SK_FL4KBL3/SK_SK_FL4KBL3.SK_SK_FL4KBL3",
+      "native_bind_verified": true,
+      "bone_count": 234,
+      "material_slots": [
+        {
+          "source_index": 1
+        }
+      ],
+      "shoulder_morphs": {
+        "SQBT_Shoulder_L_X": {
+          "side": "L",
+          "axis": 0,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_L_Y": {
+          "side": "L",
+          "axis": 1,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_L_Z": {
+          "side": "L",
+          "axis": 2,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_R_X": {
+          "side": "R",
+          "axis": 0,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_R_Y": {
+          "side": "R",
+          "axis": 1,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_R_Z": {
+          "side": "R",
+          "axis": 2,
+          "unit_cm": 100.0
+        }
+      },
+      "shoulder_join_experimental": true,
+      "source_mesh": "/Game/ImportedCharacters/FL4KBL3/SK_FL4KBL3.SK_FL4KBL3"
+    },
+    {
+      "mesh": "/Game/ImportedCharacters/FirstPersonArms/HunterGripV2/SK_GaigeBL2/SK_SK_GaigeBL2.SK_SK_GaigeBL2",
+      "native_bind_verified": true,
+      "bone_count": 234,
+      "material_slots": [
+        {
+          "source_index": 0
+        }
+      ],
+      "shoulder_morphs": {
+        "SQBT_Shoulder_L_X": {
+          "side": "L",
+          "axis": 0,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_L_Y": {
+          "side": "L",
+          "axis": 1,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_L_Z": {
+          "side": "L",
+          "axis": 2,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_R_X": {
+          "side": "R",
+          "axis": 0,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_R_Y": {
+          "side": "R",
+          "axis": 1,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_R_Z": {
+          "side": "R",
+          "axis": 2,
+          "unit_cm": 100.0
+        }
+      },
+      "shoulder_join_experimental": true,
+      "source_mesh": "/Game/ImportedCharacters/GaigeBL2/SK_GaigeBL2.SK_GaigeBL2"
+    },
+    {
+      "mesh": "/Game/ImportedCharacters/FirstPersonArms/HunterGripV2/SK_LilithBL1/SK_SK_LilithBL1.SK_SK_LilithBL1",
+      "native_bind_verified": true,
+      "bone_count": 234,
+      "material_slots": [
+        {
+          "source_index": 0
+        },
+        {
+          "source_index": 1
+        }
+      ],
+      "shoulder_morphs": {
+        "SQBT_Shoulder_L_X": {
+          "side": "L",
+          "axis": 0,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_L_Y": {
+          "side": "L",
+          "axis": 1,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_L_Z": {
+          "side": "L",
+          "axis": 2,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_R_X": {
+          "side": "R",
+          "axis": 0,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_R_Y": {
+          "side": "R",
+          "axis": 1,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_R_Z": {
+          "side": "R",
+          "axis": 2,
+          "unit_cm": 100.0
+        }
+      },
+      "shoulder_join_experimental": true,
+      "source_mesh": "/Game/ImportedCharacters/LilithBL1/SK_LilithBL1.SK_LilithBL1"
+    },
+    {
+      "mesh": "/Game/ImportedCharacters/FirstPersonArms/HunterGripV2/SK_MasterChiefHalo3/SK_SK_MasterChiefHalo3.SK_SK_MasterChiefHalo3",
+      "native_bind_verified": true,
+      "bone_count": 234,
+      "material_slots": [
+        {
+          "source_index": 0
+        }
+      ],
+      "shoulder_morphs": {
+        "SQBT_Shoulder_L_X": {
+          "side": "L",
+          "axis": 0,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_L_Y": {
+          "side": "L",
+          "axis": 1,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_L_Z": {
+          "side": "L",
+          "axis": 2,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_R_X": {
+          "side": "R",
+          "axis": 0,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_R_Y": {
+          "side": "R",
+          "axis": 1,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_R_Z": {
+          "side": "R",
+          "axis": 2,
+          "unit_cm": 100.0
+        }
+      },
+      "shoulder_join_experimental": true,
+      "source_mesh": "/Game/ImportedCharacters/MasterChiefHalo3/SK_MasterChiefHalo3.SK_MasterChiefHalo3"
+    },
+    {
+      "mesh": "/Game/ImportedCharacters/FirstPersonArms/HunterGripV2/SK_NishaTPS/SK_SK_NishaTPS.SK_SK_NishaTPS",
+      "native_bind_verified": true,
+      "bone_count": 234,
+      "material_slots": [
+        {
+          "source_index": 0
+        }
+      ],
+      "shoulder_morphs": {
+        "SQBT_Shoulder_L_X": {
+          "side": "L",
+          "axis": 0,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_L_Y": {
+          "side": "L",
+          "axis": 1,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_L_Z": {
+          "side": "L",
+          "axis": 2,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_R_X": {
+          "side": "R",
+          "axis": 0,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_R_Y": {
+          "side": "R",
+          "axis": 1,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_R_Z": {
+          "side": "R",
+          "axis": 2,
+          "unit_cm": 100.0
+        }
+      },
+      "shoulder_join_experimental": true,
+      "source_mesh": "/Game/ImportedCharacters/NishaTPS/SK_NishaTPS.SK_NishaTPS"
+    },
+    {
+      "mesh": "/Game/ImportedCharacters/FirstPersonArms/HunterGripV2/SK_RolandBL1/SK_SK_RolandBL1.SK_SK_RolandBL1",
+      "native_bind_verified": true,
+      "bone_count": 234,
+      "material_slots": [
+        {
+          "source_index": 0
+        }
+      ],
+      "shoulder_morphs": {
+        "SQBT_Shoulder_L_X": {
+          "side": "L",
+          "axis": 0,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_L_Y": {
+          "side": "L",
+          "axis": 1,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_L_Z": {
+          "side": "L",
+          "axis": 2,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_R_X": {
+          "side": "R",
+          "axis": 0,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_R_Y": {
+          "side": "R",
+          "axis": 1,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_R_Z": {
+          "side": "R",
+          "axis": 2,
+          "unit_cm": 100.0
+        }
+      },
+      "shoulder_join_experimental": true,
+      "source_mesh": "/Game/ImportedCharacters/RolandBL1/SK_RolandBL1.SK_RolandBL1"
+    },
+    {
+      "mesh": "/Game/ImportedCharacters/FirstPersonArms/HunterGripV2/SK_TimothyTPS/SK_SK_TimothyTPS.SK_SK_TimothyTPS",
+      "native_bind_verified": true,
+      "bone_count": 234,
+      "material_slots": [
+        {
+          "source_index": 0
+        },
+        {
+          "source_index": 1
+        }
+      ],
+      "shoulder_morphs": {
+        "SQBT_Shoulder_L_X": {
+          "side": "L",
+          "axis": 0,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_L_Y": {
+          "side": "L",
+          "axis": 1,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_L_Z": {
+          "side": "L",
+          "axis": 2,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_R_X": {
+          "side": "R",
+          "axis": 0,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_R_Y": {
+          "side": "R",
+          "axis": 1,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_R_Z": {
+          "side": "R",
+          "axis": 2,
+          "unit_cm": 100.0
+        }
+      },
+      "shoulder_join_experimental": true,
+      "source_mesh": "/Game/ImportedCharacters/TimothyTPS/SK_TimothyTPS.SK_TimothyTPS"
+    },
+    {
+      "mesh": "/Game/ImportedCharacters/FirstPersonArms/HunterGripV2/SK_ZaneBL3/SK_SK_ZaneBL3.SK_SK_ZaneBL3",
+      "native_bind_verified": true,
+      "bone_count": 234,
+      "material_slots": [
+        {
+          "source_index": 0
+        },
+        {
+          "source_index": 1
+        },
+        {
+          "hidden": true
+        }
+      ],
+      "shoulder_morphs": {
+        "SQBT_Shoulder_L_X": {
+          "side": "L",
+          "axis": 0,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_L_Y": {
+          "side": "L",
+          "axis": 1,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_L_Z": {
+          "side": "L",
+          "axis": 2,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_R_X": {
+          "side": "R",
+          "axis": 0,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_R_Y": {
+          "side": "R",
+          "axis": 1,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_R_Z": {
+          "side": "R",
+          "axis": 2,
+          "unit_cm": 100.0
+        }
+      },
+      "shoulder_join_experimental": true,
+      "source_mesh": "/Game/ImportedCharacters/ZaneBL3/SK_ZaneBL3.SK_ZaneBL3"
+    },
+    {
+      "mesh": "/Game/ImportedCharacters/FirstPersonArms/AnatomicalGripV1/Amara/SK_Amara.SK_Amara",
+      "native_bind_verified": true,
+      "bone_count": 234,
+      "material_slots": [
+        {
+          "source_index": 0,
+          "normal_texture": "/Game/ImportedCharacters/FirstPersonArms/AmaraSurface/T_Amara_Arms_N.T_Amara_Arms_N"
+        }
+      ],
+      "shoulder_morphs": {
+        "SQBT_Shoulder_L_X": {
+          "side": "L",
+          "axis": 0,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_L_Y": {
+          "side": "L",
+          "axis": 1,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_L_Z": {
+          "side": "L",
+          "axis": 2,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_R_X": {
+          "side": "R",
+          "axis": 0,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_R_Y": {
+          "side": "R",
+          "axis": 1,
+          "unit_cm": 100.0
+        },
+        "SQBT_Shoulder_R_Z": {
+          "side": "R",
+          "axis": 2,
+          "unit_cm": 100.0
+        }
+      },
+      "shoulder_join_experimental": true,
+      "source_mesh": "/Game/ImportedCharacters/AmaraBL3/SK_AmaraBL3.SK_AmaraBL3"
+    }
+  ]
+}

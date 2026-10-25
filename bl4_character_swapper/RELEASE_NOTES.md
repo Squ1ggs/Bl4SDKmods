@@ -1,11 +1,9 @@
-# BL4 Character Swapper 0.2.8
+# BL4 Character Swapper 0.2.13
 
-- Adds character browsing to the SDK Mods menu without BLImGui: category, page,
-  character, then Preview or Apply.
-- Adds player selection, restore, clear-preview and status controls to that menu.
-- Uses `bl4cs` for console commands. Existing `asw` commands remain as aliases.
-- Includes the current attachment, visibility and animation-restore fixes.
-- Keeps vehicle controls out of this character swapper.
+- Wearing an enemy or boss keeps friendly characters friendly. The worn body
+  uses your team, and you stay targetable.
+- Your weapons, skills, and controls stay yours.
+- The character list, SDK menu, and `bl4cs` commands are unchanged from 0.2.12.
 
-Not every character has been tested. Animations, gun holding, seating and
-multiplayer visibility still have limitations; see README.md.
+Not every character has been tested. Other players may not see the swap.
+See README.md.

@@ -19,6 +19,7 @@ def draw():
     imgui.text(f"BL4 Character Swapper · {VERSION}")
     imgui.text_disabled("Created by RDPSqu1ggs · github.com/Squ1ggs/Bl4SDKmods")
     imgui.text_disabled("Standalone SDK mod · also included in Squ1ggs Boosting Tools")
+    imgui.text_disabled("Visual swaps change appearance only; skills and controls stay the same.")
     choices = CONTROLLER.choices()
     from .packs.catalog import GAME_FILTERS, matches
     for label, options, current in [('Game', GAME_FILTERS, _game), ('Characters', ('All characters', 'Vault Hunters', 'Other characters'), _role)]:
@@ -44,7 +45,7 @@ def draw():
     current = next((row["name"] for row in rows if row["key"] == _model), "Choose a character")
     if imgui.begin_combo("Character", current):
         for row in rows[:250]:
-            label = row["name"] + (' · preview only' if not row.get('apply_enabled', True) else " · load on demand" if row["availability"] == "load_on_demand" else "")
+            label = row["name"] + (' · preview' if not row.get('apply_enabled', True) else " · load on demand" if row["availability"] == "load_on_demand" else "")
             selected, _ = imgui.selectable(label + "##" + row["key"], row["key"] == _model)
             if selected:
                 _model = row["key"]
@@ -61,7 +62,6 @@ def draw():
             if selected:
                 _owner = row["key"]
         imgui.end_combo()
-    _, _follow_pose = imgui.checkbox("Follow player animation (matching rigs)", _follow_pose)
     _, _keep_respawn = imgui.checkbox("Reapply after respawn", _keep_respawn)
     imgui.begin_disabled(not any(row["key"] == _model for row in rows) or bool(CONTROLLER.pending or CONTROLLER.spawn_job))
     if imgui.button("Preview beside me"):
@@ -70,7 +70,7 @@ def draw():
     imgui.begin_disabled(not next((row.get('apply_enabled', True) for row in rows if row['key'] == _model), True))
     if imgui.button("Apply to selected player"):
         CONTROLLER.request("apply", model=_model, owner=_owner,
-                           options={"follow_player_pose": _follow_pose, "keep_on_respawn": _keep_respawn})
+                           options={"follow_player_pose": True, "keep_on_respawn": _keep_respawn})
     imgui.end_disabled()
     imgui.end_disabled()
     if imgui.button("Restore selected player"):
@@ -78,6 +78,9 @@ def draw():
     imgui.same_line()
     if imgui.button("Restore everyone"):
         CONTROLLER.request("restore_all")
+    if imgui.button("Switch first / third person"):
+        CONTROLLER.request("toggle_camera")
+    imgui.text_disabled("F9: switch view / F10: character menu")
     if imgui.button("Remove unworn previews"):
         CONTROLLER.request("clear")
     imgui.separator()

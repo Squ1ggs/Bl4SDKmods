@@ -22,6 +22,8 @@ class CharacterMenu:
             ButtonOption('refresh_characters', display_name='Refresh characters and players',
                          on_press=lambda _: self.refresh()),
             self.target, self.browser,
+            ButtonOption('toggle_camera', display_name='Switch first / third person (F9)',
+                         on_press=lambda _: self.action('toggle_camera')),
             ButtonOption('restore_character', display_name='Restore selected player',
                          on_press=lambda _: self.action('restore')),
             ButtonOption('restore_everyone', display_name='Restore all changed players',
@@ -119,6 +121,7 @@ class CharacterMenu:
             self.log('That player left. Refresh players and select the target again.')
             return
         accepted = self.controller.request(action, model=key if action in ('apply', 'preview') else '',
-                                           owner=owner or 'self')
+                                           owner=owner or 'self',
+                                           **({'options': {'follow_player_pose': True, 'keep_on_respawn': True}} if action == 'apply' else {}))
         self.result.display_name = 'Status: ' + (f'{action} queued' if accepted else self.controller.status)
         self.log(self.result.display_name)

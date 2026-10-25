@@ -1,0 +1,727 @@
+{
+  "SK_GunToter_Skeleton_bb29338e": {
+    "source": "game_native",
+    "enabled": true,
+    "local_slot_motion_enabled": true,
+    "mesh_skeleton": "/Game/AI/ArmyBandit/GunToter/_Shared/Model/Rig/SK_GunToter_Skeleton.SK_GunToter_Skeleton",
+    "scope": "local_owned_native_stock_slot_preview",
+    "visual_verified": false,
+    "clips": {
+      "run": {
+        "animation": "/Game/AI/ArmyBandit/GunToter/_Shared/Animation/Combat/Rifle/AS_RH_Run_F.AS_RH_Run_F",
+        "speed_cm_s": 470.0
+      },
+      "sprint": {
+        "animation": "/Game/AI/ArmyBandit/GunToter/_Shared/Animation/Combat/Rifle/AS_RH_Sprint_F.AS_RH_Sprint_F",
+        "speed_cm_s": 720.0
+      },
+      "walk": {
+        "animation": "/Game/AI/ArmyBandit/GunToter/_Shared/Animation/Passive/AS_Walk_F.AS_Walk_F",
+        "speed_cm_s": 160.0
+      },
+      "airborne": {
+        "animation": "/Game/AI/ArmyBandit/GunToter/_Shared/Animation/Combat/Rifle/AS_RH_Falling_InAir.AS_RH_Falling_InAir",
+        "duration_seconds": 0.53333336
+      },
+      "air_hold": {
+        "animation": "/Game/AI/ArmyBandit/GunToter/_Shared/Animation/Combat/Rifle/AS_RH_Falling_InAir.AS_RH_Falling_InAir",
+        "duration_seconds": 0.53333336
+      }
+    },
+    "local_airborne_motion_enabled": true
+  },
+  "SK_MeatHead_Skeleton_d7b4eaf5": {
+    "source": "game_native",
+    "enabled": true,
+    "local_slot_motion_enabled": true,
+    "mesh_skeleton": "/Game/AI/ArmyBandit/Meathead/_Shared/Model/Rig/SK_MeatHead_Skeleton.SK_MeatHead_Skeleton",
+    "scope": "local_owned_native_stock_slot_preview",
+    "visual_verified": false,
+    "clips": {
+      "walk": {
+        "animation": "/Game/AI/ArmyBandit/Meathead/_Shared/Animation/Combat/AS_Walk_F.AS_Walk_F",
+        "speed_cm_s": 160.0
+      },
+      "airborne": {
+        "animation": "/Game/AI/ArmyBandit/Meathead/_Shared/Animation/Combat/AS_Falling_InAir.AS_Falling_InAir",
+        "duration_seconds": 0.53333336
+      },
+      "air_hold": {
+        "animation": "/Game/AI/ArmyBandit/Meathead/_Shared/Animation/Combat/AS_Falling_InAir.AS_Falling_InAir",
+        "duration_seconds": 0.53333336
+      }
+    },
+    "local_airborne_motion_enabled": true
+  },
+  "SK_Phalanx_Skeleton_4efc76ca": {
+    "source": "game_native",
+    "enabled": true,
+    "local_slot_motion_enabled": true,
+    "mesh_skeleton": "/Game/AI/ArmyBandit/Phalanx/_Shared/Model/Rig/SK_Phalanx_Skeleton.SK_Phalanx_Skeleton",
+    "scope": "local_owned_native_stock_slot_preview",
+    "visual_verified": false,
+    "clips": {
+      "run": {
+        "animation": "/Game/AI/ArmyBandit/Phalanx/_Shared/Animation/Combat/Melee_Frenzy/AS_Run_F.AS_Run_F",
+        "speed_cm_s": 470.0
+      },
+      "walk": {
+        "animation": "/Game/AI/ArmyBandit/Phalanx/_Shared/Animation/Combat/Melee_Normal/AS_Walk_F.AS_Walk_F",
+        "speed_cm_s": 160.0
+      },
+      "airborne": {
+        "animation": "/Game/AI/ArmyBandit/Phalanx/_Shared/Animation/Combat/Melee_Frenzy/AS_Falling_InAir.AS_Falling_InAir",
+        "duration_seconds": 0.53333336
+      },
+      "air_hold": {
+        "animation": "/Game/AI/ArmyBandit/Phalanx/_Shared/Animation/Combat/Melee_Frenzy/AS_Falling_InAir.AS_Falling_InAir",
+        "duration_seconds": 0.53333336
+      }
+    },
+    "local_airborne_motion_enabled": true
+  },
+  "SK_Psycho_Skeleton_35cc185d": {
+    "source": "game_native",
+    "enabled": true,
+    "local_slot_motion_enabled": true,
+    "mesh_skeleton": "/Game/AI/ArmyBandit/Psycho/_Shared/Model/Rig/SK_Psycho_Skeleton.SK_Psycho_Skeleton",
+    "scope": "local_owned_native_stock_slot_preview",
+    "visual_verified": false,
+    "clips": {
+      "run": {
+        "animation": "/Game/AI/ArmyBandit/Psycho/_Shared/Animation/Combat/AS_Run_F.AS_Run_F",
+        "speed_cm_s": 470.0
+      },
+      "sprint": {
+        "animation": "/Game/AI/ArmyBandit/Psycho/_Shared/Animation/Combat/AS_Sprint_F.AS_Sprint_F",
+        "speed_cm_s": 720.0
+      },
+      "walk": {
+        "animation": "/Game/AI/ArmyBandit/Psycho/_Shared/Animation/Combat/AS_Suicide_Walk_F.AS_Suicide_Walk_F",
+        "speed_cm_s": 160.0
+      },
+      "airborne": {
+        "animation": "/Game/AI/ArmyBandit/Psycho/_Shared/Animation/Combat/AS_Falling_InAir.AS_Falling_InAir",
+        "duration_seconds": 0.53333336
+      },
+      "air_hold": {
+        "animation": "/Game/AI/ArmyBandit/Psycho/_Shared/Animation/Combat/AS_Falling_InAir.AS_Falling_InAir",
+        "duration_seconds": 0.53333336
+      }
+    },
+    "local_airborne_motion_enabled": true
+  },
+  "SK_Splice_Skeleton_a040b10f": {
+    "source": "game_native",
+    "enabled": true,
+    "local_slot_motion_enabled": true,
+    "mesh_skeleton": "/Game/AI/ArmyBandit/Splice/_Shared/Model/Rig/SK_Splice_Skeleton.SK_Splice_Skeleton",
+    "scope": "local_owned_native_stock_slot_preview",
+    "visual_verified": false,
+    "clips": {
+      "run": {
+        "animation": "/Game/AI/ArmyBandit/Splice/_Shared/Animation/Ground/Combat/AS_Run_F.AS_Run_F",
+        "speed_cm_s": 470.0
+      },
+      "walk": {
+        "animation": "/Game/AI/ArmyBandit/Splice/_Shared/Animation/Ground/Combat/AS_Walk_F.AS_Walk_F",
+        "speed_cm_s": 160.0
+      },
+      "airborne": {
+        "animation": "/Game/AI/ArmyBandit/Splice/_Shared/Animation/Ground/Combat/AS_Falling_InAir.AS_Falling_InAir",
+        "duration_seconds": 0.53333336
+      },
+      "air_hold": {
+        "animation": "/Game/AI/ArmyBandit/Splice/_Shared/Animation/Ground/Combat/AS_Falling_InAir.AS_Falling_InAir",
+        "duration_seconds": 0.53333336
+      }
+    },
+    "local_airborne_motion_enabled": true
+  },
+  "SK_Brute_Skeleton_396437d0": {
+    "source": "game_native",
+    "enabled": true,
+    "local_slot_motion_enabled": true,
+    "mesh_skeleton": "/Game/AI/ArmyOrder/Brute/_Shared/Model/Rig/SK_Brute_Skeleton.SK_Brute_Skeleton",
+    "scope": "local_owned_native_stock_slot_preview",
+    "visual_verified": false,
+    "clips": {
+      "run": {
+        "animation": "/Game/AI/ArmyOrder/Brute/_Shared/Animation/Combat/AS_Run_F.AS_Run_F",
+        "speed_cm_s": 470.0
+      },
+      "walk": {
+        "animation": "/Game/AI/ArmyOrder/Brute/_Shared/Animation/Combat/AS_Walk_F.AS_Walk_F",
+        "speed_cm_s": 160.0
+      },
+      "airborne": {
+        "animation": "/Game/AI/ArmyOrder/Brute/_Shared/Animation/Combat/AS_Falling_InAir.AS_Falling_InAir",
+        "duration_seconds": 0.7
+      },
+      "air_hold": {
+        "animation": "/Game/AI/ArmyOrder/Brute/_Shared/Animation/Combat/AS_Falling_InAir.AS_Falling_InAir",
+        "duration_seconds": 0.7
+      }
+    },
+    "local_airborne_motion_enabled": true
+  },
+  "SK_Drone_Skeleton_48193cdb": {
+    "source": "game_native",
+    "enabled": true,
+    "local_slot_motion_enabled": true,
+    "mesh_skeleton": "/Game/AI/ArmyOrder/Drone/_Shared/Model/Rig/SK_Drone_Skeleton.SK_Drone_Skeleton",
+    "scope": "local_owned_native_stock_slot_preview",
+    "visual_verified": false,
+    "clips": {
+      "run": {
+        "animation": "/Game/AI/ArmyOrder/Drone/_Shared/Animation/Passive/AS_Fly_F.AS_Fly_F",
+        "speed_cm_s": 470.0
+      }
+    }
+  },
+  "SK_ORD_Gunship_Skeleton_64de580a": {
+    "source": "game_native",
+    "enabled": true,
+    "local_slot_motion_enabled": true,
+    "mesh_skeleton": "/Game/AI/ArmyOrder/GunShip/_Shared/Model/Rig/SK_ORD_Gunship_Skeleton.SK_ORD_Gunship_Skeleton",
+    "scope": "local_owned_native_stock_slot_preview",
+    "visual_verified": false,
+    "clips": {
+      "run": {
+        "animation": "/Game/AI/ArmyOrder/GunShip/_Shared/Animation/Hover/AS_Run_F.AS_Run_F",
+        "speed_cm_s": 470.0
+      },
+      "walk": {
+        "animation": "/Game/AI/ArmyOrder/GunShip/_Shared/Animation/Tank/AS_Walk_F.AS_Walk_F",
+        "speed_cm_s": 160.0
+      },
+      "airborne": {
+        "animation": "/Game/AI/ArmyOrder/GunShip/_Shared/Animation/Tank/AS_Falling_InAir.AS_Falling_InAir",
+        "duration_seconds": 2.0
+      },
+      "air_hold": {
+        "animation": "/Game/AI/ArmyOrder/GunShip/_Shared/Animation/Tank/AS_Falling_InAir.AS_Falling_InAir",
+        "duration_seconds": 2.0
+      }
+    },
+    "local_airborne_motion_enabled": true
+  },
+  "SK_Synth_Skeleton_940af8d1": {
+    "source": "game_native",
+    "enabled": true,
+    "local_slot_motion_enabled": true,
+    "mesh_skeleton": "/Game/AI/ArmyOrder/_Shared/Model/Rig/SK_Synth_Skeleton.SK_Synth_Skeleton",
+    "scope": "local_owned_native_stock_slot_preview",
+    "visual_verified": false,
+    "clips": {
+      "run": {
+        "animation": "/Game/AI/ArmyOrder/Defect/_Shared/Animation/Combat/AS_Run_F.AS_Run_F",
+        "speed_cm_s": 470.0
+      },
+      "walk": {
+        "animation": "/Game/AI/ArmyOrder/Defect/_Shared/Animation/Combat/AS_Walk_F.AS_Walk_F",
+        "speed_cm_s": 160.0
+      },
+      "airborne": {
+        "animation": "/Game/AI/ArmyOrder/Defect/_Shared/Animation/Combat/AS_Falling_InAir.AS_Falling_InAir",
+        "duration_seconds": 0.53333336
+      },
+      "air_hold": {
+        "animation": "/Game/AI/ArmyOrder/Defect/_Shared/Animation/Combat/AS_Falling_InAir.AS_Falling_InAir",
+        "duration_seconds": 0.53333336
+      }
+    },
+    "local_airborne_motion_enabled": true
+  },
+  "SK_GrassBoss_Skeleton_dcdeea92": {
+    "source": "game_native",
+    "enabled": true,
+    "local_slot_motion_enabled": true,
+    "mesh_skeleton": "/Game/AI/Bosses/GrassBoss/Model/Rig/SK_GrassBoss_Skeleton.SK_GrassBoss_Skeleton",
+    "scope": "local_owned_native_stock_slot_preview",
+    "visual_verified": false,
+    "clips": {
+      "walk": {
+        "animation": "/Game/AI/Bosses/GrassBoss/Animation/Armored/AS_Armored_Walk_F.AS_Armored_Walk_F",
+        "speed_cm_s": 160.0
+      },
+      "airborne": {
+        "animation": "/Game/DLC/Raid2/AI/Bosses/Animation/AS_Falling_InAir.AS_Falling_InAir",
+        "duration_seconds": 0.5
+      },
+      "air_hold": {
+        "animation": "/Game/DLC/Raid2/AI/Bosses/Animation/AS_Falling_InAir.AS_Falling_InAir",
+        "duration_seconds": 0.5
+      }
+    },
+    "local_airborne_motion_enabled": true
+  },
+  "SK_Guardian_Skeleton_f7123dcf": {
+    "source": "game_native",
+    "enabled": true,
+    "local_slot_motion_enabled": true,
+    "mesh_skeleton": "/Game/AI/Bosses/Guardian/_Shared/Rig/SK_Guardian_Skeleton.SK_Guardian_Skeleton",
+    "scope": "local_owned_native_stock_slot_preview",
+    "visual_verified": false,
+    "clips": {
+      "walk": {
+        "animation": "/Game/AI/Bosses/Guardian/GrassGuard/Animation/AS_Grass_Walk_F.AS_Grass_Walk_F",
+        "speed_cm_s": 160.0
+      },
+      "run": {
+        "animation": "/Game/AI/Bosses/Guardian/MountGuard/Animation/AS_Mount_Fly_QuickDash_F_Loop.AS_Mount_Fly_QuickDash_F_Loop",
+        "speed_cm_s": 470.0
+      }
+    }
+  },
+  "SK_MountBoss_suicide_Skeleton_ed3874cb": {
+    "source": "game_native",
+    "enabled": true,
+    "local_slot_motion_enabled": true,
+    "mesh_skeleton": "/Game/AI/Bosses/MountBoss/Model/Rig/SuicideHand/SK_MountBoss_suicide_Skeleton.SK_MountBoss_suicide_Skeleton",
+    "scope": "local_owned_native_stock_slot_preview",
+    "visual_verified": false,
+    "clips": {
+      "walk": {
+        "animation": "/Game/AI/Bosses/MountBoss/Animation/Phase_1/CrawlingLimb/AS_CrawlingLimb_Walk.AS_CrawlingLimb_Walk",
+        "speed_cm_s": 160.0
+      }
+    }
+  },
+  "SK_ShatterBoss_Skeleton_ff9c226d": {
+    "source": "game_native",
+    "enabled": true,
+    "local_slot_motion_enabled": true,
+    "mesh_skeleton": "/Game/AI/Bosses/ShatterBoss/Model/Rig/SK_ShatterBoss_Skeleton.SK_ShatterBoss_Skeleton",
+    "scope": "local_owned_native_stock_slot_preview",
+    "visual_verified": false,
+    "clips": {
+      "walk": {
+        "animation": "/Game/AI/Bosses/ShatterBoss/Animation/Queen/Passive/AS_Queen_Walk_F.AS_Queen_Walk_F",
+        "speed_cm_s": 160.0
+      }
+    }
+  },
+  "SK_TimeKeeper_HumanForm_Skeleton_a3e70ff7": {
+    "source": "game_native",
+    "enabled": true,
+    "local_slot_motion_enabled": true,
+    "mesh_skeleton": "/Game/AI/Bosses/TKBoss/Model/Rig/SK_TimeKeeper_HumanForm_Skeleton.SK_TimeKeeper_HumanForm_Skeleton",
+    "scope": "local_owned_native_stock_slot_preview",
+    "visual_verified": false,
+    "clips": {
+      "walk": {
+        "animation": "/Game/AI/Bosses/TKBoss/Animation/HumanForm/AS_Walk_F.AS_Walk_F",
+        "speed_cm_s": 160.0
+      }
+    }
+  },
+  "SK_Bat_Broodling_Skeleton_27e12cff": {
+    "source": "game_native",
+    "enabled": true,
+    "local_slot_motion_enabled": true,
+    "mesh_skeleton": "/Game/AI/Creatures/Bat/_Shared/Model/Rig/SK_Bat_Broodling_Skeleton.SK_Bat_Broodling_Skeleton",
+    "scope": "local_owned_native_stock_slot_preview",
+    "visual_verified": false,
+    "clips": {
+      "run": {
+        "animation": "/Game/AI/Creatures/Bat/_Shared/Animation/Broodling/AS_Fly_F.AS_Fly_F",
+        "speed_cm_s": 470.0
+      }
+    }
+  },
+  "SK_Bat_Skeleton_7beeccf2": {
+    "source": "game_native",
+    "enabled": true,
+    "local_slot_motion_enabled": true,
+    "mesh_skeleton": "/Game/AI/Creatures/Bat/_Shared/Model/Rig/SK_Bat_Skeleton.SK_Bat_Skeleton",
+    "scope": "local_owned_native_stock_slot_preview",
+    "visual_verified": false,
+    "clips": {
+      "walk": {
+        "animation": "/Game/AI/Creatures/Bat/_Shared/Animation/Combat/AS_Walk_F.AS_Walk_F",
+        "speed_cm_s": 160.0
+      }
+    }
+  },
+  "SK_Beast_Skeleton_4118a2e8": {
+    "source": "game_native",
+    "enabled": true,
+    "local_slot_motion_enabled": true,
+    "mesh_skeleton": "/Game/AI/Creatures/Beast/_Shared/Model/Rig/SK_Beast_Skeleton.SK_Beast_Skeleton",
+    "scope": "local_owned_native_stock_slot_preview",
+    "visual_verified": false,
+    "clips": {
+      "run": {
+        "animation": "/Game/AI/Creatures/Beast/_Shared/Animation/Combat/AS_Run_F.AS_Run_F",
+        "speed_cm_s": 470.0
+      },
+      "walk": {
+        "animation": "/Game/AI/Creatures/Beast/_Shared/Animation/Combat/AS_Walk_F.AS_Walk_F",
+        "speed_cm_s": 160.0
+      },
+      "airborne": {
+        "animation": "/Game/AI/Creatures/Beast/_Shared/Animation/Combat/AS_Falling_InAir.AS_Falling_InAir",
+        "duration_seconds": 0.53333336
+      },
+      "air_hold": {
+        "animation": "/Game/AI/Creatures/Beast/_Shared/Animation/Combat/AS_Falling_InAir.AS_Falling_InAir",
+        "duration_seconds": 0.53333336
+      }
+    },
+    "local_airborne_motion_enabled": true
+  },
+  "SK_Cat_Skeleton_6c8f4b7b": {
+    "source": "game_native",
+    "enabled": true,
+    "local_slot_motion_enabled": true,
+    "mesh_skeleton": "/Game/AI/Creatures/Cat/_Shared/Model/Rig/SK_Cat_Skeleton.SK_Cat_Skeleton",
+    "scope": "local_owned_native_stock_slot_preview",
+    "visual_verified": false,
+    "clips": {
+      "run": {
+        "animation": "/Game/AI/Creatures/Cat/_Shared/Animation/Combat/AS_Run_F.AS_Run_F",
+        "speed_cm_s": 470.0
+      },
+      "walk": {
+        "animation": "/Game/AI/Creatures/Cat/_Shared/Animation/Combat/AS_Walk_F.AS_Walk_F",
+        "speed_cm_s": 160.0
+      },
+      "airborne": {
+        "animation": "/Game/AI/Creatures/Cat/_Shared/Animation/Combat/AS_Falling_InAir.AS_Falling_InAir",
+        "duration_seconds": 0.6666667
+      },
+      "air_hold": {
+        "animation": "/Game/AI/Creatures/Cat/_Shared/Animation/Combat/AS_Falling_InAir.AS_Falling_InAir",
+        "duration_seconds": 0.6666667
+      }
+    },
+    "local_airborne_motion_enabled": true
+  },
+  "SK_Creep_Skeleton_5c56dce5": {
+    "source": "game_native",
+    "enabled": true,
+    "local_slot_motion_enabled": true,
+    "mesh_skeleton": "/Game/AI/Creatures/Creep/_Shared/Model/Rig/SK_Creep_Skeleton.SK_Creep_Skeleton",
+    "scope": "local_owned_native_stock_slot_preview",
+    "visual_verified": false,
+    "clips": {
+      "walk": {
+        "animation": "/Game/AI/Creatures/Creep/_Shared/Animation/Combat/AS_Walk_F.AS_Walk_F",
+        "speed_cm_s": 160.0
+      },
+      "airborne": {
+        "animation": "/Game/AI/Creatures/Creep/_Shared/Animation/Combat/AS_Falling_InAir.AS_Falling_InAir",
+        "duration_seconds": 1.0
+      },
+      "air_hold": {
+        "animation": "/Game/AI/Creatures/Creep/_Shared/Animation/Combat/AS_Falling_InAir.AS_Falling_InAir",
+        "duration_seconds": 1.0
+      }
+    },
+    "local_airborne_motion_enabled": true
+  },
+  "SK_Pangolin_Skeleton_ad8e3389": {
+    "source": "game_native",
+    "enabled": true,
+    "local_slot_motion_enabled": true,
+    "mesh_skeleton": "/Game/AI/Creatures/Pangolin/_Shared/Model/Rig/SK_Pangolin_Skeleton.SK_Pangolin_Skeleton",
+    "scope": "local_owned_native_stock_slot_preview",
+    "visual_verified": false,
+    "clips": {
+      "run": {
+        "animation": "/Game/AI/Creatures/Pangolin/_Shared/Animation/BallMode/AS_Run_F.AS_Run_F",
+        "speed_cm_s": 470.0
+      },
+      "sprint": {
+        "animation": "/Game/AI/Creatures/Pangolin/_Shared/Animation/Combat/AS_Sprint_F.AS_Sprint_F",
+        "speed_cm_s": 720.0
+      },
+      "walk": {
+        "animation": "/Game/AI/Creatures/Pangolin/_Shared/Animation/Combat/AS_Walk_F.AS_Walk_F",
+        "speed_cm_s": 160.0
+      },
+      "airborne": {
+        "animation": "/Game/AI/Creatures/Pangolin/_Shared/Animation/Combat/AS_Falling_InAir.AS_Falling_InAir",
+        "duration_seconds": 0.8333333
+      },
+      "air_hold": {
+        "animation": "/Game/AI/Creatures/Pangolin/_Shared/Animation/Combat/AS_Falling_InAir.AS_Falling_InAir",
+        "duration_seconds": 0.8333333
+      }
+    },
+    "local_airborne_motion_enabled": true
+  },
+  "SK_Thresher_Skeleton_ec0aa7eb": {
+    "source": "game_native",
+    "enabled": true,
+    "local_slot_motion_enabled": true,
+    "mesh_skeleton": "/Game/AI/Creatures/Thresher/_Shared/Model/Rig/SK_Thresher_Skeleton.SK_Thresher_Skeleton",
+    "scope": "local_owned_native_stock_slot_preview",
+    "visual_verified": false,
+    "clips": {
+      "run": {
+        "animation": "/Game/AI/Creatures/Thresher/_Shared/Animation/Combat/Flying/AS_Flight_F.AS_Flight_F",
+        "speed_cm_s": 470.0
+      },
+      "sprint": {
+        "animation": "/Game/AI/Creatures/Thresher/_Shared/Animation/Combat/Flying/AS_Flight_F_Sprint.AS_Flight_F_Sprint",
+        "speed_cm_s": 720.0
+      }
+    }
+  },
+  "SK_AMB_LargeBird_Skeleton_4a073f39": {
+    "source": "game_native",
+    "enabled": true,
+    "local_slot_motion_enabled": true,
+    "mesh_skeleton": "/Game/AI/Critters/LargeBird/Model/Rig/SK_AMB_LargeBird_Skeleton.SK_AMB_LargeBird_Skeleton",
+    "scope": "local_owned_native_stock_slot_preview",
+    "visual_verified": false,
+    "clips": {
+      "run": {
+        "animation": "/Game/AI/Critters/LargeBird/Animation/AS_Fly_F.AS_Fly_F",
+        "speed_cm_s": 470.0
+      }
+    }
+  },
+  "SK_AMB_RockCrab_Skeleton_c43ac551": {
+    "source": "game_native",
+    "enabled": true,
+    "local_slot_motion_enabled": true,
+    "mesh_skeleton": "/Game/AI/Critters/RockCrab/Model/Rig/SK_AMB_RockCrab_Skeleton.SK_AMB_RockCrab_Skeleton",
+    "scope": "local_owned_native_stock_slot_preview",
+    "visual_verified": false,
+    "clips": {
+      "run": {
+        "animation": "/Game/AI/Critters/RockCrab/Animation/AS_Run_F.AS_Run_F",
+        "speed_cm_s": 470.0
+      },
+      "walk": {
+        "animation": "/Game/AI/Critters/RockCrab/Animation/AS_Walk_F.AS_Walk_F",
+        "speed_cm_s": 160.0
+      }
+    }
+  },
+  "SK_AMB_SkyWanderer_Skeleton_664ff267": {
+    "source": "game_native",
+    "enabled": true,
+    "local_slot_motion_enabled": true,
+    "mesh_skeleton": "/Game/AI/Critters/SkyWanderer/Model/Rig/SK_AMB_SkyWanderer_Skeleton.SK_AMB_SkyWanderer_Skeleton",
+    "scope": "local_owned_native_stock_slot_preview",
+    "visual_verified": false,
+    "clips": {
+      "run": {
+        "animation": "/Game/AI/Critters/SkyWanderer/Animation/AS_Swim_F.AS_Swim_F",
+        "speed_cm_s": 470.0
+      }
+    }
+  },
+  "SK_BuddyScrap_Skeleton_50c19cdc": {
+    "source": "game_native",
+    "enabled": true,
+    "local_slot_motion_enabled": true,
+    "mesh_skeleton": "/Game/AI/NPC/_Unique/BuddyScrap/Model/Rig/SK_BuddyScrap_Skeleton.SK_BuddyScrap_Skeleton",
+    "scope": "local_owned_native_stock_slot_preview",
+    "visual_verified": false,
+    "clips": {
+      "run": {
+        "animation": "/Game/AI/NPC/_Unique/BuddyScrap/Animation/Combat/AS_Run_F.AS_Run_F",
+        "speed_cm_s": 470.0
+      }
+    }
+  },
+  "SK_Claptrap_Skeleton_c78a5d88": {
+    "source": "game_native",
+    "enabled": true,
+    "local_slot_motion_enabled": true,
+    "mesh_skeleton": "/Game/AI/NPC/_Unique/Claptrap/Model/Rig/SK_Claptrap_Skeleton.SK_Claptrap_Skeleton",
+    "scope": "local_owned_native_stock_slot_preview",
+    "visual_verified": false,
+    "clips": {
+      "run": {
+        "animation": "/Game/AI/NPC/_Unique/Claptrap/Animation/Passive/AS_Run_F.AS_Run_F",
+        "speed_cm_s": 470.0
+      },
+      "sprint": {
+        "animation": "/Game/AI/NPC/_Unique/Claptrap/Animation/Passive/AS_Sprint_F.AS_Sprint_F",
+        "speed_cm_s": 720.0
+      },
+      "walk": {
+        "animation": "/Game/AI/NPC/_Unique/Claptrap/Animation/Passive/AS_Walk_F.AS_Walk_F",
+        "speed_cm_s": 160.0
+      }
+    }
+  },
+  "SK_Echo4_Skeleton_240fc7bc": {
+    "source": "game_native",
+    "enabled": true,
+    "local_slot_motion_enabled": true,
+    "mesh_skeleton": "/Game/AI/NPC/_Unique/Echo4/Model/Rig/SK_Echo4_Skeleton.SK_Echo4_Skeleton",
+    "scope": "local_owned_native_stock_slot_preview",
+    "visual_verified": false,
+    "clips": {
+      "run": {
+        "animation": "/Game/AI/NPC/_Unique/Echo4/Animation/Passive/AS_Run_F.AS_Run_F",
+        "speed_cm_s": 470.0
+      },
+      "walk": {
+        "animation": "/Game/AI/NPC/_Unique/Echo4/Animation/Passive/AS_Walk_F.AS_Walk_F",
+        "speed_cm_s": 160.0
+      }
+    }
+  },
+  "SK_Moxxi_Skeleton_690d9a9c": {
+    "source": "game_native",
+    "enabled": true,
+    "local_slot_motion_enabled": true,
+    "mesh_skeleton": "/Game/AI/NPC/_Unique/Moxxi/Model/Rig/SK_Moxxi_Skeleton.SK_Moxxi_Skeleton",
+    "scope": "local_owned_native_stock_slot_preview",
+    "visual_verified": false,
+    "clips": {
+      "walk": {
+        "animation": "/Game/AI/NPC/_Unique/Moxxi/Animation/Passive/AS_Walk_F.AS_Walk_F",
+        "speed_cm_s": 160.0
+      }
+    }
+  },
+  "SK_DahlMech_Skeleton_174802f1": {
+    "source": "game_native",
+    "enabled": true,
+    "local_slot_motion_enabled": true,
+    "mesh_skeleton": "/Game/DLC/Cowbell/AI/ArmyDahl/DahlMech/_Shared/Model/Rig/SK_DahlMech_Skeleton.SK_DahlMech_Skeleton",
+    "scope": "local_owned_native_stock_slot_preview",
+    "visual_verified": false,
+    "clips": {
+      "run": {
+        "animation": "/Game/DLC/Cowbell/AI/ArmyDahl/DahlMech/_Shared/Animation/Combat/Melee/AS_Run_F.AS_Run_F",
+        "speed_cm_s": 470.0
+      },
+      "walk": {
+        "animation": "/Game/DLC/Cowbell/AI/ArmyDahl/DahlMech/_Shared/Animation/Combat/Ranged/AS_Walk_F.AS_Walk_F",
+        "speed_cm_s": 160.0
+      },
+      "airborne": {
+        "animation": "/Game/DLC/Cowbell/AI/ArmyDahl/DahlMech/_Shared/Animation/Combat/Melee/AS_Attack_Thrust_Jump_Loop.AS_Attack_Thrust_Jump_Loop",
+        "duration_seconds": 0.6666667
+      },
+      "air_hold": {
+        "animation": "/Game/DLC/Cowbell/AI/ArmyDahl/DahlMech/_Shared/Animation/Combat/Melee/AS_Attack_Thrust_Jump_Loop.AS_Attack_Thrust_Jump_Loop",
+        "duration_seconds": 0.6666667
+      }
+    },
+    "local_airborne_motion_enabled": true
+  },
+  "SK_Kraggon_Skeleton_3e280a9f": {
+    "source": "game_native",
+    "enabled": true,
+    "local_slot_motion_enabled": true,
+    "mesh_skeleton": "/Game/DLC/Cowbell/AI/Creatures/Kraggon/_Shared/Model/Rig/SK_Kraggon_Skeleton.SK_Kraggon_Skeleton",
+    "scope": "local_owned_native_stock_slot_preview",
+    "visual_verified": false,
+    "clips": {
+      "walk": {
+        "animation": "/Game/DLC/Cowbell/AI/Creatures/Kraggon/_Shared/Animation/Combat/AS_Walk_F.AS_Walk_F",
+        "speed_cm_s": 160.0
+      }
+    }
+  },
+  "SK_Ellie_Skeleton_59925eab": {
+    "source": "game_native",
+    "enabled": true,
+    "local_slot_motion_enabled": true,
+    "mesh_skeleton": "/Game/DLC/Cowbell/AI/NPC/_Unique/Ellie/Model/Rig/SK_Ellie_Skeleton.SK_Ellie_Skeleton",
+    "scope": "local_owned_native_stock_slot_preview",
+    "visual_verified": false,
+    "clips": {
+      "run": {
+        "animation": "/Game/DLC/Cowbell/AI/NPC/_Unique/Ellie/Animation/AS_Run_F.AS_Run_F",
+        "speed_cm_s": 470.0
+      },
+      "sprint": {
+        "animation": "/Game/DLC/Cowbell/AI/NPC/_Unique/Ellie/Animation/AS_Sprint_F.AS_Sprint_F",
+        "speed_cm_s": 720.0
+      },
+      "walk": {
+        "animation": "/Game/DLC/Cowbell/AI/NPC/_Unique/Ellie/Animation/AS_Walk_F.AS_Walk_F",
+        "speed_cm_s": 160.0
+      }
+    }
+  },
+  "SK_Mancubus_Skeleton_2be8c595": {
+    "source": "game_native",
+    "enabled": true,
+    "local_slot_motion_enabled": true,
+    "mesh_skeleton": "/Game/DLC/Cowbell/AI/NPC/_Unique/Mancubus/Model/Rig/SK_Mancubus_Skeleton.SK_Mancubus_Skeleton",
+    "scope": "local_owned_native_stock_slot_preview",
+    "visual_verified": false,
+    "clips": {
+      "walk": {
+        "animation": "/Game/DLC/Cowbell/AI/NPC/_Unique/Mancubus/Animation/Passive/AS_Walk_F.AS_Walk_F",
+        "speed_cm_s": 160.0
+      }
+    }
+  },
+  "SK_DeadFrame_Skeleton_0bfed1c7": {
+    "source": "game_native",
+    "enabled": true,
+    "local_slot_motion_enabled": true,
+    "mesh_skeleton": "/Game/DLC/Harmonica/AI/ArmyTediore/_Shared/Model/Rig/SK_DeadFrame_Skeleton.SK_DeadFrame_Skeleton",
+    "scope": "local_owned_native_stock_slot_preview",
+    "visual_verified": false,
+    "clips": {
+      "run": {
+        "animation": "/Game/DLC/Harmonica/AI/ArmyTediore/Frame/_Shared/Animation/DeadFrame/Combat/AS_Suicide_Run_F.AS_Suicide_Run_F",
+        "speed_cm_s": 470.0
+      },
+      "walk": {
+        "animation": "/Game/DLC/Harmonica/AI/ArmyTediore/Frame/_Shared/Animation/DeadFrame/Combat/AS_Walk_F.AS_Walk_F",
+        "speed_cm_s": 160.0
+      },
+      "airborne": {
+        "animation": "/Game/DLC/Harmonica/AI/ArmyTediore/Frame/_Shared/Animation/DeadFrame/Combat/AS_Falling_InAir.AS_Falling_InAir",
+        "duration_seconds": 1.0
+      },
+      "air_hold": {
+        "animation": "/Game/DLC/Harmonica/AI/ArmyTediore/Frame/_Shared/Animation/DeadFrame/Combat/AS_Falling_InAir.AS_Falling_InAir",
+        "duration_seconds": 1.0
+      }
+    },
+    "local_airborne_motion_enabled": true
+  },
+  "SK_Harmony_Skeleton_b9b08af1": {
+    "source": "game_native",
+    "enabled": true,
+    "local_slot_motion_enabled": true,
+    "mesh_skeleton": "/Game/DLC/Harmonica/AI/Bosses/Harmony/Model/Rig/SK_Harmony_Skeleton.SK_Harmony_Skeleton",
+    "scope": "local_owned_native_stock_slot_preview",
+    "visual_verified": false,
+    "clips": {
+      "run": {
+        "animation": "/Game/DLC/Harmonica/AI/Bosses/Villainess/Animation/AS_Phase1_Run_F.AS_Phase1_Run_F",
+        "speed_cm_s": 470.0
+      },
+      "walk": {
+        "animation": "/Game/DLC/Harmonica/AI/Bosses/Villainess/Animation/AS_Phase1_Walk_F.AS_Phase1_Walk_F",
+        "speed_cm_s": 160.0
+      }
+    }
+  },
+  "SK_MrChew_Skeleton_67b6478c": {
+    "source": "game_native",
+    "enabled": true,
+    "local_slot_motion_enabled": true,
+    "mesh_skeleton": "/Game/DLC/Harmonica/AI/NPC/_Unique/MrChew/Model/Rig/SK_MrChew_Skeleton.SK_MrChew_Skeleton",
+    "scope": "local_owned_native_stock_slot_preview",
+    "visual_verified": false,
+    "clips": {
+      "run": {
+        "animation": "/Game/DLC/Harmonica/AI/NPC/_Unique/MrChew/Animation/Combat/AS_Run_F.AS_Run_F",
+        "speed_cm_s": 470.0
+      },
+      "walk": {
+        "animation": "/Game/DLC/Harmonica/AI/NPC/_Unique/MrChew/Animation/Combat/AS_Walk_F.AS_Walk_F",
+        "speed_cm_s": 160.0
+      }
+    }
+  }
+}
