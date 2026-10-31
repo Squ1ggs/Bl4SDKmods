@@ -1,6 +1,6 @@
 [project]
 name = "bl4-player-movement"
-version = "1.0.6"
+version = "1.0.7"
 authors = [{ name = "Squ1ggs" }]
 description = """
 On-foot movement tuning for Borderlands 4 — walk/sprint speed, jump, gravity, glide, friction, and vault costs. BLImGui panel, Mods menu sliders, presets, and player_move_* console commands. Client-side co-op.
@@ -12,6 +12,6 @@ Repository = "https://github.com/Squ1ggs/Bl4SDKmods"
 [tool.sdkmod]
 name = "BL4 Player Movement"
 license = { name = "MIT", url = "https://choosealicense.com/licenses/mit/" }
-version = "1.0.6"
+version = "1.0.7"
 download = "https://raw.githubusercontent.com/Squ1ggs/Bl4SDKmods/refs/heads/main/bl4_player_movement/bl4_player_movement.sdkmod"
 coop_support = "ClientSide"
