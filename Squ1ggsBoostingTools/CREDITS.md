@@ -12,8 +12,15 @@ Squ1ggs Boosting Tools opens the SHiFT dashboard and drives Accept through a
 small localhost link (`/sqbt_shift`) into Azalea’s Cohtml. We do not claim
 authorship of the ShiftUI management itself.
 
+## Mattmab — SHiFT-related work
+
+Earlier SHiFT-related work in this area is by **Mattmab**.
+
+## GZO / Ynot — catalog integration
+
+GZO item catalog integration is from **GZO / Ynot** (save-editor.be).
+
 ## Other thanks
 
-- GZO catalog from save-editor.be  
 - Tobgun — feedback, ideas, testing, and bug reports  
 - Scooter’s Toolbox — Simple Builder editor integration  

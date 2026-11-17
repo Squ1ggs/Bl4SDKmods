@@ -51,9 +51,10 @@ Non-UVHM challenge completion does not automatically open a large reward queue i
 
 ## Credits and thanks
 
-- **Azalea Asvail:** [GitHub](https://github.com/AzaleaAsvailAMW) Â· [Azzy UVH Booster](https://github.com/AzaleaAsvailAMW/amw-Uvhbooster). Her SHiFT UI management and friend auto-accepter are used through SQBT's SHiFT integration; that work remains hers. [Mods page](https://save-editor.be/GZO/Mods.html#/borderlands-4) Â· [direct download](https://save-editor.be/GZO/mods/api.php?action=download&id=92c8f31dd95c34f0).
+- **Azalea Asvail:** [GitHub](https://github.com/AzaleaAsvailAMW) · [Azzy UVH Booster](https://github.com/AzaleaAsvailAMW/amw-Uvhbooster). Her SHiFT UI management and friend auto-accepter are used through SQBT's SHiFT integration; that work remains hers. [Mods page](https://save-editor.be/GZO/Mods.html#/borderlands-4) · [direct download](https://save-editor.be/GZO/mods/api.php?action=download&id=92c8f31dd95c34f0).
+- **Mattmab:** earlier SHiFT-related work in this area.
+- **GZO / Ynot** (save-editor.be) and **Lootlemon:** item catalogs and reference data.
 - **BL SDK contributors:** the SDK and mod-loading ecosystem that make these tools possible.
-- **GZO / save-editor.be** and **Lootlemon:** item catalogs and reference data.
 - **Scooter's Toolbox:** Simple Builder editor integration.
 - **Tobgun** and everyone testing, sharing feedback and reporting bugs.
 

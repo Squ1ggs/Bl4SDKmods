@@ -27,7 +27,9 @@ Same idea as Squ1ggs Boosting Tools: exe installs the mod, restart game, control
 
 **Credits — SHiFT UI management:** by **[Azalea Asvail](https://save-editor.be/GZO/Mods.html#/borderlands-4)** ([direct download](https://save-editor.be/GZO/mods/api.php?action=download&id=92c8f31dd95c34f0)). SQBT opens SHiFT and links to her friend auto-accepter; see [CREDITS.md](CREDITS.md).
 
-**Thanks:** GZO catalog from save-editor.be. Thank you to **Tobgun** for feedback, ideas, testing, and bug reports.
+**Credits � SHiFT:** **Azalea Asvail** (SHiFT UI management / friend auto-accepter) and **Mattmab** (earlier SHiFT-related work). See [CREDITS.md](CREDITS.md).
+
+**Thanks:** GZO / Ynot catalog from save-editor.be. Thank you to **Tobgun** for feedback, ideas, testing, and bug reports.
 
 ### What's new (short)
 - **Item cards** — copyable `@U` strip; shield / repkit / shotgun stats closer to in-game; firmware names + tiers
